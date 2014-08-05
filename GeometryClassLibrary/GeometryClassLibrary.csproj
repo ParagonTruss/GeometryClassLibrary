@@ -57,8 +57,8 @@
     <Compile Include="PlaneRegion.cs" />
     <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
     <Compile Include="Point.cs" />
-    <Compile Include="PointGenerator.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
+    <Compile Include="PointGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shift.cs" />
     <Compile Include="Solid.cs" />

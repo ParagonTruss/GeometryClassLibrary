@@ -356,7 +356,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="_endPoint"></param>
         /// <returns>new dimension representing the distance</returns>
-        internal Dimension DistanceTo(Point _endPoint)
+        public Dimension DistanceTo(Point _endPoint)
         {
             //distance formula
             double term1 = Math.Pow(( _x - _endPoint._x).Millimeters, 2);
