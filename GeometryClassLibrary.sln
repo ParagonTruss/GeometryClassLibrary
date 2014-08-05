@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibrary", "GeometryClassLibrary\GeometryClassLibrary.csproj", "{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibraryTest", "GeometryClassLibraryTest\GeometryClassLibraryTest.csproj", "{F383D1FE-05BA-4591-A47E-28B7651AE289}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F383D1FE-05BA-4591-A47E-28B7651AE289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F383D1FE-05BA-4591-A47E-28B7651AE289}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F383D1FE-05BA-4591-A47E-28B7651AE289}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F383D1FE-05BA-4591-A47E-28B7651AE289}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
