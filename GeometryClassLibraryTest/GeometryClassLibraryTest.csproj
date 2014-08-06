@@ -67,6 +67,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DotProductTests.cs" />
+    <Compile Include="MatricesMatrixTests.cs" />
+    <Compile Include="MatrixTests.cs" />
     <Compile Include="SolidTests.cs" />
     <Compile Include="LineListExtensionTests.cs" />
     <Compile Include="LineSegmentListExtensionTests.cs" />
