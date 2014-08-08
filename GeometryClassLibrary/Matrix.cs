@@ -10,11 +10,45 @@ namespace GeometryClassLibrary
     [DebuggerDisplay("Size = {NumberOfRows} x {NumberOfColumns} |  First Row = {this.GetElement(0,0)} {this.GetElement(0,1)}... |  Second Row = {this.GetElement(1,0)} {this.GetElement(1,1)}...")]
     public class Matrix
     {
-        #region Fields, Properties, and Constructors
+        #region _fields and Properties
 
         // declares a two dimensional array named _matrix. The "," denotes that it is 2d
         double[,] _matrix;
 
+
+        /// <summary>
+        /// Returns the number of rows in the matrix
+        /// </summary>
+        public int NumberOfRows
+        {
+            get
+            {
+                return _matrix.GetLength(0);
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of columns in the matrix
+        /// </summary>
+        public int NumberOfColumns
+        {
+            get
+            {
+                // Check to make sure that there is at least one row
+                if (_matrix.Length != 0)
+                {
+                    return _matrix.GetLength(1);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+#endregion
+
+        #region Constructors
         /// <summary>
         ///the constructor that is called when you say "new Matrix(numberOfRows, numberOfColumns);"
         /// </summary>
@@ -48,117 +82,9 @@ namespace GeometryClassLibrary
             this.InsertMatrixAt(passedMatrix, 0, 0);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="rowIndex">The number of the row where the element will be added</param>
-        /// <param name="columnIndex">The number of the column where the element will be added</param>
-        /// <param name="element"></param>
-        public void SetElement(int rowIndex, int columnIndex, double element)
-        {
-            _matrix[rowIndex, columnIndex] = element;
-        }
+#endregion
 
-        /// <summary>
-        /// Returns the element at row "rowIndex" and column "columnIndex"
-        /// </summary>
-        /// <param name="rowIndex">The row number of the desired element</param>
-        /// <param name="columnIndex">The column number of the desired element</param>
-        /// <returns></returns>
-        public double GetElement(int rowIndex, int columnIndex)
-        {
-            return _matrix[rowIndex, columnIndex];
-        }
         
-        /// <summary>
-        /// Returns the number of rows in the matrix
-        /// </summary>
-        public int NumberOfRows
-        {
-            get
-            {
-                return _matrix.GetLength(0);
-            }
-        }
-
-        /// <summary>
-        /// Returns the number of columns in the matrix
-        /// </summary>
-        public int NumberOfColumns
-        {
-            get
-            {
-                // Check to make sure that there is at least one row
-                if (_matrix.Length != 0)
-                {
-                    return _matrix.GetLength(1);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
-        public double[] GetRow(int passedrowIndex)
-        {
-            double[] rowToReturn = new double[NumberOfColumns];
-
-            for (int columnIndex = 0; columnIndex < NumberOfColumns; columnIndex++)
-            {
-                rowToReturn[columnIndex] = GetElement(passedrowIndex, columnIndex);
-            }
-
-            return rowToReturn;
-        }
-
-        /// <summary>
-        /// Replaces the specified row of the matrix with the passed row
-        /// </summary>
-        /// <param name="passedrowIndex"></param>
-        /// <returns></returns>
-        public void SetRowOfMatrix(int passedrowIndex, double[] passedRow)
-        {
-            for (int columnIndex = 0; columnIndex < passedRow.Length; columnIndex++)
-            {
-                SetElement(passedrowIndex, columnIndex, passedRow[columnIndex]);
-            }
-        }
-
-        /// <summary>
-        /// Replaces the specified column of the matrix with the passed column
-        /// </summary>
-        /// <param name="passedrowIndex"></param>
-        /// <returns></returns>
-        public void SetColumnOfMatrix(int passedColumnIndex, double[] passedColumn)
-        {
-            for (int rowIndex = 0; rowIndex < passedColumn.Length; rowIndex++)
-            {
-                SetElement(rowIndex, passedColumnIndex, passedColumn[rowIndex]);
-            }
-        }
-
-        public double[] GetColumn(int passedColumnIndex)
-        {
-            double[] columnToReturn = new double[NumberOfRows];
-
-            for (int rowIndex = 0; rowIndex < NumberOfRows; rowIndex++)
-            {
-                columnToReturn[rowIndex] = GetElement(rowIndex, passedColumnIndex);
-            }
-
-            return columnToReturn;
-        }
-
-
-        /// <summary>
-        /// For internal use only. Returns the matrix as a double[,]
-        /// </summary>
-        internal double[,] getMatrixAs2DArray
-        {
-            get { return _matrix; }
-        }
-
-        #endregion
 
         #region Overloaded Operators
 
@@ -254,6 +180,100 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+            #region Get/Set Methods
+        /// <summary>
+        /// </summary>
+        /// <param name="rowIndex">The number of the row where the element will be added</param>
+        /// <param name="columnIndex">The number of the column where the element will be added</param>
+        /// <param name="element"></param>
+        public void SetElement(int rowIndex, int columnIndex, double element)
+        {
+            _matrix[rowIndex, columnIndex] = element;
+        }
+
+        /// <summary>
+        /// Returns the element at row "rowIndex" and column "columnIndex"
+        /// </summary>
+        /// <param name="rowIndex">The row number of the desired element</param>
+        /// <param name="columnIndex">The column number of the desired element</param>
+        /// <returns></returns>
+        public double GetElement(int rowIndex, int columnIndex)
+        {
+            return _matrix[rowIndex, columnIndex];
+        }
+
+
+        /// <summary>
+        /// Returns the specified row of the matrix
+        /// </summary>
+        /// <param name="passedrowIndex"></param>
+        /// <returns></returns>
+        public double[] GetRow(int passedrowIndex)
+        {
+            double[] rowToReturn = new double[NumberOfColumns];
+
+            for (int columnIndex = 0; columnIndex < NumberOfColumns; columnIndex++)
+            {
+                rowToReturn[columnIndex] = GetElement(passedrowIndex, columnIndex);
+            }
+
+            return rowToReturn;
+        }
+
+        /// <summary>
+        /// Replaces the specified row of the matrix with the passed row
+        /// </summary>
+        /// <param name="passedrowIndex"></param>
+        /// <returns></returns>
+        public void SetRow(int passedrowIndex, double[] passedRow)
+        {
+            for (int columnIndex = 0; columnIndex < passedRow.Length; columnIndex++)
+            {
+                SetElement(passedrowIndex, columnIndex, passedRow[columnIndex]);
+            }
+        }
+
+        /// <summary>
+        /// Returns the specified column of the matrix
+        /// </summary>
+        /// <param name="passedColumnIndex"></param>
+        /// <returns></returns>
+        public double[] GetColumn(int passedColumnIndex)
+        {
+            double[] columnToReturn = new double[NumberOfRows];
+
+            for (int rowIndex = 0; rowIndex < NumberOfRows; rowIndex++)
+            {
+                columnToReturn[rowIndex] = GetElement(rowIndex, passedColumnIndex);
+            }
+
+            return columnToReturn;
+        }
+
+        /// <summary>
+        /// Replaces the specified column of the matrix with the passed column
+        /// </summary>
+        /// <param name="passedrowIndex"></param>
+        /// <returns></returns>
+        public void SetColumn(int passedColumnIndex, double[] passedColumn)
+        {
+            for (int rowIndex = 0; rowIndex < passedColumn.Length; rowIndex++)
+            {
+                SetElement(rowIndex, passedColumnIndex, passedColumn[rowIndex]);
+            }
+        }       
+
+
+        /// <summary>
+        /// For internal use only. Returns the matrix as a double[,]
+        /// </summary>
+        internal double[,] getMatrixAs2DArray
+        {
+            get { return _matrix; }
+        }
+        #endregion
+
         /// <summary>
         /// Checks to see if this matrix and the passed matrix can be added together.  
         /// In order to be able to add two matrices, they must have the same dimensions.
@@ -458,9 +478,96 @@ namespace GeometryClassLibrary
                 {
                     columnIndexOfSubMatrix = 0;
                     rowIndexOfSubMatrix++;
-                }
+                }                
             }
             return subMatrix;
+            
+        }
+
+        /// <summary>
+        /// Takes values from a matrix and determines a cofactor by removing a certain row and column from the matrix.
+        /// Logic developed with help from Andrew Morton on stackoverflow:
+        /// http://stackoverflow.com/questions/24416946/next-step-in-calculating-a-matrix-determinant
+        /// </summary>
+        /// <param name="passedMatrix"></param>
+        /// <param name="knockOutColumn"></param>
+        /// <returns></returns>
+        public Matrix GetSubMatrix(int[] indicesOfRowsToKeep, int[] indicesOfColumnsToKeep)
+        {
+            Matrix subMatrix = new Matrix(indicesOfRowsToKeep.Length, indicesOfColumnsToKeep.Length);
+            Matrix tempMatrix = new Matrix(indicesOfRowsToKeep.Length, this.NumberOfColumns);
+
+            int insertRowAt = 0;
+            foreach (int rowToKeep in indicesOfRowsToKeep)
+            {
+                tempMatrix.SetRow(insertRowAt, this.GetRow(rowToKeep)); 
+                insertRowAt++;
+            }
+
+            int insertColumnAt = 0;
+            foreach (int columnToKeep in indicesOfColumnsToKeep)
+            {
+                subMatrix.SetColumn(insertColumnAt, tempMatrix.GetColumn(columnToKeep)); 
+                insertColumnAt++;
+            }
+
+            return subMatrix;
+        }
+
+        /// <summary>
+        /// Returns a new matrix with all of the specified rows removed
+        /// </summary>
+        /// <param name="indicesOfRowsToRemove"></param> 
+        /// <returns></returns>
+        public Matrix RemoveRows(int[] indicesOfRowsToRemove)
+        {
+            Matrix returnMatrix = new Matrix(this);
+
+            foreach (int rowToRemove in indicesOfRowsToRemove)
+            {
+                returnMatrix = returnMatrix.RemoveRow(rowToRemove);
+
+                //Now that the matrix has shrunk by 1 row, all of the indices at or after that row need to decrease by 1
+                int arrayIndex = 0;
+                foreach (int index in indicesOfRowsToRemove)
+                {
+                    if (index >= rowToRemove)
+                    {
+                        indicesOfRowsToRemove[arrayIndex] = index - 1;
+                    }
+                    arrayIndex++;
+                }
+            }
+
+            return returnMatrix;
+        }
+
+        /// <summary>
+        /// Returns a new matrix with all of the specified columns removed
+        /// </summary>
+        /// <param name="indicesOfColumnsToRemove"></param>
+        /// <returns></returns>
+        public Matrix RemoveColumns(int[] indicesOfColumnsToRemove)
+        {
+            Matrix returnMatrix = new Matrix(this);
+            foreach (int columnToRemove in indicesOfColumnsToRemove)
+            {
+
+                returnMatrix = returnMatrix.RemoveColumn(columnToRemove);
+
+                //Now that the matrix has shrunk by 1 column, all of the indices at or after that column need to decrease by 1
+                int arrayIndex = 0;
+                foreach (int index in indicesOfColumnsToRemove)
+                {
+                    if (index >= columnToRemove)
+                    {
+                        indicesOfColumnsToRemove[arrayIndex] = index - 1;
+                    }
+                    arrayIndex++;
+                }
+            }
+
+            return returnMatrix;
         }
 
         /// <summary>
@@ -489,7 +596,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double GetCofactor(int rowIndex, int columnIndex)
         {
-            Matrix subMatrix = this.GetSubMatrix(rowIndex, columnIndex);
+            Matrix subMatrix = this.RemoveRow(rowIndex);
+            subMatrix = subMatrix.RemoveColumn(columnIndex);
 
             double determinantOfSubMatrix = subMatrix.Determinant();
 
@@ -564,9 +672,9 @@ namespace GeometryClassLibrary
             double[] row2 = { 0, Math.Cos(rotationAngle.Radians), -Math.Sin(rotationAngle.Radians)};
             double[] row3 = { 0, Math.Sin(rotationAngle.Radians), Math.Cos(rotationAngle.Radians)};
 
-            rotationMatrix.SetRowOfMatrix(0, row1);
-            rotationMatrix.SetRowOfMatrix(1, row2);
-            rotationMatrix.SetRowOfMatrix(2, row3);
+            rotationMatrix.SetRow(0, row1);
+            rotationMatrix.SetRow(1, row2);
+            rotationMatrix.SetRow(2, row3);
 
             return rotationMatrix;
         }
@@ -597,9 +705,9 @@ namespace GeometryClassLibrary
             double[] row2 = { 0, 1, 0};
             double[] row3 = { -Math.Sin(rotationAngle.Radians), 0, Math.Cos(rotationAngle.Radians)};
 
-            rotationMatrix.SetRowOfMatrix(0, row1);
-            rotationMatrix.SetRowOfMatrix(1, row2);
-            rotationMatrix.SetRowOfMatrix(2, row3);
+            rotationMatrix.SetRow(0, row1);
+            rotationMatrix.SetRow(1, row2);
+            rotationMatrix.SetRow(2, row3);
 
             return rotationMatrix;
         }
@@ -630,9 +738,9 @@ namespace GeometryClassLibrary
             double[] row2 = { Math.Sin(rotationAngle.Radians), Math.Cos(rotationAngle.Radians), 0 };
             double[] row3 = { 0, 0, 1 };
 
-            rotationMatrix.SetRowOfMatrix(0, row1);
-            rotationMatrix.SetRowOfMatrix(1, row2);
-            rotationMatrix.SetRowOfMatrix(2, row3);
+            rotationMatrix.SetRow(0, row1);
+            rotationMatrix.SetRow(1, row2);
+            rotationMatrix.SetRow(2, row3);
 
             return rotationMatrix;
         }
@@ -709,7 +817,27 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix RemoveRow(int rowIndexToDelete)
         {
-            return this.GetSubMatrix(rowIndexToDelete, -1);
+            Matrix returnMatrix = new Matrix(this.NumberOfRows - 1, this.NumberOfColumns);
+            int[] rowsToKeep = new int[this.NumberOfRows - 1];
+            int[] columnsToKeep = new int[this.NumberOfColumns];
+
+            int indexOfRowArray = 0;
+
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                if (i != rowIndexToDelete)
+                {
+                    rowsToKeep[indexOfRowArray] = i;
+                    indexOfRowArray++;
+                }
+            }
+
+            for (int i = 0; i < this.NumberOfColumns; i++)
+            {
+                columnsToKeep[i] = i;
+            }
+
+            return this.GetSubMatrix(rowsToKeep, columnsToKeep);
         }
 
         /// <summary>
@@ -719,7 +847,27 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix RemoveColumn(int columnIndexToDelete)
         {
-            return this.GetSubMatrix(-1, columnIndexToDelete);
+            Matrix returnMatrix = new Matrix(this.NumberOfRows, this.NumberOfColumns - 1);
+            int[] rowsToKeep = new int[this.NumberOfRows];
+            int[] columnsToKeep = new int[this.NumberOfColumns - 1];
+
+            int indexOfColumnArray = 0;
+
+            for (int i = 0; i < this.NumberOfColumns; i++)
+            {
+                if (i != columnIndexToDelete)
+                {
+                    columnsToKeep[indexOfColumnArray] = i;
+                    indexOfColumnArray++;
+                }
+            }
+
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                rowsToKeep[i] = i;
+            }
+
+            return this.GetSubMatrix(rowsToKeep, columnsToKeep);
         }
 
 
@@ -789,8 +937,8 @@ namespace GeometryClassLibrary
                 if (pivotRowIndex != columnIndex) // if largest value not on pivot, swap rows
                 {
                     double[] rowPtr = decomposedMatrix.GetRow(pivotRowIndex);
-                    decomposedMatrix.SetRowOfMatrix(pivotRowIndex, decomposedMatrix.GetRow(columnIndex));
-                    decomposedMatrix.SetRowOfMatrix(columnIndex, rowPtr);
+                    decomposedMatrix.SetRow(pivotRowIndex, decomposedMatrix.GetRow(columnIndex));
+                    decomposedMatrix.SetRow(columnIndex, rowPtr);
 
                     int tmp = permutationArray[pivotRowIndex]; // and swap permutation info
                     permutationArray[pivotRowIndex] = permutationArray[columnIndex];
@@ -821,8 +969,8 @@ namespace GeometryClassLibrary
 
                     // swap rows so 0.0 no longer on diagonal
                     double[] rowPtr = decomposedMatrix.GetRow(goodRow);
-                    decomposedMatrix.SetRowOfMatrix(goodRow, decomposedMatrix.GetRow(columnIndex));
-                    decomposedMatrix.SetRowOfMatrix(columnIndex, rowPtr);
+                    decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
+                    decomposedMatrix.SetRow(columnIndex, rowPtr);
 
                     int tmp = permutationArray[goodRow]; // and swap perm info
                     permutationArray[goodRow] = permutationArray[columnIndex];
@@ -994,13 +1142,13 @@ namespace GeometryClassLibrary
                 {
                     matrixA = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
                     matrixA.InsertMatrixAt(this, 0, 0);
-                    matrixA.SetColumnOfMatrix(this.NumberOfColumns - 1, matrixA.GetColumn(0));
+                    matrixA.SetColumn(this.NumberOfColumns - 1, matrixA.GetColumn(0));
                 }
                 else
                 {
                     matrixA = new Matrix(this.NumberOfRows + 1, this.NumberOfColumns);
                     matrixA.InsertMatrixAt(this, 0, 0);
-                    matrixA.SetRowOfMatrix(this.NumberOfRows - 1, matrixA.GetRow(0));
+                    matrixA.SetRow(this.NumberOfRows - 1, matrixA.GetRow(0));
                 }                
             }
 
@@ -1035,7 +1183,7 @@ namespace GeometryClassLibrary
         {
            double[] solutionColumn = SystemSolve(passedSolutionMatrix.GetColumn(0));
            Matrix solution = new Matrix(NumberOfRows, 1);
-           solution.SetColumnOfMatrix(0, solutionColumn);
+           solution.SetColumn(0, solutionColumn);
 
            return solution;
 

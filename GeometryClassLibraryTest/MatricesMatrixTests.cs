@@ -175,14 +175,14 @@ namespace ClearspanLibraryUnitTest
             double[] m4Row1 = { 4, 4, 4 };
             double[] m4Row2 = { 4, 4, 4 };
 
-            m1.SetRowOfMatrix(0, m1Row1);
-            m1.SetRowOfMatrix(1, m1Row2);
-            m2.SetRowOfMatrix(0, m2Row1);
-            m2.SetRowOfMatrix(1, m2Row2); 
-            m3.SetRowOfMatrix(0, m3Row1);
-            m3.SetRowOfMatrix(1, m3Row2);
-            m4.SetRowOfMatrix(0, m4Row1);
-            m4.SetRowOfMatrix(1, m4Row2);
+            m1.SetRow(0, m1Row1);
+            m1.SetRow(1, m1Row2);
+            m2.SetRow(0, m2Row1);
+            m2.SetRow(1, m2Row2); 
+            m3.SetRow(0, m3Row1);
+            m3.SetRow(1, m3Row2);
+            m4.SetRow(0, m4Row1);
+            m4.SetRow(1, m4Row2);
 
             MatricesMatrix testMatricesMatrix = new MatricesMatrix(2, 2);
 
@@ -198,10 +198,10 @@ namespace ClearspanLibraryUnitTest
             double[] expectedRow3 = { 3, 3, 4, 4, 4 };
             double[] expectedRow4 = { 3, 3, 4, 4, 4 };
 
-            expectedResult.SetRowOfMatrix(0, expectedRow1);
-            expectedResult.SetRowOfMatrix(1, expectedRow2);
-            expectedResult.SetRowOfMatrix(2, expectedRow3);
-            expectedResult.SetRowOfMatrix(3, expectedRow4);
+            expectedResult.SetRow(0, expectedRow1);
+            expectedResult.SetRow(1, expectedRow2);
+            expectedResult.SetRow(2, expectedRow3);
+            expectedResult.SetRow(3, expectedRow4);
 
             Matrix actualResult = testMatricesMatrix.ConvertToMatrix();
 
@@ -232,19 +232,19 @@ namespace ClearspanLibraryUnitTest
             double[] m4Row4 = { 4, 4, 4, 4 };
 
 
-            m1.SetRowOfMatrix(0, m1Row1);
+            m1.SetRow(0, m1Row1);
 
-            m2.SetRowOfMatrix(0, m2Row1);
-            m2.SetRowOfMatrix(1, m2Row2);
+            m2.SetRow(0, m2Row1);
+            m2.SetRow(1, m2Row2);
 
-            m3.SetRowOfMatrix(0, m3Row1);
-            m3.SetRowOfMatrix(1, m3Row2);
-            m3.SetRowOfMatrix(2, m3Row3);
+            m3.SetRow(0, m3Row1);
+            m3.SetRow(1, m3Row2);
+            m3.SetRow(2, m3Row3);
 
-            m4.SetRowOfMatrix(0, m4Row1);
-            m4.SetRowOfMatrix(1, m4Row2);
-            m4.SetRowOfMatrix(2, m4Row3);
-            m4.SetRowOfMatrix(3, m4Row4);
+            m4.SetRow(0, m4Row1);
+            m4.SetRow(1, m4Row2);
+            m4.SetRow(2, m4Row3);
+            m4.SetRow(3, m4Row4);
 
             MatricesMatrix testMatricesMatrix = new MatricesMatrix(2, 2);
 
@@ -263,13 +263,13 @@ namespace ClearspanLibraryUnitTest
             double[] expectedRow6 = { 0, 0, 4, 4, 4, 4 };
             double[] expectedRow7 = { 0, 0, 4, 4, 4, 4 };
 
-            expectedResult.SetRowOfMatrix(0, expectedRow1);
-            expectedResult.SetRowOfMatrix(1, expectedRow2);
-            expectedResult.SetRowOfMatrix(2, expectedRow3);
-            expectedResult.SetRowOfMatrix(3, expectedRow4);
-            expectedResult.SetRowOfMatrix(4, expectedRow5);
-            expectedResult.SetRowOfMatrix(5, expectedRow6);
-            expectedResult.SetRowOfMatrix(6, expectedRow7);
+            expectedResult.SetRow(0, expectedRow1);
+            expectedResult.SetRow(1, expectedRow2);
+            expectedResult.SetRow(2, expectedRow3);
+            expectedResult.SetRow(3, expectedRow4);
+            expectedResult.SetRow(4, expectedRow5);
+            expectedResult.SetRow(5, expectedRow6);
+            expectedResult.SetRow(6, expectedRow7);
 
 
             Matrix actualResult = testMatricesMatrix.ConvertToMatrix();
@@ -288,8 +288,8 @@ namespace ClearspanLibraryUnitTest
 
             double[] m2Column1 = { 2, 2, 2 };
 
-            m1.SetColumnOfMatrix(0, m1Column1);
-            m2.SetColumnOfMatrix(0, m2Column1);
+            m1.SetColumn(0, m1Column1);
+            m2.SetColumn(0, m2Column1);
             
             MatricesMatrix testMatricesMatrix = new MatricesMatrix(2, 1);
 
@@ -300,7 +300,7 @@ namespace ClearspanLibraryUnitTest
 
             double[] expectedColumn1 = { 1, 1, 2, 2, 2 };
 
-            expectedResult.SetColumnOfMatrix(0, expectedColumn1);
+            expectedResult.SetColumn(0, expectedColumn1);
 
             Matrix actualResult = testMatricesMatrix.ConvertToMatrix();
 
