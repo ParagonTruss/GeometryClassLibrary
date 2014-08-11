@@ -38,7 +38,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a point that is a distance away from the Vector's current basepoint that is equal to the vector's magnitude in the same direction as the vector
+        /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the same direction as the vector
         /// </summary>
         public Point DirectionPoint
         {
@@ -165,17 +165,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a new Vector with each component multiplied by the multiplier (order of terms does not matter)
+        /// Returns a new Vector with each component multiplied by the acalar (order of terms does not matter)
         /// </summary>
         /// <param name="passedVector"></param>
-        /// <param name="multiplier"></param>
+        /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Vector operator *(Vector passedVector, double multiplier)
+        public static Vector operator *(Vector passedVector, double scalar)
         {
 
-            double xComponent = passedVector.XComponentOfDirection.Millimeters * multiplier;
-            double yComponent = passedVector.YComponentOfDirection.Millimeters * multiplier;
-            double zComponent = passedVector.ZComponentOfDirection.Millimeters * multiplier;
+            double xComponent = passedVector.XComponentOfDirection.Millimeters * scalar;
+            double yComponent = passedVector.YComponentOfDirection.Millimeters * scalar;
+            double zComponent = passedVector.ZComponentOfDirection.Millimeters * scalar;
 
             Point newPoint = PointGenerator.MakePointWithMillimeters(xComponent, yComponent, zComponent);
             
@@ -183,18 +183,18 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a new Vector with each component multiplied by the multiplier (order of terms does not matter)
+        /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
-        /// <param name="multiplier"></param>
+        /// <param name="scalar"></param>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public static Vector operator *(double multiplier, Vector passedVector)
+        public static Vector operator *(double scalar, Vector passedVector)
         {
-            //returns a new Vector with each component multiplied by the multiplier
+            //returns a new Vector with each component multiplied by the scalar
 
-            double xComponent = passedVector.XComponentOfDirection.Millimeters * multiplier;
-            double yComponent = passedVector.YComponentOfDirection.Millimeters * multiplier;
-            double zComponent = passedVector.ZComponentOfDirection.Millimeters * multiplier;
+            double xComponent = passedVector.XComponentOfDirection.Millimeters * scalar;
+            double yComponent = passedVector.YComponentOfDirection.Millimeters * scalar;
+            double zComponent = passedVector.ZComponentOfDirection.Millimeters * scalar;
 
             Point newPoint = PointGenerator.MakePointWithMillimeters(xComponent, yComponent, zComponent);
 
@@ -355,11 +355,11 @@ namespace GeometryClassLibrary
 
             // determines a component that does not equal 0 to use as a probable factor
             if (this.XComponentOfDirection.Millimeters != 0)
-                compareTo = (this.XComponentOfDirection / v1.XComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection));
             else if (this.YComponentOfDirection.Millimeters != 0)
-                compareTo = (this.YComponentOfDirection / v1.YComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
             else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = (this.YComponentOfDirection / v1.YComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
             else
                 compareTo = new Dimension();
 
@@ -410,11 +410,11 @@ namespace GeometryClassLibrary
 
             // determines a component that does not equal 0 to use as a probable factor
             if (this.XComponentOfDirection.Millimeters != 0)
-                compareTo = (this.XComponentOfDirection / v1.XComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection));
             else if (this.YComponentOfDirection.Millimeters != 0)
-                compareTo = (this.YComponentOfDirection / v1.YComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
             else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = (this.YComponentOfDirection / v1.YComponentOfDirection).AbsoluteValue();
+                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
             else
                 compareTo = new Dimension();
 
@@ -442,7 +442,7 @@ namespace GeometryClassLibrary
         /// 
         /// In other words does not do this  <-------|------->
         /// 
-        /// It does this ------>|<-------
+        /// It does this: ------>|<-------
         /// 
         /// 
         /// </summary>

@@ -41,7 +41,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Unit Class Library">
-      <HintPath>..\..\..\Desktop\Unit Class Library.dll</HintPath>
+      <HintPath>..\..\Unit Class Library\Unit Class Library\bin\Debug\Unit Class Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
