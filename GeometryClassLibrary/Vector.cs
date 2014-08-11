@@ -285,7 +285,7 @@ namespace GeometryClassLibrary
         {
             Matrix returnMatrix = new Matrix(3, 1);
             double[] vectorArray = { XComponentOfDirection.Millimeters, YComponentOfDirection.Millimeters, ZComponentOfDirection.Millimeters };
-            returnMatrix.SetColumnOfMatrix(0, vectorArray);
+            returnMatrix.SetColumn(0, vectorArray);
             return returnMatrix;
         }
 

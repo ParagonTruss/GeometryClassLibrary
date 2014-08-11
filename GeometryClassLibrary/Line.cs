@@ -331,13 +331,13 @@ namespace GeometryClassLibrary
 
             Matrix pointsMatrix = new Matrix(4, 4);
 
-            pointsMatrix.SetRowOfMatrix(0, point1Line1);
-            pointsMatrix.SetRowOfMatrix(1, point2Line1);
-            pointsMatrix.SetRowOfMatrix(2, point1Line2);
-            pointsMatrix.SetRowOfMatrix(3, point2Line2);
+            pointsMatrix.SetRow(0, point1Line1);
+            pointsMatrix.SetRow(1, point2Line1);
+            pointsMatrix.SetRow(2, point1Line2);
+            pointsMatrix.SetRow(3, point2Line2);
 
             double[] onesColumn = { 1, 1, 1, 1 };
-            pointsMatrix.SetColumnOfMatrix(3, onesColumn);
+            pointsMatrix.SetColumn(3, onesColumn);
 
             // checks if it is equal to 0
             return Math.Abs(pointsMatrix.Determinant()) < Constants.AcceptedEqualityDeviationConstant;
