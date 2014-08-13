@@ -46,7 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="HashGenerator.cs" />
+    <Compile Include="Generators\HashGenerator.cs" />
+    <Compile Include="Generators\PointGenerator.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineExtensionMethods.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs" />
     <Compile Include="Line.cs" />
@@ -58,15 +59,12 @@
     <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
-    <Compile Include="PointGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shift.cs" />
     <Compile Include="Solid.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Generators\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
