@@ -69,6 +69,35 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Creates a matrix with the specified number of rows and columns, and containing the values in the given array, filled in from top-to-bottom and left-to-right
+        /// </summary>
+        /// <param name="passedNumRows"></param>
+        /// <param name="passedNumColumns"></param>
+        /// <param name="passedValuesInMatrix"></param>
+        public Matrix (int passedNumRows, int passedNumColumns, double[] passedValuesInMatrix)
+        {
+            Matrix newMatrix = new Matrix(passedNumRows, passedNumColumns);
+            int arrayIndex = 0;
+            for (int i = 0; i < passedNumRows; i++) //row loop
+            {
+                for (int j = 0; j < passedNumColumns; j++) //column loop
+                {
+                    if (arrayIndex < passedValuesInMatrix.Count())
+                    {
+                        newMatrix.SetElement(i, j, passedValuesInMatrix[arrayIndex]);
+                        arrayIndex++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            _matrix = newMatrix.getMatrixAs2DArray;
+        }
+
+        /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
         /// <param name="passedMatrix"></param>
