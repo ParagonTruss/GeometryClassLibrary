@@ -96,12 +96,9 @@ namespace GeometryClassLibraryTests
             PlaneRegion actualPlaneRegion = testPlaneRegion.Rotate(rotationAxis, rotationAngle);
             
             List<LineSegment> expectedLineSegments = new List<LineSegment>();
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218)));
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218), PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495)));
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495), PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809)));
-            PlaneRegion expectedPlaneRegion = new PlaneRegion(expectedLineSegments);
-
-            (actualPlaneRegion == expectedPlaneRegion).Should().BeTrue();
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(5.238195, 1.6816970, -1.919892), PointGenerator.MakePointWithInches(1.31623019, -1.08627088, -5.229959)));
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(1.3162301, -1.0862708, -5.229959), PointGenerator.MakePointWithInches(2.843930, -1.46406412, -0.379865)));
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(2.8439301, -1.4640641, -0.379865), PointGenerator.MakePointWithInches(5.238195, 1.681697053, -1.9198923)));
         }
 
         [TestMethod()]
@@ -119,14 +116,10 @@ namespace GeometryClassLibraryTests
 
             PlaneRegion actualPlaneRegion = testPlaneRegion.Translate(testDirectionVector, testDisplacement);
 
-            List<LineSegment> expectedLineSegments = new List<LineSegment>();
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(-3, 15, 12)));
-            expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 15, 12), PointGenerator.MakePointWithInches(0, 0, 0)));
-            PlaneRegion expectedPlaneRegion = new PlaneRegion(expectedLineSegments);
-
-            (actualPlaneRegion == expectedPlaneRegion).Should().BeTrue();
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(-3, 15, 12)));
+            actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-3, 15, 12), PointGenerator.MakePointWithInches(0, 0, 0)));
         }
     }
 }

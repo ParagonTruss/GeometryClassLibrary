@@ -18,10 +18,10 @@ namespace GeometryClassLibrary
             get { return _displacement; }
         }
 
-        private Angle _angleWithYZPlane; //polar angle
-        public Angle AngleWithYZPlane
+        private Angle _angleWithZAxis; //polar angle
+        public Angle AngleWithZAxis
         {
-            get { return _angleWithYZPlane; }
+            get { return _angleWithZAxis; }
         }
 
         private Angle _angleWithXZPlane; //azimuthal angle
@@ -48,34 +48,24 @@ namespace GeometryClassLibrary
         }
 
 
-        public Shift(Vector passedDisplacement, Angle passedAngleWithYZPlane, Angle passedAngleWithXZPlane)
+        public Shift(Vector passedDisplacement, Angle passedAngleWithZAxis, Angle passedAngleWithXZPlane)
         {
             this._displacement = passedDisplacement;
-            this._angleWithYZPlane = passedAngleWithYZPlane;
+            this._angleWithZAxis = passedAngleWithZAxis;
             this._angleWithXZPlane = passedAngleWithXZPlane;
         }
 
         public Shift()
         {
             this._displacement = new Vector();
-            this._angleWithYZPlane = new Angle();
+            this._angleWithZAxis = new Angle();
             this._angleWithXZPlane = new Angle();
         }
 
         public Shift(Vector passedDisplacement, Angle passedRotationAngle)
         {
             this._displacement = passedDisplacement;
-            this._angleWithYZPlane = passedRotationAngle;
-            this._angleWithXZPlane = new Angle();
-        }
-
-        public Shift(Vector passedDisplacement, Angle passedRotationAngle, Line passedRotationAxis)
-        {
-            this._displacement = passedDisplacement;
-            //Calculate Rotation Angle based on axis and passed angle
-            //this._rotationAngle = new Angle();
-
-            //Calculate Elevation Angle based on axis and passed angle
+            this._angleWithZAxis = passedRotationAngle;
             this._angleWithXZPlane = new Angle();
         }
 
@@ -91,7 +81,7 @@ namespace GeometryClassLibrary
             //return a new Shift with the new value
 
             Vector displacement = d1._displacement + d2.Displacement;
-            Angle rotationAngle = d1._angleWithYZPlane + d2._angleWithYZPlane;
+            Angle rotationAngle = d1._angleWithZAxis + d2._angleWithZAxis;
             Angle elevationAngle = d1._angleWithXZPlane + d2._angleWithXZPlane;
 
             return new Shift(displacement, rotationAngle, elevationAngle);
@@ -102,7 +92,7 @@ namespace GeometryClassLibrary
             //subtract the two Shifts
             //return a new Shift with the new value
             Vector displacement = d1._displacement - d2.Displacement;
-            Angle rotationAngle = d1._angleWithYZPlane - d2._angleWithYZPlane;
+            Angle rotationAngle = d1._angleWithZAxis - d2._angleWithZAxis;
             Angle elevationAngle = d1._angleWithXZPlane - d2._angleWithXZPlane;
 
             return new Shift(displacement, rotationAngle, elevationAngle);
@@ -132,7 +122,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public override int GetHashCode()
         {
-            List<object> parameters = new List<object> { this.Displacement, this.AngleWithYZPlane, this.AngleWithXZPlane };
+            List<object> parameters = new List<object> { this.Displacement, this.AngleWithZAxis, this.AngleWithXZPlane };
 
             return HashGenerator.GetHashCode(parameters);
         }
@@ -155,7 +145,7 @@ namespace GeometryClassLibrary
 
             return this.Displacement == sh.Displacement &&
                 this.AngleWithXZPlane == sh.AngleWithXZPlane &&
-                this.AngleWithYZPlane == sh.AngleWithYZPlane;
+                this.AngleWithZAxis == sh.AngleWithZAxis;
         }
 
         #endregion
@@ -170,7 +160,7 @@ namespace GeometryClassLibrary
         {
             //get negative instances of all of the shift's fields
             Angle returnAngleWithXZPlane = _angleWithXZPlane.Negate();
-            Angle returnAngleWithYZPlane = _angleWithYZPlane.Negate();
+            Angle returnAngleWithYZPlane = _angleWithZAxis.Negate();
             Vector returnDisplancement = _displacement.Negate();
 
             //create and return new shift

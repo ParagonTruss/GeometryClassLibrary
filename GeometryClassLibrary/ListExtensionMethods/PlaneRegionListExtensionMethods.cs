@@ -26,5 +26,17 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
+
+        public static IEnumerable<PlaneRegion> Shift(this IEnumerable<PlaneRegion> passedPlaneRegions, Shift passedShift)
+        {
+            List<PlaneRegion> shiftedRegions = new List<PlaneRegion>();
+
+            foreach (var region in passedPlaneRegions)
+            {
+                shiftedRegions.Add(region.Shift(passedShift));
+            }
+
+            return shiftedRegions;
+        }
     }
 }

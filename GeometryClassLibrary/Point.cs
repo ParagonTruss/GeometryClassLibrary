@@ -357,6 +357,11 @@ namespace GeometryClassLibrary
         /// <returns>new dimension representing the distance</returns>
         public Dimension DistanceTo(Point _endPoint)
         {
+            if (this == _endPoint)
+            {
+                return new Dimension();
+            }
+
             //distance formula
             double term1 = Math.Pow(( _x - _endPoint._x).Millimeters, 2);
             double term2 = Math.Pow(( _y - _endPoint._y).Millimeters, 2);
@@ -517,7 +522,7 @@ namespace GeometryClassLibrary
 
         public Point Shift(Shift passedShift)
         {
-            Matrix rotationAboutZ = Matrix.RotationMatrixAboutZ(passedShift.AngleWithYZPlane);
+            Matrix rotationAboutZ = Matrix.RotationMatrixAboutZ(passedShift.AngleWithZAxis);
             Matrix rotationAboutX = Matrix.RotationMatrixAboutX(passedShift.AngleWithXZPlane);
 
             Matrix pointMatrix = this.ConvertToMatrixColumn();
