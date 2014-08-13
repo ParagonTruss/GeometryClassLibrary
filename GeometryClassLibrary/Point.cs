@@ -39,7 +39,6 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-
         /// <summary>
         /// Zero Constructor
         /// </summary>
@@ -49,7 +48,7 @@ namespace GeometryClassLibrary
             _y = new Dimension();
             _z = new Dimension();
         }
-
+        
         /// <summary>
         /// copy Constructor
         /// </summary>
