@@ -382,9 +382,10 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="indicesOfRowsToRemove"></param> 
         /// <returns></returns>
-        public Matrix RemoveRows(int[] indicesOfRowsToRemove)
+        public Matrix RemoveRows(int[] passedIndicesOfRowsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
+            int[] indicesOfRowsToRemove = new int[passedIndicesOfRowsToRemove];
 
             foreach (int rowToRemove in indicesOfRowsToRemove)
             {
@@ -410,9 +411,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="indicesOfColumnsToRemove"></param>
         /// <returns></returns>
-        public Matrix RemoveColumns(int[] indicesOfColumnsToRemove)
+        public Matrix RemoveColumns(int[] passedIndicesOfColumnsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
+            int[] indicesOfColumnsToRemove = new int[passedIndicesOfRowsToRemove];
+
             foreach (int columnToRemove in indicesOfColumnsToRemove)
             {
                 returnMatrix = returnMatrix.RemoveColumn(columnToRemove);
