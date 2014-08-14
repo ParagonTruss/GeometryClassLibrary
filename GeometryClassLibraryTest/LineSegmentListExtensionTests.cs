@@ -11,11 +11,6 @@ namespace GeometryClassLibraryTests
     [TestClass]
     public class LineSegmentListExtensionTests
     {
-        [TestMethod()]
-        public void LineSegmentList_RotatePointsAboutAxisTest()
-        {
-            Assert.Fail();
-        }
 
         [TestMethod()]
         public void LineSegmentList_DoFormClosedRegionTest()

@@ -40,8 +40,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unit Class Library">
-      <HintPath>..\..\Unit Class Library\Unit Class Library\bin\Debug\Unit Class Library.dll</HintPath>
+    <Reference Include="Unit Class Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\UnitClassLibrary.1.0.0.2\lib\net40\Unit Class Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

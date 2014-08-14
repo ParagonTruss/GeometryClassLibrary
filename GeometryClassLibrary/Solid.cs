@@ -398,9 +398,19 @@ namespace GeometryClassLibrary
             _planeRegions = new List<PlaneRegion>();
         }
 
-        public Solid(List<LineSegment> passedLineSegments)
+        public Solid(IEnumerable<LineSegment> passedLineSegments)
         {
             _planeRegions = passedLineSegments.MakeCoplanarLineSegmentsIntoRegions();
+        }
+
+        public Solid(IEnumerable<PlaneRegion> passedPlaneRegions)
+        {
+            _planeRegions = new List<PlaneRegion>(passedPlaneRegions);
+        }
+
+        public Solid(Solid passedSolid)
+        {
+            _planeRegions = passedSolid._planeRegions;
         }
 
         public List<LineSegment> LineSegments
@@ -423,40 +433,16 @@ namespace GeometryClassLibrary
             }
         }
 
-        ///// <summary>
-        ///// Shifts all of the planes.
-        ///// </summary>
-        ///// <param name="passedShift"></param>
-        ///// <param name="passedRotationAxis"></param>
-        //public void Shift(Shift passedShift, Line passedRotationAxis)
-        //{
-        //    _planeRegions.Translate(passedShift.Displacement);
-        //    _planeRegions.Rotate(passedRotationAxis, passedShift.AngleWithXYPlane);
-        //    throw new NotImplementedException();
-        //    _shiftBackToOriginal = _shiftBackToOriginal + passedShift;
-        //}
-
         /// <summary>
-        /// Shifts all of the planes.
+        /// Shifts the solid to another location and orientation
         /// </summary>
         /// <param name="passedShift"></param>
         /// <param name="passedRotationAxis"></param>
-        public void Shift(Shift passedShift)
+        public Solid Shift(Shift passedShift)
         {
-            _planeRegions.Translate(passedShift.Displacement);
-            //_planeRegions.Rotate(passedShift.RotationAxis, passedShift.AngleWithXYPlane);
-            throw new NotImplementedException();
-        }
+            List<PlaneRegion> shiftedRegions = new List<PlaneRegion>( _planeRegions.Shift(passedShift));
 
-        public PlaneRegion PlaneRegion
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            return new Solid(shiftedRegions);
         }
     }
 }
