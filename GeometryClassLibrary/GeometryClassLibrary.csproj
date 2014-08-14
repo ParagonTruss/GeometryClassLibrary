@@ -40,8 +40,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unit Class Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Unit Class Library">
       <HintPath>..\packages\UnitClassLibrary.1.0.0.2\lib\net40\Unit Class Library.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -65,7 +64,9 @@
     <Compile Include="Solid.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

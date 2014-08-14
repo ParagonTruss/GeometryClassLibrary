@@ -385,7 +385,8 @@ namespace GeometryClassLibrary
         public Matrix RemoveRows(int[] passedIndicesOfRowsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
-            int[] indicesOfRowsToRemove = new int[passedIndicesOfRowsToRemove];
+            int[] indicesOfRowsToRemove = new int[passedIndicesOfRowsToRemove.Count()];
+            passedIndicesOfRowsToRemove.CopyTo(indicesOfRowsToRemove, 0);
 
             foreach (int rowToRemove in indicesOfRowsToRemove)
             {
@@ -414,7 +415,8 @@ namespace GeometryClassLibrary
         public Matrix RemoveColumns(int[] passedIndicesOfColumnsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
-            int[] indicesOfColumnsToRemove = new int[passedIndicesOfRowsToRemove];
+            int[] indicesOfColumnsToRemove = new int[passedIndicesOfColumnsToRemove.Count()];
+            passedIndicesOfColumnsToRemove.CopyTo(indicesOfColumnsToRemove, 0);
 
             foreach (int columnToRemove in indicesOfColumnsToRemove)
             {
