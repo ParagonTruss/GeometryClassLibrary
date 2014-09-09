@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FluentAssertions;
 using UnitClassLibrary;
@@ -255,16 +257,16 @@ namespace GeometryClassLibraryTests
 
         [TestMethod()]
         public void Point_ShiftTest()
-        {
-            //
-            
+        {            
             Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);
 
             Vector displacementVector = new Vector();
                 //new Vector(PointGenerator.MakePointWithMillimeters(1, -1, 1));
-            Angle angleWithYZPlane = new Angle(AngleType.Degree, 45);
-            Angle angleWithXZPlane = new Angle(AngleType.Degree, 112);
-            Shift testShift = new Shift(displacementVector, angleWithYZPlane, angleWithXZPlane);
+            Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
+            Rotation zRotation = new Rotation(Line.Z_AXIS, angleAboutZAxis);
+            Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
+            Rotation xRotation = new Rotation(Line.X_AXIS, angleAboutXAxis);
+            Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
 
             Point actual1 = point1.Shift(testShift);
 
@@ -280,9 +282,11 @@ namespace GeometryClassLibraryTests
             Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);
 
             Vector displacementVector = new Vector();
-            Angle angleWithYZPlane = new Angle(AngleType.Degree, 45);
-            Angle angleWithXZPlane = new Angle(AngleType.Degree, 112);
-            Shift testShift = new Shift(displacementVector, angleWithYZPlane, angleWithXZPlane);
+            Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
+            Rotation zRotation = new Rotation(Line.Z_AXIS, angleAboutZAxis);
+            Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
+            Rotation xRotation = new Rotation(Line.X_AXIS, angleAboutXAxis);
+            Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
 
             Point actual1 = point1.Shift(testShift);
 

@@ -276,6 +276,44 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [TestMethod()]
+        public void Line_RotateTest_AboutReferencePoint()
+        {
+            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
+            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
+
+            Line toRotate = new Line(start, end);
+            Line startPointYAxis = new Line(start, PointGenerator.MakePointWithInches(0, 2, 3)); //relative y axis
+
+            Angle rotationAngle = new Angle(AngleType.Degree, 90);
+
+            Line afterRotate = toRotate.Rotate(startPointYAxis, rotationAngle);
+
+            Point expectedStart = new Point(start);
+            Point expectedEnd = PointGenerator.MakePointWithInches(2, 1, 3);
+            Line expectedResult = new Line(expectedStart, expectedEnd);
+
+            (expectedResult == afterRotate).Should().BeTrue();
+        }
+
+        [TestMethod()]
+        public void Line_ShiftTest_Translate()
+        {
+            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
+            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
+
+            Line toShift = new Line(start, end);
+
+
+
+
+
+
+
+
+            
+        }
+
+        [TestMethod()]
         public void Line_TranslateTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithMillimeters(1, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0));
