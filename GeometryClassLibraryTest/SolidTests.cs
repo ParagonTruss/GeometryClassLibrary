@@ -101,9 +101,9 @@ namespace ClearspanTypeLibrary.Tests
             //rotate 90 degrees towards z
             Vector displacementVector = new Vector(); //No displacement, just rotation
             Angle zAngle = new Angle(AngleType.Degree, 90);
-            Rotation zRotation = new Rotation(Line.Z_AXIS, zAngle);
+            Rotation zRotation = new Rotation(Line.ZAxis, zAngle);
             Angle xAngle = new Angle(AngleType.Degree, 90); //This is the X axis
-            Rotation xRotation = new Rotation(Line.X_AXIS, xAngle);
+            Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Shift ninetyShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
             Solid shifted = Solid.Shift(ninetyShift);
 
@@ -124,25 +124,25 @@ namespace ClearspanTypeLibrary.Tests
             Solid Solid = new Solid();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
             Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
 
             //rotate 90 degrees toward z
             Vector displacementVector = new Vector(); //No displacement, just rotation
             Angle xAngle = new Angle(AngleType.Degree, 90);
-            Rotation xRotation = new Rotation(Line.X_AXIS, xAngle);
+            Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             //Angle xzAngle = new Angle(AngleType.Degree, 0);
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
             Solid s = new Solid(Solid.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(0, 0, 4))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 4))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 4), PointGenerator.MakePointWithMillimeters(0, 0, 4))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 4), PointGenerator.MakePointWithMillimeters(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
 
         }
 
@@ -191,7 +191,7 @@ namespace ClearspanTypeLibrary.Tests
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
-            Rotation xRotation = new Rotation(Line.X_AXIS, xAngle);
+            Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches( 1, -2, 5));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
@@ -217,8 +217,8 @@ namespace ClearspanTypeLibrary.Tests
             Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, 90);
-            Rotation xRotation = new Rotation(Line.X_AXIS, xAngle);
+            Angle xAngle = new Angle(AngleType.Degree, 63);
+            Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
@@ -226,14 +226,42 @@ namespace ClearspanTypeLibrary.Tests
 
             Solid s2 = s.Shift(ninetyShift.Negate());
 
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue(); //no change
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); 
         }
 
         [TestMethod()]
-        public void Solid_ShiftTest_OffAxisRotateAndTranslate()
+        public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate()
+        {
+            Solid Solid = new Solid();
+
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+
+            //rotate 90 degrees toward z
+            Angle xAngle = new Angle(AngleType.Degree, -90);
+            Line testAxis = new Line(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 1));
+            Rotation xRotation = new Rotation(testAxis, xAngle);
+            Vector displacementVector = new Vector(PointGenerator.MakePointWithMillimeters(-1, 2, 5));
+            Shift ninetyShift = new Shift(displacementVector, xRotation);
+
+            Solid s = new Solid(Solid.Shift(ninetyShift));
+
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 5), PointGenerator.MakePointWithMillimeters(4, 3, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 5), PointGenerator.MakePointWithMillimeters(4, -5, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(4, -5, 5), PointGenerator.MakePointWithMillimeters(0, -5, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, -5, 5), PointGenerator.MakePointWithMillimeters(0, 3, 5))).Should().BeTrue(); 
+
+        }
+
+        [TestMethod()]
+        public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
             Solid Solid = new Solid();
 
@@ -246,20 +274,21 @@ namespace ClearspanTypeLibrary.Tests
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
-            Rotation xRotation = new Rotation(new Line(PointGenerator.MakePointWithInches(0 ,0, 0), PointGenerator.MakePointWithInches(1, 1, 0)), xAngle);
-            Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(1, -2, 5));
+            //Line testAxis = new Line(PointGenerator.MakePointWithInches(0, 1, -3), PointGenerator.MakePointWithInches(2, 0, -5));
+            Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
+            Rotation xRotation = new Rotation(testAxis, xAngle);
+            Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 0));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
             Solid s = new Solid(Solid.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 5), PointGenerator.MakePointWithInches(9, -2, 5))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(9, -2, 5), PointGenerator.MakePointWithInches(9, -2, 9))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(9, -2, 9), PointGenerator.MakePointWithInches(1, -2, 9))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 9), PointGenerator.MakePointWithInches(1, -2, 5))).Should().BeTrue(); //from y axis to z axis
+            Solid s2 = s.Shift(ninetyShift.Negate());
 
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
+            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
-
-
 
 
 

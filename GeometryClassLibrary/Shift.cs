@@ -229,7 +229,7 @@ namespace GeometryClassLibrary
 
             //create and return new shift
             Shift test = new Shift(returnDisplancement, returnRotations);
-            test.isNegate = true;
+            test._isNegatedShift = true;
             return test;
         }
         #endregion

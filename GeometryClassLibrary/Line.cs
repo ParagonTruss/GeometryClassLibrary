@@ -14,9 +14,9 @@ namespace GeometryClassLibrary
     public class Line
     {
 
-        public readonly static Line X_AXIS = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0));
-        public readonly static Line Y_AXIS = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
-        public readonly static Line Z_AXIS = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
+        public readonly static Line XAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0));
+        public readonly static Line YAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
+        public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
     
 
 
@@ -346,8 +346,8 @@ namespace GeometryClassLibrary
             pointsMatrix.SetColumn(3, onesColumn);
 
             // checks if it is equal to 0
-            double test = Math.Abs(pointsMatrix.Determinant());
-            return  test < Constants.AcceptedEqualityDeviationConstant;
+            double determinate = Math.Abs(pointsMatrix.Determinant());
+            return determinate < Constants.AcceptedEqualityDeviationConstant;
         }
 
         public Line Translate(Vector passedDirectionVector, Dimension passedDisplacement)

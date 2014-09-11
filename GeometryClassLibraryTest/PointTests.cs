@@ -263,9 +263,9 @@ namespace GeometryClassLibraryTests
             Vector displacementVector = new Vector();
                 //new Vector(PointGenerator.MakePointWithMillimeters(1, -1, 1));
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
-            Rotation zRotation = new Rotation(Line.Z_AXIS, angleAboutZAxis);
+            Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
-            Rotation xRotation = new Rotation(Line.X_AXIS, angleAboutXAxis);
+            Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
             Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
 
             Point actual1 = point1.Shift(testShift);
@@ -283,9 +283,9 @@ namespace GeometryClassLibraryTests
 
             Vector displacementVector = new Vector();
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
-            Rotation zRotation = new Rotation(Line.Z_AXIS, angleAboutZAxis);
+            Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
-            Rotation xRotation = new Rotation(Line.X_AXIS, angleAboutXAxis);
+            Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
             Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
 
             Point actual1 = point1.Shift(testShift);

@@ -20,9 +20,9 @@ namespace GeometryClassLibrary
                 catch (Exception)
                 {
 
-                    return 0.00005;
+                    return 0.000005;
                 }
-                return 0.00005;
+                return 0.000005;
 
             } // a big hippo was here
 
