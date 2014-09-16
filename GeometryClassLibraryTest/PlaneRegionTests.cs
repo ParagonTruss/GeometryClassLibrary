@@ -121,5 +121,112 @@ namespace GeometryClassLibraryTests
             actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(-3, 15, 12)));
             actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-3, 15, 12), PointGenerator.MakePointWithInches(0, 0, 0)));
         }
+
+        [TestMethod()]
+        public void PlaneRegion_Centorid()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            PlaneRegion testPlaneRegion = new PlaneRegion(bounds);
+
+            Point center = testPlaneRegion.Centroid();
+            Point expected = PointGenerator.MakePointWithMillimeters(-2.5, 3, 0);
+
+            center.X.Millimeters.Should().BeApproximately(expected.X.Millimeters, 0.00001);
+            center.Y.Millimeters.Should().BeApproximately(expected.Y.Millimeters, 0.00001);
+            center.Z.Millimeters.Should().BeApproximately(expected.Z.Millimeters, 0.00001);
+
+            //make sure the centroid is in the region
+            testPlaneRegion.Contains(center).Should().BeTrue();
+
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-3, -2, 0), PointGenerator.MakePointWithMillimeters(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, -1), PointGenerator.MakePointWithMillimeters(0, 2, 3)));
+            PlaneRegion testPlaneRegion2 = new PlaneRegion(lineSegments);
+
+            Point center2 = testPlaneRegion2.Centroid();
+            Point expected2 = PointGenerator.MakePointWithMillimeters(-0.6666667, 0.33333333, 0.66666667);
+
+            center2.X.Millimeters.Should().BeApproximately(expected2.X.Millimeters, 0.00001);
+            center2.Y.Millimeters.Should().BeApproximately(expected2.Y.Millimeters, 0.00001);
+            center2.Z.Millimeters.Should().BeApproximately(expected2.Z.Millimeters, 0.00001);
+
+            //make sure the centroid is in the region
+            testPlaneRegion2.Contains(center2).Should().BeTrue();
+        }
+
+        [TestMethod()]
+        public void PlaneRegion_Copy()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            PlaneRegion testPlaneRegion = new PlaneRegion(bounds);
+
+            PlaneRegion planeCopy = new PlaneRegion(testPlaneRegion);
+
+            //make sure it copied correctly 
+            foreach (LineSegment line in testPlaneRegion.PlaneBoundaries)
+            {
+                planeCopy.PlaneBoundaries.Contains(line).Should().BeTrue();
+            }
+            (planeCopy.BasePoint == testPlaneRegion.BasePoint).Should().BeTrue();
+            (planeCopy.NormalVector == testPlaneRegion.NormalVector).Should().BeTrue();
+
+            //now make sure the copy is independent by shifting it and then testing again
+            planeCopy = planeCopy.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(1, 4, -2)), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
+
+            foreach (LineSegment line in testPlaneRegion.PlaneBoundaries)
+            {
+                planeCopy.PlaneBoundaries.Contains(line).Should().BeFalse();
+            }
+            (planeCopy.BasePoint == testPlaneRegion.BasePoint).Should().BeFalse();
+            (planeCopy.NormalVector == testPlaneRegion.NormalVector).Should().BeFalse();
+        }
+
+        [TestMethod()]
+        public void PlaneRegion_ContainsPoint()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            PlaneRegion testPlaneRegion = new PlaneRegion(bounds);
+
+            Point test = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
+            Point test2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
+
+            testPlaneRegion.Contains(test).Should().BeTrue();
+            testPlaneRegion.Contains(test2).Should().BeFalse();
+
+            //make sure the sides are not included
+            Point sideTest = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            testPlaneRegion.Contains(sideTest).Should().BeFalse();
+
+            //make sure the PlaneRegion contains the centroid
+            testPlaneRegion.Contains(testPlaneRegion.Centroid()).Should().BeTrue();
+
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-3, -2, 0), PointGenerator.MakePointWithMillimeters(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, -1), PointGenerator.MakePointWithMillimeters(0, 2, 3)));
+            PlaneRegion testPlaneRegion2 = new PlaneRegion(lineSegments);
+
+            //make sure the PlaneRegion contains the centroid
+            Point center = testPlaneRegion2.Centroid();
+            testPlaneRegion2.Contains(center).Should().BeTrue();
+
+            Point test3 = center.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
+            testPlaneRegion2.Contains(test3).Should().BeFalse();
+
+        }
+
     }
 }

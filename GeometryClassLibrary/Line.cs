@@ -17,8 +17,6 @@ namespace GeometryClassLibrary
         public readonly static Line XAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0));
         public readonly static Line YAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
         public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
-    
-
 
         #region private fields and constants
         //Properties that define a line:

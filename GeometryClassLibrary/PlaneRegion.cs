@@ -19,14 +19,6 @@ namespace GeometryClassLibrary
         }
         private List<LineSegment> _planeBoundaries;
 
-        public Line CenterPoint
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public Area Area
         {
             get
@@ -44,6 +36,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(PlaneRegion region1, PlaneRegion region2)
         {
+            if ((object)region1 == null || (object)region2 == null)
+            {
+                if ((object)region1 == null && (object)region2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
             return region1.Equals(region2);
         }
 
@@ -52,6 +52,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(PlaneRegion region1, PlaneRegion region2)
         {
+            if (region1 == null || region2 == null)
+            {
+                if (region1 == null && region2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
             return !region1.Equals(region2);
         }
 
@@ -111,6 +119,16 @@ namespace GeometryClassLibrary
                 _planeBoundaries = roundedBoundaryList;
             }
         }
+
+        /// <summary>
+        /// creates a new PlaneRegion that is a copy of the inputted PlaneRegion
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public PlaneRegion(PlaneRegion planeToCopy)
+            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
+            //constructing a plane fron a List<LineSegment>
+            : this(planeToCopy.PlaneBoundaries, 3) { }
+
 
         public PlaneRegion(List<Point> passedPoints)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
@@ -494,5 +512,87 @@ namespace GeometryClassLibrary
         {
            return new PlaneRegion( this.PlaneBoundaries.Shift(passedShift));
         }
+
+        /// <summary>
+        /// Returns the centoid (center point) of the PlaneRegion
+        /// </summary>
+        /// <returns>the region's center as a point</returns>
+        public Point Centroid()
+        {
+            //the centorid is the average of all the points
+            Dimension xSum = new Dimension();
+            Dimension ySum = new Dimension();
+            Dimension zSum = new Dimension();
+
+            //we count each point twice
+            //the reason why we have to add all of the points twice is because we do not know which way the 
+            //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
+            int count = PlaneBoundaries.Count * 2;
+
+            //sum up each of the points
+            foreach (LineSegment line in PlaneBoundaries)
+            {
+                xSum += line.BasePoint.X + line.EndPoint.X;
+                ySum += line.BasePoint.Y + line.EndPoint.Y;
+                zSum += line.BasePoint.Z + line.EndPoint.Z;
+            }
+
+            //now divide it by the number of points to find the average values
+            return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
+
+        }
+
+        /// <summary>
+        /// Returns true if the PlaneRegion is valid (is a closed region and the LineSegments are all coplaner)
+        /// </summary>
+        /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
+        public bool isValidPlaneRegion(int passedNumberOfDecimalsToCheck)
+        {
+            List<LineSegment> roundedBoundaryList = (List<LineSegment>)PlaneBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
+            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
+            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
+
+            if (isClosed && areCoplanar)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the point is contained within this PlaneRegion
+        /// </summary>
+        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
+        /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
+        public new bool Contains(Point passedPoint)
+        {
+            //check if it is in our plane first
+            if(base.Contains(passedPoint))
+            {
+                //now check if it is in the bounds each line at a time
+                foreach (LineSegment line in PlaneBoundaries)
+                {
+                    //find the plane perpendicular to this plane that represents the side we are on
+                    
+                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
+                    Vector divisionPlaneNormal = NormalVector.CrossProduct(line.DirectionVector);
+
+                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
+                    Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);
+
+                    //if the point is on the side outside of our region we know it is not in it and can return
+                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
+                    {
+                        return false;
+                    }
+                }
+
+                //if it is on the right side of all the sides than we know the point must be inside the region
+                return true;
+            }
+            //if its not in the Plane than it is obviously not in the PlaneRegion
+            return false;
+        }
+
     }
 }
