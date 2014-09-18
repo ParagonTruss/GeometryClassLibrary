@@ -50,9 +50,14 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+<<<<<<< HEAD
+    <Reference Include="Unit Class Library">
+      <HintPath>..\..\unit-class-library\Unit Class Library\bin\Debug\Unit Class Library.dll</HintPath>
+=======
     <Reference Include="Unit Class Library, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UnitClassLibrary.1.0.0.2\lib\net40\Unit Class Library.dll</HintPath>
+>>>>>>> ca670ff753c06b9ccc185d3ce8a19ad995c3c188
     </Reference>
   </ItemGroup>
   <Choose>

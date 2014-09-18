@@ -322,8 +322,7 @@ namespace GeometryClassLibrary
         
         
         #endregion
-
-
+        
         /// <summary>
         /// Returns the number of rows of the matrix with the largest number of rows in the specified row of the MatricesMatrix
         /// </summary>
@@ -366,6 +365,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Strips out all the elements from each Matrix of a MatricesMatrix and inserts them into the approprate places of a new Matrix
+        /// For a more detailed explanation, see http://stackoverflow.com/questions/24678305/converting-a-2d-array-of-2d-arrays-into-a-single-2d-array
         /// </summary>
         /// <returns></returns>
         public Matrix ConvertToMatrix()
@@ -376,8 +376,10 @@ namespace GeometryClassLibrary
             int nextRow = 0;
             int nextCol = 0;
 
+            //Loop through the rows of this matrices matrix
             for (int row = 0; row < this.NumberOfRows; row++)
             {
+                //Loop through the columns of this matrices matrix
                 for (int col = 0; col < this.NumberOfColumns; col++)
                 {
                     Matrix currentMatrix = this.GetElement(row, col);

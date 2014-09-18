@@ -24,7 +24,7 @@ namespace GeometryClassLibrary
                 }
                 return 0.0000001;
 
-            }
+            } // a big hippo was here
 
         }
     }

@@ -93,16 +93,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(List<LineSegment> passedBoundaries)
-            : base(passedBoundaries)
-        {
-            bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.AreAllCoplanar();
-
-            if (isClosed && areCoplanar)
-            {
-                _planeBoundaries = passedBoundaries;
-            }
-        }
+            : this(passedBoundaries, 3) { }
 
         /// <summary>
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region within the given tolerance
@@ -497,6 +488,11 @@ namespace GeometryClassLibrary
             set
             {
             }
+        }
+
+        public PlaneRegion Shift(Shift passedShift)
+        {
+           return new PlaneRegion( this.PlaneBoundaries.Shift(passedShift));
         }
     }
 }

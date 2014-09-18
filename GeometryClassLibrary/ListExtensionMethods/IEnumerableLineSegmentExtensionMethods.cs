@@ -208,5 +208,17 @@ namespace GeometryClassLibrary
             }
 
         }
+
+                public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)
+                {
+                    List<LineSegment> shiftedSegments = new List<LineSegment>();
+
+                    foreach (var segment in passedLineSegments)
+                    {
+                      shiftedSegments.Add(  segment.Shift(passedShift));
+                    }
+
+                    return shiftedSegments;
+                }
     }
 }

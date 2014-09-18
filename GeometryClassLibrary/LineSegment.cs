@@ -16,6 +16,11 @@ namespace GeometryClassLibrary
         {
             get 
             {
+                if(MagnitudeOfDirectionVector == new Dimension())
+                {
+                    return new Point();
+                }
+
                 Dimension xOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.X.Millimeters + (_length.Millimeters * XComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
                 Dimension yOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Y.Millimeters + (_length.Millimeters * YComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
                 Dimension zOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Z.Millimeters + (_length.Millimeters * ZComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
@@ -213,6 +218,10 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        
+
+        public LineSegment Shift(Shift passedShift)
+        {
+            return new LineSegment(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
+        }
     }
 }
