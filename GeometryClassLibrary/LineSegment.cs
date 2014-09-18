@@ -258,5 +258,36 @@ namespace GeometryClassLibrary
             //now we have the two projected points and we can make a line segment which represents the porjected line
             return new LineSegment(newBasePoint, newEndPoint);
         }
+
+
+        /// <summary>
+        /// Slices this lineSegment into two lineSegments at the given point and returns them with the longer segment first
+        /// or the original line segment if the point is not on it
+        /// </summary>
+        /// <param name="spotToSliceAt">Spot on the line to slice at</param>
+        /// <returns>returns the two parts the LineSegment is sliced into, or the original line segment if the point is not on it</returns>
+        public List<LineSegment> Slice(Point spotToSliceAt)
+        {
+            if (spotToSliceAt.IsOnLineSegment(this))
+            {
+                List<LineSegment> returnLines = new List<LineSegment>();
+
+                //add the two segments to the return list
+                returnLines.Add(new LineSegment(this.BasePoint, spotToSliceAt));
+                returnLines.Add(new LineSegment(spotToSliceAt, this.EndPoint));
+
+                //sort them so the longest is first (sort is ascending by default so we need to reverse if)
+                returnLines.Sort();
+                returnLines.Reverse();
+
+                return returnLines;
+            }
+            else
+            {
+                //if its not on the line just return the original segment
+                return new List<LineSegment>() { this };
+            }
+        }
+
     }
 }

@@ -204,21 +204,21 @@ namespace GeometryClassLibrary
             }
             else
             {
-                return null;
+                return new Area();
             }
 
         }
 
-                public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)
-                {
-                    List<LineSegment> shiftedSegments = new List<LineSegment>();
+        public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)
+        {
+            List<LineSegment> shiftedSegments = new List<LineSegment>();
 
-                    foreach (var segment in passedLineSegments)
-                    {
-                      shiftedSegments.Add(  segment.Shift(passedShift));
-                    }
+            foreach (var segment in passedLineSegments)
+            {
+                shiftedSegments.Add(  segment.Shift(passedShift));
+            }
 
-                    return shiftedSegments;
-                }
+            return shiftedSegments;
+        }
     }
 }

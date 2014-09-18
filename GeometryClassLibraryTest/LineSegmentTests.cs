@@ -228,5 +228,51 @@ namespace ClearspanTypeLibrary.Tests
             result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
         }
+
+        [TestMethod()]
+        public void LineSegment_SliceWithPoint()
+        {
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));
+            Point midPoint = PointGenerator.MakePointWithMillimeters(1, 1, 2.5);
+            Point notOnLine = PointGenerator.MakePointWithMillimeters(1, 1, 2);
+            Point onLine = PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751);
+
+            List<LineSegment> expectedwithMidPoint = new List<LineSegment>();
+            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(1, 1, 2.5)));
+            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 2.5), PointGenerator.MakePointWithMillimeters(0, 2, 1)));
+
+            List<LineSegment> splitMidPoint = testSegment.Slice(midPoint);
+
+            //its the midpoint so the lengths should be the same and the order is ambiguos
+            (splitMidPoint[0].Length == splitMidPoint[1].Length).Should().BeTrue();
+
+            //now check of the segments are the same
+            (splitMidPoint.Count == expectedwithMidPoint.Count).Should().BeTrue();
+            foreach (LineSegment line in expectedwithMidPoint)
+            {
+                splitMidPoint.Contains(line).Should().BeTrue();
+            }
+
+            //now check to make sure it works right for a point not on the line
+            List<LineSegment> offPointResult = testSegment.Slice(notOnLine);
+
+            //now check of the segments are the same
+            (offPointResult.Count == 1).Should().BeTrue();
+            (offPointResult[0] == testSegment).Should().BeTrue();
+
+            //now try a more generic point
+            List<LineSegment> expectedOnLine = new List<LineSegment>();
+            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751), PointGenerator.MakePointWithMillimeters(0, 2, 1)));
+            //thiss second one is the unitvector so it is only 1 in length and is smaller so it should go second
+            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751)));
+
+            List<LineSegment> splitOnLine = testSegment.Slice(onLine);
+            //now check of the segments are the same
+            (splitOnLine.Count == expectedOnLine.Count).Should().BeTrue();
+            for(int i = 0; i < splitOnLine.Count; i++)
+            {
+                (splitOnLine[i] == expectedOnLine[i]).Should().BeTrue();
+            }
+        }
     }
 }
