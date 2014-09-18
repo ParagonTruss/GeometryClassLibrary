@@ -8,37 +8,43 @@ namespace GeometryClassLibrary
 {
     public static class IEnumerableLineExtensionMethods
     {
-
+        /// <summary>
+        /// checks to see whether every line is parallel
+        /// </summary>
+        /// <param name="passedLines">passed List of Lines</param>
+        /// <returns></returns>
         public static bool AreAllParallel(this IEnumerable<Line> passedLines)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLines);
 
-            bool returnBool = true;
-            for (int i = 0; i < passedLineListCasted.Count - 2; i++)
+            for (int i = 0; i < passedLineListCasted.Count - 1; i++)
             {
                 if (!passedLineListCasted[i].IsParallelTo(passedLineListCasted[i + 1]))
                 {
-                    returnBool = false;
+                    return false;
                 }
             }
 
-            return returnBool;
+            return true;
         }
 
         /// <summary>
         /// Returns true if all of the passed lines are in the same plane, false otherwise
         /// </summary>
-        /// <param name="passedLine"></param>
+        /// <param name="passedLine">passed lines</param>
         /// <returns></returns>
         public static bool AreAllCoplanar(this IEnumerable<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
-            for (int i = 0; i < passedLineList.Count() - 1; i++)
+            for (int i = 0; i < passedLineList.Count(); i++)
             {
-                if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[i + 1]))
+                for (int j = 0; j < passedLineList.Count(); j++)
                 {
-                    return false;
+                    if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[j]))
+                    {
+                        return false;
+                    }
                 }
             }
 
