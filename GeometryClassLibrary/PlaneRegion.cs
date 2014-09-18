@@ -614,180 +614,14 @@ namespace GeometryClassLibrary
 
                 foreach (Line divisionLine in this.PlaneBoundaries)
                 {
-                    Vector divisionPlaneNormal = this.NormalVector.CrossProduct(divisionLine.DirectionVector);
-                    Plane divisionPlane = new Plane(divisionLine.BasePoint, divisionPlaneNormal);
+                    List<PlaneRegion> slicedPlane = overlapping.Slice(divisionLine, this.Centroid());
 
-                    //keep track of all the new lines we added so that we can connect them if we need to
-                    List<LineSegment> newSegmentsGenerated = new List<LineSegment>();
-
-                    //we have to keep track of lines to move and do it after the foreach loop because we cant change the list
-                    //while we are looping through it (immutable)
-                    List<LineSegment> toRemove = new List<LineSegment>();
-
-                    foreach (LineSegment line in overlapping.PlaneBoundaries)
+                    //findout which one we want to keep and we dont need the other part
+                    overlapping = slicedPlane[0];
+                    /*if (slicedPlane[1].Contains(this.Centroid()))
                     {
-                        //find where or if the linesegment overlaps the clipping line
-                        Point intersectPoint = line.Intersection(divisionLine);
-                        //if there is an interception than we need to clip the line
-                        if (intersectPoint != null)
-                        {
-                            List<LineSegment> lineSliced = line.Slice(intersectPoint);
- 
-                            // if the base point is on the "wrong" side of the plane that it is the one we need to remove
-                            if (!divisionPlane.PointIsOnSameSideAs(line.BasePoint, this.Centroid()))
-                            {
-                                //check to make sure its not on the plane first because then we want to leave it unchanged
-                                if (!divisionPlane.Contains(line.BasePoint))
-                                {
-                                    //but first we need to project the part of the line outside the boundary onto the plane so we can make a line segment
-                                    //that connects the new points so we have an enclosed region
-
-                                    //find out which line contains the basePoint (and is thus the outside line)
-                                    LineSegment outsidePart = lineSliced[0];
-                                    LineSegment insidePart = lineSliced[1];
-                                    //if the second one doesnt contain the basePoint than the first one must so we can leave it 
-                                    if (line.BasePoint.IsOnLineSegment(lineSliced[1]))
-                                    {
-                                        outsidePart = lineSliced[1];
-                                        insidePart = lineSliced[0];
-                                    }
-
-                                    //now project it onto the division line 
-                                    LineSegment projectedLine = outsidePart.ProjectOntoLine(divisionLine);
-
-                                    //and then add it to our new segments list if its not zero length
-                                    if (projectedLine.Length != new Dimension())
-                                    {
-                                        newSegmentsGenerated.Add(projectedLine);
-                                    }
-
-                                    //now we can change the intersecting line to the inside line
-                                    //have to do it part by part because line is immutable during a foreach loop
-                                    //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
-                                    line.BasePoint = insidePart.BasePoint;
-                                    line.EndPoint = insidePart.EndPoint;
-                                }
-                            }
-                            //if the base point wasnt on the wrong side than we need to check if the endPoint is on the wrong side
-                            else if (!divisionPlane.PointIsOnSameSideAs(line.EndPoint, this.Centroid()))
-                            {
-                                //make sure the point isnt on the plane
-                                if (!divisionPlane.Contains(line.EndPoint))
-                                {
-                                    //We also need to project this first
-
-                                    //find out which line contains the endPoint (and is thus the outside line)
-                                    //we dont need both segments because of the nature of the lineSegment class because if we
-                                    //move the endpoint the length and stuff changes, but if we move the base point the whole line moves
-                                    LineSegment outsidePart = lineSliced[0];
-                                    //if the second one doesnt contain the endPoint than the first one must so we can leave it 
-                                    if (line.EndPoint.IsOnLineSegment(lineSliced[1]))
-                                    {
-                                        outsidePart = lineSliced[1];
-                                    }
-
-                                    //now project it onto the division line 
-                                    LineSegment projectedLine = outsidePart.ProjectOntoLine(divisionLine);
-
-                                    //and then add it to our new segments list if its not zero length
-                                    if (projectedLine.Length != new Dimension())
-                                    {
-                                        newSegmentsGenerated.Add(projectedLine);
-                                    }
-
-                                    //now change the basepoint of our intersecting line
-                                    //we dont have to change the base point because it is the same as before
-                                    line.EndPoint = intersectPoint;
-                                }
-                            }
-                        }
-                        //if it doesnt intersect at all we are either completely on the right side or the wrong side
-                        else
-                        {
-                            //if one of the points is on the wrong side than both of them must be at this point
-                            if (!divisionPlane.PointIsOnSameSideAs(line.BasePoint, this.Centroid()))
-                            {
-                                //add the projection to our new segments list for them
-                                LineSegment projectedLine = line.ProjectOntoLine(divisionLine);
-                                if (projectedLine.Length != new Dimension())
-                                {
-                                    newSegmentsGenerated.Add(projectedLine);
-                                }
-
-                                //and now we add it to the toRemove list so we know to get rid of it so it doesnt caus us problems later on
-                                toRemove.Add(line);
-                            }
-                        }
-                    }
-
-                    //remove any segments we need to from our overlapping polygon
-                    foreach (LineSegment lineToRemove in toRemove)
-                    {
-                        overlapping.PlaneBoundaries.Remove(lineToRemove);
-                    }
-
-                    //now consolidate the new lines and then add them to the polygon
-
-                    //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
-                    //we can do this because we know that they are all along the same line so if they share a point they are
-                    //just an extension of the other one
-                    for (int i = 0; i < newSegmentsGenerated.Count; i++)
-                    {
-                        for (int j = 0; j < newSegmentsGenerated.Count; j++)
-                        {
-                            //get our lines for this round of checks
-                            LineSegment firstLine = newSegmentsGenerated[i];
-                            LineSegment secondLine = newSegmentsGenerated[j];
-
-                            //if its not the same line (or equivalent - if it is we just ignore it for now and it will work iself out as other ones combine)
-                            if (firstLine != secondLine)
-                            {
-                                //if two points match then combine them and add the new one to the list
-                                //then remove the two old ones
-                                //then we need to restart it at i = 0, j = -1 (-1 because it will increment at the end and then be back to 0) otherwise 
-                                //we may skip some or gout out of bounds
-                                if (firstLine.BasePoint == secondLine.BasePoint)
-                                {
-                                    newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.EndPoint));
-                                    newSegmentsGenerated.Remove(firstLine);
-                                    newSegmentsGenerated.Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.BasePoint == secondLine.EndPoint)
-                                {
-                                    newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.BasePoint));
-                                    newSegmentsGenerated.Remove(firstLine);
-                                    newSegmentsGenerated.Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.EndPoint == secondLine.EndPoint)
-                                {
-                                    newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.BasePoint));
-                                    newSegmentsGenerated.Remove(firstLine);
-                                    newSegmentsGenerated.Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.EndPoint == secondLine.BasePoint)
-                                {
-                                    newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.EndPoint));
-                                    newSegmentsGenerated.Remove(firstLine);
-                                    newSegmentsGenerated.Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                            }
-                        }
-                    }
-
-                    //now we need to add the new lineSegments to our plane region
-                    foreach (LineSegment toAdd in newSegmentsGenerated)
-                    {
-                        overlapping.PlaneBoundaries.Add(toAdd);
-                    }
-
+                        overlapping = slicedPlane[1];
+                    }*/
                 }
                 //make sure that our planeRegion is valid (coplanar and enclosed) and that the area is not equal 
                 //to zero (this would mean the planeRegions are only touching not overlapping so we dont want to return it) 
@@ -801,19 +635,218 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        public List<PlaneRegion> Slice(Line slicingLine)
+        /// <summary>
+        /// This function Slices a plane and returns both halves of the plane, with the larger piece returning first. If the
+        /// Line is not in this Plane it will return the original planeRegion
+        /// </summary>
+        /// <param name="slicingLine">The line in the PlaneRegion to slice at</param>
+        /// <returns>returns the PlaneRegions from slicing along the Line in descending size order or the original Plane if the line
+        /// is not in the plane</returns>
+        public List<PlaneRegion> Slice(Line slicingLine, Point referencePoint)
         {
+            if (this.Contains(slicingLine))
+            {
+                Vector divisionPlaneNormal = this.NormalVector.CrossProduct(slicingLine.DirectionVector);
+                Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
 
-
+                return this.Slice(slicingLine, divisionPlane, referencePoint);
+            }
+            else
+            {
+                return new List<PlaneRegion>() { this };
+            }
         }
 
-        public List<PlaneRegion> Slice(Plane slicingPlane)
+        public List<PlaneRegion> Slice(Plane slicingPlane, Point referencePoint)
         {
             throw new NotImplementedException();
-            //once plane.IntersectionLine(plane) is created, this is simple to implement like so
-            Line intersectionLine = new Line();
-            //Line intersectionLine = slicingPlane.IntersectionLine(this);
-            return this.Slice(intersectionLine);
+
+            Line slicingLine = new Line();
+            //Line slicingLine = slicingPlane.IntersectionLine(this);
+
+            return this.Slice(slicingLine, slicingPlane, referencePoint);
+        }
+
+        private List<PlaneRegion> Slice(Line slicingLine, Plane slicingPlane, Point referencePoint)
+        {
+            //create our two regions that we will have
+            List<PlaneRegion> slicedPlanes = new List<PlaneRegion>();
+            PlaneRegion inside = new PlaneRegion(this);
+            PlaneRegion outside = new PlaneRegion(this);
+            slicedPlanes.Add(inside);
+            slicedPlanes.Add(outside);
+
+            //keep track of all the new lines we added so that we can connect them if we need to
+            List<LineSegment> newSegmentsGenerated = new List<LineSegment>();
+            //we have to keep track of lines to move and do it after the foreach loop because we cant change the list
+            //while we are looping through it (immutable)
+            List<LineSegment> toRemove = new List<LineSegment>();
+
+            foreach (LineSegment line in inside.PlaneBoundaries)
+            {
+                //find where or if the linesegment overlaps the clipping line
+                Point intersectPoint = line.Intersection(slicingLine);
+                //if there is an interception than we need to clip the line
+                if (intersectPoint != null)
+                {
+                    List<LineSegment> lineSliced = line.Slice(intersectPoint);
+
+                    // if the base point is on the "wrong" side of the plane that it is the one we need to remove
+                    if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
+                    {
+                        //check to make sure its not on the plane first because then we want to leave it unchanged
+                        if (!slicingPlane.Contains(line.BasePoint))
+                        {
+                            //but first we need to project the part of the line outside the boundary onto the plane so we can make a line segment
+                            //that connects the new points so we have an enclosed region
+
+                            //find out which line contains the basePoint (and is thus the outside line)
+                            LineSegment outsidePart = lineSliced[0];
+                            LineSegment insidePart = lineSliced[1];
+                            //if the second one doesnt contain the basePoint than the first one must so we can leave it 
+                            if (line.BasePoint.IsOnLineSegment(lineSliced[1]))
+                            {
+                                outsidePart = lineSliced[1];
+                                insidePart = lineSliced[0];
+                            }
+
+                            //now project it onto the division line 
+                            LineSegment projectedLine = outsidePart.ProjectOntoLine(slicingLine);
+
+                            //and then add it to our new segments list if its not zero length
+                            if (projectedLine.Length != new Dimension())
+                            {
+                                newSegmentsGenerated.Add(projectedLine);
+                            }
+
+                            //now we can change the intersecting line to the inside line
+                            //have to do it part by part because line is immutable during a foreach loop
+                            //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
+                            line.BasePoint = insidePart.BasePoint;
+                            line.EndPoint = insidePart.EndPoint;
+                        }
+                    }
+                    //if the base point wasnt on the wrong side than we need to check if the endPoint is on the wrong side
+                    else if (!slicingPlane.PointIsOnSameSideAs(line.EndPoint, referencePoint))
+                    {
+                        //make sure the point isnt on the plane
+                        if (!slicingPlane.Contains(line.EndPoint))
+                        {
+                            //We also need to project this first
+
+                            //find out which line contains the endPoint (and is thus the outside line)
+                            //we dont need both segments because of the nature of the lineSegment class because if we
+                            //move the endpoint the length and stuff changes, but if we move the base point the whole line moves
+                            LineSegment outsidePart = lineSliced[0];
+                            //if the second one doesnt contain the endPoint than the first one must so we can leave it 
+                            if (line.EndPoint.IsOnLineSegment(lineSliced[1]))
+                            {
+                                outsidePart = lineSliced[1];
+                            }
+
+                            //now project it onto the division line 
+                            LineSegment projectedLine = outsidePart.ProjectOntoLine(slicingLine);
+
+                            //and then add it to our new segments list if its not zero length
+                            if (projectedLine.Length != new Dimension())
+                            {
+                                newSegmentsGenerated.Add(projectedLine);
+                            }
+
+                            //now change the basepoint of our intersecting line
+                            //we dont have to change the base point because it is the same as before
+                            line.EndPoint = intersectPoint;
+                        }
+                    }
+                }
+                //if it doesnt intersect at all we are either completely on the right side or the wrong side
+                else
+                {
+                    //if one of the points is on the wrong side than both of them must be at this point
+                    if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
+                    {
+                        //add the projection to our new segments list for them
+                        LineSegment projectedLine = line.ProjectOntoLine(slicingLine);
+                        if (projectedLine.Length != new Dimension())
+                        {
+                            newSegmentsGenerated.Add(projectedLine);
+                        }
+
+                        //and now we add it to the toRemove list so we know to get rid of it so it doesnt caus us problems later on
+                        toRemove.Add(line);
+                    }
+                }
+            }
+
+            //remove any segments we need to from our overlapping polygon
+            foreach (LineSegment lineToRemove in toRemove)
+            {
+                inside.PlaneBoundaries.Remove(lineToRemove);
+            }
+
+            //now consolidate the new lines and then add them to the polygon
+
+            //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
+            //we can do this because we know that they are all along the same line so if they share a point they are
+            //just an extension of the other one
+            for (int i = 0; i < newSegmentsGenerated.Count; i++)
+            {
+                for (int j = 0; j < newSegmentsGenerated.Count; j++)
+                {
+                    //get our lines for this round of checks
+                    LineSegment firstLine = newSegmentsGenerated[i];
+                    LineSegment secondLine = newSegmentsGenerated[j];
+
+                    //if its not the same line (or equivalent - if it is we just ignore it for now and it will work iself out as other ones combine)
+                    if (firstLine != secondLine)
+                    {
+                        //if two points match then combine them and add the new one to the list
+                        //then remove the two old ones
+                        //then we need to restart it at i = 0, j = -1 (-1 because it will increment at the end and then be back to 0) otherwise 
+                        //we may skip some or gout out of bounds
+                        if (firstLine.BasePoint == secondLine.BasePoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.EndPoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.BasePoint == secondLine.EndPoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.BasePoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.EndPoint == secondLine.EndPoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.BasePoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.EndPoint == secondLine.BasePoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.EndPoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                    }
+                }
+            }
+
+            //now we need to add the new lineSegments to our plane region
+            foreach (LineSegment toAdd in newSegmentsGenerated)
+            {
+                inside.PlaneBoundaries.Add(toAdd);
+            }
+
+            return slicedPlanes;
         }
 
 
