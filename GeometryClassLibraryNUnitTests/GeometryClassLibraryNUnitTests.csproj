@@ -48,11 +48,15 @@
     <Reference Include="System" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnitClassLibrary">
+      <HintPath>..\packages\UnitClassLibrary.1.0.5374.37217\lib\net45\UnitClassLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">

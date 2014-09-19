@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ClearspanTypeLibrary;
 using NUnit.Framework;
+using GeometryClassLibrary;
+using UnitClassLibrary;
 
 namespace ClearspanTypeLibrary.Tests
 {
