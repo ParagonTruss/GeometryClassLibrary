@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary">
       <HintPath>..\packages\UnitClassLibrary.1.0.5374.37217\lib\net45\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\..\unit-class-library\Unit Class Library\bin\Debug\Unit Class Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +61,7 @@
     <Compile Include="Point.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rotation.cs" />
     <Compile Include="Shift.cs" />
     <Compile Include="Solid.cs" />
     <Compile Include="Vector.cs" />

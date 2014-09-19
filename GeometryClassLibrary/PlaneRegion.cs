@@ -19,14 +19,6 @@ namespace GeometryClassLibrary
         }
         private List<LineSegment> _planeBoundaries;
 
-        public Line CenterPoint
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public Area Area
         {
             get
@@ -44,6 +36,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(PlaneRegion region1, PlaneRegion region2)
         {
+            if ((object)region1 == null || (object)region2 == null)
+            {
+                if ((object)region1 == null && (object)region2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
             return region1.Equals(region2);
         }
 
@@ -52,6 +52,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(PlaneRegion region1, PlaneRegion region2)
         {
+            if (region1 == null || region2 == null)
+            {
+                if (region1 == null && region2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
             return !region1.Equals(region2);
         }
 
@@ -111,6 +119,16 @@ namespace GeometryClassLibrary
                 _planeBoundaries = roundedBoundaryList;
             }
         }
+
+        /// <summary>
+        /// creates a new PlaneRegion that is a copy of the inputted PlaneRegion
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public PlaneRegion(PlaneRegion planeToCopy)
+            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
+            //constructing a plane fron a List<LineSegment>
+            : this(planeToCopy.PlaneBoundaries, 3) { }
+
 
         public PlaneRegion(List<Point> passedPoints)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
@@ -494,5 +512,343 @@ namespace GeometryClassLibrary
         {
            return new PlaneRegion( this.PlaneBoundaries.Shift(passedShift));
         }
+
+        /// <summary>
+        /// Returns the centoid (center point) of the PlaneRegion
+        /// </summary>
+        /// <returns>the region's center as a point</returns>
+        public Point Centroid()
+        {
+            //the centorid is the average of all the points
+            Dimension xSum = new Dimension();
+            Dimension ySum = new Dimension();
+            Dimension zSum = new Dimension();
+
+            //we count each point twice
+            //the reason why we have to add all of the points twice is because we do not know which way the 
+            //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
+            int count = PlaneBoundaries.Count * 2;
+
+            //sum up each of the points
+            foreach (LineSegment line in PlaneBoundaries)
+            {
+                xSum += line.BasePoint.X + line.EndPoint.X;
+                ySum += line.BasePoint.Y + line.EndPoint.Y;
+                zSum += line.BasePoint.Z + line.EndPoint.Z;
+            }
+
+            //now divide it by the number of points to find the average values
+            return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
+
+        }
+
+        /// <summary>
+        /// Returns true if the PlaneRegion is valid (is a closed region and the LineSegments are all coplaner)
+        /// </summary>
+        /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
+        public bool isValidPlaneRegion(int passedNumberOfDecimalsToCheck)
+        {
+            List<LineSegment> roundedBoundaryList = (List<LineSegment>)PlaneBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
+            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
+            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
+
+            if (isClosed && areCoplanar)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the point is contained within this PlaneRegion
+        /// </summary>
+        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
+        /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
+        public new bool Contains(Point passedPoint)
+        {
+            //check if it is in our plane first
+            if(base.Contains(passedPoint))
+            {
+                //now check if it is in the bounds each line at a time
+                foreach (LineSegment line in PlaneBoundaries)
+                {
+                    //find the plane perpendicular to this plane that represents the side we are on
+                    
+                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
+                    Vector divisionPlaneNormal = NormalVector.CrossProduct(line.DirectionVector);
+
+                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
+                    Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);
+
+                    //if the point is on the side outside of our region we know it is not in it and can return
+                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
+                    {
+                        return false;
+                    }
+                }
+
+                //if it is on the right side of all the sides than we know the point must be inside the region
+                return true;
+            }
+            //if its not in the Plane than it is obviously not in the PlaneRegion
+            return false;
+        }
+
+        /// <summary>
+        /// This finds and returns the PlaneRegion where the two PlaneRegions overlap or null if they do not 
+        /// overlap (or if they are only touching - the overlap region has an area o 0). The plane this function 
+        /// is called on must a convex polygon or else the function will not return the proper region
+        /// </summary>
+        /// <param name="planeToBeClipped">The PlaneRegion that will be clipped (can be either a convex or concave polygon)</param>
+        /// <returns>Returns the PlaneRegion that represents where the two PlaneRegions overlap or null if they do not overlap
+        /// or only touch</returns>
+        public PlaneRegion OverlappingPlaneRegion(PlaneRegion planeToBeClipped)
+        {
+            //if they are coplanar
+            if (this.Contains(planeToBeClipped))
+            {
+                //using the the idea of the Sutherland-Hodgman algoritm
+
+                //create the plane we will be trimming so we dont mess up the original one
+                PlaneRegion overlapping = new PlaneRegion(planeToBeClipped);
+
+                foreach (Line divisionLine in this.PlaneBoundaries)
+                {
+                    List<PlaneRegion> slicedPlane = overlapping.Slice(divisionLine, this.Centroid());
+
+                    //findout which one we want to keep and we dont need the other part
+                    overlapping = slicedPlane[0];
+                    /*if (slicedPlane[1].Contains(this.Centroid()))
+                    {
+                        overlapping = slicedPlane[1];
+                    }*/
+                }
+                //make sure that our planeRegion is valid (coplanar and enclosed) and that the area is not equal 
+                //to zero (this would mean the planeRegions are only touching not overlapping so we dont want to return it) 
+                //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
+                //right now and this should work for how the function is set up)
+                if (overlapping.isValidPlaneRegion(3) && overlapping.PlaneBoundaries.Count > 2)
+                    return overlapping;
+            }
+
+            //if we fail to find a valid planeRegion of intersection return null
+            return null;
+        }
+
+        /// <summary>
+        /// This function Slices a plane and returns both halves of the plane, with the larger piece returning first. If the
+        /// Line is not in this Plane it will return the original planeRegion
+        /// </summary>
+        /// <param name="slicingLine">The line in the PlaneRegion to slice at</param>
+        /// <returns>returns the PlaneRegions from slicing along the Line in descending size order or the original Plane if the line
+        /// is not in the plane</returns>
+        public List<PlaneRegion> Slice(Line slicingLine, Point referencePoint)
+        {
+            if (this.Contains(slicingLine))
+            {
+                Vector divisionPlaneNormal = this.NormalVector.CrossProduct(slicingLine.DirectionVector);
+                Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
+
+                return this.Slice(slicingLine, divisionPlane, referencePoint);
+            }
+            else
+            {
+                return new List<PlaneRegion>() { this };
+            }
+        }
+
+        public List<PlaneRegion> Slice(Plane slicingPlane, Point referencePoint)
+        {
+            throw new NotImplementedException();
+
+            Line slicingLine = new Line();
+            //Line slicingLine = slicingPlane.IntersectionLine(this);
+
+            return this.Slice(slicingLine, slicingPlane, referencePoint);
+        }
+
+        private List<PlaneRegion> Slice(Line slicingLine, Plane slicingPlane, Point referencePoint)
+        {
+            //create our two regions that we will have
+            List<PlaneRegion> slicedPlanes = new List<PlaneRegion>();
+            PlaneRegion inside = new PlaneRegion(this);
+            PlaneRegion outside = new PlaneRegion(this);
+            slicedPlanes.Add(inside);
+            slicedPlanes.Add(outside);
+
+            //keep track of all the new lines we added so that we can connect them if we need to
+            List<LineSegment> newSegmentsGenerated = new List<LineSegment>();
+            //we have to keep track of lines to move and do it after the foreach loop because we cant change the list
+            //while we are looping through it (immutable)
+            List<LineSegment> toRemove = new List<LineSegment>();
+
+            foreach (LineSegment line in inside.PlaneBoundaries)
+            {
+                //find where or if the linesegment overlaps the clipping line
+                Point intersectPoint = line.Intersection(slicingLine);
+                //if there is an interception than we need to clip the line
+                if (intersectPoint != null)
+                {
+                    List<LineSegment> lineSliced = line.Slice(intersectPoint);
+
+                    // if the base point is on the "wrong" side of the plane that it is the one we need to remove
+                    if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
+                    {
+                        //check to make sure its not on the plane first because then we want to leave it unchanged
+                        if (!slicingPlane.Contains(line.BasePoint))
+                        {
+                            //but first we need to project the part of the line outside the boundary onto the plane so we can make a line segment
+                            //that connects the new points so we have an enclosed region
+
+                            //find out which line contains the basePoint (and is thus the outside line)
+                            LineSegment outsidePart = lineSliced[0];
+                            LineSegment insidePart = lineSliced[1];
+                            //if the second one doesnt contain the basePoint than the first one must so we can leave it 
+                            if (line.BasePoint.IsOnLineSegment(lineSliced[1]))
+                            {
+                                outsidePart = lineSliced[1];
+                                insidePart = lineSliced[0];
+                            }
+
+                            //now project it onto the division line 
+                            LineSegment projectedLine = outsidePart.ProjectOntoLine(slicingLine);
+
+                            //and then add it to our new segments list if its not zero length
+                            if (projectedLine.Length != new Dimension())
+                            {
+                                newSegmentsGenerated.Add(projectedLine);
+                            }
+
+                            //now we can change the intersecting line to the inside line
+                            //have to do it part by part because line is immutable during a foreach loop
+                            //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
+                            line.BasePoint = insidePart.BasePoint;
+                            line.EndPoint = insidePart.EndPoint;
+                        }
+                    }
+                    //if the base point wasnt on the wrong side than we need to check if the endPoint is on the wrong side
+                    else if (!slicingPlane.PointIsOnSameSideAs(line.EndPoint, referencePoint))
+                    {
+                        //make sure the point isnt on the plane
+                        if (!slicingPlane.Contains(line.EndPoint))
+                        {
+                            //We also need to project this first
+
+                            //find out which line contains the endPoint (and is thus the outside line)
+                            //we dont need both segments because of the nature of the lineSegment class because if we
+                            //move the endpoint the length and stuff changes, but if we move the base point the whole line moves
+                            LineSegment outsidePart = lineSliced[0];
+                            //if the second one doesnt contain the endPoint than the first one must so we can leave it 
+                            if (line.EndPoint.IsOnLineSegment(lineSliced[1]))
+                            {
+                                outsidePart = lineSliced[1];
+                            }
+
+                            //now project it onto the division line 
+                            LineSegment projectedLine = outsidePart.ProjectOntoLine(slicingLine);
+
+                            //and then add it to our new segments list if its not zero length
+                            if (projectedLine.Length != new Dimension())
+                            {
+                                newSegmentsGenerated.Add(projectedLine);
+                            }
+
+                            //now change the basepoint of our intersecting line
+                            //we dont have to change the base point because it is the same as before
+                            line.EndPoint = intersectPoint;
+                        }
+                    }
+                }
+                //if it doesnt intersect at all we are either completely on the right side or the wrong side
+                else
+                {
+                    //if one of the points is on the wrong side than both of them must be at this point
+                    if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
+                    {
+                        //add the projection to our new segments list for them
+                        LineSegment projectedLine = line.ProjectOntoLine(slicingLine);
+                        if (projectedLine.Length != new Dimension())
+                        {
+                            newSegmentsGenerated.Add(projectedLine);
+                        }
+
+                        //and now we add it to the toRemove list so we know to get rid of it so it doesnt caus us problems later on
+                        toRemove.Add(line);
+                    }
+                }
+            }
+
+            //remove any segments we need to from our overlapping polygon
+            foreach (LineSegment lineToRemove in toRemove)
+            {
+                inside.PlaneBoundaries.Remove(lineToRemove);
+            }
+
+            //now consolidate the new lines and then add them to the polygon
+
+            //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
+            //we can do this because we know that they are all along the same line so if they share a point they are
+            //just an extension of the other one
+            for (int i = 0; i < newSegmentsGenerated.Count; i++)
+            {
+                for (int j = 0; j < newSegmentsGenerated.Count; j++)
+                {
+                    //get our lines for this round of checks
+                    LineSegment firstLine = newSegmentsGenerated[i];
+                    LineSegment secondLine = newSegmentsGenerated[j];
+
+                    //if its not the same line (or equivalent - if it is we just ignore it for now and it will work iself out as other ones combine)
+                    if (firstLine != secondLine)
+                    {
+                        //if two points match then combine them and add the new one to the list
+                        //then remove the two old ones
+                        //then we need to restart it at i = 0, j = -1 (-1 because it will increment at the end and then be back to 0) otherwise 
+                        //we may skip some or gout out of bounds
+                        if (firstLine.BasePoint == secondLine.BasePoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.EndPoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.BasePoint == secondLine.EndPoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.EndPoint, secondLine.BasePoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.EndPoint == secondLine.EndPoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.BasePoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                        else if (firstLine.EndPoint == secondLine.BasePoint)
+                        {
+                            newSegmentsGenerated.Add(new LineSegment(firstLine.BasePoint, secondLine.EndPoint));
+                            newSegmentsGenerated.Remove(firstLine);
+                            newSegmentsGenerated.Remove(secondLine);
+                            i = 0;
+                            j = -1;
+                        }
+                    }
+                }
+            }
+
+            //now we need to add the new lineSegments to our plane region
+            foreach (LineSegment toAdd in newSegmentsGenerated)
+            {
+                inside.PlaneBoundaries.Add(toAdd);
+            }
+
+            return slicedPlanes;
+        }
+
+
     }
 }

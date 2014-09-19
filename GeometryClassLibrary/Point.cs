@@ -305,8 +305,15 @@ namespace GeometryClassLibrary
 
             double displacementSquared = Math.Pow(passedDisplacement.Millimeters, 2);
 
-            double oneOverMultiplierSquared = (directionXSquared + directionYSquared + directionZSquared) / displacementSquared;
-            double multiplier = Math.Sqrt(1.0 / oneOverMultiplierSquared);
+            //just so its not a NaN value
+            double oneOverMultiplierSquared = 0;
+            double multiplier = 0;
+
+            if (displacementSquared != 0)
+            {
+                oneOverMultiplierSquared = (directionXSquared + directionYSquared + directionZSquared) / displacementSquared;
+                multiplier = Math.Sqrt(1.0 / oneOverMultiplierSquared);
+            }
 
             Dimension xDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.XComponentOfDirection.Millimeters);
             Dimension yDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.YComponentOfDirection.Millimeters);
@@ -522,15 +529,26 @@ namespace GeometryClassLibrary
 
         public Point Shift(Shift passedShift)
         {
-            Matrix rotationAboutZ = Matrix.RotationMatrixAboutZ(passedShift.AngleWithZAxis);
-            Matrix rotationAboutX = Matrix.RotationMatrixAboutX(passedShift.AngleWithXZPlane);
+            Point pointToReturn = this;
 
-            Matrix pointMatrix = this.ConvertToMatrixColumn();
-            Matrix rotatedPointMatrix = rotationAboutZ * pointMatrix;
-            rotatedPointMatrix = rotationAboutX * rotatedPointMatrix;
+            //we need to untranslate the point first if we are negating a previous shift so that it returns 
+            //correcly - for a full explaination look in Shift.cs where isNegatedShift is declared
+            if (passedShift.isNegatedShift)
+            {
+                pointToReturn = pointToReturn.Translate(passedShift.Displacement);
+            }
 
-            Point pointToReturn = PointGenerator.MakePointWithMillimeters(rotatedPointMatrix.GetElement(0, 0), rotatedPointMatrix.GetElement(1, 0), rotatedPointMatrix.GetElement(2, 0));
-            pointToReturn = pointToReturn.Translate(passedShift.Displacement);
+            //we need to apply each rotation in order to the point
+            foreach(Rotation rotation in passedShift.rotationsToApply)
+            {
+                pointToReturn = pointToReturn.Rotate3D(rotation.axisToRotateAround, rotation.angleToRotate);
+            }
+
+            //and then we translate it (unless is a negating shift) so the shift is more intuitive
+            if (!passedShift.isNegatedShift)
+            {
+                pointToReturn = pointToReturn.Translate(passedShift.Displacement);
+            }
             return pointToReturn;
         }
 

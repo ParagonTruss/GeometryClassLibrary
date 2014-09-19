@@ -114,7 +114,16 @@ namespace GeometryClassLibrary
             if (passedLineListCasted.AreAllCoplanar())
             {
                 _basePoint = passedLineListCasted[0].BasePoint;
-                _normalVector = passedLineListCasted[0].DirectionVector.CrossProduct(passedLineListCasted[1].DirectionVector);
+
+                //we have to check against vectors until we find one that is not parralel with the first line we passed in
+                //or else the normal vector will be zero (cross product of parralel lines is 0)
+                Vector vector1 = passedLineListCasted[0].DirectionVector;
+                for (int i = 1; i < passedLineListCasted.Count; i++)
+                {
+                    _normalVector = vector1.CrossProduct(passedLineListCasted[i].DirectionVector);
+                    if (!_normalVector.Equals(new Vector()))
+                        i = passedLineListCasted.Count;
+                }
             }
             else
             {
@@ -139,7 +148,6 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             Plane comparablePlane = null;
-
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
             {
@@ -186,12 +194,17 @@ namespace GeometryClassLibrary
             return (dotProduct1.Equals(new Dimension()) && dotProduct2.Equals(new Dimension()));
         }
 
+        /// <summary>
+        /// Returns wether or not the Point passed in is in this Plane
+        /// </summary>
+        /// <param name="passedPoint">Point to see if the Plane contains</param>
+        /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
         public bool Contains(Point passedPoint)
         {
             Vector planeVector = new Vector(passedPoint, BasePoint);
             Dimension dotProduct = planeVector * NormalVector;
 
-            return (dotProduct.Millimeters == 0);
+            return (Math.Abs(dotProduct.Millimeters) < Constants.AcceptedEqualityDeviationConstant);
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)
@@ -199,6 +212,35 @@ namespace GeometryClassLibrary
             Point newBasePoint = _basePoint.Rotate3D(passedAxis, passedAngle);
             Vector newNormalVector = _normalVector.Rotate(passedAxis, passedAngle);
             return new Plane(newBasePoint, newNormalVector);
+        }
+
+        /// <summary>
+        /// This function returns true if both the points are on the same side of this plane. 
+        /// If either point is on the plane it will return false
+        /// </summary>
+        /// <param name="testPoint">The point to see if it is on the same side of the plane as the reference point</param>
+        /// <param name="referencePoint">The point on the side you want to check if the test point is on</param>
+        /// <returns>returns true if both points are on the same side of the plane or false if they are not. 
+        /// If either point is on the plane it always returns false</returns>
+        public bool PointIsOnSameSideAs(Point testPoint, Point referencePoint)
+        {
+            //as stated by esun at http://forums.anandtech.com/showthread.php?t=162930
+            //if the dot product between the point and the normal vector is positive, it is on the side the normal faces
+            //if it is negative than the point is on the opposite side of the normal
+            //if it is 0 than it is on the plane
+
+            //so find the dot products between the points and the normal of the plane
+            Dimension testDot = new Vector(BasePoint, testPoint) * NormalVector;
+            Dimension referenceDot = new Vector(BasePoint, referencePoint) * NormalVector;
+
+            //if they are both either positive or negative than they are both on the same side
+            if ((testDot < new Dimension() && referenceDot < new Dimension()) || (testDot > new Dimension() && referenceDot > new Dimension()))
+            {
+                return true;
+            }
+
+            //if they are on opposite sides of the plane or either of the points are on the plan than we will return false
+            return false;
         }
 
         #endregion

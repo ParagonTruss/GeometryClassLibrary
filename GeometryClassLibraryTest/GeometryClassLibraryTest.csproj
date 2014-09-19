@@ -70,6 +70,7 @@
     <Compile Include="DotProductTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
+    <Compile Include="RotationTests.cs" />
     <Compile Include="SolidTests.cs" />
     <Compile Include="LineListExtensionTests.cs" />
     <Compile Include="LineSegmentListExtensionTests.cs" />

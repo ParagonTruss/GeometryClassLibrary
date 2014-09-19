@@ -223,5 +223,71 @@ namespace GeometryClassLibrary
         {
             return new LineSegment(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
+
+        /// <summary>
+        /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
+        /// </summary>
+        /// <param name="projectOnto">the Line on which to project the LineSegment</param>
+        /// <returns></returns>
+        public LineSegment ProjectOntoLine(Line projectOnto)
+        {
+            //we can do this by making the points into vectors with the basepoint of the line as the basepoint and the endpoint of the 
+            //point we want to project then using the dot product to find its relative vector and then position it 
+            //relative to the clipping basepoint. We have to make the basepoint to the divisionLine's so that the vectors
+            //intersect, allowing us to project the one onto the other easily
+            Vector basePointVector = new Vector(projectOnto.BasePoint, BasePoint);
+
+            //now we can project the basepointvector onto the division line's unit vector to find the scalar length of the projection
+            //  note: we use the unit vector because it has a length of 1 and will not affect the scaling of the projected vector
+            Dimension basePointProjectedLength = basePointVector * projectOnto.DirectionVector.ConvertToUnitVector();
+
+            //now make the projected vector using divisionLine's basePoint (our reference), the divisionLines unitVector (since we
+            //  are projecting onto it we know that it is the direction of the resulting vector), and then the length we
+            //  found for the projection
+            LineSegment basePointProjection = new LineSegment(projectOnto.BasePoint, projectOnto.DirectionVector.ConvertToUnitVector(), basePointProjectedLength);
+
+            //now the basepointProjection starts at the divisionLine's endpoint and ends at the projected point on itself
+            Point newBasePoint = basePointProjection.EndPoint;
+
+            //now we just need to do it all again to find the newEndpoint's projection
+            Vector endPointVector = new Vector(projectOnto.BasePoint, this.EndPoint);
+            Dimension endPointProjectedLength = endPointVector * projectOnto.DirectionVector.ConvertToUnitVector();
+            LineSegment endPointProjection = new LineSegment(projectOnto.BasePoint, projectOnto.DirectionVector.ConvertToUnitVector(), endPointProjectedLength);
+            Point newEndPoint = endPointProjection.EndPoint;
+
+            //now we have the two projected points and we can make a line segment which represents the porjected line
+            return new LineSegment(newBasePoint, newEndPoint);
+        }
+
+
+        /// <summary>
+        /// Slices this lineSegment into two lineSegments at the given point and returns them with the longer segment first
+        /// or the original line segment if the point is not on it
+        /// </summary>
+        /// <param name="spotToSliceAt">Spot on the line to slice at</param>
+        /// <returns>returns the two parts the LineSegment is sliced into, or the original line segment if the point is not on it</returns>
+        public List<LineSegment> Slice(Point spotToSliceAt)
+        {
+            if (spotToSliceAt.IsOnLineSegment(this))
+            {
+                List<LineSegment> returnLines = new List<LineSegment>();
+
+                //add the two segments to the return list
+                returnLines.Add(new LineSegment(this.BasePoint, spotToSliceAt));
+                returnLines.Add(new LineSegment(spotToSliceAt, this.EndPoint));
+
+                //sort them so the longest is first (sort is ascending by default so we need to reverse if)
+                returnLines.Sort();
+                returnLines.Reverse();
+
+                return returnLines;
+            }
+            else
+            {
+                //if its not on the line just return the original segment
+                return new List<LineSegment>() { this };
+            }
+        }
+
     }
 }
