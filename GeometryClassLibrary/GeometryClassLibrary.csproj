@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary">
       <HintPath>..\packages\UnitClassLibrary.1.0.5374.37217\lib\net45\UnitClassLibrary.dll</HintPath>
-      <HintPath>..\..\unit-class-library\Unit Class Library\bin\Debug\Unit Class Library.dll</HintPath>
+      <HintPath>..\..\unit-class-library\UnitClassLibrary\bin\Debug\Unit Class Library.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
