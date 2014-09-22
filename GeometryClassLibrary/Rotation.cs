@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
@@ -48,14 +47,6 @@ namespace GeometryClassLibrary
         #endregion 
 
         #region Overloaded Operators
-
-        /* You may notice that we do not overload the increment and decrement operators nor do we overload multiplication and division.
-         * This is because the user of this library does not know what is being internally stored and those operations will not return useful information. 
-         */
-
-        //Adding two rotations together should give you a list of Rotations because they dont straight up add well
-        //because they are non comunitive
-
 
         public static Rotation operator +(Rotation r1, Angle angleToAdd)
         {
