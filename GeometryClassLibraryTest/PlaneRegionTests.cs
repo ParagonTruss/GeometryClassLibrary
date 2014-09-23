@@ -366,5 +366,47 @@ namespace GeometryClassLibraryTests
             Area testArea = testPlaneRegion.Area;
             testArea.ShouldBeEquivalentTo(new Area(AreaType.MillimetersSquared, 8));
         }
+
+        [TestMethod()]
+        public void PlaneRegion_SliceOnLineTest()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(4, 1, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 4), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            PlaneRegion testPlaneRegion = new PlaneRegion(bounds);
+
+            Line slicingLine = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 1));
+
+            List<PlaneRegion> results = testPlaneRegion.Slice(slicingLine);
+
+            //create the expected planes to compare to
+            List<LineSegment> expected1Bounds = new List<LineSegment>();
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(1, 1, 1)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
+            PlaneRegion expected1 = new PlaneRegion(expected1Bounds);
+
+            List<LineSegment> expected2Bounds = new List<LineSegment>();
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(4, 1, 4)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 3, 3), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 4), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            PlaneRegion expected2 = new PlaneRegion(expected2Bounds);
+
+
+            results.Contains(expected2).Should().BeTrue();
+            results.Contains(expected1).Should().BeTrue();
+
+            //now make sure it handles no intersection well
+            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 0.9));
+            List<PlaneRegion> results2 = testPlaneRegion.Slice(notIntersecting);
+
+            //should only return the original plane
+            results2.Count.Should().Be(1);
+            (results2[0] == testPlaneRegion).Should().BeTrue();
+        }
     }
 }
