@@ -681,7 +681,7 @@ namespace GeometryClassLibrary
 
 
                 //then find where the sides overlap
-                
+
 
 
                 foreach (Line divisionLine in this.PlaneBoundaries)
@@ -851,7 +851,7 @@ namespace GeometryClassLibrary
                         else
                         {
                             //if the endpoint is on the slicing plane than we can determine which side based on the basepoint
-                            if(slicingPlane.Contains(line.EndPoint))
+                            if (slicingPlane.Contains(line.EndPoint))
                             {
                                 //if the base point is on the inside than we should cut it out of the outside
                                 if (slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
