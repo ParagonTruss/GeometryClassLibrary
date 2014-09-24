@@ -1,17 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
-
 using System.Collections.Generic;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTest
 {
-    [TestClass()]
+    [TestFixture()]
     public class RotationTests
     {
-        [TestMethod()]
+        [Test()]
         public void Rotation_AdditionAndSubtractionTest()
         {
             Line axis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 1));
@@ -31,7 +30,7 @@ namespace GeometryClassLibraryTest
         
         }
 
-        [TestMethod()]
+        [Test()]
         public void Rotation_EqualityTest()
         {
             Line axis1 = new Line(PointGenerator.MakePointWithInches(-2, 7, 0), PointGenerator.MakePointWithInches(0, 1, 1));

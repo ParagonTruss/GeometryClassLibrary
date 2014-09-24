@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using ClearspanTypeLibrary;
 using UnitClassLibrary;
@@ -7,10 +7,10 @@ using GeometryClassLibrary;
 
 namespace ClearspanLibraryUnitTest
 {
-    [TestClass()]
+    [TestFixture()]
     public class MatrixTests
     {
-        [TestMethod()]
+        [Test()]
         public void Matrix_StandardMatrixMultiplyTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -52,7 +52,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_CanBeMultipliedTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -78,8 +78,8 @@ namespace ClearspanLibraryUnitTest
             result.Should().BeTrue();
 
         }
-        
-        [TestMethod()]
+
+        [Test()]
         public void Matrix_CannotBeMultipliedTest()
         {
             Matrix matrix1 = new Matrix(2, 3);
@@ -106,7 +106,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IdentityMatrixMultiplyTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -130,7 +130,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_StandardMatrixAdditionTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -164,7 +164,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_CanBeAddedTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -189,7 +189,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_CannotBeAddedTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -214,7 +214,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IdentityMatrixAdditionTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -240,7 +240,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_GetRowStandardTest()
         {
             Matrix testMatrix = new Matrix(2, 3);
@@ -253,7 +253,7 @@ namespace ClearspanLibraryUnitTest
         }
 
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_GetColumnStandardTest()
         {
             Matrix testMatrix = new Matrix(3, 2);
@@ -265,7 +265,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_SystemSolveStandardTest()
         {
             //Ax = b
@@ -308,7 +308,7 @@ namespace ClearspanLibraryUnitTest
             
         }
 
-        [TestMethod]
+        [Test]
         public void MatrixTest_SystemSolve_ZeroMatrix()
         {
             //Ax = b
@@ -323,7 +323,7 @@ namespace ClearspanLibraryUnitTest
             actualResultMatrix.Should().Be(expectedResultMatrix);
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_DecomposeSimpleTest()
         {
             //Set up IDENTITY matrix A            
@@ -359,7 +359,7 @@ namespace ClearspanLibraryUnitTest
         }
 
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_DecomposeComplicatedTest()
         {
             Matrix matrixA = new Matrix(4, 4);
@@ -445,7 +445,7 @@ namespace ClearspanLibraryUnitTest
        
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_DecomposeTest2()
         {
             Matrix matrixA = new Matrix(9);
@@ -551,7 +551,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_DecomposeTest3_DifferentSigns()
         {
             Matrix matrixA = new Matrix(9);
@@ -661,7 +661,7 @@ namespace ClearspanLibraryUnitTest
         }
 
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_ExtractLowerComplicatedTest()
         {
             Matrix matrixA = new Matrix(4, 4);
@@ -699,7 +699,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-         [TestMethod()]
+         [Test()]
         public void Matrix_ExtractUpperComplicatedTest()
         {
             Matrix matrixA = new Matrix(4, 4);
@@ -739,7 +739,7 @@ namespace ClearspanLibraryUnitTest
 
         #region Operator Tests
 
-        [TestMethod()]
+        [Test()]
          public void Matrix_EqualsOperatorTrueTest()
          {
             Matrix matrix1 = new Matrix(2, 2);
@@ -761,7 +761,7 @@ namespace ClearspanLibraryUnitTest
             result.Should().BeTrue();
          }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_EqualsOperatorFalseTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -784,7 +784,7 @@ namespace ClearspanLibraryUnitTest
         }
 
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_EqualsTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -806,7 +806,7 @@ namespace ClearspanLibraryUnitTest
             result.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_MinusOperatorTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -839,7 +839,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_MultiplyOperatorTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -873,7 +873,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_ScalarMultiplyOperatorTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -908,7 +908,7 @@ namespace ClearspanLibraryUnitTest
 
         #region Method Tests
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IsSquareTrueTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -923,7 +923,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IsSquareFalseTest()
         {
             Matrix matrix1 = new Matrix(3, 2);
@@ -938,7 +938,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IsSquareZeroTest()
         {
             Matrix matrix1 = new Matrix(3, 3);
@@ -946,7 +946,7 @@ namespace ClearspanLibraryUnitTest
             matrix1.IsSquare().Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_GetSubMatrixTwiceTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -973,7 +973,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_GetSubMatrixStandardTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -1004,7 +1004,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_InsertMatrixTest()
         {
             Matrix originalMatrix = new Matrix(3);
@@ -1037,7 +1037,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void DeterminantSmallMatrixTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -1056,8 +1056,8 @@ namespace ClearspanLibraryUnitTest
 
             equalityResult.Should().BeTrue();
         }
-        
-        [TestMethod()]
+
+        [Test()]
         public void Matrix_DeterminantStandardTest()
         {
             Matrix matrix1 = new Matrix(3, 3);
@@ -1081,7 +1081,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_DeterminantIsZeroTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -1101,7 +1101,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IsInvertibleTrueTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -1115,7 +1115,7 @@ namespace ClearspanLibraryUnitTest
             matrix1.IsInvertible().Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_IsInvertibleFalseBecauseOfDeterminantTest()
         {
             Matrix matrix1 = new Matrix(2, 2);
@@ -1129,7 +1129,7 @@ namespace ClearspanLibraryUnitTest
             matrix1.IsInvertible().Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_GenerateCofactorMatrixTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -1159,7 +1159,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_InvertTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -1189,7 +1189,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_MatrixTimesItsInverseTest()
         {
             Matrix matrix1 = new Matrix(4);
@@ -1213,7 +1213,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_AbsoluteValueOfMatrixTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -1243,7 +1243,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_CreateIdentityMatrixTest()
         {
             Matrix expectedResult = new Matrix(3);
@@ -1263,7 +1263,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_TransposeTest()
         {
             Matrix matrix1 = new Matrix(3);
@@ -1293,7 +1293,7 @@ namespace ClearspanLibraryUnitTest
             equalityResult.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Test]
         public void Matrix_RotateAboutXTest()
         {
             Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
@@ -1311,7 +1311,7 @@ namespace ClearspanLibraryUnitTest
             (actualResultMatrix == expectedResultMatrix).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Test]
         public void Matrix_RotateAboutYTest()
         {
             Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
@@ -1329,7 +1329,7 @@ namespace ClearspanLibraryUnitTest
             (actualResultMatrix == expectedResultMatrix).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Test]
         public void Matrix_RotateAboutZTest()
         {
             Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
@@ -1347,7 +1347,7 @@ namespace ClearspanLibraryUnitTest
             (actualResultMatrix == expectedResultMatrix).Should().BeTrue();            
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_RemoveRowsAndColumnsTest()
         {
             Matrix testMatrix = new Matrix(3);
@@ -1365,7 +1365,7 @@ namespace ClearspanLibraryUnitTest
             (actualMatrix == expectedMatrix).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_RemoveColumnsTest()
         {
             Matrix testMatrix = new Matrix(2,5);
@@ -1391,7 +1391,7 @@ namespace ClearspanLibraryUnitTest
             (actualMatrix == expectedMatrix).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Matrix_ArrayConstructorTest()
         {
             Matrix expectedMatrix1 = new Matrix(3);
@@ -1435,31 +1435,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #endregion
-
-
-
-
-
 
     }
 }

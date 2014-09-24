@@ -39,10 +39,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions">
-      <HintPath>..\packages\FluentAssertions.3.1.229\lib\net45\FluentAssertions.dll</HintPath>
+      <HintPath>..\packages\FluentAssertions.3.2.1\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions.Core">
-      <HintPath>..\packages\FluentAssertions.3.1.229\lib\net45\FluentAssertions.Core.dll</HintPath>
+      <HintPath>..\packages\FluentAssertions.3.2.1\lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GeometryClassLibrary, Version=1.0.5379.39106, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\GeometryClassLibrary.1.0.5379.39106\lib\net45\GeometryClassLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -50,7 +60,8 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="UnitClassLibrary">
+    <Reference Include="UnitClassLibrary, Version=1.0.5374.37217, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\UnitClassLibrary.1.0.5374.37217\lib\net45\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -67,7 +78,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DotProductTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="RotationTests.cs" />
@@ -78,7 +88,6 @@
     <Compile Include="LineTests.cs" />
     <Compile Include="PlaneRegionTests.cs" />
     <Compile Include="PlaneTests.cs" />
-    <Compile Include="PointListExtensionTests.cs" />
     <Compile Include="PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,12 +95,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
-      <Project>{be165769-e5c6-4d8e-ae6a-7075b1dd3d2d}</Project>
-      <Name>GeometryClassLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

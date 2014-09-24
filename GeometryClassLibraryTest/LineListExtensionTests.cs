@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Collections.Generic;
 
 using FluentAssertions;
@@ -7,10 +7,10 @@ using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
-    [TestClass]
+    [TestFixture]
     public class LineListExtensionTests
     {
-        [TestMethod]
+        [Test]
         public void LineListExtension_AreAllCoplanarTest()
         {
             List<LineSegment> testList = new List<Point>
@@ -25,7 +25,7 @@ namespace GeometryClassLibraryTests
             testList.AreAllCoplanar().Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineListExtension_AreAllParallelTest()
         {
             List<LineSegment> horizontalList = new List<LineSegment>

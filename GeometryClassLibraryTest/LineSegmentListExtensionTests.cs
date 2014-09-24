@@ -1,18 +1,17 @@
 ﻿using System;
-
 using GeometryClassLibraryTests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using System.Collections.Generic;
 using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
-    [TestClass]
+    [TestFixture]
     public class LineSegmentListExtensionTests
     {
 
-        [TestMethod()]
+        [Test()]
         public void LineSegmentList_DoFormClosedRegionTest()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();

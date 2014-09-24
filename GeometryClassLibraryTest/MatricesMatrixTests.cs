@@ -1,15 +1,15 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using ClearspanTypeLibrary;
 using GeometryClassLibrary;
 
 namespace ClearspanLibraryUnitTest
 {
-    [TestClass()]
+    [TestFixture()]
     public class MatricesMatrixTests
     {
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_TotalRowsTest()
         {
             Matrix m1 = new Matrix(1);
@@ -32,7 +32,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_TotalColumnsTest()
         {
             Matrix m1 = new Matrix(1);
@@ -55,7 +55,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void TotalRowsTest_EqualRowDimensions()
         {
             Matrix m1 = new Matrix(2);
@@ -78,7 +78,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void TotalColumnsTest_EqualRowDimensions()
         {
             Matrix m1 = new Matrix(2);
@@ -101,7 +101,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_GetRowHeightTest()
         {
             Matrix m1 = new Matrix(1);
@@ -128,7 +128,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_GetColumnWidthTest()
         {
             Matrix m1 = new Matrix(1);
@@ -155,7 +155,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_ConvertToMatrixTest()
         {
             Matrix m1 = new Matrix(2);
@@ -209,7 +209,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_ConvertToMatrixTest_VariedDimensions()
         {
             Matrix m1 = new Matrix(1);
@@ -278,7 +278,7 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void MatricesMatrix_ConvertToMatrixTest_SingleColumn()
         {
             Matrix m1 = new Matrix(2, 1);
@@ -306,8 +306,5 @@ namespace ClearspanLibraryUnitTest
 
             (actualResult == expectedResult).Should().BeTrue();
         }
-
-
-
     }
 }

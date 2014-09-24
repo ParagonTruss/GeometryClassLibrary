@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using GeometryClassLibraryTests;
 using UnitClassLibrary;
@@ -11,10 +10,10 @@ using GeometryClassLibrary;
 
 namespace ClearspanTypeLibrary.Tests
 {
-    [TestClass()]
+    [TestFixture()]
     public class LineTests
     {
-        [TestMethod()]
+        [Test()]
         public void Line_GetPointOnLineTest()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
@@ -26,7 +25,7 @@ namespace ClearspanTypeLibrary.Tests
             testLine.GetPointOnLine(2).Should().Be(pointOnLine);         
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_IntersectionTest_Inches()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
@@ -41,7 +40,7 @@ namespace ClearspanTypeLibrary.Tests
             actualResult.Should().Be(expectedResult);  
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_IntersectionTest_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
@@ -56,7 +55,7 @@ namespace ClearspanTypeLibrary.Tests
             actualResult.Should().Be(expectedResult);
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_IntersectionTest_Perpendicular()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(1, 2, 2);
@@ -71,7 +70,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_IntersectionTest_Perpendicular2()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(1, 1, 2);
@@ -86,7 +85,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_IntersectionTest_Perpendicular3()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(1, 2, 2);
@@ -101,7 +100,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void IntersectionTest_Origin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -116,8 +115,8 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();  
         }
 
-       
-        [TestMethod()]
+
+        [Test()]
         public void Line_AngleBetweenIntersectingLineTest_Inches()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
@@ -132,7 +131,7 @@ namespace ClearspanTypeLibrary.Tests
             actualResult.Should().Be(expectedResult);
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_AngleBetweenIntersectingLineTest_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
@@ -147,7 +146,7 @@ namespace ClearspanTypeLibrary.Tests
             actualResult.Should().Be(expectedResult);
         }
 
-        [TestMethod()]
+        [Test()]
         public void AngleBetweenIntersectingLineTest_IntersectAtOrigin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -162,7 +161,7 @@ namespace ClearspanTypeLibrary.Tests
             line1.AngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_AngleBetweenIntersectingLinePerpendicularTest()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -178,7 +177,7 @@ namespace ClearspanTypeLibrary.Tests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_WillTwoLinesOnTopOfOneAnotherIntersectTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(10, 0, 0));
@@ -199,7 +198,7 @@ namespace ClearspanTypeLibrary.Tests
             resultF1.Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_CoplanarTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
@@ -213,7 +212,7 @@ namespace ClearspanTypeLibrary.Tests
             line4.IsCoplanarWith(line2).Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_ParallelTest()
         {
             Line line1 = new LineSegment(PointGenerator.MakePointWithInches(0,0), PointGenerator.MakePointWithInches(5,0));
@@ -234,7 +233,7 @@ namespace ClearspanTypeLibrary.Tests
             line5.IsParallelTo(line3).Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_RotateTest_AboutZAxis()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
@@ -255,7 +254,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_RotateTest_AboutZAxis_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
@@ -275,7 +274,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == actualResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_RotateTest_AboutReferencePoint()
         {
             Point start = PointGenerator.MakePointWithInches(0, 1, 3);
@@ -295,7 +294,7 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == afterRotate).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_ShiftTest_Translate()
         {
             Point start = PointGenerator.MakePointWithInches(0, 1, 3);
@@ -303,17 +302,11 @@ namespace ClearspanTypeLibrary.Tests
 
             Line toShift = new Line(start, end);
 
-
-
-
-
-
-
-
+            Assert.Fail();
             
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_TranslateTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithMillimeters(1, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0));
@@ -328,7 +321,7 @@ namespace ClearspanTypeLibrary.Tests
             (actualLine1 == expectedLine1).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_DoesIntersectLineTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
@@ -345,7 +338,7 @@ namespace ClearspanTypeLibrary.Tests
             resultT2.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Line_DoesIntersectLineSegmentTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(-3, 0, 0));

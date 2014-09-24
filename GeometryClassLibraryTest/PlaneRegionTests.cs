@@ -1,6 +1,5 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using NUnit.Framework;
 using FluentAssertions;
 using System.Collections.Generic;
 using UnitClassLibrary;
@@ -8,10 +7,10 @@ using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
-    [TestClass()]
+    [TestFixture()]
     public class PlaneRegionTests
     {
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_ExtrudePlaneRegion()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -56,7 +55,7 @@ namespace GeometryClassLibraryTests
             extrudedResult.PlaneRegions.Contains(rightRegion).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_RotateAndRoundTest_Orthogonal()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -81,7 +80,7 @@ namespace GeometryClassLibraryTests
             (actualPlaneRegion == expectedPlaneRegion).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_RotateTest()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -101,7 +100,7 @@ namespace GeometryClassLibraryTests
             actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(2.8439301, -1.4640641, -0.379865), PointGenerator.MakePointWithInches(5.238195, 1.681697053, -1.9198923)));
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_TranslateTest()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -122,7 +121,7 @@ namespace GeometryClassLibraryTests
             actualPlaneRegion.Contains(new LineSegment(PointGenerator.MakePointWithInches(-3, 15, 12), PointGenerator.MakePointWithInches(0, 0, 0)));
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_Centorid()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -159,7 +158,7 @@ namespace GeometryClassLibraryTests
             testPlaneRegion2.Contains(center2).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_Copy()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -190,7 +189,7 @@ namespace GeometryClassLibraryTests
             (planeCopy.NormalVector == testPlaneRegion.NormalVector).Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_ContainsPoint()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -229,7 +228,7 @@ namespace GeometryClassLibraryTests
         }
 
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_OverlappingPlaneRegionOneEnclosedInOtherTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -255,7 +254,7 @@ namespace GeometryClassLibraryTests
             intersect1.Equals(testPlaneRegion).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_OverlappingPlaneRegionSharedSidesTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -282,7 +281,7 @@ namespace GeometryClassLibraryTests
             intersect1.Equals(testPlaneRegion).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_OverlappingPlaneRegionIntersectingBoundriesTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -317,7 +316,7 @@ namespace GeometryClassLibraryTests
             intersect1.Equals(intersect2).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_OverlappingPlaneRegion()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -352,7 +351,7 @@ namespace GeometryClassLibraryTests
             intersect1.Equals(intersect2).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_AreaTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -367,7 +366,7 @@ namespace GeometryClassLibraryTests
             testArea.ShouldBeEquivalentTo(new Area(AreaType.MillimetersSquared, 8));
         }
 
-        [TestMethod()]
+        [Test()]
         public void PlaneRegion_SliceOnLineTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();

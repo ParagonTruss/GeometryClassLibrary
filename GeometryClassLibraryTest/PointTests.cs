@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
-    [TestClass()]
+    [TestFixture()]
     public class PointTests
     {
         /// <summary>
         /// This test is to make sure that the z property is still created even if there are only 2 dimensions passed in
         /// </summary>
-        [TestMethod()]
+        [Test()]
         public void Point_2DConstructorTest()
         {
             Dimension xDimension = new Dimension(DimensionType.Millimeter, 5);
@@ -27,7 +26,7 @@ namespace GeometryClassLibraryTests
             p.Z.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_3DConstructorTest()
         {
             Dimension xDimension = new Dimension(DimensionType.Millimeter, 0);
@@ -41,7 +40,7 @@ namespace GeometryClassLibraryTests
             p.Z.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_PlusOperatorStandardTest()
         {
             Dimension xDimension1 = new Dimension(DimensionType.Millimeter, 5);
@@ -66,7 +65,7 @@ namespace GeometryClassLibraryTests
             cumulativePoint.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_MinusOperatorStandardTest()
         {
             Dimension xDimension1 = new Dimension(DimensionType.Millimeter, 5);
@@ -93,7 +92,7 @@ namespace GeometryClassLibraryTests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_IsOnLineStandardTest()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
@@ -111,7 +110,7 @@ namespace GeometryClassLibraryTests
             result2.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_IsOnLineWithComponentOfDirectionEqualToZeroTest()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
@@ -124,7 +123,7 @@ namespace GeometryClassLibraryTests
             pointOnLine.IsOnLine(testLine).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin()
         {
             //Fails because the perpendicular line segment created for Rotate does not intersect the "destination line," so there is a NullReferenceException when it tries to do something with the null intersection point
@@ -140,7 +139,7 @@ namespace GeometryClassLibraryTests
             newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin_PointIsOrigin()
         {
             Point originPoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
@@ -152,7 +151,7 @@ namespace GeometryClassLibraryTests
             newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(1.8480480961564261, 0, -0.52991926423320479));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_IsOnLineSegment()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(5, 0));
@@ -179,7 +178,7 @@ namespace GeometryClassLibraryTests
             resultF3.Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_MirrorAcrossTest_ZAxis()
         {
             Point pointToRotate = PointGenerator.MakePointWithMillimeters(3, 1, 2);
@@ -193,7 +192,7 @@ namespace GeometryClassLibraryTests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_MakePerpendicularLineSegmentTest()
         {
             Point destinationLineBasePoint = PointGenerator.MakePointWithMillimeters(1, 0, 0);
@@ -208,7 +207,7 @@ namespace GeometryClassLibraryTests
             (actualResult == expectedResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_MakePerpendicularLineSegmentTest2()
         {
             Point destinationLineBasePoint = PointGenerator.MakePointWithMillimeters(2,3,4);
@@ -223,9 +222,9 @@ namespace GeometryClassLibraryTests
             (actualResult == expectedResult).Should().BeTrue();
         }
 
-        
 
-        [TestMethod()]
+
+        [Test()]
         public void Point_TranslateTest()
         {
             Point pointToTranslate = PointGenerator.MakePointWithMillimeters(1, 2, 3);
@@ -240,7 +239,7 @@ namespace GeometryClassLibraryTests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_TranslateTest_OneComponent()
         {
             Point pointToTranslate = PointGenerator.MakePointWithMillimeters(1,1,1);
@@ -255,7 +254,7 @@ namespace GeometryClassLibraryTests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_ShiftTest()
         {            
             Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);
@@ -276,7 +275,7 @@ namespace GeometryClassLibraryTests
             (actual1 == expected1).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Point_ShiftTest_RotateOnly()
         {
             Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);

@@ -1,17 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
-
 using System.Collections.Generic;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
-    [TestClass()]
+    [TestFixture()]
     public class PlaneTests
     {
-        [TestMethod()]
+        [Test()]
         public void Plane_ContainsLine()
         {
             Plane testPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 3, 0), PointGenerator.MakePointWithInches(4, -2, 0));
@@ -25,7 +24,7 @@ namespace GeometryClassLibraryTests
             result2.Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Plane_ContainsLineOnOrigin()
         {
             Plane testPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 3, 0), PointGenerator.MakePointWithInches(-3, -1, 0));
@@ -36,7 +35,7 @@ namespace GeometryClassLibraryTests
             result.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Plane_ContainsPlaneRegion()
         {
             Plane testPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, -3, 4), PointGenerator.MakePointWithInches(1, 2, 2));
@@ -53,7 +52,7 @@ namespace GeometryClassLibraryTests
             result.Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Plane_ContainsPoint()
         {
             Plane testPlane = new Plane(PointGenerator.MakePointWithInches(0,1,0), PointGenerator.MakePointWithInches(2,1,-3), PointGenerator.MakePointWithInches(-4,1,-1));
@@ -67,7 +66,7 @@ namespace GeometryClassLibraryTests
             result2.Should().BeFalse();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Plane_RotateTest()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 1, -1);            
@@ -87,7 +86,7 @@ namespace GeometryClassLibraryTests
             (actualResult == expectedResult).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void Plane_PointOnSameSideAs()
         {
             Point testPoint = PointGenerator.MakePointWithInches(1, 3, -1);

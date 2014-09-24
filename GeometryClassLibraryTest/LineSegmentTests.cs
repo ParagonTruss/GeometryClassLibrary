@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 namespace ClearspanTypeLibrary.Tests
 {
-    [TestClass()]
+    [TestFixture()]
     public class LineSegmentTests
     {
-        [TestMethod()]
+        [Test()]
         public void LineSegment_ConstructorTest()
         {
             //Fixture fixture = new Fixture();
@@ -26,7 +26,7 @@ namespace ClearspanTypeLibrary.Tests
             Assert.AreEqual("","");
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_IntersectionOriginTest()
         {
             LineSegment verticalLine = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
@@ -35,7 +35,7 @@ namespace ClearspanTypeLibrary.Tests
             verticalLine.Intersection(flatLine).Should().Be(PointGenerator.MakePointWithInches(0, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_SegmentIntersectionTest()
         {
             LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
@@ -52,7 +52,7 @@ namespace ClearspanTypeLibrary.Tests
             intersectF1.Should().BeNull();
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_LineIntersectionTest() 
         {
             LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
@@ -67,7 +67,7 @@ namespace ClearspanTypeLibrary.Tests
             intersectF1.Should().BeNull();
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_MidpointTest()
         {
             LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 2, 2));
@@ -75,7 +75,7 @@ namespace ClearspanTypeLibrary.Tests
             line1.MidPoint.Should().Be(PointGenerator.MakePointWithInches(1, 1, 1));
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_HypotheticalIntersectionTest()
         {
             LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-5, -5, 0));
@@ -86,7 +86,7 @@ namespace ClearspanTypeLibrary.Tests
             intersectT1.Should().Be(PointGenerator.MakePointWithInches(.5, .5, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_LineSegmentOverlappingEquality()
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
@@ -95,7 +95,7 @@ namespace ClearspanTypeLibrary.Tests
             segment1.Should().Be(segment2);
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_EqualityOperator()
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
@@ -104,7 +104,7 @@ namespace ClearspanTypeLibrary.Tests
             segment1.Should().Be(segment2);
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_InequalityOperator()
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
@@ -113,7 +113,7 @@ namespace ClearspanTypeLibrary.Tests
             segment1.Should().Be(segment2);
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_3dRotateTest_Orthogonal()
         {
             LineSegment originalSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 5, 0));
@@ -125,7 +125,7 @@ namespace ClearspanTypeLibrary.Tests
             (actualSegment == expectedSegment).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_3dRotateTest()
         {
 
@@ -147,7 +147,7 @@ namespace ClearspanTypeLibrary.Tests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_TranslateTest()
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithMillimeters(1, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0));
@@ -162,13 +162,13 @@ namespace ClearspanTypeLibrary.Tests
             (actualSegment1 == expectedSegment1).Should().BeTrue();
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_Contains()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(5, 0));
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_ProjectOntoLine2DThroughOrigin()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 5));
@@ -199,7 +199,7 @@ namespace ClearspanTypeLibrary.Tests
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_ProjectOntoLine3DNotThroughOrigin()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2,0,4), PointGenerator.MakePointWithMillimeters(0,2,1));
@@ -229,7 +229,7 @@ namespace ClearspanTypeLibrary.Tests
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
         }
 
-        [TestMethod()]
+        [Test()]
         public void LineSegment_SliceWithPoint()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));

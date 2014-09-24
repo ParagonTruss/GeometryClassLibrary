@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 namespace ClearspanTypeLibrary.Tests
 {
-    [TestClass()]
+    [TestFixture()]
     public class SolidTests
     {
-        //[TestMethod()]
+        //[Test()]
         //public void Solid_ShiftXYTest()
         //{
         //    Solid Solid = new Solid();
@@ -35,29 +35,31 @@ namespace ClearspanTypeLibrary.Tests
         //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 8), PointGenerator.MakePointWithInches(8, 0))).Should().BeTrue();
         //}
 
-        //[TestMethod()]
-        //public void Solid_ShiftYZTest()
-        //{
-        //    Solid Solid = new Solid();
+        [Test()]
+        public void Solid_ShiftYZTest()
+        {
+            Solid Solid = new Solid();
 
-        //    List<LineSegment> lineSegments = new List<LineSegment>();
-        //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-        //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-        //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-        //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-        //    Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
 
-        //    //rotate 90 degrees towards z
-        //    Shift nintyShift = new Shift(new Vector(), new Angle(), new Angle(AngleType.Degree, -90));
-        //    Solid.Shift(nintyShift, PointGenerator.MakePointWithInches(8, 0, 0));
+            Line rotationLine = new Line (PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
 
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
-        //}
+            //rotate 90 degrees towards z
+            Shift nintyShift = new Shift(new Vector(), new Rotation(rotationLine, new Angle(AngleType.Degree, -90)));
+            Solid.Shift(nintyShift);
 
-        //[TestMethod()]
+            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
+            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
+            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+        }
+
+        //[Test()]
         //public void Solid_ReturnToOriginalTest()
         //{
         //    Solid Solid = new Solid();
@@ -73,8 +75,8 @@ namespace ClearspanTypeLibrary.Tests
         //    Shift nintyzShift = new Shift(new Vector(), new Angle(), new Angle(AngleType.Degree, -90));
         //    //rotate 90 degrees towards x
         //    Shift nintyxShift = new Shift(new Vector(), new Angle(AngleType.Degree, -90), new Angle());
-        //    Solid.Shift(nintyzShift, PointGenerator.MakePointWithInches(8, 0, 0));
-        //    Solid.Shift(nintyxShift, PointGenerator.MakePointWithInches(8, 0, 0));
+        //    Solid.Shift(nintyzShift);
+        //    Solid.Shift(nintyxShift);
 
         //    Solid.ShiftBackToHomeCoordinateSystem();
 
@@ -86,7 +88,7 @@ namespace ClearspanTypeLibrary.Tests
 
         //}
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ReturnToOriginalTest()
         {
             Solid Solid = new Solid();
@@ -118,7 +120,7 @@ namespace ClearspanTypeLibrary.Tests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_RotationOnly()
         {
             Solid Solid = new Solid();
@@ -146,7 +148,7 @@ namespace ClearspanTypeLibrary.Tests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_TranslationOnly()
         {
             Solid Solid = new Solid();
@@ -177,7 +179,7 @@ namespace ClearspanTypeLibrary.Tests
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 7, 5), PointGenerator.MakePointWithInches(0, 3, 9)));
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_RotateAndTranslate()
         {
             Solid Solid = new Solid();
@@ -204,7 +206,7 @@ namespace ClearspanTypeLibrary.Tests
         
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_RotateAndTranslate_ThenReturnToOriginal()
         {
             Solid Solid = new Solid();
@@ -232,7 +234,7 @@ namespace ClearspanTypeLibrary.Tests
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate()
         {
             Solid Solid = new Solid();
@@ -260,7 +262,7 @@ namespace ClearspanTypeLibrary.Tests
 
         }
 
-        [TestMethod()]
+        [Test()]
         public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
             Solid Solid = new Solid();
@@ -274,7 +276,6 @@ namespace ClearspanTypeLibrary.Tests
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
-            //Line testAxis = new Line(PointGenerator.MakePointWithInches(0, 1, -3), PointGenerator.MakePointWithInches(2, 0, -5));
             Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 0));
@@ -289,8 +290,5 @@ namespace ClearspanTypeLibrary.Tests
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
-
-
-
     }
 }
