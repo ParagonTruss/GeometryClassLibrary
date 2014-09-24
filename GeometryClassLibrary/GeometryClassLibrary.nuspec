@@ -8,7 +8,8 @@
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Very beautiful shapes.</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+	<iconUrl>http://chattanooga.clearspaninc.com/images/geometry-class-library.png</iconUrl>
+    <releaseNotes>Automatically updated</releaseNotes>
     <copyright>Copyright Clearspan Components Inc 2014</copyright>
   </metadata>
 </package>
