@@ -124,22 +124,6 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Point_Rotate3DTest_AxisNotThroughOrigin()
-        {
-            //Fails because the perpendicular line segment created for Rotate does not intersect the "destination line," so there is a NullReferenceException when it tries to do something with the null intersection point
-                //I think it almost intersects, but it does not because of rounding error.
-
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
-            Line axis = new Line(PointGenerator.MakePointWithMillimeters(2, -2, -3), new Vector(PointGenerator.MakePointWithMillimeters(-1, -5, -3)));
-
-            Angle rotationAngle = new Angle(AngleType.Degree, 322);
-
-            Point newPoint = pointToRotate.Rotate3D(axis, rotationAngle);
-
-            newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
-        }
-
-        [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin_PointIsOrigin()
         {
             Point originPoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);

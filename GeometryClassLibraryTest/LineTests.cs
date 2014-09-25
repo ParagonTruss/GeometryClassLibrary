@@ -294,17 +294,6 @@ namespace ClearspanTypeLibrary.Tests
             (expectedResult == afterRotate).Should().BeTrue();
         }
 
-        [Test()]
-        public void Line_ShiftTest_Translate()
-        {
-            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
-            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
-
-            Line toShift = new Line(start, end);
-
-            Assert.Fail();
-            
-        }
 
         [Test()]
         public void Line_TranslateTest()
