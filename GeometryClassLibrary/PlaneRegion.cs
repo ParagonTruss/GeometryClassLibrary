@@ -7,6 +7,9 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
+    /// <summary>
+    /// A plane region is a section of a plane.
+    /// </summary>
     public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Fields and Properties
@@ -95,6 +98,13 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Zero constructor
+        /// </summary>
+        public PlaneRegion()
+        {
+
+        }
 
         /// <summary>
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region

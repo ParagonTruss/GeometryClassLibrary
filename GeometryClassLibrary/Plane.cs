@@ -6,6 +6,9 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
+    /// <summary>
+    /// A plane is an unbounded flat surface
+    /// </summary>
     public class Plane
     {
         #region Fields and Properties
@@ -25,6 +28,13 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Zero constructor
+        /// </summary>
+        public Plane()
+        {
+            throw new NotImplementedException();
+        }
 
         public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )
         {

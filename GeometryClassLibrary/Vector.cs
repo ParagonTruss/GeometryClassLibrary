@@ -7,6 +7,9 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
+    /// <summary>
+    /// A vector is a line segment that has a direction
+    /// </summary>
     [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
     public class Vector : LineSegment
     {

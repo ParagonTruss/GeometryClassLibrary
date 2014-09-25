@@ -45,27 +45,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arc.cs" />
+    <Compile Include="Circle.cs" />
+    <Compile Include="ConeClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Cube.cs" />
+    <Compile Include="Cylinder.cs" />
+    <Compile Include="Ellipse.cs" />
+    <Compile Include="FiniteLine.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
+    <Compile Include="IrregularPolygon.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineExtensionMethods.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="LineSegment.cs" />
     <Compile Include="MatricesMatrix.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="NonPolygon.cs" />
+    <Compile Include="NonPolyhedron.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="PlaneRegion.cs" />
     <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
+    <Compile Include="Polygon.cs" />
+    <Compile Include="Polyhedron.cs" />
+    <Compile Include="Prism.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rectangle.cs" />
+    <Compile Include="RegularPolygon.cs" />
+    <Compile Include="Rhombus.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="Shift.cs" />
     <Compile Include="Solid.cs" />
+    <Compile Include="Sphere.cs" />
+    <Compile Include="Square.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
