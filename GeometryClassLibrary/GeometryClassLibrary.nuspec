@@ -11,5 +11,6 @@
 	<iconUrl>http://chattanooga.clearspaninc.com/images/geometry-class-library.png</iconUrl>
     <releaseNotes>Automatically updated</releaseNotes>
     <copyright>Copyright Clearspan Components Inc 2014</copyright>
+	<licenseurl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseurl>
   </metadata>
 </package>
