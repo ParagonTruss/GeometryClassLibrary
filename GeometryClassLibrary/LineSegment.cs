@@ -174,7 +174,7 @@ namespace GeometryClassLibrary
         {
             Point potentialIntersect = this.Intersection((Line)passedLineSegment);
 
-            if (potentialIntersect.IsOnLineSegment(passedLineSegment))
+            if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(passedLineSegment))
                 return potentialIntersect;
             else
                 return null;

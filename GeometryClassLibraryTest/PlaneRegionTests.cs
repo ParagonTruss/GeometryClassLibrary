@@ -13,6 +13,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void PlaneRegion_ExtrudePlaneRegion()
         {
+            //Not implemented yet
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 4, 0);
             Point bottomRightPoint = PointGenerator.MakePointWithInches(8, 0, 0);
@@ -83,6 +84,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void PlaneRegion_RotateTest()
         {
+            //Fails due to accuracy error
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
@@ -190,7 +192,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void PlaneRegion_ContainsPoint()
+        public void PlaneRegion_ContainsExclusiveInclusiveAndTouchingPoint()
         {
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
@@ -199,18 +201,14 @@ namespace GeometryClassLibraryTests
             bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
             PlaneRegion testPlaneRegion = new PlaneRegion(bounds);
 
-            Point test = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
-            Point test2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
+            Point insidePlane1 = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
+            Point insidePlane2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
 
-            testPlaneRegion.Contains(test).Should().BeTrue();
-            testPlaneRegion.Contains(test2).Should().BeFalse();
+            Point center1 = testPlaneRegion.Centroid();
 
             //make sure the sides are not included
             Point sideTest = PointGenerator.MakePointWithMillimeters(0, 0, 0);
-            testPlaneRegion.Contains(sideTest).Should().BeFalse();
 
-            //make sure the PlaneRegion contains the centroid
-            testPlaneRegion.Contains(testPlaneRegion.Centroid()).Should().BeTrue();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
@@ -219,12 +217,37 @@ namespace GeometryClassLibraryTests
             PlaneRegion testPlaneRegion2 = new PlaneRegion(lineSegments);
 
             //make sure the PlaneRegion contains the centroid
-            Point center = testPlaneRegion2.Centroid();
-            testPlaneRegion2.Contains(center).Should().BeTrue();
+            Point center2 = testPlaneRegion2.Centroid();
 
-            Point test3 = center.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
-            testPlaneRegion2.Contains(test3).Should().BeFalse();
+            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
 
+            //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
+            testPlaneRegion.ContainsExclusive(insidePlane1).Should().BeTrue();
+            testPlaneRegion.ContainsInclusive(insidePlane1).Should().BeTrue();
+            testPlaneRegion.Touches(insidePlane1).Should().BeFalse();
+
+            testPlaneRegion.ContainsExclusive(insidePlane2).Should().BeFalse();
+            testPlaneRegion.ContainsInclusive(insidePlane2).Should().BeFalse();
+            testPlaneRegion.Touches(insidePlane2).Should().BeFalse();
+
+            //make sure the PlaneRegion contains the centroid (true for exclusive and inclusive, false for touching)
+            testPlaneRegion.ContainsExclusive(center1).Should().BeTrue();
+            testPlaneRegion.ContainsInclusive(center1).Should().BeTrue();
+            testPlaneRegion.Touches(center1).Should().BeFalse();
+
+            testPlaneRegion2.ContainsExclusive(center2).Should().BeTrue();
+            testPlaneRegion2.ContainsInclusive(center2).Should().BeTrue();
+            testPlaneRegion2.Touches(center2).Should().BeFalse();
+
+            //check the side point (true for inclusive and touches, false for exclusive)
+            testPlaneRegion.ContainsExclusive(sideTest).Should().BeFalse();
+            testPlaneRegion.ContainsInclusive(sideTest).Should().BeTrue();
+            testPlaneRegion.Touches(sideTest).Should().BeTrue();
+
+            //not on plane (false for all)
+            testPlaneRegion2.ContainsExclusive(notOnPlane).Should().BeFalse();
+            testPlaneRegion2.ContainsInclusive(notOnPlane).Should().BeFalse();
+            testPlaneRegion2.Touches(notOnPlane).Should().BeFalse();
         }
 
 

@@ -569,11 +569,21 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns true if the point is contained within this PlaneRegion
+        /// Returns true if the point is contained within this PlaneRegion, Does not include the boundaries!
         /// </summary>
         /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
         /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
-        public new bool Contains(Point passedPoint)
+        public bool ContainsExclusive(Point passedPoint)
+        {
+            return (ContainsInclusive(passedPoint) && !Touches(passedPoint));
+        }
+
+        /// <summary>
+        /// Returns true if the point is on the PlaneRegion, including on its boundaries
+        /// </summary>
+        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
+        /// <returns>returns true if the Point is in this PlaneRegion or on its boundaries and false if it is not</returns>
+        public bool ContainsInclusive(Point passedPoint)
         {
             //check if it is in our plane first
             if (base.Contains(passedPoint))
@@ -592,14 +602,35 @@ namespace GeometryClassLibrary
                     //if the point is on the side outside of our region we know it is not in it and can return
                     if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
                     {
-                        return false;
+                        //since its inclusive, if the point is on the plane its still good
+                        if(!divisionPlane.Contains(passedPoint))
+                            return false;
                     }
                 }
 
                 //if it is on the right side of all the sides than we know the point must be inside the region
                 return true;
             }
+
             //if its not in the Plane than it is obviously not in the PlaneRegion
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the point is touching the PlaneRegion (aka if it is on the boundaries of the planeRegion)
+        /// </summary>
+        /// <param name="passedPoint">Point to check if it is touching</param>
+        /// <returns>Returns true if the point touches the PlaneRegion and false if it is not on the boundaries</returns>
+        public bool Touches(Point passedPoint)
+        {
+            //check each of our boundaries if the point is on the LineSegment
+            foreach (LineSegment line in this.PlaneBoundaries)
+            {
+                if (passedPoint.IsOnLineSegment(line))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -612,11 +643,11 @@ namespace GeometryClassLibrary
         public Point SharedPointNotOnThisPlaneRegionsBoundary(PlaneRegion otherPlane)
         {
             //check the centroids
-            if (otherPlane.Contains(this.Centroid()))
+            if (otherPlane.ContainsInclusive(this.Centroid()))
             {
                 return this.Centroid();
             }
-            if (this.Contains(otherPlane.Centroid()))
+            if (this.ContainsExclusive(otherPlane.Centroid()))
             {
                 return otherPlane.Centroid();
             }
@@ -625,11 +656,11 @@ namespace GeometryClassLibrary
             //if we still havent found it try looking at the endpints of the otherPlane
             foreach (LineSegment line in otherPlane.PlaneBoundaries)
             {
-                if (this.Contains(line.BasePoint))
+                if (this.ContainsExclusive(line.BasePoint))
                 {
                     return line.BasePoint;
                 }
-                else if (this.Contains(line.EndPoint))
+                else if (this.ContainsExclusive(line.EndPoint))
                 {
                     return line.EndPoint;
                 }
@@ -684,7 +715,7 @@ namespace GeometryClassLibrary
         public PlaneRegion OverlappingPlaneRegion(PlaneRegion planeToBeClipped)
         {
             //if they are coplanar
-            if (((Plane)this).Contains(planeToBeClipped))
+            if (this.Contains(planeToBeClipped))
             {
                 //using the the idea of the Sutherland-Hodgman algoritm
 
@@ -704,7 +735,7 @@ namespace GeometryClassLibrary
 
                         //findout which one we want to keep and we dont need the other part
                         overlapping = slicedPlane[0];
-                        if (slicedPlane[1].Contains(referencePoint))
+                        if (slicedPlane[1].ContainsInclusive(referencePoint))
                         {
                             overlapping = slicedPlane[1];
                         }
