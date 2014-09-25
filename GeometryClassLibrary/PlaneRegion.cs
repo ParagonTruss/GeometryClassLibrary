@@ -652,17 +652,12 @@ namespace GeometryClassLibrary
                 return otherPlane.Centroid();
             }
 
-
-            //if we still havent found it try looking at the endpints of the otherPlane
-            foreach (LineSegment line in otherPlane.PlaneBoundaries)
+            //if we still havent found it try looking at the veticies of the otherPlane
+            foreach (Point vertex in otherPlane.PlaneBoundaries.GetAllPoints())
             {
-                if (this.ContainsExclusive(line.BasePoint))
+                if (this.ContainsExclusive(vertex))
                 {
-                    return line.BasePoint;
-                }
-                else if (this.ContainsExclusive(line.EndPoint))
-                {
-                    return line.EndPoint;
+                    return vertex;
                 }
             }
 
@@ -891,7 +886,7 @@ namespace GeometryClassLibrary
                             //we have to do it part by part because line is immutable during a foreach loop so we cannot reassign it, only modify it
                             //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
                             line.BasePoint = insidePart.BasePoint;
-                            line.EndPoint = insidePart.EndPoint;
+                            line.Length = insidePart.Length;
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else

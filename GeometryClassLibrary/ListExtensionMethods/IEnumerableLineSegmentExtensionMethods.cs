@@ -105,21 +105,28 @@ namespace GeometryClassLibrary
         {
             Point minXPoint = PointGenerator.MakePointWithMillimeters(double.MaxValue, double.MaxValue);
 
-            // find the minimum X
+            // find the Point with the smallest X
+            foreach (Point vertex in borders.GetAllPoints())
+            {
+
+            }
+
             foreach (LineSegment segment in borders)
             {
                 // if the x's are equal but the y is higher, make the new point the one with the higher y
                 if (segment.BasePoint.X == minXPoint.X)
+                {
                     if (segment.BasePoint.Y > minXPoint.Y)
                         minXPoint = segment.BasePoint;
-
+                }
                 // else if this segment's base point has a lower x, make it the new minX
-                    else if (segment.BasePoint.X < minXPoint.X)
-                        minXPoint = segment.BasePoint;
+                else if (segment.BasePoint.X < minXPoint.X)
+                    minXPoint = segment.BasePoint;
             }
 
             LineSegment firstChoice = null;
             LineSegment secondChoice = null;
+            LineSegment startingSegment = null;
 
             // figure out which point to cross over to first
             foreach (LineSegment segment in borders)
@@ -133,11 +140,12 @@ namespace GeometryClassLibrary
             // if the first choice is higher thna the second choice, choose it
             if (firstChoice.EndPoint.Y > secondChoice.BasePoint.Y)
             {
-                
+                startingSegment = firstChoice;
             }
             // else the second point is higher, so you need to reverse it and go on
             else
             {
+                startingSegment = secondChoice;
 
             }
 
@@ -177,36 +185,79 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
+        /// </summary>
+        /// <param name="passedSegments">The List of LineSegments to get the points of</param>
+        /// <returns>Returns a list of Points containing all the unique Points in the LineSegments List</returns>
+        public static List<Point> GetAllPoints(this IEnumerable<LineSegment> passedSegments)
+        {
+            List<Point> points = new List<Point>();
+
+            //just cycle through each line and add the points to our list if they are not already there
+            foreach (LineSegment line in passedSegments)
+            {
+                if (!points.Contains(line.BasePoint))
+                {
+                    points.Add(line.BasePoint);
+                }
+                if (!points.Contains(line.EndPoint))
+                {
+                    points.Add(line.EndPoint);
+                }
+            }
+
+            return points;
+        }
+    
+
+        /// <summary>
         /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
         /// </summary>
         /// <param name="passedBorders"></param>
         /// <returns></returns>
         public static Area FindAreaOfPolygon(this IEnumerable<LineSegment> passedBorders)
         {
-            double area = 0.0;
-
-            if (passedBorders != null && passedBorders.Count() > 2)
+            if (passedBorders.AreAllCoplanar())
             {
-                // for each of the borders
-                foreach (LineSegment border in passedBorders)
-                {
-                    double height = (border.BasePoint.Y.Millimeters + border.EndPoint.Y.Millimeters) / 2;
-                    double width = border.EndPoint.X.Millimeters - border.BasePoint.X.Millimeters;
+                Dimension areaDimension = new Dimension();
+                Vector areaVector = new Vector();
 
-                    double tempArea = height * width;
-                    area += tempArea;
+                if (passedBorders != null && passedBorders.Count() > 2)
+                {
+                    //following the method here of projecting the triangles formed with an arbitrary point onto the plane: http://geomalgorithms.com/a01-_area.html
+
+                    //get our verticies
+                    List<Point> verticies = passedBorders.GetAllPoints();
+
+                    //for each of our verticies compare it to the previous one
+                    Point previousVertex = verticies[verticies.Count - 1];
+                    foreach (Point vertex in verticies)
+                    {
+                        //take the cross product of them (relative to the origin)
+                        Vector crossProduct = vertex.VectorFromOriginToPoint().CrossProduct(previousVertex.VectorFromOriginToPoint());
+
+                        //now we add the magnitute to the area
+                        //areaDimension += crossProduct.Magnitude;
+                        areaVector += crossProduct;
+
+                        previousVertex = vertex;
+                    }
+                }
+
+                areaDimension = areaVector.Magnitude;
+
+                if (areaDimension > new Dimension())
+                {
+                    //the area is really units squared so we need to return it that way - not as a dimension
+                    //also we need to divide it in half (we were using triangles)
+                    return new Area(AreaType.MillimetersSquared, areaDimension.Millimeters / 2);
+                }
+                else
+                {
+                    return new Area();
                 }
             }
-
-            if (area > 0)
-            {
-                return new Area(AreaType.MillimetersSquared, area);
-            }
-            else
-            {
-                return new Area();
-            }
-
+            return null;
         }
 
         public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)

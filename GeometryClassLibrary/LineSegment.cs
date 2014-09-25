@@ -18,7 +18,7 @@ namespace GeometryClassLibrary
             {
                 if(MagnitudeOfDirectionVector == new Dimension())
                 {
-                    return new Point();
+                    return BasePoint;
                 }
 
                 Dimension xOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.X.Millimeters + (_length.Millimeters * XComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
@@ -26,10 +26,6 @@ namespace GeometryClassLibrary
                 Dimension zOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Z.Millimeters + (_length.Millimeters * ZComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
 
                 return new Point(xOfEndPoint,yOfEndPoint,zOfEndPoint);
-            }
-            set
-            {
-                _length = this.BasePoint.DistanceTo(value);
             }
         }
 

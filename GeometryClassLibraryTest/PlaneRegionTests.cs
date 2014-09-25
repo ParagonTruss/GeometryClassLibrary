@@ -430,5 +430,63 @@ namespace GeometryClassLibraryTests
             results2.Count.Should().Be(1);
             (results2[0] == testPlaneRegion).Should().BeTrue();
         }
+
+
+        [Test()]
+        public void PlaneRegion_SharedPointNotOnThisPlaneRegionsBoundary()
+        {
+            List<LineSegment> bounds1 = new List<LineSegment>();
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(3, 0, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
+            PlaneRegion testPlaneRegion1 = new PlaneRegion(bounds1);
+
+            List<LineSegment> bounds2 = new List<LineSegment>();
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 0, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3.5, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
+            PlaneRegion testPlaneRegion2 = new PlaneRegion(bounds2);
+
+            Point result = testPlaneRegion1.SharedPointNotOnThisPlaneRegionsBoundary(testPlaneRegion2);
+            (result != null).Should().BeTrue();
+            testPlaneRegion1.Touches(result).Should().BeFalse();
+
+
+            List<LineSegment> bounds3 = new List<LineSegment>();
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            PlaneRegion testPlaneRegion3 = new PlaneRegion(bounds3);
+
+            Point result2 = testPlaneRegion1.SharedPointNotOnThisPlaneRegionsBoundary(testPlaneRegion3);
+            (result2 != null).Should().BeTrue();
+            testPlaneRegion2.Touches(result).Should().BeFalse();
+
+
+            List<LineSegment> bounds4 = new List<LineSegment>();
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            PlaneRegion testPlaneRegion4 = new PlaneRegion(bounds4);
+
+            Point result3 = testPlaneRegion1.SharedPointNotOnThisPlaneRegionsBoundary(testPlaneRegion4);
+            (result3 != null).Should().BeFalse();
+
+
+            List<LineSegment> bounds5 = new List<LineSegment>();
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(9, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(-1, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(9, 0, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, .5, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
+            PlaneRegion testPlaneRegion5 = new PlaneRegion(bounds4);
+
+            Point result4 = testPlaneRegion1.SharedPointNotOnThisPlaneRegionsBoundary(testPlaneRegion5);
+            (result4 != null).Should().BeTrue();
+            testPlaneRegion4.Touches(result).Should().BeFalse();
+        }
     }
 }
