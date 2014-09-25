@@ -150,12 +150,32 @@ namespace GeometryClassLibrary
             return new Line(this).Intersection(passedLine);
         }
 
+        /// <summary>
+        /// Checks if this LineSegment intersects the given line and returns the point if it does or null otherwise
+        /// </summary>
+        /// <param name="passedLine">The line to check if this intersects with</param>
+        /// <returns>returns the intersection point of the two lines or null if they do not</returns>
         public override Point Intersection(Line passedLine)
         {
             Point intersect = this.HypotheticalIntersection(passedLine);
 
             if (!ReferenceEquals(intersect, null) && intersect.IsOnLineSegment(this))
                 return intersect;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
+        /// </summary>
+        /// <param name="passedLineSegment">The LineSegment to check for intersection with</param>
+        /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
+        public Point Intersection(LineSegment passedLineSegment)
+        {
+            Point potentialIntersect = this.Intersection((Line)passedLineSegment);
+
+            if (potentialIntersect.IsOnLineSegment(passedLineSegment))
+                return potentialIntersect;
             else
                 return null;
         }

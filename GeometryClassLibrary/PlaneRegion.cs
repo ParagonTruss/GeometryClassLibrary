@@ -603,6 +603,76 @@ namespace GeometryClassLibrary
             return false;
         }
 
+
+        /// <summary>
+        /// Finds and returns a Point that is on this PlaneRegion, but not on its boundaries, and the PlaneRegion passed in
+        /// </summary>
+        /// <param name="otherPlane">Other plane region to find a shared point with</param>
+        /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
+        public Point SharedPointNotOnThisPlaneRegionsBoundary(PlaneRegion otherPlane)
+        {
+            //check the centroids
+            if (otherPlane.Contains(this.Centroid()))
+            {
+                return this.Centroid();
+            }
+            if (this.Contains(otherPlane.Centroid()))
+            {
+                return otherPlane.Centroid();
+            }
+
+
+            //if we still havent found it try looking at the endpints of the otherPlane
+            foreach (LineSegment line in otherPlane.PlaneBoundaries)
+            {
+                if (this.Contains(line.BasePoint))
+                {
+                    return line.BasePoint;
+                }
+                else if (this.Contains(line.EndPoint))
+                {
+                    return line.EndPoint;
+                }
+            }
+
+            //still still havent found it check if the sides overlap
+            //we know one line at least must intersect this planes boundaries twice
+            foreach (LineSegment line in otherPlane.PlaneBoundaries)
+            {
+                //keep track of our intersection
+                Point firstIntesect = null;
+
+                //look at all the bounding planes
+                foreach (LineSegment otherLine in this.PlaneBoundaries)
+                {
+                    //see if they intersect
+                    Point intersection = line.Intersection(otherLine);
+                    if (intersection != null)
+                    {
+                        //if we havent found a first intersection
+                        if (firstIntesect == null)
+                        {
+                            firstIntesect = intersection;
+                        }
+                        //if we already found one than this is the second and we can interpolate the point between
+                        else
+                        {
+                            //find the point between them by making a line between them and then finding the midpoint of it
+                            LineSegment betweenIntersects = new LineSegment(firstIntesect, intersection);
+
+                            //we have to return here instead of breaking because breaking will only take us out of onw
+                            return betweenIntersects.MidPoint;
+                        }
+                    }
+                }
+            }
+
+            //if we didnt find any return null
+            return null;
+        }
+
+
+
         /// <summary>
         /// This finds and returns the PlaneRegion where the two PlaneRegions overlap or null if they do not 
         /// overlap (or if they are only touching - the overlap region has an area o 0). The plane this function 
@@ -614,7 +684,7 @@ namespace GeometryClassLibrary
         public PlaneRegion OverlappingPlaneRegion(PlaneRegion planeToBeClipped)
         {
             //if they are coplanar
-            if (this.Contains(planeToBeClipped))
+            if (((Plane)this).Contains(planeToBeClipped))
             {
                 //using the the idea of the Sutherland-Hodgman algoritm
 
@@ -622,85 +692,30 @@ namespace GeometryClassLibrary
                 PlaneRegion overlapping = new PlaneRegion(planeToBeClipped);
 
                 //find a point where they overlap
-                Point referencePoint = null;
+                Point referencePoint = this.SharedPointNotOnThisPlaneRegionsBoundary(planeToBeClipped);
 
-                //check the centroids
-                if (overlapping.Contains(this.Centroid()))
+                //if we couldnt find a shared point than they must not overlap
+                if (referencePoint != null)
                 {
-                    referencePoint = this.Centroid();
-                }
-                else if (this.Contains(overlapping.Centroid()))
-                {
-                    referencePoint = overlapping.Centroid();
-                }
-                else
-                {
-                    //check the verticies
-                    foreach (LineSegment line in this.PlaneBoundaries)
+                    //then find where the sides overlap
+                    foreach (Line divisionLine in this.PlaneBoundaries)
                     {
-                        if (overlapping.Contains(line.BasePoint))
+                        List<PlaneRegion> slicedPlane = overlapping.Slice(divisionLine);
+
+                        //findout which one we want to keep and we dont need the other part
+                        overlapping = slicedPlane[0];
+                        if (slicedPlane[1].Contains(referencePoint))
                         {
-                            referencePoint = line.BasePoint;
-                            break;
-                        }
-                        else if (overlapping.Contains(line.EndPoint))
-                        {
-                            referencePoint = line.EndPoint;
-                            break;
+                            overlapping = slicedPlane[1];
                         }
                     }
-
-                    //if we still havent found it
-                    if (referencePoint == null)
-                    {
-                        foreach (LineSegment line in overlapping.PlaneBoundaries)
-                        {
-                            if (this.Contains(line.BasePoint))
-                            {
-                                referencePoint = line.BasePoint;
-                                break;
-                            }
-                            else if (this.Contains(line.EndPoint))
-                            {
-                                referencePoint = line.EndPoint;
-                                break;
-                            }
-                        }
-
-                        //still still havent found it
-                        if (referencePoint == null)
-                        {
-                            //check the line segments
-                            return null;
-                        }
-                    }
-
-
-
+                    //make sure that our planeRegion is valid (coplanar and enclosed) and that the area is not equal 
+                    //to zero (this would mean the planeRegions are only touching not overlapping so we dont want to return it) 
+                    //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
+                    //right now and this should work for how the function is set up)
+                    if (overlapping.isValidPlaneRegion(3) && overlapping.PlaneBoundaries.Count > 2)
+                        return overlapping;
                 }
-
-
-                //then find where the sides overlap
-
-
-
-                foreach (Line divisionLine in this.PlaneBoundaries)
-                {
-                    List<PlaneRegion> slicedPlane = overlapping.Slice(divisionLine);
-
-                    //findout which one we want to keep and we dont need the other part
-                    overlapping = slicedPlane[0];
-                    if (slicedPlane[1].Contains(referencePoint))
-                    {
-                        overlapping = slicedPlane[1];
-                    }
-                }
-                //make sure that our planeRegion is valid (coplanar and enclosed) and that the area is not equal 
-                //to zero (this would mean the planeRegions are only touching not overlapping so we dont want to return it) 
-                //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
-                //right now and this should work for how the function is set up)
-                if (overlapping.isValidPlaneRegion(3) && overlapping.PlaneBoundaries.Count > 2)
-                    return overlapping;
             }
 
             //if we fail to find a valid planeRegion of intersection return null
