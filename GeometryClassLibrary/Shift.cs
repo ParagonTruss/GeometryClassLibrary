@@ -219,7 +219,7 @@ namespace GeometryClassLibrary
             foreach (Rotation rotation in _rotationsToApply)
             {
                 //switch the angle of each rotation to its opposite
-                 returnRotations.Add(new Rotation(rotation.axisToRotateAround, new Angle() - rotation.angleToRotate));
+                 returnRotations.Add(new Rotation(rotation.AxisToRotateAround, new Angle() - rotation.AngleToRotate));
             }
             //now flip the order of them
             returnRotations.Reverse();
@@ -233,19 +233,5 @@ namespace GeometryClassLibrary
             return test;
         }
         #endregion
-
-        public Vector Vector
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
-
-
-
     }
 }

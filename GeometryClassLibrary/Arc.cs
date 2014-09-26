@@ -8,7 +8,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved (not straight)
     /// </summary>
-    public class Arc : FiniteLine
+    public class Arc :IEdge
     {
         /// <summary>
         /// One of the points where the arc arises from

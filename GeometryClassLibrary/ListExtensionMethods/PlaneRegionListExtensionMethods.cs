@@ -9,7 +9,7 @@ namespace GeometryClassLibrary
 {
     public static class IEnumerablePlaneRegionExtensionMethods
     {
-        public static void Rotate(this IEnumerable<PlaneRegion> passedPlaneRegions, Line passedAxisLine, Angle passedRotationAngle)
+        public static void Rotate(this IEnumerable<Polygon> passedPlaneRegions, Line passedAxisLine, Angle passedRotationAngle)
         {
             foreach (var planeRegion in passedPlaneRegions)
             {
@@ -17,19 +17,19 @@ namespace GeometryClassLibrary
             }
         }
 
-        public static void Translate(this IEnumerable<PlaneRegion> passedPlaneRegions, Dimension xTranslate, Dimension yTranslate, Dimension zTranslate)
+        public static void Translate(this IEnumerable<Polygon> passedPlaneRegions, Dimension xTranslate, Dimension yTranslate, Dimension zTranslate)
         {
             throw new NotImplementedException();
         }
 
-        public static void Translate(this List<PlaneRegion> passedPlaneRegions, Vector passedVector)
+        public static void Translate(this List<Polygon> passedPlaneRegions, Vector passedVector)
         {
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<PlaneRegion> Shift(this IEnumerable<PlaneRegion> passedPlaneRegions, Shift passedShift)
+        public static IEnumerable<Polygon> Shift(this IEnumerable<Polygon> passedPlaneRegions, Shift passedShift)
         {
-            List<PlaneRegion> shiftedRegions = new List<PlaneRegion>();
+            List<Polygon> shiftedRegions = new List<Polygon>();
 
             foreach (var region in passedPlaneRegions)
             {

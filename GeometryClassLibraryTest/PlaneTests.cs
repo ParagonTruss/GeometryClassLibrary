@@ -36,10 +36,10 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Plane_ContainsPlaneRegion()
+        public void Plane_ContainsPolygon()
         {
             Plane testPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, -3, 4), PointGenerator.MakePointWithInches(1, 2, 2));
-            PlaneRegion testRegion = new PlaneRegion(new List<Point>
+            Polygon testRegion = new Polygon(new List<Point>
                 {
                     PointGenerator.MakePointWithInches(1,1,1),
                     PointGenerator.MakePointWithInches(1,2,1),

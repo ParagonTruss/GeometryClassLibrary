@@ -9,13 +9,13 @@ namespace GeometryClassLibrary
     public class Rotation
     {
         private Angle _angleToRotate;
-        public Angle angleToRotate
+        public Angle AngleToRotate
         {
             get { return _angleToRotate; }
         }
 
         private Line _axisToRotateAround;
-        public Line axisToRotateAround
+        public Line AxisToRotateAround
         {
             get { return _axisToRotateAround; }
         }

@@ -11,94 +11,94 @@ using GeometryClassLibrary;
 namespace ClearspanTypeLibrary.Tests
 {
     [TestFixture()]
-    public class SolidTests
+    public class PolyhedronTests
     {
         //[Test()]
-        //public void Solid_ShiftXYTest()
+        //public void Polyhedron_ShiftXYTest()
         //{
-        //    Solid Solid = new Solid();
+        //    Polyhedron Polyhedron = new Polyhedron();
 
         //    List<LineSegment> lineSegments = new List<LineSegment>();
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 4)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
-        //    Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+        //    Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
         //    //rotate 90 degrees towards x
         //    Shift ninetyShift = new Shift(new Vector(), new Angle(AngleType.Degree, -90));
-        //    Solid.Shift(ninetyShift, PointGenerator.MakePointWithInches(8, 0));
+        //    Polyhedron.Shift(ninetyShift, PointGenerator.MakePointWithInches(8, 0));
 
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 8), PointGenerator.MakePointWithInches(8, 12))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(12, 0), PointGenerator.MakePointWithInches(8, 12))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(12, 0), PointGenerator.MakePointWithInches(8, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 8), PointGenerator.MakePointWithInches(8, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 8), PointGenerator.MakePointWithInches(8, 12))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(12, 0), PointGenerator.MakePointWithInches(8, 12))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(12, 0), PointGenerator.MakePointWithInches(8, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 8), PointGenerator.MakePointWithInches(8, 0))).Should().BeTrue();
         //}
 
         [Test()]
-        public void Solid_ShiftYZTest()
+        public void Polyhedron_ShiftYZTest()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             Line rotationLine = new Line (PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
 
             //rotate 90 degrees towards z
             Shift nintyShift = new Shift(new Vector(), new Rotation(rotationLine, new Angle(AngleType.Degree, -90)));
-            Solid.Shift(nintyShift);
+            Polyhedron.Shift(nintyShift);
 
-            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
-            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
-            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
-            Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+            Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+            Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
+            Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
+            Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
         }
 
         //[Test()]
-        //public void Solid_ReturnToOriginalTest()
+        //public void Polyhedron_ReturnToOriginalTest()
         //{
-        //    Solid Solid = new Solid();
+        //    Polyhedron Polyhedron = new Polyhedron();
 
         //    List<LineSegment> lineSegments = new List<LineSegment>();
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
         //    lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-        //    Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+        //    Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
         //    //rotate 90 degrees towards z
         //    Shift nintyzShift = new Shift(new Vector(), new Angle(), new Angle(AngleType.Degree, -90));
         //    //rotate 90 degrees towards x
         //    Shift nintyxShift = new Shift(new Vector(), new Angle(AngleType.Degree, -90), new Angle());
-        //    Solid.Shift(nintyzShift);
-        //    Solid.Shift(nintyxShift);
+        //    Polyhedron.Shift(nintyzShift);
+        //    Polyhedron.Shift(nintyxShift);
 
-        //    Solid.ShiftBackToHomeCoordinateSystem();
+        //    Polyhedron.ShiftBackToHomeCoordinateSystem();
 
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();
-        //    Solid.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();
+        //    Polyhedron.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
 
 
         //}
 
         [Test()]
-        public void Solid_ReturnToOriginalTest()
+        public void Polyhedron_ReturnToOriginalTest()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees towards z
             Vector displacementVector = new Vector(); //No displacement, just rotation
@@ -107,10 +107,10 @@ namespace ClearspanTypeLibrary.Tests
             Angle xAngle = new Angle(AngleType.Degree, 90); //This is the X axis
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Shift ninetyShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
-            Solid shifted = Solid.Shift(ninetyShift);
+            Polyhedron shifted = Polyhedron.Shift(ninetyShift);
 
             //undo the previous shift
-            Solid s = new Solid(shifted.Shift(ninetyShift.Negate()));
+            Polyhedron s = new Polyhedron(shifted.Shift(ninetyShift.Negate()));
 
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
@@ -121,16 +121,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_RotationOnly()
+        public void Polyhedron_ShiftTest_RotationOnly()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Vector displacementVector = new Vector(); //No displacement, just rotation
@@ -139,7 +139,7 @@ namespace ClearspanTypeLibrary.Tests
             //Angle xzAngle = new Angle(AngleType.Degree, 0);
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
-            Solid s = new Solid(Solid.Shift(ninetyShift));
+            Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 4))).Should().BeTrue();
@@ -149,16 +149,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_TranslationOnly()
+        public void Polyhedron_ShiftTest_TranslationOnly()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //Move 5 in. in z direction
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 5));
@@ -170,8 +170,8 @@ namespace ClearspanTypeLibrary.Tests
             //Angle rotationAngle2 = new Angle(); //No rotation, just displacement
             Shift shift2 = new Shift(displacementVector2);
 
-            Solid s1 = Solid.Shift(shift);
-            Solid s2 = s1.Shift(shift2);
+            Polyhedron s1 = Polyhedron.Shift(shift);
+            Polyhedron s2 = s1.Shift(shift2);
 
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(0, 7, 5)));
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(8, 3, 5)));
@@ -180,16 +180,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_RotateAndTranslate()
+        public void Polyhedron_ShiftTest_RotateAndTranslate()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
@@ -197,7 +197,7 @@ namespace ClearspanTypeLibrary.Tests
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches( 1, -2, 5));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
-            Solid s = new Solid(Solid.Shift(ninetyShift));
+            Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 5), PointGenerator.MakePointWithInches(9, -2, 5))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(9, -2, 5), PointGenerator.MakePointWithInches(9, -2, 9))).Should().BeTrue();
@@ -207,16 +207,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_RotateAndTranslate_ThenReturnToOriginal()
+        public void Polyhedron_ShiftTest_RotateAndTranslate_ThenReturnToOriginal()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 63);
@@ -224,9 +224,9 @@ namespace ClearspanTypeLibrary.Tests
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
-            Solid s = new Solid(Solid.Shift(ninetyShift));
+            Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
-            Solid s2 = s.Shift(ninetyShift.Negate());
+            Polyhedron s2 = s.Shift(ninetyShift.Negate());
 
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();
@@ -235,16 +235,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate()
+        public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, -90);
@@ -253,7 +253,7 @@ namespace ClearspanTypeLibrary.Tests
             Vector displacementVector = new Vector(PointGenerator.MakePointWithMillimeters(-1, 2, 5));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
-            Solid s = new Solid(Solid.Shift(ninetyShift));
+            Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 5), PointGenerator.MakePointWithMillimeters(4, 3, 5))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 5), PointGenerator.MakePointWithMillimeters(4, -5, 5))).Should().BeTrue();
@@ -263,16 +263,16 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Solid_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
+        public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
-            Solid Solid = new Solid();
+            Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Solid.PlaneRegions.Add(new PlaneRegion(lineSegments));
+            Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
@@ -281,9 +281,9 @@ namespace ClearspanTypeLibrary.Tests
             Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(0, 0, 0));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
-            Solid s = new Solid(Solid.Shift(ninetyShift));
+            Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
-            Solid s2 = s.Shift(ninetyShift.Negate());
+            Polyhedron s2 = s.Shift(ninetyShift.Negate());
 
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0))).Should().BeTrue();

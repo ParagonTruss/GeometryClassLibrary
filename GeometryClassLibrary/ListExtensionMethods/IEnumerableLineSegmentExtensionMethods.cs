@@ -9,7 +9,7 @@ namespace GeometryClassLibrary
 {
     public static class IEnumerableLineSegmentExtensionMethods
     {
-        public static List<PlaneRegion> MakeCoplanarLineSegmentsIntoRegions(this IEnumerable<LineSegment> passedLineSegments)
+        public static List<Polygon> MakeCoplanarLineSegmentsIntoRegions(this IEnumerable<LineSegment> passedLineSegments)
         {
             List<Plane> planesList = new List<Plane>();
 
@@ -24,7 +24,7 @@ namespace GeometryClassLibrary
                 }
             }
 
-            List<PlaneRegion> returnList = new List<PlaneRegion>();
+            List<Polygon> returnList = new List<Polygon>();
 
             foreach (var plane in planesList)
             {
@@ -36,7 +36,7 @@ namespace GeometryClassLibrary
                         newRegionBoundaries.Add(segment);
                     }
                 }
-                returnList.Add(new PlaneRegion(newRegionBoundaries));
+                returnList.Add(new Polygon(newRegionBoundaries));
             }
 
             return returnList;

@@ -1,28 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="GeometryClassLibrary.Constants" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Position X="11" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Constants.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.HashGenerator" Collapsed="true">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+    <Position X="9.25" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>Generators\HashGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.PointGenerator" Collapsed="true">
-    <Position X="9.5" Y="2.5" Width="1.5" />
+    <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAQAAgAA=</HashCode>
       <FileName>Generators\PointGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Line" Collapsed="true">
-    <Position X="1.25" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gACAkIMBAAAAhgAAgAABAABAEIAQAgAAAAIMAEgAAiA=</HashCode>
       <FileName>Line.cs</FileName>
@@ -37,42 +37,42 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="GeometryClassLibrary.IEnumerableLineExtensionMethods" Collapsed="true">
-    <Position X="13" Y="0.5" Width="1.5" />
+    <Position X="9.25" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>ListExtensionMethods\IEnumerableLineExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.IEnumerableLineSegmentExtensionMethods" Collapsed="true">
-    <Position X="14.75" Y="0.5" Width="1.5" />
+    <Position X="11" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAABgAAAAAAAAAgAAAAAACAAAABAAAAEA=</HashCode>
       <FileName>ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.IEnumerablePlaneRegionExtensionMethods" Collapsed="true">
-    <Position X="9.5" Y="1.5" Width="1.5" />
+    <Position X="11" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAEAAAAAAA=</HashCode>
       <FileName>ListExtensionMethods\PlaneRegionListExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.PointListExtensionMethods" Collapsed="true">
-    <Position X="11.25" Y="2.5" Width="1.5" />
+    <Position X="9.25" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
       <FileName>ListExtensionMethods\PointListExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.MatricesMatrix" Collapsed="true">
-    <Position X="11.25" Y="1.5" Width="1.5" />
+    <Position X="8.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQBAAACAAAAIAAiAIABIAAAAIAAAABAASAAUAIAiA=</HashCode>
       <FileName>MatricesMatrix.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Matrix" Collapsed="true">
-    <Position X="13" Y="1.5" Width="1.5" />
+    <Position X="8.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAQCYEAAOIQAAsSA6AEBAOCAAAIAACABgASAQSgICmA=</HashCode>
       <FileName>Matrix.cs</FileName>
@@ -85,39 +85,39 @@
       <FileName>Plane.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.PlaneRegion" Collapsed="true">
-    <Position X="5.5" Y="1.75" Width="1.5" />
+  <Class Name="GeometryClassLibrary.Polygon" Collapsed="true">
+    <Position X="6.5" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAIAAgAAAMwAgAEAAIAAEAAAAAAAAQAEAQCwAiA=</HashCode>
-      <FileName>PlaneRegion.cs</FileName>
+      <HashCode>IAAAACIAAAAAAMwAgAEAAAAAEAAAAAAAAAAEAQCwBiA=</HashCode>
+      <FileName>Polygon.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="GeometryClassLibrary.Point" Collapsed="true">
-    <Position X="14.75" Y="1.5" Width="1.5" />
+    <Position X="2.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAQIAAQAAAikwAEABAACCAgAAAACAAAEAAAAYiE=</HashCode>
       <FileName>Point.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Rotation" Collapsed="true">
-    <Position X="13" Y="2.5" Width="1.5" />
+    <Position X="10.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAAwAEAAAEEAAIAAAAAAAAAAAAAAiA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAwAEAAgEEAAAAAAAAAAQAAAAAAiA=</HashCode>
       <FileName>Rotation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Shift" Collapsed="true">
-    <Position X="14.75" Y="2.5" Width="1.5" />
+    <Position X="11.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABACQAAAAAEgAAAAAAAABAAAIBAAEAEAAEAAiA=</HashCode>
+      <HashCode>AAAAAABACQAAAAAEgAAAAAAAABAAAIBAAAAEAAEAAiA=</HashCode>
       <FileName>Shift.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.Solid" Collapsed="true">
-    <Position X="4.25" Y="7.5" Width="1.5" />
+  <Class Name="GeometryClassLibrary.Polyhedron" Collapsed="true">
+    <Position X="4.5" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAgAAAAAEgAAAAAAAAAAAAAAAAABAAABAABAAA=</HashCode>
+      <HashCode>CAAAAAAgAAAAAAgAAAAAAAAAAAAIAAABBAAABAAAAAA=</HashCode>
       <FileName>Solid.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -128,28 +128,15 @@
       <FileName>Vector.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.FiniteLine">
-    <Position X="1.25" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>FiniteLine.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="GeometryClassLibrary.Arc">
-    <Position X="2.5" Y="3.5" Width="1.5" />
+    <Position X="2.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAABAAAAAAAAAAAAAA=</HashCode>
       <FileName>Arc.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="GeometryClassLibrary.Polygon">
-    <Position X="6.5" Y="2.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Polygon.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="GeometryClassLibrary.NonPolygon">
+  <Class Name="GeometryClassLibrary.NonPolygon" Collapsed="true">
     <Position X="4.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
@@ -171,56 +158,49 @@
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.RegularPolygon">
-    <Position X="6.5" Y="4" Width="1.5" />
+    <Position X="6.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>RegularPolygon.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Rectangle">
-    <Position X="6.25" Y="5.5" Width="1.5" />
+    <Position X="11.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Rectangle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Square">
-    <Position X="7.75" Y="5.5" Width="1.5" />
+    <Position X="6.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Square.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Rhombus">
-    <Position X="9.25" Y="5.5" Width="1.5" />
+    <Position X="9" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Rhombus.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.IrregularPolygon">
-    <Position X="8.25" Y="4" Width="1.5" />
+    <Position X="10.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IrregularPolygon.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.Polyhedron">
-    <Position X="6" Y="8.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Polyhedron.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="GeometryClassLibrary.Prism">
-    <Position X="6" Y="10" Width="1.5" />
+    <Position X="5.75" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Prism.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GeometryClassLibrary.Cube">
-    <Position X="6" Y="11.25" Width="1.5" />
+    <Position X="5.75" Y="10.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Cube.cs</FileName>
@@ -254,5 +234,34 @@
       <FileName>ConeClass.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="GeometryClassLibrary.PlaneRegion" Collapsed="true">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAQ=</HashCode>
+      <FileName>PlaneRegion.cs</FileName>
+      <NewMemberFileName>Polygon.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GeometryClassLibrary.Solid">
+    <Position X="3.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Solid.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GeometryClassLibrary.Translation">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Translation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="GeometryClassLibrary.IEdge">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IEdge.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

@@ -55,6 +55,7 @@
     <Compile Include="FiniteLine.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
+    <Compile Include="IEdge.cs" />
     <Compile Include="IrregularPolygon.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineExtensionMethods.cs" />
     <Compile Include="ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs" />
@@ -66,10 +67,10 @@
     <Compile Include="NonPolyhedron.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="PlaneRegion.cs" />
+    <Compile Include="Polygon.cs" />
     <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
-    <Compile Include="Polygon.cs" />
     <Compile Include="Polyhedron.cs" />
     <Compile Include="Prism.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Solid.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Square.cs" />
+    <Compile Include="Translation.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>

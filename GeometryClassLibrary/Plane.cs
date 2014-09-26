@@ -179,7 +179,7 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        public bool Contains(PlaneRegion passedPlaneRegion)
+        public bool Contains(Polygon passedPlaneRegion)
         {
             // checks to make sure that every line is on the line segment
             foreach (LineSegment segment in passedPlaneRegion.PlaneBoundaries)

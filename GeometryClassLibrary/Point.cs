@@ -540,7 +540,7 @@ namespace GeometryClassLibrary
             //we need to apply each rotation in order to the point
             foreach(Rotation rotation in passedShift.rotationsToApply)
             {
-                pointToReturn = pointToReturn.Rotate3D(rotation.axisToRotateAround, rotation.angleToRotate);
+                pointToReturn = pointToReturn.Rotate3D(rotation.AxisToRotateAround, rotation.AngleToRotate);
             }
 
             //and then we translate it (unless is a negating shift) so the shift is more intuitive
