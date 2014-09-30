@@ -2,14 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class IEnumerableLineSegmentExtensionMethods
+    public static class ListLineSegmentExtensionMethods
     {
-        public static List<PlaneRegion> MakeCoplanarLineSegmentsIntoRegions(this IEnumerable<LineSegment> passedLineSegments)
+        /// <summary>
+        /// checks to see whether every line is parallel
+        /// </summary>
+        /// <param name="passedLines">passed List of Lines</param>
+        /// <returns></returns>
+        public static bool AreAllParallel(this List<LineSegment> passedLines)
+        {
+            for (int i = 0; i < passedLines.Count - 1; i++)
+            {
+                if (!passedLines[i].IsParallelTo(passedLines[i + 1]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if all of the passed lines are in the same plane, false otherwise
+        /// </summary>
+        /// <param name="passedLine">passed lines</param>
+        /// <returns></returns>
+        public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
+        {
+
+            for (int i = 0; i < passedLineList.Count(); i++)
+            {
+                for (int j = 0; j < passedLineList.Count(); j++)
+                {
+                    if (!passedLineList[i].IsCoplanarWith(passedLineList[j]))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public static List<PlaneRegion> MakeCoplanarLineSegmentsIntoRegions(this List<LineSegment> passedLineSegments)
         {
             List<Plane> planesList = new List<Plane>();
 
@@ -17,7 +57,7 @@ namespace GeometryClassLibrary
             {
                 foreach (var segment2 in passedLineSegments)
                 {
-                    if (segment1 != segment2 && segment1.DoesSharesABaseOrEndPointWith(segment2) && passedLineSegments.AreAllCoplanar())
+                    if (segment1 != segment2 && segment1.DoesSharesABaseOrEndPointWith(segment2) && (passedLineSegments).AreAllCoplanar())
                     {
                         planesList.Add(new Plane(segment1, segment2));
                     }
@@ -47,7 +87,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         /// <returns></returns>
-        public static bool DoFormClosedRegion(this IEnumerable<LineSegment> passedBoundaries)
+        public static bool DoFormClosedRegion(this List<LineSegment> passedBoundaries)
         {
             List<LineSegment> newList = new List<LineSegment>();
             foreach (LineSegment segment in passedBoundaries)
@@ -74,7 +114,7 @@ namespace GeometryClassLibrary
                 .All(group => group.Count() == 2);
         }
 
-        public static IEnumerable<LineSegment> RoundAllPoints(this IEnumerable<LineSegment> passedBoundaries, int passedNumberOfDecimals)
+        public static List<LineSegment> RoundAllPoints(this List<LineSegment> passedBoundaries, int passedNumberOfDecimals)
         {
             List<LineSegment> newSegments = new List<LineSegment>();
 
@@ -152,7 +192,7 @@ namespace GeometryClassLibrary
         /// <param name="axis"></param>
         /// <param name="rotateAngle"></param>
         /// <returns></returns>
-        public static IEnumerable<LineSegment> RotatePointsAboutAnAxis(this IEnumerable<LineSegment> segments, Line axis, Angle rotateAngle)
+        public static List<LineSegment> RotatePointsAboutAnAxis(this List<LineSegment> segments, Line axis, Angle rotateAngle)
         {
             List<Point> pointList = new List<Point>();
 
@@ -181,7 +221,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBorders"></param>
         /// <returns></returns>
-        public static Area FindAreaOfPolygon(this IEnumerable<LineSegment> passedBorders)
+        public static Area FindAreaOfPolygon(this List<LineSegment> passedBorders)
         {
             double area = 0.0;
 
@@ -209,7 +249,7 @@ namespace GeometryClassLibrary
 
         }
 
-        public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)
+        public static List<LineSegment> Shift(this List<LineSegment> passedLineSegments, Shift passedShift)
         {
             List<LineSegment> shiftedSegments = new List<LineSegment>();
 
