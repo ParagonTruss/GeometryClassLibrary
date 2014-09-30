@@ -297,6 +297,7 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_ShiftTest_Translate()
         {
+            //not completed test
             Point start = PointGenerator.MakePointWithInches(0, 1, 3);
             Point end = PointGenerator.MakePointWithInches(0, 1, 5);
 

@@ -33,7 +33,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Plane()
         {
-            throw new NotImplementedException();
+            _basePoint = new Point();
+            _normalVector = new Vector();
         }
 
         public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )

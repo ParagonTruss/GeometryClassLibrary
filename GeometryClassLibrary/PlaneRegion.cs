@@ -13,12 +13,12 @@ namespace GeometryClassLibrary
         public PlaneRegion()
         {
             // TODO: Complete member initialization
-            this.passedBoundaries = passedBoundaries;
+            this.passedBoundaries = new List<LineSegment>();
         }
 
         public PlaneRegion(List<LineSegment> passedBoundaries)
+            : base(passedBoundaries)
         {
-            // TODO: Complete member initialization
             this.passedBoundaries = passedBoundaries;
         }
 

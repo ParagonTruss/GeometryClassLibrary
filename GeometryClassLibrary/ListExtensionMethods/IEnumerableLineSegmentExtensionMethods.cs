@@ -9,7 +9,7 @@ namespace GeometryClassLibrary
 {
     public static class IEnumerableLineSegmentExtensionMethods
     {
-        public static List<Polygon> MakeCoplanarLineSegmentsIntoRegions(this IEnumerable<LineSegment> passedLineSegments)
+        public static List<Polygon> MakeCoplanarLineSegmentsIntoPolygons(this IEnumerable<LineSegment> passedLineSegments)
         {
             List<Plane> planesList = new List<Plane>();
 
@@ -98,50 +98,94 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Will break down all line segments into points and form them into clockwise traveling segments
+        /// Segments must be coplanar and closed or else it will return null
         /// </summary>
         /// <param name="borders"></param>
-        /// <returns></returns>
+        /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static IEnumerable<LineSegment> SortIntoClockWiseSegments(this IEnumerable<LineSegment> borders)
         {
-            Point minXPoint = PointGenerator.MakePointWithMillimeters(double.MaxValue, double.MaxValue);
-
-            // find the minimum X
-            foreach (LineSegment segment in borders)
+            if (borders.AreAllCoplanar() && borders.DoFormClosedRegion())
             {
-                // if the x's are equal but the y is higher, make the new point the one with the higher y
-                if (segment.BasePoint.X == minXPoint.X)
-                    if (segment.BasePoint.Y > minXPoint.Y)
-                        minXPoint = segment.BasePoint;
+                List<LineSegment> sortedSegments = new List<LineSegment>();
+                Point minXPoint = null;
 
-                // else if this segment's base point has a lower x, make it the new minX
-                    else if (segment.BasePoint.X < minXPoint.X)
-                        minXPoint = segment.BasePoint;
+                // find the Point with the smallest X
+                foreach (Point vertex in borders.GetAllPoints())
+                {
+                    if (minXPoint == null || vertex.X < minXPoint.X)
+                    {
+                        minXPoint = vertex;
+                    }
+                }
+
+                //find the line with the highest Y that contains the smallestXPoint
+                LineSegment maxYLine = null;
+                Point maxYPoint = null;
+
+                foreach (LineSegment segment in borders)
+                {
+                    if (segment.BasePoint == minXPoint)
+                    {
+                        if (maxYPoint == null || maxYPoint.Y < segment.EndPoint.Y)
+                        {
+                            maxYPoint = segment.EndPoint;
+                            maxYLine = segment;
+                        }
+                    }
+                    else if (segment.EndPoint == minXPoint)
+                    {
+                        if (maxYPoint == null || maxYPoint.Y < segment.BasePoint.Y)
+                        {
+                            maxYPoint = segment.BasePoint;
+                            maxYLine = segment;
+                        }
+                    }
+                }
+
+                //now start at the first line and make sure it starts at the min and goes to the max y point
+                if (maxYLine.BasePoint == minXPoint)
+                {
+                    sortedSegments.Add(new LineSegment(maxYLine));
+                }
+                else
+                {
+                    sortedSegments.Add(maxYLine.Reverse());
+                }
+
+                //create a shalloe copy of the borders to find out which we have checked
+                List<LineSegment> hasNotAdded = new List<LineSegment>(borders);
+                hasNotAdded.Remove(maxYLine);
+
+                //get our endpoint to find out which segment to process next
+                Point previousEndPoint = sortedSegments[0].EndPoint;
+
+                //now go through the rest and find the next Segment to use
+                for (int i = 0; i < hasNotAdded.Count; i++)
+                {
+                    LineSegment currentLine = hasNotAdded[i];
+
+                    //if our line contains the previous endpoint than it comes next and add it in the right direction
+                    if (currentLine.BasePoint == previousEndPoint)
+                    {
+                        sortedSegments.Add(new LineSegment(currentLine));
+                        previousEndPoint = currentLine.EndPoint;
+                        hasNotAdded.Remove(currentLine);
+                        //restart the looping (note it will increment before starting again hence the -1)
+                        i = -1;
+                    }
+                    else if (currentLine.EndPoint == previousEndPoint)
+                    {
+                        sortedSegments.Add(currentLine.Reverse());
+                        previousEndPoint = currentLine.BasePoint;
+                        hasNotAdded.Remove(currentLine);
+                        //restart the looping 
+                        i = -1;
+                    }
+                }
+
+                //now were all done and return the sorted segments
+                return sortedSegments;
             }
-
-            LineSegment firstChoice = null;
-            LineSegment secondChoice = null;
-
-            // figure out which point to cross over to first
-            foreach (LineSegment segment in borders)
-            {
-                if (segment.BasePoint.Equals(minXPoint))
-                    firstChoice = segment;
-                else if (segment.EndPoint.Equals(minXPoint))
-                    secondChoice = segment;
-            }
-
-            // if the first choice is higher thna the second choice, choose it
-            if (firstChoice.EndPoint.Y > secondChoice.BasePoint.Y)
-            {
-                
-            }
-            // else the second point is higher, so you need to reverse it and go on
-            else
-            {
-
-            }
-
-            // use loop to check each individual point and make sure the segment using it is clockwise
             return null;
         }
 
@@ -177,36 +221,82 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
+        /// </summary>
+        /// <param name="passedSegments">The List of LineSegments to get the points of</param>
+        /// <returns>Returns a list of Points containing all the unique Points in the LineSegments List</returns>
+        public static List<Point> GetAllPoints(this IEnumerable<LineSegment> passedSegments)
+        {
+            List<Point> points = new List<Point>();
+
+            //just cycle through each line and add the points to our list if they are not already there
+            foreach (LineSegment line in passedSegments)
+            {
+                if (!points.Contains(line.BasePoint))
+                {
+                    points.Add(line.BasePoint);
+                }
+                if (!points.Contains(line.EndPoint))
+                {
+                    points.Add(line.EndPoint);
+                }
+            }
+
+            return points;
+        }
+    
+
+        /// <summary>
         /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
         /// </summary>
         /// <param name="passedBorders"></param>
         /// <returns></returns>
         public static Area FindAreaOfPolygon(this IEnumerable<LineSegment> passedBorders)
         {
-            double area = 0.0;
-
-            if (passedBorders != null && passedBorders.Count() > 2)
+            if (passedBorders.AreAllCoplanar())
             {
-                // for each of the borders
-                foreach (LineSegment border in passedBorders)
-                {
-                    double height = (border.BasePoint.Y.Millimeters + border.EndPoint.Y.Millimeters) / 2;
-                    double width = border.EndPoint.X.Millimeters - border.BasePoint.X.Millimeters;
+                Dimension areaDimension = new Dimension();
+                Vector areaVector = new Vector();
 
-                    double tempArea = height * width;
-                    area += tempArea;
+                if (passedBorders != null && passedBorders.Count() > 2)
+                {
+                    //following the method here of projecting the triangles formed with an arbitrary point onto the plane: http://geomalgorithms.com/a01-_area.html
+
+                    //first sort them clockwise
+                    List<LineSegment> sortedBorders = (List<LineSegment>)passedBorders.SortIntoClockWiseSegments();
+
+                    //get our verticies
+                    List<Point> verticies = sortedBorders.GetAllPoints();
+
+                    //for each of our verticies compare it to the previous one
+                    Point previousVertex = verticies[verticies.Count - 1];
+                    foreach (Point vertex in verticies)
+                    {
+                        //take the cross product of them (relative to the origin)
+                        Vector crossProduct = vertex.VectorFromOriginToPoint().CrossProduct(previousVertex.VectorFromOriginToPoint());
+
+                        //now we add the magnitute to the area
+                        //areaDimension += crossProduct.Magnitude;
+                        areaVector += crossProduct;
+
+                        previousVertex = vertex;
+                    }
+                }
+
+                areaDimension = areaVector.Magnitude;
+
+                if (areaDimension > new Dimension())
+                {
+                    //the area is really units squared so we need to return it that way - not as a dimension
+                    //also we need to divide it in half (we were using triangles)
+                    return new Area(AreaType.MillimetersSquared, areaDimension.Millimeters / 2);
+                }
+                else
+                {
+                    return new Area();
                 }
             }
-
-            if (area > 0)
-            {
-                return new Area(AreaType.MillimetersSquared, area);
-            }
-            else
-            {
-                return new Area();
-            }
-
+            return null;
         }
 
         public static List<LineSegment> Shift(this IEnumerable<LineSegment> passedLineSegments, Shift passedShift)

@@ -274,5 +274,15 @@ namespace ClearspanTypeLibrary.Tests
                 (splitOnLine[i] == expectedOnLine[i]).Should().BeTrue();
             }
         }
+
+        [Test()]
+        public void LineSegment_ReverseTest()
+        {
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));
+            LineSegment result = testSegment.Reverse();
+            (result.BasePoint == testSegment.EndPoint).Should().BeTrue();
+            (result.Length == testSegment.Length).Should().BeTrue();
+            (result.DirectionVector == new Vector(PointGenerator.MakePointWithMillimeters(0, 2, 1), PointGenerator.MakePointWithMillimeters(2, 0, 4))).Should().BeTrue();
+        }
     }
 }

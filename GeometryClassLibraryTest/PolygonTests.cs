@@ -13,6 +13,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_ExtrudePolygon()
         {
+            //extrude not yet implmented
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 4, 0);
             Point bottomRightPoint = PointGenerator.MakePointWithInches(8, 0, 0);
@@ -83,6 +84,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_RotateTest()
         {
+            //think messes up due to percision error
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
@@ -190,7 +192,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_ContainsPoint()
+        public void Polygon_ContainsExclusiveInclusiveAndTouchingPoint()
         {
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
@@ -199,18 +201,14 @@ namespace GeometryClassLibraryTests
             bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Point test = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
-            Point test2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
+            Point insidePlane1 = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
+            Point insidePlane2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
 
-            testPolygon.Contains(test).Should().BeTrue();
-            testPolygon.Contains(test2).Should().BeFalse();
+            Point center1 = testPolygon.Centroid();
 
             //make sure the sides are not included
             Point sideTest = PointGenerator.MakePointWithMillimeters(0, 0, 0);
-            testPolygon.Contains(sideTest).Should().BeFalse();
 
-            //make sure the Polygon contains the centroid
-            testPolygon.Contains(testPolygon.Centroid()).Should().BeTrue();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
@@ -218,13 +216,38 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, -1), PointGenerator.MakePointWithMillimeters(0, 2, 3)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
-            //make sure the Polygon contains the centroid
-            Point center = testPolygon2.Centroid();
-            testPolygon2.Contains(center).Should().BeTrue();
+            //make sure the PlaneRegion contains the centroid
+            Point center2 = testPolygon2.Centroid();
 
-            Point test3 = center.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
-            testPolygon2.Contains(test3).Should().BeFalse();
+            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
 
+            //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
+            testPolygon.ContainsExclusive(insidePlane1).Should().BeTrue();
+            testPolygon.ContainsInclusive(insidePlane1).Should().BeTrue();
+            testPolygon.Touches(insidePlane1).Should().BeFalse();
+
+            testPolygon.ContainsExclusive(insidePlane2).Should().BeFalse();
+            testPolygon.ContainsInclusive(insidePlane2).Should().BeFalse();
+            testPolygon.Touches(insidePlane2).Should().BeFalse();
+
+            //make sure the PlaneRegion contains the centroid (true for exclusive and inclusive, false for touching)
+            testPolygon.ContainsExclusive(center1).Should().BeTrue();
+            testPolygon.ContainsInclusive(center1).Should().BeTrue();
+            testPolygon.Touches(center1).Should().BeFalse();
+
+            testPolygon2.ContainsExclusive(center2).Should().BeTrue();
+            testPolygon2.ContainsInclusive(center2).Should().BeTrue();
+            testPolygon2.Touches(center2).Should().BeFalse();
+
+            //check the side point (true for inclusive and touches, false for exclusive)
+            testPolygon.ContainsExclusive(sideTest).Should().BeFalse();
+            testPolygon.ContainsInclusive(sideTest).Should().BeTrue();
+            testPolygon.Touches(sideTest).Should().BeTrue();
+
+            //not on plane (false for all)
+            testPolygon2.ContainsExclusive(notOnPlane).Should().BeFalse();
+            testPolygon2.ContainsInclusive(notOnPlane).Should().BeFalse();
+            testPolygon2.Touches(notOnPlane).Should().BeFalse();
         }
 
 
@@ -406,6 +429,63 @@ namespace GeometryClassLibraryTests
             //should only return the original plane
             results2.Count.Should().Be(1);
             (results2[0] == testPolygon).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Polygon_SharedPointNotOnThisPolygonsBoundary()
+        {
+            List<LineSegment> bounds1 = new List<LineSegment>();
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(3, 0, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
+            Polygon testPolygon1 = new Polygon(bounds1);
+
+            List<LineSegment> bounds2 = new List<LineSegment>();
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 0, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3.5, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
+            Polygon testPolygon2 = new Polygon(bounds2);
+
+            Point result = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon2);
+            (result != null).Should().BeTrue();
+            testPolygon1.Touches(result).Should().BeFalse();
+
+
+            List<LineSegment> bounds3 = new List<LineSegment>();
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            Polygon testPolygon3 = new Polygon(bounds3);
+
+            Point result2 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon3);
+            (result2 != null).Should().BeTrue();
+            testPolygon1.Touches(result).Should().BeFalse();
+
+
+            List<LineSegment> bounds4 = new List<LineSegment>();
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            Polygon testPolygon4 = new Polygon(bounds4);
+
+            Point result3 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon4);
+            (result3 != null).Should().BeFalse();
+
+
+            List<LineSegment> bounds5 = new List<LineSegment>();
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(9, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(-1, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(9, 0, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, .5, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
+            Polygon testPolygon5 = new Polygon(bounds4);
+
+            Point result4 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
+            (result4 != null).Should().BeTrue();
+            testPolygon1.Touches(result).Should().BeFalse();
         }
     }
 }

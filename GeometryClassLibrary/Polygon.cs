@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
-    public class Polygon : PlaneRegion, IComparable
+    public class Polygon : PlaneRegion, IComparable<Polygon>
     {
         #region Fields and Properties
 
@@ -122,6 +122,20 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other PlaneRegion
+        /// NOTE: BASED SOLELY ON AREA.  MAY WANT TO CHANGE LATER
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Polygon other)
+        {
+            if (this.Area.Equals(other.Area))
+                return 0;
+            else
+                return this.Area.CompareTo(other.Area);
         }
 
         #endregion
@@ -532,28 +546,13 @@ namespace GeometryClassLibrary
 
         }
 
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other Polygon
-        /// NOTE: BASED SOLELY ON AREA.  MAY WANT TO CHANGE LATER
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Polygon other)
-        {
-            if (this.Area.Equals(other.Area))
-                return 0;
-            else
-                return this.Area.CompareTo(other.Area);
-        }
-
-
 
         #endregion
-
         
 
 
-        
+
+
 
         /// <summary>
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
@@ -573,69 +572,28 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns true if the point is contained within this Polygon
-        /// </summary>
-        /// <param name="passedPoint">The point to see if it is in this Polygon</param>
-        /// <returns>returns true if the Point is in this Polygon and false if it is not</returns>
-        public new bool Contains(Point passedPoint)
-        {
-            //check if it is in our plane first
-            if (base.Contains(passedPoint))
-            {
-                //now check if it is in the bounds each line at a time
-                foreach (LineSegment line in PlaneBoundaries)
-                {
-                    //find the plane perpendicular to this plane that represents the side we are on
-
-                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = NormalVector.CrossProduct(line.DirectionVector);
-
-                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
-                    Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);
-
-                    //if the point is on the side outside of our region we know it is not in it and can return
-                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
-                    {
-                        return false;
-                    }
-                }
-
-                //if it is on the right side of all the sides than we know the point must be inside the region
-                return true;
-            }
-            //if its not in the Plane than it is obviously not in the Polygon
-            return false;
-        }
-
-
-        /// <summary>
-        /// Finds and returns a Point that is on this Polygon, but not on its boundaries, and the Polygon passed in
+        /// Finds and returns a Point that is on this PlaneRegion, but not on its boundaries, and the PlaneRegion passed in
         /// </summary>
         /// <param name="otherPlane">Other plane region to find a shared point with</param>
         /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
         public Point SharedPointNotOnThisPolygonsBoundary(Polygon otherPlane)
         {
             //check the centroids
-            if (otherPlane.Contains(this.Centroid()))
+            if (otherPlane.ContainsInclusive(this.Centroid()))
             {
                 return this.Centroid();
             }
-            if (this.Contains(otherPlane.Centroid()))
+            if (this.ContainsExclusive(otherPlane.Centroid()))
             {
                 return otherPlane.Centroid();
             }
 
-
-            //if we still havent found it try looking at the endpints of the otherPlane
-            foreach (LineSegment line in otherPlane.PlaneBoundaries)
+            //if we still havent found it try looking at the veticies of the otherPlane
+            foreach (Point vertex in otherPlane.PlaneBoundaries.GetAllPoints())
             {
-                if (this.Contains(line.BasePoint))
+                if (this.ContainsExclusive(vertex))
                 {
-                    return line.BasePoint;
-                }
-                else if (this.Contains(line.EndPoint))
-                {
-                    return line.EndPoint;
+                    return vertex;
                 }
             }
 
@@ -675,8 +633,6 @@ namespace GeometryClassLibrary
             return null;
         }
 
-
-
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
         /// overlap (or if they are only touching - the overlap region has an area o 0). The plane this function 
@@ -708,7 +664,7 @@ namespace GeometryClassLibrary
 
                         //findout which one we want to keep and we dont need the other part
                         overlapping = slicedPlane[0];
-                        if (slicedPlane[1].Contains(referencePoint))
+                        if (slicedPlane[1].ContainsInclusive(referencePoint))
                         {
                             overlapping = slicedPlane[1];
                         }
@@ -758,22 +714,22 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// An internal method that slices a Polygon into two parts and returns them
+        /// An internal method that slices a planeRegion into two parts and returns them
         /// Should be called through other methods that take only a plane or a line
         /// and let them calculate the other part to use for better consistency
         /// </summary>
-        /// <param name="slicingLine">The line to slice this Polygon with (where the slicing plane and this Polygon intersect</param>
-        /// <param name="slicingPlane">the plane to use to slice this Polygon (corresponds to the slicing line)</param>
+        /// <param name="slicingLine">The line to slice this planeRegion with (where the slicing plane and this planeRegion intersect</param>
+        /// <param name="slicingPlane">the plane to use to slice this planeRegion (corresponds to the slicing line)</param>
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first
-        /// or just a copy of the Polygon in a list if it does not intersect</returns>
+        /// or just a copy of the planeRegion in a list if it does not intersect</returns>
         private List<Polygon> Slice(Line slicingLine, Plane slicingPlane)
         {
             //make sure the line is in this plane or else it shouldnt slice
-            if (this.Contains(slicingLine))
+            if (((Plane)this).Contains(slicingLine))
             {
                 //          NOTE:
-                //index 0 is our insidePolygon
-                //index 1 is our outsidePolygon
+                //index 0 is our insidePlaneRegion
+                //index 1 is our outsidePlaneRegion
 
                 //create our two regions that we will modify and return
                 List<Polygon> slicedPlanes = new List<Polygon>() { new Polygon(this), new Polygon(this) };
@@ -788,7 +744,7 @@ namespace GeometryClassLibrary
                 //while we are looping through it (immutable) (one for each region returned)
                 List<List<LineSegment>> toRemove = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
 
-                //loop through each segment in the Polygon to see if and where it needs to be sliced
+                //loop through each segment in the planeRegion to see if and where it needs to be sliced
                 foreach (LineSegment line in slicedPlanes[0].PlaneBoundaries)
                 {
                     //find where or if the linesegment overlaps the clipping line
@@ -846,7 +802,7 @@ namespace GeometryClassLibrary
                                 newSegmentsGenerated[1].Add(projectedLineForOutside);
                             }
 
-                            //get the same line in the outside Polygon as we already have in line for the inside region
+                            //get the same line in the outside planeregion as we already have in line for the inside region
                             //and then change it to the outside part of the line
                             int indexOfLine = slicedPlanes[1].PlaneBoundaries.IndexOf(line);
                             slicedPlanes[1].PlaneBoundaries[indexOfLine] = outsidePart;
@@ -864,7 +820,7 @@ namespace GeometryClassLibrary
                             //we have to do it part by part because line is immutable during a foreach loop so we cannot reassign it, only modify it
                             //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
                             line.BasePoint = insidePart.BasePoint;
-                            line.EndPoint = insidePart.EndPoint;
+                            line.Length = insidePart.Length;
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
@@ -1022,7 +978,71 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
-    }
 
-    
+        /// <summary>
+        /// Returns true if the point is contained within this PlaneRegion, Does not include the boundaries!
+        /// </summary>
+        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
+        /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
+        public bool ContainsExclusive(Point passedPoint)
+        {
+            return (ContainsInclusive(passedPoint) && !Touches(passedPoint));
+        }
+
+        /// <summary>
+        /// Returns true if the point is on the PlaneRegion, including on its boundaries
+        /// </summary>
+        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
+        /// <returns>returns true if the Point is in this PlaneRegion or on its boundaries and false if it is not</returns>
+        public bool ContainsInclusive(Point passedPoint)
+        {
+            //check if it is in our plane first
+            if (((Plane)this).Contains(passedPoint))
+            {
+                //now check if it is in the bounds each line at a time
+                foreach (LineSegment line in PlaneBoundaries)
+                {
+                    //find the plane perpendicular to this plane that represents the side we are on
+
+                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
+                    Vector divisionPlaneNormal = NormalVector.CrossProduct(line.DirectionVector);
+
+                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
+                    Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);
+
+                    //if the point is on the side outside of our region we know it is not in it and can return
+                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
+                    {
+                        //since its inclusive, if the point is on the plane its still good
+                        if (!divisionPlane.Contains(passedPoint))
+                            return false;
+                    }
+                }
+
+                //if it is on the right side of all the sides than we know the point must be inside the region
+                return true;
+            }
+
+            //if its not in the Plane than it is obviously not in the PlaneRegion
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the point is touching the PlaneRegion (aka if it is on the boundaries of the planeRegion)
+        /// </summary>
+        /// <param name="passedPoint">Point to check if it is touching</param>
+        /// <returns>Returns true if the point touches the PlaneRegion and false if it is not on the boundaries</returns>
+        public bool Touches(Point passedPoint)
+        {
+            //check each of our boundaries if the point is on the LineSegment
+            foreach (LineSegment line in this.PlaneBoundaries)
+            {
+                if (passedPoint.IsOnLineSegment(line))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

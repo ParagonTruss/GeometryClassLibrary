@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
             {
                 if(MagnitudeOfDirectionVector == new Dimension())
                 {
-                    return new Point();
+                    return BasePoint;
                 }
 
                 Dimension xOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.X.Millimeters + (_length.Millimeters * XComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
@@ -29,10 +29,6 @@ namespace GeometryClassLibrary
                 Dimension zOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Z.Millimeters + (_length.Millimeters * ZComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
 
                 return new Point(xOfEndPoint,yOfEndPoint,zOfEndPoint);
-            }
-            set
-            {
-                _length = this.BasePoint.DistanceTo(value);
             }
         }
 
@@ -97,6 +93,16 @@ namespace GeometryClassLibrary
             : base(passedBasePoint, passedDirection)
         {
             Length = passedLength;
+        }
+
+        /// <summary>
+        /// Copies a Linesegment creating new objects so the original is not changed with the copy
+        /// </summary>
+        /// <param name="toCopy">LineSegment to copy</param>
+        public LineSegment(LineSegment toCopy)
+            : base(toCopy)
+        {
+            Length = new Dimension(toCopy.Length);
         }
 
         #endregion
@@ -177,7 +183,7 @@ namespace GeometryClassLibrary
         {
             Point potentialIntersect = this.Intersection((Line)passedLineSegment);
 
-            if (potentialIntersect.IsOnLineSegment(passedLineSegment))
+            if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(passedLineSegment))
                 return potentialIntersect;
             else
                 return null;
@@ -312,5 +318,13 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// returns a copy of the line segment pointing in the opposite direction as the original
+        /// </summary>
+        /// <returns></returns>
+        public LineSegment Reverse()
+        {
+            return new LineSegment(this.EndPoint, this.DirectionVector.Negate(), this.Length);
+        }
     }
 }
