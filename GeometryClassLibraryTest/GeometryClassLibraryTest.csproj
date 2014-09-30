@@ -72,13 +72,18 @@
   <ItemGroup>
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
+    <Compile Include="PolygonTests.cs" />
+    <Compile Include="PolyhedronTests.cs" />
     <Compile Include="RotationTests.cs" />
     <Compile Include="SolidTests.cs" />
     <Compile Include="LineListExtensionTests.cs" />
     <Compile Include="LineSegmentListExtensionTests.cs" />
     <Compile Include="LineSegmentTests.cs" />
     <Compile Include="LineTests.cs" />
-    <Compile Include="PlaneRegionTests.cs" />
+    <Compile Include="PlaneRegionTests.cs">
+      <SubType>
+      </SubType>
+    </Compile>
     <Compile Include="PlaneTests.cs" />
     <Compile Include="PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,6 +11,7 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [DebuggerDisplay("UNITS = Millimeters, Base Point = {BasePoint.X.Millimeters}, {BasePoint.Y.Millimeters}, {BasePoint.Z.Millimeters}, End Point = {EndPoint.X.Millimeters}, {EndPoint.Y.Millimeters}, {EndPoint.Z.Millimeters}, Length = {Length.Millimeters},  Direction Vector = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}")]
+    [Serializable]
     public class LineSegment : Line, IComparable<LineSegment>, IEdge
     {
         #region Properties
@@ -113,6 +114,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(LineSegment segment1, LineSegment segment2)
         {
+            if (segment1 == null || segment2 == null)
+            {
+                if (segment1 == null && segment2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
             return segment1.Equals(segment2);
         }
 
@@ -121,6 +130,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(LineSegment segment1, LineSegment segment2)
         {
+            if (segment1 == null || segment2 == null)
+            {
+                if (segment1 == null && segment2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
             return !segment1.Equals(segment2);
         }
 
@@ -325,6 +342,11 @@ namespace GeometryClassLibrary
         public LineSegment Reverse()
         {
             return new LineSegment(this.EndPoint, this.DirectionVector.Negate(), this.Length);
+        }
+
+        IEdge IEdge.Shift(Shift passedShift)
+        {
+            return this.Shift(passedShift);
         }
     }
 }

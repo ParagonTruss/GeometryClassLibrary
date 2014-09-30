@@ -5,6 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
+    [Serializable]
     public class Sphere : NonPolyhedron
     {
     }

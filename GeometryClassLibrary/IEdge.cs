@@ -7,5 +7,6 @@ namespace GeometryClassLibrary
 {
     public interface IEdge
     {
+        IEdge Shift(Shift passedShift);
     }
 }

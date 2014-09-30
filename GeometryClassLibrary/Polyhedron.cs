@@ -7,12 +7,14 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Base Point = {BasePoint}")]
+    [Serializable]
     public class Polyhedron : Solid
     {
+        #region Fields and Properties
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>
-        public Point PointOnSolid
+        public override Point PointOnSolid
         {
             get
             {
@@ -25,17 +27,31 @@ namespace GeometryClassLibrary
             }
         }
 
-
-        public Point CenterPoint()
+        /// <summary>
+        /// Accesses tge line segments in the polyhedron
+        /// </summary>
+        public List<LineSegment> LineSegments
         {
-            throw new NotImplementedException();
-        }
+            get
+            {
+                List<LineSegment> returnList = new List<LineSegment>();
 
-        public Line MidLine()
-        {
-            throw new NotImplementedException();
-        }
+                foreach (Polygon region in _polygons)
+                {
+                    if (region.PlaneBoundaries != null)
+                        returnList.AddRange(region.PlaneBoundaries);
+                }
 
+                return returnList;
+            }
+            set
+            {
+                this._polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
+            }
+        }
+        #endregion
+
+        #region Constructors
         public List<Polygon> Polygons
         {
             get { return _polygons; }
@@ -62,25 +78,17 @@ namespace GeometryClassLibrary
         {
             _polygons = passedSolid._polygons;
         }
+        #endregion
 
-        public List<LineSegment> LineSegments
+        #region Methods
+        public override Point CenterPoint()
         {
-            get
-            {
-                List<LineSegment> returnList = new List<LineSegment>();
+            throw new NotImplementedException();
+        }
 
-                foreach (Polygon region in _polygons)
-                {
-                    if (region.PlaneBoundaries != null)
-                        returnList.AddRange(region.PlaneBoundaries);
-                }
-
-                return returnList;
-            }
-            set
-            {
-                this._polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
-            }
+        public override Line MidLine()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -94,5 +102,6 @@ namespace GeometryClassLibrary
 
             return new Polyhedron(shiftedRegions);
         }
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved (not straight)
     /// </summary>
+    [Serializable]
     public class Arc :IEdge
     {
         /// <summary>
@@ -36,6 +37,11 @@ namespace GeometryClassLibrary
             set
             {
             }
+        }
+
+        public IEdge Shift(Shift passedShift)
+        {
+            throw new NotImplementedException();
         }
     }
 }

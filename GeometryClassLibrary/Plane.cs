@@ -9,6 +9,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
+    [Serializable]
     public class Plane
     {
         #region Fields and Properties

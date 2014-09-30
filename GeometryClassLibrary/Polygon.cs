@@ -10,19 +10,18 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
-    public class Polygon : PlaneRegion, IComparable<Polygon>
+    [Serializable]
+    public class Polygon : PlaneRegion<LineSegment>, IComparable<Polygon>
     {
         #region Fields and Properties
-
-
-        public List<LineSegment> PlaneBoundaries
+        public override List<LineSegment> PlaneBoundaries
         {
             get { return _planeBoundaries; }
             set { _planeBoundaries = value; }
         }
-        private List<LineSegment> _planeBoundaries;
+        protected List<LineSegment> _planeBoundaries;
 
-        public Area Area
+        public override Area Area
         {
             get
             {
@@ -30,35 +29,53 @@ namespace GeometryClassLibrary
             }
         }
 
+        #endregion
+
+        #region Constructors
         /// <summary>
-        /// Returns the centoid (center point) of the Polygon
+        /// Zero constructor
         /// </summary>
-        /// <returns>the region's center as a point</returns>
-        public Point Centroid()
+        public Polygon()
         {
-            //the centorid is the average of all the points
-            Dimension xSum = new Dimension();
-            Dimension ySum = new Dimension();
-            Dimension zSum = new Dimension();
-
-            //we count each point twice
-            //the reason why we have to add all of the points twice is because we do not know which way the 
-            //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
-            int count = PlaneBoundaries.Count * 2;
-
-            //sum up each of the points
-            foreach (LineSegment line in PlaneBoundaries)
-            {
-                xSum += line.BasePoint.X + line.EndPoint.X;
-                ySum += line.BasePoint.Y + line.EndPoint.Y;
-                zSum += line.BasePoint.Z + line.EndPoint.Z;
-            }
-
-            //now divide it by the number of points to find the average values
-            return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
 
         }
 
+        /// <summary>
+        /// Defines a plane region using the given boundaries as long as the line segments form a closed region
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(List<LineSegment> passedBoundaries)
+            : this(passedBoundaries, 3) { }
+
+        /// <summary>
+        /// Defines a plane region using the given boundaries as long as the line segments form a closed region within the given tolerance
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(List<LineSegment> passedBoundaries, int passedNumberOfDecimalsToCheck)
+            : base(passedBoundaries)
+        {
+            List<LineSegment> roundedBoundaryList = (List<LineSegment>)passedBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
+            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
+            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
+
+            if (isClosed && areCoplanar)
+            {
+                _planeBoundaries = roundedBoundaryList;
+            }
+        }
+
+        /// <summary>
+        /// creates a new Polygon that is a copy of the inputted Polygon
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(Polygon polygonToCopy)
+            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
+            //constructing a plane fron a List<LineSegment>
+            : this(polygonToCopy.PlaneBoundaries, 3) { }
+
+
+        public Polygon(List<Point> passedPoints)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
         #endregion
 
         #region Overloaded Operators
@@ -68,9 +85,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(Polygon region1, Polygon region2)
         {
-            if ((object)region1 == null || (object)region2 == null)
+            if (region1 == null || region2 == null)
             {
-                if ((object)region1 == null && (object)region2 == null)
+                if (region1 == null && region2 == null)
                 {
                     return true;
                 }
@@ -140,54 +157,36 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        #region Constructors
-        /// <summary>
-        /// Zero constructor
-        /// </summary>
-        public Polygon()
-        {
-
-        }
-
-        /// <summary>
-        /// Defines a plane region using the given boundaries as long as the line segments form a closed region
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries)
-            : this(passedBoundaries, 3) { }
-
-        /// <summary>
-        /// Defines a plane region using the given boundaries as long as the line segments form a closed region within the given tolerance
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries, int passedNumberOfDecimalsToCheck)
-            : base(passedBoundaries)
-        {
-            List<LineSegment> roundedBoundaryList = (List<LineSegment>)passedBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
-            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
-            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
-
-            if (isClosed && areCoplanar)
-            {
-                _planeBoundaries = roundedBoundaryList;
-            }
-        }
-
-        /// <summary>
-        /// creates a new Polygon that is a copy of the inputted Polygon
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon planeToCopy)
-            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
-            //constructing a plane fron a List<LineSegment>
-            : this(planeToCopy.PlaneBoundaries, 3) { }
-
-
-        public Polygon(List<Point> passedPoints)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
-        #endregion
-
         #region Methods
+
+        /// <summary>
+        /// Returns the centoid (geometric center point) of the Polygon
+        /// </summary>
+        /// <returns>the region's center as a point</returns>
+        public override Point Centroid()
+        {
+            //the centorid is the average of all the points
+            Dimension xSum = new Dimension();
+            Dimension ySum = new Dimension();
+            Dimension zSum = new Dimension();
+
+            //we count each point twice
+            //the reason why we have to add all of the points twice is because we do not know which way the 
+            //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
+            int count = PlaneBoundaries.Count * 2;
+
+            //sum up each of the points
+            foreach (LineSegment line in PlaneBoundaries)
+            {
+                xSum += line.BasePoint.X + line.EndPoint.X;
+                ySum += line.BasePoint.Y + line.EndPoint.Y;
+                zSum += line.BasePoint.Z + line.EndPoint.Z;
+            }
+
+            //now divide it by the number of points to find the average values
+            return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
+
+        }
 
         public Polygon Shift(Shift passedShift)
         {
@@ -221,7 +220,7 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
-        public Polygon SmallestRectangleThatCanSurroundThisShape()
+        public override Polygon SmallestRectangleThatCanSurroundThisShape()
         {
             throw new NotImplementedException();
         }
@@ -489,7 +488,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public Polyhedron Extrude(Dimension dimension)
+        public override Polyhedron Extrude(Dimension dimension)
         {
             //find two lines that are not parallel
             LineSegment firstLine = _planeBoundaries[0];
@@ -545,14 +544,6 @@ namespace GeometryClassLibrary
 
 
         }
-
-
-        #endregion
-        
-
-
-
-
 
         /// <summary>
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
@@ -1044,5 +1035,7 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+
+        #endregion
     }
 }

@@ -52,7 +52,6 @@
     <Compile Include="Cube.cs" />
     <Compile Include="Cylinder.cs" />
     <Compile Include="Ellipse.cs" />
-    <Compile Include="FiniteLine.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
     <Compile Include="IEdge.cs" />
@@ -61,6 +60,7 @@
     <Compile Include="ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="LineSegment.cs" />
+    <Compile Include="ListExtensionMethods\IListIEdgeExtensionMethods.cs" />
     <Compile Include="MatricesMatrix.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="NonPolygon.cs" />

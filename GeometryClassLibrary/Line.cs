@@ -11,6 +11,7 @@ namespace GeometryClassLibrary
     /// Represents an infinite Line
     /// </summary>
     [DebuggerDisplay("BasePoint = {BasePoint.X.Millimeters}, {BasePoint.Y.Millimeters} , {BasePoint.Z.Millimeters}, Vector = {DirectionVector.XComponentOfDirection.Millimeters}, {DirectionVector.YComponentOfDirection.Millimeters}, {DirectionVector.ZComponentOfDirection.Millimeters}")]
+    [Serializable]
     public class Line
     {
 

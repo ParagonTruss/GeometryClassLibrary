@@ -5,7 +5,9 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
+    [Serializable]
     public class RegularPolygon : Polygon
     {
+
     }
 }
