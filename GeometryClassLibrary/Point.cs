@@ -5,13 +5,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
+    [DebuggerVisualizer(typeof(GeometryVisualizer))]
     [DebuggerDisplay("{X.Millimeters}, {Y.Millimeters}, {Z.Millimeters}")]
+    [Serializable]
     public class Point
     {
         #region fields and Properties
