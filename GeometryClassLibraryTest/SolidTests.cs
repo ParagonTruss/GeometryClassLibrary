@@ -8,7 +8,6 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Test()
         {
-            
         }      
     }
 }

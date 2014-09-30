@@ -135,12 +135,10 @@ namespace GeometryClassLibrary
 
             foreach (var edge in PlaneBoundaries)
             {
-              // shiftedBoundaries.Add(edge.Shift(passedShift));
+               shiftedBoundaries.Add((T)edge.Shift(passedShift));
             }
 
             return new PlaneRegion<T>(shiftedBoundaries);
-
-
         }
 
         public virtual PlaneRegion<T> Rotate(Line passedAxisLine, Angle passedRotationAngle)

@@ -17,6 +17,17 @@ namespace GeometryClassLibrary
         {
 
         }
+        
+        /// <summary>
+        /// Defines a nonPolygon usuing the boundaries
+        /// NOTE: Should check if they are coplanar and form a closed region first!
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public NonPolygon(List<IEdge> passedBoundaries)
+        {
+            _planeBoundaries = passedBoundaries;
+        }
+
         #endregion
 
         public override List<IEdge> PlaneBoundaries

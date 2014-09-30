@@ -162,6 +162,21 @@ namespace GeometryClassLibrary
                 return false;
             }
         }
+
+        /// <summary>
+        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
+        /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(LineSegment other)
+        {
+            if (this.Length.Equals(other.Length))
+                return 0;
+            else
+                return this.Length.CompareTo(other.Length);
+        }
+
         #endregion
 
         #region Methods
@@ -248,26 +263,17 @@ namespace GeometryClassLibrary
             return new LineSegment(newBasePoint, newEndPoint);
         }
 
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
-        /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(LineSegment other)
-        {
-            if (this.Length.Equals(other.Length))
-                return 0;
-            else
-                return this.Length.CompareTo(other.Length);
-        }
-
         #endregion
 
 
         public LineSegment Shift(Shift passedShift)
         {
             return new LineSegment(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
+        }
+
+        IEdge IEdge.Shift(Shift passedShift)
+        {
+            return this.Shift(passedShift);
         }
 
         /// <summary>
@@ -342,11 +348,6 @@ namespace GeometryClassLibrary
         public LineSegment Reverse()
         {
             return new LineSegment(this.EndPoint, this.DirectionVector.Negate(), this.Length);
-        }
-
-        IEdge IEdge.Shift(Shift passedShift)
-        {
-            return this.Shift(passedShift);
         }
     }
 }

@@ -187,7 +187,14 @@ namespace GeometryClassLibrary
             return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
 
         }
-
+        /*public Polygon ShiftPolygon(Shift passedShift)
+        {
+            return new Polygon(this.PlaneBoundaries.Shift(passedShift));
+        }
+        public override PlaneRegion<T> Shift<T>(Shift passedShift)
+        {
+            return new Polygon(this.PlaneBoundaries.Shift(passedShift));
+        }*/
         public Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.PlaneBoundaries.Shift(passedShift));
@@ -488,7 +495,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="dimension"></param>
         /// <returns></returns>
-        public override Polyhedron Extrude(Dimension dimension)
+        public override Solid Extrude(Dimension dimension)
         {
             //find two lines that are not parallel
             LineSegment firstLine = _planeBoundaries[0];
