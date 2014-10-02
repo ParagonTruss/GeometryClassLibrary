@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
 namespace GeometryClassLibrary
 {
@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLines">passed List of Lines</param>
         /// <returns></returns>
-        public static bool AreAllParallel(this IEnumerable<Line> passedLines)
+        public static bool AreAllParallel(this List<Line> passedLines)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLines);
 
@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine">passed lines</param>
         /// <returns></returns>
-        public static bool AreAllCoplanar(this IEnumerable<Line> passedLineList)
+        public static bool AreAllCoplanar(this List<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
 

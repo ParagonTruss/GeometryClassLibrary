@@ -107,7 +107,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        public Plane(IEnumerable<Line> passedLineList)
+        public Plane(List<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
@@ -131,6 +131,31 @@ namespace GeometryClassLibrary
             }
             
         }
+
+        public Plane(List<LineSegment> passedLineSegmentList)
+        {
+
+            if (passedLineSegmentList.AreAllCoplanar())
+            {
+                _basePoint = passedLineSegmentList[0].BasePoint;
+
+                //we have to check against vectors until we find one that is not parralel with the first line we passed in
+                //or else the normal vector will be zero (cross product of parralel lines is 0)
+                Vector vector1 = passedLineSegmentList[0].DirectionVector;
+                for (int i = 1; i < passedLineSegmentList.Count; i++)
+                {
+                    _normalVector = vector1.CrossProduct(passedLineSegmentList[i].DirectionVector);
+                    if (!_normalVector.Equals(new Vector()))
+                        i = passedLineSegmentList.Count;
+                }
+            }
+            else
+            {
+                throw new Exception();
+            }
+
+        }
+
         #endregion
 
         #region Overloaded Operators

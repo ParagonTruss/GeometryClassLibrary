@@ -309,6 +309,22 @@ namespace ClearspanLibraryUnitTest
         }
 
 
+        //[Test]
+        //public void MatrixTest_SystemSolve_ZeroMatrix()
+        //{
+        //    //Ax = b
+        //    Matrix matrixA = new Matrix(4, 4);
+        //    Matrix matrixB = new Matrix(4, 1);
+                                 
+        //    //Solve for x
+        //    Matrix expectedResultMatrix = new Matrix(4, 1);
+            
+        //    Matrix actualResultMatrix = matrixA.SystemSolve(matrixB);
+
+        //    actualResultMatrix.Should().Be(expectedResultMatrix);
+        //}
+
+
         [Test()]
         public void Matrix_DecomposeSimpleTest()
         {

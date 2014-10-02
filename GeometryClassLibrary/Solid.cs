@@ -398,12 +398,12 @@ namespace GeometryClassLibrary
             _planeRegions = new List<PlaneRegion>();
         }
 
-        public Solid(IEnumerable<LineSegment> passedLineSegments)
+        public Solid(List<LineSegment> passedLineSegments)
         {
             _planeRegions = passedLineSegments.MakeCoplanarLineSegmentsIntoRegions();
         }
 
-        public Solid(IEnumerable<PlaneRegion> passedPlaneRegions)
+        public Solid(List<PlaneRegion> passedPlaneRegions)
         {
             _planeRegions = new List<PlaneRegion>(passedPlaneRegions);
         }
