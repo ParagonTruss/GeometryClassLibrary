@@ -35,22 +35,22 @@ namespace ClearspanTypeLibrary.Tests
             verticalLine.Intersection(flatLine).Should().Be(PointGenerator.MakePointWithInches(0, 0));
         }
 
-        [Test()]
-        public void LineSegment_SegmentIntersectionTest()
-        {
-            LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
-            LineSegment line2 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 1), PointGenerator.MakePointWithInches(1, 1, 0));
-            LineSegment line3 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(3, -4, 2));
-            LineSegment line4 = new LineSegment(PointGenerator.MakePointWithInches(0, -4, 0), PointGenerator.MakePointWithInches(3, 0, 2));
+        //[Test()]
+        //public void LineSegment_SegmentIntersectionTest()
+        //{
+        //    LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
+        //    LineSegment line2 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 1), PointGenerator.MakePointWithInches(1, 1, 0));
+        //    LineSegment line3 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(3, -4, 2));
+        //    LineSegment line4 = new LineSegment(PointGenerator.MakePointWithInches(0, -4, 0), PointGenerator.MakePointWithInches(3, 0, 2));
 
-            Point intersectT1 = line1.Intersection(line2);
-            Point intersectT2 = line3.Intersection(line4);
-            Point intersectF1 = line1.Intersection(line4);
+        //    Point intersectT1 = line1.Intersection(line2);
+        //    Point intersectT2 = line3.Intersection(line4);
+        //    Point intersectF1 = line1.Intersection(line4);
 
-            intersectT1.Should().Be(PointGenerator.MakePointWithInches(.5, .5, .5));
-            intersectT2.Should().Be(PointGenerator.MakePointWithInches(1.5, -2, 1));
-            intersectF1.Should().BeNull();
-        }
+        //    intersectT1.Should().Be(PointGenerator.MakePointWithInches(.5, .5, .5));
+        //    intersectT2.Should().Be(PointGenerator.MakePointWithInches(1.5, -2, 1));
+        //    intersectF1.Should().BeNull();
+        //}
 
         [Test()]
         public void LineSegment_LineIntersectionTest() 
