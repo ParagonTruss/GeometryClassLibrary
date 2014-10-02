@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <id>GeometryClassLibrary</id>
+    <version>1.1.0</version>
+    <title>Geometry Class Library</title>
+    <authors>Clearspan Components Inc</authors>
+    <owners>Clearspan Components Inc</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Very beautiful shapes.</description>
 	<iconUrl>http://chattanooga.clearspaninc.com/images/geometry-class-library.png</iconUrl>
     <releaseNotes>Automatically updated</releaseNotes>
     <copyright>Copyright Clearspan Components Inc 2014</copyright>
-	<licenseurl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseurl>
+	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
   </metadata>
 </package>
