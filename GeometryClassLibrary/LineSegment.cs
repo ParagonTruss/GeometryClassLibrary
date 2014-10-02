@@ -114,9 +114,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(LineSegment segment1, LineSegment segment2)
         {
-            if (segment1 == null || segment2 == null)
+            if ((object)segment1 == null || (object)segment2 == null)
             {
-                if (segment1 == null && segment2 == null)
+                if ((object)segment1 == null && (object)segment2 == null)
                 {
                     return true;
                 }
@@ -130,9 +130,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(LineSegment segment1, LineSegment segment2)
         {
-            if (segment1 == null || segment2 == null)
+            if ((object)segment1 == null || (object)segment2 == null)
             {
-                if (segment1 == null && segment2 == null)
+                if ((object)segment1 == null && (object)segment2 == null)
                 {
                     return false;
                 }

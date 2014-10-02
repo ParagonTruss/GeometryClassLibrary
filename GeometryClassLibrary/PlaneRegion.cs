@@ -59,9 +59,9 @@ namespace GeometryClassLibrary
 
         public static bool operator ==(PlaneRegion<T> region1, PlaneRegion<T> region2)
         {
-            if (region1 == null || region2 == null)
+            if ((object)region1 == null || (object)region2 == null)
             {
-                if (region1 == null && region2 == null)
+                if ((object)region1 == null && (object)region2 == null)
                 {
                     return true;
                 }
@@ -72,9 +72,9 @@ namespace GeometryClassLibrary
 
         public static bool operator !=(PlaneRegion<T> region1, PlaneRegion<T> region2)
         {
-            if (region1 == null || region2 == null)
+            if ((object)region1 == null || (object)region2 == null)
             {
-                if (region1 == null && region2 == null)
+                if ((object)region1 == null && (object)region2 == null)
                 {
                     return false;
                 }
@@ -88,7 +88,28 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            PlaneRegion<T> comparableRegion = null;
+
+            //try to cast the object to a Plane Region, if it fails then we know the user passed in the wrong type of object
+            try
+            {
+                comparableRegion = (PlaneRegion<T>)obj;
+                bool areEqual = true;
+                foreach (T edge in comparableRegion.PlaneBoundaries)
+                {
+                    if (!PlaneBoundaries.Contains(edge))
+                    {
+                        areEqual = false;
+                    }
+
+                }
+
+                return areEqual;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -103,7 +124,7 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        #region Abstract Methods
+        #region Methods
 
         public virtual Polygon SmallestRectangleThatCanSurroundThisShape()
         {
@@ -123,10 +144,6 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
-
-        #endregion
-
-        #region Methods
 
         public virtual PlaneRegion<T> Shift<T>(Shift passedShift) where T : IEdge
         {

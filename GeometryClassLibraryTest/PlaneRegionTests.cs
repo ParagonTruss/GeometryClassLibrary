@@ -9,7 +9,7 @@ namespace GeometryClassLibraryTest
     public class PlaneRegionTests
     {
         [Test]
-        public void PlaneRegion_ShiftTest()
+        public void PlaneRegion_GenericShiftTest()
         {
             List<PlaneRegion<IEdge>> planes = new List<PlaneRegion<IEdge>>();
 
@@ -24,9 +24,7 @@ namespace GeometryClassLibraryTest
             nonPolygonEdges.Add(new Arc(PointGenerator.MakePointWithMillimeters(1, 5, 3)));
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
-
-            //planes.Add((PlaneRegion<IEdge>)polygon);
-            planes.Add(null);
+            planes.Add(polygon as PlaneRegion<IEdge>);
             planes.Add(nonPolygon);
 
             Shift shift = new Shift(new Vector(PointGenerator.MakePointWithMillimeters(2, 0, 0)));
@@ -48,6 +46,7 @@ namespace GeometryClassLibraryTest
 
             PlaneRegion<IEdge> nonPolygonResult = planes[1].Shift<IEdge>(shift);
             (nonPolygonResult == nonPolygonExpected).Should().BeTrue();
+            nonPolygonResult = (NonPolygon)nonPolygonResult;
 
             
         }      

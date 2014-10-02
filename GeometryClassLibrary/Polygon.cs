@@ -85,9 +85,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(Polygon region1, Polygon region2)
         {
-            if (region1 == null || region2 == null)
+            if ((object)region1 == null || (object)region2 == null)
             {
-                if (region1 == null && region2 == null)
+                if ((object)region1 == null && (object)region2 == null)
                 {
                     return true;
                 }
@@ -101,9 +101,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(Polygon region1, Polygon region2)
         {
-            if (region1 == null || region2 == null)
+            if ((object)region1 == null || (object)region2 == null)
             {
-                if (region1 == null && region2 == null)
+                if ((object)region1 == null && (object)region2 == null)
                 {
                     return false;
                 }
@@ -119,7 +119,7 @@ namespace GeometryClassLibrary
         {
             Polygon comparableRegion = null;
 
-            //try to cast the object to a Plane Region, if it fails then we know the user passed in the wrong type of object
+            //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
             try
             {
                 comparableRegion = (Polygon)obj;
