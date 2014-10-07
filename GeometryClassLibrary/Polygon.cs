@@ -47,13 +47,12 @@ namespace GeometryClassLibrary
         public Polygon(List<LineSegment> passedBoundaries)
             : base(passedBoundaries)
         {
-            List<LineSegment> roundedBoundaryList = (List<LineSegment>)passedBoundaries;
-            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
-            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
+            bool isClosed = passedBoundaries.DoFormClosedRegion();
+            bool areCoplanar = passedBoundaries.AreAllCoplanar();
 
             if (isClosed && areCoplanar)
             {
-                _planeBoundaries = roundedBoundaryList;
+                _planeBoundaries = passedBoundaries;
             }
         }
 
@@ -206,7 +205,7 @@ namespace GeometryClassLibrary
             {
                 newBoundaryList.Add(segment.Rotate(passedAxisLine, passedRotationAngle));
             }
-            newBoundaryList = (List<LineSegment>)newBoundaryList.RoundAllPoints(5);
+      
             return new Polygon(newBoundaryList);
         }
 
@@ -551,9 +550,8 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
         public bool isValidPolygon(int passedNumberOfDecimalsToCheck)
         {
-            List<LineSegment> roundedBoundaryList = (List<LineSegment>)PlaneBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
-            bool isClosed = roundedBoundaryList.DoFormClosedRegion();
-            bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
+            bool isClosed = PlaneBoundaries.DoFormClosedRegion();
+            bool areCoplanar = PlaneBoundaries.AreAllCoplanar();
 
             if (isClosed && areCoplanar)
             {
@@ -638,15 +636,15 @@ namespace GeometryClassLibrary
         public Polygon OverlappingPolygon(Polygon polygonToBeClipped)
         {
             //if they are coplanar
-            if (((Plane)this).Contains(planeToBeClipped))
+            if (((Plane)this).Contains(polygonToBeClipped))
             {
                 //using the the idea of the Sutherland-Hodgman algoritm
 
                 //create the plane we will be trimming so we dont mess up the original one
-                Polygon overlapping = new Polygon(planeToBeClipped);
+                Polygon overlapping = new Polygon(polygonToBeClipped);
 
                 //find a point where they overlap
-                Point referencePoint = this.SharedPointNotOnThisPolygonsBoundary(planeToBeClipped);
+                Point referencePoint = this.SharedPointNotOnThisPolygonsBoundary(polygonToBeClipped);
 
                 //if we couldnt find a shared point than they must not overlap
                 if (referencePoint != null)

@@ -79,28 +79,6 @@ namespace GeometryClassLibrary
                 .All(group => group.Count() == 2);
         }
 
-        public static IEnumerable<LineSegment> RoundAllPoints(this IEnumerable<LineSegment> passedBoundaries, int passedNumberOfDecimals)
-        {
-            List<LineSegment> newSegments = new List<LineSegment>();
-
-            foreach (LineSegment segment in passedBoundaries)
-            {
-                double newBaseX = Math.Round(segment.BasePoint.X.Millimeters, passedNumberOfDecimals);
-                double newBaseY = Math.Round(segment.BasePoint.Y.Millimeters, passedNumberOfDecimals);
-                double newBaseZ = Math.Round(segment.BasePoint.Z.Millimeters, passedNumberOfDecimals);
-                Point newBasePoint = PointGenerator.MakePointWithMillimeters(newBaseX, newBaseY, newBaseZ);
-
-                double newEndX = Math.Round(segment.EndPoint.X.Millimeters, passedNumberOfDecimals);
-                double newEndY = Math.Round(segment.EndPoint.Y.Millimeters, passedNumberOfDecimals);
-                double newEndZ = Math.Round(segment.EndPoint.Z.Millimeters, passedNumberOfDecimals);
-                Point newEndPoint = PointGenerator.MakePointWithMillimeters(newEndX, newEndY, newEndZ);
-
-                newSegments.Add(new LineSegment(newBasePoint, newEndPoint));
-            }
-
-            return newSegments;
-        }
-
         /// <summary>
         /// Will break down all line segments into points and form them into clockwise traveling segments
         /// Segments must be coplanar and closed or else it will return null
