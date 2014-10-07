@@ -52,7 +52,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
-        public List<Polygon> Polygons
+        public virtual List<Polygon> Polygons
         {
             get { return _polygons; }
             set { _polygons = value; }
