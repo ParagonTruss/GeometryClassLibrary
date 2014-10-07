@@ -17,10 +17,15 @@ namespace GeometryClassLibrary
             {
                 foreach (var segment2 in passedLineSegments)
                 {
-                    if (segment1 != segment2 && segment1.DoesSharesABaseOrEndPointWith(segment2) && passedLineSegments.AreAllCoplanar())
+                    if (segment1.IsCoplanarWith(segment2))
                     {
-                        planesList.Add(new Plane(segment1, segment2));
+                        Plane possiblePlane = new Plane(segment1, segment2);
+                        if (segment1 != segment2 && segment1.DoesSharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
+                        {
+                            planesList.Add(possiblePlane);
+                        }
                     }
+
                 }
             }
 
@@ -31,7 +36,7 @@ namespace GeometryClassLibrary
                 List<LineSegment> newRegionBoundaries = new List<LineSegment>();
                 foreach (var segment in passedLineSegments)
                 {
-                    if (plane.Contains(segment))
+                    if (plane.Contains(segment) && !newRegionBoundaries.Contains(segment))
                     {
                         newRegionBoundaries.Add(segment);
                     }

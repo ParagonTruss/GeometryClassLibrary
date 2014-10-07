@@ -11,6 +11,8 @@ namespace GeometryClassLibraryTest
         [Test]
         public void PlaneRegion_GenericShiftTest()
         {
+            Assert.Fail();
+
             List<PlaneRegion<IEdge>> planes = new List<PlaneRegion<IEdge>>();
 
             List<LineSegment> polygonLines = new List<LineSegment>();
@@ -24,7 +26,7 @@ namespace GeometryClassLibraryTest
             nonPolygonEdges.Add(new Arc(PointGenerator.MakePointWithMillimeters(1, 5, 3)));
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
-            planes.Add(polygon as PlaneRegion<IEdge>);
+            //planes.Add(polygon);
             planes.Add(nonPolygon);
 
             Shift shift = new Shift(new Vector(PointGenerator.MakePointWithMillimeters(2, 0, 0)));

@@ -14,6 +14,23 @@ namespace ClearspanTypeLibrary.Tests
     public class PolyhedronTests
     {
         [Test()]
+        public void Polyhedron_MakeCoplanarLineSegmentsIntoPolygons()
+        {
+            List<LineSegment> lineSegments =
+                new List<Point> {
+                    PointGenerator.MakePointWithInches(0.000,  0.000),
+                    PointGenerator.MakePointWithInches(0.000,  0.250),
+                    PointGenerator.MakePointWithInches(6.500,  3.500),
+                    PointGenerator.MakePointWithInches(144.000,  3.500),
+                    PointGenerator.MakePointWithInches(144.000,  0.000)
+                }.MakeIntoLineSegmentsThatMeet();
+
+            Polyhedron testPoly = new Polyhedron(lineSegments);
+
+            testPoly.LineSegments.Should().BeEquivalentTo(lineSegments);
+        }
+
+        [Test()]
         public void Polyhedron_ShiftXYTest()
         {
 

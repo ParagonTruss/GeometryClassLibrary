@@ -346,7 +346,7 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinate = Math.Abs(pointsMatrix.Determinant());
-            return determinate < Constants.AcceptedEqualityDeviationConstant;
+            return determinate < Constants.AcceptedEqualityDeviationDouble;
         }
 
         public Line Translate(Vector passedDirectionVector, Dimension passedDisplacement)

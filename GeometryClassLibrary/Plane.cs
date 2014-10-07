@@ -216,7 +216,7 @@ namespace GeometryClassLibrary
             Vector planeVector = new Vector(passedPoint, BasePoint);
             Dimension dotProduct = planeVector * NormalVector;
 
-            return (Math.Abs(dotProduct.Millimeters) < Constants.AcceptedEqualityDeviationConstant);
+            return (Math.Abs(dotProduct.Inches) < new Dimension(DimensionType.ThirtySecond, 1).Inches);
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)

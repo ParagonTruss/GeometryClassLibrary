@@ -152,7 +152,7 @@ namespace GeometryClassLibrary
             {
                 for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
-                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - checkMatrix.GetElement(rowIndex, columnIndex)) > Constants.AcceptedEqualityDeviationConstant)
+                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - checkMatrix.GetElement(rowIndex, columnIndex)) > Constants.AcceptedEqualityDeviationDouble)
                     {
                         return false;
                     }
@@ -1123,13 +1123,36 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix SystemSolve(Matrix passedSolutionMatrix)
         {
-           double[] solutionColumn = SystemSolve(passedSolutionMatrix.GetColumn(0));
-           Matrix solution = new Matrix(NumberOfRows, 1);
-           solution.SetColumn(0, solutionColumn);
+            Matrix solution = new Matrix(NumberOfRows, 1);
+            if (passedSolutionMatrix.IsZeroMatrix())
+            {
+                solution.SetColumn(0, passedSolutionMatrix.GetColumn(0));
+            }
+            else
+            {
+                solution.SetColumn(0, SystemSolve(passedSolutionMatrix.GetColumn(0)));
+            }
 
-           return solution;
+            return solution;
 
-        } // SystemSolve
+        }
+
+        private bool IsZeroMatrix()
+        {
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                for (int j = 0; j < this.GetRow(i).Length; j++)
+                {
+                    if (this.GetElement(i, j) != 0)
+                    {
+                        return false;
+                    }
+                }
+
+            }
+
+            return true;
+        }
 
 
         // --------------------------------------------------------------------------------------------------------------

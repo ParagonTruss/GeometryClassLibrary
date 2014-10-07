@@ -45,16 +45,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(List<LineSegment> passedBoundaries)
-            : this(passedBoundaries, 3) { }
-
-        /// <summary>
-        /// Defines a plane region using the given boundaries as long as the line segments form a closed region within the given tolerance
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries, int passedNumberOfDecimalsToCheck)
             : base(passedBoundaries)
         {
-            List<LineSegment> roundedBoundaryList = (List<LineSegment>)passedBoundaries.RoundAllPoints(passedNumberOfDecimalsToCheck);
+            List<LineSegment> roundedBoundaryList = (List<LineSegment>)passedBoundaries;
             bool isClosed = roundedBoundaryList.DoFormClosedRegion();
             bool areCoplanar = roundedBoundaryList.AreAllCoplanar();
 
@@ -71,7 +64,7 @@ namespace GeometryClassLibrary
         public Polygon(Polygon polygonToCopy)
             //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
             //constructing a plane fron a List<LineSegment>
-            : this(polygonToCopy.PlaneBoundaries, 3) { }
+            : this(polygonToCopy.PlaneBoundaries) { }
 
 
         public Polygon(List<Point> passedPoints)

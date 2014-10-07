@@ -67,5 +67,25 @@ namespace GeometryClassLibraryTests
             (sorted[2] == new LineSegment(PointGenerator.MakePointWithMillimeters(3, 4, 2), PointGenerator.MakePointWithMillimeters(3, 1, 0))).Should().BeTrue();
             (sorted[3] == new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0))).Should().BeTrue();
         }
+
+        [Test()]
+        public void LineSegmentList_MakeIntoLineSegmentsThatMeet()
+        {
+            
+            List<LineSegment> lineSegments =
+                new List<Point> {
+                    PointGenerator.MakePointWithInches(0.000,  0.000),
+                    PointGenerator.MakePointWithInches(0.000,  0.250),
+                    PointGenerator.MakePointWithInches(6.500,  3.500),
+                    PointGenerator.MakePointWithInches(144.000,  3.500),
+                    PointGenerator.MakePointWithInches(144.000,  0.000)
+                }.MakeIntoLineSegmentsThatMeet();
+
+            lineSegments.Count.Should().Be(5);
+
+
+            
+            
+        }
     }
 }

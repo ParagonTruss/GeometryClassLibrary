@@ -233,29 +233,9 @@ namespace ClearspanTypeLibrary.Tests
             line5.IsParallelTo(line3).Should().BeFalse();
         }
 
+
         [Test()]
         public void Line_RotateTest_AboutZAxis()
-        {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point otherPointLine1 = PointGenerator.MakePointWithInches(3, 3, 3);
-
-            Line line1 = new Line(basePointLine1, otherPointLine1);
-            Line axisLine = new Line(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(0, 0, 1)); 
-
-            Angle rotationAngle = new Angle(AngleType.Degree, 199);
-
-            Line actualResult = line1.Rotate(axisLine, rotationAngle);
-
-            Point expectedResultBasePoint = PointGenerator.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
-            Vector expectedDirectionVector = new Vector(PointGenerator.MakePointWithInches(-0.29438226668500322, -2.2166053056557904, 3.0));
-
-            Line expectedResult = new Line(expectedResultBasePoint, expectedDirectionVector);
-
-            (expectedResult == actualResult).Should().BeTrue();
-        }
-
-        [Test()]
-        public void Line_RotateTest_AboutZAxis_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
             Point otherPointLine1 = PointGenerator.MakePointWithMillimeters(3, 3, 3);
@@ -292,19 +272,6 @@ namespace ClearspanTypeLibrary.Tests
             Line expectedResult = new Line(expectedStart, expectedEnd);
 
             (expectedResult == afterRotate).Should().BeTrue();
-        }
-
-        [Test()]
-        public void Line_ShiftTest_Translate()
-        {
-            //not completed test
-            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
-            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
-
-            Line toShift = new Line(start, end);
-
-            Assert.Fail();
-            
         }
 
         [Test()]

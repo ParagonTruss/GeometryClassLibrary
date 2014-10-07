@@ -219,7 +219,7 @@ namespace GeometryClassLibraryTests
             //make sure the PlaneRegion contains the centroid
             Point center2 = testPolygon2.Centroid();
 
-            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(0.1, 0, 0))));
+            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(0.1, 0, 0))));
 
             //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
             testPolygon.ContainsExclusive(insidePlane1).Should().BeTrue();

@@ -58,7 +58,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnitClassLibrary, Version=1.0.5374.37217, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\UnitClassLibrary.1.0.5374.37217\lib\net45\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>
@@ -73,6 +73,7 @@
     <Compile Include="IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
+    <Compile Include="PointListTests.cs" />
     <Compile Include="PolygonTests.cs" />
     <Compile Include="PolyhedronTests.cs" />
     <Compile Include="RotationTests.cs" />

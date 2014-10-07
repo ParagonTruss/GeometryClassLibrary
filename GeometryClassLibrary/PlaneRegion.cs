@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(List<T> passedBoundaries)
-            //: base(passedBoundaries)
+            : base()
         {
             PlaneBoundaries = passedBoundaries;
         }
