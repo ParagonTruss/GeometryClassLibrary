@@ -11,17 +11,46 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Arc : IEdge, IComparable<Arc>
     {
+        #region Fields and Properties
+        /// <summary>
+        /// One of the points where the arc arises from
+        /// </summary>
+        private Point _basePoint;
+        public Point BasePoint
+        {
+            get { return _basePoint; }
+            set { throw new System.NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// One of the points where the arc arises from
+        /// </summary>
+        private Point _originPointTwo;
+        public Point OriginPointTwo
+        {
+            get { throw new System.NotImplementedException(); }
+            set { throw new System.NotImplementedException(); }
+        }
+
+        private Vector _directionVector;
+        public Vector DirectionVector
+        {
+            get { throw new System.NotImplementedException(); }
+            set { throw new System.NotImplementedException(); }
+        }
+        #endregion
+
         #region Constructors
 
         public Arc(Point originPointTwo)
         {
-            this._originPointOne = new Point();
+            this._basePoint = new Point();
             this._originPointTwo = originPointTwo;
         }
 
         public Arc(Point originPointOne, Point originPointTwo)
         {
-            this._originPointOne = originPointOne;
+            this._basePoint = originPointOne;
             this._originPointTwo = originPointTwo;
         }
 
@@ -75,8 +104,8 @@ namespace GeometryClassLibrary
                 comparableArc = (Arc)obj;
 
                 // if the two points' x and y are equal, returns true
-                return (comparableArc._originPointOne.Equals(this._originPointOne) && comparableArc._originPointTwo.Equals(this._originPointTwo))
-                    || (comparableArc._originPointOne.Equals(this._originPointTwo) && comparableArc._originPointTwo.Equals(this._originPointOne));
+                return (comparableArc._basePoint.Equals(this._basePoint) && comparableArc._originPointTwo.Equals(this._originPointTwo))
+                    || (comparableArc._basePoint.Equals(this._originPointTwo) && comparableArc._originPointTwo.Equals(this._basePoint));
             }
             catch
             {
@@ -96,33 +125,11 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        #region Fields and Properties
-        /// <summary>
-        /// One of the points where the arc arises from
-        /// </summary>
-        private Point _originPointOne;
-        public Point OriginPointOne
-        {
-            get { return _originPointOne; }
-            set { throw new System.NotImplementedException(); }
-        }
-
-        /// <summary>
-        /// One of the points where the arc arises from
-        /// </summary>
-        private Point _originPointTwo;
-        public Point OriginPointTwo
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
-        #endregion
-
         #region Methods
 
         public Arc Shift(Shift passedShift)
         {
-            return new Arc(_originPointOne.Shift(passedShift), _originPointTwo.Shift(passedShift));
+            return new Arc(_basePoint.Shift(passedShift), _originPointTwo.Shift(passedShift));
         }
 
         IEdge IEdge.Shift(Shift passedShift)

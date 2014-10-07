@@ -24,7 +24,7 @@ namespace GeometryClassLibraryTest
             nonPolygonEdges.Add(new Arc(PointGenerator.MakePointWithMillimeters(1, 5, 3)));
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
-            planes.Add(polygon as PlaneRegion<IEdge>);
+            //planes.Add(polygon as PlaneRegion<IEdge>);
             planes.Add(nonPolygon);
 
             Shift shift = new Shift(new Vector(PointGenerator.MakePointWithMillimeters(2, 0, 0)));

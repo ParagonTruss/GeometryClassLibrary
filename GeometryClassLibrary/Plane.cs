@@ -19,11 +19,13 @@ namespace GeometryClassLibrary
         public Point BasePoint
         {   
             get{ return _basePoint; }
+            protected set { _basePoint = value; }
         }
 
         public Vector NormalVector
         {
             get { return _normalVector; }
+            protected set { _normalVector = value; } 
         }
 
         #endregion
