@@ -121,6 +121,7 @@ namespace GeometryClassLibrary
             }
         }
 
+        
         public Plane(IEnumerable<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
@@ -218,7 +219,7 @@ namespace GeometryClassLibrary
             Vector planeVector = new Vector(passedPoint, BasePoint);
             Dimension dotProduct = planeVector * NormalVector;
 
-            return (Math.Abs(dotProduct.Millimeters) < Constants.AcceptedEqualityDeviationConstant);
+            return dotProduct == new Dimension();
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)

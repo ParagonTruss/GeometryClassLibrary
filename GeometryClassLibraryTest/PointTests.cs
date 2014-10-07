@@ -136,7 +136,8 @@ namespace GeometryClassLibraryTests
 
             Point newPoint = pointToRotate.Rotate3D(axis, rotationAngle);
 
-            newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
+            //newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
+            (newPoint == PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096)).Should().BeTrue();
         }
 
         [Test()]

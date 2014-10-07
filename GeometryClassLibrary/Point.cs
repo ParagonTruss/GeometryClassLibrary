@@ -490,7 +490,7 @@ namespace GeometryClassLibrary
             Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.DirectionVector);
 
             //if the above cross product is the 0 vector, the point is on the given line
-            return Math.Abs(crossProduct.Magnitude.Millimeters) < Constants.AcceptedEqualityDeviationConstant;
+            return crossProduct.Magnitude == new Dimension();
         }
 
         /// <summary>

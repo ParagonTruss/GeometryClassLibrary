@@ -37,17 +37,20 @@ namespace GeometryClassLibrary
         {
             PlaneBoundaries = passedBoundaries;
 
-            //we have to check against vectors until we find one that is not parralel with the first line we passed in
-            //or else the normal vector will be zero (cross product of parralel lines is 0)
-            Vector vector1 = passedBoundaries[0].DirectionVector;
-            for (int i = 1; i < passedBoundaries.Count; i++)
+            if (passedBoundaries.Count > 0)
             {
-                base.NormalVector = vector1.CrossProduct(passedBoundaries[i].DirectionVector);
-                if (!base.NormalVector.Equals(new Vector()))
-                    i = passedBoundaries.Count;
-            }
+                //we have to check against vectors until we find one that is not parralel with the first line we passed in
+                //or else the normal vector will be zero (cross product of parralel lines is 0)
+                Vector vector1 = passedBoundaries[0].DirectionVector;
+                for (int i = 1; i < passedBoundaries.Count; i++)
+                {
+                    base.NormalVector = vector1.CrossProduct(passedBoundaries[i].DirectionVector);
+                    if (!base.NormalVector.Equals(new Vector()))
+                        i = passedBoundaries.Count;
+                }
 
-            base.BasePoint = passedBoundaries[0].BasePoint;
+                base.BasePoint = passedBoundaries[0].BasePoint;
+            }
         }
 
         /// <summary>

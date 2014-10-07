@@ -152,7 +152,7 @@ namespace GeometryClassLibrary
             {
                 for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
-                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - checkMatrix.GetElement(rowIndex, columnIndex)) > Constants.AcceptedEqualityDeviationConstant)
+                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - checkMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
                     {
                         return false;
                     }

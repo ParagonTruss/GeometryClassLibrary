@@ -295,19 +295,6 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_ShiftTest_Translate()
-        {
-            //not completed test
-            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
-            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
-
-            Line toShift = new Line(start, end);
-
-            Assert.Fail();
-            
-        }
-
-        [Test()]
         public void Line_TranslateTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithMillimeters(1, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0));
