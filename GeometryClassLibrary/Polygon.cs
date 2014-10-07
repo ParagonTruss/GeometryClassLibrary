@@ -733,6 +733,9 @@ namespace GeometryClassLibrary
                 //keep track of all the new lines we added so that we can connect them later on (one for each region returned)
                 List<List<LineSegment>> newSegmentsGenerated = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
 
+                //keep track of the ones we just want to slice but not merge in with the generated segments
+                List<List<LineSegment>> segmentsCut = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
+
                 //we have to keep track of lines to move and do it after the foreach loop because we cant change the list
                 //while we are looping through it (immutable) (one for each region returned)
                 List<List<LineSegment>> toRemove = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
@@ -751,7 +754,7 @@ namespace GeometryClassLibrary
                         {
                             //slice the line and project the parts for the relevent polygons
                             sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
-                                slicedPolygons, newSegmentsGenerated);
+                                slicedPolygons, segmentsCut, newSegmentsGenerated, toRemove);
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
@@ -791,6 +794,16 @@ namespace GeometryClassLibrary
                     }
                 }
 
+                //now add the cut segments in
+                for (int currentRegionNumber = 0; currentRegionNumber < newSegmentsGenerated.Count; currentRegionNumber++)
+                {
+                    //remove any segments we need to from our overlapping polygon first
+                    foreach (LineSegment lineToAdd in segmentsCut[currentRegionNumber])
+                    {
+                        slicedPolygons[currentRegionNumber].PlaneBoundaries.Add(lineToAdd);
+                    }
+                }
+
                 //now consolidate the generated line segments into one that spans the gap created by the line segments
                 consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
 
@@ -815,7 +828,7 @@ namespace GeometryClassLibrary
         /// <param name="slicedPolygons"></param>
         /// <param name="newSegmentsGenerated"></param>
         private void sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
-            Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> newSegmentsGenerated)
+            Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
             //we know we will always get two because we already checked and confirmed intersect
             List<LineSegment> lineSliced = lineToSlice.Slice(intersectPoint);
@@ -839,10 +852,9 @@ namespace GeometryClassLibrary
                 newSegmentsGenerated[1].Add(projectedLineForOutside);
             }
 
-            //get the same line in the outside planeregion as we already have in line for the inside region
-            //and then change it to the outside part of the line
-            int indexOfLine = slicedPolygons[1].PlaneBoundaries.IndexOf(lineToSlice);
-            slicedPolygons[1].PlaneBoundaries[indexOfLine] = outsidePart;
+            //now tell it to remove the original part on the outside polygon and add the cut part
+            toRemove[1].Add(lineToSlice);
+            segmentsCut[1].Add(outsidePart);
 
             //Deal with the insidePlane and the inside part of the line
             //now do it all again for the outside line too (this is for the insidePlane)
@@ -852,11 +864,9 @@ namespace GeometryClassLibrary
                 newSegmentsGenerated[0].Add(projectedLineForInside);
             }
 
-            //now we can change the intersecting line to the inside line
-            //we have to do it part by part because line is immutable during a foreach loop so we cannot reassign it, only modify it
-            //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
-            lineToSlice.BasePoint = insidePart.BasePoint;
-            lineToSlice.Length = insidePart.Length;
+            //now remove it from the inside part and add the sliced line
+            toRemove[0].Add(lineToSlice);
+            segmentsCut[0].Add(insidePart);
         }
 
         /// <summary>
