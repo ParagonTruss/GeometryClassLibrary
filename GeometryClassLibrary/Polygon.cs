@@ -37,7 +37,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Polygon()
         {
-
+            PlaneBoundaries = new List<LineSegment>();
         }
 
         /// <summary>
@@ -63,7 +63,15 @@ namespace GeometryClassLibrary
         public Polygon(Polygon polygonToCopy)
             //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
             //constructing a plane fron a List<LineSegment>
-            : this(polygonToCopy.PlaneBoundaries) { }
+        {
+            foreach (var line in polygonToCopy.PlaneBoundaries)
+            {
+                this.PlaneBoundaries.Add(new LineSegment(line));
+                
+            }
+            this.NormalVector = polygonToCopy.NormalVector;
+            this.BasePoint = polygonToCopy.BasePoint;
+        }
 
 
         public Polygon(List<Point> passedPoints)
@@ -795,7 +803,7 @@ namespace GeometryClassLibrary
                 }
 
                 //now add the cut segments in
-                for (int currentRegionNumber = 0; currentRegionNumber < newSegmentsGenerated.Count; currentRegionNumber++)
+                for (int currentRegionNumber = 0; currentRegionNumber < segmentsCut.Count; currentRegionNumber++)
                 {
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToAdd in segmentsCut[currentRegionNumber])

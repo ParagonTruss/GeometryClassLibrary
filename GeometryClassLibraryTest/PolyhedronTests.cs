@@ -25,7 +25,9 @@ namespace ClearspanTypeLibrary.Tests
                     PointGenerator.MakePointWithInches(144.000,  0.000)
                 }.MakeIntoLineSegmentsThatMeet();
 
-            Polyhedron testPoly = new Polyhedron(lineSegments);
+            List<Polygon> polygons = lineSegments.MakeCoplanarLineSegmentsIntoPolygons();
+
+            Polyhedron testPoly = new Polyhedron(polygons);
 
             testPoly.LineSegments.Should().BeEquivalentTo(lineSegments);
         }

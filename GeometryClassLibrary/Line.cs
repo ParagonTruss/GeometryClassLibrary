@@ -348,7 +348,6 @@ namespace GeometryClassLibrary
             double determinate = Math.Abs(pointsMatrix.Determinant());
             Dimension determinateDimension = new Dimension(DimensionType.Millimeter, determinate);
             return determinateDimension == new Dimension();
-            //return determinate < Constants.AcceptedEqualityDeviationConstant;
         }
 
         public Line Translate(Vector passedDirectionVector, Dimension passedDisplacement)

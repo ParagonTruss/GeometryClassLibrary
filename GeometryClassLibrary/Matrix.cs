@@ -1115,6 +1115,7 @@ namespace GeometryClassLibrary
 
         // --------------------------------------------------------------------------------------------------------------
 
+
         /// <summary>
         /// This method makes it possible to use SystemSolve on a matrix. It calls the other SystemSolve method and returns the result as a new Matrix.
         /// </summary>
@@ -1123,15 +1124,36 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix SystemSolve(Matrix passedSolutionMatrix)
         {
-           double[] solutionColumn = SystemSolve(passedSolutionMatrix.GetColumn(0));
-           Matrix solution = new Matrix(NumberOfRows, 1);
-           solution.SetColumn(0, solutionColumn);
+            Matrix solution = new Matrix(NumberOfRows, 1);
+            if (passedSolutionMatrix.IsZeroMatrix())
+            {
+                solution.SetColumn(0, passedSolutionMatrix.GetColumn(0));
+            }
+            else
+            {
+                solution.SetColumn(0, SystemSolve(passedSolutionMatrix.GetColumn(0)));
+            }
 
-           return solution;
+            return solution;
 
-        } // SystemSolve
+        }
 
+        private bool IsZeroMatrix()
+        {
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                for (int j = 0; j < this.GetRow(i).Length; j++)
+                {
+                    if (this.GetElement(i, j) != 0)
+                    {
+                        return false;
+                    }
+                }
 
+            }
+
+            return true;
+        }
         // --------------------------------------------------------------------------------------------------------------
 
         /// <summary>

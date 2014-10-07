@@ -76,7 +76,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPoint"></param>
         /// <param name="passedLine"></param>
-        Plane(Point passedPoint, Line passedLine)
+        public Plane(Point passedPoint, Line passedLine)
         {
             if(!passedPoint.IsOnLine(passedLine))
             {
@@ -108,7 +108,7 @@ namespace GeometryClassLibrary
 
                 
             }
-            if(passedLine1.DoesIntersect(passedLine2))
+            if(passedLine1.IsCoplanarWith(passedLine2))
             {
                 _basePoint = passedLine1.BasePoint;
                 _normalVector = passedLine1.DirectionVector.CrossProduct(passedLine2.DirectionVector);
