@@ -432,6 +432,47 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
+        public void Polygon_SliceWithLineTest()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(6, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 1, 0), PointGenerator.MakePointWithMillimeters(6, 0, 0)));
+            Polygon testPolygon = new Polygon(bounds);
+
+            Line slicingLine = new Line(PointGenerator.MakePointWithMillimeters(6, 5, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0));
+
+            List<Polygon> results = testPolygon.Slice(slicingLine);
+
+            //create the expected planes to compare to
+            List<LineSegment> expected1Bounds = new List<LineSegment>();
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(6, 1, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 1, 0), PointGenerator.MakePointWithMillimeters(6, 0, 0)));
+            Polygon expected1 = new Polygon(expected1Bounds);
+
+            List<LineSegment> expected2Bounds = new List<LineSegment>();
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            Polygon expected2 = new Polygon(expected2Bounds);
+
+
+            results.Contains(expected2).Should().BeTrue();
+            results.Contains(expected1).Should().BeTrue();
+
+            //now make sure it handles no intersection well
+            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 0.9));
+            List<Polygon> results2 = testPolygon.Slice(notIntersecting);
+
+            //should only return the original plane
+            results2.Count.Should().Be(1);
+            (results2[0] == testPolygon).Should().BeTrue();
+        }
+
+        [Test()]
         public void Polygon_SharedPointNotOnThisPolygonsBoundary()
         {
             List<LineSegment> bounds1 = new List<LineSegment>();
@@ -486,6 +527,24 @@ namespace GeometryClassLibraryTests
             Point result4 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
             (result4 != null).Should().BeTrue();
             testPolygon1.Touches(result).Should().BeFalse();
+
+            //one more becasue it was causing errors before in program implementing this
+            List<LineSegment> bounds6 = new List<LineSegment>();
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 6, 2), PointGenerator.MakePointWithMillimeters(6, 5, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 6, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 5, 2), PointGenerator.MakePointWithMillimeters(10, 1, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(10, 1, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            Polygon testPolygon6 = new Polygon(bounds6);
+
+            List<LineSegment> bounds7 = new List<LineSegment>();
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 2), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 2), PointGenerator.MakePointWithMillimeters(10, 1, 2)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(10, 1, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            Polygon testPolygon7 = new Polygon(bounds7);
+
+            Point result67 = testPolygon6.SharedPointNotOnThisPolygonsBoundary(testPolygon7);
+            (result67 == null).Should().BeTrue();
         }
     }
 }

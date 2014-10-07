@@ -19,11 +19,13 @@ namespace GeometryClassLibrary
         public Point BasePoint
         {   
             get{ return _basePoint; }
+            protected set { _basePoint = value; }
         }
 
         public Vector NormalVector
         {
             get { return _normalVector; }
+            protected set { _normalVector = value; } 
         }
 
         #endregion
@@ -119,6 +121,7 @@ namespace GeometryClassLibrary
             }
         }
 
+        
         public Plane(IEnumerable<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
@@ -216,7 +219,7 @@ namespace GeometryClassLibrary
             Vector planeVector = new Vector(passedPoint, BasePoint);
             Dimension dotProduct = planeVector * NormalVector;
 
-            return (Math.Abs(dotProduct.Inches) < new Dimension(DimensionType.ThirtySecond, 1).Inches);
+            return dotProduct == new Dimension();
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)

@@ -567,20 +567,20 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="otherPlane">Other plane region to find a shared point with</param>
         /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
-        public Point SharedPointNotOnThisPolygonsBoundary(Polygon otherPlane)
+        public Point SharedPointNotOnThisPolygonsBoundary(Polygon otherPolygon)
         {
             //check the centroids
-            if (otherPlane.ContainsInclusive(this.Centroid()))
+            if (otherPolygon.ContainsInclusive(this.Centroid()))
             {
                 return this.Centroid();
             }
-            if (this.ContainsExclusive(otherPlane.Centroid()))
+            if (this.ContainsExclusive(otherPolygon.Centroid()))
             {
-                return otherPlane.Centroid();
+                return otherPolygon.Centroid();
             }
 
             //if we still havent found it try looking at the veticies of the otherPlane
-            foreach (Point vertex in otherPlane.PlaneBoundaries.GetAllPoints())
+            foreach (Point vertex in otherPolygon.PlaneBoundaries.GetAllPoints())
             {
                 if (this.ContainsExclusive(vertex))
                 {
@@ -590,7 +590,7 @@ namespace GeometryClassLibrary
 
             //still still havent found it check if the sides overlap
             //we know one line at least must intersect this planes boundaries twice
-            foreach (LineSegment line in otherPlane.PlaneBoundaries)
+            foreach (LineSegment line in otherPolygon.PlaneBoundaries)
             {
                 //keep track of our intersection
                 Point firstIntesect = null;
@@ -613,8 +613,11 @@ namespace GeometryClassLibrary
                             //find the point between them by making a line between them and then finding the midpoint of it
                             LineSegment betweenIntersects = new LineSegment(firstIntesect, intersection);
 
-                            //we have to return here instead of breaking because breaking will only take us out of onw
-                            return betweenIntersects.MidPoint;
+                            if (!this.Touches(betweenIntersects.MidPoint))
+                            {
+                                //we have to return here instead of breaking because breaking will only take us out of onw
+                                return betweenIntersects.MidPoint;
+                            }
                         }
                     }
                 }
@@ -632,7 +635,7 @@ namespace GeometryClassLibrary
         /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
         /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
         /// or only touch</returns>
-        public Polygon OverlappingPolygon(Polygon planeToBeClipped)
+        public Polygon OverlappingPolygon(Polygon polygonToBeClipped)
         {
             //if they are coplanar
             if (((Plane)this).Contains(planeToBeClipped))
@@ -722,11 +725,12 @@ namespace GeometryClassLibrary
                 //index 0 is our insidePlaneRegion
                 //index 1 is our outsidePlaneRegion
 
-                //create our two regions that we will modify and return
-                List<Polygon> slicedPlanes = new List<Polygon>() { new Polygon(this), new Polygon(this) };
-
-                //now get our reference point - one that we know is on a side and not on the plane (using the normal is an easy consistent way)
+                //get our reference point - one that we know is on a side and not on the plane (using the normal is an easy consistent way)
                 Point referencePoint = slicingPlane.BasePoint + slicingPlane.NormalVector.DirectionPoint;
+
+                //set up our variables we will need
+                //create our two regions that we will modify and return
+                List<Polygon> slicedPolygons = new List<Polygon>() { new Polygon(this), new Polygon(this) };
 
                 //keep track of all the new lines we added so that we can connect them later on (one for each region returned)
                 List<List<LineSegment>> newSegmentsGenerated = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
@@ -736,7 +740,7 @@ namespace GeometryClassLibrary
                 List<List<LineSegment>> toRemove = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
 
                 //loop through each segment in the planeRegion to see if and where it needs to be sliced
-                foreach (LineSegment line in slicedPlanes[0].PlaneBoundaries)
+                foreach (LineSegment line in slicedPolygons[0].PlaneBoundaries)
                 {
                     //find where or if the linesegment overlaps the clipping line
                     Point intersectPoint = line.Intersection(slicingLine);
@@ -747,103 +751,15 @@ namespace GeometryClassLibrary
                         //if the line does not have one of its points on the plane than we need to slice it 
                         if (!slicingPlane.Contains(line.EndPoint) && !slicingPlane.Contains(line.BasePoint))
                         {
-                            //we know we will always get two because we already checked and confirmed intersect
-                            List<LineSegment> lineSliced = line.Slice(intersectPoint);
-
-                            //guess as what line part is the outside;
-                            LineSegment outsidePart = lineSliced[0];
-                            LineSegment insidePart = lineSliced[1];
-
-                            //check to see if our "guess" was right
-
-                            //if the base point of the original line is on the other side as the reference point then that line that 
-                            //contains it is the outside part of the line
-                            if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
-                            {
-                                //if the basepoint is on the lineSegment than that is the inside part
-                                if (line.BasePoint.IsOnLineSegment(lineSliced[1]))
-                                {
-                                    outsidePart = lineSliced[1];
-                                    insidePart = lineSliced[0];
-                                }
-                            }
-                            //if the end point of the original line is on the other side of the reference point then that line 
-                            //that contains it is actually the outside line
-                            else if (!slicingPlane.PointIsOnSameSideAs(line.EndPoint, referencePoint))
-                            {
-                                //this time if the endpoint is on the lineSegment than that is the inside part
-                                if (line.EndPoint.IsOnLineSegment(lineSliced[1]))
-                                {
-                                    outsidePart = lineSliced[1];
-                                    insidePart = lineSliced[0];
-                                }
-                            }
-                            //otherwise our guess was right
-
-                            //now we need to deal with the projection on the lines and both halves since we need to keep both 
-                            //sections the region is split into 
-
-                            //Deal with the outsidePlane and outside part of the line
-                            //first project it(inside line) onto the division line(this is for the outsidePlane) 
-                            LineSegment projectedLineForOutside = insidePart.ProjectOntoLine(slicingLine);
-
-                            //and then add it to our new segments list if its not zero length
-                            if (projectedLineForOutside.Length != new Dimension())
-                            {
-                                newSegmentsGenerated[1].Add(projectedLineForOutside);
-                            }
-
-                            //get the same line in the outside planeregion as we already have in line for the inside region
-                            //and then change it to the outside part of the line
-                            int indexOfLine = slicedPlanes[1].PlaneBoundaries.IndexOf(line);
-                            slicedPlanes[1].PlaneBoundaries[indexOfLine] = outsidePart;
-
-
-                            //Deal with the insidePlane and the inside part of the line
-                            //now do it all again for the outside line too (this is for the insidePlane)
-                            LineSegment projectedLineForInside = outsidePart.ProjectOntoLine(slicingLine);
-                            if (projectedLineForInside.Length != new Dimension())
-                            {
-                                newSegmentsGenerated[0].Add(projectedLineForInside);
-                            }
-
-                            //now we can change the intersecting line to the inside line
-                            //we have to do it part by part because line is immutable during a foreach loop so we cannot reassign it, only modify it
-                            //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
-                            line.BasePoint = insidePart.BasePoint;
-                            line.Length = insidePart.Length;
+                            //slice the line and project the parts for the relevent polygons
+                            sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
+                                slicedPolygons, newSegmentsGenerated);
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
                         {
-                            //if the endpoint is on the slicing plane than we can determine which side based on the basepoint
-                            if (slicingPlane.Contains(line.EndPoint))
-                            {
-                                //if the base point is on the inside than we should cut it out of the outside
-                                if (slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
-                                {
-                                    toRemove[1].Add(line);
-                                }
-                                //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
-                                else
-                                {
-                                    toRemove[0].Add(line);
-                                }
-                            }
-                            //if the endpoint wasnt on the line than the basepoint was and we can determine the side with the endpoint
-                            else
-                            {
-                                //if the end point is on the inside than we should cut it out of the outside
-                                if (slicingPlane.PointIsOnSameSideAs(line.EndPoint, referencePoint))
-                                {
-                                    toRemove[1].Add(line);
-                                }
-                                //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
-                                else
-                                {
-                                    toRemove[0].Add(line);
-                                }
-                            }
+                            //we only need to project it on either the inside or outside polygon
+                            projectSegmentForOneSide(line, slicingPlane, slicingLine, referencePoint, newSegmentsGenerated, toRemove);
                         }
                     }
                     //if it doesnt intersect at all we are either completely on the inside side or the out side
@@ -853,116 +769,280 @@ namespace GeometryClassLibrary
                         //so we need to project it for the inisde region and leave it for the outside one
                         if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
                         {
-                            //add the projection to our new segments list for the inside region
-                            LineSegment projectedLine = line.ProjectOntoLine(slicingLine);
-                            if (projectedLine.Length != new Dimension())
-                            {
-                                newSegmentsGenerated[0].Add(projectedLine);
-                            }
-
-                            //and now we add it to the toRemove list of the inside plane so we know to get rid of it so 
-                            //it doesnt cause us problems later on
-                            toRemove[0].Add(line);
+                            //add it to the remove list and project it for the generated segments list
+                            removeAndProjectLineSegment(line, slicingLine, toRemove[0], newSegmentsGenerated[0]);
                         }
                         //we know that it is either on the other side or on the plane so if we check that it is
                         //not on the plane than we know it must be on the same side as the reference point
                         //so we need to leave it for the inside region and project it for the outside one
                         else if (!slicingPlane.Contains(line.BasePoint))
                         {
-                            //add the projection to our new segments list for the outside region
-                            LineSegment projectedLine = line.ProjectOntoLine(slicingLine);
-                            if (projectedLine.Length != new Dimension())
-                            {
-                                newSegmentsGenerated[1].Add(projectedLine);
-                            }
-
-                            //and now we add it to the toRemove list for the outside plane so we know to get rid of it so it 
-                            //doesnt caus us problems later on
-                            toRemove[1].Add(line);
+                            //add it to the remove list and project it for the generated segments list
+                            removeAndProjectLineSegment(line, slicingLine, toRemove[1], newSegmentsGenerated[1]);
                         }
                     }
                 }
 
-                //now consolidate the new lines combining them to as few as posible (should only be one line at the end because all 
-                //the projections were on the same line) and then add them to the polygon
-
-                //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
-                //we can do this because we know that they are all along the same line so if they share a point they are
-                //just an extension of the other one (they all should be exensions of the same line)
+                //start by removing the segments we no longer need
                 for (int currentRegionNumber = 0; currentRegionNumber < newSegmentsGenerated.Count; currentRegionNumber++)
                 {
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToRemove in toRemove[currentRegionNumber])
                     {
-                        slicedPlanes[currentRegionNumber].PlaneBoundaries.Remove(lineToRemove);
-                    }
-
-                    //now combine those segments
-                    for (int i = 0; i < newSegmentsGenerated[currentRegionNumber].Count; i++)
-                    {
-                        for (int j = 0; j < newSegmentsGenerated[currentRegionNumber].Count; j++)
-                        {
-                            //get our lines for this round of checks
-                            LineSegment firstLine = newSegmentsGenerated[currentRegionNumber][i];
-                            LineSegment secondLine = newSegmentsGenerated[currentRegionNumber][j];
-
-                            //if its not the same line (or equivalent - if it is we just ignore it for now and it will work iself out as other ones combine)
-                            if (firstLine != secondLine)
-                            {
-                                //if two points match then combine them and add the new one to the list
-                                //then remove the two old ones
-                                //then we need to restart it at i = 0, j = -1 (-1 because it will increment at the end and then be back to 0) otherwise 
-                                //we may skip some or gout out of bounds
-                                if (firstLine.BasePoint == secondLine.BasePoint)
-                                {
-                                    newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.EndPoint, secondLine.EndPoint));
-                                    newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
-                                    newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.BasePoint == secondLine.EndPoint)
-                                {
-                                    newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.EndPoint, secondLine.BasePoint));
-                                    newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
-                                    newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.EndPoint == secondLine.EndPoint)
-                                {
-                                    newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.BasePoint, secondLine.BasePoint));
-                                    newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
-                                    newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                                else if (firstLine.EndPoint == secondLine.BasePoint)
-                                {
-                                    newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.BasePoint, secondLine.EndPoint));
-                                    newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
-                                    newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
-                                    i = 0;
-                                    j = -1;
-                                }
-                            }
-                        }
-                    }
-
-                    //now we need to add the new lineSegments to our plane region
-                    foreach (LineSegment toAdd in newSegmentsGenerated[currentRegionNumber])
-                    {
-                        slicedPlanes[currentRegionNumber].PlaneBoundaries.Add(toAdd);
+                        slicedPolygons[currentRegionNumber].PlaneBoundaries.Remove(lineToRemove);
                     }
                 }
 
-                //now return them in opposite order
-                slicedPlanes.Sort();
-                slicedPlanes.Reverse();
-                return slicedPlanes;
+                //now consolidate the generated line segments into one that spans the gap created by the line segments
+                consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
+
+                //now return them in opposite order (largest first
+                slicedPolygons.Sort();
+                slicedPolygons.Reverse();
+                return slicedPolygons;
             }
             //if we were not in the plane than we return a copy of the orignal plane (this)
             return new List<Polygon>() { this };
+        }
+
+        /// <summary>
+        /// Slices the line segment and modifies the polygons so that they reflect they slice and finally projects the necessary part of the slice
+        /// to the newSegments for the polygons
+        /// </summary>
+        /// <param name="lineToSlice"></param>
+        /// <param name="intersectPoint"></param>
+        /// <param name="slicingPlane"></param>
+        /// <param name="slicingLine"></param>
+        /// <param name="referencePoint"></param>
+        /// <param name="slicedPolygons"></param>
+        /// <param name="newSegmentsGenerated"></param>
+        private void sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
+            Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> newSegmentsGenerated)
+        {
+            //we know we will always get two because we already checked and confirmed intersect
+            List<LineSegment> lineSliced = lineToSlice.Slice(intersectPoint);
+
+            //sets it so the inside lineSegment is in the first spot and the outside in the Second
+            findAndSortInsideAndOutsideLineSegments(lineSliced, lineToSlice, slicingPlane, referencePoint);
+
+            LineSegment insidePart = lineSliced[0];
+            LineSegment outsidePart = lineSliced[1];
+
+            //now we need to deal with the projection on the lines and both halves since we need to keep both 
+            //sections the region is split into 
+
+            //Deal with the outsidePlane and outside part of the line
+            //first project it(inside line) onto the division line(this is for the outsidePlane) 
+            LineSegment projectedLineForOutside = insidePart.ProjectOntoLine(slicingLine);
+
+            //and then add it to our new segments list if its not zero length
+            if (projectedLineForOutside.Length != new Dimension())
+            {
+                newSegmentsGenerated[1].Add(projectedLineForOutside);
+            }
+
+            //get the same line in the outside planeregion as we already have in line for the inside region
+            //and then change it to the outside part of the line
+            int indexOfLine = slicedPolygons[1].PlaneBoundaries.IndexOf(lineToSlice);
+            slicedPolygons[1].PlaneBoundaries[indexOfLine] = outsidePart;
+
+            //Deal with the insidePlane and the inside part of the line
+            //now do it all again for the outside line too (this is for the insidePlane)
+            LineSegment projectedLineForInside = outsidePart.ProjectOntoLine(slicingLine);
+            if (projectedLineForInside.Length != new Dimension())
+            {
+                newSegmentsGenerated[0].Add(projectedLineForInside);
+            }
+
+            //now we can change the intersecting line to the inside line
+            //we have to do it part by part because line is immutable during a foreach loop so we cannot reassign it, only modify it
+            //we also have to change basepoint and endpoint other wise it will just translate the lineSegment
+            lineToSlice.BasePoint = insidePart.BasePoint;
+            lineToSlice.Length = insidePart.Length;
+        }
+
+        /// <summary>
+        /// Projects the segment and adds it to the list for the polygon that needs the projected segment
+        /// </summary>
+        /// <param name="lineToSlice"></param>
+        /// <param name="slicingPlane"></param>
+        /// <param name="slicingLine"></param>
+        /// <param name="referencePoint"></param>
+        /// <param name="newSegmentsGenerated"></param>
+        /// <param name="toRemove"></param>
+        private void projectSegmentForOneSide(LineSegment lineToSlice, Plane slicingPlane, Line slicingLine,
+            Point referencePoint, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
+        {
+            //if the endpoint is on the slicing plane than we can determine which side based on the basepoint
+            if (slicingPlane.Contains(lineToSlice.EndPoint))
+            {
+                //if the base point is on the inside than we should cut it out of the outside
+                if (slicingPlane.PointIsOnSameSideAs(lineToSlice.BasePoint, referencePoint))
+                {
+                    //add it to the remove list and project it for the generated segments list
+                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                }
+                //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
+                else
+                {
+                    //add it to the remove list and project it for the generated segments list
+                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                }
+            }
+            //if the endpoint wasnt on the line than the basepoint was and we can determine the side with the endpoint
+            else
+            {
+                //if the end point is on the inside than we should cut it out of the outside
+                if (slicingPlane.PointIsOnSameSideAs(lineToSlice.EndPoint, referencePoint))
+                {
+                    //add it to the remove list and project it for the generated segments list
+                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                }
+                //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
+                else
+                {
+                    //add it to the remove list and project it for the generated segments list
+                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds which linesegment was on the "inside" of the slice and returns it before the one that was on the "outside" of the slice
+        /// </summary>
+        /// <param name="lineSliced">Line Segments generated from the slice</param>
+        /// <param name="lineThatWasSliced">Line that was sliced to form the sliced parts</param>
+        /// <param name="slicingPlane">Plane that was used to slice the line (To tell which is "inside")</param>
+        /// <param name="referencePoint">Reference point that is on the "inside" side of the slicingPlane</param>
+        private void findAndSortInsideAndOutsideLineSegments(List<LineSegment> lineSliced, LineSegment lineThatWasSliced, Plane slicingPlane, Point referencePoint)
+        {
+            //guess as what line part is the outside;
+            LineSegment insidePart = lineSliced[1];
+            LineSegment outsidePart = lineSliced[0];
+
+            //check to see if our "guess" was right
+
+            //if the base point of the original line is on the other side as the reference point then that line that 
+            //contains it is the outside part of the line
+            if (!slicingPlane.PointIsOnSameSideAs(lineThatWasSliced.BasePoint, referencePoint))
+            {
+                //if the basepoint is on the lineSegment than that is the inside part
+                if (lineThatWasSliced.BasePoint.IsOnLineSegment(lineSliced[1]))
+                {
+                    outsidePart = lineSliced[1];
+                    insidePart = lineSliced[0];
+                }
+            }
+            //if the end point of the original line is on the other side of the reference point then that line 
+            //that contains it is actually the outside line
+            else if (!slicingPlane.PointIsOnSameSideAs(lineThatWasSliced.EndPoint, referencePoint))
+            {
+                //this time if the endpoint is on the lineSegment than that is the inside part
+                if (lineThatWasSliced.EndPoint.IsOnLineSegment(lineSliced[1]))
+                {
+                    outsidePart = lineSliced[1];
+                    insidePart = lineSliced[0];
+                }
+            }
+            //otherwise our guess was right
+
+            //now modify our list
+            lineSliced[0] = insidePart;
+            lineSliced[1] = outsidePart;
+        }
+
+        /// <summary>
+        /// Adds the line to the given toRemove list and then projects it onto the projection line and adds it to the segmentsGenerated list
+        /// </summary>
+        /// <param name="line">LineSegment to remove and project</param>
+        /// <param name="toProjectOnto">Line to Project the lineSegment onto</param>
+        /// <param name="toRemoveList">List to remove the line segment from (should be for the same polygon as newSegmentGeneratedList)</param>
+        /// <param name="newSegmentsGeneratedList">list to add the projected line too (should be for the same polygon as toRemoveList)</param>
+        private void removeAndProjectLineSegment(LineSegment line, Line toProjectOnto, List<LineSegment> toRemoveList, List<LineSegment> newSegmentsGeneratedList)
+        {
+            //add the projection to our new segments list for the outside region
+            LineSegment projectedLine = line.ProjectOntoLine(toProjectOnto);
+            if (projectedLine.Length != new Dimension())
+            {
+                newSegmentsGeneratedList.Add(projectedLine);
+            }
+
+            //and now we add it to the toRemove list for the outside plane so we know to get rid of it so it 
+            //doesnt caus us problems later on
+            toRemoveList.Add(line);
+        }
+
+        /// <summary>
+        /// This combines LineSegments into as few as possible based on combining lines with a shared point into one longer one. By doing this
+        /// the generated segments should be reduced to one line and span the gap that would have been created
+        /// </summary>
+        /// <param name="newSegmentsGenerated">Line segments generated by slicing the polygon</param>
+        /// <param name="slicedPlanes">the two result polygons from the slice</param>
+        private void consolidateGeneratedLineSegments(List<List<LineSegment>> newSegmentsGenerated, List<Polygon> slicedPlanes)
+        {
+            //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
+            //we can do this because we know that they are all along the same line so if they share a point they are
+            //just an extension of the other one (they all should be exensions of the same line)
+            for (int currentRegionNumber = 0; currentRegionNumber < newSegmentsGenerated.Count; currentRegionNumber++)
+            {
+                //now combine those segments
+                for (int i = 0; i < newSegmentsGenerated[currentRegionNumber].Count; i++)
+                {
+                    for (int j = 0; j < newSegmentsGenerated[currentRegionNumber].Count; j++)
+                    {
+                        //get our lines for this round of checks
+                        LineSegment firstLine = newSegmentsGenerated[currentRegionNumber][i];
+                        LineSegment secondLine = newSegmentsGenerated[currentRegionNumber][j];
+
+                        //if its not the same line (or equivalent - if it is we just ignore it for now and it will work iself out as other ones combine)
+                        if (firstLine != secondLine)
+                        {
+                            //if two points match then combine them and add the new one to the list
+                            //then remove the two old ones
+                            //then we need to restart it at i = 0, j = -1 (-1 because it will increment at the end and then be back to 0) otherwise 
+                            //we may skip some or gout out of bounds
+                            if (firstLine.BasePoint == secondLine.BasePoint)
+                            {
+                                newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.EndPoint, secondLine.EndPoint));
+                                newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
+                                newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
+                                i = 0;
+                                j = -1;
+                            }
+                            else if (firstLine.BasePoint == secondLine.EndPoint)
+                            {
+                                newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.EndPoint, secondLine.BasePoint));
+                                newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
+                                newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
+                                i = 0;
+                                j = -1;
+                            }
+                            else if (firstLine.EndPoint == secondLine.EndPoint)
+                            {
+                                newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.BasePoint, secondLine.BasePoint));
+                                newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
+                                newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
+                                i = 0;
+                                j = -1;
+                            }
+                            else if (firstLine.EndPoint == secondLine.BasePoint)
+                            {
+                                newSegmentsGenerated[currentRegionNumber].Add(new LineSegment(firstLine.BasePoint, secondLine.EndPoint));
+                                newSegmentsGenerated[currentRegionNumber].Remove(firstLine);
+                                newSegmentsGenerated[currentRegionNumber].Remove(secondLine);
+                                i = 0;
+                                j = -1;
+                            }
+                        }
+                    }
+                }
+
+                //now we need to add the new lineSegments to our plane region
+                foreach (LineSegment toAdd in newSegmentsGenerated[currentRegionNumber])
+                {
+                    slicedPlanes[currentRegionNumber].PlaneBoundaries.Add(toAdd);
+                }
+            }
         }
 
         private bool Contains(Line slicingLine)
