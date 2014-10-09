@@ -117,5 +117,53 @@ namespace GeometryClassLibraryTests
             testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin3, referencePointOffOrigin).Should().BeFalse();
 
         }
+
+        [Test()]
+        public void Plane_IntersectionLineWithPlane()
+        {
+            //try all the zero cases
+            Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, 1, 2), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
+            Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(1, 3, 3), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
+
+            Line test12Intersect = testPlane1.IntersectionLineWithPlane(testPlane2);
+            Line test21Intersect = testPlane2.IntersectionLineWithPlane(testPlane1);
+
+            Line expectedLine = new Line(PointGenerator.MakePointWithInches(2, -1, 0), new Vector(PointGenerator.MakePointWithInches(0, 3, 3)));
+
+            test12Intersect.Should().Be(test21Intersect);
+            test21Intersect.Should().Be(expectedLine);
+        }
+
+        [Test()]
+        public void Plane_IntersectionLineWithPlane_ZeroCases()
+        {
+            //try all the zero cases
+            Point testPoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            Point testPointX = PointGenerator.MakePointWithMillimeters(10, 0, 0);
+            Point testPointY = PointGenerator.MakePointWithMillimeters(0, 10, 0);
+            Point testPointZ = PointGenerator.MakePointWithMillimeters(0, 0, 10);
+
+            Plane testPlaneXY = new Plane(testPoint, testPointX, testPointY);
+            Plane testPlaneXZ = new Plane(testPoint, testPointX, testPointZ);
+            Plane testPlaneYZ = new Plane(testPoint, testPointY, testPointZ);
+
+            Line testXYXZIntersect = testPlaneXZ.IntersectionLineWithPlane(testPlaneXY);
+            Line testXZXYIntersect = testPlaneXY.IntersectionLineWithPlane(testPlaneXZ);
+            testXYXZIntersect.Should().Be(Line.XAxis);
+            testXZXYIntersect.Should().Be(Line.XAxis);
+
+            Line testXYYZIntersect = testPlaneXY.IntersectionLineWithPlane(testPlaneYZ);
+            Line testYZXYIntersect = testPlaneYZ.IntersectionLineWithPlane(testPlaneXY);
+            testXYYZIntersect.Should().Be(Line.YAxis);
+            testYZXYIntersect.Should().Be(Line.YAxis);
+
+            Line testXZYZIntersect = testPlaneXZ.IntersectionLineWithPlane(testPlaneYZ);
+            Line testYZXZIntersect = testPlaneYZ.IntersectionLineWithPlane(testPlaneXZ);
+            testXZYZIntersect.Should().Be(Line.ZAxis);
+            testYZXZIntersect.Should().Be(Line.ZAxis);
+
+            Line testXYXY = testPlaneXY.IntersectionLineWithPlane(testPlaneXY);
+            testXYXY.Should().Be(null);
+        }
     }
 }

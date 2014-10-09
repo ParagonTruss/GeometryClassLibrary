@@ -258,6 +258,91 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        /// <summary>
+        /// Finds the line where the two planes intersect 
+        /// Note: covnerts the types to inches Internally so some percision might be lost
+        /// </summary>
+        /// <param name="otherPlane">the other plane to see where it intersects with this plane</param>
+        /// <returns>returns the Line of intersection between the planes or null if they do not intersect</returns>
+        public Line IntersectionLineWithPlane(Plane otherPlane)
+        {
+            //We make them all doubles because we need to ignore the dimesnions for this calculation to work correctly and then restore them
+            //at the end, so we choose inches to use as the base to convert to
+
+            //Explains how to find where planes intersect: http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
+            //if we have the normals we can cross them to find direction vector of the intersection
+            Vector intersectionLineDirection = this.NormalVector.CrossProduct(otherPlane.NormalVector);
+
+            //if it is 0 than thay are parallel and dont intersect
+            if (intersectionLineDirection != new Vector())
+            {
+                //put them in plane notation  adn find what they equal (normal.X * X + normal.Y * Y + normal.Z * Z = planeEqualsValue)
+                double thisPlaneEqualsValue = this.NormalVector.XComponentOfDirection.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponentOfDirection.Inches * this.BasePoint.Y.Inches +
+                    this.NormalVector.ZComponentOfDirection.Inches * this.BasePoint.Z.Inches;
+                //double thisPlaneEqualsAsInches = thisPlaneEqualsValue;
+
+                double otherPlaneEqualsValue = otherPlane.NormalVector.XComponentOfDirection.Inches * otherPlane.BasePoint.X.Inches +
+                    otherPlane.NormalVector.YComponentOfDirection.Inches * otherPlane.BasePoint.Y.Inches + otherPlane.NormalVector.ZComponentOfDirection.Inches * otherPlane.BasePoint.Z.Inches;
+                //double otherPlaneEqualsAsInches = otherPlaneEqualsValue;
+
+                //pull them all out as the same thing because we need to know what dimension we are dealing with
+                double thisFirstVariable = this.NormalVector.XComponentOfDirection.Inches;
+                double thisSecondVariable = this.NormalVector.YComponentOfDirection.Inches;
+                double otherFirstVariable = otherPlane.NormalVector.XComponentOfDirection.Inches;
+                double otherSecondVariable = otherPlane.NormalVector.YComponentOfDirection.Inches;
+
+                //first we play a game to find an axis it will always cross (default is to use z first then y, then x)
+                if (intersectionLineDirection.ZComponentOfDirection == new Dimension())
+                {
+                    //try y
+                    if (intersectionLineDirection.YComponentOfDirection != new Dimension())
+                    {
+                        //make the y the thirdVariable(the one we make 0) and z the second 
+                        thisSecondVariable = this.NormalVector.ZComponentOfDirection.Inches;
+                        otherSecondVariable = otherPlane.NormalVector.ZComponentOfDirection.Inches;
+                    }
+                    //if not y or z than it must be x because we know it is non zero at this point
+                    else
+                    {
+                        //make x the third variable(the one make 0) and z the first
+                        thisFirstVariable = this.NormalVector.ZComponentOfDirection.Inches;
+                        otherFirstVariable = otherPlane.NormalVector.ZComponentOfDirection.Inches;
+                    }
+                }
+
+                //make them into a matrix and then solve it
+                Matrix equations = new Matrix(2, 2);
+                equations.SetElement(0, 0, thisFirstVariable);
+                equations.SetElement(0, 1, thisSecondVariable);
+                equations.SetElement(1, 0, otherFirstVariable);
+                equations.SetElement(1, 1, otherSecondVariable);
+
+                double[] equationEquals = new double[] {thisPlaneEqualsValue, otherPlaneEqualsValue};
+
+                double[] results = equations.SystemSolve(equationEquals);
+                
+
+                //now assign them to the point in the way the need to be (assume z again)
+                Point intersectLinePoint = PointGenerator.MakePointWithInches(results[0], results[1], 0);
+                if (intersectionLineDirection.ZComponentOfDirection == new Dimension())
+                {
+                    //if y was what we made zero then it was third and z was second
+                    if (intersectionLineDirection.YComponentOfDirection != new Dimension())
+                    {
+                        intersectLinePoint = PointGenerator.MakePointWithInches(results[0], 0, results[1]);
+                    }
+                    //if x is what we made 0 than it was third and z was first
+                    else
+                    {
+                        intersectLinePoint = PointGenerator.MakePointWithInches(0, results[1], results[0]);
+                    }
+                }
+                return new Line(intersectLinePoint, intersectionLineDirection);
+            }
+
+            return null;
+        }
+
         #endregion
 
 
