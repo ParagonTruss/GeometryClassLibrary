@@ -379,11 +379,27 @@ namespace GeometryClassLibrary
 
         public static bool operator ==(Line d1, Line d2)
         {
+            if ((object)d1 == null || (object)d2 == null)
+            {
+                if ((object)d1 == null && (object)d2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
             return d1.Equals(d2);
         }
 
         public static bool operator !=(Line d1, Line d2)
         {
+            if ((object)d1 == null || (object)d2 == null)
+            {
+                if ((object)d1 == null && (object)d2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
             return !d1.Equals(d2);
         }
 
