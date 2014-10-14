@@ -351,21 +351,21 @@ namespace GeometryClassLibrary
             // if there's only one, our job becomes a lot simpler
             // make sure it's the same component, and then check to see if multiplying them creates a number greater than 0, which means they have different signs
             if (numberOfZeroComponents1 == 2 && numberOfZeroComponents2 == 2 && componentIndex1 == componentIndex2)
-                return this[componentIndex1] * v1[componentIndex2] > new Dimension();
+                return this[componentIndex1] * v1[componentIndex2] > new Area();
 
             // uses compareTo as a factor and compares it to the other quotients, determining whether the
             // component is a multiple of the other component.  Negate() is used for opposite directions
-            Dimension compareTo;
+            double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
             if (this.XComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection));
+                compareTo =  Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
             else if (this.YComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
+                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
             else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
+                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
             else
-                compareTo = new Dimension();
+                compareTo = 0;
 
             return v1.XComponentOfDirection * compareTo == this.XComponentOfDirection &&
                 v1.YComponentOfDirection * compareTo == this.YComponentOfDirection &&
@@ -406,21 +406,21 @@ namespace GeometryClassLibrary
             // if there's only one, our job becomes a lot simpler
             // make sure it's the same component, and then check to see if multiplying them creates a number less than 0, which means only 1 is negative
             if (numberOfZeroComponents1 == 2 && numberOfZeroComponents2 == 2 && componentIndex1 == componentIndex2)
-                return this[componentIndex1] * v1[componentIndex2] < new Dimension();
+                return this[componentIndex1] * v1[componentIndex2] < new Area();
 
             // uses compareTo as a factor and compares it to the other quotients, determining whether the
             // component is a multiple of the other component.  Negate() is used for opposite directions
-            Dimension compareTo;
+            double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
             if (this.XComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection));
+                compareTo = Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
             else if (this.YComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
+                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
             else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = new Dimension(DimensionType.Millimeter, Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection));
+                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
             else
-                compareTo = new Dimension();
+                compareTo = 0;
 
             return v1.XComponentOfDirection.Negate() * compareTo == this.XComponentOfDirection &&
                 v1.YComponentOfDirection.Negate() * compareTo == this.YComponentOfDirection &&
