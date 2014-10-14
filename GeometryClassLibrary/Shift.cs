@@ -45,7 +45,7 @@ namespace GeometryClassLibrary
             get { return _displacement; }
         }
 
-        
+
         private List<Rotation> _rotationsToApply;
         public List<Rotation> rotationsToApply
         {
@@ -66,16 +66,16 @@ namespace GeometryClassLibrary
             get { return _angleAboutXAxis; }
         }*/
 
-       /// <summary>
-       /// Converts from a rotation described by 2 angles to a rotation described by 1 angle and an axis
-       /// </summary>
+        /// <summary>
+        /// Converts from a rotation described by 2 angles to a rotation described by 1 angle and an axis
+        /// </summary>
         public Line RotationAxis
         {
             //http://math.stackexchange.com/questions/513397/how-can-i-convert-an-axis-angle-representation-to-a-euler-angle-representation
             get
             {
-                throw new NotImplementedException();                
-                                
+                throw new NotImplementedException();
+
             }
             set
             {
@@ -87,14 +87,6 @@ namespace GeometryClassLibrary
         {
             this._displacement = new Vector();
             this._rotationsToApply = new List<Rotation>();
-            //this._angleAboutZAxis = new Angle();
-            //this._angleAboutXAxis = new Angle();
-        }
-
-        public Shift(Vector passedDisplacement)
-        {
-            this._displacement = passedDisplacement;
-            this._rotationsToApply = new List<Rotation>();
         }
 
         public Shift(Rotation passedRotation)
@@ -103,21 +95,29 @@ namespace GeometryClassLibrary
             this._rotationsToApply = new List<Rotation>() { passedRotation };
         }
 
+        public Shift(Vector passedDisplacement)
+        {
+            this._displacement = passedDisplacement;
+            this._rotationsToApply = new List<Rotation>();
+        }
+        public Shift(Translation passedTranslation)
+            : this((Vector)passedTranslation) { }
+
         public Shift(Vector passedDisplacement, Rotation passedRotation)
         {
             this._displacement = passedDisplacement;
             this._rotationsToApply = new List<Rotation>() { passedRotation };
-            //this._angleAboutZAxis = passedRotationAngle;
-            //this._angleAboutXAxis = new Angle();
         }
+        public Shift(Translation passedTranslation, Rotation passedRotation)
+            : this((Vector)passedTranslation, passedRotation) { }
 
         public Shift(Vector passedDisplacement, List<Rotation> passedRotations)
         {
             this._displacement = passedDisplacement;
             this._rotationsToApply = passedRotations;
-            //this._angleAboutZAxis = passedAngleWithZAxis;
-            //this._angleAboutXAxis = passedAngleWithXZPlane;
         }
+        public Shift(Translation passedTranslation, List<Rotation> passedRotations)
+            : this((Vector)passedTranslation, passedRotations) { }
 
         #region Overloaded Operators
 
@@ -225,7 +225,7 @@ namespace GeometryClassLibrary
             foreach (Rotation rotation in _rotationsToApply)
             {
                 //switch the angle of each rotation to its opposite
-                 returnRotations.Add(new Rotation(rotation.AxisToRotateAround, new Angle() - rotation.AngleToRotate));
+                returnRotations.Add(new Rotation(rotation.AxisToRotateAround, new Angle() - rotation.AngleToRotate));
             }
             //now flip the order of them
             returnRotations.Reverse();

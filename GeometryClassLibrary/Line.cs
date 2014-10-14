@@ -19,26 +19,20 @@ namespace GeometryClassLibrary
         public readonly static Line YAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
         public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
 
-        #region private fields and constants
-        //Properties that define a line:
-
-        private Point _basePoint; //this is any point that is on the line
-
-        //A line's direction vector defines its orientation in space
-        //The components of the direction vector do not necessarily correspond to a point on the line
-        private Dimension _xComponentOfDirection;
-        private Dimension _yComponentOfDirection;
-        private Dimension _zComponentOfDirection;
-
-        //Parmateric Representation of a Line: [basePoint] + (scalarMultiplier)[direction] = [point on line]
-        #endregion
-
         #region Properties
         public Point BasePoint
         {
             get { return _basePoint; }
             set { this._basePoint = value; }
         }
+        private Point _basePoint; //this is any point that is on the line
+
+        public Direction Direction
+        {
+            get { return _direction; }
+            set { _direction = value; }
+        }
+        private Direction _direction;
 
         public double Slope
         {
@@ -60,87 +54,30 @@ namespace GeometryClassLibrary
         //    get { throw new NotImplementedException(); }
         //}
 
-        public Vector DirectionVector
-        {
-            get
-            {
-                return new Vector(new Point(XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection));
-            }
-            set
-            {
-                this._xComponentOfDirection = value.XComponentOfDirection;
-                this._yComponentOfDirection = value.YComponentOfDirection;
-                this._zComponentOfDirection = value.ZComponentOfDirection;
-            }
-        }
-
-        /// <summary>
-        /// Getter/Setter for the x-component of the line's direction vector. NOTE: The direction vector is not necessarily a point on the line.
-        /// </summary>
-        public Dimension XComponentOfDirection
-        {
-            get { return _xComponentOfDirection; }
-            set { _xComponentOfDirection = value; }
-
-        }
-
-        /// <summary>
-        /// Getter/Setter for the y-component of the line's direction vector. NOTE: The direction vector is not necessarily a point on the line.
-        /// </summary>
-        public Dimension YComponentOfDirection
-        {
-            get { return _yComponentOfDirection; }
-            set { _yComponentOfDirection = value; }
-
-        }
-
-        /// <summary>
-        /// Getter/Setter for the z-component of the line's direction vector. NOTE: The direction vector is not necessarily a point on the line.
-        /// </summary>
-        public Dimension ZComponentOfDirection
-        {
-            get { return _zComponentOfDirection; }
-            set { _zComponentOfDirection = value; }
-
-        }
-
-        public Dimension MagnitudeOfDirectionVector
-        {
-            get
-            {
-                Dimension xSquared = new Dimension(DimensionType.Millimeter, Math.Pow(XComponentOfDirection.Millimeters, 2));
-                Dimension ySquared = new Dimension(DimensionType.Millimeter, Math.Pow(YComponentOfDirection.Millimeters, 2));
-                Dimension zSquared = new Dimension(DimensionType.Millimeter, Math.Pow(ZComponentOfDirection.Millimeters, 2));
-
-                //Magnitude is the square root of the sum of the squares of each component
-                return new Dimension(DimensionType.Millimeter, Math.Sqrt(xSquared.Millimeters + ySquared.Millimeters + zSquared.Millimeters));
-            }
-        }
-
         #endregion
-
-        public Point Point
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
 
         #region Constructors
 
         /// <summary>
-        /// Creates a line using parametric form
+        /// Creates a line using with a direction in the same direction as the given vector
         /// </summary>
         /// <param name="basePoint"></param>
         /// <param name="direction"></param>
-        public Line(Point passedBasePoint, Vector passedDirection)
+        public Line(Point passedBasePoint, Vector passedDirectionVector)
         {
             _basePoint = passedBasePoint;
-            DirectionVector = passedDirection;
+            Direction = new Direction(passedDirectionVector);
+        }
+
+        /// <summary>
+        /// Creates a line with the given direction and point
+        /// </summary>
+        /// <param name="basePoint"></param>
+        /// <param name="direction"></param>
+        public Line(Point passedBasePoint, Direction passedDirection)
+        {
+            _basePoint = passedBasePoint;
+            Direction = passedDirection;
         }
 
         /// <summary>
@@ -149,22 +86,8 @@ namespace GeometryClassLibrary
         /// <param name="passedDirectionReferencePoint"></param>
         public Line(Point passedDirectionReferencePoint)
         {
-            Point origin = PointGenerator.MakePointWithMillimeters(0, 0, 0);
-
-            //if (passedDirectionReferencePoint != origin)
-            //{
-            _basePoint = origin;
-            XComponentOfDirection = passedDirectionReferencePoint.X;
-            YComponentOfDirection = passedDirectionReferencePoint.Y;
-            ZComponentOfDirection = passedDirectionReferencePoint.Z;
-            //}
-
-            //A "zero" line is allowed so that it is possible to construct a zero vector
-            //else
-            //{
-            //    var exception = new DivideByZeroException("The point that was used to define a line is the  origin");
-            //    throw exception;
-            //}
+            _basePoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            _direction = new Direction(passedDirectionReferencePoint);
         }
 
         /// <summary>
@@ -176,10 +99,7 @@ namespace GeometryClassLibrary
         {
             //A "zero" line is allowed so that it is possible to construct a zero vector  
             _basePoint = passedBasePoint;
-            XComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.X.Millimeters - passedBasePoint.X.Millimeters, 6));
-            YComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.Y.Millimeters - passedBasePoint.Y.Millimeters, 6));
-            ZComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.Z.Millimeters - passedBasePoint.Z.Millimeters, 6));
-
+            _direction = new Direction(new Vector(passedBasePoint, passedOtherPoint));
 
             //else
             //{
@@ -196,8 +116,8 @@ namespace GeometryClassLibrary
         /// <param name="passedParallelLine"></param>
         public Line(Point passedPoint, Line passedParallelLine)
         {
-            _basePoint = passedPoint;
-            this.DirectionVector = passedParallelLine.DirectionVector;
+            _basePoint = new Point(passedPoint);
+            this.Direction = new Direction(passedParallelLine.Direction);
         }
 
         public Line(LineSegment lineSegment1) : this(lineSegment1.BasePoint, lineSegment1.EndPoint) { }

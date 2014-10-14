@@ -44,6 +44,10 @@
     <Reference Include="FluentAssertions.Core">
       <HintPath>..\packages\FluentAssertions.3.2.1\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="GeometryClassLibrary, Version=1.0.5400.24174, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\GeometryClassLibrary\bin\Debug\GeometryClassLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -73,6 +77,7 @@
     <Compile Include="IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
+    <Compile Include="DirectionTests.cs" />
     <Compile Include="PointListTests.cs" />
     <Compile Include="PolygonTests.cs" />
     <Compile Include="PolyhedronTests.cs" />
@@ -94,12 +99,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
-      <Project>{be165769-e5c6-4d8e-ae6a-7075b1dd3d2d}</Project>
-      <Name>GeometryClassLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

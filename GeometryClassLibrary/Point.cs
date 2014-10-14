@@ -67,12 +67,25 @@ namespace GeometryClassLibrary
         /// <param name="dimension1"></param>
         /// <param name="dimension2"></param>
         /// <param name="dimension3"></param>
-        /// <param name="coordinateSystem"></param>
         public Point(Dimension dimension1, Dimension dimension2, Dimension dimension3)
         {
             _x = dimension1;
             _y = dimension2;
             _z = dimension3;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="passedType"></param>
+        /// <param name="dimension1"></param>
+        /// <param name="dimension2"></param>
+        /// <param name="dimension3"></param>
+        public Point(DimensionType passedType, double dimension1, double dimension2, double dimension3)
+        {
+            _x = new Dimension(passedType, dimension1);
+            _y = new Dimension(passedType, dimension2);
+            _z = new Dimension(passedType, dimension3);
         }
 
         /// <summary>

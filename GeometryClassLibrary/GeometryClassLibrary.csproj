@@ -50,6 +50,7 @@
     <Compile Include="Circle.cs" />
     <Compile Include="ConeClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Direction.cs" />
     <Compile Include="EquilateralTriangle.cs" />
     <Compile Include="Cube.cs" />
     <Compile Include="Cylinder.cs" />

@@ -12,47 +12,35 @@ namespace GeometryClassLibrary
     /// </summary>
     [DebuggerDisplay("UNITS = Inches, Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, End Point = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Length = {Length.Inches},  Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}")]
     [Serializable]
-    public class LineSegment : Line, IComparable<LineSegment>, IEdge
+    public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties
 
-        public Point EndPoint
-        {
-            get 
-            {
-                if(MagnitudeOfDirectionVector == new Dimension())
-                {
-                    return BasePoint;
-                }
-
-                Dimension xOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.X.Millimeters + (_length.Millimeters * XComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
-                Dimension yOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Y.Millimeters + (_length.Millimeters * YComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
-                Dimension zOfEndPoint = DimensionGenerator.MakeDimensionWithMillimeters(Math.Round(BasePoint.Z.Millimeters + (_length.Millimeters * ZComponentOfDirection.Millimeters / MagnitudeOfDirectionVector.Millimeters), 6));
-
-                return new Point(xOfEndPoint,yOfEndPoint,zOfEndPoint);
-            }
-        }
-
+        /// <summary>
+        /// Returns this lineSegment's length (this is the same as the magnitude)
+        /// </summary>
         public Dimension Length
         {
-            get { return _length; }
-            set { _length = value; }
-            
+            get { return base.Magnitude; }
+            set { base.Magnitude = value; }
         }
-        private Dimension _length;
 
+        /// <summary>
+        /// Returns the midpoint of this lineSegment
+        /// </summary>
         public Point MidPoint
         {
             get 
             {
                 //Find midpoint for each component
-                Dimension xMid = new Dimension(DimensionType.Millimeter, (base.BasePoint.X.Millimeters + EndPoint.X.Millimeters) / 2);
-                Dimension yMid = new Dimension(DimensionType.Millimeter, (base.BasePoint.Y.Millimeters + EndPoint.Y.Millimeters) / 2);
-                Dimension zMid = new Dimension(DimensionType.Millimeter, (base.BasePoint.Z.Millimeters + EndPoint.Z.Millimeters) / 2);
+                Dimension xMid = (base.Magnitude / 2) * base.Direction.XComponentOfDirection;
+                Dimension yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
+                Dimension zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection; 
 
                 return new Point(xMid, yMid, zMid);
             }
         }
+        
         #endregion
 
         #region Constructors
@@ -65,6 +53,8 @@ namespace GeometryClassLibrary
             : base(passedEndPoint)
         {
             Length = passedEndPoint.DistanceTo(PointGenerator.MakePointWithInches(0,0,0));
+
+            this.Magnitude = new Dimension();
         }
 
 

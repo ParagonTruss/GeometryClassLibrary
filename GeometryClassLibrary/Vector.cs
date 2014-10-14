@@ -12,70 +12,76 @@ namespace GeometryClassLibrary
     /// </summary>
     [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
     [Serializable]
-    public class Vector : LineSegment
+    public class Vector : Line
     {
         #region Properties and Fields
                 
-
         /// <summary>
-        /// Returns the magnitude of the vector (equals the length of the line segment parent)
+        /// Returns the magnitude of the vector
         /// </summary>
         public Dimension Magnitude
         {
-            get { return base.Length; }
-            set { base.Length = value; }
+            get { return _magnitude; }
+            set { _magnitude = value; }
+        }
+        private Dimension _magnitude;
+
+        /// <summary>
+        /// Returns the x-component of this vector
+        /// </summary>
+        public Dimension XComponent
+        {
+            get { return _magnitude * base.Direction.XComponentOfDirection; }
         }
 
+        /// <summary>
+        /// Returns the y-component of this vector
+        /// </summary>
+        public Dimension YComponent
+        {
+            get { return _magnitude * base.Direction.YComponentOfDirection; }
+        }
+
+        /// <summary>
+        /// Returns the z-component of this vector
+        /// </summary>
+        public Dimension ZComponent
+        {
+            get { return _magnitude * base.Direction.ZComponentOfDirection; }
+        }
+
+        /// <summary>
+        /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the vector's direction
+        /// </summary>
+        public Point EndPoint
+        {
+            get { return new Point(XComponent, YComponent, ZComponent) + BasePoint; }
+        }
+
+        /// <summary>
+        /// Allows the xyz components of the vector to be able to be accessed as an array
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
         private Dimension this[int i]
         {
             get
             {
                 if (i == 0)
-                    return XComponentOfDirection;
+                    return XComponent;
                 else if (i == 1)
-                    return YComponentOfDirection;
+                    return YComponent;
                 else if (i == 2)
-                    return ZComponentOfDirection;
+                    return ZComponent;
                 else
                     throw new Exception("No item of that index!");
             }
         }
 
-        /// <summary>
-        /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the same direction as the vector
-        /// </summary>
-        public Point DirectionPoint
-        {
-            get { return base.EndPoint; }
-        }
-
-        /// <summary>
-        /// Returns the x-component of this direction vector
-        /// </summary>
-        public Dimension XComponentOfDirection
-        {
-            get { return base.XComponentOfDirection; }
-        }
-
-        /// <summary>
-        /// Returns the y-component of this direction vector
-        /// </summary>
-        public Dimension YComponentOfDirection
-        {
-            get { return base.YComponentOfDirection; }
-        }
-
-        /// <summary>
-        /// Returns the z-component of this direction vector
-        /// </summary>
-        public Dimension ZComponentOfDirection
-        {
-            get { return base.ZComponentOfDirection; }
-        }
-
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Empty Constructor (A "Zero Vector")
         /// </summary>   
@@ -85,7 +91,11 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint) 
         {
-            Magnitude = base.Length;
+            Dimension xLength = passedBasePoint.X - passedEndPoint.X;
+            Dimension yLength = passedBasePoint.Y - passedEndPoint.Y;
+            Dimension zLength = passedBasePoint.Z - passedEndPoint.Z;
+
+            Magnitude = new Point(xLength, yLength, zLength).DistanceTo(new Point());
         }
 
         /// <summary>
@@ -96,7 +106,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Vector passedDirection)
             : base(passedBasePoint, passedDirection) 
         {
-            Magnitude = new Dimension(DimensionType.Millimeter, 1);
+            Magnitude = passedDirection;
         }
 
         public Vector(Point passedBasePoint, Vector passedDirection, Dimension passedMagnitude)
@@ -439,7 +449,6 @@ namespace GeometryClassLibrary
 
             return sameDirection || oppositeDirections;
         }
-        #endregion
 
         /// <summary>
         /// creates a new vector towards acting on the same point but from the opposite side. 
@@ -467,5 +476,7 @@ namespace GeometryClassLibrary
 
             return new Vector(newBasePoint, newDirectionPoint);
         }
+
+        #endregion
     }
 }
