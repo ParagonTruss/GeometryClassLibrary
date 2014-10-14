@@ -58,7 +58,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnitClassLibrary, Version=1.0.5374.37217, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>
