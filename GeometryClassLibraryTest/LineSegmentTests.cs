@@ -23,7 +23,7 @@ namespace ClearspanTypeLibrary.Tests
             ////fixture.Customize<Line>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
             //fixture.Customize<Point>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
             //var memb = fixture.Create<Member>();
-            Assert.AreEqual("","");
+            Assert.AreEqual("", "");
         }
 
         [Test()]
@@ -53,7 +53,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void LineSegment_LineIntersectionTest() 
+        public void LineSegment_LineIntersectionTest()
         {
             LineSegment line1 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
             Line line2 = new Line(PointGenerator.MakePointWithInches(0, 0, 1), PointGenerator.MakePointWithInches(1, 1, 0));
@@ -117,7 +117,7 @@ namespace ClearspanTypeLibrary.Tests
         public void LineSegment_3dRotateTest_Orthogonal()
         {
             LineSegment originalSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 5, 0));
-            Line axis = new Line(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(1, 0, 0));
+            Line axis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
             Angle toRotate = new Angle(AngleType.Degree, 180);
 
             LineSegment actualSegment = originalSegment.Rotate(axis, toRotate);
@@ -150,14 +150,14 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void LineSegment_TranslateTest()
         {
-            LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithMillimeters(1, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0));
+            LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
-            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithMillimeters(-1, 5, 4));
-            Dimension testDisplacement = new Dimension(DimensionType.Millimeter, 12.9614814);
+            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithInches(-1, 5, 4));
+            Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
 
             LineSegment actualSegment1 = segment1.Translate(testDirectionVector, testDisplacement);
 
-            LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 12, 11), PointGenerator.MakePointWithMillimeters(-5, 8, 8));
+            LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(-1, 12, 11), PointGenerator.MakePointWithInches(-5, 8, 8));
 
             (actualSegment1 == expectedSegment1).Should().BeTrue();
         }
@@ -171,11 +171,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void LineSegment_ProjectOntoLine2DThroughOrigin()
         {
-            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 5));
-            Line projectOnto = new Line(PointGenerator.MakePointWithMillimeters(2, 1));
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 5));
+            Line projectOnto = new Line(PointGenerator.MakePointWithInches(2, 1));
             LineSegment result = testSegment.ProjectOntoLine(projectOnto);
 
-            LineSegment expected = new LineSegment(PointGenerator.MakePointWithMillimeters(3.6, 1.8));
+            LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(3.6, 1.8));
 
             //make sure the result is actually along the right line
             Vector resultVector = result.DirectionVector.ConvertToUnitVector();
@@ -191,9 +191,9 @@ namespace ClearspanTypeLibrary.Tests
             resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Z.Millimeters, 0.00001);
 
             //now check the actual projected line
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
+            result.BasePoint.X.Millimeters.Should().BeApproximately(expected.BasePoint.X.Millimeters, 0.0001);
+            result.BasePoint.Y.Millimeters.Should().BeApproximately(expected.BasePoint.Y.Millimeters, 0.0001);
+            result.BasePoint.Z.Millimeters.Should().BeApproximately(expected.BasePoint.Z.Millimeters, 0.0001);
             result.EndPoint.X.Millimeters.Should().BeApproximately(expected.EndPoint.X.Millimeters, 0.0001);
             result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
@@ -202,44 +202,36 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void LineSegment_ProjectOntoLine3DNotThroughOrigin()
         {
-            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2,0,4), PointGenerator.MakePointWithMillimeters(0,2,1));
-            Line projectOnto = new Line(PointGenerator.MakePointWithMillimeters(5,1,2), PointGenerator.MakePointWithMillimeters(1,4,0));
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(0, 2, 1));
+            Line projectOnto = new Line(PointGenerator.MakePointWithInches(5, 1, 2), PointGenerator.MakePointWithInches(1, 4, 0));
             LineSegment result = testSegment.ProjectOntoLine(projectOnto);
 
-            LineSegment expected = new LineSegment(PointGenerator.MakePointWithMillimeters(5 - 0.689655, 1 + 0.517242, 2 - 0.344828), PointGenerator.MakePointWithMillimeters(5 - 3.448276, 1 + 2.586207, 2 - 1.724138));
+            LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(5 - 0.689655, 1 + 0.517242, 2 - 0.344828), PointGenerator.MakePointWithInches(5 - 3.448276, 1 + 2.586207, 2 - 1.724138));
 
             //make sure the result is actually along the right line
             Vector resultVector = result.DirectionVector.ConvertToUnitVector();
             Vector projectOntoVector = projectOnto.DirectionVector.ConvertToUnitVector();
-            resultVector.EndPoint.X.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.X.Millimeters, 0.00001);
-            resultVector.EndPoint.Y.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.Y.Millimeters, 0.00001);
-            resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.Z.Millimeters, 0.00001);
+            resultVector.EndPoint.Should().Be(projectOntoVector.EndPoint);
 
             //make sure the expected and result are along the same line
             Vector expectedVector = projectOnto.DirectionVector.ConvertToUnitVector();
-            resultVector.EndPoint.X.Millimeters.Should().BeApproximately(expectedVector.EndPoint.X.Millimeters, 0.00001);
-            resultVector.EndPoint.Y.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Y.Millimeters, 0.00001);
-            resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Z.Millimeters, 0.00001);
+            resultVector.EndPoint.Should().Be(expectedVector.EndPoint);
 
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
-            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
-            result.EndPoint.X.Millimeters.Should().BeApproximately(expected.EndPoint.X.Millimeters, 0.0001);
-            result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
-            result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
+            result.BasePoint.Should().Be(expected.BasePoint);
+            result.EndPoint.Should().Be(expected.EndPoint);
         }
 
         [Test()]
         public void LineSegment_SliceWithPoint()
         {
-            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));
-            Point midPoint = PointGenerator.MakePointWithMillimeters(1, 1, 2.5);
-            Point notOnLine = PointGenerator.MakePointWithMillimeters(1, 1, 2);
-            Point onLine = PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751);
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(0, 2, 1));
+            Point midPoint = PointGenerator.MakePointWithInches(1, 1, 2.5);
+            Point notOnLine = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point onLine = PointGenerator.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751);
 
             List<LineSegment> expectedwithMidPoint = new List<LineSegment>();
-            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(1, 1, 2.5)));
-            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 2.5), PointGenerator.MakePointWithMillimeters(0, 2, 1)));
+            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(1, 1, 2.5)));
+            expectedwithMidPoint.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 2.5), PointGenerator.MakePointWithInches(0, 2, 1)));
 
             List<LineSegment> splitMidPoint = testSegment.Slice(midPoint);
 
@@ -262,14 +254,14 @@ namespace ClearspanTypeLibrary.Tests
 
             //now try a more generic point
             List<LineSegment> expectedOnLine = new List<LineSegment>();
-            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751), PointGenerator.MakePointWithMillimeters(0, 2, 1)));
+            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751), PointGenerator.MakePointWithInches(0, 2, 1)));
             //thiss second one is the unitvector so it is only 1 in length and is smaller so it should go second
-            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751)));
+            expectedOnLine.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751)));
 
             List<LineSegment> splitOnLine = testSegment.Slice(onLine);
             //now check of the segments are the same
             (splitOnLine.Count == expectedOnLine.Count).Should().BeTrue();
-            for(int i = 0; i < splitOnLine.Count; i++)
+            for (int i = 0; i < splitOnLine.Count; i++)
             {
                 (splitOnLine[i] == expectedOnLine[i]).Should().BeTrue();
             }
@@ -278,11 +270,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void LineSegment_ReverseTest()
         {
-            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));
+            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(0, 2, 1));
             LineSegment result = testSegment.Reverse();
-            (result.Slope == testSegment.Slope).Should().BeTrue();
+            (result.BasePoint == testSegment.EndPoint).Should().BeTrue();
             (result.Length == testSegment.Length).Should().BeTrue();
-            (result.DirectionVector == new Vector(PointGenerator.MakePointWithMillimeters(0, 2, 1), PointGenerator.MakePointWithMillimeters(2, 0, 4))).Should().BeTrue();
+            (result.DirectionVector == new Vector(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(2, 0, 4))).Should().BeTrue();
         }
     }
 }

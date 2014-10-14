@@ -224,7 +224,7 @@ namespace GeometryClassLibrary
         public bool Contains(Point passedPoint)
         {
             Vector planeVector = new Vector(passedPoint, BasePoint);
-            Dimension dotProduct = planeVector * NormalVector;
+            Dimension dotProduct = planeVector * NormalVector.ConvertToUnitVector();
 
             return dotProduct == new Dimension();
         }

@@ -333,7 +333,7 @@ namespace GeometryClassLibrary
             // checks the first Vector
             for (int i = 0; i < 3; i++)
             {
-                if (this[i].Millimeters == 0)
+                if (this[i] == new Dimension())
                     numberOfZeroComponents1++;
                 else
                     componentIndex1 = i;
@@ -342,7 +342,7 @@ namespace GeometryClassLibrary
             // checks the second Vector
             for (int j = 0; j < 3; j++)
             {
-                if (v1[j].Millimeters == 0)
+                if (v1[j] == new Dimension())
                     numberOfZeroComponents2++;
                 else
                     componentIndex2 = j;
@@ -358,12 +358,12 @@ namespace GeometryClassLibrary
             double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponentOfDirection.Millimeters != 0)
+            if (this.XComponentOfDirection != new Dimension())
                 compareTo =  Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
-            else if (this.YComponentOfDirection.Millimeters != 0)
+            else if (this.YComponentOfDirection != new Dimension())
                 compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
-            else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
+            else if (this.ZComponentOfDirection != new Dimension())
+                compareTo = Math.Abs(this.ZComponentOfDirection / v1.ZComponentOfDirection);
             else
                 compareTo = 0;
 
@@ -388,7 +388,7 @@ namespace GeometryClassLibrary
             // checks the first Vector
             for (int i = 0; i < 3; i++)
             {
-                if (this[i].Millimeters == 0)
+                if (this[i] == new Dimension())
                     numberOfZeroComponents1++;
                 else
                     componentIndex1 = i;
@@ -397,7 +397,7 @@ namespace GeometryClassLibrary
             // checks the second Vector
             for (int j = 0; j < 3; j++) 
             {
-                if (v1[j].Millimeters == 0) 
+                if (v1[j] == new Dimension()) 
                     numberOfZeroComponents2++;
                 else
                     componentIndex2 = j;
@@ -413,12 +413,12 @@ namespace GeometryClassLibrary
             double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponentOfDirection.Millimeters != 0)
+            if (this.XComponentOfDirection != new Dimension())
                 compareTo = Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
-            else if (this.YComponentOfDirection.Millimeters != 0)
+            else if (this.YComponentOfDirection != new Dimension())
                 compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
-            else if (this.ZComponentOfDirection.Millimeters != 0)
-                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
+            else if (this.ZComponentOfDirection != new Dimension())
+                compareTo = Math.Abs(this.ZComponentOfDirection / v1.ZComponentOfDirection);
             else
                 compareTo = 0;
 

@@ -112,7 +112,7 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(1, -5, -4)));
             Polygon testPolygon = new Polygon(lineSegments);
 
-            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithMillimeters(-1, 5, 4));
+            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithInches(-1, 5, 4));
             Dimension testDisplacement = new Dimension(DimensionType.Millimeter, Math.Sqrt(42));
 
             Polygon actualPolygon = testPolygon.Translate(testDirectionVector, testDisplacement);
@@ -127,34 +127,30 @@ namespace GeometryClassLibraryTests
         public void Polygon_Centorid()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-4, 2, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
             Point center = testPolygon.Centroid();
-            Point expected = PointGenerator.MakePointWithMillimeters(-2.5, 3, 0);
+            Point expected = PointGenerator.MakePointWithInches(-2.5, 3, 0);
 
-            center.X.Millimeters.Should().BeApproximately(expected.X.Millimeters, 0.00001);
-            center.Y.Millimeters.Should().BeApproximately(expected.Y.Millimeters, 0.00001);
-            center.Z.Millimeters.Should().BeApproximately(expected.Z.Millimeters, 0.00001);
+            center.Should().Be(expected);
 
             //make sure the centroid is in the region
             testPolygon.Contains(center).Should().BeTrue();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-3, -2, 0), PointGenerator.MakePointWithMillimeters(1, 1, -1)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, -1), PointGenerator.MakePointWithMillimeters(0, 2, 3)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             Point center2 = testPolygon2.Centroid();
-            Point expected2 = PointGenerator.MakePointWithMillimeters(-0.6666667, 0.33333333, 0.66666667);
+            Point expected2 = PointGenerator.MakePointWithInches(-0.6666667, 0.33333333, 0.66666667);
 
-            center2.X.Millimeters.Should().BeApproximately(expected2.X.Millimeters, 0.00001);
-            center2.Y.Millimeters.Should().BeApproximately(expected2.Y.Millimeters, 0.00001);
-            center2.Z.Millimeters.Should().BeApproximately(expected2.Z.Millimeters, 0.00001);
+            center2.Should().Be(expected2);
 
             //make sure the centroid is in the region
             testPolygon2.Contains(center2).Should().BeTrue();
@@ -164,10 +160,10 @@ namespace GeometryClassLibraryTests
         public void Polygon_Copy()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-4, 2, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
             Polygon planeCopy = new Polygon(testPolygon);
@@ -181,7 +177,7 @@ namespace GeometryClassLibraryTests
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
-            planeCopy = planeCopy.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(1, 4, -2)), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
+            planeCopy = planeCopy.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(1, 4, -2)), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
 
             foreach (LineSegment line in testPolygon.PlaneBoundaries)
             {
@@ -195,25 +191,25 @@ namespace GeometryClassLibraryTests
         public void Polygon_ContainsExclusiveInclusiveAndTouchingPoint()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-1, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(-4, 2, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-4, 2, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 5, 0), PointGenerator.MakePointWithMillimeters(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-4, 2, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Point insidePlane1 = PointGenerator.MakePointWithMillimeters(-2, 2, 0);
-            Point insidePlane2 = PointGenerator.MakePointWithMillimeters(-2, 2, 1);
+            Point insidePlane1 = PointGenerator.MakePointWithInches(-2, 2, 0);
+            Point insidePlane2 = PointGenerator.MakePointWithInches(-2, 2, 1);
 
             Point center1 = testPolygon.Centroid();
 
             //make sure the sides are not included
-            Point sideTest = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            Point sideTest = PointGenerator.MakePointWithInches(0, 0, 0);
 
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 3), PointGenerator.MakePointWithMillimeters(-3, -2, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-3, -2, 0), PointGenerator.MakePointWithMillimeters(1, 1, -1)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, -1), PointGenerator.MakePointWithMillimeters(0, 2, 3)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             //make sure the PlaneRegion contains the centroid
@@ -255,17 +251,17 @@ namespace GeometryClassLibraryTests
         public void Polygon_OverlappingPolygonOneEnclosedInOtherTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 4, 1)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 3, 3)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 4, 1), PointGenerator.MakePointWithMillimeters(4, 4, 3)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 3), PointGenerator.MakePointWithMillimeters(4, 4, 3)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 4, 1)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 3, 3)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 1), PointGenerator.MakePointWithInches(4, 4, 3)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 3), PointGenerator.MakePointWithInches(4, 4, 3)));
             Polygon testPolygon = new Polygon(bounds);
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 12, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 0, 4)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 12, 0), PointGenerator.MakePointWithMillimeters(4, 12, 4)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 4), PointGenerator.MakePointWithMillimeters(4, 12, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 12, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 12, 0), PointGenerator.MakePointWithInches(4, 12, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 4), PointGenerator.MakePointWithInches(4, 12, 4)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
@@ -281,17 +277,17 @@ namespace GeometryClassLibraryTests
         public void Polygon_OverlappingPolygonSharedSidesTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 0, 2)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 0), PointGenerator.MakePointWithMillimeters(4, 1, 2)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 2), PointGenerator.MakePointWithMillimeters(4, 1, 2)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 2)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 1, 2)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 2), PointGenerator.MakePointWithInches(4, 1, 2)));
             Polygon testPolygon = new Polygon(bounds);
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 12, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 0, 2)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 12, 0), PointGenerator.MakePointWithMillimeters(4, 12, 2)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 2), PointGenerator.MakePointWithMillimeters(4, 12, 2)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 12, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 2)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 12, 0), PointGenerator.MakePointWithInches(4, 12, 2)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 2), PointGenerator.MakePointWithInches(4, 12, 2)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
@@ -307,26 +303,27 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_OverlappingPolygonIntersectingBoundriesTest()
         {
+            //changed to inches because mm were gave results smaller than what we are considering equivalent
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 4, 1)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 3, 3)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 4, 1), PointGenerator.MakePointWithMillimeters(4, 4, 5)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 3), PointGenerator.MakePointWithMillimeters(4, 4, 5)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 4, 1)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 3, 3)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 1), PointGenerator.MakePointWithInches(4, 4, 5)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 3), PointGenerator.MakePointWithInches(4, 4, 5)));
             Polygon testPolygon = new Polygon(bounds);
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 12, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 0), PointGenerator.MakePointWithMillimeters(4, 0, 4)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 12, 0), PointGenerator.MakePointWithMillimeters(4, 12, 4)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 0, 4), PointGenerator.MakePointWithMillimeters(4, 12, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 12, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 12, 0), PointGenerator.MakePointWithInches(4, 12, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 4), PointGenerator.MakePointWithInches(4, 12, 4)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             List<LineSegment> expectedBounds = new List<LineSegment>();
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 4, 1)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 1), PointGenerator.MakePointWithMillimeters(4, 3, 3)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 4, 1), PointGenerator.MakePointWithMillimeters(4, 4, 4)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3.5, 4), PointGenerator.MakePointWithMillimeters(4, 3, 3)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 4, 4), PointGenerator.MakePointWithMillimeters(4, 3.5, 4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 4, 1)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(4, 3, 3)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 1), PointGenerator.MakePointWithInches(4, 4, 4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3.5, 4), PointGenerator.MakePointWithInches(4, 3, 3)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 4), PointGenerator.MakePointWithInches(4, 3.5, 4)));
             Polygon expected = new Polygon(expectedBounds);
 
             //check to see if it is what we were expecting
@@ -342,25 +339,26 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_OverlappingPolygon()
         {
+            //changed to inches because mm were gave results smaller than what we are considering equivalent
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(4, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(4, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 0), PointGenerator.MakePointWithMillimeters(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, -1, 0), PointGenerator.MakePointWithMillimeters(1, -1, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, -1, 0), PointGenerator.MakePointWithMillimeters(3, 5, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, -1, 0), PointGenerator.MakePointWithMillimeters(4, 5, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 5, 0), PointGenerator.MakePointWithMillimeters(4, 5, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, -1, 0), PointGenerator.MakePointWithInches(1, -1, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, -1, 0), PointGenerator.MakePointWithInches(3, 5, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -1, 0), PointGenerator.MakePointWithInches(4, 5, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 5, 0), PointGenerator.MakePointWithInches(4, 5, 0)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             List<LineSegment> expectedBound = new List<LineSegment>();
-            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(3, 3, 0)));
-            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 3, 0), PointGenerator.MakePointWithMillimeters(2, 3, 0)));
-            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 3, 0), PointGenerator.MakePointWithMillimeters(1, 1, 0)));
+            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(3, 3, 0)));
+            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 3, 0), PointGenerator.MakePointWithInches(2, 3, 0)));
+            expectedBound.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 3, 0), PointGenerator.MakePointWithInches(1, 1, 0)));
             Polygon expected = new Polygon(expectedBound);
 
             //check to see if its what we expected
@@ -378,44 +376,44 @@ namespace GeometryClassLibraryTests
         public void Polygon_AreaTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(4, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(4, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 0), PointGenerator.MakePointWithMillimeters(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
             //check to see if its what we expected
             Area testArea = testPolygon.Area;
-            testArea.ShouldBeEquivalentTo(new Area(AreaType.MillimetersSquared, 8));
+            testArea.Should().Be(new Area(AreaType.InchesSquared, 8));
         }
 
         [Test()]
         public void Polygon_SliceOnLineTest()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(4, 1, 4)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 4), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(4, 3, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 4), PointGenerator.MakePointWithInches(4, 3, 4)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Line slicingLine = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 1));
+            Line slicingLine = new Line(new Point(), PointGenerator.MakePointWithInches(1, 1, 1));
 
             List<Polygon> results = testPolygon.Slice(slicingLine);
 
             //create the expected planes to compare to
             List<LineSegment> expected1Bounds = new List<LineSegment>();
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 3, 0)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(1, 1, 1)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 0), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(1, 1, 1)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(3, 3, 3)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 1), PointGenerator.MakePointWithInches(3, 3, 3)));
             Polygon expected1 = new Polygon(expected1Bounds);
 
             List<LineSegment> expected2Bounds = new List<LineSegment>();
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(3, 3, 3)));
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 1, 1), PointGenerator.MakePointWithMillimeters(4, 1, 4)));
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 3, 3), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 1, 4), PointGenerator.MakePointWithMillimeters(4, 3, 4)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 1), PointGenerator.MakePointWithInches(3, 3, 3)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 1), PointGenerator.MakePointWithInches(4, 1, 4)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 3, 3), PointGenerator.MakePointWithInches(4, 3, 4)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 4), PointGenerator.MakePointWithInches(4, 3, 4)));
             Polygon expected2 = new Polygon(expected2Bounds);
 
 
@@ -423,7 +421,7 @@ namespace GeometryClassLibraryTests
             results.Contains(expected1).Should().BeTrue();
 
             //now make sure it handles no intersection well
-            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 0.9));
+            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithInches(1, 1, 0.9));
             List<Polygon> results2 = testPolygon.Slice(notIntersecting);
 
             //should only return the original plane
@@ -434,29 +432,30 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_SliceWithLineTest()
         {
+            //changed to inches because mm were gave results smaller than what we are considering equivalent
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(6, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 1, 0), PointGenerator.MakePointWithMillimeters(6, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(6, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 1, 0), PointGenerator.MakePointWithInches(6, 0, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Line slicingLine = new Line(PointGenerator.MakePointWithMillimeters(6, 5, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0));
+            Line slicingLine = new Line(PointGenerator.MakePointWithInches(6, 5, 0), PointGenerator.MakePointWithInches(2, 1, 0));
 
             List<Polygon> results = testPolygon.Slice(slicingLine);
 
             //create the expected planes to compare to
             List<LineSegment> expected1Bounds = new List<LineSegment>();
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(6, 1, 0)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0)));
-            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 1, 0), PointGenerator.MakePointWithMillimeters(6, 0, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(6, 1, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 1, 0), PointGenerator.MakePointWithInches(6, 0, 0)));
             Polygon expected1 = new Polygon(expected1Bounds);
 
             List<LineSegment> expected2Bounds = new List<LineSegment>();
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0)));
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
             Polygon expected2 = new Polygon(expected2Bounds);
 
 
@@ -464,7 +463,7 @@ namespace GeometryClassLibraryTests
             results.Contains(expected1).Should().BeTrue();
 
             //now make sure it handles no intersection well
-            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithMillimeters(1, 1, 0.9));
+            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithInches(1, 1, 0.9));
             List<Polygon> results2 = testPolygon.Slice(notIntersecting);
 
             //should only return the original plane
@@ -476,17 +475,17 @@ namespace GeometryClassLibraryTests
         public void Polygon_SharedPointNotOnThisPolygonsBoundary()
         {
             List<LineSegment> bounds1 = new List<LineSegment>();
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(3, 0, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 2, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 2, 0), PointGenerator.MakePointWithMillimeters(3, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(3, 0, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
+            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
             Polygon testPolygon1 = new Polygon(bounds1);
 
             List<LineSegment> bounds2 = new List<LineSegment>();
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 0, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3.5, 0, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(3.5, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3.5, 0, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(3.5, 0, 0), PointGenerator.MakePointWithInches(3.5, 1, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(3.5, 1, 0)));
             Polygon testPolygon2 = new Polygon(bounds2);
 
             Point result = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon2);
@@ -495,10 +494,10 @@ namespace GeometryClassLibraryTests
 
 
             List<LineSegment> bounds3 = new List<LineSegment>();
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(5, 0, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
             Polygon testPolygon3 = new Polygon(bounds3);
 
             Point result2 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon3);
@@ -507,10 +506,10 @@ namespace GeometryClassLibraryTests
 
 
             List<LineSegment> bounds4 = new List<LineSegment>();
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(5, 0, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 0, 0), PointGenerator.MakePointWithMillimeters(3, 1, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(5, 0, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(5, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(5, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(3, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
             Polygon testPolygon4 = new Polygon(bounds4);
 
             Point result3 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon4);
@@ -518,10 +517,10 @@ namespace GeometryClassLibraryTests
 
 
             List<LineSegment> bounds5 = new List<LineSegment>();
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(9, 0, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, 0, 0), PointGenerator.MakePointWithMillimeters(-1, .5, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(9, 0, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(-1, .5, 0), PointGenerator.MakePointWithMillimeters(9, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(9, 0, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(-1, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(9, 0, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
+            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, .5, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
             Polygon testPolygon5 = new Polygon(bounds4);
 
             Point result4 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
@@ -530,17 +529,17 @@ namespace GeometryClassLibraryTests
 
             //one more becasue it was causing errors before in program implementing this
             List<LineSegment> bounds6 = new List<LineSegment>();
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 6, 2), PointGenerator.MakePointWithMillimeters(6, 5, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 6, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(6, 5, 2), PointGenerator.MakePointWithMillimeters(10, 1, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(10, 1, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 6, 2), PointGenerator.MakePointWithInches(6, 5, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 6, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 5, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
+            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             Polygon testPolygon6 = new Polygon(bounds6);
 
             List<LineSegment> bounds7 = new List<LineSegment>();
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 2), PointGenerator.MakePointWithMillimeters(2, 1, 0)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 1, 2), PointGenerator.MakePointWithMillimeters(10, 1, 2)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(10, 1, 2), PointGenerator.MakePointWithMillimeters(12, 0, 2)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             Polygon testPolygon7 = new Polygon(bounds7);
 
             Point result67 = testPolygon6.SharedPointNotOnThisPolygonsBoundary(testPolygon7);
