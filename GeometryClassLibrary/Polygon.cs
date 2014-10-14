@@ -707,10 +707,9 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
 
-            Line slicingLine = new Line();
-            //Line slicingLine = slicingPlane.IntersectionLine(this);
+            //Line slicingLine = slicingPlane.(this);
 
-            return this.Slice(slicingLine, slicingPlane);
+            //return this.Slice(slicingLine, slicingPlane);
         }
 
         /// <summary>

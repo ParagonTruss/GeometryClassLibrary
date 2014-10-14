@@ -191,9 +191,9 @@ namespace ClearspanTypeLibrary.Tests
             resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Z.Millimeters, 0.00001);
 
             //now check the actual projected line
-            result.BasePoint.X.Millimeters.Should().BeApproximately(expected.BasePoint.X.Millimeters, 0.0001);
-            result.BasePoint.Y.Millimeters.Should().BeApproximately(expected.BasePoint.Y.Millimeters, 0.0001);
-            result.BasePoint.Z.Millimeters.Should().BeApproximately(expected.BasePoint.Z.Millimeters, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
             result.EndPoint.X.Millimeters.Should().BeApproximately(expected.EndPoint.X.Millimeters, 0.0001);
             result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
@@ -221,9 +221,9 @@ namespace ClearspanTypeLibrary.Tests
             resultVector.EndPoint.Y.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Y.Millimeters, 0.00001);
             resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Z.Millimeters, 0.00001);
 
-            result.BasePoint.X.Millimeters.Should().BeApproximately(expected.BasePoint.X.Millimeters, 0.0001);
-            result.BasePoint.Y.Millimeters.Should().BeApproximately(expected.BasePoint.Y.Millimeters, 0.0001);
-            result.BasePoint.Z.Millimeters.Should().BeApproximately(expected.BasePoint.Z.Millimeters, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
+            result.Slope.Should().BeApproximately(expected.Slope, 0.0001);
             result.EndPoint.X.Millimeters.Should().BeApproximately(expected.EndPoint.X.Millimeters, 0.0001);
             result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
             result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
@@ -280,7 +280,7 @@ namespace ClearspanTypeLibrary.Tests
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 4), PointGenerator.MakePointWithMillimeters(0, 2, 1));
             LineSegment result = testSegment.Reverse();
-            (result.BasePoint == testSegment.EndPoint).Should().BeTrue();
+            (result.Slope == testSegment.Slope).Should().BeTrue();
             (result.Length == testSegment.Length).Should().BeTrue();
             (result.DirectionVector == new Vector(PointGenerator.MakePointWithMillimeters(0, 2, 1), PointGenerator.MakePointWithMillimeters(2, 0, 4))).Should().BeTrue();
         }

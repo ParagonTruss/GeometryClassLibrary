@@ -7,9 +7,9 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class IEnumerablePlaneRegionExtensionMethods
+    public static class IListPlaneRegionExtensionMethods
     {
-        public static void Rotate(this IEnumerable<Polygon> passedPlaneRegions, Line passedAxisLine, Angle passedRotationAngle)
+        public static void Rotate(this IList<Polygon> passedPlaneRegions, Line passedAxisLine, Angle passedRotationAngle)
         {
             foreach (var planeRegion in passedPlaneRegions)
             {
@@ -17,7 +17,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        public static void Translate(this IEnumerable<Polygon> passedPlaneRegions, Dimension xTranslate, Dimension yTranslate, Dimension zTranslate)
+        public static void Translate(this IList<Polygon> passedPlaneRegions, Dimension xTranslate, Dimension yTranslate, Dimension zTranslate)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<Polygon> Shift(this IEnumerable<Polygon> passedPlaneRegions, Shift passedShift)
+        public static IList<Polygon> Shift(this IList<Polygon> passedPlaneRegions, Shift passedShift)
         {
             List<Polygon> shiftedRegions = new List<Polygon>();
 

@@ -122,7 +122,7 @@ namespace GeometryClassLibrary
         }
 
         
-        public Plane(IEnumerable<Line> passedLineList)
+        public Plane(IList<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
@@ -145,6 +145,13 @@ namespace GeometryClassLibrary
                 throw new Exception();
             }
             
+        }
+
+        public Plane(Plane passedPlane)
+        {
+            this._basePoint = passedPlane._basePoint;
+            this._normalVector = passedPlane.NormalVector;
+
         }
         #endregion
 

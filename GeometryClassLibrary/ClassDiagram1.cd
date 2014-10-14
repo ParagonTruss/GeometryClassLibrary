@@ -36,21 +36,21 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="GeometryClassLibrary.IEnumerableLineExtensionMethods" Collapsed="true">
+  <Class Name="GeometryClassLibrary.IListLineExtensionMethods" Collapsed="true">
     <Position X="9.25" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAgAAAAAAAAAAAA=</HashCode>
-      <FileName>ListExtensionMethods\IEnumerableLineExtensionMethods.cs</FileName>
+      <FileName>ListExtensionMethods\IListLineExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.IEnumerableLineSegmentExtensionMethods" Collapsed="true">
+  <Class Name="GeometryClassLibrary.IListLineSegmentExtensionMethods" Collapsed="true">
     <Position X="11" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAABgAAAAAAAAAgAAAAAACAAAABAAAAEA=</HashCode>
-      <FileName>ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs</FileName>
+      <FileName>ListExtensionMethods\IListLineSegmentExtensionMethods.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="GeometryClassLibrary.IEnumerablePlaneRegionExtensionMethods" Collapsed="true">
+  <Class Name="GeometryClassLibrary.IListPlaneRegionExtensionMethods" Collapsed="true">
     <Position X="11" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAEAAAAAAA=</HashCode>

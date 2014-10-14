@@ -9,6 +9,14 @@ namespace GeometryClassLibrary
 {
     public static class PointGenerator
     {
+        public static Point Origin
+        {
+            get
+            {
+                return new Point();
+            }
+        }
+
         public static Point MakePointWithInches(double inputValue1, double inputValue2)
         {
             Dimension dim1 = new Dimension(DimensionType.Inch, inputValue1);

@@ -97,6 +97,12 @@ namespace GeometryClassLibrary
             this._rotationsToApply = new List<Rotation>();
         }
 
+        public Shift(Rotation passedRotation)
+        {
+            this._displacement = new Vector();
+            this._rotationsToApply = new List<Rotation>() { passedRotation };
+        }
+
         public Shift(Vector passedDisplacement, Rotation passedRotation)
         {
             this._displacement = passedDisplacement;

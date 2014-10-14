@@ -26,9 +26,9 @@ namespace GeometryClassLibrary
 
         //A line's direction vector defines its orientation in space
         //The components of the direction vector do not necessarily correspond to a point on the line
-        private Dimension _xComponentOfDirection; 
-        private Dimension _yComponentOfDirection; 
-        private Dimension _zComponentOfDirection; 
+        private Dimension _xComponentOfDirection;
+        private Dimension _yComponentOfDirection;
+        private Dimension _zComponentOfDirection;
 
         //Parmateric Representation of a Line: [basePoint] + (scalarMultiplier)[direction] = [point on line]
         #endregion
@@ -39,6 +39,26 @@ namespace GeometryClassLibrary
             get { return _basePoint; }
             set { this._basePoint = value; }
         }
+
+        public double Slope
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        //public double XIntercept
+        //{
+        //    get { throw new NotImplementedException(); }
+        //}
+
+        //public double YIntercept
+        //{
+        //    get { throw new NotImplementedException(); }
+        //}
+
+        //public double ZIntercept
+        //{
+        //    get { throw new NotImplementedException(); }
+        //}
 
         public Vector DirectionVector
         {
@@ -133,10 +153,10 @@ namespace GeometryClassLibrary
 
             //if (passedDirectionReferencePoint != origin)
             //{
-                _basePoint = origin;
-                XComponentOfDirection = passedDirectionReferencePoint.X;
-                YComponentOfDirection = passedDirectionReferencePoint.Y;
-                ZComponentOfDirection = passedDirectionReferencePoint.Z;
+            _basePoint = origin;
+            XComponentOfDirection = passedDirectionReferencePoint.X;
+            YComponentOfDirection = passedDirectionReferencePoint.Y;
+            ZComponentOfDirection = passedDirectionReferencePoint.Z;
             //}
 
             //A "zero" line is allowed so that it is possible to construct a zero vector
@@ -158,7 +178,7 @@ namespace GeometryClassLibrary
             _basePoint = passedBasePoint;
             XComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.X.Millimeters - passedBasePoint.X.Millimeters, 6));
             YComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.Y.Millimeters - passedBasePoint.Y.Millimeters, 6));
-            ZComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.Z.Millimeters - passedBasePoint.Z.Millimeters,6));
+            ZComponentOfDirection = new Dimension(DimensionType.Millimeter, Math.Round(passedOtherPoint.Z.Millimeters - passedBasePoint.Z.Millimeters, 6));
 
 
             //else
@@ -191,6 +211,43 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        public Plane PlaneThroughLineInDirectionOf(Enums.Axis passedAxis)
+        {
+            Line extrustionLine;
+
+            switch (passedAxis)
+            {
+                case Enums.Axis.X:
+                    extrustionLine = new Line(this.BasePoint,
+                        PointGenerator.MakePointWithInches(
+                            this.BasePoint.X.Inches - 1,
+                            this.BasePoint.Y.Inches,
+                            this.BasePoint.Z.Inches));
+                    break;
+                case Enums.Axis.Y:
+                    extrustionLine = new Line(this.BasePoint,
+                        PointGenerator.MakePointWithInches(
+                            this.BasePoint.X.Inches,
+                            this.BasePoint.Y.Inches - 1,
+                            this.BasePoint.Z.Inches));
+                    break;
+                case Enums.Axis.Z:
+                    extrustionLine = new Line(this.BasePoint,
+                        PointGenerator.MakePointWithInches(
+                        this.BasePoint.X.Inches,
+                        this.BasePoint.Y.Inches,
+                        this.BasePoint.Z.Inches - 1));
+                    break;
+                default:
+                    throw new ArgumentException("You passed in an unknown Axis Enum");
+                    break;
+
+
+            }
+            return new Plane(this, extrustionLine);
+        }
+
+
         public Angle AngleBetweenIntersectingLine(Line passedIntersectingLine)
         {
             if (!DoesIntersect(passedIntersectingLine))
@@ -200,18 +257,18 @@ namespace GeometryClassLibrary
             double productOfMagnitudes = DirectionVector.Magnitude.Millimeters * passedIntersectingLine.DirectionVector.Magnitude.Millimeters;
 
             double angleBetweenLines = Math.Acos(dotProduct.Millimeters / productOfMagnitudes);
-            
+
             Angle returnAngle = new Angle(AngleType.Radian, angleBetweenLines);
 
-            if(returnAngle.Degrees > 90)
+            if (returnAngle.Degrees > 90)
             {
                 return new Angle(AngleType.Radian, Math.PI - angleBetweenLines);
             }
-            else 
+            else
             {
                 return returnAngle;
             }
-            
+
         }
 
         /// <summary>
@@ -249,17 +306,17 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual Point Intersection(Line passedLine)
         {
-            if(!this.IsCoplanarWith(passedLine))
+            if (!this.IsCoplanarWith(passedLine))
             {
                 //The lines do not intersect
                 return null;
             }
 
-            if(this.Equals(passedLine))
+            if (this.Equals(passedLine))
             {
                 return null;
             }
-            
+
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
 
             Vector directionVectorA = new Vector(this.BasePoint, this.DirectionVector);
@@ -270,11 +327,11 @@ namespace GeometryClassLibrary
 
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
-            
+
             double crossProductABMagnitudeSquared = Math.Pow(crossProductAB.Magnitude.Millimeters, 2);
             double dotProductOfCrossProducts = (crossProductCB * crossProductAB).Millimeters;
 
-            if(crossProductABMagnitudeSquared == 0)
+            if (crossProductABMagnitudeSquared == 0)
             {
                 //The first if statements should prevent you from ever getting here
                 return null;
@@ -314,7 +371,7 @@ namespace GeometryClassLibrary
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
             Vector newDirectionVector = this.DirectionVector.Rotate(passedAxisLine, passedRotationAngle);
-            return new Line(newBasePoint, newDirectionVector);  
+            return new Line(newBasePoint, newDirectionVector);
         }
 
         /// <summary>
@@ -356,8 +413,8 @@ namespace GeometryClassLibrary
             Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirectionVector, passedDisplacement);
 
             return new Line(newBasePoint, newOtherPoint);
-        }       
-        
+        }
+
 
         #endregion
 
@@ -381,7 +438,7 @@ namespace GeometryClassLibrary
 
             return (linesAreParallel && basePointIsOnLine);
         }
-        
+
 
         #endregion
     }
