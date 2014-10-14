@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
-    [DebuggerDisplay("UNITS = Millimeters, Base Point = {BasePoint.X.Millimeters}, {BasePoint.Y.Millimeters}, {BasePoint.Z.Millimeters}, End Point = {EndPoint.X.Millimeters}, {EndPoint.Y.Millimeters}, {EndPoint.Z.Millimeters}, Length = {Length.Millimeters},  Direction Vector = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}")]
+    [DebuggerDisplay("UNITS = Inches, Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, End Point = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Length = {Length.Inches},  Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}")]
     [Serializable]
     public class LineSegment : Line, IComparable<LineSegment>, IEdge
     {
@@ -263,9 +263,6 @@ namespace GeometryClassLibrary
             return new LineSegment(newBasePoint, newEndPoint);
         }
 
-        #endregion
-
-
         public LineSegment Shift(Shift passedShift)
         {
             return new LineSegment(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
@@ -311,7 +308,6 @@ namespace GeometryClassLibrary
             return new LineSegment(newBasePoint, newEndPoint);
         }
 
-
         /// <summary>
         /// Slices this lineSegment into two lineSegments at the given point and returns them with the longer segment first
         /// or the original line segment if the point is not on it
@@ -349,5 +345,7 @@ namespace GeometryClassLibrary
         {
             return new LineSegment(this.EndPoint, this.DirectionVector.Negate(), this.Length);
         }
+
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Represents an infinite Line
     /// </summary>
-    [DebuggerDisplay("BasePoint = {BasePoint.X.Millimeters}, {BasePoint.Y.Millimeters} , {BasePoint.Z.Millimeters}, Vector = {DirectionVector.XComponentOfDirection.Millimeters}, {DirectionVector.YComponentOfDirection.Millimeters}, {DirectionVector.ZComponentOfDirection.Millimeters}")]
+    [DebuggerDisplay("UNITS = Inches, BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches} , {BasePoint.Z.Inches}, Vector = {DirectionVector.XComponentOfDirection.Inches}, {DirectionVector.YComponentOfDirection.Inches}, {DirectionVector.ZComponentOfDirection.Inches}")]
     [Serializable]
     public class Line
     {

@@ -196,14 +196,14 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_MakePerpendicularLineSegmentTest()
         {
-            Point destinationLineBasePoint = PointGenerator.MakePointWithMillimeters(1, 0, 0);
-            Line destinationLine = new Line(destinationLineBasePoint, PointGenerator.MakePointWithMillimeters(1, 1, 0));
+            Point destinationLineBasePoint = PointGenerator.MakePointWithInches(1, 0, 0);
+            Line destinationLine = new Line(destinationLineBasePoint, PointGenerator.MakePointWithInches(1, 1, 0));
 
-            Point testPoint = PointGenerator.MakePointWithMillimeters(1, 0.5, 0.5);
+            Point testPoint = PointGenerator.MakePointWithInches(1, 0.5, 0.5);
 
             LineSegment actualResult = testPoint.MakePerpendicularLineSegment(destinationLine);
 
-            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithMillimeters(1, .5, 0));
+            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(1, .5, 0));
 
             (actualResult == expectedResult).Should().BeTrue();
         }

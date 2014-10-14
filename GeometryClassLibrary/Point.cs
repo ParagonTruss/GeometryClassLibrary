@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
-    [DebuggerDisplay("{X.Millimeters}, {Y.Millimeters}, {Z.Millimeters}")]
+    [DebuggerDisplay("{X.Inches}, {Y.Inches}, {Z.Inches}")]
     [Serializable]
     public class Point
     {
