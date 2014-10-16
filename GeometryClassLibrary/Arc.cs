@@ -32,8 +32,8 @@ namespace GeometryClassLibrary
             set { throw new System.NotImplementedException(); }
         }
 
-        private Vector _directionVector;
-        public Vector DirectionVector
+        private Direction _direction;
+        public Direction Direction
         {
             get { throw new System.NotImplementedException(); }
             set { throw new System.NotImplementedException(); }

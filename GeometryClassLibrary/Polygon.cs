@@ -14,18 +14,12 @@ namespace GeometryClassLibrary
     public class Polygon : PlaneRegion<LineSegment>, IComparable<Polygon>
     {
         #region Fields and Properties
-        public override List<LineSegment> PlaneBoundaries
-        {
-            get { return _planeBoundaries; }
-            set { _planeBoundaries = value; }
-        }
-        protected List<LineSegment> _planeBoundaries;
-
+        public override List<LineSegment> PlaneBoundaries { get; set; }
         public override Area Area
         {
             get
             {
-                return _planeBoundaries.FindAreaOfPolygon();
+                return this.PlaneBoundaries.FindAreaOfPolygon();
             }
         }
 
@@ -52,7 +46,7 @@ namespace GeometryClassLibrary
 
             if (isClosed && areCoplanar)
             {
-                _planeBoundaries = passedBoundaries;
+                this.PlaneBoundaries = passedBoundaries;
             }
         }
 
@@ -126,7 +120,7 @@ namespace GeometryClassLibrary
                 bool areEqual = true;
                 foreach (LineSegment segment in comparableRegion.PlaneBoundaries)
                 {
-                    if (!_planeBoundaries.Contains(segment))
+                    if (!this.PlaneBoundaries.Contains(segment))
                     {
                         areEqual = false;
                     }
@@ -209,7 +203,7 @@ namespace GeometryClassLibrary
         public Polygon Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in _planeBoundaries)
+            foreach (LineSegment segment in this.PlaneBoundaries)
             {
                 newBoundaryList.Add(segment.Rotate(passedAxisLine, passedRotationAngle));
             }
@@ -217,12 +211,12 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
-        public Polygon Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        public Polygon Translate(Direction passedDirection, Dimension passedDisplacement)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in _planeBoundaries)
+            foreach (LineSegment segment in this.PlaneBoundaries)
             {
-                newBoundaryList.Add(segment.Translate(passedDirectionVector, passedDisplacement));
+                newBoundaryList.Add(segment.Translate(passedDirection, passedDisplacement));
             }
             return new Polygon(newBoundaryList);
         }
@@ -497,6 +491,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public override Solid Extrude(Dimension dimension)
         {
+            /*
             //find two lines that are not parallel
             LineSegment firstLine = _planeBoundaries[0];
             LineSegment secondLine = null;
@@ -545,7 +540,7 @@ namespace GeometryClassLibrary
             returnGeometry.Polygons.Add(new Polygon(backPolygonLines));
 
             //take all coplanar lines and create a Polygon from 
-
+            */
 
             throw new NotImplementedException();
 
@@ -691,7 +686,10 @@ namespace GeometryClassLibrary
         /// is not in the plane</returns>
         public List<Polygon> Slice(Line slicingLine)
         {
-            Vector divisionPlaneNormal = this.NormalVector.CrossProduct(slicingLine.DirectionVector);
+            //find the normal direction of the plane we will use to slice with
+            Vector divisionPlaneNormal = this.NormalVector.Direction.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.Direction.UnitVector(DimensionType.Inch));
+            
+            //now make it with the normal we found anf the lines basepoint
             Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
 
             return this.Slice(slicingLine, divisionPlane);
@@ -731,7 +729,7 @@ namespace GeometryClassLibrary
                 //index 1 is our outsidePlaneRegion
 
                 //get our reference point - one that we know is on a side and not on the plane (using the normal is an easy consistent way)
-                Point referencePoint = slicingPlane.BasePoint + slicingPlane.NormalVector.DirectionPoint;
+                Point referencePoint = slicingPlane.NormalVector.EndPoint;
 
                 //set up our variables we will need
                 //create our two regions that we will modify and return
@@ -778,7 +776,7 @@ namespace GeometryClassLibrary
                         if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
                         {
                             //add it to the remove list and project it for the generated segments list
-                            removeAndProjectLineSegment(line, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                            _removeAndProjectLineSegment(line, slicingLine, toRemove[0], newSegmentsGenerated[0]);
                         }
                         //we know that it is either on the other side or on the plane so if we check that it is
                         //not on the plane than we know it must be on the same side as the reference point
@@ -786,7 +784,7 @@ namespace GeometryClassLibrary
                         else if (!slicingPlane.Contains(line.BasePoint))
                         {
                             //add it to the remove list and project it for the generated segments list
-                            removeAndProjectLineSegment(line, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                            _removeAndProjectLineSegment(line, slicingLine, toRemove[1], newSegmentsGenerated[1]);
                         }
                     }
                 }
@@ -841,7 +839,7 @@ namespace GeometryClassLibrary
             List<LineSegment> lineSliced = lineToSlice.Slice(intersectPoint);
 
             //sets it so the inside lineSegment is in the first spot and the outside in the Second
-            findAndSortInsideAndOutsideLineSegments(lineSliced, lineToSlice, slicingPlane, referencePoint);
+            _findAndSortInsideAndOutsideLineSegments(lineSliced, lineToSlice, slicingPlane, referencePoint);
 
             LineSegment insidePart = lineSliced[0];
             LineSegment outsidePart = lineSliced[1];
@@ -895,13 +893,13 @@ namespace GeometryClassLibrary
                 if (slicingPlane.PointIsOnSameSideAs(lineToSlice.BasePoint, referencePoint))
                 {
                     //add it to the remove list and project it for the generated segments list
-                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                    _removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
                 }
                 //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
                 else
                 {
                     //add it to the remove list and project it for the generated segments list
-                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                    _removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
                 }
             }
             //if the endpoint wasnt on the line than the basepoint was and we can determine the side with the endpoint
@@ -911,13 +909,13 @@ namespace GeometryClassLibrary
                 if (slicingPlane.PointIsOnSameSideAs(lineToSlice.EndPoint, referencePoint))
                 {
                     //add it to the remove list and project it for the generated segments list
-                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                    _removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[1], newSegmentsGenerated[1]);
                 }
                 //if it wasnt on the inside than it was on the outside and we need to remove it from the inside
                 else
                 {
                     //add it to the remove list and project it for the generated segments list
-                    removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                    _removeAndProjectLineSegment(lineToSlice, slicingLine, toRemove[0], newSegmentsGenerated[0]);
                 }
             }
         }
@@ -929,7 +927,7 @@ namespace GeometryClassLibrary
         /// <param name="lineThatWasSliced">Line that was sliced to form the sliced parts</param>
         /// <param name="slicingPlane">Plane that was used to slice the line (To tell which is "inside")</param>
         /// <param name="referencePoint">Reference point that is on the "inside" side of the slicingPlane</param>
-        private void findAndSortInsideAndOutsideLineSegments(List<LineSegment> lineSliced, LineSegment lineThatWasSliced, Plane slicingPlane, Point referencePoint)
+        private void _findAndSortInsideAndOutsideLineSegments(List<LineSegment> lineSliced, LineSegment lineThatWasSliced, Plane slicingPlane, Point referencePoint)
         {
             //guess as what line part is the outside;
             LineSegment insidePart = lineSliced[1];
@@ -973,7 +971,7 @@ namespace GeometryClassLibrary
         /// <param name="toProjectOnto">Line to Project the lineSegment onto</param>
         /// <param name="toRemoveList">List to remove the line segment from (should be for the same polygon as newSegmentGeneratedList)</param>
         /// <param name="newSegmentsGeneratedList">list to add the projected line too (should be for the same polygon as toRemoveList)</param>
-        private void removeAndProjectLineSegment(LineSegment line, Line toProjectOnto, List<LineSegment> toRemoveList, List<LineSegment> newSegmentsGeneratedList)
+        private void _removeAndProjectLineSegment(LineSegment line, Line toProjectOnto, List<LineSegment> toRemoveList, List<LineSegment> newSegmentsGeneratedList)
         {
             //add the projection to our new segments list for the outside region
             LineSegment projectedLine = line.ProjectOntoLine(toProjectOnto);
@@ -1091,7 +1089,7 @@ namespace GeometryClassLibrary
                     //find the plane perpendicular to this plane that represents the side we are on
 
                     //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = NormalVector.CrossProduct(line.DirectionVector);
+                    Vector divisionPlaneNormal = NormalVector.Direction.UnitVector(DimensionType.Inch).CrossProduct(line.Direction.UnitVector(DimensionType.Inch));
 
                     //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
                     Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);

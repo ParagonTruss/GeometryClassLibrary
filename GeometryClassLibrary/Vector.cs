@@ -85,8 +85,31 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Empty Constructor (A "Zero Vector")
         /// </summary>   
-        public Vector():
-        base(new Point()){}
+        public Vector()
+            : base() 
+        {
+            _magnitude = new Dimension();
+        }
+
+        /// <summary>
+        /// Creates a vector that extends from the Origin to the passed reference point  
+        /// </summary>
+        /// <param name="passedEndPoint"></param>
+        public Vector(Point passedEndPoint)
+            : base(passedEndPoint)
+        {
+            _magnitude = passedEndPoint.DistanceTo(new Point());
+        }
+
+        /// <summary>
+        /// Creates a zero Vector with the same basepoint and direction as the given line
+        /// </summary>
+        /// <param name="passedLine"></param>
+        public Vector(Line passedLine)
+            : base(passedLine)
+        {
+            this._magnitude = new Dimension();
+        }
 
         public Vector(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint) 
@@ -95,39 +118,50 @@ namespace GeometryClassLibrary
             Dimension yLength = passedBasePoint.Y - passedEndPoint.Y;
             Dimension zLength = passedBasePoint.Z - passedEndPoint.Z;
 
-            Magnitude = new Point(xLength, yLength, zLength).DistanceTo(new Point());
+            _magnitude = new Point(xLength, yLength, zLength).DistanceTo(new Point());
         }
 
         /// <summary>
-        /// Constructs a unit vector (magnitude = 1) from the passed base point in the given direction
+        /// Creates a new zero vector with the given BasePoint in the given direction
         /// </summary>
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
-        public Vector(Point passedBasePoint, Vector passedDirection)
-            : base(passedBasePoint, passedDirection) 
+        public Vector(Point passedBasePoint, Direction passedDirection)
+            : base(passedBasePoint, passedDirection)
         {
-            Magnitude = passedDirection;
-        }
-
-        public Vector(Point passedBasePoint, Vector passedDirection, Dimension passedMagnitude)
-            : base(passedBasePoint, passedDirection, passedMagnitude)
-        {
-            Magnitude = passedMagnitude;
+            _magnitude = new Dimension();
         }
 
         /// <summary>
-        /// Creates a vector that extends from the Origin to the passed reference point  
+        /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        /// <param name="passedX"></param>
-        /// <param name="passedY"></param>
-        /// <param name="passedZ"></param>
-        public Vector(Point passedEndPoint) 
-            : base(passedEndPoint)
-        {}
+        /// <param name="passedBasePoint"></param>
+        /// <param name="passedDirection"></param>
+        public Vector(Point passedBasePoint, Vector passedVector)
+            : base(passedBasePoint, passedVector.Direction)
+        {
+            _magnitude = new Dimension(passedVector._magnitude);
+        }
 
+        /// <summary>
+        /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
+        /// </summary>
+        /// <param name="passedBasePoint"></param>
+        /// <param name="passedDirection"></param>
+        /// <param name="passedMagnitude"></param>
+        public Vector(Point passedBasePoint, Direction passedDirection, Dimension passedMagnitude)
+            : base(passedBasePoint, passedDirection)
+        {
+            _magnitude = new Dimension(passedMagnitude);
+        }
+
+        /// <summary>
+        /// Default copy constructor
+        /// </summary>
+        /// <param name="passedVector"></param>
         public Vector(Vector passedVector)
-            : this(passedVector.BasePoint, passedVector, passedVector.Magnitude)
-        { }
+            : this(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude) { }
+
         #endregion
 
         #region Overloaded Operators
@@ -141,7 +175,7 @@ namespace GeometryClassLibrary
         public static Vector operator +(Vector passedVector1, Vector passedVector2)
         {
             //Recreates Vector 2 with its base point at the end point of Vector 1
-            Vector relocatedVector2 = new Vector(passedVector1.EndPoint, passedVector2.DirectionVector, passedVector2.Magnitude);
+            Vector relocatedVector2 = new Vector(passedVector1.EndPoint, passedVector2);
             
             Point newBasePoint = passedVector1.BasePoint; //The new vector has the same base point as Vector 1
             Point newEndPoint = relocatedVector2.EndPoint; //The new vector has the same end point as the relocated Vector 2
@@ -161,7 +195,6 @@ namespace GeometryClassLibrary
             return passedVector1 + negatedVector2;
         } 
 
-
         /// <summary>
         /// Returns the dot product of the two vectors
         /// </summary>
@@ -171,11 +204,11 @@ namespace GeometryClassLibrary
         public static Dimension operator *(Vector passedVector1, Vector passedVector2)
         {
             //returns a new dimension with the dot product of the two vectors
-            double xComponent = passedVector1.XComponentOfDirection.Millimeters * passedVector2.XComponentOfDirection.Millimeters;
-            double yComponent = passedVector1.YComponentOfDirection.Millimeters * passedVector2.YComponentOfDirection.Millimeters;
-            double zComponent = passedVector1.ZComponentOfDirection.Millimeters * passedVector2.ZComponentOfDirection.Millimeters;
+            double xComponent = passedVector1.XComponent.Inches * passedVector2.XComponent.Inches;
+            double yComponent = passedVector1.YComponent.Inches * passedVector2.YComponent.Inches;
+            double zComponent = passedVector1.ZComponent.Inches * passedVector2.ZComponent.Inches;
 
-            return new Dimension(DimensionType.Millimeter, xComponent + yComponent + zComponent);
+            return new Dimension(DimensionType.Inch, xComponent + yComponent + zComponent);
         }
 
         /// <summary>
@@ -186,14 +219,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Vector operator *(Vector passedVector, double scalar)
         {
-
-            double xComponent = passedVector.XComponentOfDirection.Millimeters * scalar;
-            double yComponent = passedVector.YComponentOfDirection.Millimeters * scalar;
-            double zComponent = passedVector.ZComponentOfDirection.Millimeters * scalar;
-
-            Point newPoint = PointGenerator.MakePointWithMillimeters(xComponent, yComponent, zComponent);
-            
-            return new Vector(newPoint);
+            return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude * scalar);
         }
 
         /// <summary>
@@ -204,15 +230,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Vector operator *(double scalar, Vector passedVector)
         {
-            //returns a new Vector with each component multiplied by the scalar
-
-            double xComponent = passedVector.XComponentOfDirection.Millimeters * scalar;
-            double yComponent = passedVector.YComponentOfDirection.Millimeters * scalar;
-            double zComponent = passedVector.ZComponentOfDirection.Millimeters * scalar;
-
-            Point newPoint = PointGenerator.MakePointWithMillimeters(xComponent, yComponent, zComponent);
-
-            return new Vector(newPoint);
+            return passedVector * scalar;
         }
 
         /// <summary>
@@ -221,25 +239,43 @@ namespace GeometryClassLibrary
         /// <param name="passedVector1"></param>
         /// <param name="divisor"></param>
         /// <returns></returns>
-        public static Vector operator /(Vector passedVector1, double divisor)
+        public static Vector operator /(Vector passedVector, double divisor)
         {
-            double multiplier = 1 / divisor;
-            return passedVector1 * multiplier;
-
+            return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude / divisor);
         }
 
-        public static bool operator ==(Vector v1, Vector v2)
+        public static bool operator ==(Vector vector1, Vector vector2)
         {
-            return v1.Equals(v2);
+            if ((object)vector1 == null)
+            {
+                if ((object)vector2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return vector1.Equals(vector2);
         }
 
-        public static bool operator !=(Vector v1, Vector v2)
+        public static bool operator !=(Vector vector1, Vector vector2)
         {
-            return !v1.Equals(v2);
+            if ((object)vector1 == null)
+            {
+                if ((object)vector2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return !vector1.Equals(vector2);
         }
 
         public override bool Equals(object obj)
         {
+            //check for null
+            if (obj == null)
+                return false;
+
             try
             {
                 Vector vec = (Vector)obj;
@@ -252,9 +288,129 @@ namespace GeometryClassLibrary
                 return false;
             }
         }
+        
+        /// <summary>
+        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
+        /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Vector other)
+        {
+            if (this._magnitude.Equals(other._magnitude))
+                return 0;
+            else
+                return this._magnitude.CompareTo(other._magnitude);
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Sometimes we want to check if the vector would intersect with line if it were extended towards the line
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
+        public Point HypotheticalIntersection(Line passedLine)
+        {
+            return new Line(this).Intersection(passedLine);
+        }
+
+        /// <summary>
+        /// Checks if this Vector intersects the given line and returns the point if it does or null otherwise
+        /// </summary>
+        /// <param name="passedLine">The line to check if this intersects with</param>
+        /// <returns>returns the intersection point of the two lines or null if they do not</returns>
+        public override Point Intersection(Line passedLine)
+        {
+            Point intersect = this.HypotheticalIntersection(passedLine);
+
+            if (!ReferenceEquals(intersect, null) && intersect.IsOnVector(this))
+                return intersect;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
+        /// </summary>
+        /// <param name="passedLineSegment">The LineSegment to check for intersection with</param>
+        /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
+        public Point Intersection(Vector passedVector)
+        {
+            Point potentialIntersect = this.Intersection((Line)passedVector);
+
+            if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector))
+                return potentialIntersect;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Returns true if the vector shares a base point or endpoint with the passed vector
+        /// </summary>
+        /// <param name="passedVector"></param>
+        /// <returns></returns>
+        public bool DoesSharesABaseOrEndPointWith(Vector passedVector)
+        {
+            return (this.BasePoint == passedVector.EndPoint
+                || this.BasePoint == passedVector.BasePoint
+                || this.EndPoint == passedVector.EndPoint
+                || this.EndPoint == passedVector.BasePoint);
+        }
+
+        /// <summary>
+        /// Checks to see if a vector contains another vector.  Useful for checking if members touch
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
+        public bool Contains(Vector passedVector)
+        {
+            if (this.Magnitude >= passedVector.Magnitude)
+            {
+                if (this.IsCoplanarWith(passedVector) && this.IsParallelTo(passedVector))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
+        /// </summary>
+        /// <param name="projectOnto">the Line on which to project the LineSegment</param>
+        /// <returns></returns>
+        public Vector ProjectOntoLine(Line projectOnto)
+        {
+            //we can do this by making the points into vectors with the basepoint of the line as the basepoint and the endpoint of the 
+            //point we want to project then using the dot product to find its relative vector and then position it 
+            //relative to the clipping basepoint. We have to make the basepoint to the divisionLine's so that the vectors
+            //intersect, allowing us to project the one onto the other easily
+            Vector basePointVector = new Vector(projectOnto.BasePoint, BasePoint);
+
+            //now we can project the basepointvector onto the division line's unit vector to find the scalar length of the projection
+            //  note: we use the unit vector because it has a length of 1 and will not affect the scaling of the projected vector
+            Dimension basePointProjectedLength = basePointVector * projectOnto.Direction.UnitVector(DimensionType.Inch);
+
+            //now make the projected vector using divisionLine's basePoint (our reference), the divisionLines unitVector (since we
+            //  are projecting onto it we know that it is the direction of the resulting vector), and then the length we
+            //  found for the projection
+            Vector basePointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, basePointProjectedLength);
+
+            //now the basepointProjection starts at the divisionLine's endpoint and ends at the projected point on itself
+            Point newBasePoint = basePointProjection.EndPoint;
+
+            //now we just need to do it all again to find the newEndpoint's projection
+            Vector endPointVector = new Vector(projectOnto.BasePoint, this.EndPoint);
+            Dimension endPointProjectedLength = endPointVector * projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Vector endPointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, endPointProjectedLength);
+            Point newEndPoint = endPointProjection.EndPoint;
+
+            //now we have the two projected points and we can make a line segment which represents the porjected line
+            return new Vector(newBasePoint, newEndPoint);
+        }
 
         /// <summary>
         /// Returns the cross product of the 2 vectors(i.e. a vector that is perpendicular to both this vector and the passed Vector)
@@ -263,7 +419,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Vector CrossProduct(Vector passedVector)
         {
-            Point originPoint = PointGenerator.MakePointWithMillimeters(0,0,0);
+            Point originPoint = new Point();
             Vector v1 = this;
             Vector v2 = passedVector;
 
@@ -275,56 +431,20 @@ namespace GeometryClassLibrary
 
             //Find each component 
 
-            double xProduct1 = v1.YComponentOfDirection.Millimeters * v2.ZComponentOfDirection.Millimeters;
-            double xProduct2 = v1.ZComponentOfDirection.Millimeters * v2.YComponentOfDirection.Millimeters;
+            double xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
+            double xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
 
-            double yProduct1 = v1.ZComponentOfDirection.Millimeters * v2.XComponentOfDirection.Millimeters;
-            double yProduct2 = v1.XComponentOfDirection.Millimeters * v2.ZComponentOfDirection.Millimeters;
+            double yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
+            double yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
 
-            double zProduct1 = v1.XComponentOfDirection.Millimeters * v2.YComponentOfDirection.Millimeters;
-            double zProduct2 = v1.YComponentOfDirection.Millimeters * v2.XComponentOfDirection.Millimeters;
+            double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
+            double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
 
-            Dimension newX = DimensionGenerator.MakeDimensionWithMillimeters((xProduct1) - (xProduct2));
-            Dimension newY = DimensionGenerator.MakeDimensionWithMillimeters((yProduct1) - (yProduct2));
-            Dimension newZ = DimensionGenerator.MakeDimensionWithMillimeters((zProduct1) - (zProduct2));
+            Dimension newX = DimensionGenerator.MakeDimensionWithInches((xProduct1) - (xProduct2));
+            Dimension newY = DimensionGenerator.MakeDimensionWithInches((yProduct1) - (yProduct2));
+            Dimension newZ = DimensionGenerator.MakeDimensionWithInches((zProduct1) - (zProduct2));
 
-            return new Vector(PointGenerator.MakePointWithMillimeters(newX.Millimeters, newY.Millimeters, newZ.Millimeters));
-        }
-
-        /// <summary>
-        /// Converts a vector into a matrix with one column
-        /// </summary>
-        /// <returns></returns>
-        public Matrix ConvertToMatrixColumn()
-        {
-            Matrix returnMatrix = new Matrix(3, 1);
-            double[] vectorArray = { XComponentOfDirection.Millimeters, YComponentOfDirection.Millimeters, ZComponentOfDirection.Millimeters };
-            returnMatrix.SetColumn(0, vectorArray);
-            return returnMatrix;
-        }
-
-        /// <summary>
-        /// Divides the vector by its length to produce a unit vector (magnitude = 1)
-        /// </summary>
-        /// <returns></returns>
-        public Vector ConvertToUnitVector()
-        {
-            Vector unitVector = this / this.Magnitude.Millimeters;   
-
-            return unitVector;
-        }
-
-        /// <summary>
-        /// Rotates the vector about the given axis by the passed angle
-        /// </summary>
-        /// <param name="passedRotationAxis"></param>
-        /// <param name="passedRotationAngle"></param>
-        /// <returns></returns>
-        public Vector Rotate(Line passedRotationAxis, Angle passedRotationAngle)
-        {
-            Point rotatedBasePoint = this.BasePoint.Rotate3D(passedRotationAxis, passedRotationAngle);
-            Point rotatedDirectionPoint =  this.DirectionPoint.Rotate3D(passedRotationAxis, passedRotationAngle);
-            return new Vector(rotatedBasePoint, rotatedDirectionPoint);
+            return new Vector(PointGenerator.MakePointWithInches(newX.Inches, newY.Inches, newZ.Inches));
         }
 
         /// <summary>
@@ -332,7 +452,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
-        public bool PointInSameDirection(Vector v1)
+        public bool PointInSameDirection(Vector passedVector)
         {
             // checks to see if there's more than 1 nonzero component
             int componentIndex1 = -1;
@@ -352,7 +472,7 @@ namespace GeometryClassLibrary
             // checks the second Vector
             for (int j = 0; j < 3; j++)
             {
-                if (v1[j] == new Dimension())
+                if (passedVector[j] == new Dimension())
                     numberOfZeroComponents2++;
                 else
                     componentIndex2 = j;
@@ -361,25 +481,25 @@ namespace GeometryClassLibrary
             // if there's only one, our job becomes a lot simpler
             // make sure it's the same component, and then check to see if multiplying them creates a number greater than 0, which means they have different signs
             if (numberOfZeroComponents1 == 2 && numberOfZeroComponents2 == 2 && componentIndex1 == componentIndex2)
-                return this[componentIndex1] * v1[componentIndex2] > new Area();
+                return this[componentIndex1] * passedVector[componentIndex2] > new Area();
 
             // uses compareTo as a factor and compares it to the other quotients, determining whether the
             // component is a multiple of the other component.  Negate() is used for opposite directions
             double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponentOfDirection != new Dimension())
-                compareTo =  Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
-            else if (this.YComponentOfDirection != new Dimension())
-                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
-            else if (this.ZComponentOfDirection != new Dimension())
-                compareTo = Math.Abs(this.ZComponentOfDirection / v1.ZComponentOfDirection);
+            if (this.XComponent != new Dimension())
+                compareTo = Math.Abs(this.XComponent / passedVector.XComponent);
+            else if (this.YComponent != new Dimension())
+                compareTo = Math.Abs(this.YComponent / passedVector.YComponent);
+            else if (this.ZComponent != new Dimension())
+                compareTo = Math.Abs(this.ZComponent / passedVector.ZComponent);
             else
                 compareTo = 0;
 
-            return v1.XComponentOfDirection * compareTo == this.XComponentOfDirection &&
-                v1.YComponentOfDirection * compareTo == this.YComponentOfDirection &&
-                v1.ZComponentOfDirection * compareTo == this.ZComponentOfDirection;
+            return passedVector.XComponent * compareTo == this.XComponent &&
+                passedVector.YComponent * compareTo == this.YComponent &&
+                passedVector.ZComponent * compareTo == this.ZComponent;
         }
 
         /// <summary>
@@ -387,54 +507,13 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
-        public bool PointInOppositeDirections(Vector v1)
+        public bool PointInOppositeDirections(Vector passedVector)
         {
-            // checks to see if there's more than 1 nonzero component
-            int componentIndex1 = -1;
-            int componentIndex2 = -1;
-            int numberOfZeroComponents1 = 0;
-            int numberOfZeroComponents2 = 0;
+            //flip one of the vectors
+            Vector passedVectorInOppositeDirection = passedVector.Negate();
 
-            // checks the first Vector
-            for (int i = 0; i < 3; i++)
-            {
-                if (this[i] == new Dimension())
-                    numberOfZeroComponents1++;
-                else
-                    componentIndex1 = i;
-            }
-
-            // checks the second Vector
-            for (int j = 0; j < 3; j++) 
-            {
-                if (v1[j] == new Dimension()) 
-                    numberOfZeroComponents2++;
-                else
-                    componentIndex2 = j;
-            }
-
-            // if there's only one, our job becomes a lot simpler
-            // make sure it's the same component, and then check to see if multiplying them creates a number less than 0, which means only 1 is negative
-            if (numberOfZeroComponents1 == 2 && numberOfZeroComponents2 == 2 && componentIndex1 == componentIndex2)
-                return this[componentIndex1] * v1[componentIndex2] < new Area();
-
-            // uses compareTo as a factor and compares it to the other quotients, determining whether the
-            // component is a multiple of the other component.  Negate() is used for opposite directions
-            double compareTo;
-
-            // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponentOfDirection != new Dimension())
-                compareTo = Math.Abs(this.XComponentOfDirection / v1.XComponentOfDirection);
-            else if (this.YComponentOfDirection != new Dimension())
-                compareTo = Math.Abs(this.YComponentOfDirection / v1.YComponentOfDirection);
-            else if (this.ZComponentOfDirection != new Dimension())
-                compareTo = Math.Abs(this.ZComponentOfDirection / v1.ZComponentOfDirection);
-            else
-                compareTo = 0;
-
-            return v1.XComponentOfDirection.Negate() * compareTo == this.XComponentOfDirection &&
-                v1.YComponentOfDirection.Negate() * compareTo == this.YComponentOfDirection &&
-                v1.ZComponentOfDirection.Negate() * compareTo == this.ZComponentOfDirection;
+            //then check if they are in the same direction
+            return this.PointInSameDirection(passedVectorInOppositeDirection);
         }
 
         /// <summary>
@@ -466,15 +545,67 @@ namespace GeometryClassLibrary
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);
 
             //next translate the vector to the correct position
-            return flipped.Translate(this.DirectionVector, this.Magnitude);
+            return flipped.Translate(this.Direction, this.Magnitude);
         }
 
-        public Vector Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        /// <summary>
+        /// Converts a vector into a matrix with one column
+        /// </summary>
+        /// <returns></returns>
+        public Matrix ConvertToMatrixColumn()
         {
-            Point newBasePoint = this.BasePoint.Translate(passedDirectionVector, passedDisplacement);
-            Point newDirectionPoint = this.DirectionPoint.Translate(passedDirectionVector, passedDisplacement);
+            Matrix returnMatrix = new Matrix(3, 1);
+            double[] vectorArray = { XComponent.Inches, YComponent.Inches, ZComponent.Inches };
+            returnMatrix.SetColumn(0, vectorArray);
+            return returnMatrix;
+        }
 
-            return new Vector(newBasePoint, newDirectionPoint);
+        /// <summary>
+        /// Divides the vector by its length to produce a unit vector (magnitude = 1)
+        /// </summary>
+        /// <returns></returns>
+        public Vector ConvertToUnitVector(DimensionType passedDimension)
+        {
+            Vector unitVector = new Vector(this);
+            unitVector.Magnitude = new Dimension(passedDimension, 1);
+            return unitVector;
+        }
+
+        /// <summary>
+        /// Rotates the vector about the given axis by the passed angle
+        /// </summary>
+        /// <param name="passedRotationAxis"></param>
+        /// <param name="passedRotationAngle"></param>
+        /// <returns></returns>
+        public new Vector Rotate(Line passedRotationAxis, Angle passedRotationAngle)
+        {
+            Point rotatedBasePoint = this.BasePoint.Rotate3D(passedRotationAxis, passedRotationAngle);
+            Point rotatedEndPoint =  this.EndPoint.Rotate3D(passedRotationAxis, passedRotationAngle);
+            return new Vector(rotatedBasePoint, rotatedEndPoint);
+        }
+
+        /// <summary>
+        /// Performs the Shift on this vector
+        /// </summary>
+        /// <param name="passedShift"></param>
+        /// <returns></returns>
+        public Vector Shift(Shift passedShift)
+        {
+            return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
+        }
+
+        /// <summary>
+        /// Translates the vector the given distance in the given direction
+        /// </summary>
+        /// <param name="passedDirection"></param>
+        /// <param name="passedDisplacement"></param>
+        /// <returns></returns>
+        public new Vector Translate(Direction passedDirection, Dimension passedDisplacement)
+        {
+            Point newBasePoint = this.BasePoint.Translate(passedDirection, passedDisplacement);
+            Point newEndPoint = this.EndPoint.Translate(passedDirection, passedDisplacement);
+
+            return new Vector(newBasePoint, newEndPoint);
         }
 
         #endregion

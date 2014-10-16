@@ -13,19 +13,18 @@ namespace GeometryClassLibrary
     public class Plane
     {
         #region Fields and Properties
-        private Point _basePoint; //Could be any point on the plane
-        private Vector _normalVector; //Could be any vector that is normal (perpendicular) to the plane
+        public Point BasePoint { get; protected set; }
 
-        public Point BasePoint
-        {   
-            get{ return _basePoint; }
-            protected set { _basePoint = value; }
-        }
-
+        private Vector _normalVector;
         public Vector NormalVector
         {
             get { return _normalVector; }
-            protected set { _normalVector = value; } 
+            protected set
+            {
+                //make sure that the Normal's base point is always the same as the planes base point for convinience
+                _normalVector = value;
+                _normalVector.BasePoint = this.BasePoint;
+            }
         }
 
         #endregion
@@ -36,8 +35,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Plane()
         {
-            _basePoint = new Point();
-            _normalVector = new Vector();
+            this.BasePoint = new Point();
+            this.NormalVector = new Vector();
         }
 
         public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )
@@ -50,8 +49,8 @@ namespace GeometryClassLibrary
 
             if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
             {
-                _basePoint = passedPoint1;
-                _normalVector = line1To2.DirectionVector.CrossProduct(line1To3.DirectionVector);
+                this.BasePoint = passedPoint1;
+                this.NormalVector = line1To2.Direction.UnitVector(DimensionType.Inch).CrossProduct(line1To3.Direction.UnitVector(DimensionType.Inch));
             }
             else
             {
@@ -67,8 +66,8 @@ namespace GeometryClassLibrary
         /// <param name="passedNormalVector"></param>
         public Plane(Point passedBasePoint, Vector passedNormalVector)
         {
-            _basePoint = passedBasePoint;
-            _normalVector = passedNormalVector;
+            this.BasePoint = passedBasePoint;
+            this.NormalVector = passedNormalVector;
         }
 
         /// <summary>
@@ -80,9 +79,9 @@ namespace GeometryClassLibrary
         {
             if(!passedPoint.IsOnLine(passedLine))
             {
-                _basePoint = passedPoint;
+                this.BasePoint = passedPoint;
                 Vector vectorFromLineToPoint = new Vector(passedLine.BasePoint, passedPoint);
-                _normalVector = passedLine.DirectionVector.CrossProduct(vectorFromLineToPoint);
+                this.NormalVector = passedLine.Direction.UnitVector(DimensionType.Inch).CrossProduct(vectorFromLineToPoint.Direction.UnitVector(DimensionType.Inch));
             }
             else
             {
@@ -100,24 +99,31 @@ namespace GeometryClassLibrary
         /// <param name="passedLine2"></param>
         public Plane(Line passedLine1, Line passedLine2)
         {
-            
-            if(passedLine1.IsParallelTo(passedLine2))
+            //if they arent equivalent lines
+            if (passedLine1 != passedLine2)
             {
-                _basePoint = passedLine1.BasePoint;
-                _normalVector = passedLine1.DirectionVector.CrossProduct(passedLine2.DirectionVector);
+                //if they are parallel we must find the line between to use to find the normal or else the cross product is 0
+                if (passedLine1.IsParallelTo(passedLine2))
+                {
+                    this.BasePoint = passedLine1.BasePoint;
 
-                
+                    Line lineBetween = new Line(passedLine1.BasePoint, passedLine2.BasePoint);
+                    this.NormalVector = passedLine1.Direction.UnitVector(DimensionType.Inch).CrossProduct(lineBetween.Direction.UnitVector(DimensionType.Inch));
+                }
+                if (passedLine1.IsCoplanarWith(passedLine2))
+                {
+                    this.BasePoint = passedLine1.BasePoint;
+                    this.NormalVector = passedLine1.Direction.UnitVector(DimensionType.Inch).CrossProduct(passedLine2.Direction.UnitVector(DimensionType.Inch));
+                }
+                else
+                {
+                    throw new NotSupportedException("Those 3 points are not on the same plane");
+                }
             }
-            if(passedLine1.IsCoplanarWith(passedLine2))
-            {
-                _basePoint = passedLine1.BasePoint;
-                _normalVector = passedLine1.DirectionVector.CrossProduct(passedLine2.DirectionVector);
-            }
-
             else
             {
-                String message = "Those 3 points are not on the same plane";
-                throw new NotSupportedException(message);
+                //they are the same line and we cant make a plane
+                throw new ArgumentException("The passed Lines are the same!");
             }
         }
 
@@ -128,15 +134,15 @@ namespace GeometryClassLibrary
 
             if (passedLineListCasted.AreAllCoplanar())
             {
-                _basePoint = passedLineListCasted[0].BasePoint;
+                this.BasePoint = passedLineListCasted[0].BasePoint;
 
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedLineListCasted[0].DirectionVector;
+                Vector vector1 = passedLineListCasted[0].Direction.UnitVector(DimensionType.Inch);
                 for (int i = 1; i < passedLineListCasted.Count; i++)
                 {
-                    _normalVector = vector1.CrossProduct(passedLineListCasted[i].DirectionVector);
-                    if (!_normalVector.Equals(new Vector()))
+                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].Direction.UnitVector(DimensionType.Inch));
+                    if (!this.NormalVector.Equals(new Vector()))
                         i = passedLineListCasted.Count;
                 }
             }
@@ -149,9 +155,8 @@ namespace GeometryClassLibrary
 
         public Plane(Plane passedPlane)
         {
-            this._basePoint = passedPlane._basePoint;
-            this._normalVector = passedPlane.NormalVector;
-
+            this.BasePoint = passedPlane.BasePoint;
+            this.NormalVector = passedPlane.NormalVector;
         }
         #endregion
 
@@ -209,8 +214,8 @@ namespace GeometryClassLibrary
         {
             // weird calculus voodoo
             Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
-            Dimension dotProduct1 = planeVector * NormalVector;
-            Dimension dotProduct2 = passedLine.DirectionVector * NormalVector;
+            Dimension dotProduct1 = planeVector.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
+            Dimension dotProduct2 = passedLine.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
 
             // if both of the vectors' dotproducts come out to 0, the line is on the plane
             return (dotProduct1.Equals(new Dimension()) && dotProduct2.Equals(new Dimension()));
@@ -224,15 +229,15 @@ namespace GeometryClassLibrary
         public bool Contains(Point passedPoint)
         {
             Vector planeVector = new Vector(passedPoint, BasePoint);
-            Dimension dotProduct = planeVector * NormalVector.ConvertToUnitVector();
+            Dimension dotProduct = planeVector.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
 
             return dotProduct == new Dimension();
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)
         {
-            Point newBasePoint = _basePoint.Rotate3D(passedAxis, passedAngle);
-            Vector newNormalVector = _normalVector.Rotate(passedAxis, passedAngle);
+            Point newBasePoint = this.BasePoint.Rotate3D(passedAxis, passedAngle);
+            Vector newNormalVector = this.NormalVector.Rotate(passedAxis, passedAngle);
             return new Plane(newBasePoint, newNormalVector);
         }
 

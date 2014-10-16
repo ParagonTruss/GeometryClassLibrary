@@ -1298,7 +1298,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutXTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutX(angleToRotate);
@@ -1316,7 +1316,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutYTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutY(angleToRotate);
@@ -1334,7 +1334,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutZTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutZ(angleToRotate);

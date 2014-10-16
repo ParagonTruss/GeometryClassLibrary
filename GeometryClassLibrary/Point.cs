@@ -151,7 +151,7 @@ namespace GeometryClassLibrary
             Dimension newZ = point1._z + point2._z;
 
             //create a new Point object with your new values
-            return new Point(newX, newY);
+            return new Point(newX, newY, newZ);
         }
 
         public static Point operator -(Point point1, Point point2)
@@ -175,15 +175,15 @@ namespace GeometryClassLibrary
         public static bool operator ==(Point point1, Point point2)
         {
             // covers null reference checks
-            if (ReferenceEquals(point1, null))
-                if (ReferenceEquals(point2, null))
+            if ((Object)point1 == null)
+            {
+                if((Object)point2 == null)
+                {
                     return true;
-                else
-                    return false;
-            else if (ReferenceEquals(point2, null))
+                }
                 return false;
-
-            // if the two points' x and y are equal, returns true
+            }
+            // if the two points' x and y and z are equal, returns true
             return point1.Equals(point2);
         }
 
@@ -193,14 +193,14 @@ namespace GeometryClassLibrary
         public static bool operator !=(Point point1, Point point2)
         {
             // if the two points' x and y are equal, returns false
-            if (ReferenceEquals(point1, null))
-                if (ReferenceEquals(point2, null))
+            if ((Object)point1 == null)
+            {
+                if ((Object)point2 == null)
+                {
                     return false;
-                else
-                    return true;
-            else if (ReferenceEquals(point2, null))
+                }
                 return true;
-
+            }
             return !point1.Equals(point2);
         }
 
@@ -209,20 +209,22 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            Point comparablePoint = null;
-
+            //check for null (wont throw a castexception)
+            if (obj == null)
+                return false;
+            
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparablePoint = (Point)obj;
+                Point comparablePoint = (Point)obj;
 
                 // if the two points' x and y are equal, returns true
                 return (this._x.Equals(comparablePoint._x) && this._y.Equals(comparablePoint._y) && this._z.Equals(comparablePoint._z));
-
             }
-            catch (InvalidCastException castexception)
+            //if they are not the same type than they are not equal
+            catch (InvalidCastException)
             {
-                throw castexception;
+                return false;
             }
         }
 
@@ -266,6 +268,7 @@ namespace GeometryClassLibrary
         {
             return ToString(DimensionType.Inch);
         }
+        
         #endregion
 
         /// <summary>
@@ -292,75 +295,27 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Move without rotating
-        /// </summary>
-        /// <returns>a new point in the new location</returns>
-        public Point Translate(Dimension xTranslate, Dimension yTranslate, Dimension zTranslate)
-        {
-            double newX = _x.Millimeters + xTranslate.Millimeters;
-            double newY = _y.Millimeters + yTranslate.Millimeters;
-            double newZ = _z.Millimeters + zTranslate.Millimeters;
-
-            Dimension newDimX = new Dimension(DimensionType.Millimeter, newX);
-            Dimension newDimY = new Dimension(DimensionType.Millimeter, newY);
-            Dimension newDimZ = new Dimension(DimensionType.Millimeter, newZ);
-
-            return new Point(newDimX, newDimY, newDimZ);
-        }
-
-        /// <summary>
         /// Moves the point the specified distance in the specified direction
         /// </summary>
         /// <returns>a new point in the new location</returns>
-        public Point Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        public Point Translate(Direction passedDirection, Dimension passedDisplacement)
         {
-            double directionXSquared = Math.Pow(passedDirectionVector.XComponentOfDirection.Millimeters, 2);
-            double directionYSquared = Math.Pow(passedDirectionVector.YComponentOfDirection.Millimeters, 2);
-            double directionZSquared = Math.Pow(passedDirectionVector.ZComponentOfDirection.Millimeters, 2);
+            Dimension xDisplacement = passedDisplacement * passedDirection.XComponentOfDirection;
+            Dimension yDisplacement = passedDisplacement * passedDirection.YComponentOfDirection;
+            Dimension zDisplacement = passedDisplacement * passedDirection.ZComponentOfDirection;
 
-            double displacementSquared = Math.Pow(passedDisplacement.Millimeters, 2);
-
-            //just so its not a NaN value
-            double oneOverMultiplierSquared = 0;
-            double multiplier = 0;
-
-            if (displacementSquared != 0)
-            {
-                oneOverMultiplierSquared = (directionXSquared + directionYSquared + directionZSquared) / displacementSquared;
-                multiplier = Math.Sqrt(1.0 / oneOverMultiplierSquared);
-            }
-
-            Dimension xDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.XComponentOfDirection.Millimeters);
-            Dimension yDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.YComponentOfDirection.Millimeters);
-            Dimension zDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.ZComponentOfDirection.Millimeters);
-
-            return this.Translate(xDisplacement, yDisplacement, zDisplacement);
+            Point shift = new Point(xDisplacement, yDisplacement, zDisplacement);
+            return (this + shift);
         }
 
         /// <summary>
         /// Moves the point in the specified direction by the magnitude of the direction vector
         /// </summary>
         /// <returns>a new point in the new location</returns>
-        public Point Translate(Vector passedDirectionVector)
+        public Point Translate(Vector passedDisplacementVector)
         {
-            if(passedDirectionVector.Magnitude == new Dimension())
-            {
-                return this;
-            }
-            double directionXSquared = Math.Pow(passedDirectionVector.XComponentOfDirection.Millimeters, 2);
-            double directionYSquared = Math.Pow(passedDirectionVector.YComponentOfDirection.Millimeters, 2);
-            double directionZSquared = Math.Pow(passedDirectionVector.ZComponentOfDirection.Millimeters, 2);
-
-            double displacementSquared = Math.Pow(passedDirectionVector.Magnitude.Millimeters, 2);
-
-            double oneOverMultiplierSquared = (directionXSquared + directionYSquared + directionZSquared) / displacementSquared;
-            double multiplier = Math.Sqrt(1.0 / oneOverMultiplierSquared);
-
-            Dimension xDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.XComponentOfDirection.Millimeters);
-            Dimension yDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.YComponentOfDirection.Millimeters);
-            Dimension zDisplacement = new Dimension(DimensionType.Millimeter, multiplier * passedDirectionVector.ZComponentOfDirection.Millimeters);
-
-            return this.Translate(xDisplacement, yDisplacement, zDisplacement);
+            Point shift = new Point(passedDisplacementVector.XComponent, passedDisplacementVector.YComponent, passedDisplacementVector.ZComponent);
+            return (this + shift);
         }
 
         /// <summary>
@@ -385,20 +340,20 @@ namespace GeometryClassLibrary
             }
 
             //distance formula
-            double term1 = Math.Pow(( _x - _endPoint._x).Millimeters, 2);
-            double term2 = Math.Pow(( _y - _endPoint._y).Millimeters, 2);
-            double term3 = Math.Pow(( _z - _endPoint._z).Millimeters, 2);
+            double term1 = Math.Pow(( _x - _endPoint._x).Inches, 2);
+            double term2 = Math.Pow(( _y - _endPoint._y).Inches, 2);
+            double term3 = Math.Pow(( _z - _endPoint._z).Inches, 2);
 
-            double distanceInMillimeters = Math.Sqrt(term1 + term2 + term3);
+            double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
-            return new Dimension(DimensionType.Millimeter, distanceInMillimeters);
+            return new Dimension(DimensionType.Inch, distanceInInches);
         }
 
         public Dimension DistanceTo(Line passedLine)
         {
             Line perpLine = this.MakePerpendicularLineSegment(passedLine);
-            double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Millimeters;
-            return new Dimension(DimensionType.Millimeter, distance);
+            double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
+            return new Dimension(DimensionType.Inch, distance);
         }
 
         /// <summary>
@@ -418,7 +373,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Line passedAxisLine, Angle passedRotationAngle)
 		{
-            Point originPoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
             
             bool originIsOnPassedAxis = originPoint.IsOnLine(passedAxisLine);
 
@@ -426,7 +381,7 @@ namespace GeometryClassLibrary
 
             Line axisForRotating = passedAxisLine;
 
-            Vector directionFromOriginToAxis = new Vector();
+            Direction directionFromOriginToAxis = new Direction();
             Dimension distanceFromOriginToAxis = new Dimension();
 
             if(!originIsOnPassedAxis)
@@ -434,14 +389,14 @@ namespace GeometryClassLibrary
                 //Must translate everything so that the axis line goes through the origin before rotating
                 Line directionLine = originPoint.MakePerpendicularLineSegment(passedAxisLine);
 
-                directionFromOriginToAxis = directionLine.DirectionVector;
+                directionFromOriginToAxis = directionLine.Direction;
                 distanceFromOriginToAxis = originPoint.DistanceTo(axisForRotating);
 
                 //Move the point
-                pointForRotating = this.Translate(-1 * directionFromOriginToAxis, distanceFromOriginToAxis);
+                pointForRotating = this.Translate(directionFromOriginToAxis, distanceFromOriginToAxis * -1);
                 
                 //Make the axis go through the origin
-                axisForRotating = new Line(originPoint, passedAxisLine.DirectionVector);
+                axisForRotating = new Line(originPoint, passedAxisLine.Direction);
             }
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, passedRotationAngle);
@@ -454,7 +409,7 @@ namespace GeometryClassLibrary
             double yOfRotatedPoint = rotatedPointMatrix.GetElement(1, 0);
             double zOfRotatedPoint = rotatedPointMatrix.GetElement(2, 0);
 
-            Point pointToReturn = PointGenerator.MakePointWithMillimeters(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
+            Point pointToReturn = PointGenerator.MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
 
             if(originIsOnPassedAxis)
             {
@@ -482,9 +437,9 @@ namespace GeometryClassLibrary
             Angle angleBetweenLines = hypotenuse.AngleBetweenIntersectingLine(passedDestinationLine);
 
             //Make a line segment from the base point of destination line to the point on the destination line that is on a line perpendicular to this point
-            double distanceToBasePoint = this.DistanceTo(passedDestinationLine.BasePoint).Millimeters;
+            double distanceToBasePoint = this.DistanceTo(passedDestinationLine.BasePoint).Inches;
             double distanceToPerpPoint = distanceToBasePoint * (Math.Cos(angleBetweenLines.Radians)); //This is the distance to a point on the destination line that is perpendicular to this point
-            LineSegment lineSegmentOnDestinationLine = new LineSegment(passedDestinationLine.BasePoint, passedDestinationLine.DirectionVector, new Dimension(DimensionType.Millimeter, distanceToPerpPoint));
+            LineSegment lineSegmentOnDestinationLine = new LineSegment(passedDestinationLine.BasePoint, passedDestinationLine.Direction, new Dimension(DimensionType.Inch, distanceToPerpPoint));
 
             //Return a new line segment through this point and the end point of the line segment. It is perpendicular to the destination line
             return new LineSegment(this, lineSegmentOnDestinationLine.EndPoint);
@@ -497,13 +452,38 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsOnLine(Line passedLine)
         {
+            //if we are the base point than we are on the line!
+            if (passedLine.BasePoint == this)
+                return true;
+
             Vector vectorFromBasePointOfLineToPoint = new Vector(passedLine.BasePoint, this);
 
             //Take the cross product of the vector from the base point of the line to the point and the line's direction vector
-            Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.DirectionVector);
+            Vector crossProduct = vectorFromBasePointOfLineToPoint.Direction.UnitVector(DimensionType.Inch).CrossProduct(passedLine.Direction.UnitVector(DimensionType.Inch));
 
             //if the above cross product is the 0 vector, the point is on the given line
             return crossProduct.Magnitude == new Dimension();
+        }
+
+        /// <summary>
+        /// Returns true if the point is on the passed vector, false otherwise
+        /// </summary>
+        /// <param name="passedVector"></param>
+        /// <returns></returns>
+        public bool IsOnVector(Vector passedVector)
+        {
+            if (this.IsOnLine(passedVector))
+            {
+                Vector vectorFromStartPointToPoint = new Vector(passedVector.BasePoint, this);
+                Vector vectorFromEndPointToPoint = new Vector(passedVector.EndPoint, this);
+
+                // if the vectors point in opposite directions (towards the middle) or the point is an endpoint, it's true
+                return vectorFromStartPointToPoint.PointInOppositeDirections(vectorFromEndPointToPoint) ||
+                    this.Equals(passedVector.BasePoint) ||
+                    this.Equals(passedVector.EndPoint);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -513,18 +493,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
-            if (this.IsOnLine(passedLineSegment))
-            {
-                Vector vectorFromStartPointToPoint = new Vector(passedLineSegment.BasePoint, this);
-                Vector vectorFromEndPointToPoint = new Vector(passedLineSegment.EndPoint, this);
-
-                // if the vectors point in opposite directions (towards the middle) or the point is an endpoint, it's true
-                return vectorFromStartPointToPoint.PointInOppositeDirections(vectorFromEndPointToPoint) ||
-                    this.Equals(passedLineSegment.BasePoint) ||
-                    this.Equals(passedLineSegment.EndPoint);
-            }
-
-            return false;
+            return IsOnVector(passedLineSegment);
         }
 
         public Vector VectorFromOriginToPoint()
@@ -565,9 +534,6 @@ namespace GeometryClassLibrary
                 pointToReturn = pointToReturn.Translate(passedShift.Displacement);
             }
             return pointToReturn;
-        }
-
-
-       
+        }    
     }
 }

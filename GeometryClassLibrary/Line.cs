@@ -14,12 +14,12 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Line
     {
+        #region Properties
 
         public readonly static Line XAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0));
         public readonly static Line YAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
         public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
 
-        #region Properties
         public Point BasePoint
         {
             get { return _basePoint; }
@@ -59,25 +59,12 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates a line using with a direction in the same direction as the given vector
+        /// Default empty constructor
         /// </summary>
-        /// <param name="basePoint"></param>
-        /// <param name="direction"></param>
-        public Line(Point passedBasePoint, Vector passedDirectionVector)
+        public Line()
         {
-            _basePoint = passedBasePoint;
-            Direction = new Direction(passedDirectionVector);
-        }
-
-        /// <summary>
-        /// Creates a line with the given direction and point
-        /// </summary>
-        /// <param name="basePoint"></param>
-        /// <param name="direction"></param>
-        public Line(Point passedBasePoint, Direction passedDirection)
-        {
-            _basePoint = passedBasePoint;
-            Direction = passedDirection;
+            _basePoint = new Point();
+            _direction = new Direction();
         }
 
         /// <summary>
@@ -90,6 +77,12 @@ namespace GeometryClassLibrary
             _direction = new Direction(passedDirectionReferencePoint);
         }
 
+        public Line(LineSegment lineSegment1)
+            : this(lineSegment1.BasePoint, lineSegment1.Direction) { }
+
+        public Line(Vector passedVector)
+            : this(passedVector.BasePoint, passedVector.Direction) { }
+
         /// <summary>
         /// Constructs a line through any 2 dimension points
         /// </summary>
@@ -97,16 +90,19 @@ namespace GeometryClassLibrary
         /// <param name="passedOtherPoint"></param>
         public Line(Point passedBasePoint, Point passedOtherPoint)
         {
-            //A "zero" line is allowed so that it is possible to construct a zero vector  
-            _basePoint = passedBasePoint;
-            _direction = new Direction(new Vector(passedBasePoint, passedOtherPoint));
+            _basePoint = new Point(passedBasePoint);
+            _direction = new Direction(passedBasePoint, passedOtherPoint);
+        }
 
-            //else
-            //{
-            //    var exception = new DivideByZeroException("The two points that were used to define a line are identical");
-            //    throw exception;
-            //    ErrorHandlerLibrary.ExceptionHandler.ProcessException(exception);
-            //}
+        /// <summary>
+        /// Creates a line with the given direction and point
+        /// </summary>
+        /// <param name="basePoint"></param>
+        /// <param name="direction"></param>
+        public Line(Point passedBasePoint, Direction passedDirection)
+        {
+            _basePoint = new Point(passedBasePoint);
+            Direction = new Direction(passedDirection);
         }
 
         /// <summary>
@@ -120,14 +116,76 @@ namespace GeometryClassLibrary
             this.Direction = new Direction(passedParallelLine.Direction);
         }
 
-        public Line(LineSegment lineSegment1) : this(lineSegment1.BasePoint, lineSegment1.EndPoint) { }
+        /// <summary>
+        /// Creates a line using with a direction in the same direction as the given vector
+        /// </summary>
+        /// <param name="basePoint"></param>
+        /// <param name="direction"></param>
+        public Line(Point passedBasePoint, Vector passedDirectionVector)
+        {
+            _basePoint = new Point(passedBasePoint);
+            Direction = new Direction(passedDirectionVector.Direction);
+        }
+
+        /// <summary>
+        /// Default copy constructor
+        /// </summary>
+        /// <param name="toCopy"></param>
+        public Line(Line toCopy)
+            : this(toCopy.BasePoint, toCopy.Direction) { }
 
         #endregion
 
-        public Line()
+        #region Overloaded Operators
+
+        public static bool operator ==(Line line1, Line line2)
         {
-            throw new System.NotImplementedException();
+            if ((object)line1 == null)
+            {
+                if ((object)line2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return line1.Equals(line2);
         }
+
+        public static bool operator !=(Line line1, Line line2)
+        {
+            if ((object)line1 == null)
+            {
+                if ((object)line2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return !line1.Equals(line2);
+        }
+
+        public override bool Equals(object line)
+        {
+            if (line == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                Line passedLine = (Line)line;
+                bool linesAreParallel = IsParallelTo(passedLine);
+                bool basePointIsOnLine = BasePoint.IsOnLine(passedLine);
+
+                return (linesAreParallel && basePointIsOnLine);
+            }
+            catch (InvalidCastException)
+            {
+                return false;
+            }
+        }
+
+        #endregion
 
         #region Methods
 
@@ -161,22 +219,20 @@ namespace GeometryClassLibrary
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
                     break;
-
-
             }
             return new Plane(this, extrustionLine);
         }
-
 
         public Angle AngleBetweenIntersectingLine(Line passedIntersectingLine)
         {
             if (!DoesIntersect(passedIntersectingLine))
                 throw new Exception("No intercept?");
 
-            Dimension dotProduct = DirectionVector * passedIntersectingLine.DirectionVector;
-            double productOfMagnitudes = DirectionVector.Magnitude.Millimeters * passedIntersectingLine.DirectionVector.Magnitude.Millimeters;
+            Dimension dotProduct = this.Direction.UnitVector(DimensionType.Inch) * passedIntersectingLine.Direction.UnitVector(DimensionType.Inch);
 
-            double angleBetweenLines = Math.Acos(dotProduct.Millimeters / productOfMagnitudes);
+            //since they are unit vectors the magnitudes multiplies together should still be one so the equation simplifies
+            // from: A*B = |A||B|cos(theta) to: A*B = cos(theta), which can be rearranged to how we use it here: theta = Acos(A*B)
+            double angleBetweenLines = Math.Acos(dotProduct.Inches);
 
             Angle returnAngle = new Angle(AngleType.Radian, angleBetweenLines);
 
@@ -188,7 +244,6 @@ namespace GeometryClassLibrary
             {
                 return returnAngle;
             }
-
         }
 
         /// <summary>
@@ -199,9 +254,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point GetPointOnLine(double multiplier)
         {
-            Dimension newX = _basePoint.X + _xComponentOfDirection * multiplier;
-            Dimension newY = _basePoint.Y + _yComponentOfDirection * multiplier;
-            Dimension newZ = _basePoint.Z + _zComponentOfDirection * multiplier;
+            Dimension newX = new Dimension(DimensionType.Inch, _basePoint.X.Inches + Direction.XComponentOfDirection * multiplier);
+            Dimension newY = new Dimension(DimensionType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
+            Dimension newZ = new Dimension(DimensionType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
 
             //Make sure point is on the line
 
@@ -215,8 +270,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            return passedLine.DirectionVector.PointInSameDirection(DirectionVector) ||
-                passedLine.DirectionVector.PointInOppositeDirections(DirectionVector);
+            return passedLine.Direction.UnitVector(DimensionType.Inch).PointInSameDirection(this.Direction.UnitVector(DimensionType.Inch)) ||
+                passedLine.Direction.UnitVector(DimensionType.Inch).PointInOppositeDirections(this.Direction.UnitVector(DimensionType.Inch));
         }
 
         /// <summary>
@@ -239,17 +294,15 @@ namespace GeometryClassLibrary
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
 
-            Vector directionVectorA = new Vector(this.BasePoint, this.DirectionVector);
-            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.DirectionVector);
-            //Vector directionVectorA = this.DirectionVector;
-            //Vector directionVectorB = passedLine.DirectionVector;
+            Vector directionVectorA = new Vector(this.BasePoint, this.Direction.UnitVector(DimensionType.Inch));
+            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.Direction.UnitVector(DimensionType.Inch));
             Vector basePointDiffVectorC = new Vector(this.BasePoint, passedLine.BasePoint);
 
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
-            double crossProductABMagnitudeSquared = Math.Pow(crossProductAB.Magnitude.Millimeters, 2);
-            double dotProductOfCrossProducts = (crossProductCB * crossProductAB).Millimeters;
+            double crossProductABMagnitudeSquared = Math.Pow(crossProductAB.Magnitude.Inches, 2);
+            double dotProductOfCrossProducts = (crossProductCB * crossProductAB).Inches;
 
             if (crossProductABMagnitudeSquared == 0)
             {
@@ -257,12 +310,11 @@ namespace GeometryClassLibrary
                 return null;
             }
             double solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
-            Dimension solutionVariableDimension = new Dimension(DimensionType.Millimeter, solutionVariable);
+            Dimension solutionVariableDimension = new Dimension(DimensionType.Inch, solutionVariable);
 
-            Point intersectionPoint = this.GetPointOnLine(solutionVariableDimension.Millimeters);
+            Point intersectionPoint = this.GetPointOnLine(solutionVariableDimension.Inches);
 
             return intersectionPoint;
-
         }
 
         public virtual bool DoesIntersect(Line passedLine)
@@ -290,7 +342,7 @@ namespace GeometryClassLibrary
         public Line Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
-            Vector newDirectionVector = this.DirectionVector.Rotate(passedAxisLine, passedRotationAngle);
+            Vector newDirectionVector = this.Direction.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
             return new Line(newBasePoint, newDirectionVector);
         }
 
@@ -327,38 +379,19 @@ namespace GeometryClassLibrary
             return determinateDimension == new Dimension();
         }
 
-        public Line Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        /// <summary>
+        /// Translates the line the given distance in the given direction
+        /// </summary>
+        /// <param name="passedDirectionVector"></param>
+        /// <param name="passedDisplacement"></param>
+        /// <returns></returns>
+        public Line Translate(Direction passedDirection, Dimension passedDisplacement)
         {
-            Point newBasePoint = this.BasePoint.Translate(passedDirectionVector, passedDisplacement);
-            Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirectionVector, passedDisplacement);
+            Point newBasePoint = this.BasePoint.Translate(passedDirection, passedDisplacement);
+            Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirection, passedDisplacement);
 
             return new Line(newBasePoint, newOtherPoint);
         }
-
-
-        #endregion
-
-        #region Overloaded Operators
-
-        public static bool operator ==(Line d1, Line d2)
-        {
-            return d1.Equals(d2);
-        }
-
-        public static bool operator !=(Line d1, Line d2)
-        {
-            return !d1.Equals(d2);
-        }
-
-        public override bool Equals(object obj)
-        {
-            Line passedLine = (Line)obj;
-            bool linesAreParallel = IsParallelTo(passedLine);
-            bool basePointIsOnLine = BasePoint.IsOnLine(passedLine);
-
-            return (linesAreParallel && basePointIsOnLine);
-        }
-
 
         #endregion
     }

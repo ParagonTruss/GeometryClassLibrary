@@ -112,10 +112,10 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(1, -5, -4)));
             Polygon testPolygon = new Polygon(lineSegments);
 
-            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithInches(-1, 5, 4));
-            Dimension testDisplacement = new Dimension(DimensionType.Millimeter, Math.Sqrt(42));
+            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            Dimension testDisplacement = new Dimension(DimensionType.Inch, Math.Sqrt(42));
 
-            Polygon actualPolygon = testPolygon.Translate(testDirectionVector, testDisplacement);
+            Polygon actualPolygon = testPolygon.Translate(testDirection, testDisplacement);
 
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));

@@ -124,32 +124,42 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
+        public void Point_Rotate3DTest()
+        {
+            Point originPoint = PointGenerator.MakePointWithInches(1, 0, 0);
+            Angle rotationAngle = new Angle(AngleType.Degree, 90);
+
+            Point newPoint = originPoint.Rotate3D(Line.ZAxis, rotationAngle);
+
+            newPoint.Should().Be(PointGenerator.MakePointWithInches(0, 1, 0));
+        }
+
+        [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin()
         {
             //Fails because the perpendicular line segment created for Rotate does not intersect the "destination line," so there is a NullReferenceException when it tries to do something with the null intersection point
                 //I think it almost intersects, but it does not because of rounding error.
 
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
-            Line axis = new Line(PointGenerator.MakePointWithMillimeters(2, -2, -3), new Vector(PointGenerator.MakePointWithMillimeters(-1, -5, -3)));
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
+            Line axis = new Line(PointGenerator.MakePointWithInches(2, -2, -3), new Vector(PointGenerator.MakePointWithInches(-1, -5, -3)));
 
             Angle rotationAngle = new Angle(AngleType.Degree, 322);
 
             Point newPoint = pointToRotate.Rotate3D(axis, rotationAngle);
 
-            //newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
-            (newPoint == PointGenerator.MakePointWithMillimeters(6.2806322893240427, -1.3811031899761135, 0.20829455351884096)).Should().BeTrue();
+            newPoint.Should().Be(PointGenerator.MakePointWithInches(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
         }
 
         [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin_PointIsOrigin()
         {
-            Point originPoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
-            Line axis = new Line(PointGenerator.MakePointWithMillimeters(1, -1, 0), PointGenerator.MakePointWithMillimeters(1, 1, 0));
+            Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Line axis = new Line(PointGenerator.MakePointWithInches(1, -1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             Point newPoint = originPoint.Rotate3D(axis, rotationAngle);
 
-            newPoint.Should().Be(PointGenerator.MakePointWithMillimeters(1.8480480961564261, 0, -0.52991926423320479));
+            newPoint.Should().Be(PointGenerator.MakePointWithInches(1.8480480961564261, 0, -0.52991926423320479));
         }
 
         [Test()]
@@ -162,7 +172,7 @@ namespace GeometryClassLibraryTests
             Point testPointT3 = PointGenerator.MakePointWithInches(5, 0);
             Point testPointF1 = PointGenerator.MakePointWithInches(6, 0);
             Point testPointF2 = PointGenerator.MakePointWithInches(-7, 4);
-            Point testPointF3 = PointGenerator.MakePointWithMillimeters(12.7, 12.7,0);
+            Point testPointF3 = PointGenerator.MakePointWithInches(12.7, 12.7,0);
 
             bool resultT1 = testPointT1.IsOnLineSegment(testSegment);
             bool resultT2 = testPointT2.IsOnLineSegment(testSegment);
@@ -182,15 +192,14 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_MirrorAcrossTest_ZAxis()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(3, 1, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(3, 1, 2);
 
-            Line axisLine = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
+            Line axisLine = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
             Point actualResult = pointToRotate.MirrorAcross(axisLine);
 
-            Point expectedResult = PointGenerator.MakePointWithMillimeters(-3, -1, 2);
+            Point expectedResult = PointGenerator.MakePointWithInches(-3, -1, 2);
 
             actualResult.Should().Be(expectedResult);
-
         }
 
         [Test()]
@@ -205,22 +214,22 @@ namespace GeometryClassLibraryTests
 
             LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(1, .5, 0));
 
-            (actualResult == expectedResult).Should().BeTrue();
+            actualResult.Should().Be(expectedResult);
         }
 
         [Test()]
         public void Point_MakePerpendicularLineSegmentTest2()
         {
-            Point destinationLineBasePoint = PointGenerator.MakePointWithMillimeters(2,3,4);
-            Line destinationLine = new Line(destinationLineBasePoint, new Vector(PointGenerator.MakePointWithMillimeters(6,4,-6)));
+            Point destinationLineBasePoint = PointGenerator.MakePointWithInches(2,3,4);
+            Line destinationLine = new Line(destinationLineBasePoint, new Vector(PointGenerator.MakePointWithInches(6,4,-6)));
 
-            Point testPoint = PointGenerator.MakePointWithMillimeters(0,0,0);
+            Point testPoint = PointGenerator.MakePointWithInches(0,0,0);
 
             LineSegment actualResult = testPoint.MakePerpendicularLineSegment(destinationLine);
 
-            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithMillimeters(2, 3, 4));
+            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(2, 3, 4));
 
-            (actualResult == expectedResult).Should().BeTrue();
+            actualResult.Should().Be(expectedResult);
         }
 
 
@@ -228,40 +237,38 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_TranslateTest()
         {
-            Point pointToTranslate = PointGenerator.MakePointWithMillimeters(1, 2, 3);
-            Vector directionToTranslate = new Vector(PointGenerator.MakePointWithMillimeters(-1, 5, 4));
-            Dimension displacementOfTranslation = new Dimension(DimensionType.Millimeter, 12.9614814);
+            Point pointToTranslate = PointGenerator.MakePointWithInches(1, 2, 3);
+            Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 12.9614814);
 
             Point actualResult = pointToTranslate.Translate(directionToTranslate, displacementOfTranslation);
 
-            Point expectedResult = PointGenerator.MakePointWithMillimeters(-1, 12, 11);
+            Point expectedResult = PointGenerator.MakePointWithInches(-1, 12, 11);
 
-            (actualResult == expectedResult).Should().BeTrue();
-
+            actualResult.Should().Be(expectedResult);
         }
 
         [Test()]
         public void Point_TranslateTest_OneComponent()
         {
-            Point pointToTranslate = PointGenerator.MakePointWithMillimeters(1,1,1);
-            Vector directionToTranslate = new Vector(PointGenerator.MakePointWithMillimeters(1, 0, 0));
-            Dimension displacementOfTranslation = new Dimension(DimensionType.Millimeter, 4);
+            Point pointToTranslate = PointGenerator.MakePointWithInches(1,1,1);
+            Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(1, 0, 0));
+            Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 4);
 
             Point actualResult = pointToTranslate.Translate(directionToTranslate, displacementOfTranslation);
 
-            Point expectedResult = PointGenerator.MakePointWithMillimeters(5,1,1);
+            Point expectedResult = PointGenerator.MakePointWithInches(5,1,1);
 
-            (actualResult == expectedResult).Should().BeTrue();
-
+            actualResult.Should().Be(expectedResult);
         }
 
         [Test()]
         public void Point_ShiftTest()
         {            
-            Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);
+            Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
             Vector displacementVector = new Vector();
-                //new Vector(PointGenerator.MakePointWithMillimeters(1, -1, 1));
+                //new Vector(PointGenerator.MakePointWithInches(1, -1, 1));
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
@@ -270,16 +277,16 @@ namespace GeometryClassLibraryTests
 
             Point actual1 = point1.Shift(testShift);
 
-            //Point expected1 = PointGenerator.MakePointWithMillimeters(1 + 0, -1 + -0.5298, 1 + 1.3112);
-            Point expected1 = PointGenerator.MakePointWithMillimeters(0, -0.5298, 1.3112);
-            
-            (actual1 == expected1).Should().BeTrue();
+            //Point expected1 = PointGenerator.MakePointWithInches(1 + 0, -1 + -0.5298, 1 + 1.3112);
+            Point expected1 = PointGenerator.MakePointWithInches(0, -0.5298, 1.3112);
+
+            actual1.Should().Be(expected1);
         }
 
         [Test()]
         public void Point_ShiftTest_RotateOnly()
         {
-            Point point1 = PointGenerator.MakePointWithMillimeters(1, 1, 0);
+            Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
             Vector displacementVector = new Vector();
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
@@ -290,9 +297,9 @@ namespace GeometryClassLibraryTests
 
             Point actual1 = point1.Shift(testShift);
 
-            Point expected1 = PointGenerator.MakePointWithMillimeters(0, -0.52977372496316655, 1.3112359819417141);
+            Point expected1 = PointGenerator.MakePointWithInches(0, -0.52977372496316655, 1.3112359819417141);
 
-            (actual1 == expected1).Should().BeTrue();
+            actual1.Should().Be(expected1);
         }
 
     }

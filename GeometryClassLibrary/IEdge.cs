@@ -7,7 +7,7 @@ namespace GeometryClassLibrary
 {
     public interface IEdge
     {
-        Vector DirectionVector { get; set; }
+        Direction Direction { get; set; }
         Point BasePoint { get; set; }
         IEdge Shift(Shift passedShift);
     }

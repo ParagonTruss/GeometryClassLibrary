@@ -152,10 +152,10 @@ namespace ClearspanTypeLibrary.Tests
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
-            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithInches(-1, 5, 4));
+            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
             Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
 
-            LineSegment actualSegment1 = segment1.Translate(testDirectionVector, testDisplacement);
+            LineSegment actualSegment1 = segment1.Translate(testDirection, testDisplacement);
 
             LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(-1, 12, 11), PointGenerator.MakePointWithInches(-5, 8, 8));
 
@@ -178,25 +178,18 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(3.6, 1.8));
 
             //make sure the result is actually along the right line
-            Vector resultVector = result.DirectionVector.ConvertToUnitVector();
-            Vector projectOntoVector = projectOnto.DirectionVector.ConvertToUnitVector();
-            resultVector.EndPoint.X.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.X.Millimeters, 0.00001);
-            resultVector.EndPoint.Y.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.Y.Millimeters, 0.00001);
-            resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(projectOntoVector.EndPoint.Z.Millimeters, 0.00001);
+            Vector resultVector = result.Direction.UnitVector(DimensionType.Inch);
+            Vector projectOntoVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            resultVector.Should().Be(projectOntoVector);
+
 
             //make sure the expected and result are along the same line
-            Vector expectedVector = projectOnto.DirectionVector.ConvertToUnitVector();
-            resultVector.EndPoint.X.Millimeters.Should().BeApproximately(expectedVector.EndPoint.X.Millimeters, 0.00001);
-            resultVector.EndPoint.Y.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Y.Millimeters, 0.00001);
-            resultVector.EndPoint.Z.Millimeters.Should().BeApproximately(expectedVector.EndPoint.Z.Millimeters, 0.00001);
+            Vector expectedVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            resultVector.Should().Be(expectedVector);
 
             //now check the actual projected line
-            result.BasePoint.X.Millimeters.Should().BeApproximately(expected.BasePoint.X.Millimeters, 0.0001);
-            result.BasePoint.Y.Millimeters.Should().BeApproximately(expected.BasePoint.Y.Millimeters, 0.0001);
-            result.BasePoint.Z.Millimeters.Should().BeApproximately(expected.BasePoint.Z.Millimeters, 0.0001);
-            result.EndPoint.X.Millimeters.Should().BeApproximately(expected.EndPoint.X.Millimeters, 0.0001);
-            result.EndPoint.Y.Millimeters.Should().BeApproximately(expected.EndPoint.Y.Millimeters, 0.0001);
-            result.EndPoint.Z.Millimeters.Should().BeApproximately(expected.EndPoint.Z.Millimeters, 0.0001);
+            result.BasePoint.Should().Be(expected.BasePoint);
+            result.EndPoint.Should().Be(expected.EndPoint);
         }
 
         [Test()]
@@ -209,12 +202,12 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(5 - 0.689655, 1 + 0.517242, 2 - 0.344828), PointGenerator.MakePointWithInches(5 - 3.448276, 1 + 2.586207, 2 - 1.724138));
 
             //make sure the result is actually along the right line
-            Vector resultVector = result.DirectionVector.ConvertToUnitVector();
-            Vector projectOntoVector = projectOnto.DirectionVector.ConvertToUnitVector();
+            Vector resultVector = result.Direction.UnitVector(DimensionType.Inch);
+            Vector projectOntoVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
             resultVector.EndPoint.Should().Be(projectOntoVector.EndPoint);
 
             //make sure the expected and result are along the same line
-            Vector expectedVector = projectOnto.DirectionVector.ConvertToUnitVector();
+            Vector expectedVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
             resultVector.EndPoint.Should().Be(expectedVector.EndPoint);
 
             result.BasePoint.Should().Be(expected.BasePoint);
@@ -272,9 +265,10 @@ namespace ClearspanTypeLibrary.Tests
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(0, 2, 1));
             LineSegment result = testSegment.Reverse();
-            (result.BasePoint == testSegment.EndPoint).Should().BeTrue();
-            (result.Length == testSegment.Length).Should().BeTrue();
-            (result.DirectionVector == new Vector(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(2, 0, 4))).Should().BeTrue();
+            result.BasePoint.Should().Be(testSegment.EndPoint);
+            result.Length.Should().Be(testSegment.Length);
+            Direction expectedDirection = new Direction(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(2, 0, 4));
+            result.Direction.Should().Be(expectedDirection);
         }
     }
 }

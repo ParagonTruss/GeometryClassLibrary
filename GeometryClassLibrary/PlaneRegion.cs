@@ -41,10 +41,10 @@ namespace GeometryClassLibrary
             {
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedBoundaries[0].DirectionVector;
+                Vector vector1 = passedBoundaries[0].Direction.UnitVector(DimensionType.Inch);
                 for (int i = 1; i < passedBoundaries.Count; i++)
                 {
-                    base.NormalVector = vector1.CrossProduct(passedBoundaries[i].DirectionVector);
+                    base.NormalVector = vector1.CrossProduct(passedBoundaries[i].Direction.UnitVector(DimensionType.Inch));
                     if (!base.NormalVector.Equals(new Vector()))
                         i = passedBoundaries.Count;
                 }

@@ -757,11 +757,11 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
          
-            Vector rotationUnitVector = passedRotationAxisLine.DirectionVector.ConvertToUnitVector();
+            Direction rotationUnitVector = passedRotationAxisLine.Direction;
 
-            double unitX = rotationUnitVector.XComponentOfDirection.Millimeters; //Projection onto x-axis?
-            double unitY = rotationUnitVector.YComponentOfDirection.Millimeters;
-            double unitZ = rotationUnitVector.ZComponentOfDirection.Millimeters;
+            double unitX = rotationUnitVector.XComponentOfDirection; //Projection onto x-axis?
+            double unitY = rotationUnitVector.YComponentOfDirection;
+            double unitZ = rotationUnitVector.ZComponentOfDirection;
             double theta = passedRotationAngle.Radians;
 
             double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));

@@ -14,7 +14,7 @@ namespace GeometryClassLibrary
             //make sure the linesegments are equidistant and all angles equal
             if (AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(passedLineSegments))
             {
-                this._planeBoundaries = passedLineSegments;
+                this.PlaneBoundaries = passedLineSegments;
             }
         }
 
