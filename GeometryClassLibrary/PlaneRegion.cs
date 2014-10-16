@@ -155,7 +155,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public virtual Solid Extrude(Dimension dimension)
+        public virtual Polyhedron Extrude(Dimension dimension)
         {
             throw new NotImplementedException();
         }

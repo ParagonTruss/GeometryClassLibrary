@@ -52,7 +52,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public override Solid Extrude(Dimension dimension)
+        public override Polyhedron Extrude(Dimension dimension)
         {
             throw new NotImplementedException();
         }
