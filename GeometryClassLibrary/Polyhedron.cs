@@ -56,7 +56,7 @@ namespace GeometryClassLibrary
                 this.Polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
             }
         }
-        
+
         #endregion
 
         #region Constructors
@@ -84,10 +84,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedSolid"></param>
         public Polyhedron(Polyhedron toCopy)
-            : this (toCopy.Polygons) { }
+            : this(toCopy.Polygons) { }
+
         #endregion
 
         #region Methods
+
         public override Point CenterPoint()
         {
             throw new NotImplementedException();
@@ -105,20 +107,80 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public List<Polyhedron> Slice(Plane passedPlane)
         {
-            List<Polygon> biggerPolyhedron = new List<Polygon>();
-            List<Polygon> smallerPolyhedron = new List<Polygon>();
+            //make a list to keep track of all the points we sliced at
+            List<Point> slicingPlanePoints = new List<Point>();
+
+            //the slice method will return 1 or more polyhedrons
+            List<Polygon> insidePolyhedron = new List<Polygon>();
+            List<Polygon> outsidePolyhedron = new List<Polygon>();
 
             foreach (var polygon in this.Polygons)
             {
                 List<Polygon> slicedPolygons = polygon.Slice(passedPlane);
-                biggerPolyhedron.Add(slicedPolygons[0]);
-                smallerPolyhedron.Add(slicedPolygons[1]);
+
+                if (insidePolyhedron.Count == 0)
+                {
+                    //make the larger one the basis for our "inside" polygon
+                    insidePolyhedron.Add(slicedPolygons[0]);
+
+                    //and if it was split then add the other part to the "outside"
+                    if (slicedPolygons.Count > 1)
+                    {
+                        outsidePolyhedron.Add(slicedPolygons[1]);
+
+                        //add a point to our slicing line points
+                        //Line slicingLine = polygon.
+                        //foreach (LineSegment border in polygon.PlaneBoundaries)
+                        //{
+                            //border.Intersection(passedPlane);
+                        //}
+                    }
+                }
+                else
+                {
+                    bool hadInsidePart = false;
+
+                    foreach (Polygon inside in insidePolyhedron)
+                    {
+                        if (inside.DoesShareSide(slicedPolygons[0]))
+                        {
+                            insidePolyhedron.Add(slicedPolygons[0]);
+                            hadInsidePart = true;
+
+                            if (slicedPolygons.Count > 1)
+                            {
+                                outsidePolyhedron.Add(slicedPolygons[1]);
+
+                                //add a point to our slicing line points
+                            }
+                        }
+                        else if (slicedPolygons.Count > 1 && inside.DoesShareSide(slicedPolygons[1]))
+                        {
+                            outsidePolyhedron.Add(slicedPolygons[0]);
+                            insidePolyhedron.Add(slicedPolygons[1]);
+                            hadInsidePart = true;
+
+                            //add a point to our slicing line points
+
+                        }
+                    }
+
+                    if (!hadInsidePart)
+                    {
+                        outsidePolyhedron.Add(slicedPolygons[0]);
+                    }
+                }
             }
 
-            Polyhedron bigger = new Polyhedron(biggerPolyhedron);
-            Polyhedron smaller = new Polyhedron(smallerPolyhedron);
+            //now make the joining sides
+            //create a new plane based on the intersections
+            Polygon slicingPlanePolygon = new Polygon();
 
-            return new List<Polyhedron> { bigger, smaller };
+
+            List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(insidePolyhedron), new Polyhedron(outsidePolyhedron) };
+            //toReturn.Sort();
+            //toReturn.Reverse();
+            return toReturn;
         }
 
         /// <summary>
@@ -129,36 +191,75 @@ namespace GeometryClassLibrary
         public List<Polyhedron> Slice(List<Plane> passedPlanes)
         {
             //This list will be modified every time a slice happens. 
-            List<Polyhedron> returnPolyhedrons = new List<Polyhedron>{this};
+            List<Polyhedron> returnPolyhedrons = new List<Polyhedron> { this };
 
             //Do this for every passed slice
             for (int i = 0; i < passedPlanes.Count; i++)
-			{
+            {
                 //the slice method will return 1 or more polyhedrons
-                List<Polygon> biggerPolyhedron = new List<Polygon>();
-                List<Polygon> smallerPolyhedron = new List<Polygon>();
+                List<Polygon> insidePolyhedron = new List<Polygon>();
+                List<Polygon> outsidePolyhedron = new List<Polygon>();
 
-                for (int j = 0; j < returnPolyhedrons.Count; i++)
+                //slice them and put them together
+                for (int j = 0; j < returnPolyhedrons.Count; j++)
                 {
-		                foreach (var polygon in returnPolyhedrons[0].Polygons)
+                    foreach (var polygon in returnPolyhedrons[0].Polygons)
+                    {
+                        List<Polygon> slicedPolygons = polygon.Slice(passedPlanes[i]);
+
+                        if (insidePolyhedron.Count == 0)
                         {
-                            List<Polygon> slicedPolygons = polygon.Slice(passedPlanes[i]);
-                            biggerPolyhedron.Add(slicedPolygons[0]);
+                            //make the larger one the basis for our "inside" polygon
+                            insidePolyhedron.Add(slicedPolygons[0]);
+
+                            //and if it was split then add the other part to the "outside"
                             if (slicedPolygons.Count > 1)
                             {
-                                smallerPolyhedron.Add(slicedPolygons[1]);
+                                outsidePolyhedron.Add(slicedPolygons[1]);
                             }
                         }
+                        else
+                        {
+                            bool hadInsidePart = false;
 
-                    returnPolyhedrons.Add(new Polyhedron(biggerPolyhedron));
-                    if (smallerPolyhedron != null )
-	                {
-		                     returnPolyhedrons.Add(new Polyhedron(smallerPolyhedron));
-	                }
+                            foreach(Polygon inside in insidePolyhedron)
+                            {
+                                if (inside.DoesShareSide(slicedPolygons[0]))
+                                {
+                                    insidePolyhedron.Add(slicedPolygons[0]);
+                                    hadInsidePart = true;
+
+                                    if (slicedPolygons.Count > 1)
+                                    {
+                                        outsidePolyhedron.Add(slicedPolygons[1]);
+                                    }
+                                }
+                                else if (slicedPolygons.Count > 1 && inside.DoesShareSide(slicedPolygons[1]))
+                                {
+                                    outsidePolyhedron.Add(slicedPolygons[0]);
+                                    insidePolyhedron.Add(slicedPolygons[1]);
+                                    hadInsidePart = true;
+                                }
+                            }
+
+                            if (!hadInsidePart)
+                            {
+                                outsidePolyhedron.Add(slicedPolygons[0]);
+                            }
+                        }
+                    }
+
+                    returnPolyhedrons.Add(new Polyhedron(insidePolyhedron));
+                    if (outsidePolyhedron != null)
+                    {
+                        returnPolyhedrons.Add(new Polyhedron(outsidePolyhedron));
+                    }
 
                     returnPolyhedrons.Remove(returnPolyhedrons[0]);
-	            }
-			}
+                }
+
+                //add the slicing plane one
+            }
 
             return returnPolyhedrons;
         }

@@ -14,6 +14,7 @@ namespace GeometryClassLibrary
     public class Polygon : PlaneRegion, IComparable<Polygon>
     {
         #region Fields and Properties
+
         public List<LineSegment> PlaneBoundaries 
         {
             get { return this.Edges as List<LineSegment>; }
@@ -31,6 +32,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Zero constructor
         /// </summary>
@@ -194,11 +196,6 @@ namespace GeometryClassLibrary
         {
             return new Polygon(this.PlaneBoundaries.Shift(passedShift));
         }
-
-        /*public override PlaneRegion Shift(Shift passedShift)
-        {
-            return ShiftAsPolygon(passedShift);
-        }*/
 
         /// <summary>
         /// Rotates the plane region about the given axis by the specified angle. Point values are rounded to 6 decimal places to make sure the boundaries still meet after rotating.
@@ -1141,6 +1138,26 @@ namespace GeometryClassLibrary
                 if (passedPoint.IsOnLineSegment(line))
                 {
                     return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns whether or not the two Polygons have a common side
+        /// </summary>
+        /// <param name="otherPolygon"></param>
+        /// <returns></returns>
+        public bool DoesShareSide(Polygon otherPolygon)
+        {
+            foreach (LineSegment segment in this.PlaneBoundaries)
+            {
+                foreach (LineSegment segmentOther in otherPolygon.PlaneBoundaries)
+                {
+                    if (segment == segmentOther)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

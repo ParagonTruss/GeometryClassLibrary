@@ -277,5 +277,64 @@ namespace ClearspanTypeLibrary.Tests
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
+
+        [Test()]
+        public void Polyhedron_SimpleSlice()
+        {
+            //currently working on this functionality
+            Assert.Fail();
+
+            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+
+            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            planes.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            planes.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), Line.XAxis);
+
+            List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
+
+            //make our results
+            Point slicedBottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point slicedTopLeft = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point slicedBottomRight = PointGenerator.MakePointWithInches(1, 0, 0);
+            Point slicedTopRight = PointGenerator.MakePointWithInches(1, 12, 0);
+
+            List<Polygon> ExpectedPlanes1 = new List<Polygon>();
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomLeft, slicedTopLeft, slicedTopRight, slicedBottomRight }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { backtopleftpoint, backtoprightpoint, slicedTopRight, slicedTopLeft }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backbottomrightpoint, slicedBottomRight, slicedBottomLeft }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, slicedTopLeft, slicedBottomLeft }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbottomrightpoint, backtoprightpoint, slicedTopRight, slicedBottomRight }));
+            Polyhedron ExpectedPolyhedron1 = new Polyhedron(ExpectedPlanes1);
+
+            List<Polygon> ExpectedPlanes2 = new List<Polygon>();
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { slicedBottomLeft, slicedTopLeft, slicedTopRight, slicedBottomRight }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, slicedTopRight, slicedTopLeft }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, slicedBottomRight, slicedBottomLeft }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, slicedTopLeft, slicedBottomLeft }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, slicedTopRight, slicedBottomRight }));
+            Polyhedron ExpectedPolyhedron2 = new Polyhedron(ExpectedPlanes2);
+
+            //now test to see if we got what we expect
+            results.Count.Should().Be(2);
+            results.Contains(ExpectedPolyhedron1).Should().BeTrue();
+            results.Contains(ExpectedPolyhedron2).Should().BeTrue();
+        }
     }
 }

@@ -316,6 +316,20 @@ namespace ClearspanTypeLibrary.Tests
         }
 
 
+        [Test()]
+        public void Line_MakeIntoPlanePerpindicularToXYPlane()
+        {
+            Line test1 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, 0));
+            Line test2 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1),  PointGenerator.MakePointWithMillimeters(-1, 5, 2));
+
+            Plane result1 = test1.MakeIntoPlanePerpindicularToXYPlane();
+            Plane result2 = test2.MakeIntoPlanePerpindicularToXYPlane();
+
+            Plane expectedPlane = new Plane(PointGenerator.MakePointWithMillimeters(2, 1, 6), PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, -23));
+
+            result1.Should().Be(result2);
+            result1.Should().Be(expectedPlane);
+        }
 
     }
 }
