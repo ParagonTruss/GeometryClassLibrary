@@ -281,9 +281,6 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_SimpleSlice()
         {
-            //currently working on this functionality
-            Assert.Fail();
-
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
@@ -303,32 +300,32 @@ namespace ClearspanTypeLibrary.Tests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), Line.XAxis);
+            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), new Vector(PointGenerator.MakePointWithInches(1,0,0)));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
             //make our results
-            Point slicedBottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point slicedTopLeft = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point slicedBottomRight = PointGenerator.MakePointWithInches(1, 0, 0);
-            Point slicedTopRight = PointGenerator.MakePointWithInches(1, 12, 0);
+            Point slicedBottom = PointGenerator.MakePointWithInches(1, 0, 0);
+            Point slicedTop = PointGenerator.MakePointWithInches(1, 12, 0);
+            Point slicedBottomBack = PointGenerator.MakePointWithInches(1, 0, 2);
+            Point slicedTopBack = PointGenerator.MakePointWithInches(1, 12, 2);
 
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomLeft, slicedTopLeft, slicedTopRight, slicedBottomRight }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { backtopleftpoint, backtoprightpoint, slicedTopRight, slicedTopLeft }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backbottomrightpoint, slicedBottomRight, slicedBottomLeft }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, slicedTopLeft, slicedBottomLeft }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { backbottomrightpoint, backtoprightpoint, slicedTopRight, slicedBottomRight }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, topRightPoint, bottomRightPoint }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomBack, slicedTopBack, backtoprightpoint, backbottomrightpoint }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedTop, topRightPoint, backtoprightpoint, slicedTopBack }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, bottomRightPoint, backbottomrightpoint, slicedBottomBack }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, slicedTopBack, slicedBottomBack }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron ExpectedPolyhedron1 = new Polyhedron(ExpectedPlanes1);
 
             List<Polygon> ExpectedPlanes2 = new List<Polygon>();
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { slicedBottomLeft, slicedTopLeft, slicedTopRight, slicedBottomRight }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, slicedTopRight, slicedTopLeft }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, slicedBottomRight, slicedBottomLeft }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, slicedTopLeft, slicedBottomLeft }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, slicedTopRight, slicedBottomRight }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, slicedTop, slicedBottom }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, slicedTopBack, slicedBottomBack }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { topLeftPoint, slicedTop, slicedTopBack, backtopleftpoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedBottom, slicedBottomBack, backbasepoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, slicedTopBack, slicedBottomBack }));
             Polyhedron ExpectedPolyhedron2 = new Polyhedron(ExpectedPlanes2);
 
             //now test to see if we got what we expect

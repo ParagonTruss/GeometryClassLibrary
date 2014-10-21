@@ -30,6 +30,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Zero constructor
         /// </summary>
@@ -67,7 +68,7 @@ namespace GeometryClassLibrary
         public Plane(Point passedBasePoint, Vector passedNormalVector)
         {
             this.BasePoint = passedBasePoint;
-            this.NormalVector = passedNormalVector;
+            this.NormalVector = new Vector(passedNormalVector);
         }
 
         /// <summary>
@@ -158,6 +159,7 @@ namespace GeometryClassLibrary
             this.BasePoint = passedPlane.BasePoint;
             this.NormalVector = passedPlane.NormalVector;
         }
+
         #endregion
 
         #region Overloaded Operators
@@ -361,7 +363,5 @@ namespace GeometryClassLibrary
         }
 
         #endregion
-
-
     }
 }

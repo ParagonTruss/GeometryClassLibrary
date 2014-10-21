@@ -59,6 +59,51 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Defines a plane region using the given lines and where they intersect as long as the line are all coplanar
+        /// NOTE:Will not work for concave polygons
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(List<Line> passedLines)
+            //: base(passedBoundaries)
+        {
+            this.PlaneBoundaries = new List<LineSegment>();
+
+            if (passedLines.AreAllCoplanar())
+            {
+                //find where they each intersect
+                foreach(Line line in passedLines)
+                {
+                    List<Point> intersections = new List<Point>();
+
+                    foreach (Line other in passedLines)
+                    {
+                        if (line != other)
+                        {
+                            Point intersection = line.Intersection(other);
+                            if (intersection != null && intersections.Contains(intersection))
+                            {
+                                intersections.Add(intersection);
+                            }
+                        }
+                    }
+                    if (intersections.Count == 2)
+                    {
+                        this.PlaneBoundaries.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("lines are invalid");
+                    }
+                }
+            }
+
+            if (!this.PlaneBoundaries.DoFormClosedRegion())
+            {
+                throw new ArgumentException("generated line segments from lines are invalid");
+            }
+        }
+
+        /// <summary>
         /// creates a new Polygon that is a copy of the inputted Polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
@@ -565,7 +610,7 @@ namespace GeometryClassLibrary
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
         /// </summary>
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public bool isValidPolygon(int passedNumberOfDecimalsToCheck)
+        public bool isValidPolygon()
         {
             bool isClosed = PlaneBoundaries.DoFormClosedRegion();
             bool areCoplanar = PlaneBoundaries.AreAllCoplanar();
@@ -682,7 +727,7 @@ namespace GeometryClassLibrary
                     //to zero (this would mean the Polygons are only touching not overlapping so we dont want to return it) 
                     //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
                     //right now and this should work for how the function is set up)
-                    if (overlapping.isValidPolygon(3) && overlapping.PlaneBoundaries.Count > 2)
+                    if (overlapping.isValidPolygon() && overlapping.PlaneBoundaries.Count > 2)
                         return overlapping;
                 }
             }
@@ -717,11 +762,15 @@ namespace GeometryClassLibrary
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first</returns>
         public List<Polygon> Slice(Plane slicingPlane)
         {
-            throw new NotImplementedException();
+            Line slicingLine = this.IntersectionLineWithPlane(slicingPlane);
 
-            //Line slicingLine = slicingPlane.(this);
+            //if it doesnt intersect then return the original
+            if (slicingLine == null)
+            {
+                return new List<Polygon>() { new Polygon(this) };
+            }
 
-            //return this.Slice(slicingLine, slicingPlane);
+            return this.Slice(slicingLine, slicingPlane);
         }
 
         /// <summary>
