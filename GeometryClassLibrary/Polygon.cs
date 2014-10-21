@@ -687,7 +687,7 @@ namespace GeometryClassLibrary
         public List<Polygon> Slice(Line slicingLine)
         {
             //find the normal direction of the plane we will use to slice with
-            Vector divisionPlaneNormal = this.NormalVector.Direction.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.Direction.UnitVector(DimensionType.Inch));
+            Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.UnitVector(DimensionType.Inch));
             
             //now make it with the normal we found anf the lines basepoint
             Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
@@ -1089,7 +1089,7 @@ namespace GeometryClassLibrary
                     //find the plane perpendicular to this plane that represents the side we are on
 
                     //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = NormalVector.Direction.UnitVector(DimensionType.Inch).CrossProduct(line.Direction.UnitVector(DimensionType.Inch));
+                    Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(line.UnitVector(DimensionType.Inch));
 
                     //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
                     Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);

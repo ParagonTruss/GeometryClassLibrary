@@ -392,7 +392,7 @@ namespace GeometryClassLibrary
 
             //now we can project the basepointvector onto the division line's unit vector to find the scalar length of the projection
             //  note: we use the unit vector because it has a length of 1 and will not affect the scaling of the projected vector
-            Dimension basePointProjectedLength = basePointVector * projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Dimension basePointProjectedLength = basePointVector * projectOnto.UnitVector(DimensionType.Inch);
 
             //now make the projected vector using divisionLine's basePoint (our reference), the divisionLines unitVector (since we
             //  are projecting onto it we know that it is the direction of the resulting vector), and then the length we
@@ -404,7 +404,7 @@ namespace GeometryClassLibrary
 
             //now we just need to do it all again to find the newEndpoint's projection
             Vector endPointVector = new Vector(projectOnto.BasePoint, this.EndPoint);
-            Dimension endPointProjectedLength = endPointVector * projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Dimension endPointProjectedLength = endPointVector * projectOnto.UnitVector(DimensionType.Inch);
             Vector endPointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, endPointProjectedLength);
             Point newEndPoint = endPointProjection.EndPoint;
 
@@ -606,6 +606,22 @@ namespace GeometryClassLibrary
             Point newEndPoint = this.EndPoint.Translate(passedDirection, passedDisplacement);
 
             return new Vector(newBasePoint, newEndPoint);
+        }
+
+        /// <summary>
+        /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
+        /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
+        /// Note: if it is a zero vecotor and you call the unitVector it will return a zero vector
+        /// </summary>
+        /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
+        /// <returns></returns>
+        public Vector UnitVector(DimensionType passedType)
+        {
+            if (Magnitude == new Dimension())
+            {
+                return new Vector();
+            }
+            else return Direction.UnitVector(passedType);
         }
 
         #endregion

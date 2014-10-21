@@ -83,6 +83,9 @@ namespace GeometryClassLibraryTests
             Vector expectedVector = new Vector(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
             Plane expectedResult = new Plane(expectedPoint, expectedVector);
 
+            bool test = expectedPoint == actualResult.BasePoint;
+            bool test2 = expectedVector == actualResult.NormalVector;
+
             (actualResult == expectedResult).Should().BeTrue();
         }
 
@@ -98,10 +101,10 @@ namespace GeometryClassLibraryTests
 
             Plane testPlane = new Plane(PointGenerator.MakePointWithMillimeters(0,0,0), testNormalVector);
 
-            testPlane.PointIsOnSameSideAs(testPoint, referencePoint).Should().BeTrue();
-            testPlane.PointIsOnSameSideAs(testPoint2, referencePoint).Should().BeFalse();
-            testPlane.PointIsOnSameSideAs(testPoint3, referencePoint).Should().BeFalse();
-            testPlane.PointIsOnSameSideAs(testPoint, referencePoint2).Should().BeFalse();
+            testPlane.PointIsOnSameSideAs(testPoint, referencePoint).Should().BeTrue(); //test one on the same side
+            testPlane.PointIsOnSameSideAs(testPoint2, referencePoint).Should().BeFalse(); //test one on the opposite side
+            testPlane.PointIsOnSameSideAs(testPoint3, referencePoint).Should().BeFalse(); //test one on the plane
+            testPlane.PointIsOnSameSideAs(testPoint, referencePoint2).Should().BeFalse(); //test a reference point on the plane
 
 
             Point testPointOffOrigin = PointGenerator.MakePointWithInches(5, 4, 0);

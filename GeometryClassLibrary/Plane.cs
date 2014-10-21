@@ -50,7 +50,7 @@ namespace GeometryClassLibrary
             if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
             {
                 this.BasePoint = passedPoint1;
-                this.NormalVector = line1To2.Direction.UnitVector(DimensionType.Inch).CrossProduct(line1To3.Direction.UnitVector(DimensionType.Inch));
+                this.NormalVector = line1To2.UnitVector(DimensionType.Inch).CrossProduct(line1To3.UnitVector(DimensionType.Inch));
             }
             else
             {
@@ -81,7 +81,7 @@ namespace GeometryClassLibrary
             {
                 this.BasePoint = passedPoint;
                 Vector vectorFromLineToPoint = new Vector(passedLine.BasePoint, passedPoint);
-                this.NormalVector = passedLine.Direction.UnitVector(DimensionType.Inch).CrossProduct(vectorFromLineToPoint.Direction.UnitVector(DimensionType.Inch));
+                this.NormalVector = passedLine.UnitVector(DimensionType.Inch).CrossProduct(vectorFromLineToPoint.UnitVector(DimensionType.Inch));
             }
             else
             {
@@ -107,13 +107,13 @@ namespace GeometryClassLibrary
                 {
                     this.BasePoint = passedLine1.BasePoint;
 
-                    Line lineBetween = new Line(passedLine1.BasePoint, passedLine2.BasePoint);
-                    this.NormalVector = passedLine1.Direction.UnitVector(DimensionType.Inch).CrossProduct(lineBetween.Direction.UnitVector(DimensionType.Inch));
+                    Vector lineBetween = new Vector(passedLine1.BasePoint, passedLine2.BasePoint);
+                    this.NormalVector = passedLine1.UnitVector(DimensionType.Inch).CrossProduct(lineBetween.UnitVector(DimensionType.Inch));
                 }
                 if (passedLine1.IsCoplanarWith(passedLine2))
                 {
                     this.BasePoint = passedLine1.BasePoint;
-                    this.NormalVector = passedLine1.Direction.UnitVector(DimensionType.Inch).CrossProduct(passedLine2.Direction.UnitVector(DimensionType.Inch));
+                    this.NormalVector = passedLine1.UnitVector(DimensionType.Inch).CrossProduct(passedLine2.UnitVector(DimensionType.Inch));
                 }
                 else
                 {
@@ -138,10 +138,10 @@ namespace GeometryClassLibrary
 
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedLineListCasted[0].Direction.UnitVector(DimensionType.Inch);
+                Vector vector1 = passedLineListCasted[0].UnitVector(DimensionType.Inch);
                 for (int i = 1; i < passedLineListCasted.Count; i++)
                 {
-                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].Direction.UnitVector(DimensionType.Inch));
+                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DimensionType.Inch));
                     if (!this.NormalVector.Equals(new Vector()))
                         i = passedLineListCasted.Count;
                 }
@@ -214,8 +214,8 @@ namespace GeometryClassLibrary
         {
             // weird calculus voodoo
             Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
-            Dimension dotProduct1 = planeVector.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
-            Dimension dotProduct2 = passedLine.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
+            Dimension dotProduct1 = planeVector.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
+            Dimension dotProduct2 = passedLine.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
 
             // if both of the vectors' dotproducts come out to 0, the line is on the plane
             return (dotProduct1.Equals(new Dimension()) && dotProduct2.Equals(new Dimension()));
@@ -228,8 +228,13 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
         public bool Contains(Point passedPoint)
         {
+            if (BasePoint == passedPoint)
+            {
+                return true;
+            }
+
             Vector planeVector = new Vector(passedPoint, BasePoint);
-            Dimension dotProduct = planeVector.Direction.UnitVector(DimensionType.Inch) * NormalVector.Direction.UnitVector(DimensionType.Inch);
+            Dimension dotProduct = planeVector.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
 
             return dotProduct == new Dimension();
         }

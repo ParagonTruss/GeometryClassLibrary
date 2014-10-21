@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
             set { _direction = value; }
         }
         private Direction _direction;
-
+        
         public double Slope
         {
             get { throw new NotImplementedException(); }
@@ -228,7 +228,7 @@ namespace GeometryClassLibrary
             if (!DoesIntersect(passedIntersectingLine))
                 throw new Exception("No intercept?");
 
-            Dimension dotProduct = this.Direction.UnitVector(DimensionType.Inch) * passedIntersectingLine.Direction.UnitVector(DimensionType.Inch);
+            Dimension dotProduct = this.UnitVector(DimensionType.Inch) * passedIntersectingLine.UnitVector(DimensionType.Inch);
 
             //since they are unit vectors the magnitudes multiplies together should still be one so the equation simplifies
             // from: A*B = |A||B|cos(theta) to: A*B = cos(theta), which can be rearranged to how we use it here: theta = Acos(A*B)
@@ -270,8 +270,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            return passedLine.Direction.UnitVector(DimensionType.Inch).PointInSameDirection(this.Direction.UnitVector(DimensionType.Inch)) ||
-                passedLine.Direction.UnitVector(DimensionType.Inch).PointInOppositeDirections(this.Direction.UnitVector(DimensionType.Inch));
+            return passedLine.UnitVector(DimensionType.Inch).PointInSameDirection(this.UnitVector(DimensionType.Inch)) ||
+                passedLine.UnitVector(DimensionType.Inch).PointInOppositeDirections(this.UnitVector(DimensionType.Inch));
         }
 
         /// <summary>
@@ -294,8 +294,8 @@ namespace GeometryClassLibrary
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
 
-            Vector directionVectorA = new Vector(this.BasePoint, this.Direction.UnitVector(DimensionType.Inch));
-            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.Direction.UnitVector(DimensionType.Inch));
+            Vector directionVectorA = new Vector(this.BasePoint, this.UnitVector(DimensionType.Inch));
+            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.UnitVector(DimensionType.Inch));
             Vector basePointDiffVectorC = new Vector(this.BasePoint, passedLine.BasePoint);
 
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
@@ -342,7 +342,7 @@ namespace GeometryClassLibrary
         public Line Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
-            Vector newDirectionVector = this.Direction.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
+            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
             return new Line(newBasePoint, newDirectionVector);
         }
 
@@ -391,6 +391,17 @@ namespace GeometryClassLibrary
             Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirection, passedDisplacement);
 
             return new Line(newBasePoint, newOtherPoint);
+        }
+
+        /// <summary>
+        /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
+        /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
+        /// </summary>
+        /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
+        /// <returns></returns>
+        public virtual Vector UnitVector(DimensionType passedType)
+        {
+            return Direction.UnitVector(passedType);
         }
 
         #endregion

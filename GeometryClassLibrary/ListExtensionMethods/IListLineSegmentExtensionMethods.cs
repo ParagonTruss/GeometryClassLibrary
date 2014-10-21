@@ -17,10 +17,10 @@ namespace GeometryClassLibrary
             {
                 foreach (var segment2 in passedLineSegments)
                 {
-                    if (segment1.IsCoplanarWith(segment2))
+                    if (segment1 != segment2 && segment1.IsCoplanarWith(segment2))
                     {
                         Plane possiblePlane = new Plane(segment1, segment2);
-                        if (segment1 != segment2 && segment1.DoesSharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
+                        if (segment1.DoesSharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
                         {
                             planesList.Add(possiblePlane);
                         }
@@ -54,29 +54,43 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool DoFormClosedRegion(this List<LineSegment> passedBoundaries)
         {
-            List<LineSegment> newList = new List<LineSegment>();
-            foreach (LineSegment segment in passedBoundaries)
-            {
-                newList.Add(
-                    new LineSegment(
-                        PointGenerator.MakePointWithMillimeters(
-                            Math.Round(segment.BasePoint.X.Millimeters, 3),
-                            Math.Round(segment.BasePoint.Y.Millimeters, 3),
-                            Math.Round(segment.BasePoint.Z.Millimeters, 3)
-                        ),
-                        PointGenerator.MakePointWithMillimeters(
-                            Math.Round(segment.EndPoint.X.Millimeters, 3),
-                            Math.Round(segment.EndPoint.Y.Millimeters, 3),
-                            Math.Round(segment.EndPoint.Z.Millimeters, 3)
-                        )
-                    )
-                );
-            }
-
-            return newList
+            //changed from this:
+            //the problem with this is that it uses hashcode, which is based on intrinsic value and thus does not get the rounding
+            /*return newList
                 .SelectMany(segment => new[] { segment.BasePoint, segment.EndPoint })
                 .GroupBy(point => new { point.X, point.Y, point.Z })
-                .All(group => group.Count() == 2);
+                .All(group => group.Count() == 2);*/
+
+            //find all the points weve used
+            List<Point> points = passedBoundaries.GetAllPoints();
+
+            //we should have the same number of points as line segments for it to even potentially form a closed region
+            if (points.Count != passedBoundaries.Count)
+            {
+                return false;
+            }
+
+            //find out how many times each point is used
+            int[] pointsUsedCount = new int[points.Count];
+
+            foreach (LineSegment segment in passedBoundaries)
+            {
+                pointsUsedCount[points.IndexOf(segment.BasePoint)] ++;
+                pointsUsedCount[points.IndexOf(segment.EndPoint)] ++;
+            }
+
+            //every point has to be used twice in order for it to be closed
+            //Note: cant be large than two either to preserve same functionality as before
+            foreach (int timesUsed in pointsUsedCount)
+            {
+                if (timesUsed != 2)
+                {
+                    return false;
+                }
+            }
+
+            //if everything passed than were good!
+            return true;
         }
 
         /// <summary>
@@ -272,7 +286,7 @@ namespace GeometryClassLibrary
                 {
                     //the area is really units squared so we need to return it that way - not as a dimension
                     //also we need to divide it in half (we were using triangles)
-                    return new Area(AreaType.MillimetersSquared, areaDimension.Millimeters / 2);
+                    return new Area(AreaType.InchesSquared, areaDimension.Inches / 2);
                 }
                 else
                 {

@@ -215,7 +215,7 @@ namespace GeometryClassLibraryTests
             //make sure the PlaneRegion contains the centroid
             Point center2 = testPolygon2.Centroid();
 
-            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(0.1, 0, 0))));
+            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(.5, 0, 0))));
 
             //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
             testPolygon.ContainsExclusive(insidePlane1).Should().BeTrue();
@@ -294,10 +294,10 @@ namespace GeometryClassLibraryTests
             Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
 
-            intersect1.Equals(intersect2).Should().BeTrue();
+            (intersect1 == intersect2).Should().BeTrue();
 
             //the intersection should simply be the smaller plane in this case
-            intersect1.Equals(testPolygon).Should().BeTrue();
+            (intersect1 == testPolygon).Should().BeTrue();
         }
 
         [Test()]
@@ -488,9 +488,10 @@ namespace GeometryClassLibraryTests
             bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(3.5, 1, 0)));
             Polygon testPolygon2 = new Polygon(bounds2);
 
-            Point result = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon2);
-            (result != null).Should().BeTrue();
-            testPolygon1.Touches(result).Should().BeFalse();
+            //check for generic overlapping
+            Point result12 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon2);
+            (result12 != null).Should().BeTrue();
+            testPolygon1.ContainsExclusive(result12).Should().BeTrue();
 
 
             List<LineSegment> bounds3 = new List<LineSegment>();
@@ -500,9 +501,10 @@ namespace GeometryClassLibraryTests
             bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
             Polygon testPolygon3 = new Polygon(bounds3);
 
-            Point result2 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon3);
-            (result2 != null).Should().BeTrue();
-            testPolygon1.Touches(result).Should().BeFalse();
+            //check when one contains the other
+            Point result13 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon3);
+            (result13 != null).Should().BeTrue();
+            testPolygon1.ContainsExclusive(result13).Should().BeTrue();
 
 
             List<LineSegment> bounds4 = new List<LineSegment>();
@@ -512,20 +514,23 @@ namespace GeometryClassLibraryTests
             bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
             Polygon testPolygon4 = new Polygon(bounds4);
 
-            Point result3 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon4);
-            (result3 != null).Should().BeFalse();
+            //check when they touch sides but dont overlap
+            Point result14 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon4);
+            (result14 != null).Should().BeFalse();
 
 
             List<LineSegment> bounds5 = new List<LineSegment>();
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(9, 0, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(-1, .5, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(9, 0, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, .5, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
-            Polygon testPolygon5 = new Polygon(bounds4);
+            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(9, 0, 0)));
+            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(-1, .5, 0)));
+            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(9, 0, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
+            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, .5, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
+            Polygon testPolygon5 = new Polygon(bounds5);
 
-            Point result4 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
-            (result4 != null).Should().BeTrue();
-            testPolygon1.Touches(result).Should().BeFalse();
+            //check for overlapping when both centroids arent contained
+            Point result15 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
+            (result15 != null).Should().BeTrue();
+            testPolygon1.ContainsExclusive(result15).Should().BeTrue();
+
 
             //one more becasue it was causing errors before in program implementing this
             List<LineSegment> bounds6 = new List<LineSegment>();
@@ -543,7 +548,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon7 = new Polygon(bounds7);
 
             Point result67 = testPolygon6.SharedPointNotOnThisPolygonsBoundary(testPolygon7);
-            (result67 == null).Should().BeTrue();
+            (result67 != null).Should().BeFalse();
         }
     }
 }

@@ -211,7 +211,9 @@ namespace GeometryClassLibrary
         {
             //check for null (wont throw a castexception)
             if (obj == null)
+            {
                 return false;
+            }
             
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
@@ -219,7 +221,7 @@ namespace GeometryClassLibrary
                 Point comparablePoint = (Point)obj;
 
                 // if the two points' x and y are equal, returns true
-                return (this._x.Equals(comparablePoint._x) && this._y.Equals(comparablePoint._y) && this._z.Equals(comparablePoint._z));
+                return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
             }
             //if they are not the same type than they are not equal
             catch (InvalidCastException)
@@ -459,7 +461,7 @@ namespace GeometryClassLibrary
             Vector vectorFromBasePointOfLineToPoint = new Vector(passedLine.BasePoint, this);
 
             //Take the cross product of the vector from the base point of the line to the point and the line's direction vector
-            Vector crossProduct = vectorFromBasePointOfLineToPoint.Direction.UnitVector(DimensionType.Inch).CrossProduct(passedLine.Direction.UnitVector(DimensionType.Inch));
+            Vector crossProduct = vectorFromBasePointOfLineToPoint.UnitVector(DimensionType.Inch).CrossProduct(passedLine.UnitVector(DimensionType.Inch));
 
             //if the above cross product is the 0 vector, the point is on the given line
             return crossProduct.Magnitude == new Dimension();
@@ -498,8 +500,8 @@ namespace GeometryClassLibrary
 
         public Vector VectorFromOriginToPoint()
         {
-            Point origin = PointGenerator.MakePointWithMillimeters(0,0,0);            
-            Point thisPoint = PointGenerator.MakePointWithMillimeters(X.Millimeters, Y.Millimeters, Z.Millimeters);
+            Point origin = PointGenerator.MakePointWithInches(0,0,0);
+            Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
 
             Vector returnVector = new Vector(origin, thisPoint);
 

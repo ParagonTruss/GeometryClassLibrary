@@ -178,13 +178,13 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(3.6, 1.8));
 
             //make sure the result is actually along the right line
-            Vector resultVector = result.Direction.UnitVector(DimensionType.Inch);
-            Vector projectOntoVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Vector resultVector = result.UnitVector(DimensionType.Inch);
+            Vector projectOntoVector = projectOnto.UnitVector(DimensionType.Inch);
             resultVector.Should().Be(projectOntoVector);
 
 
             //make sure the expected and result are along the same line
-            Vector expectedVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Vector expectedVector = projectOnto.UnitVector(DimensionType.Inch);
             resultVector.Should().Be(expectedVector);
 
             //now check the actual projected line
@@ -202,12 +202,12 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(5 - 0.689655, 1 + 0.517242, 2 - 0.344828), PointGenerator.MakePointWithInches(5 - 3.448276, 1 + 2.586207, 2 - 1.724138));
 
             //make sure the result is actually along the right line
-            Vector resultVector = result.Direction.UnitVector(DimensionType.Inch);
-            Vector projectOntoVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Vector resultVector = result.UnitVector(DimensionType.Inch);
+            Vector projectOntoVector = projectOnto.UnitVector(DimensionType.Inch);
             resultVector.EndPoint.Should().Be(projectOntoVector.EndPoint);
 
             //make sure the expected and result are along the same line
-            Vector expectedVector = projectOnto.Direction.UnitVector(DimensionType.Inch);
+            Vector expectedVector = projectOnto.UnitVector(DimensionType.Inch);
             resultVector.EndPoint.Should().Be(expectedVector.EndPoint);
 
             result.BasePoint.Should().Be(expected.BasePoint);

@@ -22,7 +22,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Point pointOnLine = PointGenerator.MakePointWithInches(3, 6, 0);
 
-            testLine.GetPointOnLine(2).Should().Be(pointOnLine);         
+            testLine.GetPointOnLine(6.62).Should().Be(pointOnLine);         
         }
 
         [Test()]

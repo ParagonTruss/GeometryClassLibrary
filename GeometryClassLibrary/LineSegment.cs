@@ -37,7 +37,8 @@ namespace GeometryClassLibrary
                 Dimension yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
                 Dimension zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection; 
 
-                return new Point(xMid, yMid, zMid);
+                //then add our base point so it is in the right location
+                return new Point(xMid, yMid, zMid) + this.BasePoint;
             }
         }
         
