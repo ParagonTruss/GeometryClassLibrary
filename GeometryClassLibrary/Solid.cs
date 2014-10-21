@@ -12,6 +12,9 @@ namespace GeometryClassLibrary
     public class Solid: IComparable<Solid>
     {
         #region Fields and Properties
+
+        protected IEnumerable<PlaneRegion> Planes { get; set; }
+
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>

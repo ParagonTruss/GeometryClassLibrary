@@ -66,6 +66,7 @@
     <Compile Include="Line.cs" />
     <Compile Include="LineSegment.cs" />
     <Compile Include="ListExtensionMethods\IListIEdgeExtensionMethods.cs" />
+    <Compile Include="ListExtensionMethods\IListPolygonExtensionMethods.cs" />
     <Compile Include="MatricesMatrix.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="NonPolygon.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Plane.cs" />
     <Compile Include="PlaneRegion.cs" />
     <Compile Include="Polygon.cs" />
-    <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
+    <Compile Include="ListExtensionMethods\IListPlaneRegionExtensionMethods.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
     <Compile Include="Polyhedron.cs" />

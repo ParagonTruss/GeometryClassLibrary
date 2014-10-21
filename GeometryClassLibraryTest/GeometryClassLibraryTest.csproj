@@ -70,10 +70,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="PolygonListExtensionTests.cs" />
     <Compile Include="IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="DirectionTests.cs" />
+    <Compile Include="PlaneRegionListExtensionTests.cs" />
     <Compile Include="PointListTests.cs" />
     <Compile Include="PolygonTests.cs" />
     <Compile Include="PolyhedronTests.cs" />

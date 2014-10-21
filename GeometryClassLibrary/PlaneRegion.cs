@@ -9,11 +9,11 @@ namespace GeometryClassLibrary
 {
     [Serializable]
     //For an explaination of why we use generics here see: http://stackoverflow.com/questions/3551012/override-a-property-with-a-derived-type-and-same-name-c-sharp
-    public class PlaneRegion<T> : Plane, IComparable<PlaneRegion<T>> where T : IEdge
+    public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Fields and Properties
 
-        public virtual List<T> PlaneBoundaries { get; set; }
+        protected IEnumerable<IEdge> Edges;
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
         #endregion
@@ -24,32 +24,33 @@ namespace GeometryClassLibrary
         /// Default empty constructor
         /// </summary>
         public PlaneRegion()
+            : base()
         {
-            PlaneBoundaries = new List<T>();
+            Edges = new List<IEdge>();
         }
 
         /// <summary>
         /// Makes a PlaneRegion Using the given boundaries to define it
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public PlaneRegion(List<T> passedBoundaries)
+        public PlaneRegion(IEnumerable<IEdge> passedEdges)
             : base()
         {
-            PlaneBoundaries = passedBoundaries;
+            Edges = passedEdges;
 
-            if (passedBoundaries.Count > 0)
+            if (passedEdges.Count() > 0)
             {
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedBoundaries[0].Direction.UnitVector(DimensionType.Inch);
-                for (int i = 1; i < passedBoundaries.Count; i++)
+                Vector vector1 = passedEdges.ElementAt(0).Direction.UnitVector(DimensionType.Inch);
+                for (int i = 1; i < passedEdges.Count(); i++)
                 {
-                    base.NormalVector = vector1.CrossProduct(passedBoundaries[i].Direction.UnitVector(DimensionType.Inch));
+                    this.NormalVector = vector1.CrossProduct(passedEdges.ElementAt(i).Direction.UnitVector(DimensionType.Inch));
                     if (!base.NormalVector.Equals(new Vector()))
-                        i = passedBoundaries.Count;
+                        i = passedEdges.Count();
                 }
 
-                base.BasePoint = passedBoundaries[0].BasePoint;
+                base.BasePoint = passedEdges.ElementAt(0).BasePoint;
             }
         }
 
@@ -57,22 +58,22 @@ namespace GeometryClassLibrary
         /// creates a new Polygon that is a copy of the inputted Polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public PlaneRegion(PlaneRegion<T> planeToCopy)
-            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
+        public PlaneRegion(PlaneRegion planeToCopy)
+            //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
             //constructing a plane fron a List<LineSegment>
-            : this(planeToCopy.PlaneBoundaries) { }
+            : this(planeToCopy.Edges) { }
 
         /*public PlaneRegion(List<IEdge> shiftedBoundaries)
         {
                 // TODO: Complete member initialization
-            PlaneBoundaries = shiftedBoundaries;
+            Edges = shiftedBoundaries;
         }*/
 
         #endregion
 
         #region Overloaded Operators
 
-        public static bool operator ==(PlaneRegion<T> region1, PlaneRegion<T> region2)
+        public static bool operator ==(PlaneRegion region1, PlaneRegion region2)
         {
             if ((object)region1 == null || (object)region2 == null)
             {
@@ -85,7 +86,7 @@ namespace GeometryClassLibrary
             return region1.Equals(region2);
         }
 
-        public static bool operator !=(PlaneRegion<T> region1, PlaneRegion<T> region2)
+        public static bool operator !=(PlaneRegion region1, PlaneRegion region2)
         {
             if ((object)region1 == null || (object)region2 == null)
             {
@@ -103,16 +104,16 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            PlaneRegion<T> comparableRegion = null;
+            PlaneRegion comparableRegion = null;
 
             //try to cast the object to a Plane Region, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparableRegion = (PlaneRegion<T>)obj;
+                comparableRegion = (PlaneRegion)obj;
                 bool areEqual = true;
-                foreach (T edge in comparableRegion.PlaneBoundaries)
+                foreach (IEdge edge in comparableRegion.Edges)
                 {
-                    if (!PlaneBoundaries.Contains(edge))
+                    if (!Edges.Contains(edge))
                     {
                         areEqual = false;
                     }
@@ -132,7 +133,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public int CompareTo(PlaneRegion<T> other)
+        public int CompareTo(PlaneRegion other)
         {
             throw new NotImplementedException();
         }
@@ -160,25 +161,25 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public virtual PlaneRegion<T> Shift<T>(Shift passedShift) where T : IEdge
+        public virtual PlaneRegion Shift(Shift passedShift)
         {
 
-            List<T> shiftedBoundaries = new List<T>();
+            List<IEdge> shiftedBoundaries = new List<IEdge>();
 
-            foreach (var edge in PlaneBoundaries)
+            foreach (var edge in Edges)
             {
-                shiftedBoundaries.Add((T)edge.Shift(passedShift));
+                shiftedBoundaries.Add(edge.Shift(passedShift));
             }
 
-            return new PlaneRegion<T>(shiftedBoundaries);
+            return new PlaneRegion(shiftedBoundaries);
         }
 
-        public virtual PlaneRegion<T> Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
             throw new NotImplementedException();
         }
 
-        public virtual PlaneRegion<T> Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        public virtual PlaneRegion Translate(Vector passedDirectionVector, Dimension passedDisplacement)
         {
             throw new NotImplementedException();
         }

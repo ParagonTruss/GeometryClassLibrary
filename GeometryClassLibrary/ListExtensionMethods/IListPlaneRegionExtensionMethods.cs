@@ -27,9 +27,9 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public static IList<Polygon> Shift(this IList<Polygon> passedPlaneRegions, Shift passedShift)
+        public static List<PlaneRegion> Shift(this List<PlaneRegion> passedPlaneRegions, Shift passedShift)
         {
-            List<Polygon> shiftedRegions = new List<Polygon>();
+            List<PlaneRegion> shiftedRegions = new List<PlaneRegion>();
 
             foreach (var region in passedPlaneRegions)
             {

@@ -8,5 +8,12 @@ namespace GeometryClassLibrary
     [Serializable]
     public class NonPolyhedron : Solid
     {
+        public List<PlaneRegion> BoundaryPlanes
+        {
+            get { return this.Planes as List<PlaneRegion>; }
+            set { this.Planes = value; }
+        }
+
+
     }
 }

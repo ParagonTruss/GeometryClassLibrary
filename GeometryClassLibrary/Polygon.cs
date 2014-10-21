@@ -11,10 +11,15 @@ namespace GeometryClassLibrary
     /// A plane region is a section of a plane.
     /// </summary>
     [Serializable]
-    public class Polygon : PlaneRegion<LineSegment>, IComparable<Polygon>
+    public class Polygon : PlaneRegion, IComparable<Polygon>
     {
         #region Fields and Properties
-        public override List<LineSegment> PlaneBoundaries { get; set; }
+        public List<LineSegment> PlaneBoundaries 
+        {
+            get { return this.Edges as List<LineSegment>; }
+            set { this.Edges = value; }
+        }
+
         public override Area Area
         {
             get
@@ -30,8 +35,9 @@ namespace GeometryClassLibrary
         /// Zero constructor
         /// </summary>
         public Polygon()
+            : base()
         {
-            PlaneBoundaries = new List<LineSegment>();
+            this.PlaneBoundaries = new List<LineSegment>();
         }
 
         /// <summary>
@@ -46,7 +52,7 @@ namespace GeometryClassLibrary
 
             if (isClosed && areCoplanar)
             {
-                this.PlaneBoundaries = passedBoundaries;
+                this.PlaneBoundaries = new List<LineSegment>(passedBoundaries);
             }
         }
 
@@ -55,7 +61,8 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
-            //note: we do not need to call List<LineSegment>(newplaneToCopy.PlaneBoundaries) because it does this in the base case for 
+            : this()
+            //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
             //constructing a plane fron a List<LineSegment>
         {
             foreach (var line in polygonToCopy.PlaneBoundaries)
@@ -70,6 +77,7 @@ namespace GeometryClassLibrary
 
         public Polygon(List<Point> passedPoints)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
+        
         #endregion
 
         #region Overloaded Operators
@@ -167,10 +175,10 @@ namespace GeometryClassLibrary
             //we count each point twice
             //the reason why we have to add all of the points twice is because we do not know which way the 
             //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
-            int count = PlaneBoundaries.Count * 2;
+            int count = this.PlaneBoundaries.Count * 2;
 
             //sum up each of the points
-            foreach (LineSegment line in PlaneBoundaries)
+            foreach (LineSegment line in this.PlaneBoundaries)
             {
                 xSum += line.BasePoint.X + line.EndPoint.X;
                 ySum += line.BasePoint.Y + line.EndPoint.Y;
@@ -181,18 +189,16 @@ namespace GeometryClassLibrary
             return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
 
         }
-        /*public Polygon ShiftPolygon(Shift passedShift)
-        {
-            return new Polygon(this.PlaneBoundaries.Shift(passedShift));
-        }
-        public override PlaneRegion<T> Shift<T>(Shift passedShift)
-        {
-            return new Polygon(this.PlaneBoundaries.Shift(passedShift));
-        }*/
+
         public Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.PlaneBoundaries.Shift(passedShift));
         }
+
+        /*public override PlaneRegion Shift(Shift passedShift)
+        {
+            return ShiftAsPolygon(passedShift);
+        }*/
 
         /// <summary>
         /// Rotates the plane region about the given axis by the specified angle. Point values are rounded to 6 decimal places to make sure the boundaries still meet after rotating.
@@ -545,6 +551,17 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
 
 
+        }
+
+        /// <summary>
+        /// Extrudes the plane region into a Polyhedron
+        /// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <returns></returns>
+        public Polyhedron ExtrudeAsPolyhedron(Dimension dimension)
+        {
+            return (Polyhedron)Extrude(dimension);
         }
 
         /// <summary>

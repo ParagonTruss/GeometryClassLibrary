@@ -16,7 +16,7 @@ namespace GeometryClassLibrary
         /// One of the points where the arc arises from
         /// </summary>
         private Point _basePoint;
-        public Point BasePoint
+        public virtual Point BasePoint
         {
             get { return _basePoint; }
             set { throw new System.NotImplementedException(); }
@@ -26,21 +26,23 @@ namespace GeometryClassLibrary
         /// One of the points where the arc arises from
         /// </summary>
         private Point _originPointTwo;
-        public Point OriginPointTwo
+        public virtual Point OriginPointTwo
         {
             get { throw new System.NotImplementedException(); }
             set { throw new System.NotImplementedException(); }
         }
 
-        private Direction _direction;
-        public Direction Direction
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
+        public virtual Direction Direction { get; set; }
+
         #endregion
 
         #region Constructors
+
+        public Arc()
+        {
+            this._basePoint = new Point();
+            this._originPointTwo = new Point();
+        }
 
         public Arc(Point originPointTwo)
         {

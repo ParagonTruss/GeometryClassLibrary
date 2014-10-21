@@ -11,6 +11,13 @@ namespace GeometryClassLibrary
     public class Polyhedron : Solid
     {
         #region Fields and Properties
+
+        public List<Polygon> Polygons
+        {
+            get { return this.Planes as List<Polygon>; }
+            set { this.Planes = value; }
+        }
+
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>
@@ -19,9 +26,9 @@ namespace GeometryClassLibrary
             get
             {
                 Point returnPoint = null;
-                if (_polygons.Count > 0)
+                if (this.Polygons.Count > 0)
                 {
-                    returnPoint = _polygons[0].PlaneBoundaries[0].BasePoint;
+                    returnPoint = this.Polygons[0].PlaneBoundaries[0].BasePoint;
                 }
                 return returnPoint;
             }
@@ -36,7 +43,7 @@ namespace GeometryClassLibrary
             {
                 List<LineSegment> returnList = new List<LineSegment>();
 
-                foreach (Polygon region in _polygons)
+                foreach (Polygon region in this.Polygons)
                 {
                     if (region.PlaneBoundaries != null)
                         returnList.AddRange(region.PlaneBoundaries);
@@ -46,38 +53,38 @@ namespace GeometryClassLibrary
             }
             set
             {
-                this._polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
+                this.Polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
             }
         }
+        
         #endregion
 
         #region Constructors
-        public virtual List<Polygon> Polygons
-        {
-            get { return _polygons; }
-            set { _polygons = value; }
-        }
-        private List<Polygon> _polygons;
 
         public Polyhedron()
+            : base()
         {
-            _polygons = new List<Polygon>();
+            this.Polygons = new List<Polygon>();
         }
 
         public Polyhedron(List<LineSegment> passedLineSegments)
+            : base()
         {
-            _polygons = passedLineSegments.MakeCoplanarLineSegmentsIntoPolygons();
+            this.Polygons = passedLineSegments.MakeCoplanarLineSegmentsIntoPolygons();
         }
 
         public Polyhedron(List<Polygon> passedPolygons)
+            : base()
         {
-            _polygons = new List<Polygon>(passedPolygons);
+            this.Polygons = new List<Polygon>(passedPolygons);
         }
 
-        public Polyhedron(Polyhedron passedSolid)
-        {
-            _polygons = passedSolid._polygons;
-        }
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="passedSolid"></param>
+        public Polyhedron(Polyhedron toCopy)
+            : this (toCopy.Polygons) { }
         #endregion
 
         #region Methods
@@ -101,7 +108,7 @@ namespace GeometryClassLibrary
             List<Polygon> biggerPolyhedron = new List<Polygon>();
             List<Polygon> smallerPolyhedron = new List<Polygon>();
 
-            foreach (var polygon in this._polygons)
+            foreach (var polygon in this.Polygons)
             {
                 List<Polygon> slicedPolygons = polygon.Slice(passedPlane);
                 biggerPolyhedron.Add(slicedPolygons[0]);
@@ -163,7 +170,7 @@ namespace GeometryClassLibrary
         /// <param name="passedRotationAxis"></param>
         public Polyhedron Shift(Shift passedShift)
         {
-            List<Polygon> shiftedRegions = new List<Polygon>(_polygons.Shift(passedShift));
+            List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
             return new Polyhedron(shiftedRegions);
         }

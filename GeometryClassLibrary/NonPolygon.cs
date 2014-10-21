@@ -10,8 +10,10 @@ namespace GeometryClassLibrary
     /// Non polygons are shapes defined by finite lines. Unlike in polygons, these lines can intersect and be arcs.
     /// </summary>
     [Serializable]
-    public class NonPolygon : PlaneRegion<IEdge>
+    public class NonPolygon : PlaneRegion
     {
+        public virtual List<IEdge> PlaneEdges { get; set; } 
+
         #region Constructors
         public NonPolygon()
         {
@@ -25,17 +27,17 @@ namespace GeometryClassLibrary
         /// <param name="passedBoundaries"></param>
         public NonPolygon(List<IEdge> passedBoundaries)
         {
-            _planeBoundaries = passedBoundaries;
+            this.Edges = passedBoundaries;
         }
 
         #endregion
 
-        public override List<IEdge> PlaneBoundaries
+        /*public override List<IEdge> PlaneBoundaries
         {
             get { return _planeBoundaries; }
             set { _planeBoundaries = value; }
         }
-        private List<IEdge> _planeBoundaries;
+        private List<IEdge> _planeBoundaries;*/
 
         public override Area Area
         {
