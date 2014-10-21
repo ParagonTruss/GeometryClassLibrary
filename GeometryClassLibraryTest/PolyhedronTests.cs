@@ -112,10 +112,10 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
             Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
@@ -127,10 +127,10 @@ namespace ClearspanTypeLibrary.Tests
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 4))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 4), PointGenerator.MakePointWithMillimeters(0, 0, 4))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 4), PointGenerator.MakePointWithMillimeters(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 0, 4))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 4), PointGenerator.MakePointWithInches(0, 0, 4))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
 
         }
 
@@ -227,25 +227,25 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron Polyhedron = new Polyhedron();
 
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 0, 0), PointGenerator.MakePointWithMillimeters(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(8, 4, 0), PointGenerator.MakePointWithMillimeters(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 0), PointGenerator.MakePointWithMillimeters(0, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
             Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, -90);
-            Line testAxis = new Line(PointGenerator.MakePointWithMillimeters(1, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 1));
+            Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
-            Vector displacementVector = new Vector(PointGenerator.MakePointWithMillimeters(-1, 2, 5));
+            Vector displacementVector = new Vector(PointGenerator.MakePointWithInches(-1, 2, 5));
             Shift ninetyShift = new Shift(displacementVector, xRotation);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, 3, 5), PointGenerator.MakePointWithMillimeters(4, 3, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(4, 3, 5), PointGenerator.MakePointWithMillimeters(4, -5, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(4, -5, 5), PointGenerator.MakePointWithMillimeters(0, -5, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(0, -5, 5), PointGenerator.MakePointWithMillimeters(0, 3, 5))).Should().BeTrue(); 
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(4, 3, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 5), PointGenerator.MakePointWithInches(4, -5, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, -5, 5), PointGenerator.MakePointWithInches(0, -5, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, -5, 5), PointGenerator.MakePointWithInches(0, 3, 5))).Should().BeTrue(); 
 
         }
 

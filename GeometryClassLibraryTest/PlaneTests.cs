@@ -99,7 +99,7 @@ namespace GeometryClassLibraryTests
             Point referencePoint2 = PointGenerator.MakePointWithInches(0, 2, 1);
             Vector testNormalVector = new Vector(PointGenerator.MakePointWithInches(1, 0, 0));
 
-            Plane testPlane = new Plane(PointGenerator.MakePointWithMillimeters(0,0,0), testNormalVector);
+            Plane testPlane = new Plane(PointGenerator.MakePointWithInches(0,0,0), testNormalVector);
 
             testPlane.PointIsOnSameSideAs(testPoint, referencePoint).Should().BeTrue(); //test one on the same side
             testPlane.PointIsOnSameSideAs(testPoint2, referencePoint).Should().BeFalse(); //test one on the opposite side
@@ -108,17 +108,16 @@ namespace GeometryClassLibraryTests
 
 
             Point testPointOffOrigin = PointGenerator.MakePointWithInches(5, 4, 0);
-            Point testPointOffOrigin2 = PointGenerator.MakePointWithInches(-2, -2, -1);
-            Point testPointOffOrigin3 = PointGenerator.MakePointWithInches(1, -4, 2);
+            Point testPointOffOrigin2 = PointGenerator.MakePointWithInches(5, -2, 0);
             Point referencePointOffOrigin = PointGenerator.MakePointWithInches(1, 2, 3);
+            Point planeBase = PointGenerator.MakePointWithInches(1, -4, 2);
             Vector testNormalVectorOffOrigin = new Vector(PointGenerator.MakePointWithInches(-1, 2, 1));
 
-            Plane testPlaneOffOrigin = new Plane(PointGenerator.MakePointWithMillimeters(1, -4, 2), testNormalVectorOffOrigin);
+            Plane testPlaneOffOrigin = new Plane(planeBase, testNormalVectorOffOrigin);
 
             testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin, referencePointOffOrigin).Should().BeTrue();
             testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin2, referencePointOffOrigin).Should().BeFalse();
-            testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin3, referencePointOffOrigin).Should().BeFalse();
-
+            testPlaneOffOrigin.PointIsOnSameSideAs(planeBase, referencePointOffOrigin).Should().BeFalse();
         }
     }
 }

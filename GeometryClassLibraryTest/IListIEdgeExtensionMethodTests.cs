@@ -13,13 +13,13 @@ namespace GeometryClassLibraryTest
         {
             //make a bunch of edges and shift 'em
             List<IEdge> edges = new List<IEdge>();
-            edges.Add(new LineSegment(PointGenerator.MakePointWithMillimeters(1, 2, 3)));
-            edges.Add(new Arc(PointGenerator.MakePointWithMillimeters(0,4,5)));
+            edges.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3)));
+            edges.Add(new Arc(PointGenerator.MakePointWithInches(0,4,5)));
 
-            List<IEdge> results = edges.Shift(new Shift(new Vector(PointGenerator.MakePointWithMillimeters(2,0,0))));
+            List<IEdge> results = edges.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(2,0,0))));
 
-            (results.Contains(new LineSegment(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(3, 2, 3)))).Should().BeTrue();
-            (results.Contains(new Arc(PointGenerator.MakePointWithMillimeters(2, 0, 0), PointGenerator.MakePointWithMillimeters(2, 4, 5)))).Should().BeTrue();
+            (results.Contains(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 2, 3)))).Should().BeTrue();
+            (results.Contains(new Arc(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(2, 4, 5)))).Should().BeTrue();
         }
     }
 }

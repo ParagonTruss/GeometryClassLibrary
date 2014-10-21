@@ -262,8 +262,8 @@ namespace GeometryClassLibrary
             //if it is 0 than it is on the plane
 
             //so find the dot products between the points and the normal of the plane
-            Dimension testDot = new Vector(BasePoint, testPoint) * NormalVector;
-            Dimension referenceDot = new Vector(BasePoint, referencePoint) * NormalVector;
+            Dimension testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
+            Dimension referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
 
             //if they are both either positive or negative than they are both on the same side
             if ((testDot < new Dimension() && referenceDot < new Dimension()) || (testDot > new Dimension() && referenceDot > new Dimension()))

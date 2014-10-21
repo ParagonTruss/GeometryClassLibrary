@@ -53,10 +53,10 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void LineSegmentList_SortClockwiseTest()
         {
-            LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(0, 4, 2));
-            LineSegment segment2 = new LineSegment(PointGenerator.MakePointWithMillimeters(0, 1, 0), PointGenerator.MakePointWithMillimeters(3, 1, 0));
-            LineSegment segment3 = new LineSegment(PointGenerator.MakePointWithMillimeters(0, 4, 2), PointGenerator.MakePointWithMillimeters(3, 4, 2));
-            LineSegment segment4 = new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(3, 4, 2));
+            LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 4, 2));
+            LineSegment segment2 = new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(3, 1, 0));
+            LineSegment segment3 = new LineSegment(PointGenerator.MakePointWithInches(0, 4, 2), PointGenerator.MakePointWithInches(3, 4, 2));
+            LineSegment segment4 = new LineSegment(PointGenerator.MakePointWithInches(3, 1, 0), PointGenerator.MakePointWithInches(3, 4, 2));
 
             List<LineSegment> lineSegments = new List<LineSegment>() { segment1, segment2, segment3, segment4 };
 
@@ -64,8 +64,8 @@ namespace GeometryClassLibraryTests
 
             (sorted[0] == segment1).Should().BeTrue();
             (sorted[1] == segment3).Should().BeTrue();
-            (sorted[2] == new LineSegment(PointGenerator.MakePointWithMillimeters(3, 4, 2), PointGenerator.MakePointWithMillimeters(3, 1, 0))).Should().BeTrue();
-            (sorted[3] == new LineSegment(PointGenerator.MakePointWithMillimeters(3, 1, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0))).Should().BeTrue();
+            (sorted[2] == new LineSegment(PointGenerator.MakePointWithInches(3, 4, 2), PointGenerator.MakePointWithInches(3, 1, 0))).Should().BeTrue();
+            (sorted[3] == new LineSegment(PointGenerator.MakePointWithInches(3, 1, 0), PointGenerator.MakePointWithInches(0, 1, 0))).Should().BeTrue();
         }
 
         [Test()]
