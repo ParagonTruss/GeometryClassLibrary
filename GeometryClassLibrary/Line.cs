@@ -39,20 +39,59 @@ namespace GeometryClassLibrary
             get { throw new NotImplementedException(); }
         }
 
-        //public double XIntercept
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
+        public Dimension XInterceptIn2D
+        {
+            //if we are ignoring z, we can just take the x component of wher it intersects the xz plane
+            get { return XZIntercept.X; }
+        }
 
-        //public double YIntercept
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
+        public Dimension YInterceptIn2D
+        {
+            //if we are ignoring z, we can just take the y component of whery it intersects the yz plane
+            get { return YZIntercept.Y; }
+        }
 
-        //public double ZIntercept
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
+        public Point XYIntercept
+        {
+            get { return this.FindXYIntercept(); }
+        }
+
+        public Point XZIntercept
+        {
+            get { return this.FindXYIntercept(); }
+        }
+
+        public Point YZIntercept
+        {
+            get { return this.FindXYIntercept(); }
+        }
+
+        public Point FindXYIntercept()
+        {
+            //make the x axis plane
+            Plane xyPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(0,0,1)));
+
+            //then find out where the line and the plane intersect
+            return xyPlane.Intersection(this);
+        }
+
+        public Point FindXZIntercept()
+        {
+            //make the x axis plane
+            Plane xzPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(0, 1, 0)));
+
+            //then find out where the line and the plane intersect
+            return xzPlane.Intersection(this);
+        }
+
+        public Point FindYZIntercept()
+        {
+            //make the x axis plane
+            Plane yzPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(1, 0, 0)));
+
+            //then find out where the line and the plane intersect
+            return yzPlane.Intersection(this);
+        }
 
         #endregion
 

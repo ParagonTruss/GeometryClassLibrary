@@ -72,6 +72,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// A point on a plane and vector that is normal (prependicular) to that plane define the plane
+        /// </summary>
+        /// <param name="passedBasePoint"></param>
+        /// <param name="passedNormalVector"></param>
+        public Plane(Line normalDirection)
+        {
+            this.BasePoint = new Point();
+            this.NormalVector = new Vector(normalDirection);
+        }
+
+        /// <summary>
         ///  A point and a line define a plane if the point is not on the line
         /// </summary>
         /// <param name="passedPoint"></param>
