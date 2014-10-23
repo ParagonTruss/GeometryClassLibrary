@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
         /// The angle from the positive x-axis in the xy-plane (azumuth)
         /// </summary>
         private Angle _phi;
-        public Angle Phi 
+        public Angle Phi
         {
             get { return _phi; }
             set
@@ -140,13 +140,27 @@ namespace GeometryClassLibrary
                 //if the x is zero it is either straight up or down
                 if (directionPoint.X != new Dimension())
                 {
-                    //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
-                    this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
-
-                    //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
-                    if (directionPoint.X < new Dimension())
+                    if (directionPoint.Y != new Dimension())
                     {
-                        this.Phi = new Angle(AngleType.Degree, 180) - this.Phi;
+                        //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
+                        this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
+
+                        //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
+                        if (directionPoint.X < new Dimension())
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 180) - this.Phi;
+                        }
+                    }
+                    else
+                    {
+                        if (directionPoint.X > new Dimension())
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 0);
+                        }
+                        else if (directionPoint.X < new Dimension())
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 180);
+                        }
                     }
                 }
                 else
@@ -191,7 +205,7 @@ namespace GeometryClassLibrary
         /// <param name="xyPlaneAngle">The angle from the positive x-axis in the xy-plane</param>
         /// <param name="angleToZAxis">The angle from the positive z-axis</param>
         public Direction(Angle xyPlaneAngle, Angle angleToZAxis)
-            : this (xyPlaneAngle, angleToZAxis, false) { }
+            : this(xyPlaneAngle, angleToZAxis, false) { }
 
         /// <summary>
         /// Makes a direction from the origin to the given point
@@ -199,7 +213,7 @@ namespace GeometryClassLibrary
         /// <param name="directionPoint"></param>
         public Direction(Point basePoint, Point endPoint)
             : this(endPoint - basePoint) { }
-       
+
         /// <summary>
         /// Creates a direction with the given angles, but throws an error if phi is not in range if it is set to 
         /// not allow angles outside its bounds (0 <= theta <= 180)
@@ -270,7 +284,7 @@ namespace GeometryClassLibrary
             if (direction == null)
             {
                 return false;
-            }            
+            }
 
             try
             {

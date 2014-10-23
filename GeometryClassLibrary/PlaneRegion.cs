@@ -54,6 +54,9 @@ namespace GeometryClassLibrary
             }
         }
 
+        public PlaneRegion(IList<Line> passedLines)
+            :base(passedLines) { }
+
         /// <summary>
         /// creates a new Polygon that is a copy of the inputted Polygon
         /// </summary>

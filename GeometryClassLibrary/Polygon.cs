@@ -15,7 +15,7 @@ namespace GeometryClassLibrary
     {
         #region Fields and Properties
 
-        public List<LineSegment> PlaneBoundaries 
+        public List<LineSegment> PlaneBoundaries
         {
             get { return this.Edges as List<LineSegment>; }
             set { this.Edges = value; }
@@ -63,15 +63,15 @@ namespace GeometryClassLibrary
         /// NOTE:Will not work for concave polygons
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(List<Line> passedLines)
-            //: base(passedBoundaries)
+        public Polygon(IList<Line> passedLines)
+            : base(passedLines)
         {
             this.PlaneBoundaries = new List<LineSegment>();
 
             if (passedLines.AreAllCoplanar())
             {
                 //find where they each intersect
-                foreach(Line line in passedLines)
+                foreach (Line line in passedLines)
                 {
                     List<Point> intersections = new List<Point>();
 
@@ -80,7 +80,7 @@ namespace GeometryClassLibrary
                         if (line != other)
                         {
                             Point intersection = line.Intersection(other);
-                            if (intersection != null && intersections.Contains(intersection))
+                            if (intersection != null && !intersections.Contains(intersection))
                             {
                                 intersections.Add(intersection);
                             }
@@ -109,13 +109,13 @@ namespace GeometryClassLibrary
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
             : this()
-            //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
-            //constructing a plane fron a List<LineSegment>
+        //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
+        //constructing a plane fron a List<LineSegment>
         {
             foreach (var line in polygonToCopy.PlaneBoundaries)
             {
                 this.PlaneBoundaries.Add(new LineSegment(line));
-                
+
             }
             this.NormalVector = polygonToCopy.NormalVector;
             this.BasePoint = polygonToCopy.BasePoint;
@@ -124,7 +124,7 @@ namespace GeometryClassLibrary
 
         public Polygon(List<Point> passedPoints)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
-        
+
         #endregion
 
         #region Overloaded Operators
@@ -255,7 +255,7 @@ namespace GeometryClassLibrary
             {
                 newBoundaryList.Add(segment.Rotate(passedAxisLine, passedRotationAngle));
             }
-      
+
             return new Polygon(newBoundaryList);
         }
 
@@ -718,7 +718,7 @@ namespace GeometryClassLibrary
 
                         //findout which one we want to keep and we dont need the other part
                         overlapping = slicedPlane[0];
-                        if (slicedPlane[1].ContainsInclusive(referencePoint))
+                        if (slicedPlane.Count > 1 && slicedPlane[1].ContainsInclusive(referencePoint))
                         {
                             overlapping = slicedPlane[1];
                         }
@@ -747,7 +747,7 @@ namespace GeometryClassLibrary
         {
             //find the normal direction of the plane we will use to slice with
             Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.UnitVector(DimensionType.Inch));
-            
+
             //now make it with the normal we found anf the lines basepoint
             Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
 
@@ -762,7 +762,7 @@ namespace GeometryClassLibrary
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first</returns>
         public List<Polygon> Slice(Plane slicingPlane)
         {
-            Line slicingLine = this.IntersectionLineWithPlane(slicingPlane);
+            Line slicingLine = this.Intersection(slicingPlane);
 
             //if it doesnt intersect then return the original
             if (slicingLine == null)
@@ -821,14 +821,14 @@ namespace GeometryClassLibrary
                         if (!slicingPlane.Contains(line.EndPoint) && !slicingPlane.Contains(line.BasePoint))
                         {
                             //slice the line and project the parts for the relevent polygons
-                            sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
+                            _sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
                                 slicedPolygons, segmentsCut, newSegmentsGenerated, toRemove);
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
                         {
                             //we only need to project it on either the inside or outside polygon
-                            projectSegmentForOneSide(line, slicingPlane, slicingLine, referencePoint, newSegmentsGenerated, toRemove);
+                            _projectSegmentForOneSide(line, slicingPlane, slicingLine, referencePoint, newSegmentsGenerated, toRemove);
                         }
                     }
                     //if it doesnt intersect at all we are either completely on the inside side or the out side
@@ -875,13 +875,37 @@ namespace GeometryClassLibrary
                 //now consolidate the generated line segments into one that spans the gap created by the line segments
                 consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
 
+                //make sure that the polygons are actually cut
+                if (slicedPolygons[0].PlaneBoundaries.Count <= 2)
+                {
+                    if (slicedPolygons[1] == this)
+                    {
+                        return new List<Polygon>() { slicedPolygons[1] };
+                    }
+                    else //shouldnt ever get here
+                    {
+                        throw new ApplicationException();
+                    }
+                }
+                else if (slicedPolygons[1].PlaneBoundaries.Count <= 2)
+                {
+                    if (slicedPolygons[0] == this)
+                    {
+                        return new List<Polygon>() { slicedPolygons[0] };
+                    }
+                    else //shouldnt ever get here
+                    {
+                        throw new ApplicationException();
+                    }
+                }
+
                 //now return them in opposite order (largest first
                 slicedPolygons.Sort();
                 slicedPolygons.Reverse();
                 return slicedPolygons;
             }
             //if we were not in the plane than we return a copy of the orignal plane (this)
-            return new List<Polygon>() { this };
+            return new List<Polygon>() { new Polygon(this) };
         }
 
         /// <summary>
@@ -895,7 +919,7 @@ namespace GeometryClassLibrary
         /// <param name="referencePoint"></param>
         /// <param name="slicedPolygons"></param>
         /// <param name="newSegmentsGenerated"></param>
-        private void sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
+        private void _sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
             Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
             //we know we will always get two because we already checked and confirmed intersect
@@ -946,7 +970,7 @@ namespace GeometryClassLibrary
         /// <param name="referencePoint"></param>
         /// <param name="newSegmentsGenerated"></param>
         /// <param name="toRemove"></param>
-        private void projectSegmentForOneSide(LineSegment lineToSlice, Plane slicingPlane, Line slicingLine,
+        private void _projectSegmentForOneSide(LineSegment lineToSlice, Plane slicingPlane, Line slicingLine,
             Point referencePoint, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
             //if the endpoint is on the slicing plane than we can determine which side based on the basepoint
@@ -1121,9 +1145,43 @@ namespace GeometryClassLibrary
             }
         }
 
-        private bool Contains(Line slicingLine)
+        /// <summary>
+        /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
+        public new bool DoesIntersectNotCoplanar(Line passedLine)
         {
-            throw new NotImplementedException();
+            Point intersection = this.Intersection(passedLine);
+            if (intersection != null && this.ContainsInclusive(intersection))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns whether or not the given line and polygon intersect or are coplanar and intersect on the plane
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
+        public new bool DoesIntersect(Line passedLine)
+        {
+            //if the line is on the plane
+            if (((Plane)this).Contains(passedLine))
+            {
+                //check if it intersects our boundaries
+                foreach (LineSegment segment in this.PlaneBoundaries)
+                {
+                    if (passedLine.DoesIntersect(segment))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return DoesIntersectNotCoplanar(passedLine);
         }
 
         /// <summary>

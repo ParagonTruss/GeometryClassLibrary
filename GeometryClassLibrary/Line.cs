@@ -275,6 +275,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns whether or not the two lines are perindicular to each other
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
+        public bool IsPerpindicularTo(Line passedLine)
+        {
+            //if they are perpindicular then the dot product should be 0
+            return (passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch) == new Dimension());
+        }
+
+        /// <summary>
         /// Returns the point at which a line intersects the passed line
         /// </summary>
         /// <param name="passedLine"></param>
@@ -317,20 +328,50 @@ namespace GeometryClassLibrary
             return intersectionPoint;
         }
 
+        /// <summary>
+        /// Returns whether or not the two lines intersect
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
             return (Equals(passedLine) || !ReferenceEquals(Intersection(passedLine), null));
         }
 
-        public virtual bool DoesIntersect(LineSegment passedSegment)
+        /// <summary>
+        /// Determines whether or not the vector and line intersect
+        /// </summary>
+        /// <param name="passedVector"></param>
+        /// <returns></returns>
+        public virtual bool DoesIntersect(Vector passedVector)
         {
-            Line newLine = new Line(passedSegment);
+            Line newLine = new Line(passedVector);
             Point intersect = this.Intersection(newLine);
 
             if (!ReferenceEquals(intersect, null))
-                return intersect.IsOnLineSegment(passedSegment);
+                return intersect.IsOnVector(passedVector);
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Determines wheter or not the linesegment and line intersect
+        /// </summary>
+        /// <param name="passedSegment"></param>
+        /// <returns></returns>
+        public virtual bool DoesIntersect(LineSegment passedSegment)
+        {
+            return DoesIntersect((Vector)passedSegment);
+        }
+
+        /// <summary>
+        /// Returns whether or not the Polygon and Line intersect
+        /// </summary>
+        /// <param name="passedPolygon"></param>
+        /// <returns></returns>
+        public virtual bool DoesIntersect(Polygon passedPolygon)
+        {
+            return (passedPolygon.DoesIntersect(this));
         }
 
         /// <summary>

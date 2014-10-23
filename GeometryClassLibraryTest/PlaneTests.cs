@@ -128,8 +128,8 @@ namespace GeometryClassLibraryTests
             Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, 1, 2), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
             Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(1, 3, 3), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
 
-            Line test12Intersect = testPlane1.IntersectionLineWithPlane(testPlane2);
-            Line test21Intersect = testPlane2.IntersectionLineWithPlane(testPlane1);
+            Line test12Intersect = testPlane1.Intersection(testPlane2);
+            Line test21Intersect = testPlane2.Intersection(testPlane1);
 
             Line expectedLine = new Line(PointGenerator.MakePointWithInches(2, -1, 0), new Vector(PointGenerator.MakePointWithInches(0, 3, 3)));
 
@@ -150,23 +150,60 @@ namespace GeometryClassLibraryTests
             Plane testPlaneXZ = new Plane(testPoint, testPointX, testPointZ);
             Plane testPlaneYZ = new Plane(testPoint, testPointY, testPointZ);
 
-            Line testXYXZIntersect = testPlaneXZ.IntersectionLineWithPlane(testPlaneXY);
-            Line testXZXYIntersect = testPlaneXY.IntersectionLineWithPlane(testPlaneXZ);
+            Line testXYXZIntersect = testPlaneXZ.Intersection(testPlaneXY);
+            Line testXZXYIntersect = testPlaneXY.Intersection(testPlaneXZ);
             testXYXZIntersect.Should().Be(Line.XAxis);
             testXZXYIntersect.Should().Be(Line.XAxis);
 
-            Line testXYYZIntersect = testPlaneXY.IntersectionLineWithPlane(testPlaneYZ);
-            Line testYZXYIntersect = testPlaneYZ.IntersectionLineWithPlane(testPlaneXY);
+            Line testXYYZIntersect = testPlaneXY.Intersection(testPlaneYZ);
+            Line testYZXYIntersect = testPlaneYZ.Intersection(testPlaneXY);
             testXYYZIntersect.Should().Be(Line.YAxis);
             testYZXYIntersect.Should().Be(Line.YAxis);
 
-            Line testXZYZIntersect = testPlaneXZ.IntersectionLineWithPlane(testPlaneYZ);
-            Line testYZXZIntersect = testPlaneYZ.IntersectionLineWithPlane(testPlaneXZ);
+            Line testXZYZIntersect = testPlaneXZ.Intersection(testPlaneYZ);
+            Line testYZXZIntersect = testPlaneYZ.Intersection(testPlaneXZ);
             testXZYZIntersect.Should().Be(Line.ZAxis);
             testYZXZIntersect.Should().Be(Line.ZAxis);
 
-            Line testXYXY = testPlaneXY.IntersectionLineWithPlane(testPlaneXY);
+            Line testXYXY = testPlaneXY.Intersection(testPlaneXY);
             testXYXY.Should().Be(null);
+        }
+
+        [Test()]
+        public void Plane_ParallelLineTest()
+        {
+            Line plane1Line1 = new Line(PointGenerator.MakePointWithInches(1, 1, 0));
+            Line plane1Line2 = new Line(PointGenerator.MakePointWithInches(2, 0, -1), PointGenerator.MakePointWithInches(3, 1, -1));
+            Plane testPlane1 = new Plane(plane1Line1, plane1Line2);
+
+            Line plane2Line1 = new Line(PointGenerator.MakePointWithInches(-3, 2, -2));
+            Line plane2Line2 = new Line(PointGenerator.MakePointWithInches(1, -2, -1), PointGenerator.MakePointWithInches(-2, 0, -3));
+            Plane testPlane2 = new Plane(plane2Line1, plane2Line2);
+
+            Line parallel1 = new Line(PointGenerator.MakePointWithInches(1, -2, 1), PointGenerator.MakePointWithInches(2, -1, 1));
+            Line parallel2 = new Line(PointGenerator.MakePointWithInches(-6, 4, -4));
+
+            testPlane1.IsParallelTo(parallel1).Should().BeTrue();
+            testPlane1.IsParallelTo(parallel2).Should().BeFalse();
+
+            testPlane2.IsParallelTo(parallel1).Should().BeFalse();
+            testPlane2.IsParallelTo(parallel2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Plane_PrepindicularLineTest()
+        {
+            Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, 1, 2), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
+            Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(1, 3, 3), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
+
+            Line parallel1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
+            Line parallel2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 2, -4));
+
+            testPlane1.IsPerpindicularTo(parallel1).Should().BeTrue();
+            testPlane1.IsPerpindicularTo(parallel2).Should().BeFalse();
+
+            testPlane2.IsPerpindicularTo(parallel1).Should().BeFalse();
+            testPlane2.IsPerpindicularTo(parallel2).Should().BeTrue();
         }
     }
 }
