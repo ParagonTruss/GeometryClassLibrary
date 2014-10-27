@@ -21,9 +21,9 @@ namespace GeometryClassLibraryTests
 
             Point p = new Point(xDimension, yDimension);
 
-            p.X.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 5));
-            p.Y.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 10));
-            p.Z.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
+            p.X.Should().Be(new Dimension(DimensionType.Millimeter, 5));
+            p.Y.Should().Be(new Dimension(DimensionType.Millimeter, 10));
+            p.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
         }
 
         [Test()]
@@ -35,9 +35,9 @@ namespace GeometryClassLibraryTests
 
             Point p = new Point(xDimension, yDimension, zDimension);
 
-            p.X.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
-            p.Y.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
-            p.Z.ShouldBeEquivalentTo(new Dimension(DimensionType.Millimeter, 0));
+            p.X.Should().Be(new Dimension(DimensionType.Millimeter, 0));
+            p.Y.Should().Be(new Dimension(DimensionType.Millimeter, 0));
+            p.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
         }
 
         [Test()]
