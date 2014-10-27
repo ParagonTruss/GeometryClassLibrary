@@ -542,9 +542,9 @@ namespace GeometryClassLibrary
 
             // find two lines that are not parallel
 
-            LineSegment firstLine = _planeBoundaries[0];
+            LineSegment firstLine =  this.PlaneBoundaries[0];
             LineSegment secondLine = null;
-            foreach (var lineseg in _planeBoundaries)
+            foreach (var lineseg in this.PlaneBoundaries)
             {
                 if (!lineseg.IsParallelTo(firstLine))
                 {
@@ -563,12 +563,12 @@ namespace GeometryClassLibrary
             List<LineSegment> backPolygonLines = new List<LineSegment>();
             List<LineSegment> otherPolygonLines = new List<LineSegment>();
 
-            foreach (var linesegment in _planeBoundaries)
+            foreach (var linesegment in this.PlaneBoundaries)
             {
                 List<LineSegment> polygonConstruct = new List<LineSegment>();
 
-                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector.XComponentOfDirection, directionVector.YComponentOfDirection, directionVector.ZComponentOfDirection);
-                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector.XComponentOfDirection, directionVector.YComponentOfDirection, directionVector.ZComponentOfDirection);
+                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector);
+                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector);
                 LineSegment newBackLine = new LineSegment(newBackBasePoint, newBackEndPoint);
                 backPolygonLines.Add(newBackLine);
 
