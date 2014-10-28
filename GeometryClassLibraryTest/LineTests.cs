@@ -236,17 +236,25 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_PerpindicularTest()
         {
-            Line line1 = new LineSegment(PointGenerator.MakePointWithInches(5, 0, 1));
-            Line line2 = new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 5));
-            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(-.5, 0, 5));
-            Line line4 = new LineSegment(PointGenerator.MakePointWithInches(2, 3, -1), PointGenerator.MakePointWithInches(3, 1, 0)); //1,-2,1
-            Line line5 = new LineSegment(PointGenerator.MakePointWithInches(4, -1, 1), PointGenerator.MakePointWithInches(3, 1, 0)); //-1,2,1
-            Line line6 = new LineSegment(PointGenerator.MakePointWithInches(2 ,3, -1), PointGenerator.MakePointWithInches(3, 1, 0));
+            Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Dimension(DimensionType.Inch, 1));
+            Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Dimension(DimensionType.Inch, 1));
+            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Dimension(DimensionType.Inch, 1));
+
+            Line line4 = new LineSegment(PointGenerator.MakePointWithInches(3, 5, 7));
+            Line line5 = new LineSegment(PointGenerator.MakePointWithInches(1, -2, 1));
+            Line line6 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, -3), PointGenerator.MakePointWithInches(5, 1, -4)); //4, -1, -1
 
             line1.IsPerpindicularTo(line2).Should().BeTrue();
             line1.IsPerpindicularTo(line3).Should().BeTrue();
+            line2.IsPerpindicularTo(line3).Should().BeTrue();
+            line3.IsPerpindicularTo(line1).Should().BeTrue(); //check its reversable
 
             line4.IsPerpindicularTo(line5).Should().BeTrue();
+            line4.IsPerpindicularTo(line6).Should().BeTrue();
+            line5.IsPerpindicularTo(line6).Should().BeFalse();
+            line6.IsPerpindicularTo(line4).Should().BeTrue(); //check its reversable
+
+            line1.IsPerpindicularTo(line4).Should().BeFalse();
             
         }
 
@@ -352,30 +360,74 @@ namespace ClearspanTypeLibrary.Tests
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 5
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 2), PointGenerator.MakePointWithInches(4, 5, 1)); //intersects at 4, 0, 3
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
             Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             Point intercept1 = line1.XZIntercept;
             Point intercept2 = line2.XZIntercept;
             Point intercept3 = line3.XZIntercept;
-            Point intercept4 = line4.FindXZIntercept();
+            Point intercept4 = line4.XZIntercept;
             Point intercept5 = line5.XZIntercept;
 
             intercept1.Should().Be(PointGenerator.MakePointWithInches(-1, 0, 1));
             intercept2.Should().Be(PointGenerator.MakePointWithInches(6, 0, 0));
-            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 5));
+            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 6));
             intercept4.Should().Be(PointGenerator.MakePointWithInches(4, 0, 3));
+            intercept5.Should().Be(null);
+        }
+
+        [Test()]
+        public void Line_YZIntercept()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 5), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 0, 1, 3
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 0, 1.5, -0.5
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at 0, -1, -1
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            Point intercept1 = line1.YZIntercept;
+            Point intercept2 = line2.YZIntercept;
+            Point intercept3 = line3.YZIntercept;
+            Point intercept4 = line4.YZIntercept;
+            Point intercept5 = line5.YZIntercept;
+
+            intercept1.Should().Be(PointGenerator.MakePointWithInches(0, 1, 3));
+            intercept2.Should().Be(PointGenerator.MakePointWithInches(0, 1.5, -.5));
+            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 6));
+            intercept4.Should().Be(PointGenerator.MakePointWithInches(0, -1, -1));
+            intercept5.Should().Be(null);
+        }
+
+        [Test()]
+        public void Line_XYIntercept()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 1), PointGenerator.MakePointWithInches(5, 3, 2)); //intersects at 1, 1, 0
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, -2), PointGenerator.MakePointWithInches(2, 3, -1)); //intersects at -2, 6, 0
+            Line line3 = new Line(PointGenerator.MakePointWithInches(3, 3, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at -2,-2,0
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 15, 0
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 1, 2)); //doesnt intersect
+
+            Point intercept1 = line1.XYIntercept;
+            Point intercept2 = line2.XYIntercept;
+            Point intercept3 = line3.XYIntercept;
+            Point intercept4 = line4.XYIntercept;
+            Point intercept5 = line5.XYIntercept;
+
+            intercept1.Should().Be(PointGenerator.MakePointWithInches(1, 1, 0));
+            intercept2.Should().Be(PointGenerator.MakePointWithInches(-2, 6, 0));
+            intercept3.Should().Be(PointGenerator.MakePointWithInches(-2, -2, 0));
+            intercept4.Should().Be(PointGenerator.MakePointWithInches(4, 15, 0));
             intercept5.Should().Be(null);
         }
 
         [Test()]
         public void Line_XInterceptIn2D()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, -1)); //intersects at -1
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 9, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //intersects at 4
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
             Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             Dimension intercept1 = line1.XInterceptIn2D;
@@ -384,11 +436,53 @@ namespace ClearspanTypeLibrary.Tests
             Dimension intercept4 = line4.XInterceptIn2D;
             Dimension intercept5 = line5.XInterceptIn2D;
 
-            intercept1.Inches.Should().Be(-1);
-            intercept2.Inches.Should().Be(6);
-            intercept3.Inches.Should().Be(0);
-            intercept4.Inches.Should().Be(4);
+            intercept1.Should().Be(new Dimension(DimensionType.Inch, -1));
+            intercept2.Should().Be(new Dimension(DimensionType.Inch, 6));
+            intercept3.Should().Be(new Dimension(DimensionType.Inch, 0));
+            intercept4.Should().Be(new Dimension(DimensionType.Inch, 4));
             intercept5.Should().Be(null);
+        }
+
+        [Test()]
+        public void Line_YInterceptIn2D()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 5), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 0, 1, 3
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 0, 1.5, -0.5
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at 0, -1, -1
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            Dimension intercept1 = line1.YInterceptIn2D;
+            Dimension intercept2 = line2.YInterceptIn2D;
+            Dimension intercept3 = line3.YInterceptIn2D;
+            Dimension intercept4 = line4.YInterceptIn2D;
+            Dimension intercept5 = line5.YInterceptIn2D;
+
+            intercept1.Should().Be(new Dimension(DimensionType.Inch, 1));
+            intercept2.Should().Be(new Dimension(DimensionType.Inch, 1.5));
+            intercept3.Should().Be(new Dimension(DimensionType.Inch, 0));
+            intercept4.Should().Be(new Dimension(DimensionType.Inch, -1));
+            intercept5.Should().Be(null);
+        }
+
+        [Test()]
+        public void Line_Sort()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            List<Line> lines = new List<Line> { line2, line3, line5, line4, line1 };
+
+            lines.Sort();
+
+            lines[0].Should().Be(line1);
+            lines[1].Should().Be(line3);
+            lines[2].Should().Be(line4);
+            lines[3].Should().Be(line2);
+            lines[4].Should().Be(line5);
         }
     }
 }

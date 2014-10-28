@@ -72,7 +72,7 @@ namespace GeometryClassLibraryTests
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 1, -1);            
             Vector testNormalVector = new Vector(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
-            Plane testPlane = new Plane(testBasePoint, testNormalVector);
+            Plane testPlane = new Plane(testNormalVector.Direction, testBasePoint);
 
             Line rotationAxis = new Line(PointGenerator.MakePointWithInches(1, -1, -1), new Vector(PointGenerator.MakePointWithInches(1, 1, 1)));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
@@ -81,7 +81,7 @@ namespace GeometryClassLibraryTests
 
             Point expectedPoint = PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495);
             Vector expectedVector = new Vector(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
-            Plane expectedResult = new Plane(expectedPoint, expectedVector);
+            Plane expectedResult = new Plane(expectedVector.Direction, expectedPoint);
 
             bool test = expectedPoint == actualResult.BasePoint;
             bool test2 = expectedVector == actualResult.NormalVector;
@@ -99,7 +99,7 @@ namespace GeometryClassLibraryTests
             Point referencePoint2 = PointGenerator.MakePointWithInches(0, 2, 1);
             Vector testNormalVector = new Vector(PointGenerator.MakePointWithInches(1, 0, 0));
 
-            Plane testPlane = new Plane(PointGenerator.MakePointWithInches(0,0,0), testNormalVector);
+            Plane testPlane = new Plane(testNormalVector.Direction, PointGenerator.MakePointWithInches(0,0,0));
 
             testPlane.PointIsOnSameSideAs(testPoint, referencePoint).Should().BeTrue(); //test one on the same side
             testPlane.PointIsOnSameSideAs(testPoint2, referencePoint).Should().BeFalse(); //test one on the opposite side
@@ -113,7 +113,7 @@ namespace GeometryClassLibraryTests
             Point planeBase = PointGenerator.MakePointWithInches(1, -4, 2);
             Vector testNormalVectorOffOrigin = new Vector(PointGenerator.MakePointWithInches(-1, 2, 1));
 
-            Plane testPlaneOffOrigin = new Plane(planeBase, testNormalVectorOffOrigin);
+            Plane testPlaneOffOrigin = new Plane(testNormalVectorOffOrigin.Direction, planeBase);
 
             testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin, referencePointOffOrigin).Should().BeTrue();
             testPlaneOffOrigin.PointIsOnSameSideAs(testPointOffOrigin2, referencePointOffOrigin).Should().BeFalse();
@@ -125,8 +125,8 @@ namespace GeometryClassLibraryTests
         public void Plane_IntersectionLineWithPlane()
         {
             //try all the zero cases
-            Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, 1, 2), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
-            Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(1, 3, 3), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
+            Plane testPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(2, -1, 1)), PointGenerator.MakePointWithInches(2, 1, 2));
+            Plane testPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, -1)), PointGenerator.MakePointWithInches(1, 3, 3));
 
             Line test12Intersect = testPlane1.Intersection(testPlane2);
             Line test21Intersect = testPlane2.Intersection(testPlane1);
@@ -193,8 +193,8 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Plane_PrepindicularLineTest()
         {
-            Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, 1, 2), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
-            Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(1, 3, 3), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
+            Plane testPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(2, -1, 1)), PointGenerator.MakePointWithInches(2, 1, 2));
+            Plane testPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, -1)), PointGenerator.MakePointWithInches(1, 3, 3));
 
             Line perpindicular1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
             Line perpindicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 2, -4));
@@ -209,11 +209,11 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Plane_IntersectLine()
         {
-            Plane testPlane1 = new Plane(PointGenerator.MakePointWithInches(2, -1, 1), new Vector(PointGenerator.MakePointWithInches(2, -1, 1)));
-            Plane testPlane2 = new Plane(PointGenerator.MakePointWithInches(2, -1, 1), new Vector(PointGenerator.MakePointWithInches(1, 1, -1)));
+            Plane testPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(2, -1, 1)), PointGenerator.MakePointWithInches(2, -1, 1));
+            Plane testPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 2, -1)), PointGenerator.MakePointWithInches(2, -1, 1));
 
             Line perpindicular1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
-            Line perpindicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 2, -4));
+            Line perpindicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 3, -4)); //1, 2, -1
 
             Point intersection11 = testPlane1.Intersection(perpindicular1);
             Point intersection12 = testPlane1.Intersection(perpindicular2);
@@ -221,7 +221,9 @@ namespace GeometryClassLibraryTests
             Point intersection22 = testPlane2.Intersection(perpindicular2);
 
             intersection11.Should().Be(PointGenerator.MakePointWithInches(2, -1, 1));
-            intersection12.Should().Be(PointGenerator.MakePointWithInches(2, -1, 1));
+            intersection21.Should().Be(PointGenerator.MakePointWithInches(2, -1, 1));
+            intersection12.Should().Be(PointGenerator.MakePointWithInches(-1, -7, 1));
+            intersection22.Should().Be(PointGenerator.MakePointWithInches(1.5, -2, -1.5));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     /// </summary>
     [DebuggerDisplay("UNITS = Inches, BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches} , {BasePoint.Z.Inches}, Vector = {DirectionVector.XComponentOfDirection.Inches}, {DirectionVector.YComponentOfDirection.Inches}, {DirectionVector.ZComponentOfDirection.Inches}")]
     [Serializable]
-    public class Line
+    public class Line : IComparable<Line>
     {
         #region Properties
 
@@ -78,18 +78,18 @@ namespace GeometryClassLibrary
 
         public Point XZIntercept
         {
-            get { return this.FindXYIntercept(); }
+            get { return this.FindXZIntercept(); }
         }
 
         public Point YZIntercept
         {
-            get { return this.FindXYIntercept(); }
+            get { return this.FindYZIntercept(); }
         }
 
         public Point FindXYIntercept()
         {
             //make the x axis plane
-            Plane xyPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(0,0,1)));
+            Plane xyPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(0,0,1)));
 
             //then find out where the line and the plane intersect
             return xyPlane.Intersection(this);
@@ -97,8 +97,11 @@ namespace GeometryClassLibrary
 
         public Point FindXZIntercept()
         {
+            //normal vector
+            Vector normal = new Vector(PointGenerator.MakePointWithInches(0, 1, 0));
+
             //make the x axis plane
-            Plane xzPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(0, 1, 0)));
+            Plane xzPlane = new Plane(normal.Direction);
 
             //then find out where the line and the plane intersect
             return xzPlane.Intersection(this);
@@ -107,7 +110,7 @@ namespace GeometryClassLibrary
         public Point FindYZIntercept()
         {
             //make the x axis plane
-            Plane yzPlane = new Plane(new Vector(PointGenerator.MakePointWithInches(1, 0, 0)));
+            Plane yzPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)));
 
             //then find out where the line and the plane intersect
             return yzPlane.Intersection(this);
@@ -244,6 +247,33 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// planning on implementing by sorting based on smallest x intercept in 2d plane
+        /// from left to right and if they share then the one that occurs first
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Line other)
+        {
+            //use == so we dont have to worry about null
+            if (this.XInterceptIn2D == other.XInterceptIn2D)
+            {
+                return 0;
+            }
+            else
+            {
+                if (this.XInterceptIn2D == null)
+                {
+                    return 1;
+                }
+                else if (other.XInterceptIn2D == null)
+                {
+                    return -1;
+                }
+                return this.XInterceptIn2D.CompareTo(other.XInterceptIn2D);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -341,7 +371,8 @@ namespace GeometryClassLibrary
         public bool IsPerpindicularTo(Line passedLine)
         {
             //if they are perpindicular then the dot product should be 0
-            return (passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch) == new Dimension());
+            Dimension dotted = passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch);
+            return (dotted == new Dimension());
         }
 
         /// <summary>
@@ -516,6 +547,21 @@ namespace GeometryClassLibrary
         public virtual Vector UnitVector(DimensionType passedType)
         {
             return Direction.UnitVector(passedType);
+        }
+
+        /// <summary>
+        /// Returns the Direction so that y is always positive, useful for comparing slopes
+        /// </summary>
+        /// <returns></returns>
+        public Direction DirectionAssumingPositiveY()
+        {
+            //if its greater than 360 we can subtract 180 from it to it is in the opposite direction and we need to flip it
+            if (this.Direction.Phi > new Angle(AngleType.Degree, 180))
+            {
+                return this.Direction.Reverse();
+            }
+
+            return new Direction(this.Direction);
         }
 
         #endregion

@@ -749,7 +749,7 @@ namespace GeometryClassLibrary
             Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.UnitVector(DimensionType.Inch));
 
             //now make it with the normal we found anf the lines basepoint
-            Plane divisionPlane = new Plane(slicingLine.BasePoint, divisionPlaneNormal);
+            Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
 
             return this.Slice(slicingLine, divisionPlane);
         }
@@ -1213,7 +1213,7 @@ namespace GeometryClassLibrary
                     Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(line.UnitVector(DimensionType.Inch));
 
                     //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
-                    Plane divisionPlane = new Plane(line.BasePoint, divisionPlaneNormal);
+                    Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);
 
                     //if the point is on the side outside of our region we know it is not in it and can return
                     if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))

@@ -300,7 +300,7 @@ namespace ClearspanTypeLibrary.Tests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), new Vector(PointGenerator.MakePointWithInches(1,0,0)));
+            Plane slicingPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1,0,0)), PointGenerator.MakePointWithInches(1, 0, 0));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
@@ -356,7 +356,7 @@ namespace ClearspanTypeLibrary.Tests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), new Vector(PointGenerator.MakePointWithInches(1, 1, 0)));
+            Plane slicingPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
@@ -413,8 +413,8 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
             //make our slices
-            Plane slicingPlane1 = new Plane(PointGenerator.MakePointWithInches(1, 0, 0), new Vector(PointGenerator.MakePointWithInches(1, 0, 0)));
-            Plane slicingPlane2 = new Plane(PointGenerator.MakePointWithInches(2, 0, 0), new Vector(PointGenerator.MakePointWithInches(1, 1, 0)));
+            Plane slicingPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
+            Plane slicingPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, 0)), PointGenerator.MakePointWithInches(2, 0, 0));
             List<Plane> multiSlices = new List<Plane> { slicingPlane1, slicingPlane2 };
 
             List<Polyhedron> results = testPolyhedron.Slice(multiSlices);

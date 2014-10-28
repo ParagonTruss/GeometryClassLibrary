@@ -65,41 +65,18 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBasePoint"></param>
         /// <param name="passedNormalVector"></param>
-        public Plane(Point passedBasePoint, Vector passedNormalVector)
+        public Plane(Direction passedDirection, Point passedBasePoint = null)
         {
-            this.BasePoint = passedBasePoint;
-            this.NormalVector = new Vector(passedNormalVector);
-        }
-
-        /// <summary>
-        /// A point on a plane and vector that is normal (prependicular) to that plane define the plane
-        /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedNormalVector"></param>
-        public Plane(Line normalDirection)
-        {
-            this.BasePoint = new Point();
-            this.NormalVector = new Vector(normalDirection);
-        }
-
-        /// <summary>
-        ///  A point and a line define a plane if the point is not on the line
-        /// </summary>
-        /// <param name="passedPoint"></param>
-        /// <param name="passedLine"></param>
-        public Plane(Point passedPoint, Line passedLine)
-        {
-            if(!passedPoint.IsOnLine(passedLine))
+            if (passedBasePoint == null)
             {
-                this.BasePoint = passedPoint;
-                Vector vectorFromLineToPoint = new Vector(passedLine.BasePoint, passedPoint);
-                this.NormalVector = passedLine.UnitVector(DimensionType.Inch).CrossProduct(vectorFromLineToPoint.UnitVector(DimensionType.Inch));
+                this.BasePoint = new Point();
             }
             else
             {
-                String message = "That point is on the line";
-                throw new NotSupportedException(message);
+                this.BasePoint = passedBasePoint;
             }
+
+            this.NormalVector = new Vector(this.BasePoint, passedDirection, new Dimension(DimensionType.Inch, 1));
         }
 
         /// <summary>
@@ -139,7 +116,6 @@ namespace GeometryClassLibrary
                 throw new ArgumentException("The passed Lines are the same!");
             }
         }
-
         
         public Plane(IList<Line> passedLineList)
         {
@@ -257,7 +233,7 @@ namespace GeometryClassLibrary
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedAxis, passedAngle);
             Vector newNormalVector = this.NormalVector.Rotate(passedAxis, passedAngle);
-            return new Plane(newBasePoint, newNormalVector);
+            return new Plane(newNormalVector.Direction, newBasePoint);
         }
 
         /// <summary>

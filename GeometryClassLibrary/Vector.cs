@@ -122,17 +122,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a new zero vector with the given BasePoint in the given direction
-        /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
-        public Vector(Point passedBasePoint, Direction passedDirection)
-            : base(passedBasePoint, passedDirection)
-        {
-            _magnitude = new Dimension();
-        }
-
-        /// <summary>
         /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
         /// <param name="passedBasePoint"></param>
@@ -149,10 +138,17 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedMagnitude"></param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Dimension passedMagnitude)
+        public Vector(Point passedBasePoint, Direction passedDirection, Dimension passedMagnitude = null)
             : base(passedBasePoint, passedDirection)
         {
-            _magnitude = new Dimension(passedMagnitude);
+            if (passedMagnitude == null)
+            {
+                _magnitude = new Dimension();
+            }
+            else
+            {
+                _magnitude = new Dimension(passedMagnitude);
+            }
         }
 
         /// <summary>

@@ -9,6 +9,12 @@ namespace GeometryClassLibrary
 {
     public static class IListLineExtensionMethods
     {
+        /// <summary>
+        /// Returns the line with the smallest x intercept on the 2D xy-plane. If two share the same intercept it returns the
+        /// first line in the list with that segment
+        /// </summary>
+        /// <param name="passedLines"></param>
+        /// <returns></returns>
         public static Line LineWithSmallestXInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
@@ -21,17 +27,26 @@ namespace GeometryClassLibrary
 
             for (int i = 1; i < passedLines.Count; i++)
             {
-                if (passedLines[i].XInterceptIn2D < smallestX)
+                if (passedLines[i].XInterceptIn2D != null)
                 {
-                    smallestXLine = passedLines[i];
-                    smallestX = passedLines[i].XInterceptIn2D;
+                    if (smallestX == null || passedLines[i].XInterceptIn2D < smallestX)
+                    {
+                        smallestXLine = passedLines[i];
+                        smallestX = passedLines[i].XInterceptIn2D;
+                    }
                 }
             }
 
             return smallestXLine;
         }
 
-        public static Line LineWithLargestXIntercept(this IList<Line> passedLines)
+        /// <summary>
+        /// Returns the line with the largest x intercept on the 2D xy-plane. If two share the same intercept it returns the
+        /// first line in the list with that segment
+        /// </summary>
+        /// <param name="passedLines"></param>
+        /// <returns></returns>
+        public static Line LineWithLargestXInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
             {
@@ -43,7 +58,7 @@ namespace GeometryClassLibrary
 
             for (int i = 1; i < passedLines.Count; i++)
             {
-                if (passedLines[i].XInterceptIn2D < largestX)
+                if (passedLines[i].XInterceptIn2D != null && (largestX == null || passedLines[i].XInterceptIn2D > largestX))
                 {
                     largestXLine = passedLines[i];
                     largestX = passedLines[i].XInterceptIn2D;
@@ -53,14 +68,60 @@ namespace GeometryClassLibrary
             return largestXLine;
         }
 
-        public static Line LineWithSmallestYIntercept(this IList<Line> passedLines)
+        /// <summary>
+        /// Returns the line with the smallest y intercept on the 2D xy-plane. If two share the same intercept it returns the
+        /// first line in the list with that segment
+        /// </summary>
+        /// <param name="passedLines"></param>
+        /// <returns></returns>
+        public static Line LineWithSmallestYIntercept2D(this IList<Line> passedLines)
         {
-            throw new NotImplementedException();
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            Line smallestYLine = passedLines[0];
+            Dimension smallestY = passedLines[0].YInterceptIn2D;
+
+            for (int i = 1; i < passedLines.Count; i++)
+            {
+                if (passedLines[i].YInterceptIn2D != null && (smallestY == null || passedLines[i].YInterceptIn2D < smallestY))
+                {
+                    smallestYLine = passedLines[i];
+                    smallestY = passedLines[i].YInterceptIn2D;
+                }
+            }
+
+            return smallestYLine;
         }
 
-        public static Line LineWithLargestYIntercept(this IList<Line> passedLines)
+        /// <summary>
+        /// Returns the line with the largest y intercept on the 2D xy-plane. If two share the same intercept it returns the
+        /// first line in the list with that segment
+        /// </summary>
+        /// <param name="passedLines"></param>
+        /// <returns></returns>
+        public static Line LineWithLargestYIntercept2D(this IList<Line> passedLines)
         {
-            throw new NotImplementedException();
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            Line largestYLine = passedLines[0];
+            Dimension largestY = passedLines[0].YInterceptIn2D;
+
+            for (int i = 1; i < passedLines.Count; i++)
+            {
+                if (passedLines[i].YInterceptIn2D != null && (largestY == null || passedLines[i].YInterceptIn2D > largestY))
+                {
+                    largestYLine = passedLines[i];
+                    largestY = passedLines[i].YInterceptIn2D;
+                }
+            }
+
+            return largestYLine;
         }
 
         /*public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
