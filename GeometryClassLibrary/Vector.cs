@@ -138,7 +138,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedMagnitude"></param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Dimension passedMagnitude = null)
+        public Vector(Point passedBasePoint, Direction passedDirection, Dimension? passedMagnitude = null)
             : base(passedBasePoint, passedDirection)
         {
             if (passedMagnitude == null)
@@ -147,7 +147,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                _magnitude = new Dimension(passedMagnitude);
+                _magnitude = new Dimension(passedMagnitude.Value);
             }
         }
 

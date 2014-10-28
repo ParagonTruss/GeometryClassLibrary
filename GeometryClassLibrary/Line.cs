@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
             {
                 if (XZIntercept == null)
                 {
-                    return null;
+                    throw new Exception("This line does not intercept the x axis");
                 }
                 else
                 {
@@ -62,7 +62,7 @@ namespace GeometryClassLibrary
             {
                 if (YZIntercept == null)
                 {
-                    return null;
+                    throw new Exception("This line does not intercept the y axis");
                 }
                 else
                 {
@@ -255,21 +255,46 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public int CompareTo(Line other)
         {
-            //use == so we dont have to worry about null
+            //see if the firt line doesnt intersect
+            try
+            {
+                //if it doesnt throw an error it does and we can keep going
+                Dimension nullTest = this.XInterceptIn2D;
+            }
+            catch (Exception)
+            {
+                //see if the second line also doesnt intersect
+                try
+                {
+                    //the second one intersects, so the first is "greater" than the second
+                    Dimension nullTest = this.XInterceptIn2D;
+                    return 1;
+                }
+                catch (Exception) //if they both dont intersect they are equal
+                {
+                    return 0;
+                }
+            }
+
+            //see if only the second one doesnt intersect
+            try
+            {
+                //if it doesnt throw an error it does and we can keep going
+                Dimension nullTest = other.XInterceptIn2D;
+            }
+            catch (Exception)
+            {
+                //the second doesnt intersect so the first is "smaller" than the second
+                return -1;
+            }
+
+            //now that we've handled the cases where they dont intersect, we can check the values
             if (this.XInterceptIn2D == other.XInterceptIn2D)
             {
                 return 0;
             }
             else
             {
-                if (this.XInterceptIn2D == null)
-                {
-                    return 1;
-                }
-                else if (other.XInterceptIn2D == null)
-                {
-                    return -1;
-                }
                 return this.XInterceptIn2D.CompareTo(other.XInterceptIn2D);
             }
         }

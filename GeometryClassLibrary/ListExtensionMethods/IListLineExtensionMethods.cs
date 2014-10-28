@@ -22,19 +22,22 @@ namespace GeometryClassLibrary
                 return null;
             }
 
-            Line smallestXLine = passedLines[0];
-            Dimension smallestX = passedLines[0].XInterceptIn2D;
+            //make them null so that we can handle if the first element in the list never intersects
+            Line smallestXLine = null;
+            Dimension? smallestX = null;
 
-            for (int i = 1; i < passedLines.Count; i++)
+            for (int i = 0; i < passedLines.Count; i++)
             {
-                if (passedLines[i].XInterceptIn2D != null)
+                try
                 {
-                    if (smallestX == null || passedLines[i].XInterceptIn2D < smallestX)
+                    if (smallestX == null || passedLines[i].XInterceptIn2D < smallestX.Value)
                     {
                         smallestXLine = passedLines[i];
                         smallestX = passedLines[i].XInterceptIn2D;
                     }
                 }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
             }
 
             return smallestXLine;
@@ -53,16 +56,22 @@ namespace GeometryClassLibrary
                 return null;
             }
 
-            Line largestXLine = passedLines[0];
-            Dimension largestX = passedLines[0].XInterceptIn2D;
+            //make them null so that we can handle if the first element in the list never intersects
+            Line largestXLine = null;// passedLines[0];
+            Dimension? largestX = null;// passedLines[0].XInterceptIn2D;
 
-            for (int i = 1; i < passedLines.Count; i++)
+            for (int i = 0; i < passedLines.Count; i++)
             {
-                if (passedLines[i].XInterceptIn2D != null && (largestX == null || passedLines[i].XInterceptIn2D > largestX))
+                try
                 {
-                    largestXLine = passedLines[i];
-                    largestX = passedLines[i].XInterceptIn2D;
+                    if (largestX == null || passedLines[i].XInterceptIn2D > largestX)
+                    {
+                        largestXLine = passedLines[i];
+                        largestX = passedLines[i].XInterceptIn2D;
+                    }
                 }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
             }
 
             return largestXLine;
@@ -74,23 +83,29 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLines"></param>
         /// <returns></returns>
-        public static Line LineWithSmallestYIntercept2D(this IList<Line> passedLines)
+        public static Line LineWithSmallestYInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
             {
                 return null;
             }
 
-            Line smallestYLine = passedLines[0];
-            Dimension smallestY = passedLines[0].YInterceptIn2D;
+            //make them null so that we can handle if the first element in the list never intersects
+            Line smallestYLine = null;
+            Dimension? smallestY = null;
 
-            for (int i = 1; i < passedLines.Count; i++)
+            for (int i = 0; i < passedLines.Count; i++)
             {
-                if (passedLines[i].YInterceptIn2D != null && (smallestY == null || passedLines[i].YInterceptIn2D < smallestY))
+                try
                 {
-                    smallestYLine = passedLines[i];
-                    smallestY = passedLines[i].YInterceptIn2D;
+                    if (smallestY == null || passedLines[i].YInterceptIn2D < smallestY)
+                    {
+                        smallestYLine = passedLines[i];
+                        smallestY = passedLines[i].YInterceptIn2D;
+                    }
                 }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
             }
 
             return smallestYLine;
@@ -102,23 +117,29 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLines"></param>
         /// <returns></returns>
-        public static Line LineWithLargestYIntercept2D(this IList<Line> passedLines)
+        public static Line LineWithLargestYInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
             {
                 return null;
             }
 
-            Line largestYLine = passedLines[0];
-            Dimension largestY = passedLines[0].YInterceptIn2D;
+            //make them null so that we can handle if the first element in the list never intersects
+            Line largestYLine = null;
+            Dimension? largestY = null;
 
-            for (int i = 1; i < passedLines.Count; i++)
+            for (int i = 0; i < passedLines.Count; i++)
             {
-                if (passedLines[i].YInterceptIn2D != null && (largestY == null || passedLines[i].YInterceptIn2D > largestY))
+                try
                 {
-                    largestYLine = passedLines[i];
-                    largestY = passedLines[i].YInterceptIn2D;
+                    if (largestY == null || passedLines[i].YInterceptIn2D > largestY)
+                    {
+                        largestYLine = passedLines[i];
+                        largestY = passedLines[i].YInterceptIn2D;
+                    }
                 }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
             }
 
             return largestYLine;
