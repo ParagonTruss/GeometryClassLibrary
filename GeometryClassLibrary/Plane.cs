@@ -191,7 +191,7 @@ namespace GeometryClassLibrary
             // checks to make sure that every line is on the line segment
             foreach (LineSegment segment in passedPlaneRegion.PlaneBoundaries)
             {
-                if (!Contains(segment))
+                if (!this.Contains(segment))
                 {
                     return false;
                 }
@@ -203,12 +203,12 @@ namespace GeometryClassLibrary
         public bool Contains(Line passedLine)
         {
             // weird calculus voodoo
-            Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
+           /* Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
             Dimension dotProduct1 = planeVector.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
-            Dimension dotProduct2 = passedLine.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
+            Dimension dotProduct2 = passedLine.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);*/
 
             // if both of the vectors' dotproducts come out to 0, the line is on the plane
-            return (dotProduct1.Equals(new Dimension()) && dotProduct2.Equals(new Dimension()));
+            return (this.IsParallelTo(passedLine) && this.Contains(passedLine.BasePoint));
         }
 
         /// <summary>

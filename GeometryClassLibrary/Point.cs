@@ -295,29 +295,35 @@ namespace GeometryClassLibrary
                     cosTheta * (this.Y - centerPoint.Y).Inches + centerPoint.Y.Inches))
             );
         }
+        /*
+/// <summary>
+/// Moves the point the specified distance in the specified direction
+/// </summary>
+/// <returns>a new point in the new location</returns>
+public Point Translate(Direction passedDirection, Dimension passedDisplacement)
+{
+    Dimension xDisplacement = passedDisplacement * passedDirection.XComponentOfDirection;
+    Dimension yDisplacement = passedDisplacement * passedDirection.YComponentOfDirection;
+    Dimension zDisplacement = passedDisplacement * passedDirection.ZComponentOfDirection;
 
-        /// <summary>
-        /// Moves the point the specified distance in the specified direction
-        /// </summary>
-        /// <returns>a new point in the new location</returns>
-        public Point Translate(Direction passedDirection, Dimension passedDisplacement)
+    Point shift = new Point(xDisplacement, yDisplacement, zDisplacement);
+    return (this + shift);
+}
+
+
+/// <summary>
+/// Moves the point in the specified direction by the magnitude of the direction vector
+/// </summary>
+/// <returns>a new point in the new location</returns>
+public Point Translate(Vector passedDisplacementVector)
+{
+    Point shift = new Point(passedDisplacementVector.XComponent, passedDisplacementVector.YComponent, passedDisplacementVector.ZComponent);
+    return (this + shift);
+}*/
+
+        public Point Translate(Point passedDisplacementPoint)
         {
-            Dimension xDisplacement = passedDisplacement * passedDirection.XComponentOfDirection;
-            Dimension yDisplacement = passedDisplacement * passedDirection.YComponentOfDirection;
-            Dimension zDisplacement = passedDisplacement * passedDirection.ZComponentOfDirection;
-
-            Point shift = new Point(xDisplacement, yDisplacement, zDisplacement);
-            return (this + shift);
-        }
-
-        /// <summary>
-        /// Moves the point in the specified direction by the magnitude of the direction vector
-        /// </summary>
-        /// <returns>a new point in the new location</returns>
-        public Point Translate(Vector passedDisplacementVector)
-        {
-            Point shift = new Point(passedDisplacementVector.XComponent, passedDisplacementVector.YComponent, passedDisplacementVector.ZComponent);
-            return (this + shift);
+            return (this + passedDisplacementPoint);
         }
 
         /// <summary>
@@ -383,22 +389,16 @@ namespace GeometryClassLibrary
 
             Line axisForRotating = passedAxisLine;
 
-            Direction directionFromOriginToAxis = new Direction();
-            Dimension distanceFromOriginToAxis = new Dimension();
-
             if(!originIsOnPassedAxis)
             {
                 //Must translate everything so that the axis line goes through the origin before rotating
-                Line directionLine = originPoint.MakePerpendicularLineSegment(passedAxisLine);
 
-                directionFromOriginToAxis = directionLine.Direction;
-                distanceFromOriginToAxis = originPoint.DistanceTo(axisForRotating);
+                //Move the point negative the basepoint from the origin
+                pointForRotating = this.Translate(new Point() - passedAxisLine.BasePoint);
 
-                //Move the point
-                pointForRotating = this.Translate(directionFromOriginToAxis, distanceFromOriginToAxis * -1);
-                
                 //Make the axis go through the origin
                 axisForRotating = new Line(originPoint, passedAxisLine.Direction);
+
             }
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, passedRotationAngle);
@@ -420,9 +420,8 @@ namespace GeometryClassLibrary
             else
             {
                 //Must shift the point back by the same distance we shifted it before rotating it
-                return pointToReturn.Translate(directionFromOriginToAxis, distanceFromOriginToAxis);
+                return pointToReturn + passedAxisLine.BasePoint;
             }
-
         }
 
         /// <summary>
@@ -525,7 +524,7 @@ namespace GeometryClassLibrary
             }
 
             //we need to apply each rotation in order to the point
-            foreach(Rotation rotation in passedShift.rotationsToApply)
+            foreach(Rotation rotation in passedShift.RotationsToApply)
             {
                 pointToReturn = pointToReturn.Rotate3D(rotation.AxisToRotateAround, rotation.AngleToRotate);
             }

@@ -30,18 +30,18 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point MidPoint
         {
-            get 
+            get
             {
                 //Find midpoint for each component
                 Dimension xMid = (base.Magnitude / 2) * base.Direction.XComponentOfDirection;
                 Dimension yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
-                Dimension zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection; 
+                Dimension zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection;
 
                 //then add our base point so it is in the right location
                 return new Point(xMid, yMid, zMid) + this.BasePoint;
             }
         }
-        
+
         #endregion
 
         #region Constructors
@@ -89,7 +89,7 @@ namespace GeometryClassLibrary
         /// <param name="passedDirection"></param>
         public LineSegment(Point passedBasePoint, Vector passedDirection)
             : base(passedBasePoint, passedDirection) { }
-        
+
         /// <summary>
         /// Creates a new LineSegment with the given BasePoint in the given direction with the given magnitude
         /// </summary>
@@ -262,6 +262,7 @@ namespace GeometryClassLibrary
             return this.Shift(passedShift);
         }
 
+        /*
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
@@ -271,7 +272,19 @@ namespace GeometryClassLibrary
         public new LineSegment Translate(Direction passedDirection, Dimension passedDisplacement)
         {
             return new LineSegment(base.Translate(passedDirection, passedDisplacement));
+        }*/
+
+        /// <summary>
+        /// Translates the vector the given distance in the given direction
+        /// </summary>
+        /// <param name="passedDirection"></param>
+        /// <param name="passedDisplacement"></param>
+        /// <returns></returns>
+        public new LineSegment Translate(Point translation)
+        {
+            return new LineSegment(base.Translate(translation));
         }
+
 
         #endregion
     }

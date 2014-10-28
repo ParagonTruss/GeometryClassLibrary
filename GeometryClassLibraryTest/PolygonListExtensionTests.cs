@@ -31,7 +31,7 @@ namespace GeometryClassLibraryTest
             planes.Add(polygon);
             planes.Add(polygon2);
 
-            Shift shift = new Shift(new Vector(PointGenerator.MakePointWithInches(2, 0, 0)));
+            Shift shift = new Shift(PointGenerator.MakePointWithInches(2, 0, 0));
 
             List<LineSegment> polygonExpectedLines = new List<LineSegment>();
             polygonExpectedLines.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(4, 3, 1)));

@@ -39,15 +39,15 @@ namespace GeometryClassLibrary
         }
 
 
-        private Vector _displacement;
-        public Vector Displacement
+        private Point _displacement;
+        public Point Displacement
         {
             get { return _displacement; }
         }
 
 
         private List<Rotation> _rotationsToApply;
-        public List<Rotation> rotationsToApply
+        public List<Rotation> RotationsToApply
         {
             get { return _rotationsToApply; }
         }
@@ -85,39 +85,68 @@ namespace GeometryClassLibrary
 
         public Shift()
         {
-            this._displacement = new Vector();
+            this._displacement = new Point();
             this._rotationsToApply = new List<Rotation>();
         }
 
         public Shift(Rotation passedRotation)
         {
-            this._displacement = new Vector();
+            this._displacement = new Point();
             this._rotationsToApply = new List<Rotation>() { passedRotation };
         }
 
+        /*
         public Shift(Vector passedDisplacement)
         {
-            this._displacement = passedDisplacement;
+            this._displacement = passedDisplacement.EndPoint;
             this._rotationsToApply = new List<Rotation>();
         }
         public Shift(Translation passedTranslation)
             : this((Vector)passedTranslation) { }
+        */
+        /*public Shift(Vector passedDisplacement, Rotation passedRotation)
+        {
+            this._displacement = passedDisplacement.EndPoint;
+            this._rotationsToApply = new List<Rotation>() { passedRotation };
+        }*/
 
-        public Shift(Vector passedDisplacement, Rotation passedRotation)
+        public Shift(Point passedDisplacement)
+        {
+            this._displacement = passedDisplacement;
+            this._rotationsToApply = new List<Rotation>();
+        }
+
+
+        public Shift(Point passedDisplacement, Rotation passedRotation)
         {
             this._displacement = passedDisplacement;
             this._rotationsToApply = new List<Rotation>() { passedRotation };
         }
-        public Shift(Translation passedTranslation, Rotation passedRotation)
+
+
+        public Shift(Point returnDisplancement, List<Rotation> returnRotations)
+        {
+            // TODO: Complete member initialization
+            this._displacement = returnDisplancement;
+            this._rotationsToApply = returnRotations;
+        }
+
+
+
+
+        /*public Shift(Translation passedTranslation, Rotation passedRotation)
             : this((Vector)passedTranslation, passedRotation) { }
 
         public Shift(Vector passedDisplacement, List<Rotation> passedRotations)
         {
-            this._displacement = passedDisplacement;
+            this._displacement = passedDisplacement.EndPoint;
             this._rotationsToApply = passedRotations;
         }
+
         public Shift(Translation passedTranslation, List<Rotation> passedRotations)
             : this((Vector)passedTranslation, passedRotations) { }
+         * */
+
 
         #region Overloaded Operators
 
@@ -231,12 +260,12 @@ namespace GeometryClassLibrary
             returnRotations.Reverse();
 
             //now we have to do some magic to turn this back into the right spot since it will happen after the rotations again
-            Vector returnDisplancement = _displacement.Negate();
+            Point returnDisplancement = new Point() - _displacement;
 
             //create and return new shift
-            Shift test = new Shift(returnDisplancement, returnRotations);
-            test._isNegatedShift = true;
-            return test;
+            Shift toReturn = new Shift(returnDisplancement, returnRotations);
+            toReturn._isNegatedShift = true;
+            return toReturn;
         }
         #endregion
     }

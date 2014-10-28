@@ -541,7 +541,7 @@ namespace GeometryClassLibrary
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);
 
             //next translate the vector to the correct position
-            return flipped.Translate(this.Direction, this.Magnitude);
+            return flipped.Translate(flipped.EndPoint);
         }
 
         /// <summary>
@@ -590,6 +590,7 @@ namespace GeometryClassLibrary
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
 
+        /*
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
@@ -602,7 +603,22 @@ namespace GeometryClassLibrary
             Point newEndPoint = this.EndPoint.Translate(passedDirection, passedDisplacement);
 
             return new Vector(newBasePoint, newEndPoint);
+        }*/      
+  
+        /// <summary>
+        /// Translates the vector the given distance in the given direction
+        /// </summary>
+        /// <param name="passedDirection"></param>
+        /// <param name="passedDisplacement"></param>
+        /// <returns></returns>
+        public new Vector Translate(Point translation)
+        {
+            Point newBasePoint = this.BasePoint.Translate(translation);
+            Point newEndPoint = this.EndPoint.Translate(translation);
+
+            return new Vector(newBasePoint, newEndPoint);
         }
+
 
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction

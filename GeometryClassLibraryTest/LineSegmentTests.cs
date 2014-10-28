@@ -152,10 +152,11 @@ namespace ClearspanTypeLibrary.Tests
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
-            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
+            //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            //Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
+            Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
-            LineSegment actualSegment1 = segment1.Translate(testDirection, testDisplacement);
+            LineSegment actualSegment1 = segment1.Translate(testDisplacement);
 
             LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(-1, 12, 11), PointGenerator.MakePointWithInches(-5, 8, 8));
 

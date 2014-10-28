@@ -259,6 +259,17 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
+        public Polygon Translate(Point translation)
+        {
+            List<LineSegment> newBoundaryList = new List<LineSegment>();
+            foreach (LineSegment segment in this.PlaneBoundaries)
+            {
+                newBoundaryList.Add(segment.Translate(translation));
+            }
+            return new Polygon(newBoundaryList);
+        }
+
+        /*
         public Polygon Translate(Direction passedDirection, Dimension passedDisplacement)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
@@ -267,7 +278,7 @@ namespace GeometryClassLibrary
                 newBoundaryList.Add(segment.Translate(passedDirection, passedDisplacement));
             }
             return new Polygon(newBoundaryList);
-        }
+        }*/
 
         public override Polygon SmallestRectangleThatCanSurroundThisShape()
         {
@@ -567,8 +578,8 @@ namespace GeometryClassLibrary
             {
                 List<LineSegment> polygonConstruct = new List<LineSegment>();
 
-                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector);
-                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector);
+                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector.EndPoint);
+                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector.EndPoint);
                 LineSegment newBackLine = new LineSegment(newBackBasePoint, newBackEndPoint);
                 backPolygonLines.Add(newBackLine);
 
@@ -874,7 +885,7 @@ namespace GeometryClassLibrary
                 consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
 
                 //make sure that the polygons are actually cut
-                if (slicedPolygons[0].PlaneBoundaries.Count <= 2)
+                if (slicedPolygons[0].PlaneBoundaries.Count <= 2 && slicedPolygons[0].isValidPolygon())
                 {
                     if (slicedPolygons[1] == this)
                     {
@@ -885,7 +896,7 @@ namespace GeometryClassLibrary
                         throw new ApplicationException();
                     }
                 }
-                else if (slicedPolygons[1].PlaneBoundaries.Count <= 2)
+                else if (slicedPolygons[1].PlaneBoundaries.Count <= 2 && slicedPolygons[1].isValidPolygon())
                 {
                     if (slicedPolygons[0] == this)
                     {

@@ -112,10 +112,11 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(1, -5, -4)));
             Polygon testPolygon = new Polygon(lineSegments);
 
-            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            Dimension testDisplacement = new Dimension(DimensionType.Inch, Math.Sqrt(42));
+            //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            //Dimension testDisplacement = new Dimension(DimensionType.Inch, Math.Sqrt(42));
+            Point testDiplacement = PointGenerator.MakePointWithInches(-1,5,4);
 
-            Polygon actualPolygon = testPolygon.Translate(testDirection, testDisplacement);
+            Polygon actualPolygon = testPolygon.Translate(testDiplacement);
 
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));
@@ -177,7 +178,7 @@ namespace GeometryClassLibraryTests
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
-            planeCopy = planeCopy.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(1, 4, -2)), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
+            planeCopy = planeCopy.Shift(new Shift(PointGenerator.MakePointWithInches(1, 4, -2), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
 
             foreach (LineSegment line in testPolygon.PlaneBoundaries)
             {
@@ -215,7 +216,7 @@ namespace GeometryClassLibraryTests
             //make sure the PlaneRegion contains the centroid
             Point center2 = testPolygon2.Centroid();
 
-            Point notOnPlane = center2.Shift(new Shift(new Vector(PointGenerator.MakePointWithInches(.5, 0, 0))));
+            Point notOnPlane = center2.Shift(new Shift(PointGenerator.MakePointWithInches(.5, 0, 0)));
 
             //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
             testPolygon.ContainsExclusive(insidePlane1).Should().BeTrue();

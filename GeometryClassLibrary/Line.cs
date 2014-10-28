@@ -16,9 +16,9 @@ namespace GeometryClassLibrary
     {
         #region Properties
 
-        public readonly static Line XAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(1, 0, 0));
-        public readonly static Line YAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 1, 0));
-        public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithMillimeters(0, 0, 0), PointGenerator.MakePointWithMillimeters(0, 0, 1));
+        public readonly static Line XAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
+        public readonly static Line YAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
+        public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
 
         public Point BasePoint
         {
@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
             set { _direction = value; }
         }
         private Direction _direction;
-        
+
         public double Slope
         {
             get { throw new NotImplementedException(); }
@@ -89,7 +89,7 @@ namespace GeometryClassLibrary
         public Point FindXYIntercept()
         {
             //make the x axis plane
-            Plane xyPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(0,0,1)));
+            Plane xyPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(0, 0, 1)));
 
             //then find out where the line and the plane intersect
             return xyPlane.Intersection(this);
@@ -509,15 +509,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsCoplanarWith(Line passedLine)
         {
-            double[] point1Line1 = { this.BasePoint.X.Millimeters, this.BasePoint.Y.Millimeters, this.BasePoint.Z.Millimeters };
+            double[] point1Line1 = { this.BasePoint.X.Inches, this.BasePoint.Y.Inches, this.BasePoint.Z.Inches };
 
             Point anotherPointOnLine1 = this.GetPointOnLine(2);
-            double[] point2Line1 = { anotherPointOnLine1.X.Millimeters, anotherPointOnLine1.Y.Millimeters, anotherPointOnLine1.Z.Millimeters };
+            double[] point2Line1 = { anotherPointOnLine1.X.Inches, anotherPointOnLine1.Y.Inches, anotherPointOnLine1.Z.Inches };
 
-            double[] point1Line2 = { passedLine.BasePoint.X.Millimeters, passedLine.BasePoint.Y.Millimeters, passedLine.BasePoint.Z.Millimeters };
+            double[] point1Line2 = { passedLine.BasePoint.X.Inches, passedLine.BasePoint.Y.Inches, passedLine.BasePoint.Z.Inches };
 
             Point anotherPointOnLine2 = passedLine.GetPointOnLine(2);
-            double[] point2Line2 = { anotherPointOnLine2.X.Millimeters, anotherPointOnLine2.Y.Millimeters, anotherPointOnLine2.Z.Millimeters };
+            double[] point2Line2 = { anotherPointOnLine2.X.Inches, anotherPointOnLine2.Y.Inches, anotherPointOnLine2.Z.Inches };
 
             Matrix pointsMatrix = new Matrix(4, 4);
 
@@ -531,10 +531,11 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinate = Math.Abs(pointsMatrix.Determinant());
-            Dimension determinateDimension = new Dimension(DimensionType.Millimeter, determinate);
+            Dimension determinateDimension = new Dimension(DimensionType.Inch, determinate);
             return determinateDimension == new Dimension();
         }
 
+        /*
         /// <summary>
         /// Translates the line the given distance in the given direction
         /// </summary>
@@ -545,6 +546,20 @@ namespace GeometryClassLibrary
         {
             Point newBasePoint = this.BasePoint.Translate(passedDirection, passedDisplacement);
             Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirection, passedDisplacement);
+
+            return new Line(newBasePoint, newOtherPoint);
+        }*/
+
+        /// <summary>
+        /// Translates the line the given distance in the given direction
+        /// </summary>
+        /// <param name="passedDirectionVector"></param>
+        /// <param name="passedDisplacement"></param>
+        /// <returns></returns>
+        public Line Translate(Point translation)
+        {
+            Point newBasePoint = this.BasePoint.Translate(translation);
+            Point newOtherPoint = this.GetPointOnLine(2).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
         }

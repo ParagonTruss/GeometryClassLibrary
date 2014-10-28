@@ -233,15 +233,15 @@ namespace GeometryClassLibraryTests
         }
 
 
-
         [Test()]
         public void Point_TranslateTest()
         {
             Point pointToTranslate = PointGenerator.MakePointWithInches(1, 2, 3);
-            Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 12.9614814);
+            //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            //Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 12.9614814);
+            Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
-            Point actualResult = pointToTranslate.Translate(directionToTranslate, displacementOfTranslation);
+            Point actualResult = pointToTranslate.Translate(testDisplacement);
 
             Point expectedResult = PointGenerator.MakePointWithInches(-1, 12, 11);
 
@@ -252,10 +252,12 @@ namespace GeometryClassLibraryTests
         public void Point_TranslateTest_OneComponent()
         {
             Point pointToTranslate = PointGenerator.MakePointWithInches(1,1,1);
-            Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(1, 0, 0));
-            Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 4);
+            
+            //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(1, 0, 0));
+            //Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 4);
+            Point testDisplacement = PointGenerator.MakePointWithInches(4, 0, 0);
 
-            Point actualResult = pointToTranslate.Translate(directionToTranslate, displacementOfTranslation);
+            Point actualResult = pointToTranslate.Translate(testDisplacement);
 
             Point expectedResult = PointGenerator.MakePointWithInches(5,1,1);
 
@@ -267,13 +269,13 @@ namespace GeometryClassLibraryTests
         {            
             Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
-            Vector displacementVector = new Vector();
+            Point displacementPoint = new Point();
                 //new Vector(PointGenerator.MakePointWithInches(1, -1, 1));
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
-            Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
+            Shift testShift = new Shift(displacementPoint, new List<Rotation>() { zRotation, xRotation });
 
             Point actual1 = point1.Shift(testShift);
 
@@ -288,12 +290,12 @@ namespace GeometryClassLibraryTests
         {
             Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
-            Vector displacementVector = new Vector();
+            Point displacementPoint = new Point();
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
-            Shift testShift = new Shift(displacementVector, new List<Rotation>() {zRotation, xRotation});
+            Shift testShift = new Shift(displacementPoint, new List<Rotation>() { zRotation, xRotation });
 
             Point actual1 = point1.Shift(testShift);
 
