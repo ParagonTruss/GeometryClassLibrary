@@ -382,7 +382,7 @@ namespace GeometryClassLibrary
         public virtual Point Intersection(Line passedLine)
         {
             //if they are parallel than we know that they do not intersect in a point
-            if (this.IsParallelTo(this))
+            if (this.IsParallelTo(passedLine))
             {
                 return null;
             }
@@ -391,13 +391,20 @@ namespace GeometryClassLibrary
             //Following formula from http://www.netcomuk.co.uk/~jenolive/vect18c.html
 
             //substitute the x,y and z part of the lines into the plane equation
-            //find t's coefficent
-            Dimension tCoefficient = this.BasePoint.X * passedLine.Direction.XComponentOfDirection +
-                this.BasePoint.Y * passedLine.Direction.YComponentOfDirection + this.BasePoint.Z * passedLine.Direction.ZComponentOfDirection;
+            //find what the plane is equal to
+            double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
+                this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
 
-            //find what it equals
-            double equationEquals = this.BasePoint.X.Inches * passedLine.BasePoint.X.Inches +
-                this.BasePoint.Y.Inches * passedLine.BasePoint.Y.Inches + this.BasePoint.Z.Inches * passedLine.BasePoint.Z.Inches;
+            //find t's coefficent
+            Dimension tCoefficient = this.NormalVector.XComponent * passedLine.Direction.XComponentOfDirection +
+                this.NormalVector.YComponent * passedLine.Direction.YComponentOfDirection + this.NormalVector.ZComponent * passedLine.Direction.ZComponentOfDirection;
+
+            //find the part it equals ffom the line
+            double equationEquals = this.NormalVector.XComponent.Inches * passedLine.BasePoint.X.Inches +
+                this.NormalVector.YComponent.Inches * passedLine.BasePoint.Y.Inches + this.NormalVector.ZComponent.Inches * passedLine.BasePoint.Z.Inches;
+
+            //subtract the one from the line from the one from the plane
+            double equals = thisPlaneEqualsValue - equationEquals;
 
             //to keep it from dividing by zero, which means there is not intersection in this case and it should be caught by cheking
             //if they are parallel, but just in case
@@ -407,7 +414,7 @@ namespace GeometryClassLibrary
             }
 
             //now get the value for t
-            double t = equationEquals / tCoefficient.Inches;
+            double t = equals / tCoefficient.Inches;
 
             //now just plug t back into the line equations to find the x,y amd z
             //Dimension xComponent = this.BasePoint.X + new Dimension(DimensionType.Inch, this.Direction.XComponentOfDirection * t);

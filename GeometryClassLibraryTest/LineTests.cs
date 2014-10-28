@@ -233,6 +233,22 @@ namespace ClearspanTypeLibrary.Tests
             line5.IsParallelTo(line3).Should().BeFalse();
         }
 
+        [Test()]
+        public void Line_PerpindicularTest()
+        {
+            Line line1 = new LineSegment(PointGenerator.MakePointWithInches(5, 0, 1));
+            Line line2 = new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 5));
+            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(-.5, 0, 5));
+            Line line4 = new LineSegment(PointGenerator.MakePointWithInches(2, 3, -1), PointGenerator.MakePointWithInches(3, 1, 0)); //1,-2,1
+            Line line5 = new LineSegment(PointGenerator.MakePointWithInches(4, -1, 1), PointGenerator.MakePointWithInches(3, 1, 0)); //-1,2,1
+            Line line6 = new LineSegment(PointGenerator.MakePointWithInches(2 ,3, -1), PointGenerator.MakePointWithInches(3, 1, 0));
+
+            line1.IsPerpindicularTo(line2).Should().BeTrue();
+            line1.IsPerpindicularTo(line3).Should().BeTrue();
+
+            line4.IsPerpindicularTo(line5).Should().BeTrue();
+            
+        }
 
         [Test()]
         public void Line_RotateTest_AboutZAxis()
@@ -331,5 +347,48 @@ namespace ClearspanTypeLibrary.Tests
             result1.Should().Be(expectedPlane);
         }
 
+        [Test()]
+        public void Line_XZIntercept()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 5
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 2), PointGenerator.MakePointWithInches(4, 5, 1)); //intersects at 4, 0, 3
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            Point intercept1 = line1.XZIntercept;
+            Point intercept2 = line2.XZIntercept;
+            Point intercept3 = line3.XZIntercept;
+            Point intercept4 = line4.FindXZIntercept();
+            Point intercept5 = line5.XZIntercept;
+
+            intercept1.Should().Be(PointGenerator.MakePointWithInches(-1, 0, 1));
+            intercept2.Should().Be(PointGenerator.MakePointWithInches(6, 0, 0));
+            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 5));
+            intercept4.Should().Be(PointGenerator.MakePointWithInches(4, 0, 3));
+            intercept5.Should().Be(null);
+        }
+
+        [Test()]
+        public void Line_XInterceptIn2D()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, -1)); //intersects at -1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 9, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //intersects at 4
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            Dimension intercept1 = line1.XInterceptIn2D;
+            Dimension intercept2 = line2.XInterceptIn2D;
+            Dimension intercept3 = line3.XInterceptIn2D;
+            Dimension intercept4 = line4.XInterceptIn2D;
+            Dimension intercept5 = line5.XInterceptIn2D;
+
+            intercept1.Inches.Should().Be(-1);
+            intercept2.Inches.Should().Be(6);
+            intercept3.Inches.Should().Be(0);
+            intercept4.Inches.Should().Be(4);
+            intercept5.Should().Be(null);
+        }
     }
 }

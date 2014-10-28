@@ -3,19 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
     public static class IListLineExtensionMethods
     {
-        public static Line LineWithSmallestXIntercept(this IList<Line> passedLines)
+        public static Line LineWithSmallestXInterceptIn2D(this IList<Line> passedLines)
         {
-            throw new NotImplementedException();
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            Line smallestXLine = passedLines[0];
+            Dimension smallestX = passedLines[0].XInterceptIn2D;
+
+            for (int i = 1; i < passedLines.Count; i++)
+            {
+                if (passedLines[i].XInterceptIn2D < smallestX)
+                {
+                    smallestXLine = passedLines[i];
+                    smallestX = passedLines[i].XInterceptIn2D;
+                }
+            }
+
+            return smallestXLine;
         }
 
         public static Line LineWithLargestXIntercept(this IList<Line> passedLines)
         {
-            throw new NotImplementedException();
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            Line largestXLine = passedLines[0];
+            Dimension largestX = passedLines[0].XInterceptIn2D;
+
+            for (int i = 1; i < passedLines.Count; i++)
+            {
+                if (passedLines[i].XInterceptIn2D < largestX)
+                {
+                    largestXLine = passedLines[i];
+                    largestX = passedLines[i].XInterceptIn2D;
+                }
+            }
+
+            return largestXLine;
         }
 
         public static Line LineWithSmallestYIntercept(this IList<Line> passedLines)
@@ -28,7 +63,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
+        /*public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +71,7 @@ namespace GeometryClassLibrary
         public static Line LineWithLargestZIntercept(this IList<Line> passedLines)
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         /// <summary>
         /// checks to see whether every line is parallel

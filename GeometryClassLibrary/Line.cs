@@ -42,13 +42,33 @@ namespace GeometryClassLibrary
         public Dimension XInterceptIn2D
         {
             //if we are ignoring z, we can just take the x component of wher it intersects the xz plane
-            get { return XZIntercept.X; }
+            get
+            {
+                if (XZIntercept == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return XZIntercept.X;
+                }
+            }
         }
 
         public Dimension YInterceptIn2D
         {
             //if we are ignoring z, we can just take the y component of whery it intersects the yz plane
-            get { return YZIntercept.Y; }
+            get
+            {
+                if (YZIntercept == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return YZIntercept.Y;
+                }
+            }
         }
 
         public Point XYIntercept
