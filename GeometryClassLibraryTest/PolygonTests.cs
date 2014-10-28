@@ -34,10 +34,10 @@ namespace GeometryClassLibraryTests
             LineSegment backTop = new LineSegment(backtopleftpoint, backtoprightpoint);
             LineSegment backBottom = new LineSegment(backbasepoint, backbottomrightpoint);
 
-            LineSegment topleftConnector = new LineSegment(basePoint, topLeftPoint);
-            LineSegment toprightConnector = new LineSegment(bottomRightPoint, topRightPoint);
-            LineSegment baseConnector = new LineSegment(topLeftPoint, topRightPoint);
-            LineSegment bottomRightConnector = new LineSegment(basePoint, bottomRightPoint);
+            LineSegment topleftConnector = new LineSegment(topLeftPoint, backtopleftpoint);
+            LineSegment toprightConnector = new LineSegment(topRightPoint, backtoprightpoint);
+            LineSegment baseConnector = new LineSegment(basePoint, backbasepoint);
+            LineSegment bottomRightConnector = new LineSegment(bottomRightPoint, backbottomrightpoint);
 
             Polygon frontRegion = new Polygon(new List<LineSegment> { left, top, bottom, right });
             Polygon backRegion = new Polygon(new List<LineSegment> { backLeft, backRight, backTop, backBottom });
@@ -47,7 +47,7 @@ namespace GeometryClassLibraryTests
             Polygon rightRegion = new Polygon(new List<LineSegment> { right, backRight, toprightConnector, bottomRightConnector });
 
 
-            Polyhedron extrudedResult = frontRegion.Extrude(new Dimension(DimensionType.Inch, 4)) as Polyhedron;
+            Polyhedron extrudedResult = frontRegion.Extrude(new Vector(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(0,0,-4)));
             extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();

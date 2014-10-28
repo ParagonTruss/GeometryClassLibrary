@@ -535,19 +535,21 @@ namespace GeometryClassLibrary
         ///  ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM$,                                                                 
         ///  
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="directionVector">the value and direction that the polygon should be extruded</param>
         /// <returns></returns>
-        public override Solid Extrude(Dimension dimension)
+        public Polyhedron Extrude(Vector directionVector)
         {
-            /*
-            //find two lines that are not parallel
-            LineSegment firstLine = _planeBoundaries[0];
+
+            // find two lines that are not parallel
+
+            LineSegment firstLine =  this.PlaneBoundaries[0];
             LineSegment secondLine = null;
-            foreach (var lineseg in _planeBoundaries)
+            foreach (var lineseg in this.PlaneBoundaries)
             {
                 if (!lineseg.IsParallelTo(firstLine))
                 {
                     secondLine = lineseg;
+                    break;
                 }
             }
 
@@ -556,44 +558,40 @@ namespace GeometryClassLibrary
                 throw new Exception("There are no LineSegments in this plane region that are not parallel");
             }
 
-            Vector normalVector = firstLine.DirectionVector.CrossProduct(secondLine.DirectionVector);
-
             //create back Polygon
+            Polyhedron returnGeometry = new Polyhedron();
             List<LineSegment> backPolygonLines = new List<LineSegment>();
             List<LineSegment> otherPolygonLines = new List<LineSegment>();
 
-            foreach (var linesegment in _planeBoundaries)
+            foreach (var linesegment in this.PlaneBoundaries)
             {
-                Point newBackBasePoint = linesegment.BasePoint.Translate(normalVector.XComponentOfDirection, normalVector.YComponentOfDirection, normalVector.ZComponentOfDirection);
-                Point newBackEndPoint = linesegment.EndPoint.Translate(normalVector.XComponentOfDirection, normalVector.YComponentOfDirection, normalVector.ZComponentOfDirection);
-                backPolygonLines.Add(new LineSegment(newBackBasePoint, newBackEndPoint));
+                List<LineSegment> polygonConstruct = new List<LineSegment>();
 
-                LineSegment newNormalLine = new LineSegment(newBackBasePoint, linesegment.BasePoint);
+                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector);
+                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector);
+                LineSegment newBackLine = new LineSegment(newBackBasePoint, newBackEndPoint);
+                backPolygonLines.Add(newBackLine);
 
-                if (!otherPolygonLines.Contains(newNormalLine))
-                {
-                    otherPolygonLines.Add(newNormalLine);
-                }
+                LineSegment newNormalLine1 = new LineSegment(newBackBasePoint, linesegment.BasePoint);
+                LineSegment newNormalLine2 = new LineSegment(newBackEndPoint, linesegment.EndPoint);
 
-                newNormalLine = new LineSegment(newBackEndPoint, linesegment.BasePoint);
-
-                if (!otherPolygonLines.Contains(newNormalLine))
-                {
-                    otherPolygonLines.Add(newNormalLine);
-                }
+                returnGeometry.Polygons.Add(
+                    new Polygon(
+                        new List<LineSegment> {
+                            linesegment,
+                            newBackLine,
+                            newNormalLine1,
+                            newNormalLine2
+                        }
+                    )
+                );
             }
 
-            Polyhedron returnGeometry = new Polyhedron();
             returnGeometry.Polygons.Add(this);
             returnGeometry.Polygons.Add(new Polygon(backPolygonLines));
 
-            //take all coplanar lines and create a Polygon from 
-            */
-
-            throw new NotImplementedException();
-
-
-        }
+            return returnGeometry;
+      }
 
         /// <summary>
         /// Extrudes the plane region into a Polyhedron
