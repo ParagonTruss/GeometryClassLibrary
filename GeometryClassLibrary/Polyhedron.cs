@@ -125,21 +125,24 @@ namespace GeometryClassLibrary
         /// <summary>
         /// does the same thing as ==
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals(object polyhedron)
         {
-            Polyhedron comparablePolyhedron = null;
+            if (polyhedron == null)
+            {
+                return false;
+            }
 
             //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparablePolyhedron = (Polyhedron)obj;
+                Polyhedron passedPolyhedron = (Polyhedron)polyhedron;
 
-                if (this.Polygons.Count == comparablePolyhedron.Polygons.Count)
+                if (this.Polygons.Count == passedPolyhedron.Polygons.Count)
                 {
                     foreach (Polygon polygon in this.Polygons)
                     {
                         int timesUsed = 0;
-                        foreach (Polygon polygonOther in comparablePolyhedron.Polygons)
+                        foreach (Polygon polygonOther in passedPolyhedron.Polygons)
                         {
                             if (polygon == polygonOther)
                             {
