@@ -627,24 +627,6 @@ namespace GeometryClassLibrary
             Vector scaledVector1 = new Vector(new Point(), this.Direction, new Dimension(DimensionType.Inch, scale * this.Magnitude.Inches));
             Vector scaledVector2 = new Vector(new Point(), other.Direction, new Dimension(DimensionType.Inch, scale * other.Magnitude.Inches));
 
-            /*//make sure its big enough so we can compare acurrately (average of 5 for each vector)
-            //each loop were effectivly multiplying the scale by 4
-            while (scale < new Area(AreaType.InchesSquared, 25))
-            {
-                scaledVector1 = scaledVector1 * 2;
-                scaledVector2 = scaledVector2 * 2;
-                scale = scaledVector1.Magnitude * scaledVector2.Magnitude;
-            }
-
-            //make sure its not too big so that they are not overally accurate (average of about 11 for each vector)
-            //each loop were effectivly multiplying the scale by 1/4
-            while (scale > new Area(AreaType.InchesSquared, 120))
-            {
-                scaledVector1 = scaledVector1 / 2;
-                scaledVector2 = scaledVector2 / 2;
-                scale = scaledVector1.Magnitude * scaledVector2.Magnitude;
-            }*/
-
             //now get the result
             Dimension dotResult = scaledVector1 * scaledVector2;
 

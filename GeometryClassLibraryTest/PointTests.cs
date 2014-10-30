@@ -269,18 +269,17 @@ namespace GeometryClassLibraryTests
         {            
             Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
-            Point displacementPoint = new Point();
-                //new Vector(PointGenerator.MakePointWithInches(1, -1, 1));
+            Point displacementPoint = PointGenerator.MakePointWithInches(1, -1, 1);
+
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
-            Shift testShift = new Shift(displacementPoint, new List<Rotation>() { zRotation, xRotation });
+            Shift testShift = new Shift(new List<Rotation>() { zRotation, xRotation }, displacementPoint);
 
             Point actual1 = point1.Shift(testShift);
 
-            //Point expected1 = PointGenerator.MakePointWithInches(1 + 0, -1 + -0.5298, 1 + 1.3112);
-            Point expected1 = PointGenerator.MakePointWithInches(0, -0.5298, 1.3112);
+            Point expected1 = PointGenerator.MakePointWithInches(1 + 0, -1 + -0.5298, 1 + 1.3112);
 
             actual1.Should().Be(expected1);
         }
@@ -290,12 +289,11 @@ namespace GeometryClassLibraryTests
         {
             Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
 
-            Point displacementPoint = new Point();
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
-            Shift testShift = new Shift(displacementPoint, new List<Rotation>() { zRotation, xRotation });
+            Shift testShift = new Shift(new List<Rotation>() { zRotation, xRotation });
 
             Point actual1 = point1.Shift(testShift);
 

@@ -178,7 +178,7 @@ namespace GeometryClassLibraryTests
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
-            planeCopy = planeCopy.Shift(new Shift(PointGenerator.MakePointWithInches(1, 4, -2), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45))));
+            planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45)), PointGenerator.MakePointWithInches(1, 4, -2)));
 
             foreach (LineSegment line in testPolygon.PlaneBoundaries)
             {

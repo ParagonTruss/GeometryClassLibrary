@@ -44,7 +44,7 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
             //rotate 90 degrees towards x
-            Shift ninetyShift = new Shift(PointGenerator.MakePointWithInches(8, 0), new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)));
+            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)), PointGenerator.MakePointWithInches(8, 0));
             Polyhedron result = polyhedron.Shift(ninetyShift);
 
             result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(16, 0))).Should().BeTrue();
@@ -65,7 +65,7 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
             //rotate 90 degrees towards z
-            Shift nintyShift = new Shift(new Point(), new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
+            Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
             Polyhedron result = polyhedron.Shift(nintyShift);
 
             result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 8))).Should().BeTrue();
@@ -75,7 +75,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Polyhedron_ReturnToOriginalTest()
+        public void Polyhedron_MultiShiftReturnToOriginalTest()
         {
             Polyhedron Polyhedron = new Polyhedron();
 
@@ -87,12 +87,11 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees towards z
-            Point displacementPoint = new Point(); //No displacement, just rotation
             Angle zAngle = new Angle(AngleType.Degree, 90);
             Rotation zRotation = new Rotation(Line.ZAxis, zAngle);
             Angle xAngle = new Angle(AngleType.Degree, 90); //This is the X axis
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
-            Shift ninetyShift = new Shift(displacementPoint, new List<Rotation>() { zRotation, xRotation });
+            Shift ninetyShift = new Shift(new List<Rotation>() { zRotation, xRotation });
             Polyhedron shifted = Polyhedron.Shift(ninetyShift);
 
             //undo the previous shift
@@ -119,11 +118,10 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron.Polygons.Add(new Polygon(lineSegments));
 
             //rotate 90 degrees toward z
-            Point displacementPoint = new Point(); //No displacement, just rotation
             Angle xAngle = new Angle(AngleType.Degree, 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
-            //Angle xzAngle = new Angle(AngleType.Degree, 0);
-            Shift ninetyShift = new Shift(displacementPoint, xRotation);
+
+            Shift ninetyShift = new Shift(xRotation);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
@@ -181,7 +179,7 @@ namespace ClearspanTypeLibrary.Tests
             Angle xAngle = new Angle(AngleType.Degree, 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Point displacementPoint = PointGenerator.MakePointWithInches(1, -2, 5);
-            Shift ninetyShift = new Shift(displacementPoint, xRotation);
+            Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
@@ -209,7 +207,7 @@ namespace ClearspanTypeLibrary.Tests
             Angle xAngle = new Angle(AngleType.Degree, 63);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Point displacementPoint = PointGenerator.MakePointWithInches(0, 0, 1);
-            Shift ninetyShift = new Shift(displacementPoint, xRotation);
+            Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
@@ -238,7 +236,7 @@ namespace ClearspanTypeLibrary.Tests
             Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
             Point displacementPoint = PointGenerator.MakePointWithInches(-1, 2, 5);
-            Shift ninetyShift = new Shift(displacementPoint, xRotation);
+            Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 
@@ -265,8 +263,8 @@ namespace ClearspanTypeLibrary.Tests
             Angle xAngle = new Angle(AngleType.Degree, 90);
             Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
-            Point displacementPoint = new Point();
-            Shift ninetyShift = new Shift(displacementPoint, xRotation);
+            Point displacementPoint = PointGenerator.MakePointWithInches(1,3,-4);
+            Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(Polyhedron.Shift(ninetyShift));
 

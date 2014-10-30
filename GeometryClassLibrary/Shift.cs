@@ -89,27 +89,6 @@ namespace GeometryClassLibrary
             this._rotationsToApply = new List<Rotation>();
         }
 
-        public Shift(Rotation passedRotation)
-        {
-            this._displacement = new Point();
-            this._rotationsToApply = new List<Rotation>() { passedRotation };
-        }
-
-        /*
-        public Shift(Vector passedDisplacement)
-        {
-            this._displacement = passedDisplacement.EndPoint;
-            this._rotationsToApply = new List<Rotation>();
-        }
-        public Shift(Translation passedTranslation)
-            : this((Vector)passedTranslation) { }
-        */
-        /*public Shift(Vector passedDisplacement, Rotation passedRotation)
-        {
-            this._displacement = passedDisplacement.EndPoint;
-            this._rotationsToApply = new List<Rotation>() { passedRotation };
-        }*/
-
         public Shift(Point passedDisplacement)
         {
             this._displacement = passedDisplacement;
@@ -117,18 +96,25 @@ namespace GeometryClassLibrary
         }
 
 
-        public Shift(Point passedDisplacement, Rotation passedRotation)
+        public Shift(Rotation passedRotation, Point passedDisplacement = null)
         {
+            if (passedDisplacement == null)
+            {
+                passedDisplacement = new Point();
+            }
             this._displacement = passedDisplacement;
             this._rotationsToApply = new List<Rotation>() { passedRotation };
         }
 
 
-        public Shift(Point returnDisplancement, List<Rotation> returnRotations)
+        public Shift(List<Rotation> passedRotations, Point passedDisplacement = null)
         {
-            // TODO: Complete member initialization
-            this._displacement = returnDisplancement;
-            this._rotationsToApply = returnRotations;
+            if (passedDisplacement == null)
+            {
+                passedDisplacement = new Point();
+            }
+            this._displacement = passedDisplacement;
+            this._rotationsToApply = passedRotations;
         }
 
 
@@ -260,10 +246,10 @@ namespace GeometryClassLibrary
             returnRotations.Reverse();
 
             //now we have to do some magic to turn this back into the right spot since it will happen after the rotations again
-            Point returnDisplancement = new Point() - _displacement;
+            Point returnDisplacement = new Point() - _displacement;
 
             //create and return new shift
-            Shift toReturn = new Shift(returnDisplancement, returnRotations);
+            Shift toReturn = new Shift(returnRotations, returnDisplacement);
             toReturn._isNegatedShift = true;
             return toReturn;
         }
