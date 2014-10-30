@@ -557,17 +557,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Divides the vector by its length to produce a unit vector (magnitude = 1)
-        /// </summary>
-        /// <returns></returns>
-        public Vector ConvertToUnitVector(DimensionType passedDimension)
-        {
-            Vector unitVector = new Vector(this);
-            unitVector.Magnitude = new Dimension(passedDimension, 1);
-            return unitVector;
-        }
-
-        /// <summary>
         /// Rotates the vector about the given axis by the passed angle
         /// </summary>
         /// <param name="passedRotationAxis"></param>
@@ -590,21 +579,6 @@ namespace GeometryClassLibrary
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
 
-        /*
-        /// <summary>
-        /// Translates the vector the given distance in the given direction
-        /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
-        public new Vector Translate(Direction passedDirection, Dimension passedDisplacement)
-        {
-            Point newBasePoint = this.BasePoint.Translate(passedDirection, passedDisplacement);
-            Point newEndPoint = this.EndPoint.Translate(passedDirection, passedDisplacement);
-
-            return new Vector(newBasePoint, newEndPoint);
-        }*/      
-  
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
@@ -634,6 +608,48 @@ namespace GeometryClassLibrary
                 return new Vector();
             }
             else return Direction.UnitVector(passedType);
+        }
+
+        /// <summary>
+        /// Returns whether or not the dot product between the two vectors is approximately equal to 0
+        /// This takes into account the magnitude of the vectors and scales them in a way in which you
+        /// should always get a result with a small fractional error
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        public bool DotProductIsEqualToZero(Vector other)
+        {
+            //find out how to scale them so their multiplied magnitudes are 25
+            double scale = 25 / (other.Magnitude.Inches * this.Magnitude.Inches);
+            scale = Math.Sqrt(scale);
+
+            Vector scaledVector1 = new Vector(new Point(), this.Direction, new Dimension(DimensionType.Inch, scale * this.Magnitude.Inches));
+            Vector scaledVector2 = new Vector(new Point(), other.Direction, new Dimension(DimensionType.Inch, scale * other.Magnitude.Inches));
+
+            /*//make sure its big enough so we can compare acurrately (average of 5 for each vector)
+            //each loop were effectivly multiplying the scale by 4
+            while (scale < new Area(AreaType.InchesSquared, 25))
+            {
+                scaledVector1 = scaledVector1 * 2;
+                scaledVector2 = scaledVector2 * 2;
+                scale = scaledVector1.Magnitude * scaledVector2.Magnitude;
+            }
+
+            //make sure its not too big so that they are not overally accurate (average of about 11 for each vector)
+            //each loop were effectivly multiplying the scale by 1/4
+            while (scale > new Area(AreaType.InchesSquared, 120))
+            {
+                scaledVector1 = scaledVector1 / 2;
+                scaledVector2 = scaledVector2 / 2;
+                scale = scaledVector1.Magnitude * scaledVector2.Magnitude;
+            }*/
+
+            //now get the result
+            Dimension dotResult = scaledVector1 * scaledVector2;
+
+            //and return if its close to zero
+            return dotResult == new Dimension();
         }
 
         #endregion

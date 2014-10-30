@@ -396,8 +396,9 @@ namespace GeometryClassLibrary
         public bool IsPerpindicularTo(Line passedLine)
         {
             //if they are perpindicular then the dot product should be 0
-            Dimension dotted = passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch);
-            return (dotted == new Dimension());
+            //Dimension dotted = passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch);
+            //return (dotted == new Dimension());
+            return passedLine.UnitVector(DimensionType.Inch).DotProductIsEqualToZero(this.UnitVector(DimensionType.Inch));
         }
 
         /// <summary>
@@ -535,21 +536,6 @@ namespace GeometryClassLibrary
             return determinateDimension == new Dimension();
         }
 
-        /*
-        /// <summary>
-        /// Translates the line the given distance in the given direction
-        /// </summary>
-        /// <param name="passedDirectionVector"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
-        public Line Translate(Direction passedDirection, Dimension passedDisplacement)
-        {
-            Point newBasePoint = this.BasePoint.Translate(passedDirection, passedDisplacement);
-            Point newOtherPoint = this.GetPointOnLine(2).Translate(passedDirection, passedDisplacement);
-
-            return new Line(newBasePoint, newOtherPoint);
-        }*/
-
         /// <summary>
         /// Translates the line the given distance in the given direction
         /// </summary>
@@ -574,7 +560,7 @@ namespace GeometryClassLibrary
             //we use the base point and another point on the line so we know that the plane will contain the given line
             //then we use the base point but moved in the z direction so that we know it will also contain that line, which
             //will alway be perpindicular to XY because the only thing changing between the two points is the z.
-            Plane plane = new Plane(this.BasePoint, this.GetPointOnLine(2), this.BasePoint + PointGenerator.MakePointWithMillimeters(0, 0, 10));
+            Plane plane = new Plane(this.BasePoint, this.GetPointOnLine(2), this.BasePoint + PointGenerator.MakePointWithInches(0, 0, 10));
             return plane;
         }
 

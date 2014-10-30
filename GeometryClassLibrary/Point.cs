@@ -460,7 +460,7 @@ public Point Translate(Vector passedDisplacementVector)
             Vector vectorFromBasePointOfLineToPoint = new Vector(passedLine.BasePoint, this);
 
             //Take the cross product of the vector from the base point of the line to the point and the line's direction vector
-            Vector crossProduct = vectorFromBasePointOfLineToPoint.UnitVector(DimensionType.Inch).CrossProduct(passedLine.UnitVector(DimensionType.Inch));
+            Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.UnitVector(DimensionType.Inch));
 
             //if the above cross product is the 0 vector, the point is on the given line
             return crossProduct.Magnitude == new Dimension();

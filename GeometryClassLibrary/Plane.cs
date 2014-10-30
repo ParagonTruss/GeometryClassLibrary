@@ -52,6 +52,9 @@ namespace GeometryClassLibrary
             {
                 this.BasePoint = passedPoint1;
                 this.NormalVector = line1To2.UnitVector(DimensionType.Inch).CrossProduct(line1To3.UnitVector(DimensionType.Inch));
+
+                //make sure it is of size one and not smaller
+                this.NormalVector = this.NormalVector.UnitVector(DimensionType.Inch);
             }
             else
             {
@@ -224,9 +227,10 @@ namespace GeometryClassLibrary
             }
 
             Vector planeVector = new Vector(passedPoint, BasePoint);
-            Dimension dotProduct = planeVector.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
+            //Dimension dotProduct = planeVector * NormalVector;
+            //return dotProduct == new Dimension();
 
-            return dotProduct == new Dimension();
+            return planeVector.DotProductIsEqualToZero(NormalVector);
         }
 
         public Plane Rotate(Line passedAxis, Angle passedAngle)

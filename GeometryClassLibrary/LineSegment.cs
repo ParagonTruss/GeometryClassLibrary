@@ -262,18 +262,6 @@ namespace GeometryClassLibrary
             return this.Shift(passedShift);
         }
 
-        /*
-        /// <summary>
-        /// Translates the vector the given distance in the given direction
-        /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
-        public new LineSegment Translate(Direction passedDirection, Dimension passedDisplacement)
-        {
-            return new LineSegment(base.Translate(passedDirection, passedDisplacement));
-        }*/
-
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>

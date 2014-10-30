@@ -6,14 +6,19 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public class Translation : Vector
+    public class Translation : Point
     {
-        public Translation(Dimension xTranslation, Dimension yTranslation, Dimension zTranslation)
-            : base(new Point(xTranslation, yTranslation, zTranslation))
-        { }
+        public Translation()
+            : base() { }
 
-        public Translation(Point translations)
-            : base(translations)
-        { }
+        public Translation(Point translation)
+            : base(translation) { }
+
+        public Translation(Dimension xTranslation, Dimension yTranslation, Dimension zTranslation)
+            : base(xTranslation, yTranslation, zTranslation) { }
+
+        public Translation(DimensionType passedType, double xTranslation, double yTranslation, double zTranslation)
+            : base(passedType, xTranslation, yTranslation, zTranslation) { }
     }
+
 }

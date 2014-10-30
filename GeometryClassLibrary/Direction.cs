@@ -118,69 +118,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Makes a direction from the origin to the given point
-        /// </summary>
-        /// <param name="directionPoint"></param>
-        public Direction(Point directionPoint)
-            : this()
-        {
-            Dimension distanceToOrigin = directionPoint.DistanceTo(new Point());
-
-            //if it is the origin we just leave it as the base constructor
-            if (distanceToOrigin != new Dimension())
-            {
-                //if the z is 0 than the angle should be 90 so we can use the xyplane angle
-                //Note: we called the base contructor first so it is already 90 unless we change it
-                if (directionPoint.Z != new Dimension())
-                {
-                    //arcos handles negatives how we want so we dont have to worry about it
-                    this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
-                }
-
-                //if the x is zero it is either straight up or down
-                if (directionPoint.X != new Dimension())
-                {
-                    if (directionPoint.Y != new Dimension())
-                    {
-                        //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
-                        this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
-
-                        //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
-                        if (directionPoint.X < new Dimension())
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 180) - this.Phi;
-                        }
-                    }
-                    else
-                    {
-                        if (directionPoint.X > new Dimension())
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 0);
-                        }
-                        else if (directionPoint.X < new Dimension())
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 180);
-                        }
-                    }
-                }
-                else
-                {
-                    //set the angle based on if the y is positive or negative
-                    //if y is also zero, just make the xy an angle of 0
-                    //Note: we called the base contructor first so it is already 0 unless we change it
-                    if (directionPoint.Y > new Dimension())
-                    {
-                        this.Phi = new Angle(AngleType.Degree, 90);
-                    }
-                    else if (directionPoint.Y < new Dimension())
-                    {
-                        this.Phi = new Angle(AngleType.Degree, 270);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)
         /// </summary>
         /// <param name="directionVector">The vector to use the direction of</param>
@@ -199,20 +136,86 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a direction with the given angles
-        /// Note: throws an error if a value not in the range 0 < theta < 180
+        /// Makes a direction from the origin to the given point
         /// </summary>
-        /// <param name="xyPlaneAngle">The angle from the positive x-axis in the xy-plane</param>
-        /// <param name="angleToZAxis">The angle from the positive z-axis</param>
-        public Direction(Angle xyPlaneAngle, Angle angleToZAxis)
-            : this(xyPlaneAngle, angleToZAxis, false) { }
+        /// <param name="directionPoint"></param>
+        public Direction(Point directionPoint, Dimension? acceptedDeviationConstant = null)
+            : this()
+        {
+            //if they didnt pass in a value, use the default
+            if (acceptedDeviationConstant == null)
+            {
+                acceptedDeviationConstant = DeviationConstants.AcceptedEqualityDeviationDimension;
+            }
+
+            Dimension distanceToOrigin = directionPoint.DistanceTo(new Point());
+
+            //if it is the origin we just leave it as the base constructor
+            if (!distanceToOrigin.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+            {
+                //if the z is 0 than the angle should be 90 so we can use the xyplane angle
+                //Note: we called the base contructor first so it is already 90 unless we change it
+                if (!directionPoint.Z.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                {
+                    //arcos handles negatives how we want so we dont have to worry about it
+                    this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
+                }
+
+                //if the x is zero it is either straight up or down
+                if (!directionPoint.X.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                {
+                    if (!directionPoint.Y.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                    {
+                        //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
+                        this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
+
+                        //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
+                        //we can use this because we know at this point x isnt equal to zero and if we used dimension it could be
+                        //to close within the default deviation constant but not in the passed one
+                        if (directionPoint.X.Inches < 0)
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 180) - this.Phi;
+                        }
+                    }
+                    else
+                    {
+                        //we know y is zero and x is non zero so we just need to know which way x is and we use inches
+                        //in case the passed deviation is smaller than the default
+                        if (directionPoint.X.Inches > 0)
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 0);
+                        }
+                        else if (directionPoint.X.Inches < 0)
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 180);
+                        }
+                    }
+                }
+                else
+                {
+                    //set the angle based on if the y is positive or negative
+                    //if y is also zero, just make the xy an angle of 0
+                    //Note: we called the base contructor first so it is already 0 unless we change it
+                    //Also we already know x is zero so we only care about the Y direction and we use inches
+                    //in case the passed deviation is smaller than the default
+                    if (directionPoint.Y.Inches > 0)
+                    {
+                        this.Phi = new Angle(AngleType.Degree, 90);
+                    }
+                    else if (directionPoint.Y.Inches < 0)
+                    {
+                        this.Phi = new Angle(AngleType.Degree, 270);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Makes a direction from the origin to the given point
         /// </summary>
         /// <param name="directionPoint"></param>
-        public Direction(Point basePoint, Point endPoint)
-            : this(endPoint - basePoint) { }
+        public Direction(Point basePoint, Point endPoint, Dimension? acceptedDeviationConstant = null)
+            : this(endPoint - basePoint, acceptedDeviationConstant) { }
 
         /// <summary>
         /// Creates a direction with the given angles, but throws an error if phi is not in range if it is set to 
@@ -222,22 +225,22 @@ namespace GeometryClassLibrary
         /// <param name="angleToZAxis">The angle from the positive z-axis</param>
         /// <param name="allowAnglesOutOfBounds">If it is true it will adjust the given angles to within the proper bounds, otherwise
         /// if the are outside it will throw an error</param>
-        private Direction(Angle phi, Angle theta, Boolean allowAnglesOutOfBounds)
+        public Direction(Angle xyPlaneAngle, Angle angleToZAxis, Boolean allowAnglesOutOfBounds = false)
         {
-            this.Phi = phi;
-            this.Theta = theta;
+            this.Phi = xyPlaneAngle;
+            this.Theta = angleToZAxis;
 
             //if we can have angles outside the phi bound than adjust ours if necessary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (theta < new Angle() && theta > new Angle(AngleType.Degree, 180))
+                if (angleToZAxis < new Angle() && angleToZAxis > new Angle(AngleType.Degree, 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
             }
         }
-
+       
         /// <summary>
         /// Creates a copy of the given Direction
         /// </summary>
@@ -246,6 +249,7 @@ namespace GeometryClassLibrary
         {
             this.Theta = new Angle(toCopy.Theta);
             this.Phi = new Angle(toCopy.Phi);
+            
         }
 
 
@@ -318,7 +322,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Vector UnitVector(DimensionType passedType)
         {
-            return new Vector(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection));
+            Dimension magnitude = new Dimension(passedType, 1);
+            Direction direction = new Direction(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection), new Dimension(DimensionType.Inch, 0.0001));
+            return new Vector(new Point(), direction, magnitude);
         }
 
         public Direction Reverse()
