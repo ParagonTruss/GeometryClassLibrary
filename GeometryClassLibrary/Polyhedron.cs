@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     {
         #region Fields and Properties
 
-        public List<Polygon> Polygons
+        public virtual List<Polygon> Polygons
         {
             get { return this.Planes as List<Polygon>; }
             set { this.Planes = value; }
