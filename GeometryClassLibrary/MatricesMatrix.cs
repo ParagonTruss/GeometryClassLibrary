@@ -9,33 +9,10 @@ namespace GeometryClassLibrary
     [DebuggerDisplay("Size = {NumberOfRows} x {NumberOfColumns}")] 
     public class MatricesMatrix
     {
+        #region Properties and Fields
+
         // declares a two dimensional array named Matrices but does not initialize it yet.  The "," denotes that it is 2d
         Matrix[,] _matrices;
-
-        #region Constructors
-
-        /// <summary>
-        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
-        /// </summary>
-        /// <param name="numRows">The desired number of rows in the new MatricesMatrix</param>
-        /// <param name="numCols">The desired number of columns in the new MatricesMatrix</param>
-        public MatricesMatrix(int numRows, int numCols) 
-        {
-            _matrices = new Matrix[numRows, numCols];
-        }
-
-        /// <summary>
-        ///Creates a square matrix with the specified number of rows and columns
-        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
-        /// </summary>
-        public MatricesMatrix(int numRowsAndColumns)
-        {
-            _matrices = new Matrix[numRowsAndColumns, numRowsAndColumns];
-        }
-
-        # endregion
-
-        #region Properties and Fields
 
         /// <summary>
         /// Returns the element at row "rowIndex" and column "columnIndex"
@@ -96,14 +73,14 @@ namespace GeometryClassLibrary
         public int TotalRows()
         {
             int totalRows = 0;
-            
+
             for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
             {
                 int maxRowHeight = 0;
                 for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
                     int rowHeight = this.GetRowHeight(rowIndex);
-                    if(rowHeight > maxRowHeight)
+                    if (rowHeight > maxRowHeight)
                     {
                         maxRowHeight = rowHeight;
                     }
@@ -112,7 +89,7 @@ namespace GeometryClassLibrary
             }
 
             return totalRows;
-            
+
         }
 
         /// <summary>
@@ -125,7 +102,7 @@ namespace GeometryClassLibrary
             for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
             {
                 int maxColumnWidth = 0;
-                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)               
+                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
                 {
                     int columnWidth = this.GetColumnWidth(columnIndex);
                     if (columnWidth > maxColumnWidth)
@@ -142,22 +119,61 @@ namespace GeometryClassLibrary
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
+        /// </summary>
+        /// <param name="numRows">The desired number of rows in the new MatricesMatrix</param>
+        /// <param name="numCols">The desired number of columns in the new MatricesMatrix</param>
+        public MatricesMatrix(int numRows, int numCols) 
+        {
+            _matrices = new Matrix[numRows, numCols];
+        }
+
+        /// <summary>
+        ///Creates a square matrix with the specified number of rows and columns
+        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
+        /// </summary>
+        public MatricesMatrix(int numRowsAndColumns)
+        {
+            _matrices = new Matrix[numRowsAndColumns, numRowsAndColumns];
+        }
+
+        # endregion
+
         #region Overloaded Operators
 
         /// <summary>
         /// Returns true if each matricesMatrix is the same as the other
         /// </summary>
-        public static bool operator ==(MatricesMatrix m1, MatricesMatrix m2)
+        public static bool operator ==(MatricesMatrix matricies1, MatricesMatrix matricies2)
         {
-            return m1.Equals(m2);
+            if ((object)matricies2 == null)
+            {
+                if ((object)matricies2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return matricies2.Equals(matricies2);
         }
 
         /// <summary>
         /// Returns true if each matricesMatrix is NOT the same as the other
         /// </summary>
-        public static bool operator !=(MatricesMatrix m1, MatricesMatrix m2)
+        public static bool operator !=(MatricesMatrix matricies1, MatricesMatrix matricies2)
         {
-            return !m1.Equals(m2);
+            if ((object)matricies1 == null)
+            {
+                if ((object)matricies2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return !matricies1.Equals(matricies2);
         }
 
         /// <summary>
@@ -165,32 +181,47 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            MatricesMatrix mm = (MatricesMatrix)obj;
-
-            if (this.NumberOfColumns != mm.NumberOfColumns || this.NumberOfRows != mm.NumberOfRows)
+            //make sure the obj isnt null
+            if (obj == null)
             {
                 return false;
             }
-
-            for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
+            
+            //try casting it and comparing it
+            try
             {
-                for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
+                MatricesMatrix comparableMatricies = (MatricesMatrix)obj;
+
+                if (this.NumberOfColumns != comparableMatricies.NumberOfColumns || this.NumberOfRows != comparableMatricies.NumberOfRows)
                 {
-                    if (this.GetElement(rowIndex, columnIndex) != mm.GetElement(rowIndex, columnIndex))
+                    return false;
+                }
+
+                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
+                {
+                    for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                     {
-                        return false;
+                        if (this.GetElement(rowIndex, columnIndex) != comparableMatricies.GetElement(rowIndex, columnIndex))
+                        {
+                            return false;
+                        }
                     }
                 }
-            }
 
-            return true;
+                //if we didnt find a spot were it was not ewual than return true;
+                return true;
+            }
+            //if it was not a matix than they arent equal
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
 
         #endregion
 
         #region Methods 
-
-        
+    
         /// <summary>
         /// Checks to see if this matrix and the passed matrix can be added together.  
         /// In order to be able to add two matrices, they must have the same dimensions.
@@ -318,10 +349,6 @@ namespace GeometryClassLibrary
 
             return false;
         }      
-
-        
-        
-        #endregion
         
         /// <summary>
         /// Returns the number of rows of the matrix with the largest number of rows in the specified row of the MatricesMatrix
@@ -393,5 +420,6 @@ namespace GeometryClassLibrary
             return returnMatrix;
         }
 
+        #endregion
     }
 }

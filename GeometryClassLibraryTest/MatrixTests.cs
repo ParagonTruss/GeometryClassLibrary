@@ -252,7 +252,6 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-
         [Test()]
         public void Matrix_GetColumnStandardTest()
         {
@@ -359,7 +358,6 @@ namespace ClearspanLibraryUnitTest
             calculatedLPartOfLUPDecomposition.ShouldBeEquivalentTo(correctLPartOfLUPDecomposition);
             calculatedUPartOfLUPDecomposition.ShouldBeEquivalentTo(correctLPartOfLUPDecomposition);
         }
-
 
         [Test()]
         public void Matrix_DecomposeComplicatedTest()
@@ -661,7 +659,6 @@ namespace ClearspanLibraryUnitTest
 
 
         }
-
 
         [Test()]
         public void Matrix_ExtractLowerComplicatedTest()

@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Polygon : PlaneRegion, IComparable<Polygon>
     {
-        #region Fields and Properties
+        #region Properties and Fields
 
         public List<LineSegment> PlaneBoundaries
         {
@@ -134,9 +134,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(Polygon region1, Polygon region2)
         {
-            if ((object)region1 == null || (object)region2 == null)
+            if ((object)region1 == null)
             {
-                if ((object)region1 == null && (object)region2 == null)
+                if ((object)region2 == null)
                 {
                     return true;
                 }
@@ -150,9 +150,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(Polygon region1, Polygon region2)
         {
-            if ((object)region1 == null || (object)region2 == null)
+            if ((object)region1 == null)
             {
-                if ((object)region1 == null && (object)region2 == null)
+                if ((object)region2 == null)
                 {
                     return false;
                 }
@@ -166,25 +166,48 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            Polygon comparableRegion = null;
+            //make sure we didnt get a null
+            if (obj == null)
+            {
+                return false;
+            }
 
             //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparableRegion = (Polygon)obj;
-                bool areEqual = true;
-                foreach (LineSegment segment in comparableRegion.PlaneBoundaries)
-                {
-                    if (!this.PlaneBoundaries.Contains(segment))
-                    {
-                        areEqual = false;
-                    }
+                Polygon comparablePolygon = (Polygon)obj;
 
+                //if they have differnt number of boundaries they cant be equal
+                if (this.PlaneBoundaries.Count != comparablePolygon.PlaneBoundaries.Count)
+                {
+                    return false;
                 }
 
-                return areEqual;
+                //now check each line segment
+                foreach (LineSegment segment in this.PlaneBoundaries)
+                {                        
+                    //make sure each segment is represented exactly once
+                    int timesUsed = 0;
+                    foreach (LineSegment segmentOther in comparablePolygon.PlaneBoundaries)
+                    {
+                        if (segment == segmentOther)
+                        {
+                            timesUsed++;
+                        }
+                    }
+
+                    //make sure each is used exactly once
+                    if (timesUsed != 1)
+                    {
+                        return false;
+                    }
+                }
+
+                //if the segments were are there than its equal
+                return true;
             }
-            catch
+            //if we didnt get a polygon than its not equal
+            catch (InvalidCastException)
             {
                 return false;
             }

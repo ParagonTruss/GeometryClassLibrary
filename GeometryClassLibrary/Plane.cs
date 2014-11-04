@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Plane
     {
-        #region Fields and Properties
+        #region Properties and Fields
         public Point BasePoint { get; protected set; }
 
         private Vector _normalVector;
@@ -157,32 +157,53 @@ namespace GeometryClassLibrary
 
         public static bool operator ==(Plane plane1, Plane plane2)
         {
+            if ((object)plane1 == null)
+            {
+                if ((object)plane2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
             return plane1.Equals(plane2);
         }
 
         public static bool operator !=(Plane plane1, Plane plane2)
         {
+            if ((object)plane1 == null)
+            {
+                if ((object)plane2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
             return !plane1.Equals(plane2);
         }
 
         public override bool Equals(object obj)
         {
-            Plane comparablePlane = null;
+            //make sure the passed obj isnt null
+            if (obj == null)
+            {
+                return false;
+            }
+
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparablePlane = (Plane)obj;
+                Plane comparablePlane = (Plane)obj;
+
                 bool checkPoint = this.Contains(comparablePlane.BasePoint);
                 bool checkVector = this.NormalVector.PointInSameOrOppositeDirections(comparablePlane.NormalVector);
 
                 return checkPoint && checkVector;
             }
+            //if its not a plane than its not equal
             catch
             {
                 return false;
             }
-            
-            
         }
 
         #endregion

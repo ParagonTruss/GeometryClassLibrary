@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     [DebuggerDisplay("Size = {NumberOfRows} x {NumberOfColumns} |  First Row = {this.GetElement(0,0)} {this.GetElement(0,1)}... |  Second Row = {this.GetElement(1,0)} {this.GetElement(1,1)}...")]
     public class Matrix
     {
-        #region _fields and Properties
+        #region Properties and Fields
 
         // declares a two dimensional array named _matrix. The "," denotes that it is 2d
         double[,] _matrix;
@@ -49,6 +49,7 @@ namespace GeometryClassLibrary
 #endregion
 
         #region Constructors
+
         /// <summary>
         ///the constructor that is called when you say "new Matrix(numberOfRows, numberOfColumns);"
         /// </summary>
@@ -118,17 +119,33 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to difference of 0.00000001 in any two elements
         /// </summary>
-        public static bool operator ==(Matrix m1, Matrix m2)
+        public static bool operator ==(Matrix matrix1, Matrix matrix2)
         {
-            return m1.Equals(m2);
+            if ((object)matrix1 == null)
+            {
+                if ((object)matrix2 == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return matrix1.Equals(matrix2);
         }
 
         /// <summary>
         /// Not a perfect inequality operator, is only accurate up to a difference of 0.00000001 in any two elements
         /// </summary>
-        public static bool operator !=(Matrix m1, Matrix m2)
+        public static bool operator !=(Matrix matrix1, Matrix matrix2)
         {
-            return !m1.Equals(m2);
+            if ((object)matrix1 == null)
+            {
+                if ((object)matrix2 == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return !matrix1.Equals(matrix2);
         }
 
         /// <summary>
@@ -136,30 +153,40 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            if(Object.ReferenceEquals(obj, null))
-            {
-                return false;
-            }
-            Matrix checkMatrix = (Matrix)obj;
-
-
-            if (this.NumberOfColumns != checkMatrix.NumberOfColumns || this.NumberOfRows != checkMatrix.NumberOfRows)
+            //make sure the passed obj is not null
+            if(obj == null)
             {
                 return false;
             }
 
-            for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
+            //try casting and then comparing
+            try
             {
-                for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
+                Matrix comparableMatrix = (Matrix)obj;
+
+                if (this.NumberOfColumns != comparableMatrix.NumberOfColumns || this.NumberOfRows != comparableMatrix.NumberOfRows)
                 {
-                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - checkMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
+                    return false;
+                }
+
+                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
+                {
+                    for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                     {
-                        return false;
+                        if (Math.Abs(this.GetElement(rowIndex, columnIndex) - comparableMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
+                        {
+                            return false;
+                        }
                     }
                 }
-            }
 
-            return true;
+                return true;
+            }
+            //if it was not a matrix than it was not equal
+            catch (InvalidCastException)
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -238,7 +265,7 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-            #region Get/Set Methods
+        #region Get/Set Methods
         /// <summary>
         /// </summary>
         /// <param name="rowIndex">The number of the row where the element will be added</param>
@@ -329,6 +356,7 @@ namespace GeometryClassLibrary
         {
             get { return _matrix; }
         }
+
         #endregion
 
         /// <summary>
@@ -871,8 +899,6 @@ namespace GeometryClassLibrary
             return this.GetSubMatrix(rowsToKeep, columnsToKeep);
         }
 
-        #endregion
-
         #region Matrix Decomposition Stuff (Source: http://msdn.microsoft.com/en-us/magazine/jj863137.aspx)
         // --------------------------------------------------------------------------------------------------------------
 
@@ -1201,7 +1227,8 @@ namespace GeometryClassLibrary
             return UpperPart;
         }
 
+        #endregion
 
-        #endregion                
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Line : IComparable<Line>
     {
-        #region Properties
+        #region Properties and Fields
 
         public readonly static Line XAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
         public readonly static Line YAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
@@ -226,21 +226,25 @@ namespace GeometryClassLibrary
             return !line1.Equals(line2);
         }
 
-        public override bool Equals(object line)
+        public override bool Equals(object obj)
         {
-            if (line == null)
+            //make sure the passed object is not null
+            if (obj == null)
             {
                 return false;
             }
 
+            //try casting and comparing it
             try
             {
-                Line passedLine = (Line)line;
-                bool linesAreParallel = IsParallelTo(passedLine);
-                bool basePointIsOnLine = BasePoint.IsOnLine(passedLine);
+                Line comparableLine = (Line)obj;
+
+                bool linesAreParallel = IsParallelTo(comparableLine);
+                bool basePointIsOnLine = BasePoint.IsOnLine(comparableLine);
 
                 return (linesAreParallel && basePointIsOnLine);
             }
+            //if it wasnt a Line than it wasnt equal
             catch (InvalidCastException)
             {
                 return false;

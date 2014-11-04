@@ -36,10 +36,30 @@ namespace GeometryClassLibrary
         #endregion 
 
         #region Constructors
+
         public Solid()
         {
 
         }
+
+        #endregion
+
+        #region Overloaded Operators
+
+        /// <summary>
+        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other Solid
+        /// NOTE: BASED SOLELY ON Volume.  MAY WANT TO CHANGE LATER
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(Solid other)
+        {
+            if (this.Volume.Equals(other.Volume))
+                return 0;
+            else
+                return this.Volume.CompareTo(other.Volume);
+        }
+
         #endregion
 
         #region Methods
@@ -59,18 +79,5 @@ namespace GeometryClassLibrary
         }
         #endregion
 
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other Solid
-        /// NOTE: BASED SOLELY ON Volume.  MAY WANT TO CHANGE LATER
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Solid other)
-        {
-            if (this.Volume.Equals(other.Volume))
-                return 0;
-            else
-                return this.Volume.CompareTo(other.Volume);
-        }
     }
 }

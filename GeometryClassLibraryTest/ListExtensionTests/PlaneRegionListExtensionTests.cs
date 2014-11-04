@@ -10,7 +10,7 @@ namespace GeometryClassLibraryTest
     public class PlaneRegionListExtensionTests
     {
         [Test]
-        public void PlaneRegion_Shift()
+        public void PlaneRegion_ShiftList()
         {
             List<PlaneRegion> planes = new List<PlaneRegion>();
 
@@ -20,28 +20,23 @@ namespace GeometryClassLibraryTest
             polygonLines.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 3, 1), PointGenerator.MakePointWithInches(0, 2, 5)));
             Polygon polygon = new Polygon(polygonLines);
 
-
             List<LineSegment> polygon2Lines = new List<LineSegment>();
             polygon2Lines.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, -5, 7)));
             polygon2Lines.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 3, 2)));
             polygon2Lines.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 3, 2), PointGenerator.MakePointWithInches(-1, -5, 7)));
             Polygon polygon2 = new Polygon(polygon2Lines);
 
-            /*var arcTest = new Mock<Arc>();
-            arcTest.Setup(x => x.Direction).Returns(new Direction());
-            arcTest.Setup(x => x.BasePoint).Returns(new Point());
-            arcTest.Setup(x => x.OriginPointTwo).Returns(PointGenerator.MakePointWithInches(1, 5, 3));*/
-
             List<IEdge> nonPolygonEdges = new List<IEdge>();
             nonPolygonEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 5, 3)));
-            nonPolygonEdges.Add(new Arc(PointGenerator.MakePointWithInches(1, 5, 3))); ;
-            //nonPolygonEdges.Add(arcTest.Object);
+            Arc arcToadd = new Arc(PointGenerator.MakePointWithInches(1, 5, 3));
+            arcToadd.Direction = new Direction(PointGenerator.MakePointWithInches(2, 3, 3));
+            nonPolygonEdges.Add(arcToadd);
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
             //add them to the generic list
             planes.Add(polygon);
             planes.Add(polygon2);
-            //planes.Add(nonPolygon);
+            planes.Add(nonPolygon);
 
             Shift shift = new Shift(PointGenerator.MakePointWithInches(2, 0, 0));
 
@@ -57,28 +52,17 @@ namespace GeometryClassLibraryTest
             polygon2ExpectedLines.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 2), PointGenerator.MakePointWithInches(1, -5, 7)));
             Polygon polygon2Expected = new Polygon(polygon2ExpectedLines);
 
+            List<IEdge> nonPolygonExpectedEdges = new List<IEdge>();
+            nonPolygonExpectedEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3)));
+            Arc arcExpected = new Arc(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3));
+            arcExpected.Direction = new Direction(PointGenerator.MakePointWithInches(2, 3, 3));
+            nonPolygonExpectedEdges.Add(arcExpected);
+            NonPolygon nonPolygonExpected = new NonPolygon(nonPolygonExpectedEdges);
+
             List<PlaneRegion> resultPlanes = planes.Shift(shift);
             (resultPlanes[0] == polygonExpected).Should().BeTrue();
             (resultPlanes[1] == polygon2Expected).Should().BeTrue();
-
-
-            //Arcs are not implemetned
-            /*var arcResult = new Mock<Arc>();
-            arcResult.Setup(x => x.Direction).Returns(new Direction());
-            arcResult.Setup(x => x.BasePoint).Returns(PointGenerator.MakePointWithInches(2, 0, 0));
-            arcResult.Setup(x => x.OriginPointTwo).Returns(PointGenerator.MakePointWithInches(3, 5, 3));
-
-            List<IEdge> nonPolygonExpectedEdges = new List<IEdge>();
-            nonPolygonExpectedEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3)));
-            nonPolygonExpectedEdges.Add(new Arc(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3)));
-            //nonPolygonExpectedEdges.Add(arcResult.Object);
-            NonPolygon nonPolygonExpected = new NonPolygon(nonPolygonExpectedEdges);
-
-            PlaneRegion nonPolygonResult = planes[1].Shift(shift);
-            (nonPolygonResult == nonPolygonExpected).Should().BeTrue();
-            nonPolygonResult = (NonPolygon)nonPolygonResult;*/
-
-            
-        }
+            (resultPlanes[2] == nonPolygonExpected).Should().BeTrue();
+        }  
     }
 }

@@ -259,9 +259,9 @@ namespace GeometryClassLibrary
             {
                 if ((object)vector2 == null)
                 {
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
             }
             return !vector1.Equals(vector2);
         }
@@ -270,15 +270,21 @@ namespace GeometryClassLibrary
         {
             //check for null
             if (obj == null)
+            {
                 return false;
+            }
 
+            //try casting and comparing them
             try
             {
                 Vector vec = (Vector)obj;
 
-                return PointInSameDirection(vec) &&
-                    Magnitude == vec.Magnitude;
+                bool areInSameDirection = PointInSameDirection(vec);
+                bool magnitudesEqual = Magnitude == vec.Magnitude;
+
+                return areInSameDirection && magnitudesEqual;
             }
+            //if it was not a vector than it cant be equal
             catch (InvalidCastException)
             {
                 return false;

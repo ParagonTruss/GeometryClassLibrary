@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
     /// </summary>
     public class Direction
     {
-        #region fields and Properties
+        #region Properties and Fields
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azumuth)
@@ -283,9 +283,9 @@ namespace GeometryClassLibrary
             return !direction1.Equals(direction2);
         }
 
-        public override bool Equals(object direction)
+        public override bool Equals(object obj)
         {
-            if (direction == null)
+            if (obj == null)
             {
                 return false;
             }
@@ -293,11 +293,11 @@ namespace GeometryClassLibrary
             try
             {
                 //try casting to a direction
-                Direction vec = (Direction)direction;
+                Direction comparableDirection = (Direction)obj;
 
                 //now check if the angles are the same
-                Boolean phiEqual = (vec.Phi == this.Phi);
-                Boolean thetaEqual = (vec.Theta == this.Theta);
+                bool phiEqual = (comparableDirection.Phi == this.Phi);
+                bool thetaEqual = (comparableDirection.Theta == this.Theta);
 
                 //returns true if all were true of false if at least one was not
                 return (phiEqual && thetaEqual);

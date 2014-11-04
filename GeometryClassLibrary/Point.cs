@@ -17,7 +17,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Point
     {
-        #region fields and Properties
+        #region Properties and Fields
 
         public Dimension X
         {
@@ -175,9 +175,9 @@ namespace GeometryClassLibrary
         public static bool operator ==(Point point1, Point point2)
         {
             // covers null reference checks
-            if ((Object)point1 == null)
+            if ((object)point1 == null)
             {
-                if((Object)point2 == null)
+                if((object)point2 == null)
                 {
                     return true;
                 }
@@ -193,9 +193,9 @@ namespace GeometryClassLibrary
         public static bool operator !=(Point point1, Point point2)
         {
             // if the two points' x and y are equal, returns false
-            if ((Object)point1 == null)
+            if ((object)point1 == null)
             {
-                if ((Object)point2 == null)
+                if ((object)point2 == null)
                 {
                     return false;
                 }
@@ -220,7 +220,7 @@ namespace GeometryClassLibrary
             {
                 Point comparablePoint = (Point)obj;
 
-                // if the two points' x and y are equal, returns true
+                // if the two points' x, y, and z are equal, returns true
                 return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
             }
             //if they are not the same type than they are not equal
@@ -273,6 +273,8 @@ namespace GeometryClassLibrary
         
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Rotates one point around another
         /// </summary>
@@ -295,32 +297,10 @@ namespace GeometryClassLibrary
                     cosTheta * (this.Y - centerPoint.Y).Inches + centerPoint.Y.Inches))
             );
         }
-        /*
-/// <summary>
-/// Moves the point the specified distance in the specified direction
-/// </summary>
-/// <returns>a new point in the new location</returns>
-public Point Translate(Direction passedDirection, Dimension passedDisplacement)
-{
-    Dimension xDisplacement = passedDisplacement * passedDirection.XComponentOfDirection;
-    Dimension yDisplacement = passedDisplacement * passedDirection.YComponentOfDirection;
-    Dimension zDisplacement = passedDisplacement * passedDirection.ZComponentOfDirection;
 
-    Point shift = new Point(xDisplacement, yDisplacement, zDisplacement);
-    return (this + shift);
-}
-
-
-/// <summary>
-/// Moves the point in the specified direction by the magnitude of the direction vector
-/// </summary>
-/// <returns>a new point in the new location</returns>
-public Point Translate(Vector passedDisplacementVector)
-{
-    Point shift = new Point(passedDisplacementVector.XComponent, passedDisplacementVector.YComponent, passedDisplacementVector.ZComponent);
-    return (this + shift);
-}*/
-
+        /// <summary>
+        /// Moves the point by the specified amount based on the passed point
+        /// </summary>
         public Point Translate(Point passedDisplacementPoint)
         {
             return (this + passedDisplacementPoint);
@@ -535,6 +515,8 @@ public Point Translate(Vector passedDisplacementVector)
                 pointToReturn = pointToReturn.Translate(passedShift.Displacement);
             }
             return pointToReturn;
-        }    
+        }
+
+        #endregion
     }
 }

@@ -12,7 +12,11 @@ namespace GeometryClassLibrary
     [Serializable]
     public class NonPolygon : PlaneRegion
     {
-        public virtual List<IEdge> PlaneEdges { get; set; } 
+        #region Properties and Fields
+
+        public virtual List<IEdge> PlaneEdges { get; set; }
+
+        #endregion
 
         #region Constructors
         public NonPolygon()
@@ -32,12 +36,7 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        /*public override List<IEdge> PlaneBoundaries
-        {
-            get { return _planeBoundaries; }
-            set { _planeBoundaries = value; }
-        }
-        private List<IEdge> _planeBoundaries;*/
+        #region Methods
 
         public override Area Area
         {
@@ -58,5 +57,7 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

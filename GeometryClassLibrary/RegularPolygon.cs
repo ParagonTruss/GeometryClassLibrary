@@ -9,6 +9,8 @@ namespace GeometryClassLibrary
     [Serializable]
     public class RegularPolygon : Polygon
     {
+        #region Constructors
+
         public RegularPolygon(List<LineSegment> passedLineSegments)
         {
             //make sure the linesegments are equidistant and all angles equal
@@ -42,7 +44,9 @@ namespace GeometryClassLibrary
             points.MakeIntoLineSegmentsThatMeet();
         }
 
+        #endregion
 
+        #region Methods
 
         /// <summary>
         /// Calculates a point that is at an angle from the passedPoint, in XY (0 is to the right)
@@ -60,5 +64,7 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

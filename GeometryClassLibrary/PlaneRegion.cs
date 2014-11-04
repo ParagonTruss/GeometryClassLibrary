@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     //For an explaination of why we use generics here see: http://stackoverflow.com/questions/3551012/override-a-property-with-a-derived-type-and-same-name-c-sharp
     public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
-        #region Fields and Properties
+        #region Properties and Fields
 
         protected IEnumerable<IEdge> Edges;
         public virtual Area Area { get { throw new NotImplementedException(); } }
@@ -78,9 +78,9 @@ namespace GeometryClassLibrary
 
         public static bool operator ==(PlaneRegion region1, PlaneRegion region2)
         {
-            if ((object)region1 == null || (object)region2 == null)
+            if ((object)region1 == null)
             {
-                if ((object)region1 == null && (object)region2 == null)
+                if ((object)region2 == null)
                 {
                     return true;
                 }
@@ -91,9 +91,9 @@ namespace GeometryClassLibrary
 
         public static bool operator !=(PlaneRegion region1, PlaneRegion region2)
         {
-            if ((object)region1 == null || (object)region2 == null)
+            if ((object)region1 == null)
             {
-                if ((object)region1 == null && (object)region2 == null)
+                if ((object)region2 == null)
                 {
                     return false;
                 }
@@ -107,24 +107,47 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            PlaneRegion comparableRegion = null;
+            //make sure obj is not null
+            if (obj == null)
+            {
+                return false;
+            }
 
             //try to cast the object to a Plane Region, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparableRegion = (PlaneRegion)obj;
-                bool areEqual = true;
-                foreach (IEdge edge in comparableRegion.Edges)
-                {
-                    if (!Edges.Contains(edge))
-                    {
-                        areEqual = false;
-                    }
+                PlaneRegion comparableRegion = (PlaneRegion)obj;
 
+                //make sure there are the smae number of edges
+                if (this.Edges.Count() != comparableRegion.Edges.Count())
+                {
+                    return false;
                 }
 
-                return areEqual;
+                //now check each edge in our list
+                foreach (IEdge edge in this.Edges)
+                {
+                    //make sure each edge is represented exactly once
+                    int timesUsed = 0;
+                    foreach (IEdge edgeOther in comparableRegion.Edges)
+                    {
+                        if (edge.Equals(edgeOther))
+                        {
+                            timesUsed++;
+                        }
+                    }
+
+                    //make sure each is used exactly once
+                    if (timesUsed != 1)
+                    {
+                        return false;
+                    }
+                }
+
+                //if we didnt find any that werent in the edges than they are equal
+                return true;
             }
+            //if it was not a planeregion than it is not equal
             catch
             {
                 return false;

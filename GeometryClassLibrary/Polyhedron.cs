@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Polyhedron : Solid
     {
-        #region Fields and Properties
+        #region Properties and Fields
 
         public virtual List<Polygon> Polygons
         {
@@ -95,9 +95,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator ==(Polyhedron polyhedron1, Polyhedron polyhedron2)
         {
-            if ((object)polyhedron1 == null || (object)polyhedron2 == null)
+            if ((object)polyhedron1 == null)
             {
-                if ((object)polyhedron1 == null && (object)polyhedron2 == null)
+                if ((object)polyhedron2 == null)
                 {
                     return true;
                 }
@@ -111,9 +111,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(Polyhedron polyhedron1, Polyhedron polyhedron2)
         {
-            if ((object)polyhedron1 == null || (object)polyhedron2 == null)
+            if ((object)polyhedron1 == null)
             {
-                if ((object)polyhedron1 == null && (object)polyhedron2 == null)
+                if ((object)polyhedron2 == null)
                 {
                     return false;
                 }
@@ -125,9 +125,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// does the same thing as ==
         /// </summary>
-        public override bool Equals(object polyhedron)
+        public override bool Equals(object obj)
         {
-            if (polyhedron == null)
+            //make sure the obj passed is not null
+            if (obj == null)
             {
                 return false;
             }
@@ -135,32 +136,36 @@ namespace GeometryClassLibrary
             //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
             try
             {
-                Polyhedron passedPolyhedron = (Polyhedron)polyhedron;
+                Polyhedron comparablePolyhedron = (Polyhedron)obj;
 
-                if (this.Polygons.Count == passedPolyhedron.Polygons.Count)
+                //compare each of its polygons to see if they are all included
+                if (this.Polygons.Count != comparablePolyhedron.Polygons.Count)
                 {
-                    foreach (Polygon polygon in this.Polygons)
-                    {
-                        int timesUsed = 0;
-                        foreach (Polygon polygonOther in passedPolyhedron.Polygons)
-                        {
-                            if (polygon == polygonOther)
-                            {
-                                timesUsed++;
-                            }
-                        }
+                    return false;
+                }
 
-                        if (timesUsed != 1)
+                foreach (Polygon polygon in this.Polygons)
+                {
+                    //make sure each polygon is represented exactly once
+                    int timesUsed = 0;
+                    foreach (Polygon polygonOther in comparablePolyhedron.Polygons)
+                    {
+                        if (polygon == polygonOther)
                         {
-                            return false;
+                            timesUsed++;
                         }
                     }
 
-                    return true;
+                    if (timesUsed != 1)
+                    {
+                        return false;
+                    }
                 }
 
-                return false;
+                //if they were all used exactly once than its equal
+                return true;
             }
+            //if it wasnt a polygon than it must not be eqaul
             catch
             {
                 return false;
@@ -168,7 +173,6 @@ namespace GeometryClassLibrary
         }
 
         #endregion
-
 
         #region Methods
 
@@ -402,7 +406,7 @@ namespace GeometryClassLibrary
             foreach (Plane slicingPlane in passedPlanes)
             {
                 //reset our return list
-                returnPolyhedrons = new List<Polyhedron>(); 
+                returnPolyhedrons = new List<Polyhedron>();
 
                 foreach (Polyhedron polyhedron in toSlicePolyhedrons)
                 {

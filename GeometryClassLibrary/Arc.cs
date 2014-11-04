@@ -11,7 +11,8 @@ namespace GeometryClassLibrary
     [Serializable]
     public class Arc : IEdge, IComparable<Arc>
     {
-        #region Fields and Properties
+        #region Properties and Fields
+
         /// <summary>
         /// One of the points where the arc arises from
         /// </summary>
@@ -25,10 +26,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// One of the points where the arc arises from
         /// </summary>
-        private Point _originPointTwo;
-        public virtual Point OriginPointTwo
+        private Point _endPoint;
+        public virtual Point EndPoint
         {
-            get { throw new System.NotImplementedException(); }
+            get { return _endPoint; }
             set { throw new System.NotImplementedException(); }
         }
 
@@ -40,20 +41,39 @@ namespace GeometryClassLibrary
 
         public Arc()
         {
-            this._basePoint = new Point();
-            this._originPointTwo = new Point();
+            this.Direction = new Direction();
+            _basePoint = new Point();
+            _endPoint = new Point();
         }
 
-        public Arc(Point originPointTwo)
+        public Arc(Point originPointTwo, Direction passedDirection = null)
         {
-            this._basePoint = new Point();
-            this._originPointTwo = originPointTwo;
+            if (passedDirection == null)
+            {
+                this.Direction = new Direction(originPointTwo);
+            }
+            else
+            {
+                this.Direction = passedDirection;
+            }
+
+            _basePoint = new Point();
+            _endPoint = originPointTwo;
         }
 
-        public Arc(Point originPointOne, Point originPointTwo)
+        public Arc(Point basePoint, Point originPointTwo, Direction passedDirection = null)
         {
-            this._basePoint = originPointOne;
-            this._originPointTwo = originPointTwo;
+            if (passedDirection == null)
+            {
+                this.Direction = new Direction(basePoint, originPointTwo);
+            }
+            else
+            {
+                this.Direction = passedDirection;
+            }
+
+            _basePoint = basePoint;
+            _endPoint = originPointTwo;
         }
 
         #endregion
@@ -64,33 +84,33 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
         /// </summary>
-        public static bool operator ==(Arc segment1, Arc segment2)
+        public static bool operator ==(Arc arc1, Arc arc2)
         {
-            if (segment1 == null || segment2 == null)
+            if ((object)arc1 == null)
             {
-                if (segment1 == null && segment2 == null)
+                if ((object)arc1 == null)
                 {
                     return true;
                 }
                 return false;
             }
-            return segment1.Equals(segment2);
+            return arc1.Equals(arc2);
         }
 
         /// <summary>
         /// Not a perfect inequality operator, is only accurate up to the Dimension Class's accuracy
         /// </summary>
-        public static bool operator !=(Arc segment1, Arc segment2)
+        public static bool operator !=(Arc arc1, Arc arc2)
         {
-            if (segment1 == null || segment2 == null)
+            if ((object)arc1 == null)
             {
-                if (segment1 == null && segment2 == null)
+                if ((object)arc2 == null)
                 {
                     return false;
                 }
                 return true;
             }
-            return !segment1.Equals(segment2);
+            return !arc1.Equals(arc2);
         }
 
         /// <summary>
@@ -98,18 +118,24 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            Arc comparableArc = null;
+            if (obj == null)
+            {
+                return false;
+            }
 
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
             {
-                comparableArc = (Arc)obj;
+                Arc comparableArc = (Arc)obj;
 
                 // if the two points' x and y are equal, returns true
-                return (comparableArc._basePoint.Equals(this._basePoint) && comparableArc._originPointTwo.Equals(this._originPointTwo))
-                    || (comparableArc._basePoint.Equals(this._originPointTwo) && comparableArc._originPointTwo.Equals(this._basePoint));
+                bool arcAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc._endPoint.Equals(this._endPoint);
+                bool arcAreRevese = comparableArc._basePoint.Equals(this._endPoint) && comparableArc._endPoint.Equals(this._basePoint);
+
+                return arcAreEqual || arcAreRevese;
             }
-            catch
+            //if it wasnt an arc than its obviously not equal
+            catch (InvalidCastException)
             {
                 return false;
             }
@@ -131,7 +157,7 @@ namespace GeometryClassLibrary
 
         public Arc Shift(Shift passedShift)
         {
-            return new Arc(_basePoint.Shift(passedShift), _originPointTwo.Shift(passedShift));
+            return new Arc(this.BasePoint.Shift(passedShift), this.EndPoint.Shift(passedShift), this.Direction);
         }
 
         IEdge IEdge.Shift(Shift passedShift)

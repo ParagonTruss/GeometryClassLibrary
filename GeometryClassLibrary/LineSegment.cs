@@ -14,7 +14,7 @@ namespace GeometryClassLibrary
     [Serializable]
     public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
-        #region Properties
+        #region Properties and Fields
 
         /// <summary>
         /// Returns this lineSegment's length (this is the same as the magnitude)
@@ -148,7 +148,9 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             if (obj == null)
+            {
                 return false;
+            }
 
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
@@ -156,10 +158,13 @@ namespace GeometryClassLibrary
                 LineSegment comparableSegment = (LineSegment)obj;
 
                 // if the two points' x and y are equal, returns true
-                return (comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint))
-                    || (comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint));
+                bool pointsAreEqual = comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint);
+                bool pointsAreReverse = comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint);
+
+                return pointsAreEqual || pointsAreReverse;
             }
-            catch
+            //if it wasnt a linesegment its not equal
+            catch (InvalidCastException)
             {
                 return false;
             }
