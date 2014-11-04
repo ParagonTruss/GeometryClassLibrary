@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A vector is a line segment that has a direction
     /// </summary>
-    [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
+    [DebuggerDisplay("Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}, Magnitude = {Magnitude.Inches}")]
     [Serializable]
     public class Vector : Line
     {

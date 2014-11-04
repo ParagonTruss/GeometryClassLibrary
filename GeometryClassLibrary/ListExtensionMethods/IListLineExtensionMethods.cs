@@ -13,8 +13,8 @@ namespace GeometryClassLibrary
         /// Returns the line with the smallest x intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
-        /// <param name="passedLines"></param>
-        /// <returns></returns>
+        /// <param name="passedLines">The list of lines to find the smallest x from</param>
+        /// <returns>Returns the Line with the smallest x intercept</returns>
         public static Line LineWithSmallestXInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
@@ -47,8 +47,8 @@ namespace GeometryClassLibrary
         /// Returns the line with the largest x intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
-        /// <param name="passedLines"></param>
-        /// <returns></returns>
+        /// <param name="passedLines">The list of lines to find the largest x from</param>
+        /// <returns>Returns the Line with the largest x intercept</returns>
         public static Line LineWithLargestXInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
@@ -81,8 +81,8 @@ namespace GeometryClassLibrary
         /// Returns the line with the smallest y intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
-        /// <param name="passedLines"></param>
-        /// <returns></returns>
+        /// <param name="passedLines">The list of lines to find the smallest y from</param>
+        /// <returns>Returns the Line with the smallest y intercept</returns>
         public static Line LineWithSmallestYInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
@@ -115,8 +115,8 @@ namespace GeometryClassLibrary
         /// Returns the line with the largest y intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
-        /// <param name="passedLines"></param>
-        /// <returns></returns>
+        /// <param name="passedLines">The list of lines to find the largest y from</param>
+        /// <returns>Returns the Line with the largest y intercept</returns>
         public static Line LineWithLargestYInterceptIn2D(this IList<Line> passedLines)
         {
             if (passedLines.Count < 1)
@@ -159,7 +159,7 @@ namespace GeometryClassLibrary
         /// checks to see whether every line is parallel
         /// </summary>
         /// <param name="passedLines">passed List of Lines</param>
-        /// <returns></returns>
+        /// <returns>returns a bool of whether or not they are all parallel</returns>
         public static bool AreAllParallel(this IList<Line> passedLines)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLines);
@@ -179,7 +179,7 @@ namespace GeometryClassLibrary
         /// Returns true if all of the passed lines are in the same plane, false otherwise
         /// </summary>
         /// <param name="passedLine">passed lines</param>
-        /// <returns></returns>
+        /// <returns>returns a bool of whether or not they are all coplanar</returns>
         public static bool AreAllCoplanar(this IList<Line> passedLineList)
         {
             List<Line> passedLineListCasted = new List<Line>(passedLineList);

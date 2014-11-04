@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
+    [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, Normal Vector: Direction Vector {NormalVector.XComponentOfDirection.Inches}, {NormalVector.YComponentOfDirection.Inches}, {NormalVector.ZComponentOfDirection.Inches}, Magnitude = {Magnitude.Inches}")]
     [Serializable]
     public class Plane
     {

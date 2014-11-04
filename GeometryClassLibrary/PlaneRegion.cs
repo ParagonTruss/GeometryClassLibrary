@@ -8,7 +8,6 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
     [Serializable]
-    //For an explaination of why we use generics here see: http://stackoverflow.com/questions/3551012/override-a-property-with-a-derived-type-and-same-name-c-sharp
     public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Properties and Fields

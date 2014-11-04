@@ -9,7 +9,8 @@ using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Displacement = {this._displacement.Magnitude.Millimeters}, Angle With XZ-Plane = {this._angleWithXZPlane.Degrees} deg, Angle With Z-Axis = {this._angleWithZAxis.Degrees} deg")]
+    [DebuggerDisplay("Displacement = {Displacement.X.Inches}, {Displacement.Y.Inches}, {Displacement.Z.Inches}, Rotations Count = {RotationsToApply.Count}")]
+    [Serializable]
     public class Shift
     {
         #region Properties and Fields

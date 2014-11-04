@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved (not straight)
     /// </summary>
+    [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, EndPoint = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Direction: Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
     [Serializable]
     public class Arc : IEdge, IComparable<Arc>
     {
@@ -66,11 +68,11 @@ namespace GeometryClassLibrary
             }
             else
             {
-                this.Direction = passedDirection;
+                this.Direction = new Direction(passedDirection);
             }
 
             _basePoint = new Point();
-            _endPoint = passedEndPoint;
+            _endPoint = new Point(passedEndPoint);
         }
         
         /// <summary>
@@ -88,11 +90,11 @@ namespace GeometryClassLibrary
             }
             else
             {
-                this.Direction = passedDirection;
+                this.Direction = new Direction(passedDirection);
             }
 
-            _basePoint = basePoint;
-            _endPoint = passedEndPoint;
+            _basePoint = new Point(basePoint);
+            _endPoint = new Point(passedEndPoint);
         }
 
         /// <summary>
