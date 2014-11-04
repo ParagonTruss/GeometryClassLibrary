@@ -33,12 +33,18 @@ namespace GeometryClassLibrary
             set { throw new System.NotImplementedException(); }
         }
 
+        /// <summary>
+        /// The direction that the arc travels in from the base point
+        /// </summary>
         public virtual Direction Direction { get; set; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a empty arc
+        /// </summary>
         public Arc()
         {
             this.Direction = new Direction();
@@ -46,11 +52,17 @@ namespace GeometryClassLibrary
             _endPoint = new Point();
         }
 
-        public Arc(Point originPointTwo, Direction passedDirection = null)
+        /// <summary>
+        /// Creates an arc with the base point at the origin, the endpoint at the passed point and in the 
+        /// given direction, or if omitted, the direction to the end point
+        /// </summary>
+        /// <param name="passedEndPoint">The point at which the arc ends</param>
+        /// <param name="passedDirection">The direction the arc travels from the base point</param>
+        public Arc(Point passedEndPoint, Direction passedDirection = null)
         {
             if (passedDirection == null)
             {
-                this.Direction = new Direction(originPointTwo);
+                this.Direction = new Direction(passedEndPoint);
             }
             else
             {
@@ -58,14 +70,21 @@ namespace GeometryClassLibrary
             }
 
             _basePoint = new Point();
-            _endPoint = originPointTwo;
+            _endPoint = passedEndPoint;
         }
-
-        public Arc(Point basePoint, Point originPointTwo, Direction passedDirection = null)
+        
+        /// <summary>
+        /// Creates an arc with the base point at the passed base point, the endpoint at the passed end point and in the 
+        /// passed direction, or if omitted, the direction to the end point
+        /// </summary>
+        /// <param name="basePoint">The point from which the Arc originates</param>
+        /// <param name="passedEndPoint">The point at which the Arc ends</param>
+        /// <param name="passedDirection"></param>
+        public Arc(Point basePoint, Point passedEndPoint, Direction passedDirection = null)
         {
             if (passedDirection == null)
             {
-                this.Direction = new Direction(basePoint, originPointTwo);
+                this.Direction = new Direction(basePoint, passedEndPoint);
             }
             else
             {
@@ -73,7 +92,18 @@ namespace GeometryClassLibrary
             }
 
             _basePoint = basePoint;
-            _endPoint = originPointTwo;
+            _endPoint = passedEndPoint;
+        }
+
+        /// <summary>
+        /// Creates a copy of this Arc
+        /// </summary>
+        /// <param name="toCopy">The Arc to copy</param>
+        public Arc(Arc toCopy)
+        {
+            _basePoint = new Point(toCopy.BasePoint);
+            _endPoint = new Point(toCopy.EndPoint);
+            this.Direction = new Direction(toCopy.Direction);
         }
 
         #endregion
@@ -164,6 +194,16 @@ namespace GeometryClassLibrary
         {
             return this.Shift(passedShift);
         }
+
+        /// <summary>
+        /// Returns a copy of this Arc
+        /// </summary>
+        /// <returns></returns>
+        public IEdge Copy()
+        {
+            return new Arc(this);
+        }
+
 
         #endregion
     }

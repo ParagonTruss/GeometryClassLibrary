@@ -13,6 +13,9 @@ namespace GeometryClassLibrary
     {
         #region Fields and Properties
 
+        /// <summary>
+        /// The plane Regions that represent and make up this solid
+        /// </summary>
         protected IEnumerable<PlaneRegion> Planes { get; set; }
 
         /// <summary>
@@ -26,6 +29,9 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// The volume of this solid / the space enclosed by this solid
+        /// </summary>
         public virtual Volume Volume
         {
             get
@@ -33,10 +39,14 @@ namespace GeometryClassLibrary
                 throw new NotImplementedException();
             }
         }
+
         #endregion 
 
         #region Constructors
 
+        /// <summary>
+        /// Creates an empty solid object
+        /// </summary>
         public Solid()
         {
 

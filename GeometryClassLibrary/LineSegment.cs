@@ -60,7 +60,7 @@ namespace GeometryClassLibrary
             : base(passedEndPoint) { }
 
         /// <summary>
-        /// Constructs a line segment that corresponds to the given vector
+        /// Constructs a line segment that corresponds to the given vector, with the smae basepoint, direction and length
         /// </summary>
         /// <param name="passedVector"></param>
         public LineSegment(Vector passedVector)
@@ -73,30 +73,22 @@ namespace GeometryClassLibrary
         /// <param name="passedEndPoint"></param>
         public LineSegment(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint) { }
-
+        
         /// <summary>
-        /// Creates a new zero length LineSegment with the given BasePoint in the given direction
+        /// Creates a new ineSegment with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection)
-            : base(passedBasePoint, passedDirection) { }
+        public LineSegment(Point passedBasePoint, Vector passedVector)
+            : base(passedBasePoint, passedVector) { }
 
         /// <summary>
-        /// Constructs a line segment at the given basePoint with the same direction and magnitude as the passed Vector
-        /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
-        public LineSegment(Point passedBasePoint, Vector passedDirection)
-            : base(passedBasePoint, passedDirection) { }
-
-        /// <summary>
-        /// Creates a new LineSegment with the given BasePoint in the given direction with the given magnitude
+        /// Creates a new LineSegment with the given BasePoint in the given direction with the given length, or 0 if it is omitted
         /// </summary>
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection, Dimension passedLength)
+        public LineSegment(Point passedBasePoint, Direction passedDirection, Dimension? passedLength = null)
             : base(passedBasePoint, passedDirection, passedLength) { }
 
         /// <summary>
@@ -278,6 +270,14 @@ namespace GeometryClassLibrary
             return new LineSegment(base.Translate(translation));
         }
 
+        /// <summary>
+        /// Returns a copy of this lineSegment
+        /// </summary>
+        /// <returns></returns>
+        public IEdge Copy()
+        {
+            return new LineSegment(this);
+        }
 
         #endregion
     }

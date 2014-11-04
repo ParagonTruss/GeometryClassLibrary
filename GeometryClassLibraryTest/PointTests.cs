@@ -114,9 +114,9 @@ namespace GeometryClassLibraryTests
         public void Point_IsOnLineWithComponentOfDirectionEqualToZeroTest()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
-            Vector testDirectionVector = new Vector(PointGenerator.MakePointWithInches(0, 3, 1));
+            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(0, 3, 1));
 
-            Line testLine = new Line(testBasePoint, testDirectionVector);
+            Line testLine = new Line(testDirection, testBasePoint);
 
             Point pointOnLine = PointGenerator.MakePointWithInches(1, 6, 4);
 
@@ -141,7 +141,7 @@ namespace GeometryClassLibraryTests
                 //I think it almost intersects, but it does not because of rounding error.
 
             Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
-            Line axis = new Line(PointGenerator.MakePointWithInches(2, -2, -3), new Vector(PointGenerator.MakePointWithInches(-1, -5, -3)));
+            Line axis = new Line(new Direction(PointGenerator.MakePointWithInches(-1, -5, -3)), PointGenerator.MakePointWithInches(2, -2, -3));
 
             Angle rotationAngle = new Angle(AngleType.Degree, 322);
 
@@ -221,7 +221,7 @@ namespace GeometryClassLibraryTests
         public void Point_MakePerpendicularLineSegmentTest2()
         {
             Point destinationLineBasePoint = PointGenerator.MakePointWithInches(2,3,4);
-            Line destinationLine = new Line(destinationLineBasePoint, new Vector(PointGenerator.MakePointWithInches(6,4,-6)));
+            Line destinationLine = new Line(new Direction(PointGenerator.MakePointWithInches(6,4,-6)), destinationLineBasePoint);
 
             Point testPoint = PointGenerator.MakePointWithInches(0,0,0);
 

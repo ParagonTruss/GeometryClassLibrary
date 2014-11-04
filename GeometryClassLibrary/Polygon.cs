@@ -43,6 +43,13 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Makes a polygon by connecting the points with line segments in the order they are in the list
+        /// </summary>
+        /// <param name="passedPoints"></param>
+        public Polygon(List<Point> passedPoints)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
+
+        /// <summary>
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         /// <param name="passedBoundaries"></param>
@@ -63,7 +70,7 @@ namespace GeometryClassLibrary
         /// NOTE:Will not work for concave polygons
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(IList<Line> passedLines)
+        public Polygon(List<Line> passedLines)
             : base(passedLines)
         {
             this.PlaneBoundaries = new List<LineSegment>();
@@ -121,9 +128,6 @@ namespace GeometryClassLibrary
             this.BasePoint = polygonToCopy.BasePoint;
         }
 
-
-        public Polygon(List<Point> passedPoints)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
 
         #endregion
 

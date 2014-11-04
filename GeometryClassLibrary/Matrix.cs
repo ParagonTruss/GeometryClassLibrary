@@ -51,6 +51,15 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
+        /// Creates a square matrix with the passed number of rows and columns
+        /// </summary>
+        /// <param name="numRowsAndColumns"></param>
+        public Matrix(int numRowsAndColumns)
+        {
+            _matrix = new double[numRowsAndColumns, numRowsAndColumns];
+        }
+
+        /// <summary>
         ///the constructor that is called when you say "new Matrix(numberOfRows, numberOfColumns);"
         /// </summary>
         /// <param name="numRows">The desired number of rows in the new matrix</param>
@@ -58,15 +67,6 @@ namespace GeometryClassLibrary
         public Matrix (int numRows, int numCols) 
         {
             _matrix = new double[numRows, numCols];
-        }
-
-        /// <summary>
-        /// Creates a square matrix with the passed number of rows and columns
-        /// </summary>
-        /// <param name="numRowsAndColumns"></param>
-        public Matrix(int numRowsAndColumns)
-        {
-            _matrix = new double[numRowsAndColumns, numRowsAndColumns];
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace GeometryClassLibrary
             this.InsertMatrixAt(passedMatrix, 0, 0);
         }
 
-#endregion      
+        #endregion      
   
         #region Overloaded Operators
 

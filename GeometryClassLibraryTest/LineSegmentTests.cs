@@ -132,7 +132,7 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
             LineSegment segment2 = new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3));
 
-            Line rotationAxis = new Line(PointGenerator.MakePointWithInches(1, -1, -1), new Vector(PointGenerator.MakePointWithInches(1, 1, 1)));
+            Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             LineSegment actualSegment1 = segment1.Rotate(rotationAxis, rotationAngle);

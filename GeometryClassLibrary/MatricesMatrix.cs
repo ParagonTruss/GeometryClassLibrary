@@ -122,6 +122,15 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
+        ///Creates a square matrix with the specified number of rows and columns
+        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
+        /// </summary>
+        public MatricesMatrix(int numRowsAndColumns)
+        {
+            _matrices = new Matrix[numRowsAndColumns, numRowsAndColumns];
+        }
+
+        /// <summary>
         ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
         /// </summary>
         /// <param name="numRows">The desired number of rows in the new MatricesMatrix</param>
@@ -129,15 +138,6 @@ namespace GeometryClassLibrary
         public MatricesMatrix(int numRows, int numCols) 
         {
             _matrices = new Matrix[numRows, numCols];
-        }
-
-        /// <summary>
-        ///Creates a square matrix with the specified number of rows and columns
-        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
-        /// </summary>
-        public MatricesMatrix(int numRowsAndColumns)
-        {
-            _matrices = new Matrix[numRowsAndColumns, numRowsAndColumns];
         }
 
         # endregion

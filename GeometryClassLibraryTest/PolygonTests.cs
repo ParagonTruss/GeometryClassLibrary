@@ -91,7 +91,7 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
             Polygon testPolygon = new Polygon(lineSegments);
 
-            Line rotationAxis = new Line(PointGenerator.MakePointWithInches(1, -1, -1), new Vector(PointGenerator.MakePointWithInches(1, 1, 1)));
+            Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1), PointGenerator.MakePointWithInches(1, -1, -1)));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             Polygon actualPolygon = testPolygon.Rotate(rotationAxis, rotationAngle);

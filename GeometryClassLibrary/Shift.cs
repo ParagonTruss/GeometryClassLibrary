@@ -38,13 +38,18 @@ namespace GeometryClassLibrary
             get { return _isNegatedShift; }
         }
 
+        /// <summary>
+        /// The distance of translation/displacement that this shift represents
+        /// </summary>
         private Point _displacement;
         public Point Displacement
         {
             get { return _displacement; }
         }
 
-
+        /// <summary>
+        /// The list of rotations that this shift represents
+        /// </summary>
         private List<Rotation> _rotationsToApply;
         public List<Rotation> RotationsToApply
         {
@@ -85,36 +90,78 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a zero shift object
+        /// </summary>
         public Shift()
         {
-            this._displacement = new Point();
-            this._rotationsToApply = new List<Rotation>();
+            _displacement = new Point();
+            _rotationsToApply = new List<Rotation>();
         }
 
+        /// <summary>
+        /// Creates a Shift with the given displacement and no rotations
+        /// </summary>
+        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
         public Shift(Point passedDisplacement)
         {
-            this._displacement = passedDisplacement;
-            this._rotationsToApply = new List<Rotation>();
+            _displacement = new Point(passedDisplacement);
+            _rotationsToApply = new List<Rotation>();
         }
 
+        /// <summary>
+        /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
+        /// </summary>
+        /// <param name="passedRotation">The rotations that make up and are represented by this shift</param>
+        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
         public Shift(Rotation passedRotation, Point passedDisplacement = null)
         {
             if (passedDisplacement == null)
             {
-                passedDisplacement = new Point();
+                _displacement = new Point();
             }
-            this._displacement = passedDisplacement;
-            this._rotationsToApply = new List<Rotation>() { passedRotation };
+            else
+            {
+                _displacement = new Point(passedDisplacement);
+            }
+            _rotationsToApply = new List<Rotation>() { new Rotation(passedRotation) };
         }
 
+        /// <summary>
+        /// Creates a Shift with multiple Rotations and a displacment, or zero translation if it is omitted
+        /// </summary>
+        /// <param name="passedRotations">The rotations that make up and are represented by this shift</param>
+        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
         public Shift(List<Rotation> passedRotations, Point passedDisplacement = null)
         {
             if (passedDisplacement == null)
             {
-                passedDisplacement = new Point();
+                _displacement = new Point();
             }
-            this._displacement = passedDisplacement;
-            this._rotationsToApply = passedRotations;
+            else
+            {
+                _displacement = new Point(passedDisplacement);
+            }
+
+            _rotationsToApply = new List<Rotation>();
+            foreach (Rotation rotation in passedRotations)
+            {
+                _rotationsToApply.Add(new Rotation(rotation));
+            }
+        }
+
+        /// <summary>
+        /// Creates a copy of the given Shift
+        /// </summary>
+        /// <param name="toCopy">The shift to copy</param>
+        public Shift(Shift toCopy)
+        {
+            _displacement = new Point(toCopy.Displacement);
+            _rotationsToApply = new List<Rotation>();
+            foreach (Rotation rotation in toCopy.RotationsToApply)
+            {
+                _rotationsToApply.Add(new Rotation(rotation));
+            }
         }
 
         #endregion

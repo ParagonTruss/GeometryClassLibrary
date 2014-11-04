@@ -30,7 +30,16 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Creates a new planeregion with the passed in LineSegments
+        /// Note: they must all be coplanar
+        /// </summary>
+        /// <param name="passedLines"></param>
+        public PlaneRegion(IList<Line> passedLines)
+            :base(passedLines) { }
+
+        /// <summary>
         /// Makes a PlaneRegion Using the given boundaries to define it
+        /// Note: Not fully Implemented - does not check if they are all coplanar
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(IEnumerable<IEdge> passedEdges)
@@ -54,17 +63,22 @@ namespace GeometryClassLibrary
             }
         }
 
-        public PlaneRegion(IList<Line> passedLines)
-            :base(passedLines) { }
-
         /// <summary>
         /// creates a new Polygon that is a copy of the inputted Polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(PlaneRegion planeToCopy)
-            //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
-            //constructing a plane fron a List<LineSegment>
-            : this(planeToCopy.Edges) { }
+            : this(planeToCopy.Edges) 
+        {
+            List<IEdge> copiedEdges = new List<IEdge>();
+
+            foreach (IEdge edge in planeToCopy.Edges)
+            {
+                copiedEdges.Add(edge.Copy());
+            }
+
+            this.Edges = copiedEdges;
+        }
 
         /*public PlaneRegion(List<IEdge> shiftedBoundaries)
         {

@@ -94,7 +94,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a vector that extends from the Origin to the passed reference point  
         /// </summary>
-        /// <param name="passedEndPoint"></param>
+        /// <param name="passedEndPoint">The point at which the vector goes to / ends at</param>
         public Vector(Point passedEndPoint)
             : base(passedEndPoint)
         {
@@ -102,15 +102,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a zero Vector with the same basepoint and direction as the given line
+        /// Creates a vector that starts at the given base point and goes to the given end point
         /// </summary>
-        /// <param name="passedLine"></param>
-        public Vector(Line passedLine)
-            : base(passedLine)
-        {
-            this._magnitude = new Dimension();
-        }
-
+        /// <param name="passedBasePoint">The point at which the vector starts</param>
+        /// <param name="passedEndPoint">The point at which the vector goes to / ends at</param>
         public Vector(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint) 
         {
@@ -124,10 +119,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
+        /// <param name="passedBasePoint">The point at which the vector starts</param>
+        /// <param name="passedVector">The vector with the direction and magnitude to use for this vector</param>
         public Vector(Point passedBasePoint, Vector passedVector)
-            : base(passedBasePoint, passedVector.Direction)
+            : base(passedVector.Direction, passedBasePoint)
         {
             _magnitude = new Dimension(passedVector._magnitude);
         }
@@ -135,11 +130,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedMagnitude"></param>
+        /// <param name="passedBasePoint">The point at which the vector starts</param>
+        /// <param name="passedDirection">The direction the vector points</param>
+        /// <param name="passedMagnitude">The length of the Vector</param>
         public Vector(Point passedBasePoint, Direction passedDirection, Dimension? passedMagnitude = null)
-            : base(passedBasePoint, passedDirection)
+            : base(passedDirection, passedBasePoint)
         {
             if (passedMagnitude == null)
             {
@@ -154,9 +149,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Default copy constructor
         /// </summary>
-        /// <param name="passedVector"></param>
-        public Vector(Vector passedVector)
-            : this(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude) { }
+        /// <param name="toCopy">The vector to copy</param>
+        public Vector(Vector toCopy)
+            : this(toCopy.BasePoint, toCopy.Direction, toCopy.Magnitude) { }
 
         #endregion
 

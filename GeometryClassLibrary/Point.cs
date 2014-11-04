@@ -52,13 +52,15 @@ namespace GeometryClassLibrary
         }
         
         /// <summary>
-        /// copy Constructor
+        /// Creates a point with only two dimensions. Coordinates are entered assumed XY orientation
         /// </summary>
-        public Point(Point passedPoint)
+        /// <param name="dimension1"></param>
+        /// <param name="dimension2"></param>
+        public Point(Dimension dimension1, Dimension dimension2)
         {
-            _x = passedPoint._x;
-            _y = passedPoint._y;
-            _z = passedPoint._z;
+            _x = dimension1;
+            _y = dimension2;
+            _z = new Dimension(DimensionType.Millimeter, 0);
         }
 
         /// <summary>
@@ -72,33 +74,6 @@ namespace GeometryClassLibrary
             _x = dimension1;
             _y = dimension2;
             _z = dimension3;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="passedType"></param>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
-        /// <param name="dimension3"></param>
-        public Point(DimensionType passedType, double dimension1, double dimension2, double dimension3)
-        {
-            _x = new Dimension(passedType, dimension1);
-            _y = new Dimension(passedType, dimension2);
-            _z = new Dimension(passedType, dimension3);
-        }
-
-        /// <summary>
-        /// Creates a point with only two dimensions. Coordinates are entered assumed XY orientation
-        /// </summary>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
-        public Point(Dimension dimension1, Dimension dimension2)
-        {
-
-            _x = dimension1;
-            _y = dimension2;
-            _z = new Dimension(DimensionType.Millimeter, 0);
         }
 
         /// <summary>
@@ -123,12 +98,28 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public Point(Line line1, Line line2)
+        /// <summary>
+        /// Creates a new point with the given values with the given dimension type
+        /// </summary>
+        /// <param name="passedType"></param>
+        /// <param name="dimension1"></param>
+        /// <param name="dimension2"></param>
+        /// <param name="dimension3"></param>
+        public Point(DimensionType passedType, double dimension1, double dimension2, double dimension3)
         {
-            Point toCopy = line1.Intersection(line2);
-            _x = toCopy.X;
-            _y = toCopy.Y;
-            _z = toCopy.Z;
+            _x = new Dimension(passedType, dimension1);
+            _y = new Dimension(passedType, dimension2);
+            _z = new Dimension(passedType, dimension3);
+        }
+
+        /// <summary>
+        /// copy Constructor
+        /// </summary>
+        public Point(Point toCopy)
+        {
+            _x = toCopy._x;
+            _y = toCopy._y;
+            _z = toCopy._z;
         }
 
         #endregion
@@ -377,7 +368,7 @@ namespace GeometryClassLibrary
                 pointForRotating = this.Translate(new Point() - passedAxisLine.BasePoint);
 
                 //Make the axis go through the origin
-                axisForRotating = new Line(originPoint, passedAxisLine.Direction);
+                axisForRotating = new Line(passedAxisLine.Direction, originPoint);
 
             }
 

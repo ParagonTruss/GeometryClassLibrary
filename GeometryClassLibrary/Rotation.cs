@@ -10,12 +10,18 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
+        /// <summary>
+        /// The angle around the given axis that this rotation reperesents
+        /// </summary>
         private Angle _angleToRotate;
         public Angle AngleToRotate
         {
             get { return _angleToRotate; }
         }
 
+        /// <summary>
+        /// The axis around which this rotation reperesents
+        /// </summary>
         private Line _axisToRotateAround;
         public Line AxisToRotateAround
         {
@@ -25,27 +31,35 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
-        //There is no empty constructor because a rotation needs an axis to rotate around at the least
-        
-        /// <summary>
-        /// Creates an Rotation about the inputted Axis with a default rotation value of 0
-        /// </summary>
-        /// <param name="axisOfRotation">The axis to rotate around</param>
-        public Rotation(Line axisOfRotation)
-        {
-            this._axisToRotateAround = axisOfRotation;
-            this._angleToRotate = new Angle();
-        }
 
+        //There is no empty constructor because a rotation needs an axis to rotate around at the least
+       
         /// <summary>
-        /// Creates a rotation about the inputted Axis and with the inputted Angle
+        /// Creates a rotation about the inputted Axis and with the inputted Angle or 0 if the angle is omitted
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
         /// <param name="howFarToRotate">The Angle that specifies how far to rotate</param>
-        public Rotation(Line axisOfRotation, Angle howFarToRotate)
+        public Rotation(Line axisOfRotation, Angle howFarToRotate = null)
         {
+            if ((object)howFarToRotate == null)
+            {
+                howFarToRotate = new Angle();
+            }
+            else
+            {
+                this._angleToRotate = howFarToRotate;
+            }
             this._axisToRotateAround = axisOfRotation;
-            this._angleToRotate = howFarToRotate;
+        }
+
+        /// <summary>
+        /// Creates a copy of the given rotation
+        /// </summary>
+        /// <param name="toCopy">the Rotation to copy</param>
+        public Rotation(Rotation toCopy)
+        {
+            _angleToRotate = toCopy.AngleToRotate;
+            _axisToRotateAround = new Line(toCopy.AxisToRotateAround);
         }
 
         #endregion 

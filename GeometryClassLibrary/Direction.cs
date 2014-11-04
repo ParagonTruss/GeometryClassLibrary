@@ -17,6 +17,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azumuth)
+        /// currently, this should be between 0 and 360
         /// </summary>
         private Angle _phi;
         public Angle Phi
@@ -40,6 +41,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// keeps track of the angle from the positive z-axis (should be a max of 180 degrees) (inclination)
+        /// Currently, this should be between 0 and 180
         /// </summary>
         private Angle _theta;
         public Angle Theta
@@ -131,14 +133,15 @@ namespace GeometryClassLibrary
         /// <param name="xyPlaneAngle">The angle from the x-axis in the xy-plane</param>
         public Direction(Angle xyPlaneAngle)
         {
-            this.Phi = xyPlaneAngle;
+            this.Phi = new Angle(xyPlaneAngle);
             this.Theta = new Angle(AngleType.Degree, 90);
         }
 
         /// <summary>
         /// Makes a direction from the origin to the given point
         /// </summary>
-        /// <param name="directionPoint"></param>
+        /// <param name="directionPoint">the point to find the angle to relative to the origin</param>
+        /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
         public Direction(Point directionPoint, Dimension? acceptedDeviationConstant = null)
             : this()
         {
@@ -211,9 +214,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Makes a direction from the origin to the given point
+        /// Makes a direction that represents the angle of the second point realtive to the first
         /// </summary>
-        /// <param name="directionPoint"></param>
+        /// <param name="basePoint">The first point to find the angle from</param>
+        /// <param name="endPoint">The point to use to find the angle of</param>
         public Direction(Point basePoint, Point endPoint, Dimension? acceptedDeviationConstant = null)
             : this(endPoint - basePoint, acceptedDeviationConstant) { }
 
@@ -251,7 +255,6 @@ namespace GeometryClassLibrary
             this.Phi = new Angle(toCopy.Phi);
             
         }
-
 
         #endregion
 

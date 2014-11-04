@@ -11,6 +11,11 @@ namespace GeometryClassLibrary
     {
         #region Constructors
 
+        /// <summary>
+        /// Creates a regular polygon from the given line segments if they are are equal and have the same angles between
+        /// neighboring segments
+        /// </summary>
+        /// <param name="passedLineSegments"></param>
         public RegularPolygon(List<LineSegment> passedLineSegments)
         {
             //make sure the linesegments are equidistant and all angles equal
@@ -20,6 +25,13 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// Creates a regular polygon in the XY-plane with the given number of sides where each side is the given length and the 
+        /// polygon is rotated by the given angle
+        /// </summary>
+        /// <param name="passedNumberOfSides"></param>
+        /// <param name="passedSideLength"></param>
+        /// <param name="passedRotationAngle"></param>
         public RegularPolygon(int passedNumberOfSides, Dimension passedSideLength, Angle passedRotationAngle = null)
         {
             if (passedNumberOfSides < 3)

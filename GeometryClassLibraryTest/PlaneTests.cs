@@ -74,7 +74,7 @@ namespace GeometryClassLibraryTests
 
             Plane testPlane = new Plane(testNormalVector.Direction, testBasePoint);
 
-            Line rotationAxis = new Line(PointGenerator.MakePointWithInches(1, -1, -1), new Vector(PointGenerator.MakePointWithInches(1, 1, 1)));
+            Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             Plane actualResult = testPlane.Rotate(rotationAxis, rotationAngle);
@@ -131,7 +131,7 @@ namespace GeometryClassLibraryTests
             Line test12Intersect = testPlane1.Intersection(testPlane2);
             Line test21Intersect = testPlane2.Intersection(testPlane1);
 
-            Line expectedLine = new Line(PointGenerator.MakePointWithInches(2, -1, 0), new Vector(PointGenerator.MakePointWithInches(0, 3, 3)));
+            Line expectedLine = new Line(new Direction(PointGenerator.MakePointWithInches(0, 3, 3)), PointGenerator.MakePointWithInches(2, -1, 0));
 
             test12Intersect.Should().Be(test21Intersect);
             test21Intersect.Should().Be(expectedLine);

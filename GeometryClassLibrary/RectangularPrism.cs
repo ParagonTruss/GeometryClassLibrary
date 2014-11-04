@@ -12,7 +12,12 @@ namespace GeometryClassLibrary
     [Serializable]
     public class RectangularPrism : Polyhedron
     {
-
+        /// <summary>
+        /// Creates a rectangular prism with the given dimensions in the (repsective) z,y and x directions
+        /// </summary>
+        /// <param name="passedWidth">The length of the prism in the Z direction</param>
+        /// <param name="passedHeight">The length of the prism in the Y direction</param>
+        /// <param name="passedLength">The length of the prism in the X direction</param>
         public RectangularPrism(Dimension passedWidth, Dimension passedHeight, Dimension passedLength)
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);

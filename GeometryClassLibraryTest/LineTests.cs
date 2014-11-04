@@ -272,8 +272,8 @@ namespace ClearspanTypeLibrary.Tests
             Line actualResult = line1.Rotate(axisLine, rotationAngle);
 
             Point expectedResultBasePoint = PointGenerator.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
-            Vector expectedDirectionVector = new Vector(PointGenerator.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
-            Line expectedResult = new Line(expectedResultBasePoint, expectedDirectionVector);
+            Direction expectedDirection = new Direction(PointGenerator.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
+            Line expectedResult = new Line(expectedDirection, expectedResultBasePoint);
 
             (expectedResult == actualResult).Should().BeTrue();
         }

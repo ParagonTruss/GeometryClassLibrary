@@ -12,6 +12,9 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
+        /// <summary>
+        /// A list containing the polygons that make up this polyhedron
+        /// </summary>
         public virtual List<Polygon> Polygons
         {
             get { return this.Planes as List<Polygon>; }
@@ -35,7 +38,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Accesses tge line segments in the polyhedron
+        /// returns all the linesegments contained in this polyhedron's polygons
         /// </summary>
         public List<LineSegment> LineSegments
         {
@@ -61,28 +64,43 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a new empty Polyhedron
+        /// </summary>
         public Polyhedron()
             : base()
         {
             this.Polygons = new List<Polygon>();
         }
 
+        /// <summary>
+        /// Makes a Polyhedron using the giving line segments made into polygons based on if they are coplanar and share a point
+        /// </summary>
+        /// <param name="passedLineSegments">The line segments that define this Polyhedron</param>
         public Polyhedron(List<LineSegment> passedLineSegments)
             : base()
         {
             this.Polygons = passedLineSegments.MakeCoplanarLineSegmentsIntoPolygons();
         }
 
+        /// <summary>
+        /// Creates a Polyhedron using the passed polygons as its side/polygons
+        /// </summary>
+        /// <param name="passedPolygons">The list of polygons that define this Polyhedron</param>
         public Polyhedron(List<Polygon> passedPolygons)
             : base()
         {
-            this.Polygons = new List<Polygon>(passedPolygons);
+            this.Polygons = new List<Polygon>();
+            foreach (Polygon polygon in passedPolygons)
+            {
+                this.Polygons.Add(polygon);
+            }
         }
 
         /// <summary>
         /// Copy constructor
         /// </summary>
-        /// <param name="passedSolid"></param>
+        /// <param name="passedSolid">The polyhedron to copy</param>
         public Polyhedron(Polyhedron toCopy)
             : this(toCopy.Polygons) { }
 

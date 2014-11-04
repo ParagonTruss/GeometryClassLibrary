@@ -14,16 +14,23 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        public virtual List<IEdge> PlaneEdges { get; set; }
+        /// <summary>
+        /// The list of Edges that make up and define the non-polygon
+        /// </summary>
+        public virtual List<IEdge> NonPolygonBoundaries { get; set; }
 
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Creates an empty nonPolygon
+        /// </summary>
         public NonPolygon()
         {
-
+            this.Edges = new List<IEdge>();
         }
-        
+
         /// <summary>
         /// Defines a nonPolygon usuing the boundaries
         /// NOTE: Should check if they are coplanar and form a closed region first!
@@ -31,7 +38,11 @@ namespace GeometryClassLibrary
         /// <param name="passedBoundaries"></param>
         public NonPolygon(List<IEdge> passedBoundaries)
         {
-            this.Edges = passedBoundaries;
+            this.NonPolygonBoundaries = new List<IEdge>();
+            foreach (IEdge edge in passedBoundaries)
+            {
+                this.NonPolygonBoundaries.Add(edge.Copy());
+            }
         }
 
         #endregion

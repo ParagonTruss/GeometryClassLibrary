@@ -13,8 +13,16 @@ namespace GeometryClassLibrary
     public class Plane
     {
         #region Properties and Fields
+
+        /// <summary>
+        /// A point on the plane that is used as a reference point to define it
+        /// </summary>
         public Point BasePoint { get; protected set; }
 
+        /// <summary>
+        /// The vector that is normal to the plane, with the base point of the vector always
+        /// being the same as the basepoint of the plane
+        /// </summary>
         private Vector _normalVector;
         public Vector NormalVector
         {
@@ -40,21 +48,28 @@ namespace GeometryClassLibrary
             this.NormalVector = new Vector();
         }
 
-        public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )
+        /// <summary>
+        /// Creates a Plane base on the list of passed in lines
+        /// Note: the lines must be all coplanar
+        /// </summary>
+        /// <param name="passedLineList">A list of coplanar lines to define the plane with</param>
+        public Plane(IList<Line> passedLineList)
         {
-            //If all 3 points are noncollinear, they define a plane
-            
-            Line line1To2 = new Line(passedPoint1,passedPoint2);
-            Line line2To3 = new Line(passedPoint2,passedPoint3);
-            Line line1To3 = new Line(passedPoint1,passedPoint3);
+            List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
-            if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
+            if (passedLineListCasted.AreAllCoplanar())
             {
-                this.BasePoint = passedPoint1;
-                this.NormalVector = line1To2.UnitVector(DimensionType.Inch).CrossProduct(line1To3.UnitVector(DimensionType.Inch));
+                this.BasePoint = passedLineListCasted[0].BasePoint;
 
-                //make sure it is of size one and not smaller
-                this.NormalVector = this.NormalVector.UnitVector(DimensionType.Inch);
+                //we have to check against vectors until we find one that is not parralel with the first line we passed in
+                //or else the normal vector will be zero (cross product of parralel lines is 0)
+                Vector vector1 = passedLineListCasted[0].UnitVector(DimensionType.Inch);
+                for (int i = 1; i < passedLineListCasted.Count; i++)
+                {
+                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DimensionType.Inch));
+                    if (!this.NormalVector.Equals(new Vector()))
+                        i = passedLineListCasted.Count;
+                }
             }
             else
             {
@@ -64,10 +79,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// A point on a plane and vector that is normal (prependicular) to that plane define the plane
+        /// Creates a Plane that contains the given point and has a normalVector of length 1 in inches in the passed in direction
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedNormalVector"></param>
+        /// <param name="passedBasePoint">A point on the plane to be used as the reference point</param>
+        /// <param name="passedDirection">A direction that is normal to the plane</param>
         public Plane(Direction passedDirection, Point passedBasePoint = null)
         {
             if (passedBasePoint == null)
@@ -83,12 +98,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// There are 2 ways that 2 lines can define a plane:
-        ///     1. If the 2 lines intersect
-        ///     2. If the 2 lines are parallel
+        /// Creates a plane that contains the two lines (they must not be equivalent Lines!)
         /// </summary>
-        /// <param name="passedLine1"></param>
-        /// <param name="passedLine2"></param>
+        /// <param name="passedLine1">The first line to define the plane with</param>
+        /// <param name="passedLine2">The second line to define the plane with that is not the same as the first</param>
         public Plane(Line passedLine1, Line passedLine2)
         {
             //if they arent equivalent lines
@@ -119,36 +132,45 @@ namespace GeometryClassLibrary
                 throw new ArgumentException("The passed Lines are the same!");
             }
         }
-        
-        public Plane(IList<Line> passedLineList)
+
+        /// <summary>
+        /// Creates a Plane that contains the passed points, using the first one as the base point
+        /// Note: points must not bwe all along the same line
+        /// </summary>
+        /// <param name="passedPoint1">The first point contained on the plane and to be used as the reference point</param>
+        /// <param name="passedPoint2">The second point contained on the plane</param>
+        /// <param name="passedPoint3">The third point contained on the plane</param>
+        public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )
         {
-            List<Line> passedLineListCasted = new List<Line>(passedLineList);
+            //If all 3 points are noncollinear, they define a plane
+            
+            Line line1To2 = new Line(passedPoint1,passedPoint2);
+            Line line2To3 = new Line(passedPoint2,passedPoint3);
+            Line line1To3 = new Line(passedPoint1,passedPoint3);
 
-            if (passedLineListCasted.AreAllCoplanar())
+            if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
             {
-                this.BasePoint = passedLineListCasted[0].BasePoint;
+                this.BasePoint = passedPoint1;
+                this.NormalVector = line1To2.UnitVector(DimensionType.Inch).CrossProduct(line1To3.UnitVector(DimensionType.Inch));
 
-                //we have to check against vectors until we find one that is not parralel with the first line we passed in
-                //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedLineListCasted[0].UnitVector(DimensionType.Inch);
-                for (int i = 1; i < passedLineListCasted.Count; i++)
-                {
-                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DimensionType.Inch));
-                    if (!this.NormalVector.Equals(new Vector()))
-                        i = passedLineListCasted.Count;
-                }
+                //make sure it is of size one and not smaller
+                this.NormalVector = this.NormalVector.UnitVector(DimensionType.Inch);
             }
             else
             {
                 throw new Exception();
             }
-            
+
         }
 
-        public Plane(Plane passedPlane)
+        /// <summary>
+        /// Copies the given plane
+        /// </summary>
+        /// <param name="passedPlane">The Plane to copy</param>
+        public Plane(Plane toCopy)
         {
-            this.BasePoint = passedPlane.BasePoint;
-            this.NormalVector = passedPlane.NormalVector;
+            this.BasePoint = new Point(toCopy.BasePoint);
+            this.NormalVector = new Vector(toCopy.NormalVector);
         }
 
         #endregion
@@ -369,7 +391,7 @@ namespace GeometryClassLibrary
                         intersectLinePoint = PointGenerator.MakePointWithInches(0, results[1], results[0]);
                     }
                 }
-                return new Line(intersectLinePoint, intersectionLineDirection);
+                return new Line(intersectionLineDirection.Direction, intersectLinePoint);
             }
 
             return null;

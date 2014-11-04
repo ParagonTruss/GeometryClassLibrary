@@ -16,10 +16,14 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
+        //Predefined lines to use as references
         public readonly static Line XAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
         public readonly static Line YAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
         public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
 
+        /// <summary>
+        /// A point on the line to use as a reference point
+        /// </summary>
         public Point BasePoint
         {
             get { return _basePoint; }
@@ -27,6 +31,10 @@ namespace GeometryClassLibrary
         }
         private Point _basePoint; //this is any point that is on the line
 
+        /// <summary>
+        /// The direction the line is going out of the base point in one direction
+        /// Note: it also extends out in the direction opposite of this one
+        /// </summary>
         public Direction Direction
         {
             get { return _direction; }
@@ -34,11 +42,15 @@ namespace GeometryClassLibrary
         }
         private Direction _direction;
 
+        //Slope in 2D?
         public double Slope
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns the X intercept of the line if the z dimension is ignored
+        /// </summary>
         public Dimension XInterceptIn2D
         {
             //if we are ignoring z, we can just take the x component of wher it intersects the xz plane
@@ -55,6 +67,9 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// Returns the Y intecept of the Line if the z dimension is ignored
+        /// </summary>
         public Dimension YInterceptIn2D
         {
             //if we are ignoring z, we can just take the y component of whery it intersects the yz plane
@@ -71,22 +86,35 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// Returns the point at which this line intercepts the XY-Plane
+        /// </summary>
         public Point XYIntercept
         {
             get { return this.FindXYIntercept(); }
         }
 
+        /// <summary>
+        /// Returns the point at which this line intercepts the XZ-Plane
+        /// </summary>
         public Point XZIntercept
         {
             get { return this.FindXZIntercept(); }
         }
 
+        /// <summary>
+        /// Returns the point at which this line intercepts the YZ-Plane
+        /// </summary>
         public Point YZIntercept
         {
             get { return this.FindYZIntercept(); }
         }
 
-        public Point FindXYIntercept()
+        /// <summary>
+        /// Finds the point at which this line intersects the XY-plane
+        /// </summary>
+        /// <returns>Returns where this line intersects the XY-Plane</returns>
+        private Point FindXYIntercept()
         {
             //make the x axis plane
             Plane xyPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(0, 0, 1)));
@@ -95,7 +123,11 @@ namespace GeometryClassLibrary
             return xyPlane.Intersection(this);
         }
 
-        public Point FindXZIntercept()
+        /// <summary>
+        /// Finds the point at which this line intersects the XZ-plane
+        /// </summary>
+        /// <returns>Returns where this line intersects the XZ-Plane</returns>
+        private Point FindXZIntercept()
         {
             //normal vector
             Vector normal = new Vector(PointGenerator.MakePointWithInches(0, 1, 0));
@@ -107,7 +139,11 @@ namespace GeometryClassLibrary
             return xzPlane.Intersection(this);
         }
 
-        public Point FindYZIntercept()
+        /// <summary>
+        /// Finds the point at which this line intersects the YZ-plane
+        /// </summary>
+        /// <returns>Returns where this line intersects the YZ-Plane</returns>
+        private Point FindYZIntercept()
         {
             //make the x axis plane
             Plane yzPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)));
@@ -139,17 +175,30 @@ namespace GeometryClassLibrary
             _direction = new Direction(passedDirectionReferencePoint);
         }
 
-        public Line(LineSegment lineSegment1)
-            : this(lineSegment1.BasePoint, lineSegment1.Direction) { }
-
-        public Line(Vector passedVector)
-            : this(passedVector.BasePoint, passedVector.Direction) { }
+        /// <summary>
+        /// Creates a line with the given direction and point if passed, other wise it uses the origin as the base point
+        /// </summary>
+        /// <param name="direction">The direction the line goes in one direction from its reference point
+        /// Note: it also goes out in the opposite direction as this</param>
+        /// <param name="basePoint">A point on the line to use as a reference point</param>
+        public Line(Direction passedDirection, Point passedBasePoint = null)
+        {
+            if (passedBasePoint == null)
+            {
+                this.BasePoint = new Point();
+            }
+            else
+            {
+                this.BasePoint = new Point(passedBasePoint);
+            }
+            this.Direction = new Direction(passedDirection);
+        }
 
         /// <summary>
-        /// Constructs a line through any 2 dimension points
+        /// Constructs a line through any 2 points
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedOtherPoint"></param>
+        /// <param name="passedBasePoint">The first point on the line and the point to use as the reference point</param>
+        /// <param name="passedOtherPoint">The other point which the line goes through</param>
         public Line(Point passedBasePoint, Point passedOtherPoint)
         {
             _basePoint = new Point(passedBasePoint);
@@ -157,44 +206,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a line with the given direction and point
-        /// </summary>
-        /// <param name="basePoint"></param>
-        /// <param name="direction"></param>
-        public Line(Point passedBasePoint, Direction passedDirection)
-        {
-            _basePoint = new Point(passedBasePoint);
-            Direction = new Direction(passedDirection);
-        }
-
-        /// <summary>
-        /// Constructs a line that goes through passed Point and is parallel to the passed Line
-        /// </summary>
-        /// <param name="passedPoint"></param>
-        /// <param name="passedParallelLine"></param>
-        public Line(Point passedPoint, Line passedParallelLine)
-        {
-            _basePoint = new Point(passedPoint);
-            this.Direction = new Direction(passedParallelLine.Direction);
-        }
-
-        /// <summary>
-        /// Creates a line using with a direction in the same direction as the given vector
-        /// </summary>
-        /// <param name="basePoint"></param>
-        /// <param name="direction"></param>
-        public Line(Point passedBasePoint, Vector passedDirectionVector)
-        {
-            _basePoint = new Point(passedBasePoint);
-            Direction = new Direction(passedDirectionVector.Direction);
-        }
-
-        /// <summary>
         /// Default copy constructor
         /// </summary>
         /// <param name="toCopy"></param>
         public Line(Line toCopy)
-            : this(toCopy.BasePoint, toCopy.Direction) { }
+            : this(toCopy.Direction, toCopy.BasePoint) { }
 
         #endregion
 
@@ -504,7 +520,7 @@ namespace GeometryClassLibrary
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
             Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
-            return new Line(newBasePoint, newDirectionVector);
+            return new Line(newDirectionVector.Direction, newBasePoint);
         }
 
         /// <summary>
