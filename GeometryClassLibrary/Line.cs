@@ -323,6 +323,11 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        /// <summary>
+        /// Creates a plane that contains this line and extends in the given axis
+        /// </summary>
+        /// <param name="passedAxis">The axis to extend the line in</param>
+        /// <returns></returns>
         public Plane PlaneThroughLineInDirectionOf(Enums.Axis passedAxis)
         {
             Line extrustionLine;
@@ -357,6 +362,11 @@ namespace GeometryClassLibrary
             return new Plane(this, extrustionLine);
         }
 
+        /// <summary>
+        /// Returns the angle between the two lines, if they dont intersect it throws and exception
+        /// </summary>
+        /// <param name="passedIntersectingLine">The line to determine the angel to that intersects with this one</param>
+        /// <returns>Returns the angle between the two lines</returns>
         public Angle AngleBetweenIntersectingLine(Line passedIntersectingLine)
         {
             if (!DoesIntersect(passedIntersectingLine))
@@ -513,13 +523,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates a line about the given axis by the amount of the passed angle
         /// </summary>
-        /// <param name="passedAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
-        /// <returns></returns>
-        public Line Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        /// <param name="passedRotation">The Rotation to apply to this Line</param>
+        /// <returns>A new Line that has been Rotated</returns>
+        public Line Rotate(Rotation passedRotation)
         {
-            Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
-            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
+            Point newBasePoint = this.BasePoint.Rotate3D(passedRotation);
+            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedRotation);
             return new Line(newDirectionVector.Direction, newBasePoint);
         }
 
@@ -568,20 +577,6 @@ namespace GeometryClassLibrary
             Point newOtherPoint = this.GetPointOnLine(2).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
-        }
-
-        /// <summary>
-        /// Makes the line into a plane perindicular to the xy plane
-        /// </summary>
-        /// <param name="line">The line to make into a plane</param>
-        /// <returns>returns a plane perpindicular to the XY-Plane that contains the given line</returns>
-        public Plane MakeIntoPlanePerpindicularToXYPlane()
-        {
-            //we use the base point and another point on the line so we know that the plane will contain the given line
-            //then we use the base point but moved in the z direction so that we know it will also contain that line, which
-            //will alway be perpindicular to XY because the only thing changing between the two points is the z.
-            Plane plane = new Plane(this.BasePoint, this.GetPointOnLine(2), this.BasePoint + PointGenerator.MakePointWithInches(0, 0, 10));
-            return plane;
         }
 
         /// <summary>

@@ -330,11 +330,20 @@ namespace GeometryClassLibrary
             return new Vector(new Point(), direction, magnitude);
         }
 
+        /// <summary>
+        /// Creates a new direction that points in the reverse direction of this direction
+        /// </summary>
+        /// <returns>A new direction that points in the oppposite direction as this one</returns>
         public Direction Reverse()
         {
             return new Direction(this.Phi - new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 180) - this.Theta);
         }
 
+        /// <summary>
+        /// Dot products the two Directions together
+        /// </summary>
+        /// <param name="otherDirection"></param>
+        /// <returns></returns>
         public Vector DotProduct(Direction otherDirection)
         {
             throw new NotImplementedException();

@@ -212,8 +212,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects the linesegment onto a line (calls the method in its base class Vector)
         /// </summary>
-        /// <param name="projectOnto"></param>
-        /// <returns></returns>
+        /// <param name="projectOnto">The line to project the segment onto</param>
+        /// <returns>A new line segment that has that is in the same direction as the line projected onto and whose length
+        /// is the length of the line segment along the projected line</returns>
         public new LineSegment ProjectOntoLine(Line projectOnto)
         {
             return new LineSegment(base.ProjectOntoLine(projectOnto));
@@ -222,7 +223,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// returns a copy of the line segment pointing in the opposite direction as the original
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a line segment with the base and end points flipped</returns>
         public LineSegment Reverse()
         {
             return new LineSegment(this.EndPoint, this.Direction.Reverse(), this.Length);
@@ -231,19 +232,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the LineSegment about the given axis the given angle (calls the method in its base class)
         /// </summary>
-        /// <param name="passedRotaionAxis"></param>
-        /// <param name="passedAngle"></param>
-        /// <returns></returns>
-        public new LineSegment Rotate(Line passedRotaionAxis, Angle passedAngle)
+        /// <param name="passedRotation">The Rotation to appply to the Segment</param>
+        /// <returns>A new Line Segment that has been rotated</returns>
+        public new LineSegment Rotate(Rotation passedRotation)
         {
-            return new LineSegment(base.Rotate(passedRotaionAxis, passedAngle));
+            return new LineSegment(base.Rotate(passedRotation));
         }
 
         /// <summary>
         /// Performs the given shift on this LineSegment
         /// </summary>
-        /// <param name="passedShift"></param>
-        /// <returns></returns>
+        /// <param name="passedShift">The shift to preform on the Line Segment</param>
+        /// <returns>A new Line Segment that has been shifted with the given shift</returns>
         public new LineSegment Shift(Shift passedShift)
         {
             return new LineSegment(base.Shift(passedShift));
@@ -252,8 +252,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Allows for generic shifting on an IEdge
         /// </summary>
-        /// <param name="passedShift"></param>
-        /// <returns></returns>
+        /// <param name="passedShift">Shift to preform on the segment</param>
+        /// <returns>Returns a new LineSegment that has been shifted, but as an IEdge object</returns>
         IEdge IEdge.Shift(Shift passedShift)
         {
             return this.Shift(passedShift);
@@ -262,9 +262,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
+        /// <param name="translation">The distance to translate the line segment in each direction</param>
+        /// <returns>returns a new segment that has been translated</returns>
         public new LineSegment Translate(Point translation)
         {
             return new LineSegment(base.Translate(translation));
@@ -273,7 +272,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a copy of this lineSegment
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A copy of the lineSegment</returns>
         public IEdge Copy()
         {
             return new LineSegment(this);

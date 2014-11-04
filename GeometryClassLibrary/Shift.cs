@@ -299,17 +299,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// creates a negative instance of the shift object
         /// </summary>
-        /// <returns>Negative shift object</returns>
+        /// <returns>A new shift object that is negative of this one</returns>
         public Shift Negate()
         {
-            //get negative instances of all of the shift's fields
-
-
-
-            //think something has to be done with translating the axis too in order to make sure they get reversed right
-
-
-
             List<Rotation> returnRotations = new List<Rotation>();
             foreach (Rotation rotation in _rotationsToApply)
             {

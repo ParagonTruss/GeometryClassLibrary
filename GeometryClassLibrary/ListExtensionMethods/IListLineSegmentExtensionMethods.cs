@@ -211,7 +211,7 @@ namespace GeometryClassLibrary
 
             foreach (Point point in pointList)
             {
-                newList.Add(point.Rotate3D(axis, rotateAngle));
+                newList.Add(point.Rotate3D(new Rotation(axis, rotateAngle)));
             }
 
             return newList.MakeIntoLineSegmentsThatMeet();

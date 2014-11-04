@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeometryClassLibrary
 {
-    public static class IlistPointListExtensionMethods
+    public static class IListPointExtensionMethods
     {
         public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this List<Point> points)
         {

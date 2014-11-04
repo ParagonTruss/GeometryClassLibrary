@@ -73,17 +73,31 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Finds the Center Point of the Solid
+        /// </summary>
+        /// <returns>A Point that reperesents the center of the solid</returns>
         public virtual Point CenterPoint()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Finds the midline of the Solid that goes parallel to the longest side?
+        /// </summary>
+        /// <returns></returns>
         public virtual Line MidLine()
         {
             throw new NotImplementedException();
         }
 
-        public Polyhedron Shift(Shift passedShift)
+        /// <summary>
+        /// Performs the given shift on the Solid
+        /// </summary>
+        /// <param name="passedShift">The Shift to preform</param>
+        /// <returns>A new Solid that has been shifted</returns>
+        public Solid Shift(Shift passedShift)
         {
             throw new NotImplementedException();
         }

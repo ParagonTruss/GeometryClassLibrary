@@ -9,11 +9,11 @@ namespace GeometryClassLibrary
 {
     public static class IListPlaneRegionExtensionMethods
     {
-        public static void Rotate(this IList<Polygon> passedPlaneRegions, Line passedAxisLine, Angle passedRotationAngle)
+        public static void Rotate(this IList<Polygon> passedPlaneRegions, Rotation passedRotation)
         {
             foreach (var planeRegion in passedPlaneRegions)
             {
-                planeRegion.Rotate(passedAxisLine, passedRotationAngle);
+                planeRegion.Rotate(passedRotation);
             }
         }
 

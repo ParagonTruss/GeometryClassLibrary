@@ -307,8 +307,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Sometimes we want to check if the vector would intersect with line if it were extended towards the line
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The Line to see if we could possible intersect with</param>
+        /// <returns>returns the point at which they would intersect if they were both lines</returns>
         public Point HypotheticalIntersection(Line passedLine)
         {
             return new Line(this).Intersection(passedLine);
@@ -347,8 +347,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the vector shares a base point or endpoint with the passed vector
         /// </summary>
-        /// <param name="passedVector"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The vector to see if it shares a point with</param>
+        /// <returns>Returns a bool of whether or not the vectors share a base or end point</returns>
         public bool DoesSharesABaseOrEndPointWith(Vector passedVector)
         {
             return (this.BasePoint == passedVector.EndPoint
@@ -360,8 +360,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks to see if a vector contains another vector.  Useful for checking if members touch
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to see if is contained by this vector</param>
+        /// <returns>Returns a bool of whether or not this vector contains the other</returns>
         public bool Contains(Vector passedVector)
         {
             if (this.Magnitude >= passedVector.Magnitude)
@@ -378,7 +378,7 @@ namespace GeometryClassLibrary
         /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
         /// </summary>
         /// <param name="projectOnto">the Line on which to project the LineSegment</param>
-        /// <returns></returns>
+        /// <returns>returns the vector projected onto the given line</returns>
         public Vector ProjectOntoLine(Line projectOnto)
         {
             //we can do this by making the points into vectors with the basepoint of the line as the basepoint and the endpoint of the 
@@ -412,8 +412,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the cross product of the 2 vectors(i.e. a vector that is perpendicular to both this vector and the passed Vector)
         /// </summary>
-        /// <param name="?"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to take the cross product with</param>
+        /// <returns>A new vector that is the cross product of the two others</returns>
         public Vector CrossProduct(Vector passedVector)
         {
             Point originPoint = new Point();
@@ -447,8 +447,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in the same direction using comparisons of x, y, and z components
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
+        /// <param name="passedVector">vector to compare against</param>
+        /// <returns>Returns a bool of whether or not the two vectors point in the same direction</returns>
         public bool PointInSameDirection(Vector passedVector)
         {
             // checks to see if there's more than 1 nonzero component
@@ -502,8 +502,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in opposite directions using comparisons of x, y, and z components
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
+        /// <param name="passedVector">vector to compare against</param>
+        /// <returns>returns a bool of whether or not the two vectors point in the opposite directions</returns>
         public bool PointInOppositeDirections(Vector passedVector)
         {
             //flip one of the vectors
@@ -516,12 +516,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in opposite directions using comparisons of x, y, and z components
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
-        public bool PointInSameOrOppositeDirections(Vector v1)
+        /// <param name="passedVector">vector to compare against</param>
+        /// <returns>returns a bool of whether or not the two vectors point in the same or opposite directions</returns>
+        public bool PointInSameOrOppositeDirections(Vector passedVector)
         {
-            bool sameDirection = this.PointInSameDirection(v1);
-            bool oppositeDirections = this.PointInOppositeDirections(v1);
+            bool sameDirection = this.PointInSameDirection(passedVector);
+            bool oppositeDirections = this.PointInOppositeDirections(passedVector);
 
             return sameDirection || oppositeDirections;
         }
@@ -548,7 +548,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Converts a vector into a matrix with one column
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A matrix representing this vector</returns>
         public Matrix ConvertToMatrixColumn()
         {
             Matrix returnMatrix = new Matrix(3, 1);
@@ -560,21 +560,20 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the vector about the given axis by the passed angle
         /// </summary>
-        /// <param name="passedRotationAxis"></param>
-        /// <param name="passedRotationAngle"></param>
-        /// <returns></returns>
-        public new Vector Rotate(Line passedRotationAxis, Angle passedRotationAngle)
+        /// <param name="passedRotation">The Rotation to Apply to the Vector</param>
+        /// <returns>A new Vector that has been rotated</returns>
+        public new Vector Rotate(Rotation passedRotation)
         {
-            Point rotatedBasePoint = this.BasePoint.Rotate3D(passedRotationAxis, passedRotationAngle);
-            Point rotatedEndPoint =  this.EndPoint.Rotate3D(passedRotationAxis, passedRotationAngle);
+            Point rotatedBasePoint = this.BasePoint.Rotate3D(passedRotation);
+            Point rotatedEndPoint = this.EndPoint.Rotate3D(passedRotation);
             return new Vector(rotatedBasePoint, rotatedEndPoint);
         }
 
         /// <summary>
         /// Performs the Shift on this vector
         /// </summary>
-        /// <param name="passedShift"></param>
-        /// <returns></returns>
+        /// <param name="passedShift">The Shift to preform on the vector</param>
+        /// <returns>A new Vector that has been shifted</returns>
         public Vector Shift(Shift passedShift)
         {
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
@@ -583,9 +582,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
+        /// <param name="translation">The point that represents the distance to translate the vector</param>
+        /// <returns>A new Vector that has been translated</returns>
         public new Vector Translate(Point translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
@@ -602,7 +600,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
-        public Vector UnitVector(DimensionType passedType)
+        public override Vector UnitVector(DimensionType passedType)
         {
             if (Magnitude == new Dimension())
             {
@@ -616,9 +614,8 @@ namespace GeometryClassLibrary
         /// This takes into account the magnitude of the vectors and scales them in a way in which you
         /// should always get a result with a small fractional error
         /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <returns></returns>
+        /// <param name="other">The other Vector to check if the dot product is zero with</param>
+        /// <returns>A bool of whether or not the dot product of the two vectors is 0</returns>
         public bool DotProductIsEqualToZero(Vector other)
         {
             //find out how to scale them so their multiplied magnitudes are 25

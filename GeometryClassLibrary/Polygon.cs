@@ -264,7 +264,12 @@ namespace GeometryClassLibrary
 
         }
 
-        public Polygon Shift(Shift passedShift)
+        /// <summary>
+        /// Performs the Shift on this Polygon, rotating and tranlsating it
+        /// </summary>
+        /// <param name="passedShift">The shift to Preform</param>
+        /// <returns>A new Polygon that has been shifted</returns>
+        public new Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.PlaneBoundaries.Shift(passedShift));
         }
@@ -272,21 +277,20 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the plane region about the given axis by the specified angle. Point values are rounded to 6 decimal places to make sure the boundaries still meet after rotating.
         /// </summary>
-        /// <param name="passedAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
-        /// <returns></returns>
-        public Polygon Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        /// <param name="passedRotation">Rotation to apply to the Polygon</param>
+        /// <returns>A new Polygon that has been rotated</returns>
+        public new Polygon Rotate(Rotation passedRotation)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.PlaneBoundaries)
             {
-                newBoundaryList.Add(segment.Rotate(passedAxisLine, passedRotationAngle));
+                newBoundaryList.Add(segment.Rotate(passedRotation));
             }
 
             return new Polygon(newBoundaryList);
         }
 
-        public Polygon Translate(Point translation)
+        public new Polygon Translate(Point translation)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.PlaneBoundaries)
@@ -307,6 +311,10 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }*/
 
+        /// <summary>
+        /// Finds the smalles rectangle that can contain this Polygon that is coplanar with it
+        /// </summary>
+        /// <returns>Returns a rectangle(Polygon) that contains this Polygon</returns>
         public override Polygon SmallestRectangleThatCanSurroundThisShape()
         {
             throw new NotImplementedException();
@@ -574,8 +582,8 @@ namespace GeometryClassLibrary
         ///  
         /// </summary>
         /// <param name="directionVector">the value and direction that the polygon should be extruded</param>
-        /// <returns></returns>
-        public Polyhedron Extrude(Vector directionVector)
+        /// <returns>A Solid that represents this Polygon extruded into 3D</returns>
+        public override Solid Extrude(Vector directionVector)
         {
 
             // find two lines that are not parallel
@@ -635,11 +643,11 @@ namespace GeometryClassLibrary
         /// Extrudes the plane region into a Polyhedron
         /// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
         /// </summary>
-        /// <param name="dimension"></param>
-        /// <returns></returns>
-        public Polyhedron ExtrudeAsPolyhedron(Dimension dimension)
+        /// <param name="directionVector">the value and direction that the polygon should be extruded</param>
+        /// <returns>A Polyhedron that represents this Polygon in 3D</returns>
+        public Polyhedron ExtrudeAsPolyhedron(Vector directionVector)
         {
-            return (Polyhedron)Extrude(dimension);
+            return (Polyhedron)Extrude(directionVector);
         }
 
         /// <summary>
@@ -858,7 +866,7 @@ namespace GeometryClassLibrary
                         {
                             //slice the line and project the parts for the relevent polygons
                             _sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
-                                slicedPolygons, segmentsCut, newSegmentsGenerated, toRemove);
+                                segmentsCut, newSegmentsGenerated, toRemove);
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
@@ -909,7 +917,7 @@ namespace GeometryClassLibrary
                 }
 
                 //now consolidate the generated line segments into one that spans the gap created by the line segments
-                consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
+                _consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
 
                 //make sure that the polygons are actually cut
                 if (slicedPolygons[0].PlaneBoundaries.Count <= 2 && slicedPolygons[0].isValidPolygon())
@@ -948,15 +956,16 @@ namespace GeometryClassLibrary
         /// Slices the line segment and modifies the polygons so that they reflect they slice and finally projects the necessary part of the slice
         /// to the newSegments for the polygons
         /// </summary>
-        /// <param name="lineToSlice"></param>
-        /// <param name="intersectPoint"></param>
-        /// <param name="slicingPlane"></param>
-        /// <param name="slicingLine"></param>
-        /// <param name="referencePoint"></param>
-        /// <param name="slicedPolygons"></param>
-        /// <param name="newSegmentsGenerated"></param>
+        /// <param name="lineToSlice">The lineSegment that is being sloces</param>
+        /// <param name="intersectPoint">The point to slice the line segment</param>
+        /// <param name="slicingPlane">The plane that is slicing the segment</param>
+        /// <param name="slicingLine">The line that is slicing the segment</param>
+        /// <param name="referencePoint">The reference point on one side of the plane to determine which side to put the segments on</param>
+        /// <param name="segmentsCut">The list of line segments that have been cut in this slice of the polygon so far</param>
+        /// <param name="newSegmentsGenerated">The lists that contain the new segments that have been generated</param>
+        /// <param name="toRemove">The list of line segments to remove ffrom each created polygon</param>
         private void _sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
-            Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
+            Point referencePoint, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
             //we know we will always get two because we already checked and confirmed intersect
             List<LineSegment> lineSliced = lineToSlice.Slice(intersectPoint);
@@ -1000,12 +1009,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects the segment and adds it to the list for the polygon that needs the projected segment
         /// </summary>
-        /// <param name="lineToSlice"></param>
-        /// <param name="slicingPlane"></param>
-        /// <param name="slicingLine"></param>
-        /// <param name="referencePoint"></param>
-        /// <param name="newSegmentsGenerated"></param>
-        /// <param name="toRemove"></param>
+        /// <param name="lineToSlice">The Line Segment that is being sliced</param>
+        /// <param name="slicingPlane">The Plane that is sclicing the Segment</param>
+        /// <param name="slicingLine">The line that is slicing the Segment</param>
+        /// <param name="referencePoint">The reference point on one side of the plane to determine which side to put the segments on</param>
+        /// <param name="newSegmentsGenerated">The lists that contain the new segments that have been generated</param>
+        /// <param name="toRemove">The list of line segments to remove ffrom each created polygon</param>
         private void _projectSegmentForOneSide(LineSegment lineToSlice, Plane slicingPlane, Line slicingLine,
             Point referencePoint, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
@@ -1114,7 +1123,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="newSegmentsGenerated">Line segments generated by slicing the polygon</param>
         /// <param name="slicedPlanes">the two result polygons from the slice</param>
-        private void consolidateGeneratedLineSegments(List<List<LineSegment>> newSegmentsGenerated, List<Polygon> slicedPlanes)
+        private void _consolidateGeneratedLineSegments(List<List<LineSegment>> newSegmentsGenerated, List<Polygon> slicedPlanes)
         {
             //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
             //we can do this because we know that they are all along the same line so if they share a point they are
@@ -1183,9 +1192,10 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
+        /// also can be thought of as if it has a single distinct intersect point or line
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The line to check if it intersects with this polygon, but is not coplanar</param>
+        /// <returns>returns a bool of whether or no the line intersects with this polygon and is not coplanar with the polygon</returns>
         public new bool DoesIntersectNotCoplanar(Line passedLine)
         {
             Point intersection = this.Intersection(passedLine);
@@ -1200,8 +1210,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the given line and polygon intersect or are coplanar and intersect on the plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The line to see if this polygon intersects with</param>
+        /// <returns>Returns a bool of whether or not the line touches this polygon at any place</returns>
         public new bool DoesIntersect(Line passedLine)
         {
             //if the line is on the plane
@@ -1289,8 +1299,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the two Polygons have a common side
         /// </summary>
-        /// <param name="otherPolygon"></param>
-        /// <returns></returns>
+        /// <param name="otherPolygon">The polygon to check if it shares a side with</param>
+        /// <returns>Returns a boolean of whether or not the two polygons have a common side</returns>
         public bool DoesShareSide(Polygon otherPolygon)
         {
             foreach (LineSegment segment in this.PlaneBoundaries)

@@ -185,6 +185,11 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        /// <summary>
+        /// Performs the given shift on the Arc and returns a new Arc that has been shifted
+        /// </summary>
+        /// <param name="passedShift">The shift to perform on the Arc</param>
+        /// <returns></returns>
         public Arc Shift(Shift passedShift)
         {
             return new Arc(this.BasePoint.Shift(passedShift), this.EndPoint.Shift(passedShift), this.Direction);

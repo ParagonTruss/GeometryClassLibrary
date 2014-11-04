@@ -205,10 +205,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the given plane intersects with the polyhedron
+        /// Returns whether or not the given plane intersects with the polyhedron but is not coplanar with any of its sides
+        /// also can be thought of as if it has a single distinct intersect point or line
         /// </summary>
-        /// <param name="passedPolyhedron"></param>
-        /// <returns></returns>
+        /// <param name="passedPolyhedron">The polyghedron to check if it intersects with but not coplanar to any of its sides</param>
+        /// <returns>Returns a bool of whether or not the Polyhedron intersects the plane and is not coplanar with it</returns>
         public virtual bool DoesIntersectNotCoplanar(Plane passedPlane)
         {
             foreach (Polygon polygon in this.Polygons)
@@ -225,8 +226,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the given plane intersects with the polyhedron
         /// </summary>
-        /// <param name="passedPolyhedron"></param>
-        /// <returns></returns>
+        /// <param name="passedPolyhedron">The Polyhedron to see if the plane intersects with</param>
+        /// <returns>Returns a bool of whether or not the polyhedron touches the plane at any point</returns>
         public virtual bool DoesIntersect(Plane passedPlane)
         {
             foreach (Polygon polygon in this.Polygons)
@@ -243,11 +244,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the two Polyhedrons created by a slice. In order of size.
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public List<Polyhedron> Slice(Plane passedPlane)
+        /// <param name="slicingPlane">The plane to slice the Polyhedron with</param>
+        /// <returns>Returns two new Polyhedrons created by the slice in order of size</returns>
+        public List<Polyhedron> Slice(Plane slicingPlane)
         {
-            if (this.DoesIntersect(passedPlane))
+            if (this.DoesIntersect(slicingPlane))
             {
                 //make a list to keep track of all the points we sliced at
                 List<Line> slicingPlaneLines = new List<Line>();
@@ -262,7 +263,7 @@ namespace GeometryClassLibrary
                 //slice each polygon
                 foreach (var polygon in this.Polygons)
                 {
-                    List<Polygon> slicedPolygons = polygon.Slice(passedPlane);
+                    List<Polygon> slicedPolygons = polygon.Slice(slicingPlane);
 
                     bool wasAdded = _addPolygonToCorrectPolyhedron(slicedPolygons, insidePolyhedron, outsidePolyhedron);
 
@@ -282,7 +283,7 @@ namespace GeometryClassLibrary
                     }
 
                     //keep track of the lines we sliced on so we can easily make a new plane to cover the face
-                    _addSlicingLine(passedPlane, polygon, slicingPlaneLines);
+                    _addSlicingLine(slicingPlane, polygon, slicingPlaneLines);
                 }
 
                 //figure out where our undetermined polygons go
@@ -307,6 +308,13 @@ namespace GeometryClassLibrary
             return new List<Polyhedron>() { new Polyhedron(this) };
         }
 
+        /// <summary>
+        /// Adds the previously unknown polygons to the correct Polyhedron
+        /// </summary>
+        /// <param name="insidePolyhedron">the "inside" polyhedron</param>
+        /// <param name="outsidePolyhedron">the "outside" polyhedron</param>
+        /// <param name="unknownPolygons">The list of unknown Polygons to add </param>
+        /// <param name="unknownPolygonsOther">The list of unknown Polygons to add that represents the other part of the first list</param>
         private void _addUndeterminedPolygons(Polyhedron insidePolyhedron, Polyhedron outsidePolyhedron, List<Polygon> unknownPolygons, List<Polygon> unknownPolygonsOther)
         {
             List<Polygon> toAddInsides = new List<Polygon>();
@@ -351,6 +359,13 @@ namespace GeometryClassLibrary
             outsidePolyhedron.Polygons.AddRange(toAddOutsides);
         }
 
+        /// <summary>
+        /// Adds the Polygons to the correct new Polyhedron
+        /// </summary>
+        /// <param name="slicedPolygons">The sliced Polygons</param>
+        /// <param name="insidePolyhedron">the "inside" polyhedron</param>
+        /// <param name="outsidePolyhedron">the "outside" polyhedron</param>
+        /// <returns></returns>
         private bool _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, Polyhedron insidePolyhedron, Polyhedron outsidePolyhedron)
         {
             if (insidePolyhedron.Polygons.Count == 0)
@@ -400,9 +415,15 @@ namespace GeometryClassLibrary
             }
         }
 
-        private void _addSlicingLine(Plane passedPlane, Polygon polygon, List<Line> slicingPlaneLines)
+        /// <summary>
+        /// Adds the slicing line to the list of lines so we can create a polygon to represent the side that is on the slicing plane
+        /// </summary>
+        /// <param name="slicingPlane">The plane that is slicing the polygon</param>
+        /// <param name="polygon">The polygon the is being sliced</param>
+        /// <param name="slicingPlaneLines">The list of lines creates by the slicing plane</param>
+        private void _addSlicingLine(Plane slicingPlane, Polygon polygon, List<Line> slicingPlaneLines)
         {
-            Line slicingLine = polygon.Intersection(passedPlane);
+            Line slicingLine = polygon.Intersection(slicingPlane);
             if (slicingLine != null && polygon.DoesIntersect(slicingLine))
             {
                 slicingPlaneLines.Add(slicingLine);
@@ -412,16 +433,16 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns all the Polyhedrons created by slices. In order of size.
         /// </summary>
-        /// <param name="passedPlanes"></param>
-        /// <returns></returns>
-        public List<Polyhedron> Slice(List<Plane> passedPlanes)
+        /// <param name="slicingPlanes">The planes to slice the Polyhedron With</param>
+        /// <returns>Returns a list of Polyhedrons that were created by the slice, with the largest first</returns>
+        public List<Polyhedron> Slice(List<Plane> slicingPlanes)
         {
             //This list will be modified every time a slice happens. 
             List<Polyhedron> toSlicePolyhedrons = new List<Polyhedron> { this };
             List<Polyhedron> returnPolyhedrons = new List<Polyhedron>();
 
             //Do this for every passed slice
-            foreach (Plane slicingPlane in passedPlanes)
+            foreach (Plane slicingPlane in slicingPlanes)
             {
                 //reset our return list
                 returnPolyhedrons = new List<Polyhedron>();
@@ -441,11 +462,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts the solid to another location and orientation
+        /// Shifts the Polyhedron to another location and orientation
         /// </summary>
-        /// <param name="passedShift"></param>
-        /// <param name="passedRotationAxis"></param>
-        public Polyhedron Shift(Shift passedShift)
+        /// <param name="passedShift">The shift to preform on the Polyhedron</param>
+        /// <returns>A new Polyhedron that has been shifted</returns>
+        public new Polyhedron Shift(Shift passedShift)
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
@@ -453,10 +474,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the polygan has a commn side with the polyhedron
+        /// Returns whether or not the polygan has a common side with the polyhedron / any of the polyhedrons sides
         /// </summary>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
+        /// <param name="polygon">The polygon to see if any of the the Polyhedrons side share a side with</param>
+        /// <returns>Returns a bool of whether or not the Polyhedron has a common side with the polygon</returns>
         public bool DoesShareSide(Polygon polygon)
         {
             foreach (Polygon polygonReference in this.Polygons)
