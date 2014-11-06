@@ -77,6 +77,8 @@
     <Compile Include="MatrixTests.cs" />
     <Compile Include="DirectionTests.cs" />
     <Compile Include="ListExtensionTests\PlaneRegionListExtensionTests.cs" />
+    <Compile Include="VectorTests.cs" />
+    <Compile Include="ShiftTests.cs" />
     <Compile Include="PointListTests.cs" />
     <Compile Include="PolygonTests.cs" />
     <Compile Include="PolyhedronTests.cs" />

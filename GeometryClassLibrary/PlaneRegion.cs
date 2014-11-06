@@ -8,7 +8,6 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
     [Serializable]
-    //For an explaination of why we use generics here see: http://stackoverflow.com/questions/3551012/override-a-property-with-a-derived-type-and-same-name-c-sharp
     public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Properties and Fields
@@ -196,14 +195,18 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        public virtual Polyhedron Extrude(Dimension dimension)
+        public virtual Solid Extrude(Vector directionVector)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Shifts this PlaneRegion by generically shifting each edge in the PlaneRegion
+        /// </summary>
+        /// <param name="passedShift">The shift to preform on this PlaneRegion</param>
+        /// <returns>Returns a new PlaneRegion that has been shifted</returns>
         public virtual PlaneRegion Shift(Shift passedShift)
         {
-
             List<IEdge> shiftedBoundaries = new List<IEdge>();
 
             foreach (var edge in Edges)
@@ -214,12 +217,22 @@ namespace GeometryClassLibrary
             return new PlaneRegion(shiftedBoundaries);
         }
 
-        public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        /// <summary>
+        /// Rotates the given Plane Region
+        /// </summary>
+        /// <param name="passedRotation">The rotation to apply to the planeRegion</param>
+        /// <returns>Returns a new PlaneRegion that has been rotated</returns>
+        public new virtual PlaneRegion Rotate(Rotation passedRotation)
         {
             throw new NotImplementedException();
         }
 
-        public virtual PlaneRegion Translate(Vector passedDirectionVector, Dimension passedDisplacement)
+        /// <summary>
+        /// translates the given Plane Region
+        /// </summary>
+        /// <param name="passedTranslation">The translates to apply to the planeRegion</param>
+        /// <returns>Returns a new PlaneRegion that has been translated</returns>
+        public virtual PlaneRegion Translate(Point passedTranslation)
         {
             throw new NotImplementedException();
         }

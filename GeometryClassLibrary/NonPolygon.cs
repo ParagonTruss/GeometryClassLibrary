@@ -49,22 +49,38 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        /// <summary>
+        /// returns the area enclosed by this nonPolygon
+        /// </summary>
         public override Area Area
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Finds the smalles rectangle that can contain this nonPolygon that is coplanar with it
+        /// </summary>
+        /// <returns>Returns a Polygon that contains this NonPolygon</returns>
         public override Polygon SmallestRectangleThatCanSurroundThisShape()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Finds the centriod (geometric center) of this nonPolygon
+        /// </summary>
+        /// <returns>Returns a Point that is the centroid of this NonPolygon</returns>
         public override Point Centroid()
         {
             throw new NotImplementedException();
         }
 
-        public override Polyhedron Extrude(Dimension dimension)
+        /// <summary>
+        /// Extrudes this NonPolygon into a 3 dimensional prism
+        /// </summary>
+        /// <param name="dimension"></param>
+        /// <returns>Returns this NonPolygon extruded into 3D</returns>
+        public override Solid Extrude(Vector directionVector)
         {
             throw new NotImplementedException();
         }

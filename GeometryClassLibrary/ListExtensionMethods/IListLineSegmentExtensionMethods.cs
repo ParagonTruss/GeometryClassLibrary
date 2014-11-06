@@ -9,6 +9,11 @@ namespace GeometryClassLibrary
 {
     public static class ListLineSegmentExtensionMethods
     {
+        /// <summary>
+        /// Makes a series of polygons out of all the line segments that are coplanar with each other
+        /// </summary>
+        /// <param name="passedLineSegments">The list of line segments to use</param>
+        /// <returns>A list of Polygon containing all the created polygons</returns>
         public static List<Polygon> MakeCoplanarLineSegmentsIntoPolygons(this List<LineSegment> passedLineSegments)
         {
             List<Plane> planesList = new List<Plane>();
@@ -50,8 +55,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Puts the boundaries in order and then checks if the end point of the last one is on the base point of the first one
         /// </summary>
-        /// <param name="passedBoundaries"></param>
-        /// <returns></returns>
+        /// <param name="passedBoundaries">The list of lines that form the boundaries of a polygon</param>
+        /// <returns>returns a bool of whether or not the lines form a closed region</returns>
         public static bool DoFormClosedRegion(this List<LineSegment> passedBoundaries)
         {
             //changed from this:
@@ -97,7 +102,7 @@ namespace GeometryClassLibrary
         /// Will break down all line segments into points and form them into clockwise traveling segments
         /// Segments must be coplanar and closed or else it will return null
         /// </summary>
-        /// <param name="borders"></param>
+        /// <param name="borders">The list of segments to sort into clockwise</param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static IList<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
         {
@@ -189,11 +194,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// takes the points from a list of line segments, rotates them, and turns them back into segments
         /// </summary>
-        /// <param name="segments"></param>
-        /// <param name="axis"></param>
-        /// <param name="rotateAngle"></param>
-        /// <returns></returns>
-        public static IList<LineSegment> RotatePointsAboutAnAxis(this IList<LineSegment> segments, Line axis, Angle rotateAngle)
+        /// <param name="segments">The list of line segments to rotate</param>
+        /// <param name="passedRotation">The rotation to apply</param>
+        /// <returns>A list of all the Line segments rotated</returns>
+        public static IList<LineSegment> RotatePointsAboutAnAxis(this IList<LineSegment> segments, Rotation passedRotation)
         {
             List<Point> pointList = new List<Point>();
 
@@ -211,7 +215,7 @@ namespace GeometryClassLibrary
 
             foreach (Point point in pointList)
             {
-                newList.Add(point.Rotate3D(axis, rotateAngle));
+                newList.Add(point.Rotate3D(passedRotation));
             }
 
             return newList.MakeIntoLineSegmentsThatMeet();
@@ -241,13 +245,12 @@ namespace GeometryClassLibrary
 
             return points;
         }
-    
 
         /// <summary>
         /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
         /// </summary>
-        /// <param name="passedBorders"></param>
-        /// <returns></returns>
+        /// <param name="passedBorders">The list of the Polygon borders</param>
+        /// <returns>Returns an Area that is the area of the polygon enlcosed by these borders</returns>
         public static Area FindAreaOfPolygon(this List<LineSegment> passedBorders)
         {
             if (passedBorders.AreAllCoplanar())
@@ -296,13 +299,19 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        /// <summary>
+        /// Shifts all the linesegments in this list with the given Shift
+        /// </summary>
+        /// <param name="passedLineSegments">The line segments to shift</param>
+        /// <param name="passedShift">The shift to apply</param>
+        /// <returns>A new List of new linesegments that have been shifted</returns>
         public static List<LineSegment> Shift(this IList<LineSegment> passedLineSegments, Shift passedShift)
         {
             List<LineSegment> shiftedSegments = new List<LineSegment>();
 
             foreach (var segment in passedLineSegments)
             {
-                shiftedSegments.Add(  segment.Shift(passedShift));
+                shiftedSegments.Add(segment.Shift(passedShift));
             }
 
             return shiftedSegments;
@@ -312,7 +321,7 @@ namespace GeometryClassLibrary
         /// Returns true if all of the passed LineSegments are in the same plane, false otherwise
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>
-        /// <returns></returns>
+        /// <returns>Returns a bool of whether or not the segments are all coplanar</returns>
         public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
         {
             List<Line> passedLineListCasted = passedLineList.ConvertAll(x => (Line)x);
@@ -324,7 +333,7 @@ namespace GeometryClassLibrary
         /// Returns true if all of the passed LineSegments are in the same plane, false otherwise
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>
-        /// <returns></returns>
+        /// <returns>Returns a bool of whether or not the segments are all parallel</returns>
         public static bool AreAllParallel(this List<LineSegment> passedLineList)
         {
             List<Line> passedLineListCasted = passedLineList.ConvertAll(x => (Line)x);

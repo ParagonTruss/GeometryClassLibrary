@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
+    [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, Normal Vector: Direction Vector {NormalVector.XComponentOfDirection.Inches}, {NormalVector.YComponentOfDirection.Inches}, {NormalVector.ZComponentOfDirection.Inches}, Magnitude = {Magnitude.Inches}")]
     [Serializable]
     public class Plane
     {
@@ -232,6 +234,11 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        /// <summary>
+        /// Determines whether or not this plane contains the given polygon
+        /// </summary>
+        /// <param name="passedPlaneRegion">The polygon to see if it is contained</param>
+        /// <returns>Returns true if the polygon is contained and false otherwise</returns>
         public bool Contains(Polygon passedPlaneRegion)
         {
             // checks to make sure that every line is on the line segment
@@ -246,13 +253,13 @@ namespace GeometryClassLibrary
             return true;
         }
 
+        /// <summary>
+        /// Determines whether or not this plane contains the given Line
+        /// </summary>
+        /// <param name="passedLine">The Line to see if it is contained</param>
+        /// <returns>Returns true if the Line is contained and false otherwise</returns>
         public bool Contains(Line passedLine)
         {
-            // weird calculus voodoo
-           /* Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
-            Dimension dotProduct1 = planeVector.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);
-            Dimension dotProduct2 = passedLine.UnitVector(DimensionType.Inch) * NormalVector.UnitVector(DimensionType.Inch);*/
-
             // if both of the vectors' dotproducts come out to 0, the line is on the plane
             return (this.IsParallelTo(passedLine) && this.Contains(passedLine.BasePoint));
         }
@@ -276,10 +283,15 @@ namespace GeometryClassLibrary
             return planeVector.DotProductIsEqualToZero(NormalVector);
         }
 
-        public Plane Rotate(Line passedAxis, Angle passedAngle)
+        /// <summary>
+        /// Rotates the plane with the given rotation
+        /// </summary>
+        /// <param name="passedRotation">The rotation object that is to be applied to the plane</param>
+        /// <returns>A new plane that has been rotated</returns>
+        public Plane Rotate(Rotation passedRotation)
         {
-            Point newBasePoint = this.BasePoint.Rotate3D(passedAxis, passedAngle);
-            Vector newNormalVector = this.NormalVector.Rotate(passedAxis, passedAngle);
+            Point newBasePoint = this.BasePoint.Rotate3D(passedRotation);
+            Vector newNormalVector = this.NormalVector.Rotate(passedRotation);
             return new Plane(newNormalVector.Direction, newBasePoint);
         }
 
@@ -400,8 +412,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the intersection point between a line and the plane
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The Line to find where it intersect this plane at</param>
+        /// <returns>Returns the point at which the line intersects this plane</returns>
         public virtual Point Intersection(Line passedLine)
         {
             //if they are parallel than we know that they do not intersect in a point
@@ -451,10 +463,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        ///returns true if the line and the plane intersect, exlcuding if the line is on the plane
+        ///returns true if the line and the plane intersect, exlcuding if the line is on the plane 
+        /// also can be thought of as if it has a single distinct intersect point
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The Line to see if it intersects with this plane, but is not coplanar</param>
+        /// <returns>returns whether or not the plane and line intersect and are not coplanar</returns>
         public virtual bool DoesIntersectNotCoplanar(Line passedLine)
         {
             return Intersection(passedLine) != null;
@@ -462,9 +475,10 @@ namespace GeometryClassLibrary
         
         /// <summary>
         ///returns true if the vector and the plane intersect, exlcuding if the line is on the plane
+        /// also can be thought of as if it has a single distinct intersect point
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to see if it intersects with this plane, but is not coplanar</param>
+        /// <returns>returns whether or not the plane and Vector intersect and are not coplanar</returns>
         public virtual bool DoesIntersectNotCoplanar(Vector passedVector)
         {
             if (!DoesIntersectNotCoplanar((Line)passedVector))
@@ -478,20 +492,22 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the two planes intersect
+        /// Returns whether or not the two planes intersect, exlcuding if they are coplanar
+        /// also can be thought of as if it has a single distinct intersect line
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The Plane to see if it intersects with this plane, but is not coplanar</param>
+        /// <returns>returns whether or not the two planes intersect and are not coplanar</returns>
         public virtual bool DoesIntersectNotCoplanar(Plane passedPlane)
         {
             return !IsParallelTo(passedPlane);
         }
 
         /// <summary>
-        /// Returns whether or not the polygon and plane intersect
+        /// Returns whether or not the polygon and plane intersect, exlcuding if the polygon is on the plane
+        /// also can be thought of as if it has a single distinct intersect point or line
         /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
+        /// <param name="passedPolygon">The Polygon to see if it intersects with this plane, but is not coplanar</param>
+        /// <returns>returns whether or not the Polygon and plane intersect and are not coplanar</returns>
         public virtual bool DoesIntersectNotCoplanar(Polygon passedPolygon)
         {
             if (!DoesIntersectNotCoplanar((Plane)passedPolygon))
@@ -513,8 +529,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the plane and line intersect, including if the line is on the plane
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The Plane to see if it intersects with this plane</param>
+        /// <returns>returns whether or not the line touches the plane in any place</returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
             return this.DoesIntersect(passedLine);
@@ -523,8 +539,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the given vector intersects the plane
         /// </summary>
-        /// <param name="passedVector"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to see if it intersects with this plane</param>
+        /// <returns>returns whether or not the Vector touches the plane in any place</returns>
         public virtual bool DoesIntersect(Vector passedVector)
         {
 
@@ -534,8 +550,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the two planes intersect
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The Plane to see if it intersects with this plane</param>
+        /// <returns>returns whether or not the two planes touch in any place</returns>
         public virtual bool DoesIntersect(Plane passedPlane)
         {
             return this.DoesIntersectNotCoplanar(passedPlane) || this.IsCoplanarTo(passedPlane);
@@ -544,8 +560,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the polygon and plane intersect
         /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
+        /// <param name="passedPolygon">The Plane to see if it intersects with this plane</param>
+        /// <returns>returns whether or not the Polygon touches the plane in any place</returns>
         public virtual bool DoesIntersect(Polygon passedPolygon)
         {
             Line slicingLine = passedPolygon.Intersection(this);
@@ -555,8 +571,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the giving plane is parallel to this plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The plane to check if it is parallel</param>
+        /// <returns>Returns whether or not the Plane is parallel to this plane</returns>
         public bool IsParallelTo(Plane passedPlane)
         {
             return this.NormalVector.PointInSameOrOppositeDirections(passedPlane.NormalVector);
@@ -565,8 +581,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the giving Plane is prepindicular to this plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The plane to check if is perpindicular</param>
+        /// <returns>Returns a bool of whether or not the plane is perpindicular to this plane</returns>
         public bool IsPerpindicularTo(Plane passedPlane)
         {
             return this.NormalVector.IsPerpindicularTo(passedPlane.NormalVector);
@@ -575,8 +591,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the giving line is parallel to this plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The line to check if it is parallel</param>
+        /// <returns>Returns whether or not the Line is parallel to this plane</returns>
         public bool IsParallelTo(Line passedLine)
         {
             //check to see if it is perpindicular to the normal vector and if it is then it is parallel to the plane because the plane id
@@ -587,8 +603,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the giving line is prepindicular to this plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedLine">The line to check if is perpindicular</param>
+        /// <returns>Returns a bool of whether or not the line is perpindicular to this plane</returns>
         public bool IsPerpindicularTo(Line passedLine)
         {
             //check to see if it is parallel to the normal vector and if it is then it is perpindicular to the plane because the plane is
@@ -599,8 +615,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the two plans are coplanar (parallel and share points)
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
+        /// <param name="passedPlane">The plane to see if it is coplanar with this one</param>
+        /// <returns>Returns a bool of whether or not the planes are coplananr</returns>
         public bool IsCoplanarTo(Plane passedPlane)
         {
             return IsParallelTo(passedPlane) && this.Contains(passedPlane.BasePoint);

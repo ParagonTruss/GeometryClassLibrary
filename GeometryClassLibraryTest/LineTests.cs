@@ -269,7 +269,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Angle rotationAngle = new Angle(AngleType.Degree, 199);
 
-            Line actualResult = line1.Rotate(axisLine, rotationAngle);
+            Line actualResult = line1.Rotate(new Rotation(axisLine, rotationAngle));
 
             Point expectedResultBasePoint = PointGenerator.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
             Direction expectedDirection = new Direction(PointGenerator.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
@@ -289,7 +289,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
-            Line afterRotate = toRotate.Rotate(startPointYAxis, rotationAngle);
+            Line afterRotate = toRotate.Rotate(new Rotation(startPointYAxis, rotationAngle));
 
             Point expectedStart = new Point(start);
             Point expectedEnd = PointGenerator.MakePointWithInches(2, 1, 3);
@@ -342,13 +342,13 @@ namespace ClearspanTypeLibrary.Tests
 
 
         [Test()]
-        public void Line_MakeIntoPlanePerpindicularToXYPlane()
+        public void Line_PlaneThroughLineInDirectionOf_ZAxis()
         {
             Line test1 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, 0));
             Line test2 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1),  PointGenerator.MakePointWithMillimeters(-1, 5, 2));
 
-            Plane result1 = test1.MakeIntoPlanePerpindicularToXYPlane();
-            Plane result2 = test2.MakeIntoPlanePerpindicularToXYPlane();
+            Plane result1 = test1.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
+            Plane result2 = test2.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
 
             Plane expectedPlane = new Plane(PointGenerator.MakePointWithMillimeters(2, 1, 6), PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, -23));
 

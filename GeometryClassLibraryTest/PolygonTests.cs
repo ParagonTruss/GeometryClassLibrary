@@ -47,7 +47,7 @@ namespace GeometryClassLibraryTests
             Polygon rightRegion = new Polygon(new List<LineSegment> { right, backRight, toprightConnector, bottomRightConnector });
 
 
-            Polyhedron extrudedResult = frontRegion.Extrude(new Vector(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(0,0,-4)));
+            Polyhedron extrudedResult = frontRegion.ExtrudeAsPolyhedron(new Vector(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(0,0,-4)));
             extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();
@@ -69,7 +69,7 @@ namespace GeometryClassLibraryTests
             Line rotationAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0)); //This is the X axis
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
-            Polygon actualPolygon = testPolygon.Rotate(rotationAxis, rotationAngle);
+            Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
             List<LineSegment> expectedLineSegments = new List<LineSegment>();
             expectedLineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
@@ -94,7 +94,7 @@ namespace GeometryClassLibraryTests
             Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1), PointGenerator.MakePointWithInches(1, -1, -1)));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
-            Polygon actualPolygon = testPolygon.Rotate(rotationAxis, rotationAngle);
+            Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
             
             List<LineSegment> expectedLineSegments = new List<LineSegment>();
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(5.238195, 1.6816970, -1.919892), PointGenerator.MakePointWithInches(1.31623019, -1.08627088, -5.229959)));

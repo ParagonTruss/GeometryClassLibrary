@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace GeometryClassLibrary
     /// Stores the values of direction using polar coordinates using physic's conventions (theta = angle to z axis, phi = anglin in xy-plane)
     /// Can be thought of either as two angles or as a unit vector
     /// </summary>
+    [DebuggerDisplay("Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
+    [Serializable]
     public class Direction
     {
         #region Properties and Fields
@@ -330,11 +333,20 @@ namespace GeometryClassLibrary
             return new Vector(new Point(), direction, magnitude);
         }
 
+        /// <summary>
+        /// Creates a new direction that points in the reverse direction of this direction
+        /// </summary>
+        /// <returns>A new direction that points in the oppposite direction as this one</returns>
         public Direction Reverse()
         {
             return new Direction(this.Phi - new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 180) - this.Theta);
         }
 
+        /// <summary>
+        /// Dot products the two Directions together
+        /// </summary>
+        /// <param name="otherDirection"></param>
+        /// <returns></returns>
         public Vector DotProduct(Direction otherDirection)
         {
             throw new NotImplementedException();

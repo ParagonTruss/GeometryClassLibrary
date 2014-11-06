@@ -77,7 +77,7 @@ namespace GeometryClassLibraryTests
             Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
-            Plane actualResult = testPlane.Rotate(rotationAxis, rotationAngle);
+            Plane actualResult = testPlane.Rotate(new Rotation(rotationAxis, rotationAngle));
 
             Point expectedPoint = PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495);
             Vector expectedVector = new Vector(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));

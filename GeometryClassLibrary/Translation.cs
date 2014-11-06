@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
+    [DebuggerDisplay("Displacement = {X.Inches}, {Y.Inches}, {Z.Inches}")]
+    [Serializable]
     public class Translation : Point
     {
         #region Constructors

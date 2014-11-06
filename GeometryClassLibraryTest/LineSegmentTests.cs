@@ -120,7 +120,7 @@ namespace ClearspanTypeLibrary.Tests
             Line axis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
             Angle toRotate = new Angle(AngleType.Degree, 180);
 
-            LineSegment actualSegment = originalSegment.Rotate(axis, toRotate);
+            LineSegment actualSegment = originalSegment.Rotate(new Rotation(axis, toRotate));
             LineSegment expectedSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, -5, 0));
             (actualSegment == expectedSegment).Should().BeTrue();
         }
@@ -134,9 +134,10 @@ namespace ClearspanTypeLibrary.Tests
 
             Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
+            Rotation toRotate = new Rotation(rotationAxis, rotationAngle);
 
-            LineSegment actualSegment1 = segment1.Rotate(rotationAxis, rotationAngle);
-            LineSegment actualSegment2 = segment2.Rotate(rotationAxis, rotationAngle);
+            LineSegment actualSegment1 = segment1.Rotate(toRotate);
+            LineSegment actualSegment2 = segment2.Rotate(toRotate);
 
             LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
             LineSegment expectedSegment2 = new LineSegment(PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495), PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809));

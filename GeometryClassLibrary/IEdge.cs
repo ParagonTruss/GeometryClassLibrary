@@ -11,9 +11,18 @@ namespace GeometryClassLibrary
     /// </summary>
     public interface IEdge
     {
+        #region Properties and Fields
+
         Direction Direction { get; set; }
         Point BasePoint { get; set; }
+
+        #endregion
+
+        #region Methods
+
         IEdge Shift(Shift passedShift);
         IEdge Copy();
+
+        #endregion
     }
 }

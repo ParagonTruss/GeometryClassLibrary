@@ -9,7 +9,8 @@ using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Displacement = {this._displacement.Magnitude.Millimeters}, Angle With XZ-Plane = {this._angleWithXZPlane.Degrees} deg, Angle With Z-Axis = {this._angleWithZAxis.Degrees} deg")]
+    [DebuggerDisplay("Displacement = {Displacement.X.Inches}, {Displacement.Y.Inches}, {Displacement.Z.Inches}, Rotations Count = {RotationsToApply.Count}")]
+    [Serializable]
     public class Shift
     {
         #region Properties and Fields
@@ -299,17 +300,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// creates a negative instance of the shift object
         /// </summary>
-        /// <returns>Negative shift object</returns>
+        /// <returns>A new shift object that is negative of this one</returns>
         public Shift Negate()
         {
-            //get negative instances of all of the shift's fields
-
-
-
-            //think something has to be done with translating the axis too in order to make sure they get reversed right
-
-
-
             List<Rotation> returnRotations = new List<Rotation>();
             foreach (Rotation rotation in _rotationsToApply)
             {

@@ -129,7 +129,7 @@ namespace GeometryClassLibraryTests
             Point originPoint = PointGenerator.MakePointWithInches(1, 0, 0);
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
-            Point newPoint = originPoint.Rotate3D(Line.ZAxis, rotationAngle);
+            Point newPoint = originPoint.Rotate3D(new Rotation(Line.ZAxis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(0, 1, 0));
         }
@@ -137,15 +137,12 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin()
         {
-            //Fails because the perpendicular line segment created for Rotate does not intersect the "destination line," so there is a NullReferenceException when it tries to do something with the null intersection point
-                //I think it almost intersects, but it does not because of rounding error.
-
             Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Line axis = new Line(new Direction(PointGenerator.MakePointWithInches(-1, -5, -3)), PointGenerator.MakePointWithInches(2, -2, -3));
 
             Angle rotationAngle = new Angle(AngleType.Degree, 322);
 
-            Point newPoint = pointToRotate.Rotate3D(axis, rotationAngle);
+            Point newPoint = pointToRotate.Rotate3D(new Rotation(axis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
         }
@@ -157,7 +154,7 @@ namespace GeometryClassLibraryTests
             Line axis = new Line(PointGenerator.MakePointWithInches(1, -1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
-            Point newPoint = originPoint.Rotate3D(axis, rotationAngle);
+            Point newPoint = originPoint.Rotate3D(new Rotation(axis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(1.8480480961564261, 0, -0.52991926423320479));
         }
