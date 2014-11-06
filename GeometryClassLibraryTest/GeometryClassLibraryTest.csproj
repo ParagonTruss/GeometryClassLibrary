@@ -70,7 +70,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ShiftTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
