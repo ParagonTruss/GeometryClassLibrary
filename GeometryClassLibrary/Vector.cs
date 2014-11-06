@@ -613,13 +613,21 @@ namespace GeometryClassLibrary
         /// Returns whether or not the dot product between the two vectors is approximately equal to 0
         /// This takes into account the magnitude of the vectors and scales them in a way in which you
         /// should always get a result with a small fractional error
+        /// 
+        /// The fractional error should be th Dimesnion class deviation contstant (default (inches) 0.03125) / the dotScalingConstant (Default 5)
+        /// or 0.625% when using inches
         /// </summary>
         /// <param name="other">The other Vector to check if the dot product is zero with</param>
         /// <returns>A bool of whether or not the dot product of the two vectors is 0</returns>
         public bool DotProductIsEqualToZero(Vector other)
         {
+            //determines how accurate we will accpet
+            //the constant is squared because this represents the average vector length meaning when we dot them
+            //they will have an area of the contant squared
+            double dotScalingConstant = 5;
+
             //find out how to scale them so their multiplied magnitudes are 25
-            double scale = 25 / (other.Magnitude.Inches * this.Magnitude.Inches);
+            double scale = Math.Pow(dotScalingConstant, 2) / (other.Magnitude.Inches * this.Magnitude.Inches);
             scale = Math.Sqrt(scale);
 
             Vector scaledVector1 = new Vector(new Point(), this.Direction, new Dimension(DimensionType.Inch, scale * this.Magnitude.Inches));
