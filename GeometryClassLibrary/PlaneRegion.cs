@@ -214,6 +214,22 @@ namespace GeometryClassLibrary
             return new PlaneRegion(shiftedBoundaries);
         }
 
+        public virtual PlaneRegion SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Shift shiftToUse = new Shift(systemToShiftTo);
+
+            List<IEdge> shiftedBoundaries = new List<IEdge>();
+
+            foreach (var edge in Edges)
+            {
+                shiftedBoundaries.Add(edge.Shift(shiftToUse));
+            }
+
+            CoordinateSystem.CurrentSystem = systemToShiftTo;
+
+            return new PlaneRegion(shiftedBoundaries);
+        }
+
         public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
             throw new NotImplementedException();

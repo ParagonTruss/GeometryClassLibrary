@@ -110,6 +110,24 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Creates a Shift that represents a shift so that the object will be oriented in the passed coordinate system
+        /// </summary>
+        /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
+        public Shift(CoordinateSystem coordinateSystemToShiftTo)
+        {
+            _displacement = new Point() - coordinateSystemToShiftTo.Origin;
+
+            _rotationsToApply = new List<Rotation>();
+
+            //negative of the corrdinate Phi(xy-plane)
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, CoordinateSystem.WorldCoordinateSystem.Phi - coordinateSystemToShiftTo.Phi));
+
+            //find the axis to shift on for Theta
+            Line thetaAxis = new Line(new Direction(CoordinateSystem.WorldCoordinateSystem.Phi - coordinateSystemToShiftTo.Phi));
+            _rotationsToApply.Add(new Rotation(thetaAxis, coordinateSystemToShiftTo.Theta - CoordinateSystem.WorldCoordinateSystem.Theta));
+        }
+
+        /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>
         /// <param name="passedRotation">The rotations that make up and are represented by this shift</param>
@@ -324,7 +342,7 @@ namespace GeometryClassLibrary
 
             //create and return new shift
             Shift toReturn = new Shift(returnRotations, returnDisplacement);
-            toReturn._isNegatedShift = true;
+            toReturn._isNegatedShift = !this._isNegatedShift;
             return toReturn;
         }
         #endregion

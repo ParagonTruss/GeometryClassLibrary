@@ -253,7 +253,6 @@ namespace GeometryClassLibrary
         {
             this.Theta = new Angle(toCopy.Theta);
             this.Phi = new Angle(toCopy.Phi);
-            
         }
 
         #endregion

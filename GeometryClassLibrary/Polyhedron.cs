@@ -452,6 +452,17 @@ namespace GeometryClassLibrary
             return new Polyhedron(shiftedRegions);
         }
 
+
+        public Polyhedron SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Polyhedron toReturn = this.Shift(new Shift(systemToShiftTo));
+
+            CoordinateSystem.CurrentSystem = systemToShiftTo;
+
+            return toReturn;
+        }
+
+
         /// <summary>
         /// Returns whether or not the polygan has a commn side with the polyhedron
         /// </summary>

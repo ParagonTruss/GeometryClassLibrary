@@ -296,17 +296,6 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
-        /*
-        public Polygon Translate(Direction passedDirection, Dimension passedDisplacement)
-        {
-            List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in this.PlaneBoundaries)
-            {
-                newBoundaryList.Add(segment.Translate(passedDirection, passedDisplacement));
-            }
-            return new Polygon(newBoundaryList);
-        }*/
-
         public override Polygon SmallestRectangleThatCanSurroundThisShape()
         {
             throw new NotImplementedException();
