@@ -320,7 +320,7 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
-        /// Should Use a wrapper class when accessing from a Line or any of ots children!!!
+        /// Should Use a wrapper class when accessing from a Line or any of its children!!!
         /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// </summary>
