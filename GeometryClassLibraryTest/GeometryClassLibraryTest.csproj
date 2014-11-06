@@ -70,13 +70,13 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ShiftTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="DirectionTests.cs" />
     <Compile Include="ListExtensionTests\PlaneRegionListExtensionTests.cs" />
-    <Compile Include="ShiftTests.cs" />
     <Compile Include="PointListTests.cs" />
     <Compile Include="PolygonTests.cs" />
     <Compile Include="PolyhedronTests.cs" />
