@@ -357,6 +357,21 @@ namespace GeometryClassLibrary
             get { return _matrix; }
         }
 
+        /// <summary>
+        /// Returns the euler angles (in z, y, x order) assuming this matrix is a pure rotation matrix
+        /// </summary>
+        /// <returns>Returns a list of the euler angles in this order: z(bank), y(pitch), x(heading)</returns>
+        public Angle[] getAnglesOutOfRotationMatrix()
+        {
+            //This works : http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
+            Angle[] toReturn = new Angle[3];
+            toReturn[0] = new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1,0), this.GetElement(1,1)));
+            toReturn[1] = new Angle(AngleType.Radian, -Math.Asin(this.GetElement(1,2)));
+            toReturn[2] = new Angle(AngleType.Radian, Math.Atan2(this.GetElement(0,2), this.GetElement(2,2)));
+
+            return toReturn;
+        }
+
         #endregion
 
         /// <summary>

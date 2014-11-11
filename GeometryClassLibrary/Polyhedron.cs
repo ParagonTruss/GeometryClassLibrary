@@ -457,7 +457,7 @@ namespace GeometryClassLibrary
         {
             Polyhedron toReturn = this.Shift(new Shift(systemToShiftTo));
 
-            CoordinateSystem.CurrentSystem = systemToShiftTo;
+            //CoordinateSystem.CurrentSystem = systemToShiftTo;
 
             return toReturn;
         }

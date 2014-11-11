@@ -225,7 +225,7 @@ namespace GeometryClassLibrary
                 shiftedBoundaries.Add(edge.Shift(shiftToUse));
             }
 
-            CoordinateSystem.CurrentSystem = systemToShiftTo;
+            //CoordinateSystem.CurrentSystem = systemToShiftTo;
 
             return new PlaneRegion(shiftedBoundaries);
         }

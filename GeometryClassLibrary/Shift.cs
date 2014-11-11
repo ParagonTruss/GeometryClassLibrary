@@ -36,6 +36,7 @@ namespace GeometryClassLibrary
         public bool isNegatedShift
         {
             get { return _isNegatedShift; }
+            set { _isNegatedShift = value; }
         }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace GeometryClassLibrary
         public Point Displacement
         {
             get { return _displacement; }
+            set { _displacement = value; }
         }
 
         /// <summary>
@@ -115,16 +117,17 @@ namespace GeometryClassLibrary
         /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
         public Shift(CoordinateSystem coordinateSystemToShiftTo)
         {
+            //we have to do the reverse of everything becuase we are shifting the coordinate system in concept which
+            //means in implementation, we must shift the objects in the oppsosite way
+
+            //make the translation that represents the coordinate shift
             _displacement = new Point() - coordinateSystemToShiftTo.Origin;
 
+            //make the rotations that represent the coordinate shift
             _rotationsToApply = new List<Rotation>();
-
-            //negative of the corrdinate Phi(xy-plane)
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, CoordinateSystem.WorldCoordinateSystem.Phi - coordinateSystemToShiftTo.Phi));
-
-            //find the axis to shift on for Theta
-            Line thetaAxis = new Line(new Direction(CoordinateSystem.WorldCoordinateSystem.Phi - coordinateSystemToShiftTo.Phi));
-            _rotationsToApply.Add(new Rotation(thetaAxis, coordinateSystemToShiftTo.Theta - CoordinateSystem.WorldCoordinateSystem.Theta));
+            _rotationsToApply.Add(new Rotation(Line.XAxis, new Angle() - coordinateSystemToShiftTo.XRotation));
+            _rotationsToApply.Add(new Rotation(Line.YAxis, new Angle() - coordinateSystemToShiftTo.YRotation));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, new Angle() - coordinateSystemToShiftTo.ZRotation));
         }
 
         /// <summary>
@@ -321,20 +324,15 @@ namespace GeometryClassLibrary
         public Shift Negate()
         {
             //get negative instances of all of the shift's fields
-
-
-
-            //think something has to be done with translating the axis too in order to make sure they get reversed right
-
-
-
+            
+            //make a new list of rotations where the angles are all the opposite of what they were
             List<Rotation> returnRotations = new List<Rotation>();
             foreach (Rotation rotation in _rotationsToApply)
             {
                 //switch the angle of each rotation to its opposite
                 returnRotations.Add(new Rotation(rotation.AxisToRotateAround, new Angle() - rotation.AngleToRotate));
             }
-            //now flip the order of them
+            //now flip the order of them so it reverse the shift properly
             returnRotations.Reverse();
 
             //now we have to do some magic to turn this back into the right spot since it will happen after the rotations again
@@ -342,7 +340,10 @@ namespace GeometryClassLibrary
 
             //create and return new shift
             Shift toReturn = new Shift(returnRotations, returnDisplacement);
+
+            //make our negated flag the oppsotie of what it was (becuase if we negate a negated shift we want to get a normal one)
             toReturn._isNegatedShift = !this._isNegatedShift;
+
             return toReturn;
         }
         #endregion
