@@ -62,27 +62,36 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_RotateUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45));
+            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
 
             Point testPoint = PointGenerator.MakePointWithInches(3, 0, 0);
 
             Point shifted = testPoint.Shift(new Shift(system));
 
-            Point expected = PointGenerator.MakePointWithInches(1.5, -1.5, 2.12132034);
+            Point expected = PointGenerator.MakePointWithInches(1.5, -2.12132034, 1.5);
 
             shifted.Should().Be(expected);
+
+            //try to get the point we had before we switched order of shifting
+            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 30), new Angle(), new Angle(AngleType.Degree, 54.7356104));
+
+            Point shifted2 = testPoint.Shift(new Shift(system2));
+
+            Point expected2 = PointGenerator.MakePointWithInches(1.5, -1.5, 2.12132034);
+
+            shifted2.Should().Be(expected2);
         }
 
         [Test]
         public void Shift_ShiftUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle());
 
             Point testPoint = PointGenerator.MakePointWithInches(0, 3, 0);
 
             Point shifted = testPoint.Shift(new Shift(system));
 
-            Point expected = PointGenerator.MakePointWithInches(1.5 + 1, 1.5 - 2, -2.12132034 - 4);
+            Point expected = PointGenerator.MakePointWithInches(2.12132034 + 1, 1.5 - 2, -1.5 - 4);
 
             shifted.Should().Be(expected);
         }

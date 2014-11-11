@@ -47,7 +47,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Angle ZRotation;
 
-       // public Matrix ZMatrix;
+        // public Matrix ZMatrix;
 
         /// <summary>
         /// This coordinate systems origin point relative to the world coordinate system
@@ -92,7 +92,7 @@ namespace GeometryClassLibrary
         /// coordinate system</param>
         /// <param name="passedZRotation">The rotation around the world coordinate systems Z axis to rotate around to get to this
         /// coordinate system</param>
-        public CoordinateSystem(Point passedOrigin, Angle passedXRotation, Angle passedYRotation, Angle passedZRotation)
+        public CoordinateSystem(Point passedOrigin, Angle passedZRotation, Angle passedXRotation, Angle passedYRotation)
         {
             Origin = new Point(passedOrigin);
             this.XRotation = new Angle(passedXRotation);
@@ -115,37 +115,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
-
-        /*
-        public static Point operator +(Point point1, Point point2)
-        {
-            //first calculate the new x
-            Dimension newX = point1._x + point2._x;
-
-            //then calcutate the new y
-            Dimension newY = point1._y + point2._y;
-
-            //then calcutate the new z
-            Dimension newZ = point1._z + point2._z;
-
-            //create a new Point object with your new values
-            return new Point(newX, newY, newZ);
-        }
-
-        public static Point operator -(Point point1, Point point2)
-        {
-            //first calculate the new x
-            Dimension newX = point1._x - point2._x;
-
-            //then calcutate the new y
-            Dimension newY = point1._y - point2._y;
-
-            //then calcutate the new z
-            Dimension newZ = point1._z - point2._z;
-
-            //create a new Point object with your new values
-            return new Point(newX, newY, newZ);
-        }*/
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
@@ -217,6 +186,35 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
+        /// Returns this Coordinate System's axes rotations as a single rotation matrix
+        /// </summary>
+        /// <returns></returns>
+        public Matrix GetRotationMatrix()
+        {
+            return Matrix.RotationMatrixAboutZ(this.ZRotation) * Matrix.RotationMatrixAboutX(this.XRotation) * Matrix.RotationMatrixAboutY(this.YRotation);
+        }
+
+        /// <summary>
+        /// Determines if the two directions represented by the euler triple (x,y, and z angles) are equivalent 
+        /// Note: multiple combinations of euler triples can represent the same orientation
+        /// </summary>
+        /// <param name="toCheckIfEquivalentTo">The Coordinate System to see if this one is equivalent in direction</param>
+        /// <returns>Returns a bool of whether or not the two directions are equivalent</returns>
+        public bool AreDirectionsEquivalent(CoordinateSystem toCheckIfEquivalentTo)
+        {
+            //TIM:
+            //How can we tell if two rotation matricies represent the same euler triple?
+            //this is what I tried but it seemed to not work (see the CoordinateSystem_AreDirectionsEquivalentTests)
+            //Is there a way you know of other than just transforming abritrary points and cheking if they are the same
+            //with both transformations?
+            Matrix thisRotationMatrix = this.GetRotationMatrix();
+            Matrix passedRotationMatrix = toCheckIfEquivalentTo.GetRotationMatrix();
+
+            return thisRotationMatrix.Equals(passedRotationMatrix);
+        }
+
+
+        /// <summary>
         /// Returns the shift for this coordinate system to apply to OBJECTS in order to orient them back to the origin
         /// Note: Only works if this is the current shift on the object! if it is already in world coordinates and you 
         /// perform this shift it will move it from the world coordinates to coordinates that are opposite to this one!
@@ -242,37 +240,58 @@ namespace GeometryClassLibrary
             //we have to shift our origin point first
             //we need to manually make the shift so that it wont be negated and then translate before rotating
             List<Rotation> rotationsToApplyToOrigin = new List<Rotation>();
+            rotationsToApplyToOrigin.Add(new Rotation(Line.ZAxis, passedCoordinateSystem.ZRotation));
             rotationsToApplyToOrigin.Add(new Rotation(Line.XAxis, passedCoordinateSystem.XRotation));
             rotationsToApplyToOrigin.Add(new Rotation(Line.YAxis, passedCoordinateSystem.YRotation));
-            rotationsToApplyToOrigin.Add(new Rotation(Line.ZAxis, passedCoordinateSystem.ZRotation));
 
             //now shift the origin point
             toReturn.Origin = this.Origin.Shift(new Shift(rotationsToApplyToOrigin, passedCoordinateSystem.Origin));
 
             //we can just add the rotations
-            //toReturn.XRotation += passedCoordinateSystem.XRotation; //this will work right
-            //toReturn.YRotation += Math.Cos(toReturn.XRotation.Radians) * passedCoordinateSystem.YRotation; //this needs to be adjusted based on our new x angle
-            //toReturn.ZRotation += passedCoordinateSystem.ZRotation;
+            //convert them to matricies
+            Matrix[] thisAnglesMatricies = new Matrix[]{
+                Matrix.RotationMatrixAboutX(this.XRotation),
+                Matrix.RotationMatrixAboutY(this.YRotation),
+                Matrix.RotationMatrixAboutZ(this.ZRotation)
+            };
+
+            Matrix[] passedAnglesMatricies = new Matrix[]{
+                Matrix.RotationMatrixAboutX(this.XRotation),
+                Matrix.RotationMatrixAboutY(this.YRotation),
+                Matrix.RotationMatrixAboutZ(this.ZRotation)
+            };
+
+            //multiply them (order is important!)
+            Matrix resultingSystem = thisAnglesMatricies[0] * passedAnglesMatricies[0] * thisAnglesMatricies[1] * passedAnglesMatricies[1] *
+                thisAnglesMatricies[2] * passedAnglesMatricies[2];
+
+            //then pull out the data
+            Angle[] resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();
+
+            toReturn.ZRotation = resultingAngles[0];
+            toReturn.XRotation = resultingAngles[1];
+            toReturn.YRotation = resultingAngles[2];
 
             return toReturn;
         }
-/*
-        /// <summary>
-        /// Makes a shift that can be used to move coordinate systems around
-        /// </summary>
-        /// <returns>Returns a shift to be used on a coordinate systems origin to move it to the corresponding spot</returns>
-        public Shift MakeIntoShiftForAnotherCoordinateSystemsOrigin()
-        {
-            //we have to make the shift from scratch because
-            Shift systemShift = new Shift();
-            systemShift.RotationsToApply.Add(new Rotation(Line.XAxis, this.XRotation));
-            systemShift.RotationsToApply.Add(new Rotation(Line.YAxis, this.YRotation));
-            systemShift.RotationsToApply.Add(new Rotation(Line.ZAxis, this.ZRotation));
 
-            systemShift.Displacement = this.Origin;
+        /*
+                /// <summary>
+                /// Makes a shift that can be used to move coordinate systems around
+                /// </summary>
+                /// <returns>Returns a shift to be used on a coordinate systems origin to move it to the corresponding spot</returns>
+                public Shift MakeIntoShiftForAnotherCoordinateSystemsOrigin()
+                {
+                    //we have to make the shift from scratch because
+                    Shift systemShift = new Shift();
+                    systemShift.RotationsToApply.Add(new Rotation(Line.XAxis, this.XRotation));
+                    systemShift.RotationsToApply.Add(new Rotation(Line.YAxis, this.YRotation));
+                    systemShift.RotationsToApply.Add(new Rotation(Line.ZAxis, this.ZRotation));
 
-            return systemShift;
-        }*/
+                    systemShift.Displacement = this.Origin;
+
+                    return systemShift;
+                }*/
 
         #endregion
     }
