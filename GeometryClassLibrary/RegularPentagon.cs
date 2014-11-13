@@ -7,13 +7,13 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public class Pentagon : RegularPolygon
+    public class RegularPentagon : RegularPolygon
     {
         /// <summary>
         /// Creates a regular Pentagon where all sides are the passed length
         /// </summary>
         /// <param name="passedSideLength"></param>
-        public Pentagon(Dimension passedSideLength)
+        public RegularPentagon(Dimension passedSideLength)
             :base(5,passedSideLength) {  }
     }
 }

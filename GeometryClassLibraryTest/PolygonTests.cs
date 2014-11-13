@@ -542,7 +542,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon6 = new Polygon(bounds6);
 
             List<LineSegment> bounds7 = new List<LineSegment>();
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));

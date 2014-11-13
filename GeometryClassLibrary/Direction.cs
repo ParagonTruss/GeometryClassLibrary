@@ -151,7 +151,7 @@ namespace GeometryClassLibrary
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
             {
-                acceptedDeviationConstant = new Dimension(DimensionType.Inch, 1);
+                acceptedDeviationConstant = Dimension.AcceptedEqualityDeviation;
             }
 
             Dimension distanceToOrigin = directionPoint.DistanceTo(new Point());

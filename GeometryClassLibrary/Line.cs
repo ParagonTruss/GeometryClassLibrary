@@ -481,7 +481,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            return (Equals(passedLine) || !ReferenceEquals(Intersection(passedLine), null));
+            return (this.Equals(passedLine) || !ReferenceEquals(this.Intersection(passedLine), null));
         }
 
         /// <summary>

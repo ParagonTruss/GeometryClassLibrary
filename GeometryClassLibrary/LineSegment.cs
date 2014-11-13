@@ -144,7 +144,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
+            //try to cast the object to a LineSegment, if it fails then we know the user passed in the wrong type of object
             try
             {
                 LineSegment comparableSegment = (LineSegment)obj;

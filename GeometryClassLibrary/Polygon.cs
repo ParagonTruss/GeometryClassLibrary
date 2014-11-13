@@ -63,6 +63,18 @@ namespace GeometryClassLibrary
             {
                 this.PlaneBoundaries = new List<LineSegment>(passedBoundaries);
             }
+            else if (isClosed)
+            {
+                throw new Exception("Lines are not coplanar.");
+            }
+            else if (areCoplanar)
+            {
+                throw new Exception("Polygon is not closed.");
+            }
+            else
+            {
+                throw new Exception("Lines are not coplanar and polygon is not closed.");
+            }
         }
 
         /// <summary>
@@ -744,7 +756,7 @@ namespace GeometryClassLibrary
             //if they are coplanar
             if (((Plane)this).Contains(polygonToBeClipped))
             {
-                //using the the idea of the Sutherland-Hodgman algoritm
+                //using the the idea of the Sutherland-Hodgman algorithm
 
                 //create the plane we will be trimming so we dont mess up the original one
                 Polygon overlapping = new Polygon(polygonToBeClipped);
@@ -956,7 +968,7 @@ namespace GeometryClassLibrary
         /// Slices the line segment and modifies the polygons so that they reflect they slice and finally projects the necessary part of the slice
         /// to the newSegments for the polygons
         /// </summary>
-        /// <param name="lineToSlice">The lineSegment that is being sloces</param>
+        /// <param name="lineToSlice">The lineSegment that is being sliced</param>
         /// <param name="intersectPoint">The point to slice the line segment</param>
         /// <param name="slicingPlane">The plane that is slicing the segment</param>
         /// <param name="slicingLine">The line that is slicing the segment</param>

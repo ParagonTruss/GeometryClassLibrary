@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Arc.cs" />
     <Compile Include="Circle.cs" />
+    <Compile Include="TriangularPrism.cs" />
     <Compile Include="ConeClass.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CoordinateSystem.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="NonPolygon.cs" />
     <Compile Include="NonPolyhedron.cs" />
-    <Compile Include="Pentagon.cs" />
+    <Compile Include="RegularPentagon.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="PlaneRegion.cs" />
     <Compile Include="Polygon.cs" />
@@ -92,12 +93,14 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="RegularPolygon.cs" />
     <Compile Include="Rhombus.cs" />
+    <Compile Include="RightTriangle.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="Shift.cs" />
     <Compile Include="Solid.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Translation.cs" />
+    <Compile Include="Triangle.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>
