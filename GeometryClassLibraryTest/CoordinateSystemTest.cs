@@ -19,6 +19,7 @@ namespace GeometryClassLibraryTest
             CoordinateSystem equivalent = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 1, -2), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
             same.AreDirectionsEquivalent(same2).Should().BeTrue();
+            same.AreDirectionsEquivalent(equivalent).Should().BeTrue();
         }
 
         [Test]
