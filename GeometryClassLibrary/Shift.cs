@@ -125,9 +125,9 @@ namespace GeometryClassLibrary
 
             //make the rotations that represent the coordinate shift
             _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, new Angle() - coordinateSystemToShiftTo.ZRotation));
-            _rotationsToApply.Add(new Rotation(Line.XAxis, new Angle() - coordinateSystemToShiftTo.XRotation));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, new Angle() - coordinateSystemToShiftTo.YRotation));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, new Angle() - coordinateSystemToShiftTo.ZAngle));
+            _rotationsToApply.Add(new Rotation(Line.XAxis, new Angle() - coordinateSystemToShiftTo.XAngle));
+            _rotationsToApply.Add(new Rotation(Line.YAxis, new Angle() - coordinateSystemToShiftTo.YAngle));
         }
 
         /// <summary>

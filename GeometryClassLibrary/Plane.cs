@@ -276,10 +276,15 @@ namespace GeometryClassLibrary
             return planeVector.DotProductIsEqualToZero(NormalVector);
         }
 
-        public Plane Rotate(Line passedAxis, Angle passedAngle)
+        /// <summary>
+        /// Rotates the Plane with the given rotation
+        /// </summary>
+        /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the Plane</param>
+        /// <returns></returns>
+        public Plane Rotate(Rotation rotationToApply)
         {
-            Point newBasePoint = this.BasePoint.Rotate3D(passedAxis, passedAngle);
-            Vector newNormalVector = this.NormalVector.Rotate(passedAxis, passedAngle);
+            Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
+            Vector newNormalVector = this.NormalVector.Rotate(rotationToApply);
             return new Plane(newNormalVector.Direction, newBasePoint);
         }
 

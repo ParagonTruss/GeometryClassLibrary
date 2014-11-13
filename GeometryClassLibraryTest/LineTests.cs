@@ -269,7 +269,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Angle rotationAngle = new Angle(AngleType.Degree, 199);
 
-            Line actualResult = line1.Rotate(axisLine, rotationAngle);
+            Line actualResult = line1.Rotate(new Rotation(axisLine, rotationAngle));
 
             Point expectedResultBasePoint = PointGenerator.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
             Direction expectedDirection = new Direction(PointGenerator.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
@@ -289,7 +289,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
-            Line afterRotate = toRotate.Rotate(startPointYAxis, rotationAngle);
+            Line afterRotate = toRotate.Rotate(new Rotation(startPointYAxis, rotationAngle));
 
             Point expectedStart = new Point(start);
             Point expectedEnd = PointGenerator.MakePointWithInches(2, 1, 3);

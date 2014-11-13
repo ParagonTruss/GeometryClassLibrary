@@ -513,14 +513,35 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates a line about the given axis by the amount of the passed angle
         /// </summary>
-        /// <param name="passedAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
+        /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
         /// <returns></returns>
-        public Line Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        public Line Rotate(Rotation rotationToApply)
         {
-            Point newBasePoint = this.BasePoint.Rotate3D(passedAxisLine, passedRotationAngle);
-            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedAxisLine, passedRotationAngle);
+            Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
+            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(rotationToApply);
             return new Line(newDirectionVector.Direction, newBasePoint);
+        } 
+        
+        /// <summary>
+        /// Rotates a line with the given lists of rotations
+        /// </summary>
+        /// <param name="rotationsToApply">The list of Rotations(that stores the axis to rotate around and the angle to rotate) to apply to the Line</param>
+        /// <returns></returns>
+        public Line Rotate(List<Rotation> rotationsToApply)
+        {
+            Line rotated = new Line(this);
+
+            Vector newDirectionVector = this.Direction.UnitVector(DimensionType.Inch);
+
+            foreach (Rotation rotation in rotationsToApply)
+            {
+                rotated.BasePoint = this.BasePoint.Rotate3D(rotation);
+                newDirectionVector = newDirectionVector.UnitVector(DimensionType.Inch).Rotate(rotation);
+            }
+
+            rotated.Direction = newDirectionVector.Direction;
+
+            return rotated;
         }
 
         /// <summary>
@@ -608,6 +629,17 @@ namespace GeometryClassLibrary
             }
 
             return new Direction(this.Direction);
+        }
+
+        /// <summary>
+        /// Makes a Perpendicular Line to this line that is in the passed plane
+        /// </summary>
+        /// <param name="planeToMakePerpindicularLineIn">The plane in which this line and the perpindicular line should both contain</param>
+        /// <returns>A new Line that is in the passed plane and perpindicular to this line</returns>
+        public Line MakePerpindicularLineInGivenPlane(Plane planeToMakePerpindicularLineIn)
+        {
+            //rotate it 90 degrees in the nornal of the plane and it will be perpindicular to the original
+            return this.Rotate(new Rotation(planeToMakePerpindicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
         }
 
         #endregion

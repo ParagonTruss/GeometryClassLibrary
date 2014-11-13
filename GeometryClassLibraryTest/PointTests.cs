@@ -129,7 +129,7 @@ namespace GeometryClassLibraryTests
             Point originPoint = PointGenerator.MakePointWithInches(1, 0, 0);
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
-            Point newPoint = originPoint.Rotate3D(Line.ZAxis, rotationAngle);
+            Point newPoint = originPoint.Rotate3D(new Rotation(Line.ZAxis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(0, 1, 0));
         }
@@ -145,7 +145,7 @@ namespace GeometryClassLibraryTests
 
             Angle rotationAngle = new Angle(AngleType.Degree, 322);
 
-            Point newPoint = pointToRotate.Rotate3D(axis, rotationAngle);
+            Point newPoint = pointToRotate.Rotate3D(new Rotation(axis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
         }
@@ -157,7 +157,7 @@ namespace GeometryClassLibraryTests
             Line axis = new Line(PointGenerator.MakePointWithInches(1, -1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
-            Point newPoint = originPoint.Rotate3D(axis, rotationAngle);
+            Point newPoint = originPoint.Rotate3D(new Rotation(axis, rotationAngle));
 
             newPoint.Should().Be(PointGenerator.MakePointWithInches(1.8480480961564261, 0, -0.52991926423320479));
         }

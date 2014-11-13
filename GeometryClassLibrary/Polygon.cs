@@ -272,15 +272,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the plane region about the given axis by the specified angle. Point values are rounded to 6 decimal places to make sure the boundaries still meet after rotating.
         /// </summary>
-        /// <param name="passedAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
+        /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the point</param>
         /// <returns></returns>
-        public Polygon Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        public Polygon Rotate(Rotation rotationToApply)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.PlaneBoundaries)
             {
-                newBoundaryList.Add(segment.Rotate(passedAxisLine, passedRotationAngle));
+                newBoundaryList.Add(segment.Rotate(rotationToApply));
             }
 
             return new Polygon(newBoundaryList);

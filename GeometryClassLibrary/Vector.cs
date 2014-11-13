@@ -560,13 +560,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the vector about the given axis by the passed angle
         /// </summary>
-        /// <param name="passedRotationAxis"></param>
-        /// <param name="passedRotationAngle"></param>
+        /// <param name="rotationToApply">The Rotation to apply to the Vector that stores the axis to rotate around and the angle to rotate</param>
         /// <returns></returns>
-        public new Vector Rotate(Line passedRotationAxis, Angle passedRotationAngle)
+        public new Vector Rotate(Rotation rotationToApply)
         {
-            Point rotatedBasePoint = this.BasePoint.Rotate3D(passedRotationAxis, passedRotationAngle);
-            Point rotatedEndPoint =  this.EndPoint.Rotate3D(passedRotationAxis, passedRotationAngle);
+            Point rotatedBasePoint = this.BasePoint.Rotate3D(rotationToApply);
+            Point rotatedEndPoint = this.EndPoint.Rotate3D(rotationToApply);
             return new Vector(rotatedBasePoint, rotatedEndPoint);
         }
 

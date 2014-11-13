@@ -303,7 +303,7 @@ namespace GeometryClassLibrary
         /// <returns>a new point in the new location</returns>
         public Point MirrorAcross(Line passedAxisLine)
         {
-            return this.Rotate3D(passedAxisLine, new Angle(AngleType.Degree, 180));            
+            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));            
         }
 
         /// <summary>
@@ -347,32 +347,31 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates a point about an axis with the given angle (returns a new point in that location)
         /// </summary>
-        /// <param name="passedAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
+        /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
         /// <returns></returns>
-        public Point Rotate3D(Line passedAxisLine, Angle passedRotationAngle)
+        public Point Rotate3D(Rotation rotationToApply)
 		{
             Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            
-            bool originIsOnPassedAxis = originPoint.IsOnLine(passedAxisLine);
+
+            bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisToRotateAround);
 
             Point pointForRotating = this;
 
-            Line axisForRotating = passedAxisLine;
+            Line axisForRotating = rotationToApply.AxisToRotateAround;
 
             if(!originIsOnPassedAxis)
             {
                 //Must translate everything so that the axis line goes through the origin before rotating
 
                 //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Point() - passedAxisLine.BasePoint);
+                pointForRotating = this.Translate(new Point() - rotationToApply.AxisToRotateAround.BasePoint);
 
                 //Make the axis go through the origin
-                axisForRotating = new Line(passedAxisLine.Direction, originPoint);
+                axisForRotating = new Line(rotationToApply.AxisToRotateAround.Direction, originPoint);
 
             }
 
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, passedRotationAngle);
+            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, rotationToApply.AngleToRotate);
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
                 
@@ -391,7 +390,7 @@ namespace GeometryClassLibrary
             else
             {
                 //Must shift the point back by the same distance we shifted it before rotating it
-                return pointToReturn + passedAxisLine.BasePoint;
+                return pointToReturn + rotationToApply.AxisToRotateAround.BasePoint;
             }
         }
 
@@ -497,7 +496,7 @@ namespace GeometryClassLibrary
             //we need to apply each rotation in order to the point
             foreach(Rotation rotation in passedShift.RotationsToApply)
             {
-                pointToReturn = pointToReturn.Rotate3D(rotation.AxisToRotateAround, rotation.AngleToRotate);
+                pointToReturn = pointToReturn.Rotate3D(rotation);
             }
 
             //and then we translate it (unless is a negating shift) so the shift is more intuitive

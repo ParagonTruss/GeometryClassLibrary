@@ -13,13 +13,22 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_AreDirectionsEquivalentTests()
         {
-            CoordinateSystem same = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 1, -2), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
-            CoordinateSystem same2 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 1, -2), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem same = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem same2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
             
-            CoordinateSystem equivalent = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 1, -2), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
+            CoordinateSystem equivalent = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
             same.AreDirectionsEquivalent(same2).Should().BeTrue();
             same.AreDirectionsEquivalent(equivalent).Should().BeTrue();
+
+            CoordinateSystem other = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem equavalentToOther = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45));
+
+            //the two 'others' should be equavlanet
+            other.AreDirectionsEquivalent(equavalentToOther).Should().BeTrue();
+
+            //these two sets of systems should not be equavalent
+            same.AreDirectionsEquivalent(other).Should().BeFalse();
         }
 
         [Test]
@@ -89,7 +98,7 @@ namespace GeometryClassLibraryTest
             extractedAngles[1] = new Angle(AngleType.Radian, -Math.Asin(summed.GetElement(1, 2))); //x
             extractedAngles[2] = new Angle(AngleType.Radian, Math.Atan2(summed.GetElement(0, 2), summed.GetElement(2, 2))); //y
 
-            Angle[] angles = summed.getAnglesOutOfRotationMatrix();
+            List<Angle> angles = summed.getAnglesOutOfRotationMatrix();
             Shift testShift = new Shift(new List<Rotation>()
             {
                 new Rotation(Line.ZAxis, angles[0]),
@@ -188,18 +197,18 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_CoordinateSystemShifting()
         {
-            CoordinateSystem LegoSetSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem LegoSetSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
             CURRENT_COORDINATE_SYSTEM = LegoSetSystem;
 
-            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(0, -1, 0), new Angle(), new Angle(AngleType.Degree, 90), new Angle());
-            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(0, -2, -1), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 1, 0), new Angle(), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 2, 1), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle());
 
             LegoBlock block1 = createBlockInGivenCoordinateSystem(new Dimension(DimensionType.Inch, 2), new Dimension(DimensionType.Inch, 1), new Dimension(DimensionType.Inch, 6), block1SystemRelativeToLegoSet);
             LegoBlock block2 = createBlockInGivenCoordinateSystem(new Dimension(DimensionType.Inch, 2), new Dimension(DimensionType.Inch, 1), new Dimension(DimensionType.Inch, 6), block2SystemRelativeToLegoSet);
 
             //check their locations relative to the origin
-            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -45), new Angle());
-            CoordinateSystem block2ExpectedCoords = new CoordinateSystem();
+            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 1), new Angle(), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(3, -2, 2), new Angle(), new Angle(), new Angle(AngleType.Degree, -90));
 
             block1.BlockSystem.Should().Be(block1ExpectedCoords);
             block2.BlockSystem.Should().Be(block2ExpectedCoords);

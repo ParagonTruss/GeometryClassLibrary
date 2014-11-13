@@ -190,10 +190,9 @@ namespace GeometryClassLibrary
         /// takes the points from a list of line segments, rotates them, and turns them back into segments
         /// </summary>
         /// <param name="segments"></param>
-        /// <param name="axis"></param>
-        /// <param name="rotateAngle"></param>
+        /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the list of LineSegments</param>
         /// <returns></returns>
-        public static IList<LineSegment> RotatePointsAboutAnAxis(this IList<LineSegment> segments, Line axis, Angle rotateAngle)
+        public static IList<LineSegment> RotatePointsAboutAnAxis(this IList<LineSegment> segments, Rotation rotationToApply)
         {
             List<Point> pointList = new List<Point>();
 
@@ -211,7 +210,7 @@ namespace GeometryClassLibrary
 
             foreach (Point point in pointList)
             {
-                newList.Add(point.Rotate3D(axis, rotateAngle));
+                newList.Add(point.Rotate3D(rotationToApply));
             }
 
             return newList.MakeIntoLineSegmentsThatMeet();

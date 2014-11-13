@@ -231,12 +231,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the LineSegment about the given axis the given angle (calls the method in its base class)
         /// </summary>
-        /// <param name="passedRotaionAxis"></param>
-        /// <param name="passedAngle"></param>
+        /// <param name="rotationToApply">The Rotation to apply(that stores the axis to rotate around and the angle to rotate) to the LineSegment</param>
         /// <returns></returns>
-        public new LineSegment Rotate(Line passedRotaionAxis, Angle passedAngle)
+        public new LineSegment Rotate(Rotation rotationToApply)
         {
-            return new LineSegment(base.Rotate(passedRotaionAxis, passedAngle));
+            return new LineSegment(base.Rotate(rotationToApply));
         }
 
         /// <summary>
