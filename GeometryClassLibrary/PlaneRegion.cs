@@ -50,10 +50,10 @@ namespace GeometryClassLibrary
             {
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedEdges.ElementAt(0).Direction.UnitVector(DimensionType.Inch);
+                Vector vector1 = passedEdges.ElementAt(0).Direction.UnitVector(DistanceType.Inch);
                 for (int i = 1; i < passedEdges.Count(); i++)
                 {
-                    this.NormalVector = vector1.CrossProduct(passedEdges.ElementAt(i).Direction.UnitVector(DimensionType.Inch));
+                    this.NormalVector = vector1.CrossProduct(passedEdges.ElementAt(i).Direction.UnitVector(DistanceType.Inch));
                     if (!base.NormalVector.Equals(new Vector()))
                         i = passedEdges.Count();
                 }
@@ -216,15 +216,48 @@ namespace GeometryClassLibrary
 
             return new PlaneRegion(shiftedBoundaries);
         }
+       
+
+	    public virtual PlaneRegion SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Shift shiftToUse = new Shift(systemToShiftTo);
+
+            List<IEdge> shiftedBoundaries = new List<IEdge>();
+
+            foreach (var edge in Edges)
+            {
+                shiftedBoundaries.Add(edge.Shift(shiftToUse));
+            }
+
+            //CoordinateSystem.CurrentSystem = systemToShiftTo;
+
+            return new PlaneRegion(shiftedBoundaries);
+        }
 
         /// <summary>
         /// Rotates the given Plane Region
         /// </summary>
         /// <param name="passedRotation">The rotation to apply to the planeRegion</param>
         /// <returns>Returns a new PlaneRegion that has been rotated</returns>
-        public new virtual PlaneRegion Rotate(Rotation passedRotation)
+        public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
-            throw new NotImplementedException();
+            return this.Rotate(new Rotation(passedAxisLine, passedRotationAngle));
+        }
+
+        /// <summary>
+        /// Rotates the plane with the given rotation
+        /// </summary>
+        /// <param name="passedRotation">The rotation object that is to be applied to the plane</param>
+        /// <returns>A new plane that has been rotated</returns>
+        public PlaneRegion Rotate(Rotation passedRotation)
+        {
+            List<IEdge> newBoundaryList = new List<IEdge>();
+            foreach (IEdge segment in this.Edges)
+            {
+                newBoundaryList.Add(segment.Rotate(passedRotation));
+            }
+
+            return new PlaneRegion(newBoundaryList);
         }
 
         /// <summary>

@@ -16,8 +16,8 @@ namespace ClearspanTypeLibrary.Tests
         public void LineSegment_ConstructorTest()
         {
             //Fixture fixture = new Fixture();
-            //fixture.Customize<Dimension>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            //var mem = fixture.Create<Dimension>();
+            //fixture.Customize<Distance>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
+            //var mem = fixture.Create<Distance>();
 
             //fixture.Customize<Member>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
             ////fixture.Customize<Line>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
@@ -154,7 +154,7 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
             //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
+            //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
             LineSegment actualSegment1 = segment1.Translate(testDisplacement);

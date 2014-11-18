@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
         /// creates a new square in the XY plane with the given dimesnion as teh length and height
         /// </summary>
         /// <param name="passedSideLength"></param>
-        public Square(Dimension passedSideLength)
+        public Square(Distance passedSideLength)
             :base(4,passedSideLength) {  }
     }
 }

@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
         /// Creates a regular Pentagon where all sides are the passed length
         /// </summary>
         /// <param name="passedSideLength"></param>
-        public Pentagon(Dimension passedSideLength)
+        public Pentagon(Distance passedSideLength)
             :base(5,passedSideLength) {  }
     }
 }

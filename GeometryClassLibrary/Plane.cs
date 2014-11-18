@@ -65,10 +65,10 @@ namespace GeometryClassLibrary
 
                 //we have to check against vectors until we find one that is not parralel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedLineListCasted[0].UnitVector(DimensionType.Inch);
+                Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
                 for (int i = 1; i < passedLineListCasted.Count; i++)
                 {
-                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DimensionType.Inch));
+                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
                     if (!this.NormalVector.Equals(new Vector()))
                         i = passedLineListCasted.Count;
                 }
@@ -96,7 +96,7 @@ namespace GeometryClassLibrary
                 this.BasePoint = passedBasePoint;
             }
 
-            this.NormalVector = new Vector(this.BasePoint, passedDirection, new Dimension(DimensionType.Inch, 1));
+            this.NormalVector = new Vector(this.BasePoint, passedDirection, new Distance(DistanceType.Inch, 1));
         }
 
         /// <summary>
@@ -115,13 +115,13 @@ namespace GeometryClassLibrary
                     this.BasePoint = passedLine1.BasePoint;
 
                     Vector lineBetween = new Vector(passedLine1.BasePoint, passedLine2.BasePoint);
-                    this.NormalVector = passedLine1.UnitVector(DimensionType.Inch).CrossProduct(lineBetween.UnitVector(DimensionType.Inch));
+                    this.NormalVector = passedLine1.UnitVector(DistanceType.Inch).CrossProduct(lineBetween.UnitVector(DistanceType.Inch));
                 }
                 //if they are coplanar and not parallel we can just cross them
                 else if (passedLine1.IsCoplanarWith(passedLine2))
                 {
                     this.BasePoint = passedLine1.BasePoint;
-                    this.NormalVector = passedLine1.UnitVector(DimensionType.Inch).CrossProduct(passedLine2.UnitVector(DimensionType.Inch));
+                    this.NormalVector = passedLine1.UnitVector(DistanceType.Inch).CrossProduct(passedLine2.UnitVector(DistanceType.Inch));
                 }
                 else
                 {
@@ -153,10 +153,10 @@ namespace GeometryClassLibrary
             if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
             {
                 this.BasePoint = passedPoint1;
-                this.NormalVector = line1To2.UnitVector(DimensionType.Inch).CrossProduct(line1To3.UnitVector(DimensionType.Inch));
+                this.NormalVector = line1To2.UnitVector(DistanceType.Inch).CrossProduct(line1To3.UnitVector(DistanceType.Inch));
 
                 //make sure it is of size one and not smaller
-                this.NormalVector = this.NormalVector.UnitVector(DimensionType.Inch);
+                this.NormalVector = this.NormalVector.UnitVector(DistanceType.Inch);
             }
             else
             {
@@ -277,8 +277,8 @@ namespace GeometryClassLibrary
             }
 
             Vector planeVector = new Vector(passedPoint, BasePoint);
-            //Dimension dotProduct = planeVector * NormalVector;
-            //return dotProduct == new Dimension();
+            //Distance dotProduct = planeVector * NormalVector;
+            //return dotProduct == new Distance();
 
             return planeVector.DotProductIsEqualToZero(NormalVector);
         }
@@ -311,11 +311,11 @@ namespace GeometryClassLibrary
             //if it is 0 than it is on the plane
 
             //so find the dot products between the points and the normal of the plane
-            Dimension testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
-            Dimension referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
+            Distance testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
+            Distance referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
 
             //if they are both either positive or negative than they are both on the same side
-            if ((testDot < new Dimension() && referenceDot < new Dimension()) || (testDot > new Dimension() && referenceDot > new Dimension()))
+            if ((testDot < new Distance() && referenceDot < new Distance()) || (testDot > new Distance() && referenceDot > new Distance()))
             {
                 return true;
             }
@@ -351,17 +351,17 @@ namespace GeometryClassLibrary
                     otherPlane.NormalVector.YComponent.Inches * otherPlane.BasePoint.Y.Inches + otherPlane.NormalVector.ZComponent.Inches * otherPlane.BasePoint.Z.Inches;
                 //double otherPlaneEqualsAsInches = otherPlaneEqualsValue;
 
-                //pull them all out as the same thing because we need to know what dimension we are dealing with
+                //pull them all out as the same thing because we need to know what Distance we are dealing with
                 double thisFirstVariable = this.NormalVector.XComponent.Inches;
                 double thisSecondVariable = this.NormalVector.YComponent.Inches;
                 double otherFirstVariable = otherPlane.NormalVector.XComponent.Inches;
                 double otherSecondVariable = otherPlane.NormalVector.YComponent.Inches;
 
                 //first we play a game to find an axis it will always cross (default is to use z first then y, then x)
-                if (intersectionLineDirection.ZComponent == new Dimension())
+                if (intersectionLineDirection.ZComponent == new Distance())
                 {
                     //try y
-                    if (intersectionLineDirection.YComponent != new Dimension())
+                    if (intersectionLineDirection.YComponent != new Distance())
                     {
                         //make the y the thirdVariable(the one we make 0) and z the second 
                         thisSecondVariable = this.NormalVector.ZComponent.Inches;
@@ -390,10 +390,10 @@ namespace GeometryClassLibrary
 
                 //now assign them to the point in the way the need to be (assume z again)
                 Point intersectLinePoint = PointGenerator.MakePointWithInches(results[0], results[1], 0);
-                if (intersectionLineDirection.ZComponent == new Dimension())
+                if (intersectionLineDirection.ZComponent == new Distance())
                 {
                     //if y was what we made zero then it was third and z was second
-                    if (intersectionLineDirection.YComponent != new Dimension())
+                    if (intersectionLineDirection.YComponent != new Distance())
                     {
                         intersectLinePoint = PointGenerator.MakePointWithInches(results[0], 0, results[1]);
                     }
@@ -431,7 +431,7 @@ namespace GeometryClassLibrary
                 this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
 
             //find t's coefficent
-            Dimension tCoefficient = this.NormalVector.XComponent * passedLine.Direction.XComponentOfDirection +
+            Distance tCoefficient = this.NormalVector.XComponent * passedLine.Direction.XComponentOfDirection +
                 this.NormalVector.YComponent * passedLine.Direction.YComponentOfDirection + this.NormalVector.ZComponent * passedLine.Direction.ZComponentOfDirection;
 
             //find the part it equals ffom the line
@@ -443,7 +443,7 @@ namespace GeometryClassLibrary
 
             //to keep it from dividing by zero, which means there is not intersection in this case and it should be caught by cheking
             //if they are parallel, but just in case
-            if (tCoefficient == new Dimension())
+            if (tCoefficient == new Distance())
             {
                 return null;
             }
@@ -452,9 +452,9 @@ namespace GeometryClassLibrary
             double t = equals / tCoefficient.Inches;
 
             //now just plug t back into the line equations to find the x,y amd z
-            //Dimension xComponent = this.BasePoint.X + new Dimension(DimensionType.Inch, this.Direction.XComponentOfDirection * t);
-            //Dimension yComponent = this.BasePoint.Y + new Dimension(DimensionType.Inch, this.Direction.YComponentOfDirection * t);
-            //Dimension zComponent = this.BasePoint.Z + new Dimension(DimensionType.Inch, this.Direction.ZComponentOfDirection * t);
+            //Distance xComponent = this.BasePoint.X + new Distance(DistanceType.Inch, this.Direction.XComponentOfDirection * t);
+            //Distance yComponent = this.BasePoint.Y + new Distance(DistanceType.Inch, this.Direction.YComponentOfDirection * t);
+            //Distance zComponent = this.BasePoint.Z + new Distance(DistanceType.Inch, this.Direction.ZComponentOfDirection * t);
 
             //Point intersectionPoint = new Point(xComponent, yComponent, zComponent);
             Point intersectionPoint = passedLine.GetPointOnLine(t);

@@ -145,38 +145,38 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="directionPoint">the point to find the angle to relative to the origin</param>
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
-        public Direction(Point directionPoint, Dimension? acceptedDeviationConstant = null)
+        public Direction(Point directionPoint, Distance? acceptedDeviationConstant = null)
             : this()
         {
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
             {
-                acceptedDeviationConstant = new Dimension(DimensionType.Inch, 1);
+                acceptedDeviationConstant = new Distance(DistanceType.Inch, 1);
             }
 
-            Dimension distanceToOrigin = directionPoint.DistanceTo(new Point());
+            Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
 
             //if it is the origin we just leave it as the base constructor
-            if (!distanceToOrigin.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+            if (!distanceToOrigin.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
             {
                 //if the z is 0 than the angle should be 90 so we can use the xyplane angle
                 //Note: we called the base contructor first so it is already 90 unless we change it
-                if (!directionPoint.Z.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                if (!directionPoint.Z.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
                 {
                     //arcos handles negatives how we want so we dont have to worry about it
                     this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
                 }
 
                 //if the x is zero it is either straight up or down
-                if (!directionPoint.X.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                if (!directionPoint.X.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
                 {
-                    if (!directionPoint.Y.EqualsWithinPassedAcceptedDeviation(new Dimension(), acceptedDeviationConstant.Value))
+                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
                     {
                         //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
                         this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
 
                         //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
-                        //we can use this because we know at this point x isnt equal to zero and if we used dimension it could be
+                        //we can use this because we know at this point x isnt equal to zero and if we used Distance it could be
                         //to close within the default deviation constant but not in the passed one
                         if (directionPoint.X.Inches < 0)
                         {
@@ -221,7 +221,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="basePoint">The first point to find the angle from</param>
         /// <param name="endPoint">The point to use to find the angle of</param>
-        public Direction(Point basePoint, Point endPoint, Dimension? acceptedDeviationConstant = null)
+        public Direction(Point basePoint, Point endPoint, Distance? acceptedDeviationConstant = null)
             : this(endPoint - basePoint, acceptedDeviationConstant) { }
 
         /// <summary>
@@ -256,7 +256,6 @@ namespace GeometryClassLibrary
         {
             this.Theta = new Angle(toCopy.Theta);
             this.Phi = new Angle(toCopy.Phi);
-            
         }
 
         #endregion
@@ -321,15 +320,15 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Should Use a wrapper class when accessing from a Line or any of its children!!!
-        /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
+        /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// </summary>
         /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
-        public Vector UnitVector(DimensionType passedType)
+        public Vector UnitVector(DistanceType passedType)
         {
-            Dimension magnitude = new Dimension(passedType, 1);
-            Direction direction = new Direction(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection), new Dimension(DimensionType.Inch, 0.0001));
+            Distance magnitude = new Distance(passedType, 1);
+            Direction direction = new Direction(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection), new Distance(DistanceType.Inch, 0.0001));
             return new Vector(new Point(), direction, magnitude);
         }
 

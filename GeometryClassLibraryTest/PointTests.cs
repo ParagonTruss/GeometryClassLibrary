@@ -11,83 +11,83 @@ namespace GeometryClassLibraryTests
     public class PointTests
     {
         /// <summary>
-        /// This test is to make sure that the z property is still created even if there are only 2 dimensions passed in
+        /// This test is to make sure that the z property is still created even if there are only 2 Distances passed in
         /// </summary>
         [Test()]
         public void Point_2DConstructorTest()
         {
-            Dimension xDimension = new Dimension(DimensionType.Millimeter, 5);
-            Dimension yDimension = new Dimension(DimensionType.Millimeter, 10);
+            Distance xDistance = new Distance(DistanceType.Millimeter, 5);
+            Distance yDistance = new Distance(DistanceType.Millimeter, 10);
 
-            Point p = new Point(xDimension, yDimension);
+            Point p = new Point(xDistance, yDistance);
 
-            p.X.Should().Be(new Dimension(DimensionType.Millimeter, 5));
-            p.Y.Should().Be(new Dimension(DimensionType.Millimeter, 10));
-            p.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
+            p.X.Should().Be(new Distance(DistanceType.Millimeter, 5));
+            p.Y.Should().Be(new Distance(DistanceType.Millimeter, 10));
+            p.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
         }
 
         [Test()]
         public void Point_3DConstructorTest()
         {
-            Dimension xDimension = new Dimension(DimensionType.Millimeter, 0);
-            Dimension yDimension = new Dimension(DimensionType.Millimeter, 0);
-            Dimension zDimension = new Dimension(DimensionType.Millimeter, 0);
+            Distance xDistance = new Distance(DistanceType.Millimeter, 0);
+            Distance yDistance = new Distance(DistanceType.Millimeter, 0);
+            Distance zDistance = new Distance(DistanceType.Millimeter, 0);
 
-            Point p = new Point(xDimension, yDimension, zDimension);
+            Point p = new Point(xDistance, yDistance, zDistance);
 
-            p.X.Should().Be(new Dimension(DimensionType.Millimeter, 0));
-            p.Y.Should().Be(new Dimension(DimensionType.Millimeter, 0));
-            p.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
+            p.X.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            p.Y.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            p.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
         }
 
         [Test()]
         public void Point_PlusOperatorStandardTest()
         {
-            Dimension xDimension1 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension yDimension1 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension zDimension1 = new Dimension(DimensionType.Millimeter, 5);
+            Distance xDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance yDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance zDistance1 = new Distance(DistanceType.Millimeter, 5);
 
-            Dimension xDimension2 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension yDimension2 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension zDimension2 = new Dimension(DimensionType.Millimeter, 5);
+            Distance xDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance yDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance zDistance2 = new Distance(DistanceType.Millimeter, 5);
 
-            Dimension xDimension3 = new Dimension(DimensionType.Millimeter, -10);
-            Dimension yDimension3 = new Dimension(DimensionType.Millimeter, -10);
-            Dimension zDimension3 = new Dimension(DimensionType.Millimeter, -10);
+            Distance xDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance yDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance zDistance3 = new Distance(DistanceType.Millimeter, -10);
 
-            Point p1 = new Point(xDimension1, yDimension1, zDimension1);
-            Point p2 = new Point(xDimension2, yDimension2, zDimension2);
-            Point p3 = new Point(xDimension3, yDimension3, zDimension3);
+            Point p1 = new Point(xDistance1, yDistance1, zDistance1);
+            Point p2 = new Point(xDistance2, yDistance2, zDistance2);
+            Point p3 = new Point(xDistance3, yDistance3, zDistance3);
 
             Point cumulativePoint = (p1 + p2 + p3);
-            cumulativePoint.X.Should().Be(new Dimension(DimensionType.Millimeter, 0));
-            cumulativePoint.Y.Should().Be(new Dimension(DimensionType.Millimeter, 0));
-            cumulativePoint.Z.Should().Be(new Dimension(DimensionType.Millimeter, 0));
+            cumulativePoint.X.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            cumulativePoint.Y.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            cumulativePoint.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
         }
 
         [Test()]
         public void Point_MinusOperatorStandardTest()
         {
-            Dimension xDimension1 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension yDimension1 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension zDimension1 = new Dimension(DimensionType.Millimeter, 5);
+            Distance xDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance yDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance zDistance1 = new Distance(DistanceType.Millimeter, 5);
 
-            Dimension xDimension2 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension yDimension2 = new Dimension(DimensionType.Millimeter, 5);
-            Dimension zDimension2 = new Dimension(DimensionType.Millimeter, 5);
+            Distance xDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance yDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance zDistance2 = new Distance(DistanceType.Millimeter, 5);
 
-            Dimension xDimension3 = new Dimension(DimensionType.Millimeter, -10);
-            Dimension yDimension3 = new Dimension(DimensionType.Millimeter, -10);
-            Dimension zDimension3 = new Dimension(DimensionType.Millimeter, -10);
+            Distance xDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance yDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance zDistance3 = new Distance(DistanceType.Millimeter, -10);
 
-            Point p1 = new Point(xDimension1, yDimension1, zDimension1);
-            Point p2 = new Point(xDimension2, yDimension2, zDimension2);
-            Point p3 = new Point(xDimension3, yDimension3, zDimension3);
+            Point p1 = new Point(xDistance1, yDistance1, zDistance1);
+            Point p2 = new Point(xDistance2, yDistance2, zDistance2);
+            Point p3 = new Point(xDistance3, yDistance3, zDistance3);
 
             Point cumulativePoint = (p1 - p2 - p3);
-            cumulativePoint.X.Should().Be(new Dimension(DimensionType.Millimeter, 10));
-            cumulativePoint.Y.Should().Be(new Dimension(DimensionType.Millimeter, 10));
-            cumulativePoint.Z.Should().Be(new Dimension(DimensionType.Millimeter, 10));
+            cumulativePoint.X.Should().Be(new Distance(DistanceType.Millimeter, 10));
+            cumulativePoint.Y.Should().Be(new Distance(DistanceType.Millimeter, 10));
+            cumulativePoint.Z.Should().Be(new Distance(DistanceType.Millimeter, 10));
 
 
         }
@@ -235,7 +235,7 @@ namespace GeometryClassLibraryTests
         {
             Point pointToTranslate = PointGenerator.MakePointWithInches(1, 2, 3);
             //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 12.9614814);
+            //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
             Point actualResult = pointToTranslate.Translate(testDisplacement);
@@ -251,7 +251,7 @@ namespace GeometryClassLibraryTests
             Point pointToTranslate = PointGenerator.MakePointWithInches(1,1,1);
             
             //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(1, 0, 0));
-            //Dimension displacementOfTranslation = new Dimension(DimensionType.Inch, 4);
+            //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 4);
             Point testDisplacement = PointGenerator.MakePointWithInches(4, 0, 0);
 
             Point actualResult = pointToTranslate.Translate(testDisplacement);

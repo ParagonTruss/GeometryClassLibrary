@@ -10,10 +10,10 @@ namespace GeometryClassLibrary
     public class EquilateralTriangle : RegularPolygon
     {
         /// <summary>
-        /// Creates an equilateral triangle with the side the length of the passed in dimension
+        /// Creates an equilateral triangle with the side the length of the passed in Distance
         /// </summary>
         /// <param name="passedSideLength"></param>
-        public EquilateralTriangle(Dimension passedSideLength)
+        public EquilateralTriangle(Distance passedSideLength)
             :base(3,passedSideLength) {  }
     }
 }

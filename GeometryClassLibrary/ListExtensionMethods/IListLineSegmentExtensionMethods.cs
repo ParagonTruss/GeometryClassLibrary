@@ -255,7 +255,7 @@ namespace GeometryClassLibrary
         {
             if (passedBorders.AreAllCoplanar())
             {
-                Dimension areaDimension = new Dimension();
+                Distance areaDistance = new Distance();
                 Vector areaVector = new Vector();
 
                 if (passedBorders != null && passedBorders.Count() > 2)
@@ -276,20 +276,20 @@ namespace GeometryClassLibrary
                         Vector crossProduct = vertex.VectorFromOriginToPoint().CrossProduct(previousVertex.VectorFromOriginToPoint());
 
                         //now we add the magnitute to the area
-                        //areaDimension += crossProduct.Magnitude;
+                        //areaDistance += crossProduct.Magnitude;
                         areaVector += crossProduct;
 
                         previousVertex = vertex;
                     }
                 }
 
-                areaDimension = areaVector.Magnitude;
+                areaDistance = areaVector.Magnitude;
 
-                if (areaDimension > new Dimension())
+                if (areaDistance > new Distance())
                 {
-                    //the area is really units squared so we need to return it that way - not as a dimension
+                    //the area is really units squared so we need to return it that way - not as a Distance
                     //also we need to divide it in half (we were using triangles)
-                    return new Area(AreaType.InchesSquared, areaDimension.Inches / 2);
+                    return new Area(AreaType.InchesSquared, areaDistance.Inches / 2);
                 }
                 else
                 {

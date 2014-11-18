@@ -17,12 +17,12 @@ namespace GeometryClassLibrary
         /// <returns>A new list of new PlaneRegions that have been rotated</returns>
         public static List<PlaneRegion> Rotate(this IList<PlaneRegion> passedPlaneRegions, Rotation passedRotation)
         {
-            List<PlaneRegion> rotatedRegion = new List<PlaneRegion>();
-            foreach (var planeRegion in passedPlaneRegions)
+            List<PlaneRegion> rotatedRegions = new List<PlaneRegion>();
+            foreach (PlaneRegion planeRegion in passedPlaneRegions)
             {
-                rotatedRegion.Add(planeRegion.Rotate(passedRotation));
+                rotatedRegions.Add(planeRegion.Rotate(passedRotation));
             }
-            return rotatedRegion;
+            return rotatedRegions;
         }
 
         /// <summary>

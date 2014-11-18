@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns this lineSegment's length (this is the same as the magnitude)
         /// </summary>
-        public Dimension Length
+        public Distance Length
         {
             get { return base.Magnitude; }
             set { base.Magnitude = value; }
@@ -33,9 +33,9 @@ namespace GeometryClassLibrary
             get
             {
                 //Find midpoint for each component
-                Dimension xMid = (base.Magnitude / 2) * base.Direction.XComponentOfDirection;
-                Dimension yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
-                Dimension zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection;
+                Distance xMid = (base.Magnitude / 2) * base.Direction.XComponentOfDirection;
+                Distance yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
+                Distance zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection;
 
                 //then add our base point so it is in the right location
                 return new Point(xMid, yMid, zMid) + this.BasePoint;
@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection, Dimension? passedLength = null)
+        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance? passedLength = null)
             : base(passedBasePoint, passedDirection, passedLength) { }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace GeometryClassLibrary
         #region Overloaded Operators
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(LineSegment segment1, LineSegment segment2)
         {
@@ -119,7 +119,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect inequality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect inequality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(LineSegment segment1, LineSegment segment2)
         {
@@ -234,7 +234,17 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedRotation">The Rotation to appply to the Segment</param>
         /// <returns>A new Line Segment that has been rotated</returns>
-        public new LineSegment Rotate(Rotation passedRotation)
+        public LineSegment Rotate(Rotation passedRotation)
+        {
+            return new LineSegment(base.Rotate(passedRotation));
+        }
+
+        /// <summary>
+        /// Rotates the LineSegment about the given axis the given angle (calls the method in its base class)
+        /// </summary>
+        /// <param name="passedRotation">The Rotation to appply to the Segment</param>
+        /// <returns>A new Line Segment that has been rotated</returns>
+        IEdge IEdge.Rotate(Rotation passedRotation)
         {
             return new LineSegment(base.Rotate(passedRotation));
         }

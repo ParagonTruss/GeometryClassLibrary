@@ -76,9 +76,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Extrudes this NonPolygon into a 3 dimensional prism
+        /// Extrudes this NonPolygon into a 3 Distanceal prism
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="Distance"></param>
         /// <returns>Returns this NonPolygon extruded into 3D</returns>
         public override Solid Extrude(Vector directionVector)
         {

@@ -32,7 +32,7 @@ namespace GeometryClassLibrary
         /// <param name="xTranslation">The distance to translate in the X direction</param>
         /// <param name="yTranslation">The distance to translate in the Y direction</param>
         /// <param name="zTranslation">The distance to translate in the Z direction</param>
-        public Translation(Dimension xTranslation, Dimension yTranslation, Dimension zTranslation)
+        public Translation(Distance xTranslation, Distance yTranslation, Distance zTranslation)
             : base(xTranslation, yTranslation, zTranslation) { }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
         /// <param name="xTranslation">The unitless distance to translate in the X direction</param>
         /// <param name="yTranslation">The unitless distance to translate in the Y direction</param>
         /// <param name="zTranslation">The unitless distance to translate in the Z direction</param>
-        public Translation(DimensionType passedType, double xTranslation, double yTranslation, double zTranslation)
+        public Translation(DistanceType passedType, double xTranslation, double yTranslation, double zTranslation)
             : base(passedType, xTranslation, yTranslation, zTranslation) { }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace GeometryClassLibrary
         #region Overloaded Operators
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(Translation translation1, Translation translation2)
         {
@@ -73,7 +73,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Translation translation1, Translation translation2)
         {

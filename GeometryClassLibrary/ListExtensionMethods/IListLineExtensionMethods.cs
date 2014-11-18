@@ -24,7 +24,7 @@ namespace GeometryClassLibrary
 
             //make them null so that we can handle if the first element in the list never intersects
             Line smallestXLine = null;
-            Dimension? smallestX = null;
+            Distance? smallestX = null;
 
             for (int i = 0; i < passedLines.Count; i++)
             {
@@ -58,7 +58,7 @@ namespace GeometryClassLibrary
 
             //make them null so that we can handle if the first element in the list never intersects
             Line largestXLine = null;// passedLines[0];
-            Dimension? largestX = null;// passedLines[0].XInterceptIn2D;
+            Distance? largestX = null;// passedLines[0].XInterceptIn2D;
 
             for (int i = 0; i < passedLines.Count; i++)
             {
@@ -92,7 +92,7 @@ namespace GeometryClassLibrary
 
             //make them null so that we can handle if the first element in the list never intersects
             Line smallestYLine = null;
-            Dimension? smallestY = null;
+            Distance? smallestY = null;
 
             for (int i = 0; i < passedLines.Count; i++)
             {
@@ -126,7 +126,7 @@ namespace GeometryClassLibrary
 
             //make them null so that we can handle if the first element in the list never intersects
             Line largestYLine = null;
-            Dimension? largestY = null;
+            Distance? largestY = null;
 
             for (int i = 0; i < passedLines.Count; i++)
             {

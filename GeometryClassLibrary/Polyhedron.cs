@@ -109,7 +109,7 @@ namespace GeometryClassLibrary
         #region Overloaded Operators
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(Polyhedron polyhedron1, Polyhedron polyhedron2)
         {
@@ -125,7 +125,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Polyhedron polyhedron1, Polyhedron polyhedron2)
         {
@@ -472,6 +472,17 @@ namespace GeometryClassLibrary
 
             return new Polyhedron(shiftedRegions);
         }
+
+
+        public Polyhedron SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Polyhedron toReturn = this.Shift(new Shift(systemToShiftTo));
+
+            //CoordinateSystem.CurrentSystem = systemToShiftTo;
+
+            return toReturn;
+        }
+
 
         /// <summary>
         /// Returns whether or not the polygan has a common side with the polyhedron / any of the polyhedrons sides

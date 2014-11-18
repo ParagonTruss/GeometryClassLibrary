@@ -114,7 +114,7 @@ namespace GeometryClassLibrary
         #region Overloaded Operators
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(Arc arc1, Arc arc2)
         {
@@ -130,7 +130,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect inequality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect inequality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Arc arc1, Arc arc2)
         {
@@ -213,5 +213,17 @@ namespace GeometryClassLibrary
 
 
         #endregion
+
+
+        public IEdge Rotate(UnitClassLibrary.Angle passedRotationAngle)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IEdge Rotate(Rotation passedRotation)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

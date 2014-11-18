@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -20,9 +21,11 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        IEdge Rotate(Rotation passedRotation);
         IEdge Shift(Shift passedShift);
         IEdge Copy();
 
         #endregion
+
     }
 }

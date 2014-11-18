@@ -19,23 +19,23 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        public Dimension X
+        public Distance X
         {
             get { return _x; }
         }
-        private Dimension _x;
+        private Distance _x;
 
-        public Dimension Y
+        public Distance Y
         {
             get { return _y; }
         }
-        private Dimension _y;
+        private Distance _y;
 
-        public Dimension Z
+        public Distance Z
         {
             get { return _z; }
         }
-        private Dimension _z;
+        private Distance _z;
 
         #endregion
 
@@ -46,43 +46,43 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point()
         {
-            _x = new Dimension();
-            _y = new Dimension();
-            _z = new Dimension();
+            _x = new Distance();
+            _y = new Distance();
+            _z = new Distance();
         }
         
         /// <summary>
-        /// Creates a point with only two dimensions. Coordinates are entered assumed XY orientation
+        /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation
         /// </summary>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
-        public Point(Dimension dimension1, Dimension dimension2)
+        /// <param name="Distance1"></param>
+        /// <param name="Distance2"></param>
+        public Point(Distance Distance1, Distance Distance2)
         {
-            _x = dimension1;
-            _y = dimension2;
-            _z = new Dimension(DimensionType.Millimeter, 0);
+            _x = Distance1;
+            _y = Distance2;
+            _z = new Distance(DistanceType.Millimeter, 0);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
-        /// <param name="dimension3"></param>
-        public Point(Dimension dimension1, Dimension dimension2, Dimension dimension3)
+        /// <param name="Distance1"></param>
+        /// <param name="Distance2"></param>
+        /// <param name="Distance3"></param>
+        public Point(Distance Distance1, Distance Distance2, Distance Distance3)
         {
-            _x = dimension1;
-            _y = dimension2;
-            _z = dimension3;
+            _x = Distance1;
+            _y = Distance2;
+            _z = Distance3;
         }
 
         /// <summary>
         /// Cylindrical
         /// </summary>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
+        /// <param name="Distance1"></param>
+        /// <param name="Distance2"></param>
         /// <param name="angle"></param>
-        public Point(Dimension dimension1, Dimension dimension2, Angle angle)
+        public Point(Distance Distance1, Distance Distance2, Angle angle)
         {
             throw new NotImplementedException();
         }
@@ -90,26 +90,26 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Spherical
         /// </summary>
-        /// <param name="dimension"></param>
+        /// <param name="Distance"></param>
         /// <param name="angle1"></param>
         /// <param name="angle2"></param>
-        public Point(Dimension dimension, Angle angle1, Angle angle2)
+        public Point(Distance Distance, Angle angle1, Angle angle2)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Creates a new point with the given values with the given dimension type
+        /// Creates a new point with the given values with the given Distance type
         /// </summary>
         /// <param name="passedType"></param>
-        /// <param name="dimension1"></param>
-        /// <param name="dimension2"></param>
-        /// <param name="dimension3"></param>
-        public Point(DimensionType passedType, double dimension1, double dimension2, double dimension3)
+        /// <param name="Distance1"></param>
+        /// <param name="Distance2"></param>
+        /// <param name="Distance3"></param>
+        public Point(DistanceType passedType, double Distance1, double Distance2, double Distance3)
         {
-            _x = new Dimension(passedType, dimension1);
-            _y = new Dimension(passedType, dimension2);
-            _z = new Dimension(passedType, dimension3);
+            _x = new Distance(passedType, Distance1);
+            _y = new Distance(passedType, Distance2);
+            _z = new Distance(passedType, Distance3);
         }
 
         /// <summary>
@@ -133,13 +133,13 @@ namespace GeometryClassLibrary
         public static Point operator +(Point point1, Point point2)
         {
             //first calculate the new x
-            Dimension newX = point1._x + point2._x;
+            Distance newX = point1._x + point2._x;
 
             //then calcutate the new y
-            Dimension newY = point1._y + point2._y;
+            Distance newY = point1._y + point2._y;
 
             //then calcutate the new z
-            Dimension newZ = point1._z + point2._z;
+            Distance newZ = point1._z + point2._z;
 
             //create a new Point object with your new values
             return new Point(newX, newY, newZ);
@@ -148,20 +148,20 @@ namespace GeometryClassLibrary
         public static Point operator -(Point point1, Point point2)
         {
             //first calculate the new x
-            Dimension newX = point1._x - point2._x;
+            Distance newX = point1._x - point2._x;
 
             //then calcutate the new y
-            Dimension newY = point1._y - point2._y;
+            Distance newY = point1._y - point2._y;
 
             //then calcutate the new z
-            Dimension newZ = point1._z - point2._z;
+            Distance newZ = point1._z - point2._z;
 
             //create a new Point object with your new values
             return new Point(newX, newY, newZ);
         }
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(Point point1, Point point2)
         {
@@ -179,7 +179,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect inequality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect inequality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Point point1, Point point2)
         {
@@ -226,31 +226,31 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="unitType"></param>
         /// <returns></returns>
-        public string ToString(DimensionType unitType)
+        public string ToString(DistanceType unitType)
         {
             switch (unitType)
             {
-                case DimensionType.ArchitecturalString:
+                case DistanceType.ArchitecturalString:
                     return "X= " + _x.Architectural.ToString() + ", Y= " + _y.Architectural.ToString() + ", Z=" + _z.Architectural.ToString();
-                case DimensionType.Millimeter:
+                case DistanceType.Millimeter:
                     return "X= " + _x.Millimeters.ToString() + " Millimeters, Y= " + _y.Millimeters.ToString() + " Millimeters, Z=" + _z.Millimeters.ToString();
-                case DimensionType.Centimeter:
+                case DistanceType.Centimeter:
                     return "X= " + _x.Centimeters.ToString() + " Centimeters, Y= " + _y.Centimeters.ToString() + " Centimeters, Z=" + _z.Centimeters.ToString();
-                case DimensionType.Meter:
+                case DistanceType.Meter:
                     return "X= " + _x.Meters.ToString() + " Meters, Y= " + _y.Meters.ToString() + " Meters, Z=" + _z.Meters.ToString();
-                case DimensionType.Kilometer:
+                case DistanceType.Kilometer:
                     return "X= " + _x.Kilometers.ToString() + " Kilometers, Y= " + _y.Kilometers.ToString() + " Kilometers, Z=" + _z.Kilometers.ToString();
-                case DimensionType.ThirtySecond:
+                case DistanceType.ThirtySecond:
                     return "X= " + _x.ThirtySeconds.ToString() + " ThirtySeconds, Y= " + _y.ThirtySeconds.ToString() + " ThirtySeconds, Z=" + _z.ThirtySeconds.ToString();
-                case DimensionType.Sixteenth:
+                case DistanceType.Sixteenth:
                     return "X= " + _x.Sixteenths.ToString() + " Sixteenths, Y= " + _y.Sixteenths.ToString() + " Sixteenths, Z=" + _z.Sixteenths.ToString();
-                case DimensionType.Inch:
+                case DistanceType.Inch:
                     return "X= " + _x.Inches.ToString() + " Inches, Y= " + _y.Inches.ToString() + " Inches, Z=" + _z.Inches.ToString();
-                case DimensionType.Foot:
+                case DistanceType.Foot:
                     return "X= " + _x.Feet.ToString() + " Feet, Y= " + _y.Feet.ToString() + " Feet, Z=" + _z.Feet.ToString();
-                case DimensionType.Yard:
+                case DistanceType.Yard:
                     return "X= " + _x.Yards.ToString() + " Yards, Y= " + _y.Yards.ToString() + " Yards, Z=" + _z.Yards.ToString();
-                case DimensionType.Mile:
+                case DistanceType.Mile:
                     return "X= " + _x.Miles.ToString() + " Miles, Y= " + _y.Miles.ToString() + " Miles, Z=" + _z.Miles.ToString();
             }
             //code should never be run
@@ -259,7 +259,7 @@ namespace GeometryClassLibrary
 
         public override string ToString()
         {
-            return ToString(DimensionType.Inch);
+            return ToString(DistanceType.Inch);
         }
         
         #endregion
@@ -280,10 +280,10 @@ namespace GeometryClassLibrary
 
             return new Point
             (
-                DimensionGenerator.MakeDimensionWithInches(
+                Distance.MakeDistanceWithInches(
                     (cosTheta * (this.X - centerPoint.X).Inches -
                     sinTheta * (this.Y - centerPoint.Y).Inches + centerPoint.X.Inches)),
-                DimensionGenerator.MakeDimensionWithInches(
+                Distance.MakeDistanceWithInches(
                     (sinTheta * (this.X - centerPoint.X).Inches +
                     cosTheta * (this.Y - centerPoint.Y).Inches + centerPoint.Y.Inches))
             );
@@ -310,12 +310,12 @@ namespace GeometryClassLibrary
         /// uses the distance formula to find a the distance between this point and another
         /// </summary>
         /// <param name="EndPoint">The point that represents the distance in each direction from the origin</param>
-        /// <returns>new dimension representing the distance</returns>
-        public Dimension DistanceTo(Point EndPoint)
+        /// <returns>new Distance representing the distance</returns>
+        public Distance DistanceTo(Point EndPoint)
         {
             if (this == EndPoint)
             {
-                return new Dimension();
+                return new Distance();
             }
 
             //distance formula
@@ -325,14 +325,14 @@ namespace GeometryClassLibrary
 
             double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
-            return new Dimension(DimensionType.Inch, distanceInInches);
+            return new Distance(DistanceType.Inch, distanceInInches);
         }
 
-        public Dimension DistanceTo(Line passedLine)
+        public Distance DistanceTo(Line passedLine)
         {
             Line perpLine = this.MakePerpendicularLineSegment(passedLine);
             double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
-            return new Dimension(DimensionType.Inch, distance);
+            return new Distance(DistanceType.Inch, distance);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace GeometryClassLibrary
             //Make a line segment from the base point of destination line to the point on the destination line that is on a line perpendicular to this point
             double distanceToBasePoint = this.DistanceTo(passedDestinationLine.BasePoint).Inches;
             double distanceToPerpPoint = distanceToBasePoint * (Math.Cos(angleBetweenLines.Radians)); //This is the distance to a point on the destination line that is perpendicular to this point
-            LineSegment lineSegmentOnDestinationLine = new LineSegment(passedDestinationLine.BasePoint, passedDestinationLine.Direction, new Dimension(DimensionType.Inch, distanceToPerpPoint));
+            LineSegment lineSegmentOnDestinationLine = new LineSegment(passedDestinationLine.BasePoint, passedDestinationLine.Direction, new Distance(DistanceType.Inch, distanceToPerpPoint));
 
             //Return a new line segment through this point and the end point of the line segment. It is perpendicular to the destination line
             return new LineSegment(this, lineSegmentOnDestinationLine.EndPoint);
@@ -421,10 +421,10 @@ namespace GeometryClassLibrary
             Vector vectorFromBasePointOfLineToPoint = new Vector(passedLine.BasePoint, this);
 
             //Take the cross product of the vector from the base point of the line to the point and the line's direction vector
-            Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.UnitVector(DimensionType.Inch));
+            Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.UnitVector(DistanceType.Inch));
 
             //if the above cross product is the 0 vector, the point is on the given line
-            return crossProduct.Magnitude == new Dimension();
+            return crossProduct.Magnitude == new Distance();
         }
 
         /// <summary>

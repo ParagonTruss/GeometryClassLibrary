@@ -134,7 +134,7 @@ namespace GeometryClassLibrary
         #region Overloaded Operators
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator ==(Polygon region1, Polygon region2)
         {
@@ -150,7 +150,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Not a perfect equality operator, is only accurate up to the Dimension Class's accuracy
+        /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Polygon region1, Polygon region2)
         {
@@ -242,9 +242,9 @@ namespace GeometryClassLibrary
         public override Point Centroid()
         {
             //the centorid is the average of all the points
-            Dimension xSum = new Dimension();
-            Dimension ySum = new Dimension();
-            Dimension zSum = new Dimension();
+            Distance xSum = new Distance();
+            Distance ySum = new Distance();
+            Distance zSum = new Distance();
 
             //we count each point twice
             //the reason why we have to add all of the points twice is because we do not know which way the 
@@ -301,7 +301,7 @@ namespace GeometryClassLibrary
         }
 
         /*
-        public Polygon Translate(Direction passedDirection, Dimension passedDisplacement)
+        public Polygon Translate(Direction passedDirection, Distance passedDisplacement)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.PlaneBoundaries)
@@ -790,7 +790,7 @@ namespace GeometryClassLibrary
         public List<Polygon> Slice(Line slicingLine)
         {
             //find the normal direction of the plane we will use to slice with
-            Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(slicingLine.UnitVector(DimensionType.Inch));
+            Vector divisionPlaneNormal = this.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(slicingLine.UnitVector(DistanceType.Inch));
 
             //now make it with the normal we found anf the lines basepoint
             Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
@@ -984,7 +984,7 @@ namespace GeometryClassLibrary
             LineSegment projectedLineForOutside = insidePart.ProjectOntoLine(slicingLine);
 
             //and then add it to our new segments list if its not zero length
-            if (projectedLineForOutside.Length != new Dimension())
+            if (projectedLineForOutside.Length != new Distance())
             {
                 newSegmentsGenerated[1].Add(projectedLineForOutside);
             }
@@ -996,7 +996,7 @@ namespace GeometryClassLibrary
             //Deal with the insidePlane and the inside part of the line
             //now do it all again for the outside line too (this is for the insidePlane)
             LineSegment projectedLineForInside = outsidePart.ProjectOntoLine(slicingLine);
-            if (projectedLineForInside.Length != new Dimension())
+            if (projectedLineForInside.Length != new Distance())
             {
                 newSegmentsGenerated[0].Add(projectedLineForInside);
             }
@@ -1107,7 +1107,7 @@ namespace GeometryClassLibrary
         {
             //add the projection to our new segments list for the outside region
             LineSegment projectedLine = line.ProjectOntoLine(toProjectOnto);
-            if (projectedLine.Length != new Dimension())
+            if (projectedLine.Length != new Distance())
             {
                 newSegmentsGeneratedList.Add(projectedLine);
             }
@@ -1256,7 +1256,7 @@ namespace GeometryClassLibrary
                     //find the plane perpendicular to this plane that represents the side we are on
 
                     //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = this.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(line.UnitVector(DimensionType.Inch));
+                    Vector divisionPlaneNormal = this.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(line.UnitVector(DistanceType.Inch));
 
                     //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
                     Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);

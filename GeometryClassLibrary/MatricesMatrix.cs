@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        // declares a two dimensional array named Matrices but does not initialize it yet.  The "," denotes that it is 2d
+        // declares a two Distanceal array named Matrices but does not initialize it yet.  The "," denotes that it is 2d
         Matrix[,] _matrices;
 
         /// <summary>
@@ -224,14 +224,14 @@ namespace GeometryClassLibrary
     
         /// <summary>
         /// Checks to see if this matrix and the passed matrix can be added together.  
-        /// In order to be able to add two matrices, they must have the same dimensions.
+        /// In order to be able to add two matrices, they must have the same Distances.
         /// </summary>
         /// <param name="passedMatrices"></param>
         /// <returns></returns>
         public bool CanBeAddedTo(MatricesMatrix passedMatrices)
         {
             throw new NotImplementedException();            
-            //Must check that the dimensions are same for the corresponding elements of the 2 MatricesMatrixes
+            //Must check that the Distances are same for the corresponding elements of the 2 MatricesMatrixes
                         
             if ((this.NumberOfRows == passedMatrices.NumberOfRows) && (this.NumberOfColumns == passedMatrices.NumberOfColumns))
             {

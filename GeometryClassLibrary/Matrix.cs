@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        // declares a two dimensional array named _matrix. The "," denotes that it is 2d
+        // declares a two Distanceal array named _matrix. The "," denotes that it is 2d
         double[,] _matrix;
 
 
@@ -357,6 +357,22 @@ namespace GeometryClassLibrary
             get { return _matrix; }
         }
 
+        /// <summary>
+        /// Returns the euler angles (in z, x, y order) assuming this matrix is a pure rotation matrix
+        /// </summary>
+        /// <returns>Returns a list of the euler angles in this order: z, x, y</returns>
+        public List<Angle> getAnglesOutOfRotationMatrix()
+        {
+            //Try getting the angles out of the matrix (this works)
+            //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
+            List<Angle> extractedAngles = new List<Angle>();
+            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(1, 1)))); //z
+            extractedAngles.Add( new Angle(AngleType.Radian, -Math.Asin(this.GetElement(1, 2)))); //x
+            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(0, 2), this.GetElement(2, 2)))); //y
+
+            return extractedAngles;
+        }
+
         #endregion
 
         /// <summary>
@@ -467,7 +483,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Checks to see if this matrix and the passed matrix can be added together.  
-        /// In order to be able to add two matrices, they must have the same dimensions.
+        /// In order to be able to add two matrices, they must have the same Distances.
         /// </summary>
         /// <param name="passedMatrix"></param>
         /// <returns></returns>
@@ -602,7 +618,7 @@ namespace GeometryClassLibrary
                 throw new Exception("The matrix is not square; it does not have a determinant");
             }
 
-            // Check to see if the matrix has dimensions 1x1.  The determinant of a 1x1 matrix is equal to the single value in the matrix.
+            // Check to see if the matrix has Distances 1x1.  The determinant of a 1x1 matrix is equal to the single value in the matrix.
             if(this.NumberOfRows == 1)
             {
                 return this.GetElement(0, 0);

@@ -19,17 +19,17 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
-        public Dimension Magnitude
+        public Distance Magnitude
         {
             get { return _magnitude; }
             set { _magnitude = value; }
         }
-        private Dimension _magnitude;
+        private Distance _magnitude;
 
         /// <summary>
         /// Returns the x-component of this vector
         /// </summary>
-        public Dimension XComponent
+        public Distance XComponent
         {
             get { return _magnitude * base.Direction.XComponentOfDirection; }
         }
@@ -37,7 +37,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the y-component of this vector
         /// </summary>
-        public Dimension YComponent
+        public Distance YComponent
         {
             get { return _magnitude * base.Direction.YComponentOfDirection; }
         }
@@ -45,7 +45,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the z-component of this vector
         /// </summary>
-        public Dimension ZComponent
+        public Distance ZComponent
         {
             get { return _magnitude * base.Direction.ZComponentOfDirection; }
         }
@@ -63,7 +63,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        private Dimension this[int i]
+        private Distance this[int i]
         {
             get
             {
@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         public Vector()
             : base() 
         {
-            _magnitude = new Dimension();
+            _magnitude = new Distance();
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint) 
         {
-            Dimension xLength = passedBasePoint.X - passedEndPoint.X;
-            Dimension yLength = passedBasePoint.Y - passedEndPoint.Y;
-            Dimension zLength = passedBasePoint.Z - passedEndPoint.Z;
+            Distance xLength = passedBasePoint.X - passedEndPoint.X;
+            Distance yLength = passedBasePoint.Y - passedEndPoint.Y;
+            Distance zLength = passedBasePoint.Z - passedEndPoint.Z;
 
             _magnitude = new Point(xLength, yLength, zLength).DistanceTo(new Point());
         }
@@ -124,7 +124,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Vector passedVector)
             : base(passedVector.Direction, passedBasePoint)
         {
-            _magnitude = new Dimension(passedVector._magnitude);
+            _magnitude = new Distance(passedVector._magnitude);
         }
 
         /// <summary>
@@ -133,16 +133,16 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint">The point at which the vector starts</param>
         /// <param name="passedDirection">The direction the vector points</param>
         /// <param name="passedMagnitude">The length of the Vector</param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Dimension? passedMagnitude = null)
+        public Vector(Point passedBasePoint, Direction passedDirection, Distance? passedMagnitude = null)
             : base(passedDirection, passedBasePoint)
         {
             if (passedMagnitude == null)
             {
-                _magnitude = new Dimension();
+                _magnitude = new Distance();
             }
             else
             {
-                _magnitude = new Dimension(passedMagnitude.Value);
+                _magnitude = new Distance(passedMagnitude.Value);
             }
         }
 
@@ -192,14 +192,14 @@ namespace GeometryClassLibrary
         /// <param name="passedVector1"></param>
         /// <param name="passedVector2"></param>
         /// <returns></returns>
-        public static Dimension operator *(Vector passedVector1, Vector passedVector2)
+        public static Distance operator *(Vector passedVector1, Vector passedVector2)
         {
-            //returns a new dimension with the dot product of the two vectors
+            //returns a new Distance with the dot product of the two vectors
             double xComponent = passedVector1.XComponent.Inches * passedVector2.XComponent.Inches;
             double yComponent = passedVector1.YComponent.Inches * passedVector2.YComponent.Inches;
             double zComponent = passedVector1.ZComponent.Inches * passedVector2.ZComponent.Inches;
 
-            return new Dimension(DimensionType.Inch, xComponent + yComponent + zComponent);
+            return new Distance(DistanceType.Inch, xComponent + yComponent + zComponent);
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace GeometryClassLibrary
 
             //now we can project the basepointvector onto the division line's unit vector to find the scalar length of the projection
             //  note: we use the unit vector because it has a length of 1 and will not affect the scaling of the projected vector
-            Dimension basePointProjectedLength = basePointVector * projectOnto.UnitVector(DimensionType.Inch);
+            Distance basePointProjectedLength = basePointVector * projectOnto.UnitVector(DistanceType.Inch);
 
             //now make the projected vector using divisionLine's basePoint (our reference), the divisionLines unitVector (since we
             //  are projecting onto it we know that it is the direction of the resulting vector), and then the length we
@@ -401,7 +401,7 @@ namespace GeometryClassLibrary
 
             //now we just need to do it all again to find the newEndpoint's projection
             Vector endPointVector = new Vector(projectOnto.BasePoint, this.EndPoint);
-            Dimension endPointProjectedLength = endPointVector * projectOnto.UnitVector(DimensionType.Inch);
+            Distance endPointProjectedLength = endPointVector * projectOnto.UnitVector(DistanceType.Inch);
             Vector endPointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, endPointProjectedLength);
             Point newEndPoint = endPointProjection.EndPoint;
 
@@ -437,9 +437,9 @@ namespace GeometryClassLibrary
             double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
             double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
 
-            Dimension newX = DimensionGenerator.MakeDimensionWithInches((xProduct1) - (xProduct2));
-            Dimension newY = DimensionGenerator.MakeDimensionWithInches((yProduct1) - (yProduct2));
-            Dimension newZ = DimensionGenerator.MakeDimensionWithInches((zProduct1) - (zProduct2));
+            Distance newX = Distance.MakeDistanceWithInches((xProduct1) - (xProduct2));
+            Distance newY = Distance.MakeDistanceWithInches((yProduct1) - (yProduct2));
+            Distance newZ = Distance.MakeDistanceWithInches((zProduct1) - (zProduct2));
 
             return new Vector(PointGenerator.MakePointWithInches(newX.Inches, newY.Inches, newZ.Inches));
         }
@@ -460,7 +460,7 @@ namespace GeometryClassLibrary
             // checks the first Vector
             for (int i = 0; i < 3; i++)
             {
-                if (this[i] == new Dimension())
+                if (this[i] == new Distance())
                     numberOfZeroComponents1++;
                 else
                     componentIndex1 = i;
@@ -469,7 +469,7 @@ namespace GeometryClassLibrary
             // checks the second Vector
             for (int j = 0; j < 3; j++)
             {
-                if (passedVector[j] == new Dimension())
+                if (passedVector[j] == new Distance())
                     numberOfZeroComponents2++;
                 else
                     componentIndex2 = j;
@@ -485,11 +485,11 @@ namespace GeometryClassLibrary
             double compareTo;
 
             // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponent != new Dimension())
+            if (this.XComponent != new Distance())
                 compareTo = Math.Abs(this.XComponent / passedVector.XComponent);
-            else if (this.YComponent != new Dimension())
+            else if (this.YComponent != new Distance())
                 compareTo = Math.Abs(this.YComponent / passedVector.YComponent);
-            else if (this.ZComponent != new Dimension())
+            else if (this.ZComponent != new Distance())
                 compareTo = Math.Abs(this.ZComponent / passedVector.ZComponent);
             else
                 compareTo = 0;
@@ -594,15 +594,15 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
+        /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// Note: if it is a zero vecotor and you call the unitVector it will return a zero vector
         /// </summary>
         /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
-        public override Vector UnitVector(DimensionType passedType)
+        public override Vector UnitVector(DistanceType passedType)
         {
-            if (Magnitude == new Dimension())
+            if (Magnitude == new Distance())
             {
                 return new Vector();
             }
@@ -630,14 +630,14 @@ namespace GeometryClassLibrary
             double scale = Math.Pow(dotScalingConstant, 2) / (other.Magnitude.Inches * this.Magnitude.Inches);
             scale = Math.Sqrt(scale);
 
-            Vector scaledVector1 = new Vector(new Point(), this.Direction, new Dimension(DimensionType.Inch, scale * this.Magnitude.Inches));
-            Vector scaledVector2 = new Vector(new Point(), other.Direction, new Dimension(DimensionType.Inch, scale * other.Magnitude.Inches));
+            Vector scaledVector1 = new Vector(new Point(), this.Direction, new Distance(DistanceType.Inch, scale * this.Magnitude.Inches));
+            Vector scaledVector2 = new Vector(new Point(), other.Direction, new Distance(DistanceType.Inch, scale * other.Magnitude.Inches));
 
             //now get the result
-            Dimension dotResult = scaledVector1 * scaledVector2;
+            Distance dotResult = scaledVector1 * scaledVector2;
 
             //and return if its close to zero
-            return dotResult == new Dimension();
+            return dotResult == new Distance();
         }
 
         #endregion

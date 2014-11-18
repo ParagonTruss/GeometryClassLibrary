@@ -49,9 +49,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the X intercept of the line if the z dimension is ignored
+        /// Returns the X intercept of the line if the z Distance is ignored
         /// </summary>
-        public Dimension XInterceptIn2D
+        public Distance XInterceptIn2D
         {
             //if we are ignoring z, we can just take the x component of wher it intersects the xz plane
             get
@@ -68,9 +68,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the Y intecept of the Line if the z dimension is ignored
+        /// Returns the Y intecept of the Line if the z Distance is ignored
         /// </summary>
-        public Dimension YInterceptIn2D
+        public Distance YInterceptIn2D
         {
             //if we are ignoring z, we can just take the y component of whery it intersects the yz plane
             get
@@ -166,7 +166,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a line through the origin and a passed dimension point
+        /// Creates a line through the origin and a passed Distance point
         /// </summary>
         /// <param name="passedDirectionReferencePoint"></param>
         public Line(Point passedDirectionReferencePoint)
@@ -279,7 +279,7 @@ namespace GeometryClassLibrary
             try
             {
                 //if it doesnt throw an error it does and we can keep going
-                Dimension nullTest = this.XInterceptIn2D;
+                Distance nullTest = this.XInterceptIn2D;
             }
             catch (Exception)
             {
@@ -287,7 +287,7 @@ namespace GeometryClassLibrary
                 try
                 {
                     //the second one intersects, so the first is "greater" than the second
-                    Dimension nullTest = this.XInterceptIn2D;
+                    Distance nullTest = this.XInterceptIn2D;
                     return 1;
                 }
                 catch (Exception) //if they both dont intersect they are equal
@@ -300,7 +300,7 @@ namespace GeometryClassLibrary
             try
             {
                 //if it doesnt throw an error it does and we can keep going
-                Dimension nullTest = other.XInterceptIn2D;
+                Distance nullTest = other.XInterceptIn2D;
             }
             catch (Exception)
             {
@@ -372,7 +372,7 @@ namespace GeometryClassLibrary
             if (!DoesIntersect(passedIntersectingLine))
                 throw new Exception("No intercept?");
 
-            Dimension dotProduct = this.UnitVector(DimensionType.Inch) * passedIntersectingLine.UnitVector(DimensionType.Inch);
+            Distance dotProduct = this.UnitVector(DistanceType.Inch) * passedIntersectingLine.UnitVector(DistanceType.Inch);
 
             //since they are unit vectors the magnitudes multiplies together should still be one so the equation simplifies
             // from: A*B = |A||B|cos(theta) to: A*B = cos(theta), which can be rearranged to how we use it here: theta = Acos(A*B)
@@ -398,9 +398,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point GetPointOnLine(double multiplier)
         {
-            Dimension newX = new Dimension(DimensionType.Inch, _basePoint.X.Inches + Direction.XComponentOfDirection * multiplier);
-            Dimension newY = new Dimension(DimensionType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
-            Dimension newZ = new Dimension(DimensionType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
+            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponentOfDirection * multiplier);
+            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
+            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
 
             //Make sure point is on the line
 
@@ -414,8 +414,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            return passedLine.UnitVector(DimensionType.Inch).PointInSameDirection(this.UnitVector(DimensionType.Inch)) ||
-                passedLine.UnitVector(DimensionType.Inch).PointInOppositeDirections(this.UnitVector(DimensionType.Inch));
+            return passedLine.UnitVector(DistanceType.Inch).PointInSameDirection(this.UnitVector(DistanceType.Inch)) ||
+                passedLine.UnitVector(DistanceType.Inch).PointInOppositeDirections(this.UnitVector(DistanceType.Inch));
         }
 
         /// <summary>
@@ -426,9 +426,9 @@ namespace GeometryClassLibrary
         public bool IsPerpindicularTo(Line passedLine)
         {
             //if they are perpindicular then the dot product should be 0
-            //Dimension dotted = passedLine.Direction.UnitVector(DimensionType.Inch) * this.Direction.UnitVector(DimensionType.Inch);
-            //return (dotted == new Dimension());
-            return passedLine.UnitVector(DimensionType.Inch).DotProductIsEqualToZero(this.UnitVector(DimensionType.Inch));
+            //Distance dotted = passedLine.Direction.UnitVector(DistanceType.Inch) * this.Direction.UnitVector(DistanceType.Inch);
+            //return (dotted == new Distance());
+            return passedLine.UnitVector(DistanceType.Inch).DotProductIsEqualToZero(this.UnitVector(DistanceType.Inch));
         }
 
         /// <summary>
@@ -451,8 +451,8 @@ namespace GeometryClassLibrary
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
 
-            Vector directionVectorA = new Vector(this.BasePoint, this.UnitVector(DimensionType.Inch));
-            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.UnitVector(DimensionType.Inch));
+            Vector directionVectorA = new Vector(this.BasePoint, this.UnitVector(DistanceType.Inch));
+            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.UnitVector(DistanceType.Inch));
             Vector basePointDiffVectorC = new Vector(this.BasePoint, passedLine.BasePoint);
 
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
@@ -467,9 +467,9 @@ namespace GeometryClassLibrary
                 return null;
             }
             double solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
-            Dimension solutionVariableDimension = new Dimension(DimensionType.Inch, solutionVariable);
+            Distance solutionVariableDistance = new Distance(DistanceType.Inch, solutionVariable);
 
-            Point intersectionPoint = this.GetPointOnLine(solutionVariableDimension.Inches);
+            Point intersectionPoint = this.GetPointOnLine(solutionVariableDistance.Inches);
 
             return intersectionPoint;
         }
@@ -528,7 +528,7 @@ namespace GeometryClassLibrary
         public Line Rotate(Rotation passedRotation)
         {
             Point newBasePoint = this.BasePoint.Rotate3D(passedRotation);
-            Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(passedRotation);
+            Vector newDirectionVector = this.UnitVector(DistanceType.Inch).Rotate(passedRotation);
             return new Line(newDirectionVector.Direction, newBasePoint);
         }
 
@@ -561,8 +561,8 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinate = Math.Abs(pointsMatrix.Determinant());
-            Dimension determinateDimension = new Dimension(DimensionType.Inch, determinate);
-            return determinateDimension == new Dimension();
+            Distance determinateDistance = new Distance(DistanceType.Inch, determinate);
+            return determinateDistance == new Distance();
         }
 
         /// <summary>
@@ -580,12 +580,12 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a unit vector with a length of 1 in with the given dimension that is equivalent to this direction
+        /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// </summary>
         /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
-        public virtual Vector UnitVector(DimensionType passedType)
+        public virtual Vector UnitVector(DistanceType passedType)
         {
             return Direction.UnitVector(passedType);
         }

@@ -28,17 +28,17 @@ namespace GeometryClassLibrary.Generators
 
         public static Line X_Axis()
         {
-            return new Line(new Point(), new Point(new Dimension(DimensionType.Inch, 1), new Dimension(), new Dimension()));
+            return new Line(new Point(), new Point(new Distance(DistanceType.Inch, 1), new Distance(), new Distance()));
         }
 
         public static Line Y_Axis()
         {
-            return new Line(new Point(), new Point(new Dimension(), new Dimension(DimensionType.Inch, 1), new Dimension()));
+            return new Line(new Point(), new Point(new Distance(), new Distance(DistanceType.Inch, 1), new Distance()));
         }
 
         public static Line Z_Axis()
         {
-            return new Line(new Point(), new Point(new Dimension(), new Dimension(), new Dimension(DimensionType.Inch, 1)));
+            return new Line(new Point(), new Point(new Distance(), new Distance(), new Distance(DistanceType.Inch, 1)));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace GeometryClassLibrary
         /// <param name="passedNumberOfSides"></param>
         /// <param name="passedSideLength"></param>
         /// <param name="passedRotationAngle"></param>
-        public RegularPolygon(int passedNumberOfSides, Dimension passedSideLength, Angle passedRotationAngle = null)
+        public RegularPolygon(int passedNumberOfSides, Distance passedSideLength, Angle passedRotationAngle = null)
         {
             if (passedNumberOfSides < 3)
             {
@@ -63,11 +63,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Calculates a point that is at an angle from the passedPoint, in XY (0 is to the right)
         /// </summary>
-        private Point DegreesToXY(Angle passedAngle, Dimension distance, Point passedPoint)
+        private Point DegreesToXY(Angle passedAngle, Distance distance, Point passedPoint)
         {
             Point newPoint = new Point(
-                new Dimension(DimensionType.Inch, Math.Cos(passedAngle.Radians) * distance.Inches + passedPoint.X.Inches),
-            new Dimension(DimensionType.Inch, Math.Sin(passedAngle.Negate().Radians) * distance.Inches + passedPoint.Y.Inches));
+                new Distance(DistanceType.Inch, Math.Cos(passedAngle.Radians) * distance.Inches + passedPoint.X.Inches),
+            new Distance(DistanceType.Inch, Math.Sin(passedAngle.Negate().Radians) * distance.Inches + passedPoint.Y.Inches));
 
             return newPoint;
         }

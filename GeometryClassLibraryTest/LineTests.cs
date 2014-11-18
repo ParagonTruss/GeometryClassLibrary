@@ -236,9 +236,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_PerpindicularTest()
         {
-            Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Dimension(DimensionType.Inch, 1));
-            Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Dimension(DimensionType.Inch, 1));
-            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Dimension(DimensionType.Inch, 1));
+            Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
+            Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
+            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Distance(DistanceType.Inch, 1));
 
             Line line4 = new LineSegment(PointGenerator.MakePointWithInches(3, 5, 7));
             Line line5 = new LineSegment(PointGenerator.MakePointWithInches(1, -2, 1));
@@ -304,7 +304,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line1 = new Line(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
             //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
+            //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
             Line actualLine1 = line1.Translate(testDisplacement);
@@ -430,15 +430,15 @@ namespace ClearspanTypeLibrary.Tests
             Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
             Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
 
-            Dimension intercept1 = line1.XInterceptIn2D;
-            Dimension intercept2 = line2.XInterceptIn2D;
-            Dimension intercept3 = line3.XInterceptIn2D;
-            Dimension intercept4 = line4.XInterceptIn2D;
+            Distance intercept1 = line1.XInterceptIn2D;
+            Distance intercept2 = line2.XInterceptIn2D;
+            Distance intercept3 = line3.XInterceptIn2D;
+            Distance intercept4 = line4.XInterceptIn2D;
 
-            intercept1.Should().Be(new Dimension(DimensionType.Inch, -1));
-            intercept2.Should().Be(new Dimension(DimensionType.Inch, 6));
-            intercept3.Should().Be(new Dimension(DimensionType.Inch, 0));
-            intercept4.Should().Be(new Dimension(DimensionType.Inch, 4));
+            intercept1.Should().Be(new Distance(DistanceType.Inch, -1));
+            intercept2.Should().Be(new Distance(DistanceType.Inch, 6));
+            intercept3.Should().Be(new Distance(DistanceType.Inch, 0));
+            intercept4.Should().Be(new Distance(DistanceType.Inch, 4));
         }
 
         [Test()]
@@ -448,7 +448,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
-            Dimension intercept = line.XInterceptIn2D;
+            Distance intercept = line.XInterceptIn2D;
         }
 
         [Test()]
@@ -459,15 +459,15 @@ namespace ClearspanTypeLibrary.Tests
             Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
             Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at -1
 
-            Dimension intercept1 = line1.YInterceptIn2D;
-            Dimension intercept2 = line2.YInterceptIn2D;
-            Dimension intercept3 = line3.YInterceptIn2D;
-            Dimension intercept4 = line4.YInterceptIn2D;
+            Distance intercept1 = line1.YInterceptIn2D;
+            Distance intercept2 = line2.YInterceptIn2D;
+            Distance intercept3 = line3.YInterceptIn2D;
+            Distance intercept4 = line4.YInterceptIn2D;
 
-            intercept1.Should().Be(new Dimension(DimensionType.Inch, 1));
-            intercept2.Should().Be(new Dimension(DimensionType.Inch, 1.5));
-            intercept3.Should().Be(new Dimension(DimensionType.Inch, 0));
-            intercept4.Should().Be(new Dimension(DimensionType.Inch, -1));
+            intercept1.Should().Be(new Distance(DistanceType.Inch, 1));
+            intercept2.Should().Be(new Distance(DistanceType.Inch, 1.5));
+            intercept3.Should().Be(new Distance(DistanceType.Inch, 0));
+            intercept4.Should().Be(new Distance(DistanceType.Inch, -1));
         }
 
         [Test()]
@@ -477,7 +477,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
-            Dimension intercept5 = line.YInterceptIn2D;
+            Distance intercept5 = line.YInterceptIn2D;
         }
 
         [Test()]
