@@ -221,7 +221,7 @@ namespace GeometryClassLibrary
         }
 
 
-        public IEdge Rotate(Rotation passedRotation)
+        public IEdge RotateAsIEdge(Rotation passedRotation)
         {
             throw new NotImplementedException();
         }

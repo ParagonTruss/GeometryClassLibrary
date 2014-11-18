@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        IEdge Rotate(Rotation passedRotation);
+        IEdge RotateAsIEdge(Rotation passedRotation);
         IEdge Shift(Shift passedShift);
         IEdge Copy();
 

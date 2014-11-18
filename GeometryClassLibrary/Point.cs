@@ -309,19 +309,19 @@ namespace GeometryClassLibrary
         /// <summary>
         /// uses the distance formula to find a the distance between this point and another
         /// </summary>
-        /// <param name="EndPoint">The point that represents the distance in each direction from the origin</param>
+        /// <param name="_endPoint"></param>
         /// <returns>new Distance representing the distance</returns>
-        public Distance DistanceTo(Point EndPoint)
+        public Distance DistanceTo(Point _endPoint)
         {
-            if (this == EndPoint)
+            if (this == _endPoint)
             {
                 return new Distance();
             }
 
             //distance formula
-            double term1 = Math.Pow(( _x - EndPoint._x).Inches, 2);
-            double term2 = Math.Pow(( _y - EndPoint._y).Inches, 2);
-            double term3 = Math.Pow(( _z - EndPoint._z).Inches, 2);
+            double term1 = Math.Pow(( _x - _endPoint._x).Inches, 2);
+            double term2 = Math.Pow(( _y - _endPoint._y).Inches, 2);
+            double term3 = Math.Pow(( _z - _endPoint._z).Inches, 2);
 
             double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
@@ -336,33 +336,42 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns a vector that extends from the origin to this point
+        /// </summary>
+        /// <returns></returns>
+        public Vector ConvertToVector()
+        {
+            return new Vector(this);
+        }
+
+        /// <summary>
         /// Rotates a point about an axis with the given angle (returns a new point in that location)
         /// </summary>
-        /// <param name="passedRotation">The Rotation to apply to this point</param>
-        /// <returns>A new Point that has been rotated</returns>
-        public Point Rotate3D(Rotation passedRotation)
+        /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
+        /// <returns></returns>
+        public Point Rotate3D(Rotation rotationToApply)
 		{
             Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
 
-            bool originIsOnPassedAxis = originPoint.IsOnLine(passedRotation.AxisToRotateAround);
+            bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisToRotateAround);
 
             Point pointForRotating = this;
 
-            Line axisForRotating = passedRotation.AxisToRotateAround;
+            Line axisForRotating = rotationToApply.AxisToRotateAround;
 
             if(!originIsOnPassedAxis)
             {
                 //Must translate everything so that the axis line goes through the origin before rotating
 
                 //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Point() - axisForRotating.BasePoint);
+                pointForRotating = this.Translate(new Point() - rotationToApply.AxisToRotateAround.BasePoint);
 
                 //Make the axis go through the origin
-                axisForRotating = new Line(axisForRotating.Direction, originPoint);
+                axisForRotating = new Line(rotationToApply.AxisToRotateAround.Direction, originPoint);
 
             }
 
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, passedRotation.AngleToRotate);
+            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, rotationToApply.AngleToRotate);
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
                 
@@ -381,15 +390,15 @@ namespace GeometryClassLibrary
             else
             {
                 //Must shift the point back by the same distance we shifted it before rotating it
-                return pointToReturn + passedRotation.AxisToRotateAround.BasePoint;
+                return pointToReturn + rotationToApply.AxisToRotateAround.BasePoint;
             }
         }
 
         /// <summary>
-        /// Creates a line segment that goes through this point, is perpendicular to the destination line, and ends on that line
+        /// Returns a line segment that goes through this point, is perpendicular to the destination line, and ends on that line
         /// </summary>
-        /// <param name="passedDestinationLine">The Line that it should be perpindicular to and end on</param>
-        /// <returns>Returns a line segment that goes through this point, is perpendicular to the destination line, and ends on that line</returns>
+        /// <param name="passedDestinationLine"></param>
+        /// <returns></returns>
         public LineSegment MakePerpendicularLineSegment(Line passedDestinationLine)
         {
             //Make line from this point to the base point of the destination line
@@ -410,8 +419,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed line, false otherwise
         /// </summary>
-        /// <param name="passedLine">The Line to see if this Point is on</param>
-        /// <returns>Returns a bool of whether or not this point is on the line</returns>
+        /// <param name="passedPoint"></param>
+        /// <returns></returns>
         public bool IsOnLine(Line passedLine)
         {
             //if we are the base point than we are on the line!
@@ -430,8 +439,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed vector, false otherwise
         /// </summary>
-        /// <param name="passedVector">The vector to see if the Point is on</param>
-        /// <returns>Returns a boolean of whether or not this point is on the vector</returns>
+        /// <param name="passedVector"></param>
+        /// <returns></returns>
         public bool IsOnVector(Vector passedVector)
         {
             if (this.IsOnLine(passedVector))
@@ -451,36 +460,28 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed line segment, false otherwise
         /// </summary>
-        /// <param name="passedLineSegment">The LineSegment to see if the Point is on</param>
-        /// <returns>Returns a boolean of whether or not this point is on the LineSegment</returns>
+        /// <param name="passedLineSegment"></param>
+        /// <returns></returns>
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
             return IsOnVector(passedLineSegment);
         }
 
-        /// <summary>
-        /// creates a vector that extends from the origin to this point
-        /// </summary>
-        /// <returns>This as a vector from the origin to this point</returns>
         public Vector VectorFromOriginToPoint()
         {
-            return new Vector(this);
+            Point origin = PointGenerator.MakePointWithInches(0,0,0);
+            Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
+
+            Vector returnVector = new Vector(origin, thisPoint);
+
+            return returnVector;
         }
 
-        /// <summary>
-        /// Converts this Point into a column so we can then put it into a matix
-        /// </summary>
-        /// <returns>Retuns a Matrix that reperesent this point</returns>
         public Matrix ConvertToMatrixColumn()
         {
-            return this.VectorFromOriginToPoint().ConvertToMatrixColumn();
+            return this.ConvertToVector().ConvertToMatrixColumn();
         }
 
-        /// <summary>
-        /// Performs a shift on the given point, both translating and rotating it
-        /// </summary>
-        /// <param name="passedShift">The shift to preform on this point</param>
-        /// <returns>A new point that has been shifted</returns>
         public Point Shift(Shift passedShift)
         {
             Point pointToReturn = this;

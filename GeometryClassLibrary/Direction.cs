@@ -11,6 +11,8 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Stores the values of direction using polar coordinates using physic's conventions (theta = angle to z axis, phi = anglin in xy-plane)
     /// Can be thought of either as two angles or as a unit vector
+    /// Note: there are singularities (basically a point where the system breaks down) in this system
+    /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
     [DebuggerDisplay("Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
     [Serializable]
@@ -304,8 +306,13 @@ namespace GeometryClassLibrary
                 bool phiEqual = (comparableDirection.Phi == this.Phi);
                 bool thetaEqual = (comparableDirection.Theta == this.Theta);
 
+                //we need to check if the angles are both the equivalent singularities (basically a point where the system breaks down - in this
+                //  case when theta = 0 or 180 because the phi no longer has meaning) and in this case we only care about the theta angle since
+                //  the phi has no meaning
+                bool areBothSameSingularity = thetaEqual && (this.Theta == new Angle() || this.Theta == new Angle(AngleType.Degree, 180));
+
                 //returns true if all were true of false if at least one was not
-                return (phiEqual && thetaEqual);
+                return areBothSameSingularity || (phiEqual && thetaEqual);
             }
             //wasnt even a direction so it must not be equal
             catch (InvalidCastException)

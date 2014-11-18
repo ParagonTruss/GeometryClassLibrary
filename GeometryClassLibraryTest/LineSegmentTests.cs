@@ -134,10 +134,9 @@ namespace ClearspanTypeLibrary.Tests
 
             Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
-            Rotation toRotate = new Rotation(rotationAxis, rotationAngle);
 
-            LineSegment actualSegment1 = segment1.Rotate(toRotate);
-            LineSegment actualSegment2 = segment2.Rotate(toRotate);
+            LineSegment actualSegment1 = segment1.Rotate(new Rotation(rotationAxis, rotationAngle));
+            LineSegment actualSegment2 = segment2.Rotate(new Rotation(rotationAxis, rotationAngle));
 
             LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
             LineSegment expectedSegment2 = new LineSegment(PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495), PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809));

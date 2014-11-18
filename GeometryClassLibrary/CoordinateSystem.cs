@@ -31,28 +31,72 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The angle to rotate around the world coordinate system's X axis to get to this coordinate system
         /// </summary>
-        public Angle XRotation;
+        public Angle XAngle;
 
-        //public Matrix XMatrix;
+        /// <summary>
+        /// The x axis of this coordinate system
+        /// </summary>
+        public Direction XAxisDirection
+        {
+            get
+            {
+                return Line.XAxis.Rotate(this.CoordinateSystemRotations).Direction;
+            }
+        }
 
         /// <summary>
         /// The angle to rotate around the world coordinate system's Y axis to get to this coordinate system
         /// </summary>
-        public Angle YRotation;
+        public Angle YAngle;
 
-        //public Matrix YMatrix;
+        /// <summary>
+        /// The y axis of this coordinate system
+        /// </summary>
+        public Direction YAxisDirection
+        {
+            get
+            {
+                return Line.YAxis.Rotate(this.CoordinateSystemRotations).Direction;
+            }
+        }
 
         /// <summary>
         /// The angle to rotate around the world coordinate system's Z axis to get to this coordinate system
         /// </summary>
-        public Angle ZRotation;
+        public Angle ZAngle;
 
-        // public Matrix ZMatrix;
+        /// <summary>
+        /// The z axis of this coordinate system
+        /// </summary>
+        public Direction ZAxisDirection
+        {
+            get
+            {
+                return Line.ZAxis.Rotate(this.CoordinateSystemRotations).Direction;
+            }
+        }
 
         /// <summary>
         /// This coordinate systems origin point relative to the world coordinate system
         /// </summary>
         public Point Origin;
+
+        /// <summary>
+        /// The list of rotations that are applied to the world coordinate system to get the coordinate system to this one
+        /// </summary>
+        public List<Rotation> CoordinateSystemRotations
+        {
+            get
+            {
+                List<Rotation> rotations = new List<Rotation>();
+
+                rotations.Add(new Rotation(Line.ZAxis, this.ZAngle));
+                rotations.Add(new Rotation(Line.XAxis, this.XAngle));
+                rotations.Add(new Rotation(Line.YAxis, this.YAngle));
+
+                return rotations;
+            }
+        }
 
         #endregion
 
@@ -64,9 +108,9 @@ namespace GeometryClassLibrary
         public CoordinateSystem()
         {
             this.Origin = new Point();
-            this.XRotation = new Angle();
-            this.YRotation = new Angle();
-            this.ZRotation = new Angle();
+            this.XAngle = new Angle();
+            this.YAngle = new Angle();
+            this.ZAngle = new Angle();
         }
 
         /// <summary>
@@ -76,9 +120,131 @@ namespace GeometryClassLibrary
         public CoordinateSystem(Point passedOrigin)
         {
             Origin = new Point(passedOrigin);
-            this.XRotation = new Angle();
-            this.YRotation = new Angle();
-            this.ZRotation = new Angle();
+            this.XAngle = new Angle();
+            this.YAngle = new Angle();
+            this.ZAngle = new Angle();
+        }
+
+        /// <summary>
+        /// Creates a new coordinate system that has the same axis as the world one and is only shifted to the given point
+        /// </summary>
+        /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
+        public CoordinateSystem(Plane planeContainingTwoOfTheAxes, Vector axisInPassedPlaneToUseAsBase, 
+            Enums.Axis whichAxisIsPassed = Enums.Axis.X, Enums.AxisPlanes whichAxisPlaneIsPassed = Enums.AxisPlanes.XYPlane)
+        {
+            //use the base point of the passed axis as the origin point
+            Origin = new Point(axisInPassedPlaneToUseAsBase.BasePoint);
+
+            //make sure the passed vector is in our plane
+            if (!planeContainingTwoOfTheAxes.Contains(axisInPassedPlaneToUseAsBase))
+            {
+                throw new ArgumentOutOfRangeException("the passed axis was not in the plane");
+            }
+
+            Vector xAxis = new Vector();
+            Vector yAxis = new Vector();
+            Vector zAxis = new Vector();
+
+            //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+            
+            //Vector otherAxis;
+
+            switch (whichAxisPlaneIsPassed)
+            {
+                case Enums.AxisPlanes.XYPlane:
+                    zAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    switch (whichAxisIsPassed)
+                    {
+                        //if its the x we were given the one we calculate is the y, so we want it 90 degrees (to the left)
+                        case Enums.Axis.X:
+                            xAxis = axisInPassedPlaneToUseAsBase;
+                            yAxis = zAxis.CrossProduct(xAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            break;
+                        //if its the y we were the the y axis and we need to calculate the x which will be -90 degrees (to the right)
+                        case Enums.Axis.Y:
+                            yAxis = axisInPassedPlaneToUseAsBase;
+                            xAxis = yAxis.CrossProduct(zAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            break;
+                        //the axis must be in the plane we were passed
+                        case Enums.Axis.Z:
+                            throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
+                    }
+                    break;
+                case Enums.AxisPlanes.XZPlane: 
+                    yAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    switch (whichAxisIsPassed)
+                    {
+                        //if its the x we were passed then we need to calculate z, which will be -90 degrees (to the right)
+                        case Enums.Axis.X:
+                            xAxis = axisInPassedPlaneToUseAsBase;
+                            zAxis = xAxis.CrossProduct(yAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            break;
+                        //the axis must be in the plane we were passed
+                        case Enums.Axis.Y:
+                            throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
+                        //if its the z we were passed then we need to calculate x, which will be 90 degrees (to the left)
+                        case Enums.Axis.Z:
+                            zAxis = axisInPassedPlaneToUseAsBase;
+                            xAxis = yAxis.CrossProduct(zAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            break;
+                    }
+                    break;
+                case Enums.AxisPlanes.YZPlane:
+                    xAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    switch (whichAxisIsPassed)
+                    {
+                        //the axis must be in the plane we were passed
+                        case Enums.Axis.X:
+                            throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
+                        //if it is the Y axis then we need to find the z, which is 90 degrees (to the left)
+                        case Enums.Axis.Y:
+                            yAxis = axisInPassedPlaneToUseAsBase;
+                            zAxis = xAxis.CrossProduct(yAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            break;
+                        //if it is the Z axis then we need to find the y, which is -90 degrees (to the right)
+                        case Enums.Axis.Z:
+                            zAxis = axisInPassedPlaneToUseAsBase;
+                            yAxis = zAxis.CrossProduct(xAxis);
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            break;
+                    }
+                    break;
+            }
+
+            //we have our axes! now do stuff with them
+
+            //if we find line up the z axis in a plane with the y rotation, then we can rotate to make them match in the z and then we can z rotate
+            //to make the x and y coincide
+
+            //first make them into unitvectors to simplify the calculations
+            xAxis = xAxis.Direction.UnitVector(DistanceType.Inch);
+            yAxis = yAxis.Direction.UnitVector(DistanceType.Inch);
+            zAxis = zAxis.Direction.UnitVector(DistanceType.Inch);
+
+            //now first find out the amount we need to rotate around the y axis to line up z in the yz plane
+
+            //http://www.vitutor.com/geometry/distance/line_plane.html
+            //we can simplify the equation as this since it is unit vectors
+            //sin(angle to plane) = z * planeNormal
+            Distance dotProductOfZAndNormal = zAxis * planeContainingTwoOfTheAxes.NormalVector.UnitVector(DistanceType.Inch);
+            Angle inBetweenCurrentZAndYZPlane = new Angle(AngleType.Radian, Math.Asin(dotProductOfZAndNormal.Inches));
+
+            //now rotate the axis (we only need to do z and x since we are done with y now)
+            xAxis = xAxis.Rotate(new Rotation(Line.YAxis, inBetweenCurrentZAndYZPlane));
+            zAxis = zAxis.Rotate(new Rotation(Line.YAxis, inBetweenCurrentZAndYZPlane));
+
+            //now find out how much we need to rotate it in the x direction to line up z in the xz plane (meaning now z will be aligned with the world z)
+
+            //finally find out the z rotation needed to line up the x axis with the xz plane (this also forces the y to be lined up)
+
+            this.XAngle = new Angle();
+            this.YAngle = new Angle();
+            this.ZAngle = new Angle();
         }
 
         /// <summary>
@@ -95,9 +261,9 @@ namespace GeometryClassLibrary
         public CoordinateSystem(Point passedOrigin, Angle passedZRotation, Angle passedXRotation, Angle passedYRotation)
         {
             Origin = new Point(passedOrigin);
-            this.XRotation = new Angle(passedXRotation);
-            this.YRotation = new Angle(passedYRotation);
-            this.ZRotation = new Angle(passedZRotation);
+            this.XAngle = new Angle(passedXRotation);
+            this.YAngle = new Angle(passedYRotation);
+            this.ZAngle = new Angle(passedZRotation);
         }
 
         /// <summary>
@@ -107,9 +273,9 @@ namespace GeometryClassLibrary
         public CoordinateSystem(CoordinateSystem toCopy)
         {
             Origin = new Point(toCopy.Origin);
-            this.XRotation = new Angle(toCopy.XRotation);
-            this.YRotation = new Angle(toCopy.YRotation);
-            this.ZRotation = new Angle(toCopy.ZRotation);
+            this.XAngle = new Angle(toCopy.XAngle);
+            this.YAngle = new Angle(toCopy.YAngle);
+            this.ZAngle = new Angle(toCopy.ZAngle);
         }
 
         #endregion
@@ -168,9 +334,9 @@ namespace GeometryClassLibrary
                 CoordinateSystem comparableSystem = (CoordinateSystem)obj;
 
                 bool areOriginsEqual = this.Origin == comparableSystem.Origin;
-                bool areXAnglesEqual = this.XRotation == comparableSystem.XRotation;
-                bool areYAnglesEqual = this.YRotation == comparableSystem.YRotation;
-                bool areZAnglesEqual = this.ZRotation == comparableSystem.ZRotation;
+                bool areXAnglesEqual = this.XAngle == comparableSystem.XAngle;
+                bool areYAnglesEqual = this.YAngle == comparableSystem.YAngle;
+                bool areZAnglesEqual = this.ZAngle == comparableSystem.ZAngle;
 
                 return areOriginsEqual && areXAnglesEqual && areYAnglesEqual && areZAnglesEqual;
             }
@@ -191,7 +357,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix GetRotationMatrix()
         {
-            return Matrix.RotationMatrixAboutZ(this.ZRotation) * Matrix.RotationMatrixAboutX(this.XRotation) * Matrix.RotationMatrixAboutY(this.YRotation);
+            return Matrix.RotationMatrixAboutZ(this.ZAngle) * Matrix.RotationMatrixAboutX(this.XAngle) * Matrix.RotationMatrixAboutY(this.YAngle);
         }
 
         /// <summary>
@@ -202,15 +368,12 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the two directions are equivalent</returns>
         public bool AreDirectionsEquivalent(CoordinateSystem toCheckIfEquivalentTo)
         {
-            //TIM:
-            //How can we tell if two rotation matricies represent the same euler triple?
-            //this is what I tried but it seemed to not work (see the CoordinateSystem_AreDirectionsEquivalentTests)
-            //Is there a way you know of other than just transforming abritrary points and cheking if they are the same
-            //with both transformations?
-            Matrix thisRotationMatrix = this.GetRotationMatrix();
-            Matrix passedRotationMatrix = toCheckIfEquivalentTo.GetRotationMatrix();
+            //we can check this by creating the axis and then seeing if they are the same (we actually only need to test two since we
+            //always follow the right hand rule)
+            bool sameXAxes = this.XAxisDirection == toCheckIfEquivalentTo.XAxisDirection;
+            bool sameYAxes = this.YAxisDirection == toCheckIfEquivalentTo.YAxisDirection;
 
-            return thisRotationMatrix.Equals(passedRotationMatrix);
+            return sameXAxes && sameYAxes;
         }
 
 
@@ -239,26 +402,20 @@ namespace GeometryClassLibrary
 
             //we have to shift our origin point first
             //we need to manually make the shift so that it wont be negated and then translate before rotating
-            List<Rotation> rotationsToApplyToOrigin = new List<Rotation>();
-            rotationsToApplyToOrigin.Add(new Rotation(Line.ZAxis, passedCoordinateSystem.ZRotation));
-            rotationsToApplyToOrigin.Add(new Rotation(Line.XAxis, passedCoordinateSystem.XRotation));
-            rotationsToApplyToOrigin.Add(new Rotation(Line.YAxis, passedCoordinateSystem.YRotation));
-
-            //now shift the origin point
-            toReturn.Origin = this.Origin.Shift(new Shift(rotationsToApplyToOrigin, passedCoordinateSystem.Origin));
+            toReturn.Origin = this.Origin.Shift(new Shift(this.CoordinateSystemRotations, passedCoordinateSystem.Origin));
 
             //we can just add the rotations
             //convert them to matricies
             Matrix[] thisAnglesMatricies = new Matrix[]{
-                Matrix.RotationMatrixAboutX(this.XRotation),
-                Matrix.RotationMatrixAboutY(this.YRotation),
-                Matrix.RotationMatrixAboutZ(this.ZRotation)
+                Matrix.RotationMatrixAboutX(this.XAngle),
+                Matrix.RotationMatrixAboutY(this.YAngle),
+                Matrix.RotationMatrixAboutZ(this.ZAngle)
             };
 
             Matrix[] passedAnglesMatricies = new Matrix[]{
-                Matrix.RotationMatrixAboutX(this.XRotation),
-                Matrix.RotationMatrixAboutY(this.YRotation),
-                Matrix.RotationMatrixAboutZ(this.ZRotation)
+                Matrix.RotationMatrixAboutX(this.XAngle),
+                Matrix.RotationMatrixAboutY(this.YAngle),
+                Matrix.RotationMatrixAboutZ(this.ZAngle)
             };
 
             //multiply them (order is important!)
@@ -268,9 +425,9 @@ namespace GeometryClassLibrary
             //then pull out the data
             List<Angle> resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();
 
-            toReturn.ZRotation = resultingAngles[0];
-            toReturn.XRotation = resultingAngles[1];
-            toReturn.YRotation = resultingAngles[2];
+            toReturn.ZAngle = resultingAngles[0];
+            toReturn.XAngle = resultingAngles[1];
+            toReturn.YAngle = resultingAngles[2];
 
             return toReturn;
         }

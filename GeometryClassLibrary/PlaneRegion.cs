@@ -254,7 +254,7 @@ namespace GeometryClassLibrary
             List<IEdge> newBoundaryList = new List<IEdge>();
             foreach (IEdge segment in this.Edges)
             {
-                newBoundaryList.Add(segment.Rotate(passedRotation));
+                newBoundaryList.Add(segment.RotateAsIEdge(passedRotation));
             }
 
             return new PlaneRegion(newBoundaryList);
