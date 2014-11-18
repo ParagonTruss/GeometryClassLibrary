@@ -499,5 +499,18 @@ namespace ClearspanTypeLibrary.Tests
             lines[3].Should().Be(line2);
             lines[4].Should().Be(line5);
         }
+
+        [Test()]
+        public void Line_ProjectOntoPlane()
+        {
+            Line toProject = new Line(PointGenerator.MakePointWithInches(2, 2, 1));
+            Plane projectOnto = new Plane(Line.XAxis, Line.YAxis);
+
+            Line result = toProject.ProjectOntoPlane(projectOnto);
+
+            Line expected = new Line(PointGenerator.MakePointWithInches(2, 2, 0));
+
+            result.Should().Be(expected);
+        }
     }
 }

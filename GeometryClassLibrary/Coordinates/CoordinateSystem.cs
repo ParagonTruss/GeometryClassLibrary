@@ -216,10 +216,12 @@ namespace GeometryClassLibrary
                     break;
             }
 
-            //we have our axes! now do stuff with them
+            //we found our axes, now we can determine the angles from them
+            //Since we rotate in the order Z, X, then Y, we must find the angles in the reverse order
+            //i.e. y first, then x then z
 
-            //if we find line up the z axis in a plane with the y rotation, then we can rotate to make them match in the z and then we can z rotate
-            //to make the x and y coincide
+            //if we find line up the z axis in the YZ plane with the y rotation, then we can rotate it around the x axis to make the z axes line up
+            //and then we can z rotate to make the x and y coincide with the origins
 
             //first make them into unitvectors to simplify the calculations
             xAxis = xAxis.Direction.UnitVector(DistanceType.Inch);
@@ -228,23 +230,51 @@ namespace GeometryClassLibrary
 
             //now first find out the amount we need to rotate around the y axis to line up z in the yz plane
 
+
+
+
+            //First project the z axis onto the xz plane
+            Line projectedZAxis = ((Line)zAxis).ProjectOntoPlane(new Plane(Line.XAxis, Line.ZAxis));
+
+            //then use the projected Line to find out how far we need to rotate in the Y direction to line up the z axes in the YZplane
+            Angle angleBetweenCurrentZAndYZPlane = projectedZAxis.Direction.Theta;
+
+            //if the projection is in the negative x direction we need to rotate negitively(clockwise) instead of positivly
+            if (projectedZAxis.Direction.XComponentOfDirection > 0)
+            {
+                angleBetweenCurrentZAndYZPlane = new Angle() - angleBetweenCurrentZAndYZPlane;
+            }
+
+
             //http://www.vitutor.com/geometry/distance/line_plane.html
             //we can simplify the equation as this since it is unit vectors
-            //sin(angle to plane) = z * planeNormal
-            Distance dotProductOfZAndNormal = zAxis * planeContainingTwoOfTheAxes.NormalVector.UnitVector(DistanceType.Inch);
-            Angle inBetweenCurrentZAndYZPlane = new Angle(AngleType.Radian, Math.Asin(dotProductOfZAndNormal.Inches));
+            //sin(angle to plane) = z * planeNormal (which is the x axis by definition)
+            //Distance dotProductOfZAndNormal = zAxis * Line.XAxis.UnitVector(DistanceType.Inch);
+            //Angle angleBetweenCurrentZAndYZPlane = new Angle(AngleType.Radian, Math.Asin(dotProductOfZAndNormal.Inches));
 
             //now rotate the axis (we only need to do z and x since we are done with y now)
-            xAxis = xAxis.Rotate(new Rotation(Line.YAxis, inBetweenCurrentZAndYZPlane));
-            zAxis = zAxis.Rotate(new Rotation(Line.YAxis, inBetweenCurrentZAndYZPlane));
+            xAxis = xAxis.Rotate(new Rotation(Line.YAxis, angleBetweenCurrentZAndYZPlane));
+            zAxis = zAxis.Rotate(new Rotation(Line.YAxis, angleBetweenCurrentZAndYZPlane));
 
             //now find out how much we need to rotate it in the x direction to line up z in the xz plane (meaning now z will be aligned with the world z)
+            Angle angleBetweenZAndZAxis = zAxis.Direction.Theta;
+
+            //now we need to rotate the x axis so we can line it up (the y and z we are done with)
+            //if its negative we need to rotate it clockwise (negative) instead of ccw (positive)
+            if (zAxis.Direction.YComponentOfDirection < 0)
+            {
+                angleBetweenZAndZAxis = new Angle() - angleBetweenZAndZAxis;
+            }
 
             //finally find out the z rotation needed to line up the x axis with the xz plane (this also forces the y to be lined up)
+            xAxis = xAxis.Rotate(new Rotation(Line.XAxis, angleBetweenZAndZAxis));
+            Angle angleBetweenXAndXAxis = xAxis.Direction.Phi;
 
-            this.XAngle = new Angle();
-            this.YAngle = new Angle();
-            this.ZAngle = new Angle();
+            //now we know all our angles, but we have to take the negative of them because we were transforming back to
+            //the origin and we store the tranform from the origin
+            this.ZAngle = new Angle() - angleBetweenXAndXAxis;
+            this.XAngle = new Angle() - angleBetweenZAndZAxis;
+            this.YAngle = new Angle() - angleBetweenCurrentZAndYZPlane;
         }
 
         /// <summary>
@@ -334,11 +364,8 @@ namespace GeometryClassLibrary
                 CoordinateSystem comparableSystem = (CoordinateSystem)obj;
 
                 bool areOriginsEqual = this.Origin == comparableSystem.Origin;
-                bool areXAnglesEqual = this.XAngle == comparableSystem.XAngle;
-                bool areYAnglesEqual = this.YAngle == comparableSystem.YAngle;
-                bool areZAnglesEqual = this.ZAngle == comparableSystem.ZAngle;
 
-                return areOriginsEqual && areXAnglesEqual && areYAnglesEqual && areZAnglesEqual;
+                return areOriginsEqual && this.AreDirectionsEquivalent(comparableSystem);
             }
             //if they are not the same type than they are not equal
             catch (InvalidCastException)
@@ -406,21 +433,27 @@ namespace GeometryClassLibrary
 
             //we can just add the rotations
             //convert them to matricies
-            Matrix[] thisAnglesMatricies = new Matrix[]{
-                Matrix.RotationMatrixAboutX(this.XAngle),
-                Matrix.RotationMatrixAboutY(this.YAngle),
-                Matrix.RotationMatrixAboutZ(this.ZAngle)
+
+            //this one - in terms of the passed one
+            //we need to invert this one
+            Matrix[] thisAnglesMatricies = new Matrix[] {
+                Matrix.RotationMatrixAboutZ(this.ZAngle).Invert(),
+                Matrix.RotationMatrixAboutX(this.XAngle).Invert(),
+                Matrix.RotationMatrixAboutY(this.YAngle).Invert()
             };
 
-            Matrix[] passedAnglesMatricies = new Matrix[]{
-                Matrix.RotationMatrixAboutX(this.XAngle),
-                Matrix.RotationMatrixAboutY(this.YAngle),
-                Matrix.RotationMatrixAboutZ(this.ZAngle)
+            //the passed one - in terms of the world
+            Matrix[] passedAnglesMatricies = new Matrix[] {
+                Matrix.RotationMatrixAboutZ(passedCoordinateSystem.ZAngle),
+                Matrix.RotationMatrixAboutX(passedCoordinateSystem.XAngle),
+                Matrix.RotationMatrixAboutY(passedCoordinateSystem.YAngle)
             };
 
             //multiply them (order is important!)
-            Matrix resultingSystem = thisAnglesMatricies[0] * passedAnglesMatricies[0] * thisAnglesMatricies[1] * passedAnglesMatricies[1] *
-                thisAnglesMatricies[2] * passedAnglesMatricies[2];
+            Matrix resultingSystem = (thisAnglesMatricies[0] * thisAnglesMatricies[1] * thisAnglesMatricies[2]) * (passedAnglesMatricies[0] *
+                passedAnglesMatricies[1] * passedAnglesMatricies[2]);
+            //Matrix resultingSystem = (thisAnglesMatricies[0] * passedAnglesMatricies[0]) * (thisAnglesMatricies[1] * passedAnglesMatricies[1]) *
+            //    (thisAnglesMatricies[2] * passedAnglesMatricies[2]);
 
             //then pull out the data
             List<Angle> resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();

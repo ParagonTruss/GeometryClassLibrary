@@ -410,6 +410,18 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Projects this vector on the given plane
+        /// </summary>
+        /// <param name="projectOnto">The Plane to project this Vector onto</param>
+        /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
+        public Vector ProjectOntoPlane(Plane projectOnto)
+        {
+            //find the line in the plane and then project this line onto it
+            Line projectedLine = ((Line)this).ProjectOntoPlane(projectOnto);
+            return this.ProjectOntoLine(projectedLine);
+        }
+
+        /// <summary>
         /// Returns the cross product of the 2 vectors(i.e. a vector that is perpendicular to both this vector and the passed Vector)
         /// </summary>
         /// <param name="?"></param>

@@ -82,8 +82,8 @@ namespace GeometryClassLibrary
         /// Creates a Plane that contains the given point and has a normalVector of length 1 in inches in the passed in direction
         /// </summary>
         /// <param name="passedBasePoint">A point on the plane to be used as the reference point</param>
-        /// <param name="passedDirection">A direction that is normal to the plane</param>
-        public Plane(Direction passedDirection, Point passedBasePoint = null)
+        /// <param name="passedNormalDirection">A direction that is normal to the plane</param>
+        public Plane(Direction passedNormalDirection, Point passedBasePoint = null)
         {
             if (passedBasePoint == null)
             {
@@ -94,7 +94,7 @@ namespace GeometryClassLibrary
                 this.BasePoint = passedBasePoint;
             }
 
-            this.NormalVector = new Vector(this.BasePoint, passedDirection, new Distance(DistanceType.Inch, 1));
+            this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 
         /// <summary>
