@@ -520,8 +520,8 @@ namespace GeometryClassLibrary
             Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
             Vector newDirectionVector = this.UnitVector(DimensionType.Inch).Rotate(rotationToApply);
             return new Line(newDirectionVector.Direction, newBasePoint);
-        } 
-        
+        }
+
         /// <summary>
         /// Rotates a line with the given lists of rotations
         /// </summary>
@@ -633,13 +633,36 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Makes a Perpendicular Line to this line that is in the passed plane
+        /// this assumes the line is in the plane
         /// </summary>
         /// <param name="planeToMakePerpindicularLineIn">The plane in which this line and the perpindicular line should both contain</param>
         /// <returns>A new Line that is in the passed plane and perpindicular to this line</returns>
         public Line MakePerpindicularLineInGivenPlane(Plane planeToMakePerpindicularLineIn)
         {
-            //rotate it 90 degrees in the nornal of the plane and it will be perpindicular to the original
-            return this.Rotate(new Rotation(planeToMakePerpindicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
+            if (planeToMakePerpindicularLineIn.IsParallelTo(this))
+            {
+                //rotate it 90 degrees in the nornal of the plane and it will be perpindicular to the original
+                return this.Rotate(new Rotation(planeToMakePerpindicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("The given line is not in the given plane");
+            }
+        }
+
+        /// <summary>
+        /// Projects the given line onto the Plane
+        /// </summary>
+        /// <param name="projectOnto">The Plane to Project this Line onto</param>
+        /// <returns>Returns a new Line that is this Line projected onto the Plane</returns>
+        public Line ProjectOntoPlane(Plane projectOnto)
+        {
+            //http://www.euclideanspace.com/maths/geometry/elements/plane/lineOnPlane/index.htm
+            //When using unit vectors, the project on the plane is simply planeNormal X (lineDirection X planeNormal)
+            Vector aCrossB = this.Direction.UnitVector(DimensionType.Inch).CrossProduct(projectOnto.NormalVector.UnitVector(DimensionType.Inch));
+            Vector projectionVector = projectOnto.NormalVector.UnitVector(DimensionType.Inch).CrossProduct(aCrossB);
+
+            return new Line(projectionVector.Direction, this.BasePoint);
         }
 
         #endregion

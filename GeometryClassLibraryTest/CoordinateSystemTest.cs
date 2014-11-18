@@ -11,6 +11,28 @@ namespace GeometryClassLibraryTest
     public class CoordinateSystemTest
     {
         [Test]
+        public void CoordinateSystem_PlaneAndVectorConstuctorTests()
+        {
+            CoordinateSystem expected = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), 
+                new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45));
+
+            Vector xVector = new Vector(PointGenerator.MakePointWithInches(-.5, -.707106781, -.5));
+            Vector yVector = new Vector(PointGenerator.MakePointWithInches(.707106781, 0, -.707106781));
+            Vector zVector = new Vector(PointGenerator.MakePointWithInches(.5, -.707106781, .5));
+
+            /*make sure our vectors are right
+            xVector.IsPerpindicularTo(yVector).Should().BeTrue();
+            yVector.IsPerpindicularTo(zVector).Should().BeTrue();
+            zVector.IsPerpindicularTo(xVector).Should().BeTrue();*/
+
+            Plane xyPlane = new Plane(xVector, yVector);
+            CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
+
+            results.AreDirectionsEquivalent(expected).Should().BeTrue();
+
+        }
+
+        [Test]
         public void CoordinateSystem_AreDirectionsEquivalentTests()
         {
             CoordinateSystem same = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
@@ -68,7 +90,11 @@ namespace GeometryClassLibraryTest
             Matrix testXNegated = Matrix.RotationMatrixAboutX(new Angle(AngleType.Degree, -45));
             Matrix testYNegated = Matrix.RotationMatrixAboutY(new Angle(AngleType.Degree, 23.6));
             Matrix testZNegated = Matrix.RotationMatrixAboutZ(new Angle(AngleType.Degree, 243));
-            Matrix summedNegated = summed * (testXNegated * testYNegated * testZNegated);
+            Matrix summedNegated = summed + (testXNegated * testYNegated * testZNegated);
+            Matrix summedNegated2 = (testXNegated * testYNegated * testZNegated) + summed;
+            Matrix summedNegated3 = (testXNegated * testYNegated * testZNegated) - summed;
+            Matrix summedNegated4 = summed - (testXNegated * testYNegated * testZNegated);
+            Matrix summedNegated5 = summed * summed.Invert();
 
             //this does work how i'd expect
             Matrix cancel = testX * testXNegated;
@@ -82,6 +108,7 @@ namespace GeometryClassLibraryTest
 
             //what we expect the point to be once translated
             Point resultExpected = testPoint.Shift(expected);
+
 
             //Try getting the angles out of the matrix 
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
@@ -114,6 +141,10 @@ namespace GeometryClassLibraryTest
 
             Point matrixRotatedPoint = PointGenerator.MakePointWithInches(rotatedPoint.GetElement(0, 0), rotatedPoint.GetElement(1, 0), rotatedPoint.GetElement(2, 0));
 
+
+            Matrix testNeg = summed.Invert() * pointMatrix;
+
+
             resultAnglesExtracted.Should().Be(resultExpected);
             matrixRotatedPoint.Should().Be(resultAnglesExtracted);
         }
@@ -131,13 +162,14 @@ namespace GeometryClassLibraryTest
 
             //2, 3, 1
             Point expectedOrigin = PointGenerator.MakePointWithInches(0, 0, 0);
-            Angle zExpected = new Angle(AngleType.Degree, -45);
-            Angle xExpected = new Angle(AngleType.Degree, 180);
+            Angle zExpected = new Angle(AngleType.Degree, 135);
+            Angle xExpected = new Angle(AngleType.Degree, 0);
             Angle yExpected = new Angle(AngleType.Degree, 0);
 
-            CoordinateSystem expected = new CoordinateSystem(expectedOrigin, xExpected, yExpected, zExpected);
+            CoordinateSystem expected = new CoordinateSystem(expectedOrigin, zExpected, xExpected, yExpected);
 
-            basedOnWorld.AreDirectionsEquivalent(expected).Should().BeTrue();
+            bool areEqual = basedOnWorld.AreDirectionsEquivalent(expected);
+            areEqual.Should().BeTrue();
         }
 
         //these methods are for checking and demonstrating how coordinate systems can/should be used
