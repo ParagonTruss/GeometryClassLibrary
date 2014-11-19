@@ -6,25 +6,24 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    internal static class Constants
+    public static class Constants
     {
 
-        public static double AcceptedEqualityDeviationConstant
+        public static double AcceptedEqualityDeviationDouble
         {
             get
             {
                 try
                 {
-                    //double.Parse(Resources.ResourceManager.GetString("AcceptedEqualityDeviationConstant"));
+                    return double.Parse(GeometryClassLibrary.Properties.Resources.ResourceManager.GetString("AcceptedEqualityDeviationDouble"));
                 }
                 catch (Exception)
                 {
 
-                    return 0.000005;
+                    return 0.0001;
                 }
-                return 0.000005;
 
-            } // a big hippo was here
+            }
 
         }
     }

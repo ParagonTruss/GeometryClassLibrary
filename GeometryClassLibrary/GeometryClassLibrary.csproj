@@ -14,7 +14,13 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile2</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile36</TargetFrameworkProfile>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,32 +47,69 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.1.0\lib\portable-win+net40+sl40+wp\UnitClassLibrary.dll</HintPath>
+    <Reference Include="UnitClassLibrary, Version=1.0.5394.27040, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lines\Arc.cs" />
+    <Compile Include="Planes\Circle.cs" />
+    <Compile Include="Solids\ConeClass.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Coordinates\CoordinateSystem.cs" />
+    <Compile Include="Coordinates\Direction.cs" />
+    <Compile Include="Planes\EquilateralTriangle.cs" />
+    <Compile Include="Solids\Cube.cs" />
+    <Compile Include="Solids\Cylinder.cs" />
+    <Compile Include="Planes\Ellipse.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="ExtensionMethods\AngleExtensions.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
+    <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
-    <Compile Include="ListExtensionMethods\IEnumerableLineExtensionMethods.cs" />
-    <Compile Include="ListExtensionMethods\IEnumerableLineSegmentExtensionMethods.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="LineSegment.cs" />
-    <Compile Include="MatricesMatrix.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="Plane.cs" />
-    <Compile Include="PlaneRegion.cs" />
-    <Compile Include="ListExtensionMethods\PlaneRegionListExtensionMethods.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="ListExtensionMethods\PointListExtensionMethods.cs" />
-    <Compile Include="Rotation.cs" />
-    <Compile Include="Shift.cs" />
-    <Compile Include="Solid.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Lines\IEdge.cs" />
+    <Compile Include="Planes\IrregularPolygon.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineSegmentExtensionMethods.cs" />
+    <Compile Include="Lines\Line.cs" />
+    <Compile Include="Lines\LineSegment.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListIEdgeExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPointExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPolygonExtensionMethods.cs" />
+    <Compile Include="Matrices\MatricesMatrix.cs" />
+    <Compile Include="Matrices\Matrix.cs" />
+    <Compile Include="Planes\NonPolygon.cs" />
+    <Compile Include="Solids\NonPolyhedron.cs" />
+    <Compile Include="Planes\Pentagon.cs" />
+    <Compile Include="Planes\Plane.cs" />
+    <Compile Include="Planes\PlaneRegion.cs" />
+    <Compile Include="Planes\Polygon.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPlaneRegionExtensionMethods.cs" />
+    <Compile Include="Coordinates\Point.cs" />
+    <Compile Include="Solids\Polyhedron.cs" />
+    <Compile Include="Solids\RectangularPrism.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Planes\Rectangle.cs" />
+    <Compile Include="Planes\RegularPolygon.cs" />
+    <Compile Include="Planes\Rhombus.cs" />
+    <Compile Include="Coordinates\Rotation.cs" />
+    <Compile Include="Coordinates\Shift.cs" />
+    <Compile Include="Solids\Solid.cs" />
+    <Compile Include="Solids\Sphere.cs" />
+    <Compile Include="Planes\Square.cs" />
+    <Compile Include="Coordinates\Translation.cs" />
+    <Compile Include="Lines\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

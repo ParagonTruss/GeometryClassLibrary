@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
+//
 
 namespace GeometryClassLibrary
 {
-    public static class PointListExtensionMethods
+    public static class IListPointExtensionMethods
     {
+        /// <summary>
+        /// Makes line segments that connect the given points in the order the appear in the list
+        /// </summary>
+        /// <param name="points">The points to make the segments out of</param>
+        /// <returns>A new List of LineSegment that connect the points</returns>
         public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this List<Point> points)
         {
             List<LineSegment> toReturn = new List<LineSegment>();

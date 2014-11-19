@@ -2,43 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
+//
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
     public static class PointGenerator
     {
+        public static Point Origin
+        {
+            get
+            {
+                return new Point();
+            }
+        }
+
         public static Point MakePointWithInches(double inputValue1, double inputValue2)
         {
-            Dimension dim1 = new Dimension(DimensionType.Inch, inputValue1);
-            Dimension dim2 = new Dimension(DimensionType.Inch, inputValue2);
+            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
             return new Point(dim1, dim2);
         }
 
         public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3)
         {
-            Dimension dim1 = new Dimension(DimensionType.Inch, inputValue1);
-            Dimension dim2 = new Dimension(DimensionType.Inch, inputValue2);
-            Dimension dim3 = new Dimension(DimensionType.Inch, inputValue3);
+            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
+            Distance dim3 = new Distance(DistanceType.Inch, inputValue3);
 
             return new Point(dim1, dim2, dim3);
         }
 
         public static Point MakePointWithMillimeters(double inputValue1, double inputValue2)
         {
-            Dimension dim1 = new Dimension(DimensionType.Millimeter, inputValue1);
-            Dimension dim2 = new Dimension(DimensionType.Millimeter, inputValue2);
-            Dimension dim3 = new Dimension(DimensionType.Millimeter, 0);
+            Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);
+            Distance dim3 = new Distance(DistanceType.Millimeter, 0);
 
             return new Point(dim1, dim2, dim3);
         }
 
         public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3)
         {
-            Dimension dim1 = new Dimension(DimensionType.Millimeter, inputValue1);
-            Dimension dim2 = new Dimension(DimensionType.Millimeter, inputValue2);
-            Dimension dim3 = new Dimension(DimensionType.Millimeter, inputValue3);
+            Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);
+            Distance dim3 = new Distance(DistanceType.Millimeter, inputValue3);
 
             return new Point(dim1, dim2, dim3);
         }
@@ -48,8 +56,8 @@ namespace GeometryClassLibrary
             double inputValue1 = double.Parse(inputString1);
             double inputValue2 = double.Parse(inputString2);
 
-            Dimension dim1 = new Dimension(DimensionType.Inch, inputValue1);
-            Dimension dim2 = new Dimension(DimensionType.Inch, inputValue2);
+            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
             return new Point(dim1, dim2);
         }
 

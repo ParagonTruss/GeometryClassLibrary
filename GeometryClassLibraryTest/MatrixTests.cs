@@ -252,7 +252,6 @@ namespace ClearspanLibraryUnitTest
 
         }
 
-
         [Test()]
         public void Matrix_GetColumnStandardTest()
         {
@@ -308,22 +307,22 @@ namespace ClearspanLibraryUnitTest
             
         }
 
+        [Test]
+        public void MatrixTest_SystemSolve_ZeroMatrix()
+        {
+            //Fails
 
-        //[Test]
-        //public void MatrixTest_SystemSolve_ZeroMatrix()
-        //{
-        //    //Ax = b
-        //    Matrix matrixA = new Matrix(4, 4);
-        //    Matrix matrixB = new Matrix(4, 1);
+            //Ax = b
+            Matrix matrixA = new Matrix(4, 4);
+            Matrix matrixB = new Matrix(4, 1);
                                  
-        //    //Solve for x
-        //    Matrix expectedResultMatrix = new Matrix(4, 1);
+            //Solve for x
+            Matrix expectedResultMatrix = new Matrix(4, 1);
             
-        //    Matrix actualResultMatrix = matrixA.SystemSolve(matrixB);
+            Matrix actualResultMatrix = matrixA.SystemSolve(matrixB);
 
-        //    actualResultMatrix.Should().Be(expectedResultMatrix);
-        //}
-
+            actualResultMatrix.Should().Be(expectedResultMatrix);
+        }
 
         [Test()]
         public void Matrix_DecomposeSimpleTest()
@@ -359,7 +358,6 @@ namespace ClearspanLibraryUnitTest
             calculatedLPartOfLUPDecomposition.ShouldBeEquivalentTo(correctLPartOfLUPDecomposition);
             calculatedUPartOfLUPDecomposition.ShouldBeEquivalentTo(correctLPartOfLUPDecomposition);
         }
-
 
         [Test()]
         public void Matrix_DecomposeComplicatedTest()
@@ -661,7 +659,6 @@ namespace ClearspanLibraryUnitTest
 
 
         }
-
 
         [Test()]
         public void Matrix_ExtractLowerComplicatedTest()
@@ -1298,7 +1295,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutXTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutX(angleToRotate);
@@ -1316,7 +1313,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutYTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutY(angleToRotate);
@@ -1334,7 +1331,7 @@ namespace ClearspanLibraryUnitTest
         [Test]
         public void Matrix_RotateAboutZTest()
         {
-            Point pointToRotate = PointGenerator.MakePointWithMillimeters(4, -2, 2);
+            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
             Angle angleToRotate = new Angle(AngleType.Degree, 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutZ(angleToRotate);

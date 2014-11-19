@@ -10,6 +10,7 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class RotationTests
     {
+        /* Does not make sense with how we were adding and subtracting rotations because we didnt take into account the axis
         [Test()]
         public void Rotation_AdditionAndSubtractionTest()
         {
@@ -28,10 +29,10 @@ namespace GeometryClassLibraryTest
             (addedRotation == expectedAddition).Should().BeTrue();
             (subtractedRotation == expectedSubtraction).Should().BeTrue();
         
-        }
+        }*/
 
         [Test()]
-        public void Rotation_EqualityTest()
+        public void Rotation_EqualityTests()
         {
             Line axis1 = new Line(PointGenerator.MakePointWithInches(-2, 7, 0), PointGenerator.MakePointWithInches(0, 1, 1));
             Rotation rotation1 = new Rotation(axis1, new Angle(AngleType.Degree, 42));
