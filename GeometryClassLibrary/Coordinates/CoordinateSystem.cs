@@ -428,8 +428,12 @@ namespace GeometryClassLibrary
             CoordinateSystem toReturn = new CoordinateSystem(this);
 
             //we have to shift our origin point first
-            //we need to manually make the shift so that it wont be negated and then translate before rotating
-            toReturn.Origin = this.Origin.Shift(new Shift(this.CoordinateSystemRotations, passedCoordinateSystem.Origin));
+            //We need to rotate this origin based on the passed cordinate system in order to find out how its shifted relative
+            //to the world coordinate since this origin is stored relative to the passed one
+            toReturn.Origin = this.Origin.Shift(new Shift(passedCoordinateSystem.CoordinateSystemRotations));
+
+            //we then need to add the passed origin, since it is still relative in position to it
+            toReturn.Origin = toReturn.Origin + passedCoordinateSystem.Origin;
 
             //we can just add the rotations
             //convert them to matricies
@@ -437,27 +441,36 @@ namespace GeometryClassLibrary
             //this one - in terms of the passed one
             //we need to invert this one
             Matrix[] thisAnglesMatricies = new Matrix[] {
-                Matrix.RotationMatrixAboutZ(this.ZAngle).Invert(),
-                Matrix.RotationMatrixAboutX(this.XAngle).Invert(),
-                Matrix.RotationMatrixAboutY(this.YAngle).Invert()
+                Matrix.RotationMatrixAboutX(this.XAngle),
+                Matrix.RotationMatrixAboutY(this.YAngle),
+                Matrix.RotationMatrixAboutZ(this.ZAngle)
             };
 
             //the passed one - in terms of the world
             Matrix[] passedAnglesMatricies = new Matrix[] {
-                Matrix.RotationMatrixAboutZ(passedCoordinateSystem.ZAngle),
                 Matrix.RotationMatrixAboutX(passedCoordinateSystem.XAngle),
-                Matrix.RotationMatrixAboutY(passedCoordinateSystem.YAngle)
+                Matrix.RotationMatrixAboutY(passedCoordinateSystem.YAngle),
+                Matrix.RotationMatrixAboutZ(passedCoordinateSystem.ZAngle)
             };
 
-            //multiply them (order is important!)
-            Matrix resultingSystem = (thisAnglesMatricies[0] * thisAnglesMatricies[1] * thisAnglesMatricies[2]) * (passedAnglesMatricies[0] *
-                passedAnglesMatricies[1] * passedAnglesMatricies[2]);
-            //Matrix resultingSystem = (thisAnglesMatricies[0] * passedAnglesMatricies[0]) * (thisAnglesMatricies[1] * passedAnglesMatricies[1]) *
-            //    (thisAnglesMatricies[2] * passedAnglesMatricies[2]);
+            //multiply them (order is important! we multiply the passed coordinate system with this coordinate system
+            Matrix resultingSystem = (passedAnglesMatricies[0] * passedAnglesMatricies[1] * passedAnglesMatricies[2]) * (thisAnglesMatricies[0] *
+                thisAnglesMatricies[1] * thisAnglesMatricies[2]);
 
-            //then pull out the data
+            /*Matrix resultingSystem2 = (thisAnglesMatricies[0] * thisAnglesMatricies[1] * thisAnglesMatricies[2]) * (passedAnglesMatricies[0] *
+                passedAnglesMatricies[1] * passedAnglesMatricies[2]); 
+            Matrix resultingSystem3 = (passedAnglesMatricies[0] * thisAnglesMatricies[0]) * (passedAnglesMatricies[1] * thisAnglesMatricies[1]) * (passedAnglesMatricies[2] * thisAnglesMatricies[2]);
+            Matrix resultingSystem4 = (thisAnglesMatricies[0] * passedAnglesMatricies[0]) * (thisAnglesMatricies[1] * passedAnglesMatricies[1]) * (thisAnglesMatricies[2] * passedAnglesMatricies[2]);
+            */
+
+            //then pull out the angle data from the rotation matrix
             List<Angle> resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();
 
+            //List<Angle> resultingAngles2 = resultingSystem2.getAnglesOutOfRotationMatrix();
+            //List<Angle> resultingAngles3 = resultingSystem3.getAnglesOutOfRotationMatrix();
+            //List<Angle> resultingAngles4 = resultingSystem4.getAnglesOutOfRotationMatrix();
+
+            //and assign the values to our angles
             toReturn.ZAngle = resultingAngles[0];
             toReturn.XAngle = resultingAngles[1];
             toReturn.YAngle = resultingAngles[2];

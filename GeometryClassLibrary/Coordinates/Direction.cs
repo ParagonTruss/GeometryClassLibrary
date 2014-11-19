@@ -31,16 +31,6 @@ namespace GeometryClassLibrary
             set
             {
                 _phi = value;
-
-                //now make sure that it is > 0 and less than 360
-                while (_phi >= new Angle(AngleType.Degree, 360))
-                {
-                    _phi -= new Angle(AngleType.Degree, 360);
-                }
-                while (_phi < new Angle())
-                {
-                    _phi += new Angle(AngleType.Degree, 360);
-                }
             }
         }
 
@@ -58,16 +48,6 @@ namespace GeometryClassLibrary
 
                 //make sure that theta (angle to z-axis) is between 0 and 180
                 //Note: if it is between 180 and 360, we need to flip the directon of phi as well
-
-                //first make sure it is between 0 and 360
-                while (_theta >= new Angle(AngleType.Degree, 360))
-                {
-                    _theta -= new Angle(AngleType.Degree, 360);
-                }
-                while (_theta < new Angle())
-                {
-                    _theta += new Angle(AngleType.Degree, 360);
-                }
 
                 //now if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
                 if (_theta > new Angle(AngleType.Degree, 180))

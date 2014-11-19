@@ -14,6 +14,14 @@ namespace GeometryClassLibraryTest
     public class VectorTests
     {
         [Test()]
+        public void Vector_Negate()
+        {
+            Vector v = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+
+            v.Negate().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1)));
+        }
+
+        [Test()]
         public void Vector_ProjectOntoPlane()
         {
             Vector testSegment = new Vector(PointGenerator.MakePointWithInches(2, 5, 3));
