@@ -16,8 +16,8 @@ namespace ClearspanTypeLibrary.Tests
         public void LineSegment_ConstructorTest()
         {
             //Fixture fixture = new Fixture();
-            //fixture.Customize<Dimension>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            //var mem = fixture.Create<Dimension>();
+            //fixture.Customize<Distance>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
+            //var mem = fixture.Create<Distance>();
 
             //fixture.Customize<Member>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
             ////fixture.Customize<Line>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
@@ -134,10 +134,9 @@ namespace ClearspanTypeLibrary.Tests
 
             Line rotationAxis = new Line(new Direction(PointGenerator.MakePointWithInches(1, 1, 1)), PointGenerator.MakePointWithInches(1, -1, -1));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
-            Rotation toRotate = new Rotation(rotationAxis, rotationAngle);
 
-            LineSegment actualSegment1 = segment1.Rotate(toRotate);
-            LineSegment actualSegment2 = segment2.Rotate(toRotate);
+            LineSegment actualSegment1 = segment1.Rotate(new Rotation(rotationAxis, rotationAngle));
+            LineSegment actualSegment2 = segment2.Rotate(new Rotation(rotationAxis, rotationAngle));
 
             LineSegment expectedSegment1 = new LineSegment(PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), PointGenerator.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
             LineSegment expectedSegment2 = new LineSegment(PointGenerator.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495), PointGenerator.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809));
@@ -154,7 +153,7 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
             //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Dimension testDisplacement = new Dimension(DimensionType.Inch, 12.9614814);
+            //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
             LineSegment actualSegment1 = segment1.Translate(testDisplacement);

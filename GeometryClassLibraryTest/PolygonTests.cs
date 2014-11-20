@@ -113,7 +113,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon = new Polygon(lineSegments);
 
             //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Dimension testDisplacement = new Dimension(DimensionType.Inch, Math.Sqrt(42));
+            //Distance testDisplacement = new Distance(DistanceType.Inch, Math.Sqrt(42));
             Point testDiplacement = PointGenerator.MakePointWithInches(-1,5,4);
 
             Polygon actualPolygon = testPolygon.Translate(testDiplacement);

@@ -56,7 +56,7 @@ namespace ClearspanLibraryUnitTest
         }
 
         [Test()]
-        public void TotalRowsTest_EqualRowDimensions()
+        public void TotalRowsTest_EqualRowDistances()
         {
             Matrix m1 = new Matrix(2);
             Matrix m2 = new Matrix(2, 3);
@@ -79,7 +79,7 @@ namespace ClearspanLibraryUnitTest
         }
 
         [Test()]
-        public void TotalColumnsTest_EqualRowDimensions()
+        public void TotalColumnsTest_EqualRowDistances()
         {
             Matrix m1 = new Matrix(2);
             Matrix m2 = new Matrix(2, 3);
@@ -210,7 +210,7 @@ namespace ClearspanLibraryUnitTest
         }
 
         [Test()]
-        public void MatricesMatrix_ConvertToMatrixTest_VariedDimensions()
+        public void MatricesMatrix_ConvertToMatrixTest_VariedDistances()
         {
             Matrix m1 = new Matrix(1);
             Matrix m2 = new Matrix(2);
