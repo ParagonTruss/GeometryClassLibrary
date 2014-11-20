@@ -242,7 +242,7 @@ namespace GeometryClassLibrary
             //if the projection is in the negative x direction we need to rotate negitively(clockwise) instead of positivly
             if (projectedZAxis.Direction.XComponentOfDirection > 0)
             {
-                angleBetweenCurrentZAndYZPlane = new Angle() - angleBetweenCurrentZAndYZPlane;
+                angleBetweenCurrentZAndYZPlane = angleBetweenCurrentZAndYZPlane.Negate();
             }
 
 
@@ -263,7 +263,7 @@ namespace GeometryClassLibrary
             //if its negative we need to rotate it clockwise (negative) instead of ccw (positive)
             if (zAxis.Direction.YComponentOfDirection < 0)
             {
-                angleBetweenZAndZAxis = new Angle() - angleBetweenZAndZAxis;
+                angleBetweenZAndZAxis = angleBetweenZAndZAxis.Negate();
             }
 
             //finally find out the z rotation needed to line up the x axis with the xz plane (this also forces the y to be lined up)
@@ -272,9 +272,9 @@ namespace GeometryClassLibrary
 
             //now we know all our angles, but we have to take the negative of them because we were transforming back to
             //the origin and we store the tranform from the origin
-            this.ZAngle = new Angle() - angleBetweenXAndXAxis;
-            this.XAngle = new Angle() - angleBetweenZAndZAxis;
-            this.YAngle = new Angle() - angleBetweenCurrentZAndYZPlane;
+            this.ZAngle = angleBetweenXAndXAxis.Negate();
+            this.XAngle = angleBetweenZAndZAxis.Negate();
+            this.YAngle = angleBetweenCurrentZAndYZPlane.Negate();
         }
 
         /// <summary>
