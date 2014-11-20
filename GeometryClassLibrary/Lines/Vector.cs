@@ -133,7 +133,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint">The point at which the vector starts</param>
         /// <param name="passedDirection">The direction the vector points</param>
         /// <param name="passedMagnitude">The length of the Vector</param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Distance? passedMagnitude = null)
+        public Vector(Point passedBasePoint, Direction passedDirection, Distance passedMagnitude = null)
             : base(passedDirection, passedBasePoint)
         {
             if (passedMagnitude == null)
@@ -142,7 +142,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                _magnitude = new Distance(passedMagnitude.Value);
+                _magnitude = new Distance(passedMagnitude);
             }
         }
 

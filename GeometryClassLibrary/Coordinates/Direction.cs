@@ -127,7 +127,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="directionPoint">the point to find the angle to relative to the origin</param>
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
-        public Direction(Point directionPoint, Distance? acceptedDeviationConstant = null)
+        public Direction(Point directionPoint, Distance acceptedDeviationConstant = null)
             : this()
         {
             //if they didnt pass in a value, use the default
@@ -139,20 +139,20 @@ namespace GeometryClassLibrary
             Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
 
             //if it is the origin we just leave it as the base constructor
-            if (!distanceToOrigin.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+            if (!distanceToOrigin.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
             {
                 //if the z is 0 than the angle should be 90 so we can use the xyplane angle
                 //Note: we called the base contructor first so it is already 90 unless we change it
-                if (!directionPoint.Z.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                if (!directionPoint.Z.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                 {
                     //arcos handles negatives how we want so we dont have to worry about it
                     this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
                 }
 
                 //if the x is zero it is either straight up or down
-                if (!directionPoint.X.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                if (!directionPoint.X.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                 {
-                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                     {
                         //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
                         this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
@@ -203,7 +203,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="basePoint">The first point to find the angle from</param>
         /// <param name="endPoint">The point to use to find the angle of</param>
-        public Direction(Point basePoint, Point endPoint, Distance? acceptedDeviationConstant = null)
+        public Direction(Point basePoint, Point endPoint, Distance acceptedDeviationConstant = null)
             : this(endPoint - basePoint, acceptedDeviationConstant) { }
 
         /// <summary>

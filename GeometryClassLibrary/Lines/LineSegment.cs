@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance? passedLength = null)
+        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
             : base(passedBasePoint, passedDirection, passedLength) { }
 
         /// <summary>
