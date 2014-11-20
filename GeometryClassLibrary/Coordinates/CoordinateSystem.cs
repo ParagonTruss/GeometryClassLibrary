@@ -464,7 +464,7 @@ namespace GeometryClassLibrary
             */
 
             //then pull out the angle data from the rotation matrix
-            List<Angle> resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();
+            List<Angle> resultingAngles = resultingSystem.GetAnglesOutOfRotationMatrix();
 
             //List<Angle> resultingAngles2 = resultingSystem2.getAnglesOutOfRotationMatrix();
             //List<Angle> resultingAngles3 = resultingSystem3.getAnglesOutOfRotationMatrix();
@@ -495,6 +495,36 @@ namespace GeometryClassLibrary
 
                     return systemShift;
                 }*/
+
+
+        /// <summary>
+        /// This shifts the corrdinate system using the given shift
+        /// </summary>
+        /// <param name="passedShift">The shift to apply to the coordinate system</param>
+        /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
+        public CoordinateSystem Shift(Shift passedShift)
+        {
+            CoordinateSystem toReturn = new CoordinateSystem(this);
+
+            toReturn.Origin = this.Origin.Shift(passedShift);
+
+            //now we need to shift the angles
+            Matrix coordinateMatrix = this.GetRotationMatrix();
+
+            foreach (Rotation rotation in passedShift.RotationsToApply)
+            {
+                //make the rotations into a matrix
+                Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(rotation);
+
+                //we need to figure out how to add the angles to get the resulting one
+                throw new NotImplementedException();
+                coordinateMatrix = coordinateMatrix.MultiplyBy(rotationMatrix);
+            }
+
+            List<Angle> resultAngles = coordinateMatrix.GetAnglesOutOfRotationMatrix();
+
+            return toReturn;
+        }
 
         #endregion
     }
