@@ -230,8 +230,6 @@ namespace GeometryClassLibrary
         {
             switch (unitType)
             {
-                case DistanceType.ArchitecturalString:
-                    return "X= " + _x.Architectural.ToString() + ", Y= " + _y.Architectural.ToString() + ", Z=" + _z.Architectural.ToString();
                 case DistanceType.Millimeter:
                     return "X= " + _x.Millimeters.ToString() + " Millimeters, Y= " + _y.Millimeters.ToString() + " Millimeters, Z=" + _z.Millimeters.ToString();
                 case DistanceType.Centimeter:

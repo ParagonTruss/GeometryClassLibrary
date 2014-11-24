@@ -18,7 +18,14 @@ namespace GeometryClassLibrary
         public virtual List<Polygon> Polygons
         {
             get { return this.Planes as List<Polygon>; }
-            set { this.Planes = value; }
+            set 
+            {
+                List<Polygon> polygons = new List<Polygon>();
+                foreach (var item in value)
+                {
+                    this.Planes.Add(item);
+                }
+            }
         }
 
         /// <summary>
