@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary, Version=1.0.5394.27040, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
