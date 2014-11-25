@@ -361,7 +361,7 @@ namespace GeometryClassLibrary
         /// Returns the euler angles (in z, x, y order) assuming this matrix is a pure rotation matrix
         /// </summary>
         /// <returns>Returns a list of the euler angles in this order: z, x, y</returns>
-        public List<Angle> getAnglesOutOfRotationMatrix()
+        public List<Angle> GetAnglesOutOfRotationMatrix()
         {
             //Try getting the angles out of the matrix (this works)
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
@@ -794,19 +794,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
         /// </summary>
-        /// <param name="passedRotationAxisLine"></param>
-        /// <param name="passedRotationAngle"></param>
+        /// <param name="passedRotation">The rotation to make into the rotation matrix</param>
         /// <returns></returns>
-        public static Matrix RotationMatrixAboutAxis(Line passedRotationAxisLine, Angle passedRotationAngle)
+        public static Matrix RotationMatrixAboutAxis(Rotation passedRotation)
         {
             Matrix rotationMatrix = new Matrix(3);
-         
-            Direction rotationUnitVector = passedRotationAxisLine.Direction;
+
+            Direction rotationUnitVector = passedRotation.AxisToRotateAround.Direction;
 
             double unitX = rotationUnitVector.XComponentOfDirection; //Projection onto x-axis?
             double unitY = rotationUnitVector.YComponentOfDirection;
             double unitZ = rotationUnitVector.ZComponentOfDirection;
-            double theta = passedRotationAngle.Radians;
+            double theta = passedRotation.AngleToRotate.Radians;
 
             double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));
             double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);

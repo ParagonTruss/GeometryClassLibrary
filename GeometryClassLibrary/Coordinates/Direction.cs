@@ -28,10 +28,7 @@ namespace GeometryClassLibrary
         public Angle Phi
         {
             get { return _phi; }
-            set
-            {
-                _phi = value;
-            }
+            set {_phi = value; }
         }
 
         /// <summary>
@@ -49,15 +46,15 @@ namespace GeometryClassLibrary
                 //make sure that theta (angle to z-axis) is between 0 and 180
                 //Note: if it is between 180 and 360, we need to flip the directon of phi as well
 
-                //now if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
+                //if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
                 if (_theta > new Angle(AngleType.Degree, 180))
                 {
-                    _theta -= new Angle(AngleType.Degree, 180);
+                    _theta = _theta.Reverse();
 
                     //we throw if it is null because then the Phi will not be reversed in direction to reflect the change we made in theta
                     if (this.Phi != null)
                     {
-                        this.Phi -= new Angle(AngleType.Degree, 180);
+                        this.Phi = this.Phi.Reverse();
                     }
                     else
                     {
@@ -133,7 +130,7 @@ namespace GeometryClassLibrary
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
             {
-                acceptedDeviationConstant = new Distance(DistanceType.Inch, 1);
+                acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
             }
 
             Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
@@ -223,7 +220,7 @@ namespace GeometryClassLibrary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (angleToZAxis < new Angle() && angleToZAxis > new Angle(AngleType.Degree, 180))
+                if (angleToZAxis < new Angle() || angleToZAxis > new Angle(AngleType.Degree, 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -325,7 +322,8 @@ namespace GeometryClassLibrary
         /// <returns>A new direction that points in the oppposite direction as this one</returns>
         public Direction Reverse()
         {
-            return new Direction(this.Phi - new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 180) - this.Theta);
+            //reverse phi(xy) and then complement theta (from z) around 90 since its only 180 range
+            return new Direction(this.Phi.Reverse(), new Angle(AngleType.Degree, 180) - this.Theta);
         }
 
         /// <summary>
