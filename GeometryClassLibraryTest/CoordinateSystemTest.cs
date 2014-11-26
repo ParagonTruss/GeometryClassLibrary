@@ -125,7 +125,7 @@ namespace GeometryClassLibraryTest
             extractedAngles[1] = new Angle(AngleType.Radian, -Math.Asin(summed.GetElement(1, 2))); //x
             extractedAngles[2] = new Angle(AngleType.Radian, Math.Atan2(summed.GetElement(0, 2), summed.GetElement(2, 2))); //y
 
-            List<Angle> angles = summed.getAnglesOutOfRotationMatrix();
+            List<Angle> angles = summed.GetAnglesOutOfRotationMatrix();
             Shift testShift = new Shift(new List<Rotation>()
             {
                 new Rotation(Line.ZAxis, angles[0]),

@@ -12,8 +12,9 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
-    //[DebuggerVisualizer(typeof(GeometryVisualizer))]   
-    public class Point: IEquatable<Point>
+    //[DebuggerVisualizer(typeof(GeometryVisualizer))]
+    [DebuggerDisplay("{X.Inches}, {Y.Inches}, {Z.Inches}")]
+    public class Point
     {
         #region Properties and Fields
 
@@ -127,7 +128,6 @@ namespace GeometryClassLibrary
         /* You may notice that we do not overload the increment and decrement operators nor do we overload multiplication and division.
          * This is because the user of this library does not know what is being internally stored and those operations will not return useful information. 
          */
-
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -213,20 +213,15 @@ namespace GeometryClassLibrary
             try
             {
                 Point comparablePoint = (Point)obj;
-                return this.Equals(comparablePoint);
-            }
 
+                // if the two points' x, y, and z are equal, returns true
+                return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
+            }
             //if they are not the same type than they are not equal
             catch (InvalidCastException)
             {
                 return false;
             }
-        }
-
-        public bool Equals(Point other)
-        {
-            // if the two points' x, y, and z are equal, returns true
-            return (this._x.Equals(other.X) && this._y.Equals(other.Y) && this._z.Equals(other.Z));
         }
 
         /// <summary>
@@ -238,8 +233,6 @@ namespace GeometryClassLibrary
         {
             switch (unitType)
             {
-                case DistanceType.ArchitecturalString:
-                    return "X= " + _x.Architectural.ToString() + ", Y= " + _y.Architectural.ToString() + ", Z=" + _z.Architectural.ToString();
                 case DistanceType.Millimeter:
                     return "X= " + _x.Millimeters.ToString() + " Millimeters, Y= " + _y.Millimeters.ToString() + " Millimeters, Z=" + _z.Millimeters.ToString();
                 case DistanceType.Centimeter:
@@ -283,8 +276,6 @@ namespace GeometryClassLibrary
         /// <returns>Rotated point</returns>
         public Point Rotate2D(Point centerPoint, Angle rotateAngle)
         {
-            ;
-
             double cosTheta = Math.Cos(rotateAngle.Radians);
             double sinTheta = Math.Sin(rotateAngle.Radians);
 
@@ -381,7 +372,7 @@ namespace GeometryClassLibrary
 
             }
 
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(axisForRotating, rotationToApply.AngleToRotate);
+            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(new Rotation(axisForRotating, rotationToApply.AngleToRotate));
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
                 
@@ -518,7 +509,5 @@ namespace GeometryClassLibrary
         }
 
         #endregion
-
-
     }
 }

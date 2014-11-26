@@ -461,7 +461,7 @@ namespace GeometryClassLibrary
             //    (thisAnglesMatricies[2] * passedAnglesMatricies[2]);
 
             //then pull out the data
-            List<Angle> resultingAngles = resultingSystem.getAnglesOutOfRotationMatrix();
+            List<Angle> resultingAngles = resultingSystem.GetAnglesOutOfRotationMatrix();
 
             toReturn.ZAngle = resultingAngles[0];
             toReturn.XAngle = resultingAngles[1];

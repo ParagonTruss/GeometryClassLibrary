@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
@@ -15,7 +14,6 @@ namespace GeometryClassLibrary
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
     [DebuggerDisplay("Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
-    
     public class Direction
     {
         #region Properties and Fields
@@ -28,10 +26,7 @@ namespace GeometryClassLibrary
         public Angle Phi
         {
             get { return _phi; }
-            set
-            {
-                _phi = value;
-            }
+            set {_phi = value; }
         }
 
         /// <summary>
@@ -49,16 +44,15 @@ namespace GeometryClassLibrary
                 //make sure that theta (angle to z-axis) is between 0 and 180
                 //Note: if it is between 180 and 360, we need to flip the directon of phi as well
 
-
-                //now if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
+                //if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
                 if (_theta > new Angle(AngleType.Degree, 180))
                 {
-                    _theta -= new Angle(AngleType.Degree, 180);
+                    _theta = _theta.Reverse();
 
                     //we throw if it is null because then the Phi will not be reversed in direction to reflect the change we made in theta
                     if (this.Phi != null)
                     {
-                        this.Phi -= new Angle(AngleType.Degree, 180);
+                        this.Phi = this.Phi.Reverse();
                     }
                     else
                     {
@@ -128,32 +122,32 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="directionPoint">the point to find the angle to relative to the origin</param>
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
-        public Direction(Point directionPoint, Distance? acceptedDeviationConstant = null)
+        public Direction(Point directionPoint, Distance acceptedDeviationConstant = null)
             : this()
         {
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
             {
-                acceptedDeviationConstant = new Distance(DistanceType.Inch, 1);
+                acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
             }
 
             Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
 
             //if it is the origin we just leave it as the base constructor
-            if (!distanceToOrigin.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+            if (!distanceToOrigin.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
             {
                 //if the z is 0 than the angle should be 90 so we can use the xyplane angle
                 //Note: we called the base contructor first so it is already 90 unless we change it
-                if (!directionPoint.Z.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                if (!directionPoint.Z.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                 {
                     //arcos handles negatives how we want so we dont have to worry about it
                     this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
                 }
 
                 //if the x is zero it is either straight up or down
-                if (!directionPoint.X.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                if (!directionPoint.X.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                 {
-                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant.Value))
+                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                     {
                         //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
                         this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
@@ -204,7 +198,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="basePoint">The first point to find the angle from</param>
         /// <param name="endPoint">The point to use to find the angle of</param>
-        public Direction(Point basePoint, Point endPoint, Distance? acceptedDeviationConstant = null)
+        public Direction(Point basePoint, Point endPoint, Distance acceptedDeviationConstant = null)
             : this(endPoint - basePoint, acceptedDeviationConstant) { }
 
         /// <summary>
@@ -224,7 +218,7 @@ namespace GeometryClassLibrary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (angleToZAxis < new Angle() && angleToZAxis > new Angle(AngleType.Degree, 180))
+                if (angleToZAxis < new Angle() || angleToZAxis > new Angle(AngleType.Degree, 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -244,6 +238,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -251,8 +246,6 @@ namespace GeometryClassLibrary
 
         public static bool operator ==(Direction direction1, Direction direction2)
         {
-
-
             if ((object)direction1 == null)
             {
                 if ((object)direction2 == null)
@@ -332,7 +325,8 @@ namespace GeometryClassLibrary
         /// <returns>A new direction that points in the oppposite direction as this one</returns>
         public Direction Reverse()
         {
-            return new Direction(this.Phi - new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 180) - this.Theta);
+            //reverse phi(xy) and then complement theta (from z) around 90 since its only 180 range
+            return new Direction(this.Phi.Reverse(), new Angle(AngleType.Degree, 180) - this.Theta);
         }
 
         /// <summary>

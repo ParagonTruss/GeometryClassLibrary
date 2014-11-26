@@ -11,7 +11,6 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [DebuggerDisplay("UNITS = Inches, Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, End Point = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Length = {Length.Inches},  Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}")]
-    
     public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties and Fields
@@ -88,7 +87,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance? passedLength = null)
+        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
             : base(passedBasePoint, passedDirection, passedLength) { }
 
         /// <summary>

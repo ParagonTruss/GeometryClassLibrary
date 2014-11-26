@@ -11,7 +11,6 @@ namespace GeometryClassLibrary
     /// A vector is a line segment that has a direction
     /// </summary>
     [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
-    
     public class Vector : Line
     {
         #region Properties and Fields
@@ -133,7 +132,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint">The point at which the vector starts</param>
         /// <param name="passedDirection">The direction the vector points</param>
         /// <param name="passedMagnitude">The length of the Vector</param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Distance? passedMagnitude = null)
+        public Vector(Point passedBasePoint, Direction passedDirection, Distance passedMagnitude = null)
             : base(passedDirection, passedBasePoint)
         {
             if (passedMagnitude == null)
@@ -142,7 +141,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                _magnitude = new Distance(passedMagnitude.Value);
+                _magnitude = new Distance(passedMagnitude);
             }
         }
 
@@ -156,7 +155,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
-
         public override int GetHashCode()
         {
             return base.GetHashCode();
