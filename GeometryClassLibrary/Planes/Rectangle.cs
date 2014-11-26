@@ -5,6 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
+
     public class Rectangle : IrregularPolygon
     {
     }

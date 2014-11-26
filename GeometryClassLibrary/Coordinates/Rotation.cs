@@ -8,7 +8,6 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Angle to Rotate = {AngleToRotate.Degrees}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.Inches}, {AxisToRotateAround.BasePoint.Y.Inches}, {AxisToRotateAround.BasePoint.Z.Inches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.Inches}")]
-    
     public class Rotation
     {
         #region Properties and Fields
@@ -69,6 +68,11 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         /* these dont make sense right now because they assume that the rotations are the same axis
         public static Rotation operator +(Rotation r1, Angle angleToAdd)
         {
@@ -81,11 +85,6 @@ namespace GeometryClassLibrary
             //subtract the angle to how far we are already rotating
             return new Rotation(r1._axisToRotateAround, r1._angleToRotate - angleToSubtract);
         }*/
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to Constants.AcceptedEqualityDeviationConstant 

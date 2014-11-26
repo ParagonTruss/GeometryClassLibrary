@@ -10,22 +10,31 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
-    
     public class Polygon : PlaneRegion, IComparable<Polygon>
     {
         #region Properties and Fields
 
-        public List<LineSegment> PlaneBoundaries
+        public List<LineSegment> LineSegments
         {
-            get { return this.Edges as List<LineSegment>; }
-            set 
+            get 
+            {
+                List<LineSegment> convertedList = new List<LineSegment>(); 
+                foreach (var linesegment in Edges)
+                {
+                    convertedList.Add((LineSegment)linesegment);
+                }
+
+                return convertedList;
+                 
+            }
+            set
             {
                 List<IEdge> convertedList = new List<IEdge>();
                 foreach (var item in value)
                 {
                     convertedList.Add(item);
                 }
-                this.Edges = convertedList; 
+                this.Edges = convertedList;
             }
         }
 
@@ -33,7 +42,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return this.PlaneBoundaries.FindAreaOfPolygon();
+                return this.LineSegments.FindAreaOfPolygon();
             }
         }
 
@@ -47,7 +56,7 @@ namespace GeometryClassLibrary
         public Polygon()
             : base()
         {
-            this.PlaneBoundaries = new List<LineSegment>();
+            this.LineSegments = new List<LineSegment>();
         }
 
         /// <summary>
@@ -64,19 +73,19 @@ namespace GeometryClassLibrary
         public Polygon(List<LineSegment> passedBoundaries)
             : base()
         {
+
             bool isClosed = passedBoundaries.DoFormClosedRegion();
             bool areCoplanar = passedBoundaries.AreAllCoplanar();
 
             if (isClosed && areCoplanar)
             {
-                this.PlaneBoundaries = new List<LineSegment>(passedBoundaries);
+                this.LineSegments = new List<LineSegment>(passedBoundaries);
             }
             else
             {
                 throw new Exception("The linesegments you are attempting to make a polygon from are either not closed or not coplanar.");
             }
         }
-
         /// <summary>
         /// Defines a plane region using the given lines and where they intersect as long as the line are all coplanar
         /// NOTE:Will not work for concave polygons
@@ -85,7 +94,7 @@ namespace GeometryClassLibrary
         public Polygon(List<Line> passedLines)
             : base(passedLines)
         {
-            this.PlaneBoundaries = new List<LineSegment>();
+            this.LineSegments = new List<LineSegment>();
 
             if (passedLines.AreAllCoplanar())
             {
@@ -107,7 +116,7 @@ namespace GeometryClassLibrary
                     }
                     if (intersections.Count == 2)
                     {
-                        this.PlaneBoundaries.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
+                        this.LineSegments.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
                     }
                     else
                     {
@@ -116,7 +125,7 @@ namespace GeometryClassLibrary
                 }
             }
 
-            if (!this.PlaneBoundaries.DoFormClosedRegion())
+            if (!this.LineSegments.DoFormClosedRegion())
             {
                 throw new ArgumentException("generated line segments from lines are invalid");
             }
@@ -127,15 +136,10 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
-            : this()
+            : this( polygonToCopy.LineSegments)
         //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
         //constructing a plane fron a List<LineSegment>
         {
-            foreach (var line in polygonToCopy.PlaneBoundaries)
-            {
-                this.PlaneBoundaries.Add(new LineSegment(line));
-
-            }
             this.NormalVector = polygonToCopy.NormalVector;
             this.BasePoint = polygonToCopy.BasePoint;
         }
@@ -199,17 +203,17 @@ namespace GeometryClassLibrary
                 Polygon comparablePolygon = (Polygon)obj;
 
                 //if they have differnt number of boundaries they cant be equal
-                if (this.PlaneBoundaries.Count != comparablePolygon.PlaneBoundaries.Count)
+                if (this.LineSegments.Count != comparablePolygon.LineSegments.Count)
                 {
                     return false;
                 }
 
                 //now check each line segment
-                foreach (LineSegment segment in this.PlaneBoundaries)
+                foreach (LineSegment segment in this.LineSegments)
                 {                        
                     //make sure each segment is represented exactly once
                     int timesUsed = 0;
-                    foreach (LineSegment segmentOther in comparablePolygon.PlaneBoundaries)
+                    foreach (LineSegment segmentOther in comparablePolygon.LineSegments)
                     {
                         if (segment == segmentOther)
                         {
@@ -266,10 +270,10 @@ namespace GeometryClassLibrary
             //we count each point twice
             //the reason why we have to add all of the points twice is because we do not know which way the 
             //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
-            int count = this.PlaneBoundaries.Count * 2;
+            int count = this.LineSegments.Count * 2;
 
             //sum up each of the points
-            foreach (LineSegment line in this.PlaneBoundaries)
+            foreach (LineSegment line in this.LineSegments)
             {
                 xSum += line.BasePoint.X + line.EndPoint.X;
                 ySum += line.BasePoint.Y + line.EndPoint.Y;
@@ -283,7 +287,7 @@ namespace GeometryClassLibrary
 
         public new Polygon Shift(Shift passedShift)
         {
-            return new Polygon(this.PlaneBoundaries.Shift(passedShift));
+            return new Polygon(this.LineSegments.Shift(passedShift));
         }
 
         /// <summary>
@@ -294,7 +298,7 @@ namespace GeometryClassLibrary
         public new Polygon Rotate(Rotation rotationToApply)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in this.PlaneBoundaries)
+            foreach (LineSegment segment in this.LineSegments)
             {
                 newBoundaryList.Add(segment.Rotate(rotationToApply));
             }
@@ -305,7 +309,7 @@ namespace GeometryClassLibrary
         public new Polygon Translate(Point translation)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in this.PlaneBoundaries)
+            foreach (LineSegment segment in this.LineSegments)
             {
                 newBoundaryList.Add(segment.Translate(translation));
             }
@@ -585,9 +589,9 @@ namespace GeometryClassLibrary
 
             // find two lines that are not parallel
 
-            LineSegment firstLine =  this.PlaneBoundaries[0];
+            LineSegment firstLine =  this.LineSegments[0];
             LineSegment secondLine = null;
-            foreach (var lineseg in this.PlaneBoundaries)
+            foreach (var lineseg in this.LineSegments)
             {
                 if (!lineseg.IsParallelTo(firstLine))
                 {
@@ -606,7 +610,7 @@ namespace GeometryClassLibrary
             List<LineSegment> backPolygonLines = new List<LineSegment>();
             List<LineSegment> otherPolygonLines = new List<LineSegment>();
 
-            foreach (var linesegment in this.PlaneBoundaries)
+            foreach (var linesegment in this.LineSegments)
             {
                 List<LineSegment> polygonConstruct = new List<LineSegment>();
 
@@ -653,8 +657,8 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
         public bool isValidPolygon()
         {
-            bool isClosed = PlaneBoundaries.DoFormClosedRegion();
-            bool areCoplanar = PlaneBoundaries.AreAllCoplanar();
+            bool isClosed = LineSegments.DoFormClosedRegion();
+            bool areCoplanar = LineSegments.AreAllCoplanar();
 
             if (isClosed && areCoplanar)
             {
@@ -681,7 +685,7 @@ namespace GeometryClassLibrary
             }
 
             //if we still havent found it try looking at the veticies of the otherPlane
-            foreach (Point vertex in otherPolygon.PlaneBoundaries.GetAllPoints())
+            foreach (Point vertex in otherPolygon.LineSegments.GetAllPoints())
             {
                 if (this.ContainsExclusive(vertex))
                 {
@@ -691,13 +695,13 @@ namespace GeometryClassLibrary
 
             //still still havent found it check if the sides overlap
             //we know one line at least must intersect this planes boundaries twice
-            foreach (LineSegment line in otherPolygon.PlaneBoundaries)
+            foreach (LineSegment line in otherPolygon.LineSegments)
             {
                 //keep track of our intersection
                 Point firstIntesect = null;
 
                 //look at all the bounding planes
-                foreach (LineSegment otherLine in this.PlaneBoundaries)
+                foreach (LineSegment otherLine in this.LineSegments)
                 {
                     //see if they intersect
                     Point intersection = line.Intersection(otherLine);
@@ -753,7 +757,7 @@ namespace GeometryClassLibrary
                 if (referencePoint != null)
                 {
                     //then find where the sides overlap
-                    foreach (Line divisionLine in this.PlaneBoundaries)
+                    foreach (Line divisionLine in this.LineSegments)
                     {
                         List<Polygon> slicedPlane = overlapping.Slice(divisionLine);
 
@@ -768,7 +772,7 @@ namespace GeometryClassLibrary
                     //to zero (this would mean the Polygons are only touching not overlapping so we dont want to return it) 
                     //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
                     //right now and this should work for how the function is set up)
-                    if (overlapping.isValidPolygon() && overlapping.PlaneBoundaries.Count > 2)
+                    if (overlapping.isValidPolygon() && overlapping.LineSegments.Count > 2)
                         return overlapping;
                 }
             }
@@ -850,7 +854,7 @@ namespace GeometryClassLibrary
                 List<List<LineSegment>> toRemove = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
 
                 //loop through each segment in the planeRegion to see if and where it needs to be sliced
-                foreach (LineSegment line in slicedPolygons[0].PlaneBoundaries)
+                foreach (LineSegment line in slicedPolygons[0].LineSegments)
                 {
                     //find where or if the linesegment overlaps the clipping line
                     Point intersectPoint = line.Intersection(slicingLine);
@@ -899,7 +903,7 @@ namespace GeometryClassLibrary
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToRemove in toRemove[currentRegionNumber])
                     {
-                        slicedPolygons[currentRegionNumber].PlaneBoundaries.Remove(lineToRemove);
+                        slicedPolygons[currentRegionNumber].LineSegments.Remove(lineToRemove);
                     }
                 }
 
@@ -909,7 +913,7 @@ namespace GeometryClassLibrary
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToAdd in segmentsCut[currentRegionNumber])
                     {
-                        slicedPolygons[currentRegionNumber].PlaneBoundaries.Add(lineToAdd);
+                        slicedPolygons[currentRegionNumber].LineSegments.Add(lineToAdd);
                     }
                 }
 
@@ -917,7 +921,7 @@ namespace GeometryClassLibrary
                 consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
 
                 //make sure that the polygons are actually cut
-                if (slicedPolygons[0].PlaneBoundaries.Count <= 2 && slicedPolygons[0].isValidPolygon())
+                if (slicedPolygons[0].LineSegments.Count <= 2 && slicedPolygons[0].isValidPolygon())
                 {
                     if (slicedPolygons[1] == this)
                     {
@@ -928,7 +932,7 @@ namespace GeometryClassLibrary
                         throw new Exception();
                     }
                 }
-                else if (slicedPolygons[1].PlaneBoundaries.Count <= 2 && slicedPolygons[1].isValidPolygon())
+                else if (slicedPolygons[1].LineSegments.Count <= 2 && slicedPolygons[1].isValidPolygon())
                 {
                     if (slicedPolygons[0] == this)
                     {
@@ -1181,7 +1185,7 @@ namespace GeometryClassLibrary
                 //now we need to add the new lineSegments to our plane region
                 foreach (LineSegment toAdd in newSegmentsGenerated[currentRegionNumber])
                 {
-                    slicedPlanes[currentRegionNumber].PlaneBoundaries.Add(toAdd);
+                    slicedPlanes[currentRegionNumber].LineSegments.Add(toAdd);
                 }
             }
         }
@@ -1213,7 +1217,7 @@ namespace GeometryClassLibrary
             if (((Plane)this).Contains(passedLine))
             {
                 //check if it intersects our boundaries
-                foreach (LineSegment segment in this.PlaneBoundaries)
+                foreach (LineSegment segment in this.LineSegments)
                 {
                     if (passedLine.DoesIntersect(segment))
                     {
@@ -1246,7 +1250,7 @@ namespace GeometryClassLibrary
             if (((Plane)this).Contains(passedPoint))
             {
                 //now check if it is in the bounds each line at a time
-                foreach (LineSegment line in PlaneBoundaries)
+                foreach (LineSegment line in LineSegments)
                 {
                     //find the plane perpendicular to this plane that represents the side we are on
 
@@ -1281,7 +1285,7 @@ namespace GeometryClassLibrary
         public bool Touches(Point passedPoint)
         {
             //check each of our boundaries if the point is on the LineSegment
-            foreach (LineSegment line in this.PlaneBoundaries)
+            foreach (LineSegment line in this.LineSegments)
             {
                 if (passedPoint.IsOnLineSegment(line))
                 {
@@ -1298,9 +1302,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool DoesShareSide(Polygon otherPolygon)
         {
-            foreach (LineSegment segment in this.PlaneBoundaries)
+            foreach (LineSegment segment in this.LineSegments)
             {
-                foreach (LineSegment segmentOther in otherPolygon.PlaneBoundaries)
+                foreach (LineSegment segmentOther in otherPolygon.LineSegments)
                 {
                     if (segment == segmentOther)
                     {

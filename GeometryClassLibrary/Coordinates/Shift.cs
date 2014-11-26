@@ -9,7 +9,6 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Displacement = {Displacement.X.Inches}, {Displacement.Y.Inches}, {Displacement.Z.Inches}, Rotations Count = {RotationsToApply.Count}")]
-    
     public class Shift
     {
         #region Properties and Fields
@@ -124,10 +123,11 @@ namespace GeometryClassLibrary
             _displacement = new Point() - coordinateSystemToShiftTo.Origin;
 
             //make the rotations that represent the coordinate shift
+
             _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, new Angle() - coordinateSystemToShiftTo.ZAngle));
-            _rotationsToApply.Add(new Rotation(Line.XAxis, new Angle() - coordinateSystemToShiftTo.XAngle));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, new Angle() - coordinateSystemToShiftTo.YAngle));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle.Negate()));
+            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle.Negate()));
+            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle.Negate()));
         }
 
         /// <summary>
@@ -330,7 +330,8 @@ namespace GeometryClassLibrary
             foreach (Rotation rotation in _rotationsToApply)
             {
                 //switch the angle of each rotation to its opposite
-                returnRotations.Add(new Rotation(rotation.AxisToRotateAround, new Angle() - rotation.AngleToRotate));
+
+                returnRotations.Add(new Rotation(rotation.AxisToRotateAround, rotation.AngleToRotate.Negate()));
             }
             //now flip the order of them so it reverse the shift properly
             returnRotations.Reverse();

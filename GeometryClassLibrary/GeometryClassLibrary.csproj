@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Planes\Circle.cs" />
+    <Compile Include="Planes\RightTriangle.cs" />
+    <Compile Include="Planes\Triangle.cs" />
     <Compile Include="Solids\ConeClass.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Coordinates\CoordinateSystem.cs" />
@@ -94,6 +96,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Solids\TriangularPrism.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Planes\Rectangle.cs" />
     <Compile Include="Planes\RegularPolygon.cs" />
     <Compile Include="Planes\Rhombus.cs" />
@@ -110,9 +115,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

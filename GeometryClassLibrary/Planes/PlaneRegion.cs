@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    
     public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Properties and Fields
 
-        protected IEnumerable<IEdge> Edges;
+        protected List<IEdge> Edges = new List<IEdge>();
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
         #endregion
@@ -25,7 +23,7 @@ namespace GeometryClassLibrary
         public PlaneRegion()
             : base()
         {
-            Edges = new List<IEdge>();
+            this.Edges = new List<IEdge>();
         }
 
         /// <summary>
@@ -44,7 +42,10 @@ namespace GeometryClassLibrary
         public PlaneRegion(IEnumerable<IEdge> passedEdges)
             : base()
         {
-            Edges = passedEdges;
+            foreach (var edge in passedEdges)
+            {
+                this.Edges.Add(edge);
+            }
 
             if (passedEdges.Count() > 0)
             {
@@ -88,6 +89,8 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
+
         public override int GetHashCode()
         {
             return base.GetHashCode();

@@ -14,20 +14,6 @@ namespace GeometryClassLibraryTest
     [TestFixture]
     public class ShiftTests
 	{
-        [Test()]
-        public void Negate_Test()
-
-        {
-            var originalAngle = new Angle(AngleType.Degree, 45);
-            var oppositeAngle = new Angle(AngleType.Degree, -45);
-
-            var negatedOriginalAngle = originalAngle.Negate();
-            var negatedNegatedOriginalAngle = negatedOriginalAngle.Negate();
-
-            (originalAngle == negatedNegatedOriginalAngle).Should().BeTrue();
-            (negatedOriginalAngle == oppositeAngle).Should().BeTrue();
-
-        }
 
         [Test]
         public void Shift_TranslateUsingCoordinateSystem()
@@ -105,10 +91,10 @@ namespace GeometryClassLibraryTest
             Polygon shifted = testPolygon.Shift(new Shift(system));
 
             List<LineSegment> expectedBounds = new List<LineSegment>();
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(.5 - 0.75, .5 + 2, -0.707106781 + 1.5), PointGenerator.MakePointWithInches(1.5 - 0.75, 1.5 + 2, -2.12132034 + 1.5)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(.5 - 0.75, .5 + 2, -0.707106781 + 1.5), PointGenerator.MakePointWithInches(3.32847125 - 0.75, -2.328427125 + 2, -0.707106781 + 1.5)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1.5 - 0.75, 1.5 + 2, -2.12132034 + 1.5), PointGenerator.MakePointWithInches(4.328427125 - 0.75, -1.328427125 + 2, -2.12132034 + 1.5)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(3.32847125 - 0.75, -2.328427125 + 2, -0.707106781 + 1.5), PointGenerator.MakePointWithInches(4.328427125 - 0.75, -1.328427125 + 2, -2.12132034 + 1.5)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(.5 - 0.75, 0.707106781 + 2, .5 + 1.5), PointGenerator.MakePointWithInches(1.5 - 0.75, 2.12132034 + 2, 1.5 + 1.5)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(.5 - 0.75, 0.707106781 + 2, .5 + 1.5), PointGenerator.MakePointWithInches(2.5 - 0.75, -2.12132034 + 2, 2.5 + 1.5)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1.5 - 0.75, 2.12132034 + 2, 1.5 + 1.5), PointGenerator.MakePointWithInches(3.5 - 0.75, -0.707106781 + 2, 3.5 + 1.5)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2.5 - 0.75, -2.12132034 + 2, 2.5 + 1.5), PointGenerator.MakePointWithInches(3.5 - 0.75, -0.707106781 + 2, 3.5 + 1.5)));
             Polygon expectedPolygon = new Polygon(expectedBounds);
 
             shifted.Should().Be(expectedPolygon);

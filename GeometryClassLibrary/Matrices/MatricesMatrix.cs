@@ -279,6 +279,7 @@ namespace GeometryClassLibrary
             //}
 
             //return resultingMatrices;
+
         }
 
         /// <summary>
@@ -293,7 +294,6 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
             //Must check that this.numberofcolumns = passedMatricesMatrix.NumberOfRows for every element of the MatricesMatrix
             
-
             //if (this.NumberOfColumns == passedMatrices.NumberOfRows)
             //{
             //    return true;
@@ -312,6 +312,7 @@ namespace GeometryClassLibrary
         public MatricesMatrix MultiplyBy(MatricesMatrix passedMatrices)
         {
             throw new NotImplementedException();
+
             //MatricesMatrix resultingMatrices;
 
             //if (this.CanBeMultipliedBy(passedMatrices))
@@ -338,6 +339,7 @@ namespace GeometryClassLibrary
             //}
 
             //return resultingMatrices;
+
         }
 
         /// <summary>

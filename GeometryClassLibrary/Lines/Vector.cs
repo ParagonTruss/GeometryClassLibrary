@@ -155,6 +155,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -589,7 +590,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift"></param>
         /// <returns></returns>
-        public Vector Shift(Shift passedShift)
+        public new Vector Shift(Shift passedShift)
         {
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }

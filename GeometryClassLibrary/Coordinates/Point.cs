@@ -14,6 +14,7 @@ namespace GeometryClassLibrary
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [DebuggerDisplay("{X.Inches}, {Y.Inches}, {Z.Inches}")]
+
     public class Point
     {
         #region Properties and Fields
@@ -128,10 +129,12 @@ namespace GeometryClassLibrary
         /* You may notice that we do not overload the increment and decrement operators nor do we overload multiplication and division.
          * This is because the user of this library does not know what is being internally stored and those operations will not return useful information. 
          */
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
 
         public static Point operator +(Point point1, Point point2)
         {

@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    
+
     public class Square : RegularPolygon
     {
         /// <summary>

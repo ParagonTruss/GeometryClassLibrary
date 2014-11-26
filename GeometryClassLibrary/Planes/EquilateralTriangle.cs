@@ -6,6 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
+
     public class EquilateralTriangle : RegularPolygon
     {
         /// <summary>

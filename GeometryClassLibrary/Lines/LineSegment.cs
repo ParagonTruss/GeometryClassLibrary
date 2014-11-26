@@ -11,6 +11,7 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [DebuggerDisplay("UNITS = Inches, Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, End Point = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Length = {Length.Inches},  Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}")]
+
     public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties and Fields
@@ -100,6 +101,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
 
         public override int GetHashCode()
         {
@@ -243,6 +245,7 @@ namespace GeometryClassLibrary
         }
 
         public IEdge RotateAsIEdge(Rotation passedRotation)
+
         {
             return this.Rotate(passedRotation);
         }

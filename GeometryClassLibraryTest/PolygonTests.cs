@@ -170,9 +170,9 @@ namespace GeometryClassLibraryTests
             Polygon planeCopy = new Polygon(testPolygon);
 
             //make sure it copied correctly 
-            foreach (LineSegment line in testPolygon.PlaneBoundaries)
+            foreach (LineSegment line in testPolygon.LineSegments)
             {
-                planeCopy.PlaneBoundaries.Contains(line).Should().BeTrue();
+                planeCopy.LineSegments.Contains(line).Should().BeTrue();
             }
             (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeTrue();
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
@@ -180,9 +180,9 @@ namespace GeometryClassLibraryTests
             //now make sure the copy is independent by shifting it and then testing again
             planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45)), PointGenerator.MakePointWithInches(1, 4, -2)));
 
-            foreach (LineSegment line in testPolygon.PlaneBoundaries)
+            foreach (LineSegment line in testPolygon.LineSegments)
             {
-                planeCopy.PlaneBoundaries.Contains(line).Should().BeFalse();
+                planeCopy.LineSegments.Contains(line).Should().BeFalse();
             }
             (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeFalse();
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeFalse();
@@ -542,7 +542,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon6 = new Polygon(bounds6);
 
             List<LineSegment> bounds7 = new List<LineSegment>();
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 0)));
+            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));

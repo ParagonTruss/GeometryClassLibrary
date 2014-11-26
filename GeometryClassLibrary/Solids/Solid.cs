@@ -8,15 +8,16 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    
     public class Solid: IComparable<Solid>
     {
         #region Fields and Properties
 
+        public virtual IList<IEdge> Edges { get; set; }
+
         /// <summary>
         /// The plane Regions that represent and make up this solid
         /// </summary>
-        protected IEnumerable<PlaneRegion> PlaneRegions { get; set; }
+        public virtual IList<PlaneRegion> Faces { get; set; }
 
         /// <summary>
         /// Accesses a point on the solid 
@@ -97,7 +98,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift">The Shift to preform</param>
         /// <returns>A new Solid that has been shifted</returns>
-        public Solid Shift(Shift passedShift)
+        public virtual Solid Shift(Shift passedShift)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual List<Solid> Slice(Plane slicingPlane)
         {
             throw new NotImplementedException();
         }

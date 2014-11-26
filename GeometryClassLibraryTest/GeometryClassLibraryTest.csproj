@@ -28,7 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -73,6 +73,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoordinateSystemTest.cs" />
+    <Compile Include="TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
@@ -89,10 +90,7 @@
     <Compile Include="ListExtensionTests\LineSegmentListExtensionTests.cs" />
     <Compile Include="LineSegmentTests.cs" />
     <Compile Include="LineTests.cs" />
-    <Compile Include="PlaneRegionTests.cs">
-      <SubType>
-      </SubType>
-    </Compile>
+    <Compile Include="PlaneRegionTests.cs" />
     <Compile Include="PlaneTests.cs" />
     <Compile Include="PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

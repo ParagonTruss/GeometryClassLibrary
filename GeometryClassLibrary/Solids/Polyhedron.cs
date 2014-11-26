@@ -7,6 +7,7 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Base Point = {BasePoint}")]
+
     public class Polyhedron : Solid
     {
         #region Properties and Fields
@@ -16,16 +17,17 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual List<Polygon> Polygons
         {
-            get { return this.PlaneRegions as List<Polygon>; }
+
+
+            get { return this.Faces as List<Polygon>; }
             set 
             {
-
-                List<PlaneRegion> convertedList = new List<PlaneRegion>();
+                List<Polygon> polygons = new List<Polygon>();
                 foreach (var item in value)
                 {
-                    convertedList.Add(item);
+                    this.Faces.Add(item);
                 }
-                this.PlaneRegions = convertedList; 
+
             }
         }
 
@@ -39,7 +41,7 @@ namespace GeometryClassLibrary
                 Point returnPoint = null;
                 if (this.Polygons.Count > 0)
                 {
-                    returnPoint = this.Polygons[0].PlaneBoundaries[0].BasePoint;
+                    returnPoint = this.Polygons[0].LineSegments[0].BasePoint;
                 }
                 return returnPoint;
             }
@@ -56,8 +58,8 @@ namespace GeometryClassLibrary
 
                 foreach (Polygon region in this.Polygons)
                 {
-                    if (region.PlaneBoundaries != null)
-                        returnList.AddRange(region.PlaneBoundaries);
+                    if (region.LineSegments != null)
+                        returnList.AddRange(region.LineSegments);
                 }
 
                 return returnList;
@@ -120,6 +122,7 @@ namespace GeometryClassLibrary
         {
             return base.GetHashCode();
         }
+
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
@@ -259,7 +262,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="slicingPlane">The plane to slice the Polyhedron with</param>
         /// <returns>Returns two new Polyhedrons created by the slice in order of size</returns>
-        public List<Polyhedron> Slice(Plane slicingPlane)
+        public new List<Polyhedron> Slice(Plane slicingPlane)
         {
             if (this.DoesIntersect(slicingPlane))
             {

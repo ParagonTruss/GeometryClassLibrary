@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
@@ -321,6 +320,7 @@ namespace GeometryClassLibrary
             }
 
             return convertedList.AreAllCoplanar();
+
         }
 
         /// <summary>
@@ -330,6 +330,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllParallel(this List<LineSegment> passedLineList)
         {
+
             List<Line> convertedList = new List<Line>();
             foreach (var item in passedLineList)
                 {

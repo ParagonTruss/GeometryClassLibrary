@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    
+
     public class IrregularPolygon : Polygon
     {
         /*private List<LineSegment> _planeBoundaries;

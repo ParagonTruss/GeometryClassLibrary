@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     /// Represents an infinite Line
     /// </summary>
     [DebuggerDisplay("UNITS = Inches, BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches} , {BasePoint.Z.Inches}, Vector = {DirectionVector.XComponentOfDirection.Inches}, {DirectionVector.YComponentOfDirection.Inches}, {DirectionVector.ZComponentOfDirection.Inches}")]
-    
+
     public class Line : IComparable<Line>
     {
         #region Properties and Fields
@@ -216,10 +216,12 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
 
         public static bool operator ==(Line line1, Line line2)
         {
@@ -584,8 +586,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the line the given distance in the given direction
         /// </summary>
-        /// <param name="passedDirectionVector"></param>
-        /// <param name="passedDisplacement"></param>
         /// <returns></returns>
         public Line Translate(Point translation)
         {
@@ -593,6 +593,22 @@ namespace GeometryClassLibrary
             Point newOtherPoint = this.GetPointOnLine(2).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
+        }
+
+        /// <summary>
+        /// Shifts the Line with the given shift
+        /// </summary>
+        /// <param name="passedShift">The shift to apply to the Line</param>
+        /// <returns>Returns a new Line that has been shifted with the given Shift</returns>
+        public Line Shift(Shift passedShift)
+        {
+            //shift it as a vector since we currently dont shift directions
+            Vector linesVector =  this.UnitVector(DistanceType.Inch);
+
+            Vector shifted = linesVector.Shift(passedShift);
+
+            //then construct a new line with that information
+            return new Line(shifted);
         }
 
         /// <summary>

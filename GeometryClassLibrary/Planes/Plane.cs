@@ -9,7 +9,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
-    
     public class Plane
     {
         #region Properties and Fields
@@ -177,6 +176,7 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -240,7 +240,7 @@ namespace GeometryClassLibrary
         public bool Contains(Polygon passedPlaneRegion)
         {
             // checks to make sure that every line is on the line segment
-            foreach (LineSegment segment in passedPlaneRegion.PlaneBoundaries)
+            foreach (LineSegment segment in passedPlaneRegion.LineSegments)
             {
                 if (!this.Contains(segment))
                 {
@@ -509,7 +509,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            foreach (LineSegment segment in passedPolygon.PlaneBoundaries)
+            foreach (LineSegment segment in passedPolygon.LineSegments)
             {
                 if (this.DoesIntersectNotCoplanar(segment))
                 {
