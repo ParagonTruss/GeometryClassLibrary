@@ -870,7 +870,7 @@ namespace GeometryClassLibrary
 
                 //set up our variables we will need
                 //create our two regions that we will modify and return
-                List<Polygon> slicedPolygons = new List<Polygon>() { new Polygon(this), new Polygon(this) };
+                List<List<LineSegment>> slicedPolygonsLines = new List<List<LineSegment>>() { this.LineSegments, this.LineSegments };
 
                 //keep track of all the new lines we added so that we can connect them later on (one for each region returned)
                 List<List<LineSegment>> newSegmentsGenerated = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
@@ -883,7 +883,7 @@ namespace GeometryClassLibrary
                 List<List<LineSegment>> toRemove = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
 
                 //loop through each segment in the planeRegion to see if and where it needs to be sliced
-                foreach (LineSegment line in slicedPolygons[0].LineSegments)
+                foreach (LineSegment line in slicedPolygonsLines[0])
                 {
                     //find where or if the linesegment overlaps the clipping line
                     Point intersectPoint = line.Intersection(slicingLine);
@@ -896,7 +896,7 @@ namespace GeometryClassLibrary
                         {
                             //slice the line and project the parts for the relevent polygons
                             _sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
-                                slicedPolygons, segmentsCut, newSegmentsGenerated, toRemove);
+                                slicedPolygonsLines, segmentsCut, newSegmentsGenerated, toRemove);
                         }
                         //if there is a point on the plane than we need to remove for one region if its on the other side
                         else
@@ -932,7 +932,7 @@ namespace GeometryClassLibrary
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToRemove in toRemove[currentRegionNumber])
                     {
-                        slicedPolygons[currentRegionNumber].LineSegments.Remove(lineToRemove);
+                        slicedPolygonsLines[currentRegionNumber].Remove(lineToRemove);
                     }
                 }
 
@@ -942,30 +942,35 @@ namespace GeometryClassLibrary
                     //remove any segments we need to from our overlapping polygon first
                     foreach (LineSegment lineToAdd in segmentsCut[currentRegionNumber])
                     {
-                        slicedPolygons[currentRegionNumber].LineSegments.Add(lineToAdd);
+                        slicedPolygonsLines[currentRegionNumber].Add(lineToAdd);
                     }
                 }
 
                 //now consolidate the generated line segments into one that spans the gap created by the line segments
-                consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygons);
+                _consolidateGeneratedLineSegments(newSegmentsGenerated, slicedPolygonsLines);
+
+                //now actually create the two Polygons so we can return them and make sure they are valid
+                List<Polygon> createdPolygons = new List<Polygon>();
+                createdPolygons.Add(new Polygon(slicedPolygonsLines[0]));
+                createdPolygons.Add(new Polygon(slicedPolygonsLines[1]));
 
                 //make sure that the polygons are actually cut
-                if (slicedPolygons[0].LineSegments.Count <= 2 && slicedPolygons[0].isValidPolygon())
+                if (createdPolygons[0].LineSegments.Count <= 2 && createdPolygons[0].isValidPolygon())
                 {
-                    if (slicedPolygons[1] == this)
+                    if (createdPolygons[1] == this)
                     {
-                        return new List<Polygon>() { slicedPolygons[1] };
+                        return new List<Polygon>() { createdPolygons[1] };
                     }
                     else //shouldnt ever get here
                     {
                         throw new Exception();
                     }
                 }
-                else if (slicedPolygons[1].LineSegments.Count <= 2 && slicedPolygons[1].isValidPolygon())
+                else if (createdPolygons[1].LineSegments.Count <= 2 && createdPolygons[1].isValidPolygon())
                 {
-                    if (slicedPolygons[0] == this)
+                    if (createdPolygons[0] == this)
                     {
-                        return new List<Polygon>() { slicedPolygons[0] };
+                        return new List<Polygon>() { createdPolygons[0] };
                     }
                     else //shouldnt ever get here
                     {
@@ -974,9 +979,9 @@ namespace GeometryClassLibrary
                 }
 
                 //now return them in opposite order (largest first
-                slicedPolygons.Sort();
-                slicedPolygons.Reverse();
-                return slicedPolygons;
+                createdPolygons.Sort();
+                createdPolygons.Reverse();
+                return createdPolygons;
             }
             //if we were not in the plane than we return a copy of the orignal plane (this)
             return new List<Polygon>() { new Polygon(this) };
@@ -994,7 +999,7 @@ namespace GeometryClassLibrary
         /// <param name="slicedPolygons"></param>
         /// <param name="newSegmentsGenerated"></param>
         private void _sliceLineAndProjectForInsideAndOutsidePolygons(LineSegment lineToSlice, Point intersectPoint, Plane slicingPlane, Line slicingLine,
-            Point referencePoint, List<Polygon> slicedPolygons, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
+            Point referencePoint, List<List<LineSegment>> slicedPolygons, List<List<LineSegment>> segmentsCut, List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> toRemove)
         {
             //we know we will always get two because we already checked and confirmed intersect
             List<LineSegment> lineSliced = lineToSlice.Slice(intersectPoint);
@@ -1152,7 +1157,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="newSegmentsGenerated">Line segments generated by slicing the polygon</param>
         /// <param name="slicedPlanes">the two result polygons from the slice</param>
-        private void consolidateGeneratedLineSegments(List<List<LineSegment>> newSegmentsGenerated, List<Polygon> slicedPlanes)
+        private void _consolidateGeneratedLineSegments(List<List<LineSegment>> newSegmentsGenerated, List<List<LineSegment>> slicedPlanes)
         {
             //combine any of the lines that share the same point so we dont have reduntent/more segments than necessary
             //we can do this because we know that they are all along the same line so if they share a point they are
@@ -1214,7 +1219,7 @@ namespace GeometryClassLibrary
                 //now we need to add the new lineSegments to our plane region
                 foreach (LineSegment toAdd in newSegmentsGenerated[currentRegionNumber])
                 {
-                    slicedPlanes[currentRegionNumber].LineSegments.Add(toAdd);
+                    slicedPlanes[currentRegionNumber].Add(toAdd);
                 }
             }
         }
