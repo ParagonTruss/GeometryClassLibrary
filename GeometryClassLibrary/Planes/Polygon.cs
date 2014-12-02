@@ -89,9 +89,10 @@ namespace GeometryClassLibrary
                 int i = 1;
                 while (this.NormalVector.Magnitude == new Distance())
                 {
-                    if (i + 1 > passedBoundaries.Count-1)
+                    if (i + 1 > passedBoundaries.Count - 1)
                     {
                         this.NormalVector = passedBoundaries[passedBoundaries.Count - 1].CrossProduct(passedBoundaries[0]);
+                        break;
                     }
                     else
                     {

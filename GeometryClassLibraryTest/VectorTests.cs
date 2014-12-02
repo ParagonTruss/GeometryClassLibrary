@@ -70,13 +70,16 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_CrossProduct()
         {
-            throw new NotImplementedException();
-        }
+            Vector xAxis = new Vector(new Point(), new Direction());
+            Vector yAxis = new Vector(new Point(), new Direction(new Angle(AngleType.Degree, 90)));
 
-        [Test()]
-        public void Vector_Reverse()
-        {
-            throw new NotImplementedException();
+            Vector result = xAxis.CrossProduct(yAxis);
+            Vector expected = new Vector(new Point(), new Direction(new Angle(), new Angle()));
+
+            result.Should().Be(expected);
+
+            Vector resultParallel = xAxis.CrossProduct(xAxis);
+            (resultParallel.Magnitude == new Distance()).Should().BeTrue();
         }
 
         [Test()]
