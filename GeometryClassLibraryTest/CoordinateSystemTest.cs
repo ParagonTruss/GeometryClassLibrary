@@ -56,7 +56,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_ShiftThatReturnsThisToWorldCoordinateSystem()
         {
-            CoordinateSystem test = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 3), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -23.6), new Angle(AngleType.Degree, -243));
+            CoordinateSystem test = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -3), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 23.6), new Angle(AngleType.Degree, 243));
 
             Shift result = test.ShiftThatReturnsThisToWorldCoordinateSystem();
 

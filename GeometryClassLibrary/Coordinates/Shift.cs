@@ -118,17 +118,14 @@ namespace GeometryClassLibrary
         /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
         public Shift(CoordinateSystem coordinateSystemToShiftTo)
         {
-            //we have to do the reverse of everything becuase we are shifting the coordinate system in concept which
-            //means in implementation, we must shift the objects in the oppsosite way
-
-            //make the translation that represents the coordinate shift
-            _displacement = new Point() - coordinateSystemToShiftTo.Origin;
-
-            //make the rotations that represent the coordinate shift
+            //put the rotations on in the right order (Z,X,Y)
             _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle.Negate()));
-            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle.Negate()));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle.Negate()));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle));
+            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle));
+            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle));
+
+            //Then put the displacement to the origin
+            _displacement = new Point(coordinateSystemToShiftTo.Origin);
         }
 
         /// <summary>
