@@ -80,6 +80,34 @@ namespace GeometryClassLibrary
             if (isClosed && areCoplanar)
             {
                 this.LineSegments = new List<LineSegment>(passedBoundaries);
+                this.BasePoint = passedBoundaries[0].BasePoint;
+
+                
+
+                this.NormalVector = passedBoundaries[0].CrossProduct(passedBoundaries[1]);
+
+                int i = 1;
+                while (this.NormalVector.Magnitude == new Distance())
+                {
+                    if (i + 1 > passedBoundaries.Count-1)
+                    {
+                        this.NormalVector = passedBoundaries[passedBoundaries.Count - 1].CrossProduct(passedBoundaries[0]);
+                    }
+                    else
+                    {
+                        this.NormalVector = passedBoundaries[i].CrossProduct(passedBoundaries[i + 1]);   
+                    }
+
+                   i++;
+                }
+
+                this.Edges = new List<IEdge>();
+
+                foreach (var edge in passedBoundaries)
+                {
+                    this.Edges.Add(edge);
+                }
+
             }
             else
             {

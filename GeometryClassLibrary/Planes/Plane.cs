@@ -39,15 +39,6 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Zero constructor
-        /// </summary>
-        public Plane()
-        {
-            this.BasePoint = new Point();
-            this.NormalVector = new Vector();
-        }
-
-        /// <summary>
         /// Creates a Plane base on the list of passed in lines
         /// Note: the lines must be all coplanar
         /// </summary>
@@ -82,17 +73,19 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBasePoint">A point on the plane to be used as the reference point</param>
         /// <param name="passedNormalDirection">A direction that is normal to the plane</param>
-        public Plane(Direction passedNormalDirection, Point passedBasePoint = null)
+        public Plane(Direction passedNormalDirection = null, Point passedBasePoint = null)
         {
             if (passedBasePoint == null)
             {
-                this.BasePoint = new Point();
-            }
-            else
-            {
-                this.BasePoint = passedBasePoint;
+                passedBasePoint = new Point();
             }
 
+            if (passedNormalDirection == null)
+            {
+                passedNormalDirection = new Direction();
+            }
+
+            this.BasePoint = passedBasePoint;
             this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 

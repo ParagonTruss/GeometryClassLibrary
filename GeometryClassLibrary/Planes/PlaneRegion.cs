@@ -20,8 +20,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Default empty constructor
         /// </summary>
-        public PlaneRegion()
-            : base()
+        public PlaneRegion(Direction passedNormalDirection = null, Point passedBasePoint = null)
+            : base(passedNormalDirection, passedBasePoint)
         {
             this.Edges = new List<IEdge>();
         }
@@ -79,12 +79,6 @@ namespace GeometryClassLibrary
 
             this.Edges = copiedEdges;
         }
-
-        /*public PlaneRegion(List<IEdge> shiftedBoundaries)
-        {
-                // TODO: Complete member initialization
-            Edges = shiftedBoundaries;
-        }*/
 
         #endregion
 

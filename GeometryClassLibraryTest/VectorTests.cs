@@ -62,6 +62,24 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Vector_Reverse()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test()]
+        public void Vector_CrossProduct()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test()]
+        public void Vector_Reverse()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test()]
         public void Vector_ProjectOntoPlane()
         {
             Vector testSegment = new Vector(PointGenerator.MakePointWithInches(2, 5, 3));

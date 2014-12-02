@@ -98,7 +98,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="borders"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static IList<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
+        public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
         {
             if (borders.AreAllCoplanar() && borders.DoFormClosedRegion())
             {
@@ -239,7 +239,6 @@ namespace GeometryClassLibrary
 
             return points;
         }
-    
 
         /// <summary>
         /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
@@ -258,7 +257,7 @@ namespace GeometryClassLibrary
                     //following the method here of projecting the triangles formed with an arbitrary point onto the plane: http://geomalgorithms.com/a01-_area.html
 
                     //first sort them clockwise
-                    List<LineSegment> sortedBorders = (List<LineSegment>)passedBorders.SortIntoClockWiseSegments();
+                    List<LineSegment> sortedBorders = passedBorders.SortIntoClockWiseSegments();
 
                     //get our verticies
                     List<Point> verticies = sortedBorders.GetAllPoints();

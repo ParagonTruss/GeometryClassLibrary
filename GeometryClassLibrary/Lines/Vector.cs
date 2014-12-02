@@ -433,7 +433,7 @@ namespace GeometryClassLibrary
         public Vector CrossProduct(Vector passedVector)
         {
             Point originPoint = new Point();
-            Vector v1 = this;
+            Vector v1 = new Vector( this);
             Vector v2 = new Vector(passedVector);
 
             if(this.BasePoint != originPoint || passedVector.BasePoint != originPoint)
