@@ -54,11 +54,19 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Vector_Reverse()
+        {
+            Vector v = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+
+            v.Reverse().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1)));
+        }
+
+        [Test()]
         public void Vector_Negate()
         {
             Vector v = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
 
-            v.Negate().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1)));
+            v.Reverse().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(7, 1)));
         }
 
         [Test()]

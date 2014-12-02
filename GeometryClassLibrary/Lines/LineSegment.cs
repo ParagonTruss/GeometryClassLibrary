@@ -229,7 +229,7 @@ namespace GeometryClassLibrary
         /// returns a copy of the line segment pointing in the opposite direction as the original
         /// </summary>
         /// <returns></returns>
-        public LineSegment Reverse()
+        public new LineSegment Reverse()
         {
             return new LineSegment(this.EndPoint, this.Direction.Reverse(), this.Length);
         }

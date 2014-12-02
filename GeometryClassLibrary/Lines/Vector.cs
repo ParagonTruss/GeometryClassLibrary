@@ -523,7 +523,7 @@ namespace GeometryClassLibrary
         public bool PointInOppositeDirections(Vector passedVector)
         {
             //flip one of the vectors
-            Vector passedVectorInOppositeDirection = passedVector.Negate();
+            Vector passedVectorInOppositeDirection = passedVector.Reverse();
 
             //then check if they are in the same direction
             return this.PointInSameDirection(passedVectorInOppositeDirection);
@@ -553,6 +553,16 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <returns>a negative instance of this Vector</returns>
         public Vector Negate()
+        {
+            //first flip the vector about itself
+            Vector flipped = new Vector(this.EndPoint, this.BasePoint);
+
+            //next translate the vector to the correct position
+            return flipped.Translate(flipped.BasePoint);
+        }
+
+
+        public Vector Reverse()
         {
             //first flip the vector about itself
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);

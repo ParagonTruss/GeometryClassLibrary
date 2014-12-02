@@ -35,7 +35,6 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftXYTest()
         {
-
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
