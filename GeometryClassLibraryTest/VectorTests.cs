@@ -62,12 +62,6 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Vector_Reverse()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Test()]
         public void Vector_CrossProduct()
         {
             Vector xAxis = new Vector(new Point(), new Direction());

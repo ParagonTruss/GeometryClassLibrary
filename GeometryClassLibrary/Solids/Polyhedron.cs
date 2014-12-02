@@ -19,14 +19,23 @@ namespace GeometryClassLibrary
         {
 
 
-            get { return this.Faces as List<Polygon>; }
-            set 
+            get 
             {
                 List<Polygon> polygons = new List<Polygon>();
+                foreach (var item in this.Faces)
+                {
+                    polygons.Add((Polygon)item);
+                }
+                return polygons;
+            }
+            set 
+            {
+                List<PlaneRegion> planeRegions = new List<PlaneRegion>();
                 foreach (var item in value)
                 {
-                    this.Faces.Add(item);
+                    planeRegions.Add(item);
                 }
+                this.Faces = planeRegions;
 
             }
         }
