@@ -60,7 +60,7 @@ namespace GeometryClassLibrary
         {
             _x = Distance1;
             _y = Distance2;
-            _z = new Distance(DistanceType.Millimeter, 0);
+            _z = new Distance(DistanceType.Inch, 0);
         }
 
         /// <summary>

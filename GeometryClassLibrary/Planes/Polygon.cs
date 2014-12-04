@@ -123,7 +123,7 @@ namespace GeometryClassLibrary
         public Polygon(List<Line> passedLines)
             : base(passedLines)
         {
-            this.LineSegments = new List<LineSegment>();
+            List<LineSegment> toUse = new List<LineSegment>();
 
             if (passedLines.AreAllCoplanar())
             {
@@ -145,7 +145,7 @@ namespace GeometryClassLibrary
                     }
                     if (intersections.Count == 2)
                     {
-                        this.LineSegments.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
+                        toUse.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
                     }
                     else
                     {
@@ -153,11 +153,17 @@ namespace GeometryClassLibrary
                     }
                 }
             }
+            else
+            {
+                throw new ArgumentException("lines are not coplanar");
+            }
 
             if (!this.LineSegments.DoFormClosedRegion())
             {
                 throw new ArgumentException("generated line segments from lines are invalid");
             }
+
+            this.LineSegments = toUse;
         }
 
         /// <summary>
@@ -635,7 +641,7 @@ namespace GeometryClassLibrary
             }
 
             //create back Polygon
-            Polyhedron returnGeometry = new Polyhedron();
+            List<Polygon> unconstructedReturnGeometry = new List<Polygon>();
             List<LineSegment> backPolygonLines = new List<LineSegment>();
             List<LineSegment> otherPolygonLines = new List<LineSegment>();
 
@@ -651,7 +657,7 @@ namespace GeometryClassLibrary
                 LineSegment newNormalLine1 = new LineSegment(newBackBasePoint, linesegment.BasePoint);
                 LineSegment newNormalLine2 = new LineSegment(newBackEndPoint, linesegment.EndPoint);
 
-                returnGeometry.Polygons.Add(
+                unconstructedReturnGeometry.Add(
                     new Polygon(
                         new List<LineSegment> {
                             linesegment,
@@ -663,10 +669,10 @@ namespace GeometryClassLibrary
                 );
             }
 
-            returnGeometry.Polygons.Add(this);
-            returnGeometry.Polygons.Add(new Polygon(backPolygonLines));
+            unconstructedReturnGeometry.Add(this);
+            unconstructedReturnGeometry.Add(new Polygon(backPolygonLines));
 
-            return returnGeometry;
+            return new Polyhedron(unconstructedReturnGeometry);
       }
 
         /// <summary>

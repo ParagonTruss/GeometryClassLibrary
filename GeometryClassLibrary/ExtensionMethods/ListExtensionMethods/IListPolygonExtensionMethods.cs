@@ -40,5 +40,23 @@ namespace GeometryClassLibrary
 
             return shiftedPolygons;
         }
+
+        /// <summary>
+        /// Returns whether or not the polygon has a common side with any of the polygons in this list
+        /// </summary>
+        /// <param name="polygonsList">The List of Polygons to check if the passed polygon shares a side with</param>
+        /// <param name="polygonToCheckSidesOf">The polygon to see if any of the polygons in this list share a side with</param>
+        /// <returns>Returns a bool of whether or not the Polyhedron has a common side with the polygon</returns>
+        public static bool DoesShareSideWithPolygonInList(this List<Polygon> polygonsList, Polygon polygonToCheckSidesOf)
+        {
+            foreach (Polygon polygon in polygonsList)
+            {
+                if (polygonToCheckSidesOf.DoesShareSide(polygon))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
