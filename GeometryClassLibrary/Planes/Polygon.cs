@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
                 return convertedList;
                  
             }
-            set
+            internal set
             {
                 List<IEdge> convertedList = new List<IEdge>();
                 foreach (var item in value)
@@ -320,16 +320,54 @@ namespace GeometryClassLibrary
 
         }
 
-        public new Polygon Shift(Shift passedShift)
+        public Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.LineSegments.Shift(passedShift));
         }
 
+        public override PlaneRegion ShiftAsPlaneRegion(Shift passedShift)
+        {
+            return this.Shift(passedShift);
+        }
+
         /// <summary>
-        /// Rotates the plane region about the given axis by the specified angle. Point values are rounded to 6 decimal places to make sure the boundaries still meet after rotating.
+        /// Shifts the polygon based on the passed coordinate system
+        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
+        /// is currently in the world coordinates
+        /// </summary>
+        /// <param name="systemToShiftTo">The system to use for the shift</param>
+        /// <returns>Returns a new Polygon that has been shifted</returns>
+        public Polygon SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Shift shiftToUse = new Shift(systemToShiftTo);
+
+            List<LineSegment> shiftedBoundaries = new List<LineSegment>();
+
+            foreach (var segment in LineSegments)
+            {
+                shiftedBoundaries.Add(segment.Shift(shiftToUse));
+            }
+
+            return new Polygon(shiftedBoundaries);
+        }
+
+        /// <summary>
+        /// Shifts the polygon as a generic planeRegion based on the passed coordinate system
+        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
+        /// is currently in the world coordinates
+        /// </summary>
+        /// <param name="systemToShiftTo">The system to use for the shift</param>
+        /// <returns>Returns a new Polygon as a PlaneRegion that has been shifted</returns>
+        public override PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo)
+        {
+            return this.SystemShift(systemToShiftTo);
+        }
+
+        /// <summary>
+        /// Rotates the polygon about the given axis by the specified angle
         /// </summary>
         /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the point</param>
-        /// <returns></returns>
+        /// <returns>Returns a new Polygon that has been rotated</returns>
         public new Polygon Rotate(Rotation rotationToApply)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
@@ -339,6 +377,16 @@ namespace GeometryClassLibrary
             }
 
             return new Polygon(newBoundaryList);
+        }
+
+        /// <summary>
+        /// Rotates the polygon as a generic planeRegion with the given rotation
+        /// </summary>
+        /// <param name="passedRotation">The rotation object that is to be applied to the Polygon</param>
+        /// <returns>A new Polygon as a PlaneRegion that has been rotated</returns>
+        public override PlaneRegion RotateAsPlaneRegion(Rotation passedRotation)
+        {
+            return this.Rotate(passedRotation);
         }
 
         public new Polygon Translate(Point translation)

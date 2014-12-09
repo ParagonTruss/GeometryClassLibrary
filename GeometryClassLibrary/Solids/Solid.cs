@@ -8,16 +8,22 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public class Solid: IComparable<Solid>
+    public abstract class Solid: IComparable<Solid>
     {
         #region Fields and Properties
 
-        public virtual IList<IEdge> Edges { get; set; }
+        /// <summary>
+        /// should return the list of all the edges that make up the solid
+        /// </summary>
+        public abstract IList<IEdge> Edges
+        {
+            get;
+        }
 
         /// <summary>
         /// The plane Regions that represent and make up this solid
         /// </summary>
-        public virtual IList<PlaneRegion> Faces { get; set; }
+        public virtual IList<PlaneRegion> Faces { get; internal set; }
 
         /// <summary>
         /// Accesses a point on the solid 

@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public class PlaneRegion : Plane, IComparable<PlaneRegion>
+    public abstract class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Properties and Fields
 
@@ -180,7 +180,7 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        #region Methods
+       #region Methods
 
         public virtual Polygon SmallestRectangleThatCanSurroundThisShape()
         {
@@ -206,34 +206,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift">The shift to preform on this PlaneRegion</param>
         /// <returns>Returns a new PlaneRegion that has been shifted</returns>
-        public virtual PlaneRegion Shift(Shift passedShift)
-        {
-            List<IEdge> shiftedBoundaries = new List<IEdge>();
+        public abstract PlaneRegion ShiftAsPlaneRegion(Shift passedShift);
 
-            foreach (var edge in Edges)
-            {
-                shiftedBoundaries.Add(edge.Shift(passedShift));
-            }
-
-            return new PlaneRegion(shiftedBoundaries);
-        }
-       
-
-	    public virtual PlaneRegion SystemShift(CoordinateSystem systemToShiftTo)
-        {
-            Shift shiftToUse = new Shift(systemToShiftTo);
-
-            List<IEdge> shiftedBoundaries = new List<IEdge>();
-
-            foreach (var edge in Edges)
-            {
-                shiftedBoundaries.Add(edge.Shift(shiftToUse));
-            }
-
-            //CoordinateSystem.CurrentSystem = systemToShiftTo;
-
-            return new PlaneRegion(shiftedBoundaries);
-        }
+        public abstract PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo);
 
         /// <summary>
         /// Rotates the given Plane Region
@@ -242,7 +217,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new PlaneRegion that has been rotated</returns>
         public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
         {
-            return this.Rotate(new Rotation(passedAxisLine, passedRotationAngle));
+            return this.RotateAsPlaneRegion(new Rotation(passedAxisLine, passedRotationAngle));
         }
 
         /// <summary>
@@ -250,16 +225,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedRotation">The rotation object that is to be applied to the plane</param>
         /// <returns>A new plane that has been rotated</returns>
-        public new PlaneRegion Rotate(Rotation passedRotation)
-        {
-            List<IEdge> newBoundaryList = new List<IEdge>();
-            foreach (IEdge segment in this.Edges)
-            {
-                newBoundaryList.Add(segment.RotateAsIEdge(passedRotation));
-            }
-
-            return new PlaneRegion(newBoundaryList);
-        }
+        public abstract PlaneRegion RotateAsPlaneRegion(Rotation passedRotation);
 
         /// <summary>
         /// translates the given Plane Region
@@ -271,6 +237,6 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        #endregion
+        #endregion 
     }
 }

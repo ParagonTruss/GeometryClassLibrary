@@ -13,12 +13,36 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         /// <summary>
+        /// Returns a List of all the linesegments that make up this polyhedron
+        /// </summary>
+        public override IList<IEdge> Edges
+        {
+            get 
+            {
+                List<IEdge> toReturn = new List<IEdge>();
+
+                //go through each face and get the line segments
+                foreach (var face in this.Polygons)
+                {
+                    //then check to see if each line segment is already in the list or else we will get duplicates
+                    foreach (var lineSegment in face.LineSegments)
+                    {
+                        if(!toReturn.Contains(lineSegment))
+                        {
+                            toReturn.Add(lineSegment);
+                        }
+                    }
+                }
+
+                return toReturn;
+            }
+        }
+
+        /// <summary>
         /// A list containing the polygons that make up this polyhedron
         /// </summary>
         public virtual List<Polygon> Polygons
         {
-
-
             get 
             {
                 List<Polygon> polygons = new List<Polygon>();
@@ -28,7 +52,7 @@ namespace GeometryClassLibrary
                 }
                 return polygons;
             }
-            set 
+            internal set 
             {
                 List<PlaneRegion> planeRegions = new List<PlaneRegion>();
                 foreach (var item in value)

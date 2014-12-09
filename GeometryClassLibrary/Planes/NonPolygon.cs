@@ -50,6 +50,85 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
+        /// Shifts this non polygon as a more generic plane region
+        /// </summary>
+        /// <param name="passedShift">The shift to apply to this nonPolygon</param>
+        /// <returns><Returns a  new nonPolygon as a PlaneRegion that has been shifted/returns>
+        public override PlaneRegion ShiftAsPlaneRegion(Shift passedShift)
+        {
+            return this.Shift(passedShift);
+        }
+
+        /// <summary>
+        /// Shifts the NonPolygon with the given shift
+        /// </summary>
+        /// <param name="passedShift">The shift to apply to the nonPolygon</param>
+        /// <returns>A new nonPolygon that has been shifted</returns>
+        public NonPolygon Shift(Shift passedShift)
+        {
+            return new NonPolygon(this.Edges.Shift(passedShift));
+        }
+
+        /// <summary>
+        /// Shifts the nonPolygon as PlaneRegion based on the passed coordinate system
+        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
+        /// is currently in the world coordinates
+        /// </summary>
+        /// <param name="systemToShiftTo">The system to use for the shift</param>
+        /// <returns>Returns a new nonPolygon as a PlaneRegion that has been shifted</returns>
+        public override PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo)
+        {
+            return this.SystemShift(systemToShiftTo);
+        }
+
+        /// <summary>
+        /// Shifts the nonPolygon based on the passed coordinate system
+        /// or can be thought of as putting this nonPolygon in the perpective of the passsed coordinate system  assuming it
+        /// is currently in the world coordinates
+        /// </summary>
+        /// <param name="systemToShiftTo">The system to use for the shift</param>
+        /// <returns>Returns a new NonPolygon that has been shifted</returns>
+        public NonPolygon SystemShift(CoordinateSystem systemToShiftTo)
+        {
+            Shift shiftToUse = new Shift(systemToShiftTo);
+
+            List<IEdge> shiftedBoundaries = new List<IEdge>();
+
+            foreach (var edge in this.Edges)
+            {
+                shiftedBoundaries.Add(edge.Shift(shiftToUse));
+            }
+
+            return new NonPolygon(shiftedBoundaries);
+        }
+
+        /// <summary>
+        /// Rotate the NonPolygon as a more generic PlaneRegion 
+        /// </summary>
+        /// <param name="passedRotation">The rotation to apply to the nonPolygon</param>
+        /// <returns>A New nonPolygon as a PlaneRegion that has been rotated<returns>
+        public override PlaneRegion RotateAsPlaneRegion(Rotation passedRotation)
+        {
+            return this.Rotate(passedRotation);
+        }
+
+        /// <summary>
+        /// Rotates the NonPolygon using the given rotation
+        /// </summary>
+        /// <param name="passedRotation">The rotation to apply to the NonPolygon</param>
+        /// <returns>A new NonPolgon that has been rotated with the given rotation</returns>
+        public new NonPolygon Rotate(Rotation passedRotation)
+        {
+            List<IEdge> newEdges = new List<IEdge>();
+            foreach (var edge in this.Edges)
+            {
+                newEdges.Add(edge.RotateAsIEdge(passedRotation));
+            }
+
+            return new NonPolygon(newEdges);
+        }
+
+        /// <summary>
         /// returns the area enclosed by this nonPolygon
         /// </summary>
         public override Area Area

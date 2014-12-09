@@ -393,7 +393,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Determines if the two directions represented by the euler triple (x,y, and z angles) are equivalent 
+        /// Determines if the two directions represented by the euler angles (x,y, and z angles) are equivalent 
         /// Note: multiple combinations of euler triples can represent the same orientation
         /// </summary>
         /// <param name="toCheckIfEquivalentTo">The Coordinate System to see if this one is equivalent in direction</param>
