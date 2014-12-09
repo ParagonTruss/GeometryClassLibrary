@@ -25,6 +25,11 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual IList<PlaneRegion> Faces { get; internal set; }
 
+        public abstract List<Point> Verticies
+        {
+            get;
+        }
+
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>

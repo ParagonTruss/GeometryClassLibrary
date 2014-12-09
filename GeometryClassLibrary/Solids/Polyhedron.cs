@@ -97,9 +97,20 @@ namespace GeometryClassLibrary
 
                 return returnList;
             }
-            set
+            internal set
             {
                 this.Polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of all the verticies in the Polyhedron
+        /// </summary>
+        public override List<Point> Verticies
+        {
+            get
+            {
+                return this.LineSegments.GetAllPoints();
             }
         }
 

@@ -11,5 +11,10 @@ namespace GeometryClassLibrary
         {
             get { throw new NotImplementedException(); }
         }
+
+        public override List<Point> Verticies
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }
