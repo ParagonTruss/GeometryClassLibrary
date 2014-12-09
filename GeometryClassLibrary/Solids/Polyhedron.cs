@@ -553,6 +553,23 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        /// <summary>
+        /// Determines whether or not the point is on the sides of this Polyhedron
+        /// </summary>
+        /// <param name="pointToCheckIfItContains">The point to see if it is on the sides of this Polyhedron</param>
+        /// <returns>Returns a bool of whether or not the point is on a side of this Polyhedron</returns>
+        public bool DoesContainPointAlongSides(Point pointToCheckIfItContains)
+        {
+            foreach (var segment in LineSegments)
+            {
+                if (segment.Contains(pointToCheckIfItContains))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion
     }
 }

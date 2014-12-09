@@ -466,8 +466,41 @@ namespace ClearspanTypeLibrary.Tests
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
             results.Contains(ExpectedPolyhedron3).Should().BeTrue();
             results.Contains(ExpectedPolyhedron4).Should().BeTrue();
+        }
 
+        [Test()]
+        public void Polyhedron_DoesContainPointAlongSides()
+        {
+            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
 
+            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            planes.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            planes.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            Point pointOn = PointGenerator.MakePointWithInches(0, 4, 0);
+            Point anotherPointOn = PointGenerator.MakePointWithInches(2, 0, 0);
+            Point pointNotOn = PointGenerator.MakePointWithInches(1, 4, 0);
+
+            bool resultOn = testPolyhedron.DoesContainPointAlongSides(pointOn);
+            bool resultAnotherOn = testPolyhedron.DoesContainPointAlongSides(anotherPointOn);
+            bool resultNotOn = testPolyhedron.DoesContainPointAlongSides(pointNotOn);
+
+            resultOn.Should().BeTrue();
+            resultAnotherOn.Should().BeTrue();
+            resultNotOn.Should().BeFalse();
         }
     }
 }
