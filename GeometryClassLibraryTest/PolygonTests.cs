@@ -13,7 +13,6 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_ExtrudePolygon()
         {
-            //extrude not yet implmented
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 4, 0);
             Point bottomRightPoint = PointGenerator.MakePointWithInches(8, 0, 0);

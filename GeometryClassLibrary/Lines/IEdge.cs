@@ -14,8 +14,8 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        Direction Direction { get; set; }
-        Point BasePoint { get; set; }
+        Direction Direction { get; }
+        Point BasePoint { get; }
 
         #endregion
 
