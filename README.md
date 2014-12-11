@@ -15,7 +15,7 @@ Thank you! Where would we be without you, dear contributor? Thank you immensely 
 
 How to get and submit the code: [Obtaining and Submitting Code for Contribution](https://bitbucket.org/Clearspan/geometry-class-library/wiki/Obtaining%20and%20Submitting%20Code%20for%20Contribution).
 
-Please conform to our [Coding Conventions](https://bitbucket.org/Clearspan/unit-class-library/wiki/Conventions) regarding syntax.
+Please conform to our [Coding Conventions](https://bitbucket.org/Clearspan/geometry-class-library/wiki/Conventions) regarding syntax.
 
 Write and run unit tests: [Unit Test Standards](https://bitbucket.org/Clearspan/geometry-class-library/wiki/Unit%20Test%20Standards).
 
