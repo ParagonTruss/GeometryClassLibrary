@@ -364,18 +364,31 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks to see if a vector contains another vector.  Useful for checking if members touch
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to see if is contained in this one</param>
+        /// <returns>Returns a bool of whether or not the Vector is contained</returns>
         public bool Contains(Vector passedVector)
         {
             if (this.Magnitude >= passedVector.Magnitude)
             {
-                if (this.IsCoplanarWith(passedVector) && this.IsParallelTo(passedVector))
+                if(this.Direction == passedVector.Direction)
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether or not the point is along/contained by this vector
+        /// </summary>
+        /// <param name="pointToSeeIfIsContained">The point to see if is on the vector</param>
+        /// <returns>Returns a bool of whether or not the point is contained</returns>
+        public bool Contains(Point pointToSeeIfIsContained)
+        {
+            //make a vector from this line to the point and then see if the vector is contained
+            Vector pointVector = new Vector(this.BasePoint, pointToSeeIfIsContained);
+
+            return this.Contains(pointVector);
         }
 
         /// <summary>

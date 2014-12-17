@@ -7,5 +7,14 @@ namespace GeometryClassLibrary
 {
     public class NonPolyhedron : Solid
     {
+        public override IList<IEdge> Edges
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override List<Point> Verticies
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

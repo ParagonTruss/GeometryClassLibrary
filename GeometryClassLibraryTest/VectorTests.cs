@@ -96,5 +96,19 @@ namespace GeometryClassLibraryTest
 
             result.Should().Be(expected);
         }
+
+        [Test()]
+        public void Vector_ContainsPoint()
+        {
+            Vector testVector = new Vector(PointGenerator.MakePointWithInches(4, 4, -4));
+            Point testPoint = PointGenerator.MakePointWithInches(2, 2, -2);
+            Point pointNotOnVector = PointGenerator.MakePointWithInches(2, 2, -3);
+
+            bool resultOn = testVector.Contains(testPoint);
+            bool resultNotOn = testVector.Contains(pointNotOnVector);
+
+            resultOn.Should().BeTrue();
+            resultNotOn.Should().BeFalse();
+        }
     }
 }

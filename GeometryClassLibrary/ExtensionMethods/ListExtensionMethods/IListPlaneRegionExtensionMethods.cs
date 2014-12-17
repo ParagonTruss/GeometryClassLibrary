@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
             List<PlaneRegion> rotatedRegions = new List<PlaneRegion>();
             foreach (PlaneRegion planeRegion in passedPlaneRegions)
             {
-                rotatedRegions.Add(planeRegion.Rotate(passedRotation));
+                rotatedRegions.Add(planeRegion.RotateAsPlaneRegion(passedRotation));
             }
             return rotatedRegions;
         }
@@ -52,7 +52,7 @@ namespace GeometryClassLibrary
 
             foreach (var region in passedPlaneRegions)
             {
-                shiftedRegions.Add(region.Shift(passedShift));
+                shiftedRegions.Add(region.ShiftAsPlaneRegion(passedShift));
             }
 
             return shiftedRegions;
