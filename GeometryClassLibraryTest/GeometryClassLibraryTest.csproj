@@ -72,6 +72,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="NonPolygonTests.cs" />
     <Compile Include="CoordinateSystemTest.cs" />
     <Compile Include="TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
