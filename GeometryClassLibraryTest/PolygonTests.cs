@@ -551,5 +551,28 @@ namespace GeometryClassLibraryTests
             Point result67 = testPolygon6.SharedPointNotOnThisPolygonsBoundary(testPolygon7);
             (result67 != null).Should().BeFalse();
         }
+
+        [Test()]
+        public void Polygon_DoesContainPointAlongSides()
+        {
+            //think messes up due to percision error
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
+            Polygon testPolygon = new Polygon(lineSegments);
+
+            Point pointOn = PointGenerator.MakePointWithInches(-1.5, 0, 1.5);
+            Point anotherPointOn = PointGenerator.MakePointWithInches(.5, 1.5, 1);
+            Point pointNotOn = PointGenerator.MakePointWithInches(-2, 0, 1.5);
+
+            bool resultOn = testPolygon.DoesContainPointAlongSides(pointOn);
+            bool resultAnotherOn = testPolygon.DoesContainPointAlongSides(anotherPointOn);
+            bool resultNotOn = testPolygon.DoesContainPointAlongSides(pointNotOn);
+
+            resultOn.Should().BeTrue();
+            resultAnotherOn.Should().BeTrue();
+            resultNotOn.Should().BeFalse();
+        }
     }
 }
