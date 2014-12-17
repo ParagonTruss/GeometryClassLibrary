@@ -13,8 +13,8 @@ namespace GeometryClassLibrary
     /// Note: the "world" coordinate system refers to how we normally percieve the world. The world coordinates are always the same,
     /// but objects can be moved around in it and represent by different sub coordinate systems based on the world ones. This is
     /// how this class works conceptually
-    /// Note: because this shift decribes the coordinate system, the effect on objects will be the opposite if those descirbed
-    /// for the coordinate system
+    /// Note: The coordinat system represents how we need to shift an object in order to get it in its coordinate system, thus the 
+    /// coordinate system is the "same" as the shift
     /// </summary>
     public class CoordinateSystem
     {
@@ -410,7 +410,7 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// Returns the shift for this coordinate system to apply to OBJECTS in order to orient them back to the origin
+        /// Returns the shift for this coordinate system to apply to objects in order to orient them back to the origin
         /// Note: Only works if this is the current shift on the object! if it is already in world coordinates and you 
         /// perform this shift it will move it from the world coordinates to coordinates that are opposite to this one!
         /// </summary>

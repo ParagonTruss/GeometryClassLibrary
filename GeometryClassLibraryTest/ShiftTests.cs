@@ -18,7 +18,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_TranslateUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4)); 
+            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -4)); 
 
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
@@ -42,7 +42,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_RotateUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -45), new Angle(), new Angle(AngleType.Degree, -45));
 
             Point testPoint = PointGenerator.MakePointWithInches(3, 0, 0);
 
@@ -53,7 +53,7 @@ namespace GeometryClassLibraryTest
             shifted.Should().Be(expected);
 
             //try to get the point we had before we switched order of shifting
-            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 30), new Angle(), new Angle(AngleType.Degree, 54.7356104));
+            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -30), new Angle(), new Angle(AngleType.Degree, -54.7356104));
 
             Point shifted2 = testPoint.Shift(new Shift(system2));
 
@@ -65,7 +65,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_ShiftUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle());
+            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -4), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, -45), new Angle());
 
             Point testPoint = PointGenerator.MakePointWithInches(0, 3, 0);
 
@@ -79,7 +79,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_ShiftPolygonUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(0.75, -2, -1.5), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-0.75, 2, 1.5), new Angle(AngleType.Degree, -45), new Angle(), new Angle(AngleType.Degree, -45));
             
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
