@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Represents an infinite Line
     /// </summary>
-    [DebuggerDisplay("UNITS = Inches, BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches} , {BasePoint.Z.Inches}, Vector = {DirectionVector.XComponentOfDirection.Inches}, {DirectionVector.YComponentOfDirection.Inches}, {DirectionVector.ZComponentOfDirection.Inches}")]
+    [DebuggerDisplay("BasePoint = {BasePoint.X}, {BasePoint.Y} , {BasePoint.Z}, Vector = {Direction.XComponent}, {Direction.YComponent}, {Direction.ZComponent}")]
 
     public class Line : IComparable<Line>
     {
@@ -477,7 +477,12 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            return (Equals(passedLine) || !ReferenceEquals(Intersection(passedLine), null));
+            Point intersect = this.Intersection(passedLine);
+
+            if (!ReferenceEquals(intersect, null))
+                return true;
+            else
+                return false;
         }
 
         /// <summary>
