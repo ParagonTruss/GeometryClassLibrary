@@ -92,7 +92,15 @@ namespace GeometryClassLibrary
                 foreach (Polygon region in this.Polygons)
                 {
                     if (region.LineSegments != null)
-                        returnList.AddRange(region.LineSegments);
+                    {
+                        foreach(LineSegment segment in region.LineSegments)
+                        {
+                            if (!returnList.Contains(segment))
+                            {
+                                returnList.Add(segment);
+                            }
+                        }
+                    }
                 }
 
                 return returnList;
