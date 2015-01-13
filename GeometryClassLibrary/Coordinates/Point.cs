@@ -15,7 +15,7 @@ namespace GeometryClassLibrary
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [DebuggerDisplay("{X.Inches}, {Y.Inches}, {Z.Inches}")]
 
-    public class Point
+    public class Point : IComparable
     {
         #region Properties and Fields
 
@@ -50,7 +50,7 @@ namespace GeometryClassLibrary
             _y = new Distance();
             _z = new Distance();
         }
-        
+
         /// <summary>
         /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation
         /// </summary>
@@ -174,7 +174,7 @@ namespace GeometryClassLibrary
             // covers null reference checks
             if ((object)point1 == null)
             {
-                if((object)point2 == null)
+                if ((object)point2 == null)
                 {
                     return true;
                 }
@@ -211,20 +211,32 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            
+
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
             try
             {
                 Point comparablePoint = (Point)obj;
 
-                // if the two points' x, y, and z are equal, returns true
-                return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
+                return this.Equals(comparablePoint);
             }
             //if they are not the same type than they are not equal
             catch (InvalidCastException)
             {
                 return false;
             }
+        }
+
+
+        public bool Equals(Point comparablePoint)
+        {
+            //check for null (wont throw a castexception)
+            if (comparablePoint == null)
+            {
+                return false;
+            }
+
+            // if the two points' x, y, and z are equal, returns true
+            return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
         }
 
         /// <summary>
@@ -265,7 +277,7 @@ namespace GeometryClassLibrary
         {
             return ToString(DistanceType.Inch);
         }
-        
+
         #endregion
 
         #region Methods
@@ -307,7 +319,7 @@ namespace GeometryClassLibrary
         /// <returns>a new point in the new location</returns>
         public Point MirrorAcross(Line passedAxisLine)
         {
-            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));            
+            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));
         }
 
         /// <summary>
@@ -323,9 +335,9 @@ namespace GeometryClassLibrary
             }
 
             //distance formula
-            double term1 = Math.Pow(( _x - _endPoint._x).Inches, 2);
-            double term2 = Math.Pow(( _y - _endPoint._y).Inches, 2);
-            double term3 = Math.Pow(( _z - _endPoint._z).Inches, 2);
+            double term1 = Math.Pow((_x - _endPoint._x).Inches, 2);
+            double term2 = Math.Pow((_y - _endPoint._y).Inches, 2);
+            double term3 = Math.Pow((_z - _endPoint._z).Inches, 2);
 
             double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
@@ -354,7 +366,7 @@ namespace GeometryClassLibrary
         /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
-		{
+        {
             Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
 
             bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisToRotateAround);
@@ -363,7 +375,7 @@ namespace GeometryClassLibrary
 
             Line axisForRotating = rotationToApply.AxisToRotateAround;
 
-            if(!originIsOnPassedAxis)
+            if (!originIsOnPassedAxis)
             {
                 //Must translate everything so that the axis line goes through the origin before rotating
 
@@ -378,16 +390,16 @@ namespace GeometryClassLibrary
             Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(new Rotation(axisForRotating, rotationToApply.AngleToRotate));
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
-                
+
             Matrix rotatedPointMatrix = rotationMatrix * pointMatrix;
-           
+
             double xOfRotatedPoint = rotatedPointMatrix.GetElement(0, 0);
             double yOfRotatedPoint = rotatedPointMatrix.GetElement(1, 0);
             double zOfRotatedPoint = rotatedPointMatrix.GetElement(2, 0);
 
             Point pointToReturn = PointGenerator.MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
 
-            if(originIsOnPassedAxis)
+            if (originIsOnPassedAxis)
             {
                 return pointToReturn;
             }
@@ -473,7 +485,7 @@ namespace GeometryClassLibrary
 
         public Vector VectorFromOriginToPoint()
         {
-            Point origin = PointGenerator.MakePointWithInches(0,0,0);
+            Point origin = PointGenerator.MakePointWithInches(0, 0, 0);
             Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
 
             Vector returnVector = new Vector(origin, thisPoint);
@@ -498,7 +510,7 @@ namespace GeometryClassLibrary
             }
 
             //we need to apply each rotation in order to the point
-            foreach(Rotation rotation in passedShift.RotationsToApply)
+            foreach (Rotation rotation in passedShift.RotationsToApply)
             {
                 pointToReturn = pointToReturn.Rotate3D(rotation);
             }
@@ -512,5 +524,10 @@ namespace GeometryClassLibrary
         }
 
         #endregion
+
+        public int CompareTo(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

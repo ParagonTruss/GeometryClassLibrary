@@ -196,5 +196,27 @@ namespace GeometryClassLibrary
 
             return true;
         }
+
+        /// <summary>
+        /// Sorts out and returns only the lines in this list that are parallel to the passed Line
+        /// </summary>
+        /// <param name="passedLines">passed List of Lines</param>
+        /// <param name="lineToCheckIfParallelTo">passed List of Lines</param>
+        /// <returns>returns a List of Lines of only the Lines that are parallel to the passed line</returns>
+        public static List<Line> OnlyLinesParallelTo(this IList<Line> passedLines, Line lineToCheckIfParallelTo)
+        {
+            //List<Line> passedLineListCasted = new List<Line>(passedLines);
+            List<Line> parallelLines = new List<Line>();
+
+            foreach(Line currentLine in passedLines)
+            {
+                if (currentLine.IsParallelTo(lineToCheckIfParallelTo))
+                {
+                    parallelLines.Add(currentLine);
+                }
+            }
+
+            return parallelLines;
+        }
     }
 }

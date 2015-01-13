@@ -509,9 +509,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
         public CoordinateSystem Shift(Shift passedShift)
         {
-            CoordinateSystem toReturn = new CoordinateSystem(this);
-
-            toReturn.Origin = this.Origin.Shift(passedShift);
+            Point resultOrigin = this.Origin.Shift(passedShift);
 
             //now we need to shift the angles
             Matrix coordinateMatrix = this.GetRotationMatrix();
@@ -527,7 +525,7 @@ namespace GeometryClassLibrary
 
             List<Angle> resultAngles = coordinateMatrix.GetAnglesOutOfRotationMatrix();
 
-            return toReturn;
+            return new CoordinateSystem(resultOrigin, resultAngles[0], resultAngles[1], resultAngles[2]);
         }
 
         #endregion

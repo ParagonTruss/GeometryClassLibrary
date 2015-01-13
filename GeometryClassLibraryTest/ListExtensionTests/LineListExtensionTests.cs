@@ -130,5 +130,26 @@ namespace GeometryClassLibraryTests
             result2.Should().Be(line2);
         }
 
+        [Test()]
+        public void LineListExtension_OnlyLinesParallelTo()
+        {
+            Line referenceLine = new Line(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(2, -1, 0));
+
+            Line parallel1 = new Line(PointGenerator.MakePointWithInches(1, 2, 1), PointGenerator.MakePointWithInches(3, -1, 0));
+            Line parallel2 = new Line(PointGenerator.MakePointWithInches(2, 0.5, .5), PointGenerator.MakePointWithInches(3, -1, 0));
+            Line parallel3 = new Line(PointGenerator.MakePointWithInches(-1, -1, -2), PointGenerator.MakePointWithInches(1, -4, -3));
+            Line parallel4 = new Line(PointGenerator.MakePointWithInches(6, -2, 0), PointGenerator.MakePointWithInches(2, 4, 2));
+            Line notParallel1 = new Line(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(3, -1, 0));
+            Line notParallel2 = new Line(PointGenerator.MakePointWithInches(-2, 1, 1), PointGenerator.MakePointWithInches(0, 1, 0));
+            Line notParallel3 = new Line(PointGenerator.MakePointWithInches(0.75, 1.5, 0.5), PointGenerator.MakePointWithInches(-0.25, 2.25, 0.75));
+
+            List<Line> lines = new List<Line>() { parallel1, notParallel1, parallel2, parallel3, notParallel2, parallel4, notParallel3, notParallel1 };
+
+            List<Line> resultsParallel = lines.OnlyLinesParallelTo(referenceLine);
+
+            List<Line> expectedParallel = new List<Line>() { parallel1, parallel2, parallel3, parallel4 };
+
+            resultsParallel.Should().BeEquivalentTo(expectedParallel);
+        }
     }
 }

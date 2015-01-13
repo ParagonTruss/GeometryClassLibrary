@@ -353,14 +353,18 @@ namespace GeometryClassLibrary
 
                 //now make the joining sides based on where the intersection plane was
                 //create a new plane based on the intersections
-                Polygon slicingPlanePolygon = new Polygon(slicingPlaneLines);
-                Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLines);
-
-                if (slicingPlanePolygon.isValidPolygon())
+                try
                 {
-                    unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
-                    unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
+                    Polygon slicingPlanePolygon = new Polygon(slicingPlaneLines);
+                    Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLines);
+
+                    //if (slicingPlanePolygon.isValidPolygon())
+                    //{
+                        unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
+                        unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
+                    //}
                 }
+                catch (ArgumentException) { }
 
                 List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(unconstructedInsidePolyhedron), new Polyhedron(unconstructedOutsidePolyhedron) };
                 //toReturn.Sort();
