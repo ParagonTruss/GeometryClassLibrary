@@ -16,16 +16,16 @@ namespace GeometryClassLibrary
 
         public List<LineSegment> LineSegments
         {
-            get 
+            get
             {
-                List<LineSegment> convertedList = new List<LineSegment>(); 
+                List<LineSegment> convertedList = new List<LineSegment>();
                 foreach (var linesegment in Edges)
                 {
                     convertedList.Add((LineSegment)linesegment);
                 }
 
                 return convertedList;
-                 
+
             }
             internal set
             {
@@ -35,6 +35,27 @@ namespace GeometryClassLibrary
                     convertedList.Add(item);
                 }
                 this.Edges = convertedList;
+            }
+        }
+
+        /// <summary>
+        /// Finds and returns a list of all the verticies of this polygon
+        /// </summary>
+        public List<Point> Verticies
+        {
+            get
+            {
+                List<Point> verticiesFound = new List<Point>();
+
+                foreach (Point point in this.LineSegments.GetAllPoints())
+                {
+                    if (!verticiesFound.Contains(point))
+                    {
+                        verticiesFound.Add(point);
+                    }
+                }
+
+                return verticiesFound;
             }
         }
 
@@ -82,7 +103,7 @@ namespace GeometryClassLibrary
                 this.LineSegments = new List<LineSegment>(passedBoundaries);
                 this.BasePoint = passedBoundaries[0].BasePoint;
 
-                
+
 
                 this.NormalVector = passedBoundaries[0].CrossProduct(passedBoundaries[1]);
 
@@ -96,10 +117,10 @@ namespace GeometryClassLibrary
                     }
                     else
                     {
-                        this.NormalVector = passedBoundaries[i].CrossProduct(passedBoundaries[i + 1]);   
+                        this.NormalVector = passedBoundaries[i].CrossProduct(passedBoundaries[i + 1]);
                     }
 
-                   i++;
+                    i++;
                 }
 
                 this.Edges = new List<IEdge>();
@@ -171,7 +192,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
-            : this( polygonToCopy.LineSegments)
+            : this(polygonToCopy.LineSegments)
         //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
         //constructing a plane fron a List<LineSegment>
         {
@@ -245,7 +266,7 @@ namespace GeometryClassLibrary
 
                 //now check each line segment
                 foreach (LineSegment segment in this.LineSegments)
-                {                        
+                {
                     //make sure each segment is represented exactly once
                     int timesUsed = 0;
                     foreach (LineSegment segmentOther in comparablePolygon.LineSegments)
@@ -672,7 +693,7 @@ namespace GeometryClassLibrary
 
             // find two lines that are not parallel
 
-            LineSegment firstLine =  this.LineSegments[0];
+            LineSegment firstLine = this.LineSegments[0];
             LineSegment secondLine = null;
             foreach (var lineseg in this.LineSegments)
             {
@@ -721,7 +742,7 @@ namespace GeometryClassLibrary
             unconstructedReturnGeometry.Add(new Polygon(backPolygonLines));
 
             return new Polyhedron(unconstructedReturnGeometry);
-      }
+        }
 
         /// <summary>
         /// Extrudes the plane region into a Polyhedron
@@ -1412,12 +1433,30 @@ namespace GeometryClassLibrary
         {
             foreach (var segment in LineSegments)
             {
-                if(segment.Contains(pointToCheckIfItContains))
+                if (segment.Contains(pointToCheckIfItContains))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Finds a vertex of this polygon that is not contained by the given plane
+        /// </summary>
+        /// <param name="planeNotToFindTheVertexOn">The plane to find a vertex that is not contained by</param>
+        /// <returns>Returns one of the verticies that was not contained by the given plane or null if none were found</returns>
+        public Point FindVertexNotOnTheGivenPlane(Plane planeNotToFindTheVertexOn)
+        {
+            foreach (Point vertex in this.Verticies)
+            {
+                if (!planeNotToFindTheVertexOn.Contains(vertex))
+                {
+                    return vertex;
+                }
+            }
+
+            return null;
         }
 
 

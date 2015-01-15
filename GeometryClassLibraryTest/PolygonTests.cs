@@ -47,7 +47,7 @@ namespace GeometryClassLibraryTests
             Polygon rightRegion = new Polygon(new List<LineSegment> { right, backRight, toprightConnector, bottomRightConnector });
 
 
-            Polyhedron extrudedResult = frontRegion.ExtrudeAsPolyhedron(new Vector(PointGenerator.MakePointWithInches(0,0,0), PointGenerator.MakePointWithInches(0,0,-4)));
+            Polyhedron extrudedResult = frontRegion.ExtrudeAsPolyhedron(new Vector(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, -4)));
             extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();
@@ -95,7 +95,7 @@ namespace GeometryClassLibraryTests
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
-            
+
             List<LineSegment> expectedLineSegments = new List<LineSegment>();
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(5.238195, 1.6816970, -1.919892), PointGenerator.MakePointWithInches(1.31623019, -1.08627088, -5.229959)));
             actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(1.3162301, -1.0862708, -5.229959), PointGenerator.MakePointWithInches(2.843930, -1.46406412, -0.379865)));
@@ -114,7 +114,7 @@ namespace GeometryClassLibraryTests
 
             //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
             //Distance testDisplacement = new Distance(DistanceType.Inch, Math.Sqrt(42));
-            Point testDiplacement = PointGenerator.MakePointWithInches(-1,5,4);
+            Point testDiplacement = PointGenerator.MakePointWithInches(-1, 5, 4);
 
             Polygon actualPolygon = testPolygon.Translate(testDiplacement);
 
@@ -573,6 +573,25 @@ namespace GeometryClassLibraryTests
             resultOn.Should().BeTrue();
             resultAnotherOn.Should().BeTrue();
             resultNotOn.Should().BeFalse();
+        }
+
+        [Test()]
+        public void Polygon_FindVertexNotOnTheGivenPlane()
+        {
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon = new Polygon(lineSegments);
+
+            Plane borderPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(0, 0, 1));
+            Plane containingPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(1, 0, 0));
+
+            Point results1 = testPolygon.FindVertexNotOnTheGivenPlane(borderPlane);
+            Point results2 = testPolygon.FindVertexNotOnTheGivenPlane(containingPlane);
+
+            (results1 == PointGenerator.MakePointWithInches(-3, 2, 0)).Should().BeTrue();
+            (results2 == null).Should().BeTrue();
         }
     }
 }
