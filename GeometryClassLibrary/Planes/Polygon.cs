@@ -967,7 +967,8 @@ namespace GeometryClassLibrary
                     if (intersectPoint != null)
                     {
                         //if the line does not have one of its points on the plane than we need to slice it 
-                        if (!slicingPlane.Contains(line.EndPoint) && !slicingPlane.Contains(line.BasePoint))
+                        //if (!slicingPlane.Contains(line.EndPoint) && !slicingPlane.Contains(line.BasePoint))
+                        if(!(line.EndPoint == intersectPoint) && !(line.BasePoint == intersectPoint))
                         {
                             //slice the line and project the parts for the relevent polygons
                             _sliceLineAndProjectForInsideAndOutsidePolygons(line, intersectPoint, slicingPlane, slicingLine, referencePoint,
@@ -980,23 +981,23 @@ namespace GeometryClassLibrary
                             _projectSegmentForOneSide(line, slicingPlane, slicingLine, referencePoint, newSegmentsGenerated, toRemove);
                         }
                     }
-                    //if it doesnt intersect at all we are either completely on the inside side or the out side
+                    //if it doesnt intersect at all we are either completely on the inside side or the out side so we need to find out which it is
                     else
                     {
                         //if one of the points is on the outside than both of them must be at this point
                         //so we need to project it for the inisde region and leave it for the outside one
-                        if (!slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint))
+                        if (slicingPlane.PointIsOnSameSideAs(line.BasePoint, referencePoint) || slicingPlane.PointIsOnSameSideAs(line.EndPoint, referencePoint))
                         {
                             //add it to the remove list and project it for the generated segments list
-                            _removeAndProjectLineSegment(line, slicingLine, toRemove[0], newSegmentsGenerated[0]);
+                            _removeAndProjectLineSegment(line, slicingLine, toRemove[1], newSegmentsGenerated[1]);
                         }
                         //we know that it is either on the other side or on the plane so if we check that it is
                         //not on the plane than we know it must be on the same side as the reference point
                         //so we need to leave it for the inside region and project it for the outside one
-                        else if (!slicingPlane.Contains(line.BasePoint))
+                        else
                         {
                             //add it to the remove list and project it for the generated segments list
-                            _removeAndProjectLineSegment(line, slicingLine, toRemove[1], newSegmentsGenerated[1]);
+                            _removeAndProjectLineSegment(line, slicingLine, toRemove[0], newSegmentsGenerated[0]);
                         }
                     }
                 }

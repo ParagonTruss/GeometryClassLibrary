@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using FluentAssertions;
 using GeometryClassLibrary;
+using UnitClassLibrary;
 
 namespace GeometryClassLibraryTests
 {
@@ -85,6 +86,29 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
+        public void LineListExtension_LineWithXInterceptIn2DClosestTo()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
+            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
+
+            Line result = lines.LineWithXInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 3));
+
+            result.Should().Be(line4);
+
+            //check it can handle a null intersect in the first spot
+            List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
+
+            Line result2 = lines2.LineWithXInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 0));
+
+            result2.Should().Be(line3);
+        }
+
+        [Test()]
         public void LineListExtension_SmallestYInterceptIn2D()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
@@ -128,6 +152,29 @@ namespace GeometryClassLibraryTests
             Line result2 = lines2.LineWithLargestYInterceptIn2D();
 
             result2.Should().Be(line2);
+        }
+
+        [Test()]
+        public void LineListExtension_LineWithYInterceptIn2DClosestTo()
+        {
+            Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
+            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
+            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
+            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at -1
+            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+
+            List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
+
+            Line result = lines.LineWithYInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 1.3));
+
+            result.Should().Be(line2);
+
+            //check it can handle a null intersect in the first spot
+            List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
+
+            Line result2 = lines2.LineWithYInterceptIn2DClosestTo(new Distance(DistanceType.Inch, -0.25));
+
+            result2.Should().Be(line3);
         }
 
         [Test()]

@@ -473,6 +473,75 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
+        public void Polygon_SliceACaseThatDidntWorkBefore()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 3.5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3.5, 0), PointGenerator.MakePointWithInches(240, 3.5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 3.5, 0), PointGenerator.MakePointWithInches(240, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon = new Polygon(bounds);
+
+            Plane slicingPlane = new Plane(new Direction(new Angle(AngleType.Radian, 5.6548667765)), PointGenerator.MakePointWithInches(122.8315595, 169.313137732, 0));
+
+            List<Polygon> results = testPolygon.Slice(slicingPlane);
+
+            //create the expected planes to compare to
+            List<LineSegment> expected1Bounds = new List<LineSegment>();
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0.25, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0.25, 0), PointGenerator.MakePointWithInches(2.36126321602, 3.5, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2.36126321602, 3.5, 0), PointGenerator.MakePointWithInches(240, 3.5, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 3.5, 0), PointGenerator.MakePointWithInches(240, 0, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon expected1 = new Polygon(expected1Bounds);
+
+            List<LineSegment> expected2Bounds = new List<LineSegment>();
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0.25, 0), PointGenerator.MakePointWithInches(0, 3.5, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3.5, 0), PointGenerator.MakePointWithInches(2.36126321602, 3.5, 0)));
+            expected2Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(2.36126321602, 3.5, 0), PointGenerator.MakePointWithInches(0, 0.25, 0)));
+            Polygon expected2 = new Polygon(expected2Bounds);
+
+
+            results.Contains(expected1).Should().BeTrue();
+            results.Contains(expected2).Should().BeTrue();
+
+            //now make sure it handles no intersection well
+            Line notIntersecting = new Line(new Point(), PointGenerator.MakePointWithInches(1, 1, 0.9));
+            List<Polygon> results2 = testPolygon.Slice(notIntersecting);
+
+            //should only return the original plane
+            results2.Count.Should().Be(1);
+            (results2[0] == testPolygon).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Polygon_SliceAnotherCaseThatDidntWorkBefore()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1.5)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 1.5), PointGenerator.MakePointWithInches(240, 0, 1.5)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 1.5), PointGenerator.MakePointWithInches(240, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon = new Polygon(bounds);
+
+            Plane slicingPlane = new Plane(new Direction(new Angle(AngleType.Radian, 5.6548667765)), PointGenerator.MakePointWithInches(122.8315595, 169.313137732, 0));
+
+            List<Polygon> results = testPolygon.Slice(slicingPlane);
+
+            //create the expected planes to compare to
+            List<LineSegment> expected1Bounds = new List<LineSegment>();
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(240, 0, 0)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 0), PointGenerator.MakePointWithInches(240, 0, 1.5)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(240, 0, 1.5), PointGenerator.MakePointWithInches(0, 0, 1.5)));
+            expected1Bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 1.5), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon expected1 = new Polygon(expected1Bounds);
+
+            //should only return the original plane
+            results.Count.Should().Be(1);
+            (results[0] == testPolygon).Should().BeTrue();
+        }
+
+        [Test()]
         public void Polygon_SharedPointNotOnThisPolygonsBoundary()
         {
             List<LineSegment> bounds1 = new List<LineSegment>();
