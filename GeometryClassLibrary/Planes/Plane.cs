@@ -9,7 +9,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
-    [Serializable]
     public class Plane
     {
         #region Properties and Fields
@@ -38,15 +37,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Zero constructor
-        /// </summary>
-        public Plane()
-        {
-            this.BasePoint = new Point();
-            this.NormalVector = new Vector();
-        }
 
         /// <summary>
         /// Creates a Plane base on the list of passed in lines
@@ -83,17 +73,19 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBasePoint">A point on the plane to be used as the reference point</param>
         /// <param name="passedNormalDirection">A direction that is normal to the plane</param>
-        public Plane(Direction passedNormalDirection, Point passedBasePoint = null)
+        public Plane(Direction passedNormalDirection = null, Point passedBasePoint = null)
         {
             if (passedBasePoint == null)
             {
-                this.BasePoint = new Point();
-            }
-            else
-            {
-                this.BasePoint = passedBasePoint;
+                passedBasePoint = new Point();
             }
 
+            if (passedNormalDirection == null)
+            {
+                passedNormalDirection = new Direction();
+            }
+
+            this.BasePoint = passedBasePoint;
             this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 
@@ -177,6 +169,12 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public static bool operator ==(Plane plane1, Plane plane2)
         {
             if ((object)plane1 == null)
@@ -235,7 +233,7 @@ namespace GeometryClassLibrary
         public bool Contains(Polygon passedPlaneRegion)
         {
             // checks to make sure that every line is on the line segment
-            foreach (LineSegment segment in passedPlaneRegion.PlaneBoundaries)
+            foreach (LineSegment segment in passedPlaneRegion.LineSegments)
             {
                 if (!this.Contains(segment))
                 {
@@ -268,7 +266,6 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-
             Vector planeVector = new Vector(passedPoint, BasePoint);
             //Distance dotProduct = planeVector * NormalVector;
             //return dotProduct == new Distance();
@@ -338,11 +335,9 @@ namespace GeometryClassLibrary
                 //put them in plane notation  adn find what they equal (normal.X * X + normal.Y * Y + normal.Z * Z = planeEqualsValue)
                 double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
                     this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
-                //double thisPlaneEqualsAsInches = thisPlaneEqualsValue;
 
                 double otherPlaneEqualsValue = otherPlane.NormalVector.XComponent.Inches * otherPlane.BasePoint.X.Inches +
                     otherPlane.NormalVector.YComponent.Inches * otherPlane.BasePoint.Y.Inches + otherPlane.NormalVector.ZComponent.Inches * otherPlane.BasePoint.Z.Inches;
-                //double otherPlaneEqualsAsInches = otherPlaneEqualsValue;
 
                 //pull them all out as the same thing because we need to know what Distance we are dealing with
                 double thisFirstVariable = this.NormalVector.XComponent.Inches;
@@ -504,7 +499,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            foreach (LineSegment segment in passedPolygon.PlaneBoundaries)
+            foreach (LineSegment segment in passedPolygon.LineSegments)
             {
                 if (this.DoesIntersectNotCoplanar(segment))
                 {

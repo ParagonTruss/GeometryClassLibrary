@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
@@ -15,7 +14,6 @@ namespace GeometryClassLibrary
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
     [DebuggerDisplay("Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
-    [Serializable]
     public class Direction
     {
         #region Properties and Fields
@@ -240,6 +238,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public static bool operator ==(Direction direction1, Direction direction2)
         {

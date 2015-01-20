@@ -39,7 +39,7 @@ namespace GeometryClassLibraryTest
             polygonExpectedLines.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 3, 1), PointGenerator.MakePointWithInches(2, 2, 5)));
             Polygon polygonExpected = new Polygon(polygonExpectedLines);
 
-            PlaneRegion polygonResult = planes[0].Shift(shift);
+            PlaneRegion polygonResult = planes[0].ShiftAsPlaneRegion(shift);
             (polygonResult == polygonExpected).Should().BeTrue();
 
 
@@ -52,7 +52,7 @@ namespace GeometryClassLibraryTest
             nonPolygonExpectedEdges.Add(arcExpected);
             NonPolygon nonPolygonExpected = new NonPolygon(nonPolygonExpectedEdges);
 
-            PlaneRegion nonPolygonResult = planes[1].Shift(shift);
+            PlaneRegion nonPolygonResult = planes[1].ShiftAsPlaneRegion(shift);
             (nonPolygonResult == nonPolygonExpected).Should().BeTrue();
         }    
     }

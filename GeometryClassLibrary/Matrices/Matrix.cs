@@ -115,6 +115,10 @@ namespace GeometryClassLibrary
         #endregion      
   
         #region Overloaded Operators
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to difference of 0.00000001 in any two elements

@@ -11,7 +11,6 @@ namespace GeometryClassLibrary
     /// A vector is a line segment that has a direction
     /// </summary>
     [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
-    [Serializable]
     public class Vector : Line
     {
         #region Properties and Fields
@@ -156,6 +155,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /// <summary>
         /// Adds the two vectors and returns the resultant vector
@@ -360,18 +364,31 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks to see if a vector contains another vector.  Useful for checking if members touch
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
+        /// <param name="passedVector">The Vector to see if is contained in this one</param>
+        /// <returns>Returns a bool of whether or not the Vector is contained</returns>
         public bool Contains(Vector passedVector)
         {
             if (this.Magnitude >= passedVector.Magnitude)
             {
-                if (this.IsCoplanarWith(passedVector) && this.IsParallelTo(passedVector))
+                if(this.Direction == passedVector.Direction)
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether or not the point is along/contained by this vector
+        /// </summary>
+        /// <param name="pointToSeeIfIsContained">The point to see if is on the vector</param>
+        /// <returns>Returns a bool of whether or not the point is contained</returns>
+        public bool Contains(Point pointToSeeIfIsContained)
+        {
+            //make a vector from this line to the point and then see if the vector is contained
+            Vector pointVector = new Vector(this.BasePoint, pointToSeeIfIsContained);
+
+            return this.Contains(pointVector);
         }
 
         /// <summary>
@@ -414,7 +431,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="projectOnto">The Plane to project this Vector onto</param>
         /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
-        public Vector ProjectOntoPlane(Plane projectOnto)
+        public new Vector ProjectOntoPlane(Plane projectOnto)
         {
             //find the line in the plane and then project this line onto it
             Line projectedLine = ((Line)this).ProjectOntoPlane(projectOnto);
@@ -429,7 +446,7 @@ namespace GeometryClassLibrary
         public Vector CrossProduct(Vector passedVector)
         {
             Point originPoint = new Point();
-            Vector v1 = this;
+            Vector v1 = new Vector( this);
             Vector v2 = new Vector(passedVector);
 
             if(this.BasePoint != originPoint || passedVector.BasePoint != originPoint)
@@ -519,7 +536,7 @@ namespace GeometryClassLibrary
         public bool PointInOppositeDirections(Vector passedVector)
         {
             //flip one of the vectors
-            Vector passedVectorInOppositeDirection = passedVector.Negate();
+            Vector passedVectorInOppositeDirection = passedVector.Reverse();
 
             //then check if they are in the same direction
             return this.PointInSameDirection(passedVectorInOppositeDirection);
@@ -549,6 +566,16 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <returns>a negative instance of this Vector</returns>
         public Vector Negate()
+        {
+            //first flip the vector about itself
+            Vector flipped = new Vector(this.EndPoint, this.BasePoint);
+
+            //next translate the vector to the correct position
+            return flipped.Translate(flipped.BasePoint);
+        }
+
+
+        public Vector Reverse()
         {
             //first flip the vector about itself
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);
@@ -586,7 +613,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift"></param>
         /// <returns></returns>
-        public Vector Shift(Shift passedShift)
+        public new Vector Shift(Shift passedShift)
         {
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
@@ -613,7 +640,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
-        public Vector UnitVector(DistanceType passedType)
+        public new Vector UnitVector(DistanceType passedType)
         {
             if (Magnitude == new Distance())
             {

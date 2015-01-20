@@ -5,16 +5,16 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    [Serializable]
     public class NonPolyhedron : Solid
     {
-        /// <summary>
-        /// The list of planeRegions that make up and define the nonPolyhedron
-        /// </summary>
-        public List<PlaneRegion> BoundaryPlanes
+        public override IList<IEdge> Edges
         {
-            get { return this.Planes as List<PlaneRegion>; }
-            set { this.Planes = value; }
+            get { throw new NotImplementedException(); }
+        }
+
+        public override List<Point> Verticies
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

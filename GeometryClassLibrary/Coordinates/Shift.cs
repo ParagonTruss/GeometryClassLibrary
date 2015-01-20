@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using GeometryClassLibrary;
 using UnitClassLibrary;
 using System.Diagnostics;
@@ -10,7 +9,6 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Displacement = {Displacement.X.Inches}, {Displacement.Y.Inches}, {Displacement.Z.Inches}, Rotations Count = {RotationsToApply.Count}")]
-    [Serializable]
     public class Shift
     {
         #region Properties and Fields
@@ -328,6 +326,7 @@ namespace GeometryClassLibrary
             foreach (Rotation rotation in _rotationsToApply)
             {
                 //switch the angle of each rotation to its opposite
+
                 returnRotations.Add(new Rotation(rotation.AxisToRotateAround, rotation.AngleToRotate.Negate()));
             }
             //now flip the order of them so it reverse the shift properly

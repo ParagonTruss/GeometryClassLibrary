@@ -54,11 +54,34 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Vector_Reverse()
+        {
+            Vector v = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+
+            v.Reverse().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1)));
+        }
+
+        [Test()]
         public void Vector_Negate()
         {
             Vector v = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
 
-            v.Negate().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1)));
+            v.Reverse().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(7, 1)));
+        }
+
+        [Test()]
+        public void Vector_CrossProduct()
+        {
+            Vector xAxis = new Vector(new Point(), new Direction());
+            Vector yAxis = new Vector(new Point(), new Direction(new Angle(AngleType.Degree, 90)));
+
+            Vector result = xAxis.CrossProduct(yAxis);
+            Vector expected = new Vector(new Point(), new Direction(new Angle(), new Angle()));
+
+            result.Should().Be(expected);
+
+            Vector resultParallel = xAxis.CrossProduct(xAxis);
+            (resultParallel.Magnitude == new Distance()).Should().BeTrue();
         }
 
         [Test()]
@@ -72,6 +95,20 @@ namespace GeometryClassLibraryTest
             Vector expected = new Vector(PointGenerator.MakePointWithInches(2, 5, 0));
 
             result.Should().Be(expected);
+        }
+
+        [Test()]
+        public void Vector_ContainsPoint()
+        {
+            Vector testVector = new Vector(PointGenerator.MakePointWithInches(4, 4, -4));
+            Point testPoint = PointGenerator.MakePointWithInches(2, 2, -2);
+            Point pointNotOnVector = PointGenerator.MakePointWithInches(2, 2, -3);
+
+            bool resultOn = testVector.Contains(testPoint);
+            bool resultNotOn = testVector.Contains(pointNotOnVector);
+
+            resultOn.Should().BeTrue();
+            resultNotOn.Should().BeFalse();
         }
     }
 }

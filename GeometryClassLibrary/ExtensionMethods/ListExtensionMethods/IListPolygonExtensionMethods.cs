@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GeometryClassLibrary
 {
@@ -40,6 +39,48 @@ namespace GeometryClassLibrary
             }
 
             return shiftedPolygons;
+        }
+
+        /// <summary>
+        /// Returns whether or not the polygon has a common side with any of the polygons in this list
+        /// </summary>
+        /// <param name="polygonsList">The List of Polygons to check if the passed polygon shares a side with</param>
+        /// <param name="polygonToCheckSidesOf">The polygon to see if any of the polygons in this list share a side with</param>
+        /// <returns>Returns a bool of whether or not the Polyhedron has a common side with the polygon</returns>
+        public static bool DoesShareSideWithPolygonInList(this List<Polygon> polygonsList, Polygon polygonToCheckSidesOf)
+        {
+            foreach (Polygon polygon in polygonsList)
+            {
+                if (polygonToCheckSidesOf.DoesShareSide(polygon))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Finds a vertex of one of the polygons in this list that is not contained by the given plane in order to use it as a reference point 
+        /// to determine what side of the plane this list of polygons lies. Presumably, the plane is a side of the "unconstructed polhedron" that
+        /// this list of polygons represents.
+        /// </summary>
+        /// <param name="polygonsList">The list of polygons to find the vertex from</param>
+        /// <param name="planeNotToFindTheVertexOn">The plane that presumably is a side of the "unconstructed" polyhedron to determine what side of the plane this list of polygons lies</param>
+        /// <returns>A vertex from this list of polygons that is not on the given plane</returns>
+        public static Point FindVertexToUseAsReferenceNotOnThePlane(this List<Polygon> polygonsList, Plane planeNotToFindTheVertexOn)
+        {
+            Point pointFound;
+
+            foreach (Polygon polygon in polygonsList)
+            {
+                pointFound = polygon.FindVertexNotOnTheGivenPlane(planeNotToFindTheVertexOn);
+                if(pointFound != null)
+                {
+                    return pointFound;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace GeometryClassLibrary
         public RightTriangle(List<Point> corners)
             : base(corners)
         {
-            checkHasRightAngle(this.PlaneBoundaries);
+            checkHasRightAngle(this.LineSegments);
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
             get
             {
                 LineSegment hypotenuse = new LineSegment();
-                foreach (LineSegment side in this.PlaneBoundaries)
+                foreach (LineSegment side in this.LineSegments)
                 {
                     if (side.Length > hypotenuse.Length)
                     {
@@ -43,8 +43,8 @@ namespace GeometryClassLibrary
         {
             get
             {
-                LineSegment shortLeg = PlaneBoundaries[0];
-                foreach (LineSegment side in this.PlaneBoundaries)
+                LineSegment shortLeg = LineSegments[0];
+                foreach (LineSegment side in this.LineSegments)
                 {
                     if (side.Length < shortLeg.Length)
                     {
@@ -60,7 +60,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                List<LineSegment> legs = this.PlaneBoundaries;
+                List<LineSegment> legs = this.LineSegments;
                 legs.Remove(Hypotenuse);
                 
                 LineSegment longLeg = new LineSegment();

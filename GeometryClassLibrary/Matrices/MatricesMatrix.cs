@@ -144,6 +144,11 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         /// <summary>
         /// Returns true if each matricesMatrix is the same as the other
         /// </summary>
@@ -233,14 +238,14 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();            
             //Must check that the Distances are same for the corresponding elements of the 2 MatricesMatrixes
                         
-            if ((this.NumberOfRows == passedMatrices.NumberOfRows) && (this.NumberOfColumns == passedMatrices.NumberOfColumns))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //if ((this.NumberOfRows == passedMatrices.NumberOfRows) && (this.NumberOfColumns == passedMatrices.NumberOfColumns))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         /// <summary>
@@ -253,27 +258,28 @@ namespace GeometryClassLibrary
             
             throw new NotImplementedException();
 
-            MatricesMatrix resultingMatrices;
+            //MatricesMatrix resultingMatrices;
 
-            if (this.CanBeAddedTo(passedMatrices))
-            {
-                resultingMatrices = new MatricesMatrix(this.NumberOfRows, this.NumberOfColumns);
-            }
-            else
-            {
-                throw new Exception("The two matrices cannot be added");
-            }
+            //if (this.CanBeAddedTo(passedMatrices))
+            //{
+            //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, this.NumberOfColumns);
+            //}
+            //else
+            //{
+            //    throw new Exception("The two matrices cannot be added");
+            //}
             
-            for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
-            {
-                for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
-                {
-                    Matrix sum = (this.GetElement(rowIndex, columnIndex).AddTo(passedMatrices.GetElement(rowIndex, columnIndex)));
-                    resultingMatrices.SetElement(rowIndex, columnIndex, sum);
-                }
-            }
+            //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
+            //{
+            //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
+            //    {
+            //        Matrix sum = (this.GetElement(rowIndex, columnIndex).AddTo(passedMatrices.GetElement(rowIndex, columnIndex)));
+            //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
+            //    }
+            //}
 
-            return resultingMatrices;
+            //return resultingMatrices;
+
         }
 
         /// <summary>
@@ -288,15 +294,14 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
             //Must check that this.numberofcolumns = passedMatricesMatrix.NumberOfRows for every element of the MatricesMatrix
             
-
-            if (this.NumberOfColumns == passedMatrices.NumberOfRows)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //if (this.NumberOfColumns == passedMatrices.NumberOfRows)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         /// <summary>
@@ -307,32 +312,34 @@ namespace GeometryClassLibrary
         public MatricesMatrix MultiplyBy(MatricesMatrix passedMatrices)
         {
             throw new NotImplementedException();
-            MatricesMatrix resultingMatrices;
 
-            if (this.CanBeMultipliedBy(passedMatrices))
-            {
-                resultingMatrices = new MatricesMatrix(this.NumberOfRows, passedMatrices.NumberOfColumns);
-            }
-            else
-            {
-                throw new Exception("The two MatrixMatrices cannot be multiplied");
-            }
+            //MatricesMatrix resultingMatrices;
+
+            //if (this.CanBeMultipliedBy(passedMatrices))
+            //{
+            //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, passedMatrices.NumberOfColumns);
+            //}
+            //else
+            //{
+            //    throw new Exception("The two MatrixMatrices cannot be multiplied");
+            //}
 
 
-            for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
-            {
-                for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
-                {
-                    Matrix sum = null;
-                    for (int term = 0; term < this.NumberOfColumns; term++)
-                    {
-                        sum = sum.AddTo((this.GetElement(rowIndex, term).MultiplyBy( passedMatrices.GetElement(term, columnIndex))));
-                    }
-                    resultingMatrices.SetElement(rowIndex, columnIndex, sum);
-                }
-            }
+            //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
+            //{
+            //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
+            //    {
+            //        Matrix sum = null;
+            //        for (int term = 0; term < this.NumberOfColumns; term++)
+            //        {
+            //            sum = sum.AddTo((this.GetElement(rowIndex, term).MultiplyBy( passedMatrices.GetElement(term, columnIndex))));
+            //        }
+            //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
+            //    }
+            //}
 
-            return resultingMatrices;
+            //return resultingMatrices;
+
         }
 
         /// <summary>

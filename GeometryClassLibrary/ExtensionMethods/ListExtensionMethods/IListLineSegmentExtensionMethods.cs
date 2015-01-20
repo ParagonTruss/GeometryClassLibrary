@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
@@ -61,7 +60,7 @@ namespace GeometryClassLibrary
                 .GroupBy(point => new { point.X, point.Y, point.Z })
                 .All(group => group.Count() == 2);*/
 
-            //find all the points weve used
+            //find all the points we have used
             List<Point> points = passedBoundaries.GetAllPoints();
 
             //we should have the same number of points as line segments for it to even potentially form a closed region
@@ -99,7 +98,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="borders"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static IList<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
+        public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
         {
             if (borders.AreAllCoplanar() && borders.DoFormClosedRegion())
             {
@@ -240,7 +239,6 @@ namespace GeometryClassLibrary
 
             return points;
         }
-    
 
         /// <summary>
         /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
@@ -259,7 +257,7 @@ namespace GeometryClassLibrary
                     //following the method here of projecting the triangles formed with an arbitrary point onto the plane: http://geomalgorithms.com/a01-_area.html
 
                     //first sort them clockwise
-                    List<LineSegment> sortedBorders = (List<LineSegment>)passedBorders.SortIntoClockWiseSegments();
+                    List<LineSegment> sortedBorders = passedBorders.SortIntoClockWiseSegments();
 
                     //get our verticies
                     List<Point> verticies = sortedBorders.GetAllPoints();
@@ -314,9 +312,14 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
         {
-            List<Line> passedLineListCasted = passedLineList.ConvertAll(x => (Line)x);
+            List<Line> convertedList = new List<Line>();
+            foreach (var item in passedLineList)
+            {
+                convertedList.Add(item);
+            }
 
-            return passedLineListCasted.AreAllCoplanar();
+            return convertedList.AreAllCoplanar();
+
         }
 
         /// <summary>
@@ -326,9 +329,13 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllParallel(this List<LineSegment> passedLineList)
         {
-            List<Line> passedLineListCasted = passedLineList.ConvertAll(x => (Line)x);
 
-            return passedLineListCasted.AreAllParallel();
+            List<Line> convertedList = new List<Line>();
+            foreach (var item in passedLineList)
+                {
+                    convertedList.Add(item);
+                }
+            return convertedList.AreAllParallel();
         }
     }
 }

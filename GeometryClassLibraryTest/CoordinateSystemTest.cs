@@ -134,8 +134,8 @@ namespace GeometryClassLibraryTest
 
         private class LegoSet
         {
-            public List<LegoBlock> Blocks;
-            public CoordinateSystem SetSystem;
+            public List<LegoBlock> Blocks = new List<LegoBlock>();
+            public CoordinateSystem SetSystem = new CoordinateSystem();
         }
 
         private LegoBlock createBlockInGivenCoordinateSystem(Distance xDimension, Distance yDimension, Distance zDimension, CoordinateSystem blocksCoordinateSystem)

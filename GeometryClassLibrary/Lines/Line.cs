@@ -10,8 +10,8 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Represents an infinite Line
     /// </summary>
-    [DebuggerDisplay("UNITS = Inches, BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches} , {BasePoint.Z.Inches}, Vector = {DirectionVector.XComponentOfDirection.Inches}, {DirectionVector.YComponentOfDirection.Inches}, {DirectionVector.ZComponentOfDirection.Inches}")]
-    [Serializable]
+    [DebuggerDisplay("BasePoint = {BasePoint.X}, {BasePoint.Y} , {BasePoint.Z}, Vector = {Direction.XComponent}, {Direction.YComponent}, {Direction.ZComponent}")]
+
     public class Line : IComparable<Line>
     {
         #region Properties and Fields
@@ -216,6 +216,13 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+
         public static bool operator ==(Line line1, Line line2)
         {
             if ((object)line1 == null)
@@ -275,7 +282,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public int CompareTo(Line other)
         {
-            //see if the firt line doesnt intersect
+            //see if the first line doesnt intersect
             try
             {
                 //if it doesnt throw an error it does and we can keep going
@@ -352,7 +359,6 @@ namespace GeometryClassLibrary
                     break;
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
-                    break;
             }
             return new Plane(this, extrustionLine);
         }
@@ -436,7 +442,7 @@ namespace GeometryClassLibrary
 
             if (this.Equals(passedLine))
             {
-                return null;
+                return this.BasePoint;
             }
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
@@ -471,7 +477,12 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            return (Equals(passedLine) || !ReferenceEquals(Intersection(passedLine), null));
+            Point intersect = this.Intersection(passedLine);
+
+            if (!ReferenceEquals(intersect, null))
+                return true;
+            else
+                return false;
         }
 
         /// <summary>
@@ -580,7 +591,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the line the given distance in the given direction
         /// </summary>
-        /// <param name="translation">The translation to apply to the Line</param>
         /// <returns></returns>
         public Line Translate(Point translation)
         {
@@ -598,12 +608,14 @@ namespace GeometryClassLibrary
         public Line Shift(Shift passedShift)
         {
             //shift it as a vector since we currently dont shift directions
-            Vector linesVector =  this.UnitVector(DistanceType.Inch);
+            Vector linesVector = this.UnitVector(DistanceType.Inch);
 
             Vector shifted = linesVector.Shift(passedShift);
 
+            Point shiftedBasePoint = this.BasePoint.Shift(passedShift);
+
             //then construct a new line with that information
-            return new Line(shifted);
+            return new Line(shifted.Direction, shiftedBasePoint);
         }
 
         /// <summary>

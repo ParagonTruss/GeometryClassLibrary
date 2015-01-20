@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -27,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,8 +58,8 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="UnitClassLibrary, Version=1.0.5374.37217, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnitClassLibrary">
+      <HintPath>..\packages\UnitClassLibrary.1.1.0\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>
@@ -69,8 +71,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="TriangleTests.cs" />
     <Compile Include="CoordinateSystemTest.cs" />
+    <Compile Include="TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
     <Compile Include="MatricesMatrixTests.cs" />
@@ -87,10 +89,7 @@
     <Compile Include="ListExtensionTests\LineSegmentListExtensionTests.cs" />
     <Compile Include="LineSegmentTests.cs" />
     <Compile Include="LineTests.cs" />
-    <Compile Include="PlaneRegionTests.cs">
-      <SubType>
-      </SubType>
-    </Compile>
+    <Compile Include="PlaneRegionTests.cs" />
     <Compile Include="PlaneTests.cs" />
     <Compile Include="PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

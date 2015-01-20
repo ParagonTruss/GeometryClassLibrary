@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    [Serializable]
+
     public class RegularPolygon : Polygon
     {
         #region Constructors
@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
             //make sure the linesegments are equidistant and all angles equal
             if (AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(passedLineSegments))
             {
-                this.PlaneBoundaries = passedLineSegments;
+                this.LineSegments = passedLineSegments;
             }
         }
 

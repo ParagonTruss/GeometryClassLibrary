@@ -8,7 +8,6 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Displacement = {X.Inches}, {Y.Inches}, {Z.Inches}")]
-    [Serializable]
     public class Translation : Point
     {
         #region Constructors
@@ -55,6 +54,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Overloaded Operators
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy

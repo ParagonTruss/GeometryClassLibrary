@@ -10,7 +10,6 @@ namespace GeometryClassLibrary
     /// An arc is a finite line (having a start and end) that is curved (not straight)
     /// </summary>
     [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, EndPoint = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Direction: Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
-    [Serializable]
     public class Arc : IEdge, IComparable<Arc>
     {
         #region Properties and Fields
@@ -112,6 +111,12 @@ namespace GeometryClassLibrary
 
         //These are currently only based on the points and not anything else about it!
         #region Overloaded Operators
+
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy

@@ -8,7 +8,6 @@ using System.Diagnostics;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Angle to Rotate = {AngleToRotate.Degrees}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.Inches}, {AxisToRotateAround.BasePoint.Y.Inches}, {AxisToRotateAround.BasePoint.Z.Inches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.Inches}")]
-    [Serializable]
     public class Rotation
     {
         #region Properties and Fields
@@ -20,6 +19,22 @@ namespace GeometryClassLibrary
         public Matrix RotationMatrix
         {
             get { return _rotationMatrix; }
+        }
+
+        public Angle AngleToRotate
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Line AxisToRotateAround
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion
@@ -64,6 +79,11 @@ namespace GeometryClassLibrary
         #endregion 
 
         #region Overloaded Operators
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /* these dont make sense right now because they assume that the rotations are the same axis
         public static Rotation operator +(Rotation r1, Angle angleToAdd)

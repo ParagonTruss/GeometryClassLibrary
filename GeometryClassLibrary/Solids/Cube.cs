@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    [Serializable]
+
     public class Cube : RectangularPrism
     {
         /// <summary>
