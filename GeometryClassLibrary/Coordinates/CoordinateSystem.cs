@@ -8,13 +8,15 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// This represents a new coordinated system that is described using the world coordinate system. This class determines 
-    /// the translation from the origin to get to the new system as well as the angles about the world's x, y and z axes to 
-    /// rotate around in order to get to the desired coordinate system. (executes the rotations: x then y then z)
+    /// This represents a new coordinate system that is described using the world coordinate system. This class determines 
+    /// the translation from the origin to get to the new system as well as the rotation needed to get to the desired coordinate system.
+    /// The rotation is a series of three separate rotations in order, about the z-axis, then the x-axis, then the z-axis again.
+    /// The rotations are "intrinsic," which means that the are performed about the local axes, not the global axes.
+    /// This link is helpful when trying to understand the rotations: http://en.wikipedia.org/wiki/Euler_angles#Intrinsic_rotations
     /// Note: the "world" coordinate system refers to how we normally percieve the world. The world coordinates are always the same,
     /// but objects can be moved around in it and represent by different sub coordinate systems based on the world ones. This is
     /// how this class works conceptually
-    /// Note: The coordinat system represents how we need to shift an object in order to get it in its coordinate system, thus the 
+    /// Note: The coordinate system represents how we need to shift an object in order to get it in its coordinate system, thus the 
     /// coordinate system is the "same" as the shift
     /// </summary>
     public class CoordinateSystem
@@ -24,12 +26,17 @@ namespace GeometryClassLibrary
         //public static CoordinateSystem CurrentSystem = new CoordinateSystem();
 
         /// <summary>
-        /// The world coordinate System
+        /// The world coordinate system
         /// </summary>
         public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem();
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's X axis to get to this coordinate system
+        /// The rotation matrix that describes the local axes' orientation relative to the global axes.
+        /// </summary>
+        public Rotation Rotation;
+
+        /// <summary>
+        /// The angle through which the local coordinate system's x-axis has been rotated
         /// </summary>
         public Angle XAngle;
 
@@ -45,7 +52,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's Y axis to get to this coordinate system
+        /// The angle through which the local coordinate system's y-axis has been rotated
         /// </summary>
         public Angle YAngle;
 
@@ -61,7 +68,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's Z axis to get to this coordinate system
+        /// The angle through which the local coordinate system's z-axis has been rotated
         /// </summary>
         public Angle ZAngle;
 
@@ -129,7 +136,7 @@ namespace GeometryClassLibrary
         /// Creates a new coordinate system that has the same axis as the world one and is only shifted to the given point
         /// </summary>
         /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
-        public CoordinateSystem(Plane planeContainingTwoOfTheAxes, Vector axisInPassedPlaneToUseAsBase, 
+        public CoordinateSystem(Plane planeContainingTwoOfTheAxes, Vector axisInPassedPlaneToUseAsBase,
             Enums.Axis whichAxisIsPassed = Enums.Axis.X, Enums.AxisPlanes whichAxisPlaneIsPassed = Enums.AxisPlanes.XYPlane)
         {
             //use the base point of the passed axis as the origin point
@@ -146,7 +153,7 @@ namespace GeometryClassLibrary
             Vector zAxis = new Vector();
 
             //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
-            
+
             //Vector otherAxis;
 
             switch (whichAxisPlaneIsPassed)
@@ -172,7 +179,7 @@ namespace GeometryClassLibrary
                             throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
                     }
                     break;
-                case Enums.AxisPlanes.XZPlane: 
+                case Enums.AxisPlanes.XZPlane:
                     yAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
                     switch (whichAxisIsPassed)
                     {
@@ -384,7 +391,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix GetRotationMatrix()
         {
-            return Matrix.RotationMatrixAboutZ(this.ZAngle) * Matrix.RotationMatrixAboutX(this.XAngle) * Matrix.RotationMatrixAboutY(this.YAngle);
+            return Matrix.RotationMatrixAboutZ(this.ZAngle) * Matrix.RotationMatrixAboutY(this.YAngle) * Matrix.RotationMatrixAboutX(this.XAngle);
         }
 
         /// <summary>
@@ -498,7 +505,7 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// This shifts the corrdinate system using the given shift
+        /// This shifts the coordinate system using the given shift
         /// </summary>
         /// <param name="passedShift">The shift to apply to the coordinate system</param>
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
