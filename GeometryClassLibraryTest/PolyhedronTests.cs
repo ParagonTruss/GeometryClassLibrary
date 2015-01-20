@@ -591,5 +591,38 @@ namespace ClearspanTypeLibrary.Tests
                 results.Should().Contain(point);
             }
         }
+
+        [Test()]
+        public void Polyhedron_Volume()
+        {
+            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+
+            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            planes.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            planes.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            Volume results = testPolyhedron.Volume;
+
+            //now test to see if we got what we expect
+            Volume expected = new Volume(VolumeType.CubicInches, 96);
+
+            (expected == results).Should().BeTrue();
+
+            //now another case
+
+        }
     }
 }
