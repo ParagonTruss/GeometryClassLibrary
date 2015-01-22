@@ -244,8 +244,7 @@ namespace GeometryClassLibrary
             return new LineSegment(base.Rotate(rotationToApply));
         }
 
-        public IEdge RotateAsIEdge(Rotation passedRotation)
-
+        IEdge IEdge.Rotate(Rotation passedRotation)
         {
             return this.Rotate(passedRotation);
         }
@@ -273,19 +272,28 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
+        /// <param name="translation">The Translation to apply to the lineSegment</param>
+        /// <returns>returns a new LineSegment as a IEdge that has been translated</returns>
         public new LineSegment Translate(Point translation)
         {
             return new LineSegment(base.Translate(translation));
         }
 
         /// <summary>
+        /// Allows for generic translation on an IEdge
+        /// </summary>
+        /// <param name="passedTranslation"The Translation to apply></param>
+        /// <returns>A new LineSegment as a IEdge that has been translated</returns>
+        IEdge IEdge.Translate(Point passedTranslation)
+        {
+            return this.Translate(passedTranslation);
+        }
+
+        /// <summary>
         /// Returns a copy of this lineSegment
         /// </summary>
         /// <returns></returns>
-        public IEdge Copy()
+        IEdge IEdge.Copy()
         {
             return new LineSegment(this);
         }

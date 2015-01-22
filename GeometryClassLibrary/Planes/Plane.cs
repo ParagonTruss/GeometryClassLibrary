@@ -13,6 +13,10 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
+        public readonly static Plane XY = new Plane(Line.XAxis, Line.YAxis);
+        public readonly static Plane XZ = new Plane(Line.XAxis, Line.ZAxis);
+        public readonly static Plane YZ = new Plane(Line.YAxis, Line.ZAxis);
+
         /// <summary>
         /// A point on the plane that is used as a reference point to define it
         /// </summary>

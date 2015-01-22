@@ -23,7 +23,7 @@ namespace GeometryClassLibraryTest
 
             List<IEdge> nonPolygonEdges = new List<IEdge>();
             nonPolygonEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 5, 3)));
-            Arc arcToadd = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Distance(DistanceType.Inch, 2));
+            Arc arcToadd = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 0), new Distance(DistanceType.Inch, 2));
             nonPolygonEdges.Add(arcToadd);
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
@@ -42,12 +42,9 @@ namespace GeometryClassLibraryTest
             PlaneRegion polygonResult = planes[0].ShiftAsPlaneRegion(shift);
             (polygonResult == polygonExpected).Should().BeTrue();
 
-
-            //Arcs are not implemented
-
             List<IEdge> nonPolygonExpectedEdges = new List<IEdge>();
             nonPolygonExpectedEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3)));
-            Arc arcExpected = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Distance(DistanceType.Inch, 2));
+            Arc arcExpected = new Arc(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(4, 3, 0), new Distance(DistanceType.Inch, 2));
             nonPolygonExpectedEdges.Add(arcExpected);
             NonPolygon nonPolygonExpected = new NonPolygon(nonPolygonExpectedEdges);
 
