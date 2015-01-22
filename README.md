@@ -10,6 +10,8 @@ To understand the impetus for this library, see the [Overview Page](https://bitb
 
 To understand the setup and components of the Geometry Class Library, see [Geometry Class Library Structure](https://bitbucket.org/Clearspan/geometry-class-library/wiki/Geometry%20Class%20Library%20Structure).
 
+To report a bug, request a feature, or view or add any other issues, please go to our [issue tracker](https://clearspan.atlassian.net/browse/GEOMETRY/)
+
 ## Contributing
 Thank you! Where would we be without you, dear contributor? Thank you immensely for contributing. We ask that for the good of the project and the community, you adhere to the following guidelines.
 
