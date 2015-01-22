@@ -3,16 +3,79 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// An arc is a finite line (having a start and end) that is curved (not straight)
+    /// An arc is a finite line (having a start and end) that is curved as around a circle.
     /// </summary>
     [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, EndPoint = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Direction: Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
     public class Arc : IEdge, IComparable<Arc>
     {
         #region Properties and Fields
+
+        /// <summary>
+        /// The length of an arc of a circle with radius r and subtending an angle theta, with the circle center — i.e., the central angle 
+        /// </summary>
+        public Distance ArcLength
+        {
+            get 
+            { 
+                double lengthInInches = (_centralAngle.Degrees * _arcRadius.Inches) / (2 * Math.PI);
+                return new Distance(DistanceType.Inch, lengthInInches);
+            }
+        }
+
+        /// <summary>
+        /// The area between an arc and the center of a would be circle.
+        /// </summary>
+        public Area ArcArea
+        {
+            get 
+            {
+                return new Area(AreaType.InchesSquared, .5 * Math.Pow(_arcRadius.Inches, 2) * _centralAngle.Radians);
+            }
+        }
+
+        /// <summary>
+        /// The area of the shape limited by the arc and a straight line between the two end points.
+        /// </summary>
+        public Area ArcSegmentArea
+        {
+            get 
+            {
+                return new Area(AreaType.InchesSquared, .5 * Math.Pow(_arcRadius.Inches, 2) * (_centralAngle.Radians - Math.Sin(_centralAngle.Radians ))); 
+            }
+        }
+
+
+        Angle _centralAngle;
+
+        /// <summary>
+        ///  an angle whose apex (vertex) is the center O of a circle and whose legs (sides) 
+        ///  are radii intersecting the circle in two distinct points A and B 
+        ///  thereby subtending an arc between those two points whose angle is (by definition) equal to that of the central angle itself.
+        ///  It is also known as the arc segment's angular distance.
+        /// http://en.wikipedia.org/wiki/Central_angle
+        /// </summary>
+        public Angle CentralAngle
+        {
+            get { return _centralAngle; }
+        }
+
+
+
+        Distance _arcRadius;
+
+        /// <summary>
+        /// The radius of the would be circle formed by the arc
+        /// </summary>
+        public Distance ArcRadius
+        {
+            get { return _arcRadius; }
+        }
+
 
         /// <summary>
         /// One of the points where the arc arises from
@@ -25,19 +88,28 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// One of the points where the arc arises from
+        /// One of the points where the arc ends
+        /// http://math.stackexchange.com/questions/275201/how-to-find-an-end-point-of-an-arc-given-another-end-point-radius-and-arc-dire
         /// </summary>
-        private Point _endPoint;
         public virtual Point EndPoint
         {
-            get { return _endPoint; }
-            set { throw new System.NotImplementedException(); }
+            get 
+            {
+                throw new NotImplementedException();
+            }
         }
-
         /// <summary>
         /// The direction that the arc travels in from the base point
         /// </summary>
-        public virtual Direction Direction { get; set; }
+        public virtual Direction Direction 
+        { 
+            get
+            {
+                return new Direction(this._basePoint, this.EndPoint);
+            }
+        }
+
+
 
         #endregion
 
@@ -48,53 +120,23 @@ namespace GeometryClassLibrary
         /// </summary>
         public Arc()
         {
-            this.Direction = new Direction();
             _basePoint = new Point();
-            _endPoint = new Point();
+            _centralAngle = new Angle();
+            _arcRadius = new Distance();
         }
 
-        /// <summary>
-        /// Creates an arc with the base point at the origin, the endpoint at the passed point and in the 
-        /// given direction, or if omitted, the direction to the end point
-        /// </summary>
-        /// <param name="passedEndPoint">The point at which the arc ends</param>
-        /// <param name="passedDirection">The direction the arc travels from the base point</param>
-        public Arc(Point passedEndPoint, Direction passedDirection = null)
+        public Arc(Point passedBasePoint, Angle passedAngle, Distance passedRadius)
         {
-            if (passedDirection == null)
-            {
-                this.Direction = new Direction(passedEndPoint);
-            }
-            else
-            {
-                this.Direction = new Direction(passedDirection);
-            }
-
-            _basePoint = new Point();
-            _endPoint = new Point(passedEndPoint);
+            _basePoint = passedBasePoint;
+            _centralAngle = passedAngle;
+            _arcRadius = passedRadius;
         }
-        
-        /// <summary>
-        /// Creates an arc with the base point at the passed base point, the endpoint at the passed end point and in the 
-        /// passed direction, or if omitted, the direction to the end point
-        /// </summary>
-        /// <param name="basePoint">The point from which the Arc originates</param>
-        /// <param name="passedEndPoint">The point at which the Arc ends</param>
-        /// <param name="passedDirection"></param>
-        public Arc(Point basePoint, Point passedEndPoint, Direction passedDirection = null)
+
+        public Arc(Point passedBasePoint, Point passedEndPoint, Distance passedRadius)
         {
-            if (passedDirection == null)
-            {
-                this.Direction = new Direction(basePoint, passedEndPoint);
-            }
-            else
-            {
-                this.Direction = new Direction(passedDirection);
-            }
-
-            _basePoint = new Point(basePoint);
-            _endPoint = new Point(passedEndPoint);
+            throw new NotImplementedException();
         }
+
 
         /// <summary>
         /// Creates a copy of this Arc
@@ -103,8 +145,8 @@ namespace GeometryClassLibrary
         public Arc(Arc toCopy)
         {
             _basePoint = new Point(toCopy.BasePoint);
-            _endPoint = new Point(toCopy.EndPoint);
-            this.Direction = new Direction(toCopy.Direction);
+            _centralAngle = new Angle(toCopy.CentralAngle);
+            _arcRadius = new Distance();
         }
 
         #endregion
@@ -165,11 +207,14 @@ namespace GeometryClassLibrary
             {
                 Arc comparableArc = (Arc)obj;
 
-                // if the two points' x and y are equal, returns true
-                bool arcAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc._endPoint.Equals(this._endPoint);
-                bool arcAreRevese = comparableArc._basePoint.Equals(this._endPoint) && comparableArc._endPoint.Equals(this._basePoint);
+                // if the two points' x and y are equal
+                bool arcAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc.EndPoint.Equals(this.EndPoint);
+                bool arcAreRevese = comparableArc._basePoint.Equals(this.EndPoint) && comparableArc.EndPoint.Equals(this._basePoint);
 
-                return arcAreEqual || arcAreRevese;
+                bool areAnglesEqual = comparableArc.CentralAngle == this.CentralAngle;
+                bool areRadiusEqual = comparableArc.ArcRadius == this.ArcRadius;
+
+                return (arcAreEqual || arcAreRevese) && areAnglesEqual && areRadiusEqual;
             }
             //if it wasnt an arc than its obviously not equal
             catch (InvalidCastException)
@@ -199,7 +244,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Arc Shift(Shift passedShift)
         {
-            return new Arc(this.BasePoint.Shift(passedShift), this.EndPoint.Shift(passedShift), this.Direction);
+            throw new NotImplementedException();
         }
 
         IEdge IEdge.Shift(Shift passedShift)
