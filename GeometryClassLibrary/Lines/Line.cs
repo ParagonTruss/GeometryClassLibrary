@@ -297,7 +297,7 @@ namespace GeometryClassLibrary
                     Distance nullTest = this.XInterceptIn2D;
                     return 1;
                 }
-                catch (Exception) //if they both dont intersect they are equal
+                catch (Exception) //if they both dont intersect they are "equal" in this way of sorting
                 {
                     return 0;
                 }
