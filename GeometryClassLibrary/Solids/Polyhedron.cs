@@ -444,25 +444,34 @@ namespace GeometryClassLibrary
                 //figure out where our undetermined polygons go
                 _addUndeterminedPolygons(unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, unknownPolygons, unknownPolygonsOther);
 
-                //now make the joining sides based on where the intersection plane was
-                //create a new plane based on the intersections
-                try
+                //if we actually slice and did not just not overlap with a side then return two polygons
+                if (unconstructedInsidePolyhedron.Count != 0 && unconstructedOutsidePolyhedron.Count != 0)
                 {
-                    Polygon slicingPlanePolygon = new Polygon(slicingPlaneLines);
-                    Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLines);
+                    //now make the joining sides based on where the intersection plane was
+                    //create a new plane based on the intersections
+                    try
+                    {
+                        Polygon slicingPlanePolygon = new Polygon(slicingPlaneLines);
+                        Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLines);
 
-                    //if (slicingPlanePolygon.isValidPolygon())
-                    //{
-                    unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
-                    unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
-                    //}
+                        //if (slicingPlanePolygon.isValidPolygon())
+                        //{
+                        unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
+                        unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
+                        //}
+                    }
+                    catch (ArgumentException) { }
+
+                    List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(unconstructedInsidePolyhedron), new Polyhedron(unconstructedOutsidePolyhedron) };
+                    //toReturn.Sort();
+                    //toReturn.Reverse();
+                    return toReturn;
                 }
-                catch (ArgumentException) { }
-
-                List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(unconstructedInsidePolyhedron), new Polyhedron(unconstructedOutsidePolyhedron) };
-                //toReturn.Sort();
-                //toReturn.Reverse();
-                return toReturn;
+                //if we were slicing along a plane of the polyhedron so we didnt cut it any just return a copy of the original polyhedron
+                else
+                {
+                    return new List<Polyhedron>() { new Polyhedron(this) };
+                }
             }
             return new List<Polyhedron>() { new Polyhedron(this) };
         }
