@@ -71,6 +71,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ArcTests.cs" />
     <Compile Include="NonPolygonTests.cs" />
     <Compile Include="CoordinateSystemTest.cs" />
     <Compile Include="TriangleTests.cs" />

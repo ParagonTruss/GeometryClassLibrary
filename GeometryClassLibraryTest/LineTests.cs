@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using FluentAssertions;
-using GeometryClassLibraryTests;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
@@ -126,7 +125,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
-            Angle actualResult = line1.AngleBetweenIntersectingLine(line2);
+            Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
             
             actualResult.Should().Be(expectedResult);
         }
@@ -141,7 +140,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
-            Angle actualResult = line1.AngleBetweenIntersectingLine(line2);
+            Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
 
             actualResult.Should().Be(expectedResult);
         }
@@ -158,7 +157,7 @@ namespace ClearspanTypeLibrary.Tests
             double angleBetweenLinesInRadians = Math.Acos(1 / Math.Sqrt(3));
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
 
-            line1.AngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
+            line1.SmallestAngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
         }
 
         [Test()]
@@ -173,7 +172,7 @@ namespace ClearspanTypeLibrary.Tests
             double angleBetweenLinesInRadians = Math.Acos(0);
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
 
-            line1.AngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
+            line1.SmallestAngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
 
         }
 

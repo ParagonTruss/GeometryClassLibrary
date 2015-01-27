@@ -211,7 +211,7 @@ namespace GeometryClassLibraryTests
 
             LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(1, .5, 0));
 
-            actualResult.Should().Be(expectedResult);
+            (actualResult == expectedResult).Should().BeTrue();
         }
 
         [Test()]

@@ -28,7 +28,7 @@ namespace GeometryClassLibraryTest
 
             List<IEdge> nonPolygonEdges = new List<IEdge>();
             nonPolygonEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 5, 3)));
-            Arc arcToadd = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Distance(DistanceType.Inch, 2));
+            Arc arcToadd = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Direction());
             nonPolygonEdges.Add(arcToadd);
             NonPolygon nonPolygon = new NonPolygon(nonPolygonEdges);
 
@@ -53,7 +53,7 @@ namespace GeometryClassLibraryTest
 
             List<IEdge> nonPolygonExpectedEdges = new List<IEdge>();
             nonPolygonExpectedEdges.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 5, 3)));
-            Arc arcExpected = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Distance(DistanceType.Inch, 2));
+            Arc arcExpected = new Arc(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(2, 3, 3), new Direction());
             nonPolygonExpectedEdges.Add(arcExpected);
             NonPolygon nonPolygonExpected = new NonPolygon(nonPolygonExpectedEdges);
 

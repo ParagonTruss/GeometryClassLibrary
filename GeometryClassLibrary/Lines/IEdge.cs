@@ -22,7 +22,7 @@ namespace GeometryClassLibrary
         #region Methods
 
         IEdge Rotate(Rotation passedRotation);
-        IEdge Translate(Translation passedTanslation);
+        IEdge Translate(Point passedTanslation);
         IEdge Shift(Shift passedShift);
         IEdge Copy();
 

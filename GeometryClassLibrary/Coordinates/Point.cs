@@ -421,7 +421,7 @@ namespace GeometryClassLibrary
             Line hypotenuse = new Line(this, passedDestinationLine.BasePoint);
 
             //Find smallest angle between new line and destination line
-            Angle angleBetweenLines = hypotenuse.AngleBetweenIntersectingLine(passedDestinationLine);
+            Angle angleBetweenLines = hypotenuse.SmallestAngleBetweenIntersectingLine(passedDestinationLine);
 
             //Make a line segment from the base point of destination line to the point on the destination line that is on a line perpendicular to this point
             double distanceToBasePoint = this.DistanceTo(passedDestinationLine.BasePoint).Inches;

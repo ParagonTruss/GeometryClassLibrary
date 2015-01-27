@@ -363,27 +363,62 @@ namespace GeometryClassLibrary
             return new Plane(this, extrustionLine);
         }
 
-        public Angle AngleBetweenIntersectingLine(Line passedIntersectingLine)
+        //Mkae this in linesegment and make it direction dependent
+        /// <summary>
+        /// Returns the smaller of the two angles fromed where the two lines itnersect
+        /// </summary>
+        /// <param name="passedIntersectingLine">The line to find the angle between</param>
+        /// <returns>The smaller of the two angles formed by this line pair</returns>
+        public Angle SmallestAngleBetweenIntersectingLine(Line passedIntersectingLine)
         {
-            if (!DoesIntersect(passedIntersectingLine))
-                throw new Exception("No intercept?");
-
-            Distance dotProduct = this.UnitVector(DistanceType.Inch) * passedIntersectingLine.UnitVector(DistanceType.Inch);
-
-            //since they are unit vectors the magnitudes multiplies together should still be one so the equation simplifies
-            // from: A*B = |A||B|cos(theta) to: A*B = cos(theta), which can be rearranged to how we use it here: theta = Acos(A*B)
-            double angleBetweenLines = Math.Acos(dotProduct.Inches);
-
-            Angle returnAngle = new Angle(AngleType.Radian, angleBetweenLines);
+            Angle returnAngle = AngleBetweenIntersectingLine(passedIntersectingLine);
 
             if (returnAngle.Degrees > 90)
             {
-                return new Angle(AngleType.Radian, Math.PI - angleBetweenLines);
+                return new Angle(AngleType.Degree, 180) - returnAngle;
             }
             else
             {
                 return returnAngle;
             }
+        }
+
+        /// <summary>
+        /// Finds the angle between the two intersecting Lines. This operation is order dependent!
+        /// </summary>
+        /// <param name="passedIntersectingLine">The Line to find the angle with</param>
+        /// <returns>Returns the angle betweent the two Lines </returns>
+        public Angle AngleBetweenIntersectingLine(Line passedIntersectingLine)
+        {
+            if (!DoesIntersect(passedIntersectingLine))
+            {
+                //if it is the same line or opposite it will go here and we need to check for that and then make it 0 or 180
+                Line thisAsLine = new Line(this);
+                if (thisAsLine.Equals(passedIntersectingLine))
+                {
+                    if (this.Direction == passedIntersectingLine.Direction)
+                    {
+                        return new Angle();
+                    }
+                    else
+                    {
+                        return new Angle(AngleType.Degree, 180);
+                    }
+                }
+                throw new Exception("No intercept?");
+            }
+
+            Distance dotProduct = this.UnitVector(DistanceType.Inch) * passedIntersectingLine.UnitVector(DistanceType.Inch);
+
+            //since they are unit vectors the magnitudes multiplies together should still be one so the equation simplifies
+            // from: |CP| = |A||B|sin(theta) to: |CP| = sin(theta), which can be rearranged to how we use it here: theta = Asin(|CP|)
+            double angleBetweenVector = Math.Acos(dotProduct.Inches);
+
+            //now find out if it should be negative or positive by looking at the plane they form and its normal
+
+            Angle returnAngle = new Angle(AngleType.Radian, angleBetweenVector);
+
+            return returnAngle;
         }
 
         /// <summary>
