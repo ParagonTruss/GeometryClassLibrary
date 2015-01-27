@@ -56,6 +56,7 @@
     <Compile Include="Planes\Circle.cs" />
     <Compile Include="Planes\RightTriangle.cs" />
     <Compile Include="Planes\Triangle.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solids\ConeClass.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Coordinates\CoordinateSystem.cs" />

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GeometryClassLibrary.Properties")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("GeometryClassLibrary")]
+[assembly: AssemblyDescription("GeometryClassLibrary")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GeometryClassLibrary.Properties")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Clearspan Components")]
+[assembly: AssemblyProduct("GeometryClassLibrary")]
+[assembly: AssemblyCopyright("2015 Clearspan")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,3 +31,5 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersionAttribute("1.2.0.0")]
+[assembly: AssemblyFileVersionAttribute("1.2.0.0")]
