@@ -3,7 +3,7 @@
   <metadata>
     <id>GeometryClassLibrary</id>
     <version>$version$</version>
-    <title>$title$</title>
+    <title>Geometry Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
