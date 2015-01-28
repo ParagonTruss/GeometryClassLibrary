@@ -266,7 +266,6 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-
             Vector planeVector = new Vector(passedPoint, BasePoint);
             //Distance dotProduct = planeVector * NormalVector;
             //return dotProduct == new Distance();
@@ -336,11 +335,9 @@ namespace GeometryClassLibrary
                 //put them in plane notation  adn find what they equal (normal.X * X + normal.Y * Y + normal.Z * Z = planeEqualsValue)
                 double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
                     this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
-                //double thisPlaneEqualsAsInches = thisPlaneEqualsValue;
 
                 double otherPlaneEqualsValue = otherPlane.NormalVector.XComponent.Inches * otherPlane.BasePoint.X.Inches +
                     otherPlane.NormalVector.YComponent.Inches * otherPlane.BasePoint.Y.Inches + otherPlane.NormalVector.ZComponent.Inches * otherPlane.BasePoint.Z.Inches;
-                //double otherPlaneEqualsAsInches = otherPlaneEqualsValue;
 
                 //pull them all out as the same thing because we need to know what Distance we are dealing with
                 double thisFirstVariable = this.NormalVector.XComponent.Inches;

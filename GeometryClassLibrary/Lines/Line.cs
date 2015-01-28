@@ -282,7 +282,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public int CompareTo(Line other)
         {
-            //see if the firt line doesnt intersect
+            //see if the first line doesnt intersect
             try
             {
                 //if it doesnt throw an error it does and we can keep going
@@ -297,7 +297,7 @@ namespace GeometryClassLibrary
                     Distance nullTest = this.XInterceptIn2D;
                     return 1;
                 }
-                catch (Exception) //if they both dont intersect they are equal
+                catch (Exception) //if they both dont intersect they are "equal" in this way of sorting
                 {
                     return 0;
                 }
@@ -608,12 +608,14 @@ namespace GeometryClassLibrary
         public Line Shift(Shift passedShift)
         {
             //shift it as a vector since we currently dont shift directions
-            Vector linesVector =  this.UnitVector(DistanceType.Inch);
+            Vector linesVector = this.UnitVector(DistanceType.Inch);
 
             Vector shifted = linesVector.Shift(passedShift);
 
+            Point shiftedBasePoint = this.BasePoint.Shift(passedShift);
+
             //then construct a new line with that information
-            return new Line(shifted);
+            return new Line(shifted.Direction, shiftedBasePoint);
         }
 
         /// <summary>

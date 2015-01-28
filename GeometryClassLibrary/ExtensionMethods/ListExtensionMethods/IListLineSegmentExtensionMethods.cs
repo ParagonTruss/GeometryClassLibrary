@@ -185,6 +185,25 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        public static List<LineSegment> SortIntoClockWiseSegmentsRelativeToPoint(this List<LineSegment> borders, Point relativeToPoint)
+        {
+            List<LineSegment> inAnOrder = borders.SortIntoClockWiseSegments();
+
+            //test the normal and see how it relates to our point
+            //http://stackoverflow.com/questions/1988100/how-to-determine-ordering-of-3d-vertices
+            Vector segmentsNormal = new Vector(inAnOrder[1].BasePoint - inAnOrder[0].BasePoint).CrossProduct(new Vector(inAnOrder[2].BasePoint - inAnOrder[0].BasePoint));
+
+            Distance towardsPoint = segmentsNormal * (new Vector(inAnOrder[0].BasePoint - relativeToPoint));
+
+            //if it is negative than it is counter clockwise and needs to be reversed
+            if(towardsPoint < new Distance())
+            {
+                inAnOrder.Reverse();
+            }
+            return inAnOrder;
+        }
+
+
         /// <summary>
         /// takes the points from a list of line segments, rotates them, and turns them back into segments
         /// </summary>

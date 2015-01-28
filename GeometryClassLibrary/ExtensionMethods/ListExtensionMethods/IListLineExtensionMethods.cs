@@ -77,6 +77,43 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns the line whose x intercept on the 2D xy-plane is closest to the given distance on the x-axis. If two share the same intercept it returns the
+        /// first line in the list
+        /// </summary>
+        /// <param name="passedLines">The list of lines to find the largest x from</param>
+        /// <param name="pointToFindTheClosestInterceptTo">The value on the x-axis to find the line whose intercept is closest to</param>
+        /// <returns>Returns the Line whose intercept is closest to the specified point on the x-axis</returns>
+        public static Line LineWithXInterceptIn2DClosestTo(this IList<Line> passedLines, Distance pointToFindTheClosestInterceptTo)
+        {
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            //make them null so that we can handle if the first element in the list never intersects
+            Line closetXLine = null;// passedLines[0];
+            Distance closestX = null;// passedLines[0].XInterceptIn2D;
+
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                try
+                {
+                    Distance distanceAway = passedLines[i].XInterceptIn2D - pointToFindTheClosestInterceptTo;
+                    distanceAway = distanceAway.AbsoluteValue();
+                    if (closestX == null || distanceAway < closestX)
+                    {
+                        closetXLine = passedLines[i];
+                        closestX = distanceAway;
+                    }
+                }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
+            }
+
+            return closetXLine;
+        }
+
+        /// <summary>
         /// Returns the line with the smallest y intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
@@ -144,6 +181,43 @@ namespace GeometryClassLibrary
             return largestYLine;
         }
 
+        /// <summary>
+        /// Returns the line whose y intercept on the 2D xy-plane is closest to the given distance on the y-axis. If two share the same intercept it returns the
+        /// first line in the list
+        /// </summary>
+        /// <param name="passedLines">The list of lines to find the largest y from</param>
+        /// <param name="pointToFindTheClosestInterceptTo">The value on the y-axis to find the line whose intercept is closest to</param>
+        /// <returns>Returns the Line whose intercept is closest to the specified point on the y-axis</returns>
+        public static Line LineWithYInterceptIn2DClosestTo(this IList<Line> passedLines, Distance pointToFindTheClosestInterceptTo)
+        {
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            //make them null so that we can handle if the first element in the list never intersects
+            Line closetYLine = null;
+            Distance closestY = null;
+
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                try
+                {
+                    Distance distanceAway = passedLines[i].YInterceptIn2D - pointToFindTheClosestInterceptTo;
+                    distanceAway = distanceAway.AbsoluteValue();
+                    if (closestY == null || distanceAway < closestY)
+                    {
+                        closetYLine = passedLines[i];
+                        closestY = distanceAway;
+                    }
+                }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
+            }
+
+            return closetYLine;
+        }
+
         /*public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
         {
             throw new NotImplementedException();
@@ -195,6 +269,28 @@ namespace GeometryClassLibrary
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Sorts out and returns only the lines in this list that are parallel to the passed Line
+        /// </summary>
+        /// <param name="passedLines">passed List of Lines</param>
+        /// <param name="lineToCheckIfParallelTo">passed List of Lines</param>
+        /// <returns>returns a List of Lines of only the Lines that are parallel to the passed line</returns>
+        public static List<Line> OnlyLinesParallelTo(this IList<Line> passedLines, Line lineToCheckIfParallelTo)
+        {
+            //List<Line> passedLineListCasted = new List<Line>(passedLines);
+            List<Line> parallelLines = new List<Line>();
+
+            foreach(Line currentLine in passedLines)
+            {
+                if (currentLine.IsParallelTo(lineToCheckIfParallelTo))
+                {
+                    parallelLines.Add(currentLine);
+                }
+            }
+
+            return parallelLines;
         }
     }
 }
