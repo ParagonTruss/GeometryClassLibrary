@@ -122,7 +122,7 @@ namespace GeometryClassLibrary
             List<IEdge> newEdges = new List<IEdge>();
             foreach (var edge in this.Edges)
             {
-                newEdges.Add(edge.RotateAsIEdge(passedRotation));
+                newEdges.Add(edge.Rotate(passedRotation));
             }
 
             return new NonPolygon(newEdges);
