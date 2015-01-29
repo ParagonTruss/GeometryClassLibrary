@@ -1406,17 +1406,37 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the two Polygons have a common side
+        /// Returns whether or not the two Polygons share a common side meaning that the side is exactly the same as the other's side
         /// </summary>
-        /// <param name="otherPolygon"></param>
-        /// <returns></returns>
-        public bool DoesShareSide(Polygon otherPolygon)
+        /// <param name="otherPolygon">The other polygon to see if we share an exact side with</param>
+        /// <returns>Returns true if the Polugons share a side that is exactly the same</returns>
+        public bool DoesShareExactSide(Polygon otherPolygon)
         {
             foreach (LineSegment segment in this.LineSegments)
             {
                 foreach (LineSegment segmentOther in otherPolygon.LineSegments)
                 {
                     if (segment == segmentOther)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns whether or not any side in this polygon contains a side of the other polygon. If this polygons side is larger but contains the others it will return true
+        /// </summary>
+        /// <param name="otherPolygon">The other polygon to see if we share or contain in one of our sides one of its sides</param>
+        /// <returns>Returns true if any of this polygon's sides contain any of the other Polygon's sides</returns>
+        public bool DoesShareOrContainSide(Polygon otherPolygon)
+        {
+            foreach (LineSegment segment in this.LineSegments)
+            {
+                foreach (LineSegment segmentOther in otherPolygon.LineSegments)
+                {
+                    if (segment.DoesOverlapInSameDirection(segmentOther))
                     {
                         return true;
                     }

@@ -51,7 +51,7 @@ namespace GeometryClassLibrary
         {
             foreach (Polygon polygon in polygonsList)
             {
-                if (polygonToCheckSidesOf.DoesShareSide(polygon))
+                if (polygonToCheckSidesOf.DoesShareExactSide(polygon))
                 {
                     return true;
                 }
@@ -81,6 +81,26 @@ namespace GeometryClassLibrary
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Finds all the polygons in this list that intersect the given line and returns a list of those Polygons
+        /// </summary>
+        /// <param name="intersectingLine">The line that potentially intersects with this list of Polygons</param>
+        /// <returns>Returns a list of all the polygons the line intersects in the list or an empty list if the line did not intersect any of them</returns>
+        public static List<Polygon> FindPolygonsThatAreIntersectedByLine(this List<Polygon> polygonList, Line intersectingLine)
+        {
+            List<Polygon> sidesIntersected = new List<Polygon>();
+
+            foreach (Polygon side in polygonList)
+            {
+                if (side.DoesIntersect(intersectingLine))
+                {
+                    sidesIntersected.Add(side);
+                }
+            }
+
+            return sidesIntersected;
         }
     }
 }

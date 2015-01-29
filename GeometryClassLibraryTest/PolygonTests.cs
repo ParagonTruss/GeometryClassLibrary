@@ -661,5 +661,42 @@ namespace GeometryClassLibraryTests
             (results1 == PointGenerator.MakePointWithInches(-3, 2, 0)).Should().BeTrue();
             (results2 == null).Should().BeTrue();
         }
+
+        [Test()]
+        public void Polygon_DoesShareOrContainSide()
+        {
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon = new Polygon(lineSegments);
+
+            List<LineSegment> lineSegments2 = new List<LineSegment>();
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(-7, 1, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(-7, 1, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testExactSide = new Polygon(lineSegments2);
+
+            List<LineSegment> lineSegments3 = new List<LineSegment>();
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 0), PointGenerator.MakePointWithInches(0, 1, 0)));
+            Polygon testOverlappingSide = new Polygon(lineSegments3);
+
+            List<LineSegment> lineSegments4 = new List<LineSegment>();
+            lineSegments4.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, 0), PointGenerator.MakePointWithInches(-1, 3, 0)));
+            lineSegments4.Add(new LineSegment(PointGenerator.MakePointWithInches(2, -3, 0), PointGenerator.MakePointWithInches(-1, 3, 0)));
+            lineSegments4.Add(new LineSegment(PointGenerator.MakePointWithInches(2, -3, 0), PointGenerator.MakePointWithInches(1, 1, 0)));
+            Polygon testIntersecting = new Polygon(lineSegments4);
+
+            bool resultsExact = testPolygon.DoesShareOrContainSide(testExactSide);
+            bool resultsOverlapping = testPolygon.DoesShareOrContainSide(testOverlappingSide);
+            bool resultsIntersecting = testPolygon.DoesShareOrContainSide(testIntersecting);
+
+            resultsExact.Should().BeTrue();
+            resultsOverlapping.Should().BeTrue();
+            resultsIntersecting.Should().BeFalse();
+        }
+
     }
 }
