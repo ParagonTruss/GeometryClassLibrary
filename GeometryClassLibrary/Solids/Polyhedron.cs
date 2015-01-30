@@ -677,15 +677,32 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// Returns whether or not the polygan has a common side with the polyhedron / any of the polyhedrons sides
+        /// Returns whether or not the polygan has a common side that is exactly the same as that of the polyhedron / any of the polyhedrons sides
         /// </summary>
         /// <param name="polygon">The polygon to see if any of the the Polyhedrons side share a side with</param>
-        /// <returns>Returns a bool of whether or not the Polyhedron has a common side with the polygon</returns>
-        public bool DoesShareSide(Polygon polygon)
+        /// <returns>Returns a bool of whether or not the Polyhedron has a common side that is exactly the same as one of the polygons</returns>
+        public bool DoesShareExactSide(Polygon polygon)
         {
             foreach (Polygon polygonReference in this.Polygons)
             {
-                if (polygon.DoesShareSide(polygonReference))
+                if (polygon.DoesShareExactSide(polygonReference))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns whether or not the Polyhedron shares or contains a common side with the passed Polygon
+        /// </summary>
+        /// <param name="polygon">The Polygon to see if there are any shared or contained side in</param>
+        /// <returns>Returns true if the Polyhedron has a common shared or contained side of the Polygon</returns>
+        public bool DoesShareOrContainSide(Polygon polygon)
+        {
+            foreach (Polygon polygonReference in this.Polygons)
+            {
+                if (polygon.DoesShareOrContainSide(polygonReference))
                 {
                     return true;
                 }

@@ -14,7 +14,7 @@ namespace GeometryClassLibrary
     public class Vector : Line
     {
         #region Properties and Fields
-                
+
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
@@ -85,7 +85,7 @@ namespace GeometryClassLibrary
         /// Empty Constructor (A "Zero Vector")
         /// </summary>   
         public Vector()
-            : base() 
+            : base()
         {
             _magnitude = new Distance();
         }
@@ -106,7 +106,7 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint">The point at which the vector starts</param>
         /// <param name="passedEndPoint">The point at which the vector goes to / ends at</param>
         public Vector(Point passedBasePoint, Point passedEndPoint)
-            : base(passedBasePoint, passedEndPoint) 
+            : base(passedBasePoint, passedEndPoint)
         {
             Distance xLength = passedBasePoint.X - passedEndPoint.X;
             Distance yLength = passedBasePoint.Y - passedEndPoint.Y;
@@ -171,7 +171,7 @@ namespace GeometryClassLibrary
         {
             //Recreates Vector 2 with its base point at the end point of Vector 1
             Vector relocatedVector2 = new Vector(passedVector1.EndPoint, passedVector2);
-            
+
             Point newBasePoint = passedVector1.BasePoint; //The new vector has the same base point as Vector 1
             Point newEndPoint = relocatedVector2.EndPoint; //The new vector has the same end point as the relocated Vector 2
 
@@ -188,7 +188,7 @@ namespace GeometryClassLibrary
         {
             Vector negatedVector2 = -1 * passedVector2;
             return passedVector1 + negatedVector2;
-        } 
+        }
 
         /// <summary>
         /// Returns the dot product of the two vectors
@@ -289,7 +289,7 @@ namespace GeometryClassLibrary
                 return false;
             }
         }
-        
+
         /// <summary>
         /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
         /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
@@ -368,14 +368,15 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the Vector is contained</returns>
         public bool Contains(Vector passedVector)
         {
-            if (this.Magnitude >= passedVector.Magnitude)
-            {
-                if(this.Direction == passedVector.Direction)
-                {
-                    return true;
-                }
-            }
-            return false;
+            //and their directions to the points need to be the same as ours
+            Vector toOtherBasePoint = new Vector(this.BasePoint, passedVector.BasePoint);
+            Vector toOtherEndPoint = new Vector(this.BasePoint, passedVector.EndPoint);
+
+            bool areBothInSameDirectionAsThisOrAreBasePoint = (this.Direction == toOtherBasePoint.Direction || toOtherBasePoint.Magnitude == new Distance())
+                && (this.Direction == toOtherEndPoint.Direction || toOtherEndPoint.Magnitude == new Distance());
+            bool bothMagnitudesAreSmaller = toOtherBasePoint.Magnitude < this.Magnitude && toOtherEndPoint.Magnitude < this.Magnitude;
+
+            return areBothInSameDirectionAsThisOrAreBasePoint && bothMagnitudesAreSmaller;
         }
 
         /// <summary>
@@ -389,6 +390,23 @@ namespace GeometryClassLibrary
             Vector pointVector = new Vector(this.BasePoint, pointToSeeIfIsContained);
 
             return this.Contains(pointVector);
+        }
+
+        /// <summary>
+        /// Determines whether or not the two Vectors in the same direction overlap at all partially or completely 
+        /// </summary>
+        /// <param name="potentiallyOverlappingVector">The vector to see if we overlap with</param>
+        /// <returns>Returns true if the vectors overlap at all or one contains the other</returns>
+        public bool DoesOverlapInSameDirection(Vector potentiallyOverlappingVector)
+        {
+            //see if we partially overlap
+            bool doesSharePoint = this.Contains(potentiallyOverlappingVector.EndPoint) || this.Contains(potentiallyOverlappingVector.BasePoint);
+            bool partiallyOverlap = this.PointInSameOrOppositeDirections(potentiallyOverlappingVector) && doesSharePoint;
+
+            //or completely contain the other
+            bool doesContainOneOrOther = this.Contains(potentiallyOverlappingVector) || potentiallyOverlappingVector.Contains(this);
+
+            return partiallyOverlap || doesContainOneOrOther;
         }
 
         /// <summary>
@@ -446,10 +464,10 @@ namespace GeometryClassLibrary
         public Vector CrossProduct(Vector passedVector)
         {
             Point originPoint = new Point();
-            Vector v1 = new Vector( this);
+            Vector v1 = new Vector(this);
             Vector v2 = new Vector(passedVector);
 
-            if(this.BasePoint != originPoint || passedVector.BasePoint != originPoint)
+            if (this.BasePoint != originPoint || passedVector.BasePoint != originPoint)
             {
                 v1.BasePoint = originPoint;
                 v2.BasePoint = originPoint;

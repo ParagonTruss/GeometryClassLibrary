@@ -625,5 +625,56 @@ namespace ClearspanTypeLibrary.Tests
                 results.Should().Contain(point);
             }
         }
+
+
+        [Test()]
+        public void Polyhedron_DoesShareOrContainSide()
+        {
+            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+
+            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            planes.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            planes.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(4, 4, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 0), PointGenerator.MakePointWithInches(4, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testFlatSide = new Polygon(bounds);
+
+            List<LineSegment> bounds2 = new List<LineSegment>();
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 2, 0), PointGenerator.MakePointWithInches(4, 6, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 2, 0), PointGenerator.MakePointWithInches(6, 5, 0)));
+            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 6, 0), PointGenerator.MakePointWithInches(6, 5, 0)));
+            Polygon testTouches = new Polygon(bounds2);
+
+            List<LineSegment> bounds3 = new List<LineSegment>();
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, -1, 0), PointGenerator.MakePointWithInches(-1, 3, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, -1, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 3, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            Polygon testNone = new Polygon(bounds3);
+
+            bool resultFlat = testPolyhedron.DoesShareOrContainSide(testFlatSide);
+            bool resultTouches = testPolyhedron.DoesShareOrContainSide(testTouches);
+            bool resultNone = testPolyhedron.DoesShareOrContainSide(testNone);
+
+            resultFlat.Should().BeTrue();
+            resultTouches.Should().BeTrue();
+            resultNone.Should().BeFalse();
+        }
     }
 }

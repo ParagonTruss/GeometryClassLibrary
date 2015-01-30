@@ -110,5 +110,34 @@ namespace GeometryClassLibraryTest
             resultOn.Should().BeTrue();
             resultNotOn.Should().BeFalse();
         }
+
+        [Test()]
+        public void Vector_DoesOverlapInSameDirection()
+        {
+            Vector testVector = new Vector(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(4, 4, -4));
+            Vector testPartial = new Vector(PointGenerator.MakePointWithInches(2, 2, -2));
+            Vector testContained = new Vector(PointGenerator.MakePointWithInches(2, 2, -2), PointGenerator.MakePointWithInches(3, 3, -3));
+            Vector testContaining = new Vector(PointGenerator.MakePointWithInches(6, 6, -6));
+
+            Vector testSameLineNotOverlap = new Vector(PointGenerator.MakePointWithInches(5, 5, -5), PointGenerator.MakePointWithInches(6, 6, -6));
+            Vector testSameBaseNoOverlap = new Vector(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(2, 3, -3));
+            Vector testIntersecting = new Vector(PointGenerator.MakePointWithInches(0, 0, -1), PointGenerator.MakePointWithInches(4, 4, -3));
+
+            bool resultPartial = testVector.DoesOverlapInSameDirection(testPartial);
+            bool resultContained = testVector.DoesOverlapInSameDirection(testContained);
+            bool resultContaining = testVector.DoesOverlapInSameDirection(testContaining);
+
+            bool resultSameLineNotOverlap = testVector.DoesOverlapInSameDirection(testSameLineNotOverlap);
+            bool resultSameBaseNoOverlap = testVector.DoesOverlapInSameDirection(testSameBaseNoOverlap);
+            bool resultIntersecting = testVector.DoesOverlapInSameDirection(testIntersecting);
+
+            resultPartial.Should().BeTrue();
+            resultContained.Should().BeTrue();
+            resultContaining.Should().BeTrue();
+
+            resultSameLineNotOverlap.Should().BeFalse();
+            resultSameBaseNoOverlap.Should().BeFalse();
+            resultIntersecting.Should().BeFalse();
+        }
     }
 }
