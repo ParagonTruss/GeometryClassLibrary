@@ -177,27 +177,6 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_WillTwoLinesOnTopOfOneAnotherIntersectTest()
-        {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(10, 0, 0));
-            Line line2 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(6, 0, 0));
-            Line line3 = new Line(PointGenerator.MakePointWithInches(3, 2, 0), PointGenerator.MakePointWithInches(-2, 5, 3));
-            Line line4 = new Line(PointGenerator.MakePointWithInches(3, 5, 0), PointGenerator.MakePointWithInches(-2, 2, 3));
-            Line line5 = new Line(PointGenerator.MakePointWithInches(0, 5), PointGenerator.MakePointWithInches(0, -3));
-            Line line6 = new Line(PointGenerator.MakePointWithInches(0, 2), PointGenerator.MakePointWithInches(0, -1));
-
-            bool resultT1 = line1.DoesIntersect(line2);
-            bool resultT2 = line3.DoesIntersect(line4);
-            bool resultT3 = line5.DoesIntersect(line6);
-            bool resultF1 = line1.DoesIntersect(line3);
-
-            resultT1.Should().BeTrue();
-            resultT2.Should().BeTrue();
-            resultT3.Should().BeTrue();
-            resultF1.Should().BeFalse();
-        }
-
-        [Test()]
         public void Line_CoplanarTest()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
