@@ -24,7 +24,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A point on the line to use as a reference point
         /// </summary>
-        public Point BasePoint
+        public virtual Point BasePoint
         {
             get { return _basePoint; }
             set { this._basePoint = value; }
@@ -35,18 +35,13 @@ namespace GeometryClassLibrary
         /// The direction the line is going out of the base point in one direction
         /// Note: it also extends out in the direction opposite of this one
         /// </summary>
-        public Direction Direction
+        public virtual Direction Direction
         {
             get { return _direction; }
             set { _direction = value; }
         }
         private Direction _direction;
 
-        //Slope in 2D?
-        public double Slope
-        {
-            get { throw new NotImplementedException(); }
-        }
 
         /// <summary>
         /// Returns the X intercept of the line if the z Distance is ignored

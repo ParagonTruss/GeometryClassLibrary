@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns this lineSegment's length (this is the same as the magnitude)
         /// </summary>
-        public Distance Length
+        public virtual Distance Length
         {
             get { return base.Magnitude; }
             set { base.Magnitude = value; }
@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the midpoint of this lineSegment
         /// </summary>
-        public Point MidPoint
+        public virtual Point MidPoint
         {
             get
             {

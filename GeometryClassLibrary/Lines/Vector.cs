@@ -18,7 +18,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
-        public Distance Magnitude
+        public virtual Distance Magnitude
         {
             get { return _magnitude; }
             set { _magnitude = value; }
@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the x-component of this vector
         /// </summary>
-        public Distance XComponent
+        public virtual Distance XComponent
         {
             get { return _magnitude * base.Direction.XComponentOfDirection; }
         }
@@ -36,7 +36,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the y-component of this vector
         /// </summary>
-        public Distance YComponent
+        public virtual Distance YComponent
         {
             get { return _magnitude * base.Direction.YComponentOfDirection; }
         }
@@ -44,7 +44,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the z-component of this vector
         /// </summary>
-        public Distance ZComponent
+        public virtual Distance ZComponent
         {
             get { return _magnitude * base.Direction.ZComponentOfDirection; }
         }
@@ -52,7 +52,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the vector's direction
         /// </summary>
-        public Point EndPoint
+        public virtual Point EndPoint
         {
             get { return new Point(XComponent, YComponent, ZComponent) + BasePoint; }
         }
