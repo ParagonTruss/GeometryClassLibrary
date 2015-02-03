@@ -15,12 +15,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The 3x3 matrix which performs the rotation via premultiplication
         /// </summary>
-        private Matrix _rotationMatrix;
-        public Matrix RotationMatrix
-        {
-            get { return _rotationMatrix; }
-        }
-
         public Angle AngleToRotate
         {
             get
@@ -29,6 +23,9 @@ namespace GeometryClassLibrary
             }
         }
 
+        /// <summary>
+        /// The 3x3 matrix which performs the rotation via premultiplication
+        /// </summary>
         public Line AxisToRotateAround
         {
             get

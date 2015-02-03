@@ -123,7 +123,7 @@ namespace GeometryClassLibrary
             _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle));
 
             //Then put the displacement to the origin
-            _displacement = new Point(coordinateSystemToShiftTo.Origin);
+            _displacement = new Point(coordinateSystemToShiftTo.Translation);
         }
 
         /// <summary>
