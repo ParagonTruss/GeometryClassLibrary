@@ -58,8 +58,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.1.5505.29550\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
+    <Reference Include="UnitClassLibrary, Version=1.2.5512.21512, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5512.21512\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>
