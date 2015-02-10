@@ -75,6 +75,7 @@
     <Compile Include="ArcTests.cs" />
     <Compile Include="NonPolygonTests.cs" />
     <Compile Include="CoordinateSystemTest.cs" />
+    <Compile Include="RectangularPrismTest.cs" />
     <Compile Include="TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
