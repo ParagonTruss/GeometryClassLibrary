@@ -256,10 +256,6 @@ namespace GeometryClassLibrary
                     return "X= " + _x.Meters.ToString() + " Meters, Y= " + _y.Meters.ToString() + " Meters, Z=" + _z.Meters.ToString();
                 case DistanceType.Kilometer:
                     return "X= " + _x.Kilometers.ToString() + " Kilometers, Y= " + _y.Kilometers.ToString() + " Kilometers, Z=" + _z.Kilometers.ToString();
-                case DistanceType.ThirtySecond:
-                    return "X= " + _x.ThirtySeconds.ToString() + " ThirtySeconds, Y= " + _y.ThirtySeconds.ToString() + " ThirtySeconds, Z=" + _z.ThirtySeconds.ToString();
-                case DistanceType.Sixteenth:
-                    return "X= " + _x.Sixteenths.ToString() + " Sixteenths, Y= " + _y.Sixteenths.ToString() + " Sixteenths, Z=" + _z.Sixteenths.ToString();
                 case DistanceType.Inch:
                     return "X= " + _x.Inches.ToString() + " Inches, Y= " + _y.Inches.ToString() + " Inches, Z=" + _z.Inches.ToString();
                 case DistanceType.Foot:
