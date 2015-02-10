@@ -114,6 +114,43 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns the line whose x intercept on the 2D xy-plane is farthest from the given distance on the x-axis. If two share the same intercept it returns the
+        /// first line in the list
+        /// </summary>
+        /// <param name="passedLines">The list of lines to find the farthest in x from</param>
+        /// <param name="pointToFindTheFarthestInterceptTo">The value on the x-axis to find the line whose intercept is farthest from</param>
+        /// <returns>Returns the Line whose intercept is farthest from the specified point on the x-axis</returns>
+        public static Line LineWithXInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
+        {
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            //make them null so that we can handle if the first element in the list never intersects
+            Line farthestXLine = null;// passedLines[0];
+            Distance farthestX = null;// passedLines[0].XInterceptIn2D;
+
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                try
+                {
+                    Distance distanceAway = passedLines[i].XInterceptIn2D - pointToFindTheFarthestInterceptTo;
+                    distanceAway = distanceAway.AbsoluteValue();
+                    if (farthestX == null || distanceAway > farthestX)
+                    {
+                        farthestXLine = passedLines[i];
+                        farthestX = distanceAway;
+                    }
+                }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
+            }
+
+            return farthestXLine;
+        }
+
+        /// <summary>
         /// Returns the line with the smallest y intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
@@ -216,6 +253,43 @@ namespace GeometryClassLibrary
             }
 
             return closetYLine;
+        }
+
+        /// <summary>
+        /// Returns the line whose y intercept on the 2D xy-plane is farthest from the given distance on the y-axis. If two share the same intercept it returns the
+        /// first line in the list
+        /// </summary>
+        /// <param name="passedLines">The list of lines to find the fartherst in y from</param>
+        /// <param name="pointToFindTheFarthestInterceptTo">The value on the y-axis to find the line whose intercept is fartherst from</param>
+        /// <returns>Returns the Line whose intercept is farthest from the specified point on the y-axis</returns>
+        public static Line LineWithYInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
+        {
+            if (passedLines.Count < 1)
+            {
+                return null;
+            }
+
+            //make them null so that we can handle if the first element in the list never intersects
+            Line farYLine = null;
+            Distance farY = null;
+
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                try
+                {
+                    Distance distanceAway = passedLines[i].YInterceptIn2D - pointToFindTheFarthestInterceptTo;
+                    distanceAway = distanceAway.AbsoluteValue();
+                    if (farY == null || distanceAway > farY)
+                    {
+                        farYLine = passedLines[i];
+                        farY = distanceAway;
+                    }
+                }
+                //if the line doesnt intersect it throws an exception but we dont have to worry about it
+                catch (Exception) { }
+            }
+
+            return farYLine;
         }
 
         /*public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
