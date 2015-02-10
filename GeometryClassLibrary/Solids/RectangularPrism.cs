@@ -30,12 +30,14 @@ namespace GeometryClassLibrary
             Point backbottomrightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, 0, passedHeight.Inches);
             Point backtoprightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, passedLength.Inches, passedHeight.Inches);
 
-            this.Polygons.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
-            this.Polygons.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
-            this.Polygons.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
-            this.Polygons.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
-            this.Polygons.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
-            this.Polygons.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            List<Polygon> polygonsMade = new List<Polygon>();
+            polygonsMade.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
+            polygonsMade.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            polygonsMade.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
+            polygonsMade.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
+            polygonsMade.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
+            polygonsMade.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
+            this.Polygons = polygonsMade;
         }
     }
 }
