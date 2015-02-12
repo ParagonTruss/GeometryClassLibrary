@@ -410,7 +410,7 @@ namespace GeometryClassLibrary
             {
                 //if it exists add it to the list
                 Point intersectionPoint = polygon.Intersection(intersectingLine);
-                if (intersectionPoint != null)
+                if (intersectionPoint != null && !intersections.Contains(intersectionPoint))
                 {
                     intersections.Add(intersectionPoint);
                 }
