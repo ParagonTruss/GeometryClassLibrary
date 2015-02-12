@@ -490,5 +490,40 @@ namespace ClearspanTypeLibrary.Tests
 
             result.Should().Be(expected);
         }
+
+        [Test()]
+        public void Line_DoesIntersectPolyhedron()
+        {
+            //make a polyhedron
+            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point topRightBack = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            planes.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            planes.Add(new Polygon(new List<Point> { topLeft, topRight, topRightBack, topLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, bottomRight, bottomRightBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topLeftBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomRight, topRight, topRightBack, bottomRightBack }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            //now make some lines that will intersect it
+            Line intersecting1 = new Line(PointGenerator.MakePointWithInches(2, 0, 1), PointGenerator.MakePointWithInches(2, 1, 1));
+            Line intersecting2 = new Line(PointGenerator.MakePointWithInches(2, 0, .5), PointGenerator.MakePointWithInches(5, 12, 1));
+            Line intersectingAlongSide = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
+            Line noIntersect = new Line(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0));
+
+            intersecting1.DoesIntersect(testPolyhedron).Should().BeTrue();
+            intersecting2.DoesIntersect(testPolyhedron).Should().BeTrue();
+            intersectingAlongSide.DoesIntersect(testPolyhedron).Should().BeTrue();
+            noIntersect.DoesIntersect(testPolyhedron).Should().BeFalse();
+        }
     }
 }

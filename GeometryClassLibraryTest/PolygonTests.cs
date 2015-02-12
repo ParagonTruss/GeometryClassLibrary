@@ -698,5 +698,27 @@ namespace GeometryClassLibraryTests
             resultsIntersecting.Should().BeFalse();
         }
 
+        [Test()]
+        public void Polygon_IntersectWithLine()
+        {
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon = new Polygon(lineSegments);
+
+            Line testIntersect = new Line(PointGenerator.MakePointWithInches(-1.5, 1, 0), PointGenerator.MakePointWithInches(-3, -2, 1));
+            Line testIntersectSide = new Line(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(2, -1, 1));
+            Line noIntersect = new Line(PointGenerator.MakePointWithInches(-4, 1, 0), PointGenerator.MakePointWithInches(-5, -2, 1));
+
+            Point intersect = testPolygon.Intersection(testIntersect);
+            Point intersectSide = testPolygon.Intersection(testIntersectSide);
+            Point none = testPolygon.Intersection(noIntersect);
+
+            (intersect == PointGenerator.MakePointWithInches(-1.5, 1, 0)).Should().BeTrue();
+            (intersectSide == PointGenerator.MakePointWithInches(0, 1, 0)).Should().BeTrue();
+            (none == null).Should().BeTrue();
+        }
+
     }
 }

@@ -397,6 +397,28 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Finds all the intersection points between the given line and this Polyhedrons surfaces
+        /// </summary>
+        /// <param name="intersectingLine">The line that presumable intersects this Polyhedron</param>
+        /// <returns>A list of all the points where the line intersects the polygon's surface or an empty list if there are not intersections</returns>
+        public List<Point> FindAllIntersectionPoints(Line intersectingLine)
+        {
+            List<Point> intersections = new List<Point>();
+
+            //check each polygon for an intersection
+            foreach (Polygon polygon in this.Polygons)
+            {
+                //if it exists add it to the list
+                Point intersectionPoint = polygon.Intersection(intersectingLine);
+                if (intersectionPoint != null && !intersections.Contains(intersectionPoint))
+                {
+                    intersections.Add(intersectionPoint);
+                }
+            }
+            return intersections;
+        }
+
+        /// <summary>
         /// Returns the two Polyhedrons created by a slice. In order of size.
         /// </summary>
         /// <param name="slicingPlane">The plane to slice the Polyhedron with</param>
