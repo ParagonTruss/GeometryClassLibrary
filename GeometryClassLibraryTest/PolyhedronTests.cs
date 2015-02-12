@@ -626,7 +626,6 @@ namespace ClearspanTypeLibrary.Tests
             }
         }
 
-
         [Test()]
         public void Polyhedron_DoesShareOrContainSide()
         {
@@ -675,6 +674,84 @@ namespace ClearspanTypeLibrary.Tests
             resultFlat.Should().BeTrue();
             resultTouches.Should().BeTrue();
             resultNone.Should().BeFalse();
+        }
+
+        [Test()]
+        public void Polyhedron_OverlappingPolygon()
+        {
+            //make our first polyhedron
+            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point topRightBack = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            planes.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            planes.Add(new Polygon(new List<Point> { topLeft, topRight, topRightBack, topLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, bottomRight, bottomRightBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topLeftBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomRight, topRight, topRightBack, bottomRightBack }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            //and a second one that intersects both sides only partially
+            Point bottomLeft2 = PointGenerator.MakePointWithInches(6, 3, 1);
+            Point topLeft2 = PointGenerator.MakePointWithInches(6, 6, 1);
+            Point bottomRight2 = PointGenerator.MakePointWithInches(4, 3, 1);
+            Point topRight2 = PointGenerator.MakePointWithInches(4, 6, 1);
+
+            Point bottomLeftBack2 = PointGenerator.MakePointWithInches(6, 3, 5);
+            Point topLeftBack2 = PointGenerator.MakePointWithInches(6, 6, 5);
+            Point bottomRightBack2 = PointGenerator.MakePointWithInches(4, 3, 5);
+            Point topRightBack2 = PointGenerator.MakePointWithInches(4, 6, 5);
+
+            List<Polygon> planes2 = new List<Polygon>();
+            planes2.Add(new Polygon(new List<Point> { bottomLeft2, topLeft2, topRight2, bottomRight2 }));
+            planes2.Add(new Polygon(new List<Point> { bottomLeftBack2, topLeftBack2, topRightBack2, bottomRightBack2 }));
+            planes2.Add(new Polygon(new List<Point> { topLeft2, topRight2, topRightBack2, topLeftBack2 }));
+            planes2.Add(new Polygon(new List<Point> { bottomLeft2, bottomRight2, bottomRightBack2, bottomLeftBack2 }));
+            planes2.Add(new Polygon(new List<Point> { bottomLeft2, topLeft2, topLeftBack2, bottomLeftBack2 }));
+            planes2.Add(new Polygon(new List<Point> { bottomRight2, topRight2, topRightBack2, bottomRightBack2 }));
+            Polyhedron testPolyhedron2 = new Polyhedron(planes2);
+
+            Point intersect12Bottom = PointGenerator.MakePointWithInches(4, 3, 2);
+            Point intersect12Top = PointGenerator.MakePointWithInches(4, 6, 2);
+            Polygon expected12overlap = new Polygon(new List<Point>() { bottomRight2, topRight2, intersect12Top, intersect12Bottom });
+
+            Polygon overlap12 = testPolyhedron.OverlappingPolygon(testPolyhedron2);
+            (overlap12 == expected12overlap).Should().BeTrue();
+
+            //now make a thrid one that shares and end with the first and doesnt overlapp the second
+            Point bottomLeft3 = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point topLeft3 = PointGenerator.MakePointWithInches(0, 18, 0);
+            Point bottomRight3 = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point topRight3 = PointGenerator.MakePointWithInches(4, 18, 0);
+
+            Point bottomLeftBack3 = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point topLeftBack3 = PointGenerator.MakePointWithInches(0, 18, 2);
+            Point bottomRightBack3 = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point topRightBack3 = PointGenerator.MakePointWithInches(4, 18, 2);
+
+            Polygon expected13Overlap = new Polygon(new List<Point> { bottomLeft3, bottomRight3, bottomRightBack3, bottomLeftBack3 });
+            List<Polygon> planes3 = new List<Polygon>();
+            planes3.Add(new Polygon(new List<Point> { bottomLeft3, topLeft3, topRight3, bottomRight3 }));
+            planes3.Add(new Polygon(new List<Point> { bottomLeftBack3, topLeftBack3, topRightBack3, bottomRightBack3 }));
+            planes3.Add(new Polygon(new List<Point> { topLeft3, topRight3, topRightBack3, topLeftBack3 }));
+            planes3.Add(expected13Overlap);
+            planes3.Add(new Polygon(new List<Point> { bottomLeft3, topLeft3, topLeftBack3, bottomLeftBack3 }));
+            planes3.Add(new Polygon(new List<Point> { bottomRight3, topRight3, topRightBack3, bottomRightBack3 }));
+            Polyhedron testPolyhedron3 = new Polyhedron(planes3);
+
+            Polygon overlap13 = testPolyhedron.OverlappingPolygon(testPolyhedron3);
+            (overlap13 == expected13Overlap).Should().BeTrue();
+
+            Polygon overlap23 = testPolyhedron2.OverlappingPolygon(testPolyhedron3);
+            (overlap23 == null).Should().BeTrue();
         }
     }
 }

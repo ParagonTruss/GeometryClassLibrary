@@ -316,7 +316,7 @@ namespace GeometryClassLibrary
                 foreach (Polygon face in this.Faces)
                 {
                     //redo how the verticies are cycled through so one stays contant
-                    List<Point> faceVerticies = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2,6,1)).GetAllPoints();
+                    List<Point> faceVerticies = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2, 6, 1)).GetAllPoints();
                     Point baseVertex = faceVerticies[0];
                     Point previousVertex = faceVerticies[1];
 
@@ -343,7 +343,7 @@ namespace GeometryClassLibrary
             Distance yValues = new Distance();
             Distance zValues = new Distance();
 
-            foreach(Point vertex in this.Verticies)
+            foreach (Point vertex in this.Verticies)
             {
                 xValues += vertex.X;
                 yValues += vertex.Y;
@@ -725,6 +725,33 @@ namespace GeometryClassLibrary
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Finds the overlap between two polyhedrons and returns the polygon formed by that overlap
+        /// </summary>
+        /// <param name="toFindOverlapWith">The Polyhedron to fins the overlap with</param>
+        /// <returns>The overlapping region of the two Polyhedrons as a Polygon or null if they do not overlap</returns>
+        public Polygon OverlappingPolygon(Polyhedron toFindOverlapWith)
+        {
+            //just brute force the sides until we find one and then return it
+            foreach (Polygon side in this.Polygons)
+            {
+                foreach (Polygon sideOther in toFindOverlapWith.Polygons)
+                {
+                    if (side.Contains(sideOther))
+                    {
+                        //find the middle between them
+                        Polygon intersectionPlane = side.OverlappingPolygon(sideOther);
+                        if (intersectionPlane != null)
+                        {
+                            return intersectionPlane;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         #endregion
