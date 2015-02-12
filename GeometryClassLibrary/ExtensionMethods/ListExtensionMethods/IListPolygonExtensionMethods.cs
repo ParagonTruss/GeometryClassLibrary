@@ -74,7 +74,7 @@ namespace GeometryClassLibrary
             foreach (Polygon polygon in polygonsList)
             {
                 pointFound = polygon.FindVertexNotOnTheGivenPlane(planeNotToFindTheVertexOn);
-                if(pointFound != null)
+                if (pointFound != null)
                 {
                     return pointFound;
                 }
@@ -101,6 +101,34 @@ namespace GeometryClassLibrary
             }
 
             return sidesIntersected;
+        }
+
+        /// <summary>
+        /// Finds all the polygons in this list that touch the plane passed in. If the includeContained flag is false, it will not return any 
+        /// polygons contained by the the plane
+        /// </summary>
+        /// <param name="polygonList">The list of polygons to to see if they touch the planes</param>
+        /// <param name="toSeeIfTouches">The plane to see if the polygons touch</param>
+        /// <param name="includeContained">If true it will include any polygons in the list that are contained in the plane, false it will not</param>
+        /// <returns>Returns the polygons that are touching this plane</returns>
+        public static List<Polygon> FindPolygonsTouchingPlane(this List<Polygon> polygonList, Plane toSeeIfTouches, bool includeContained = false)
+        {
+            List<Polygon> touchingPolygons = new List<Polygon>();
+            foreach (Polygon polygon in polygonList)
+            {
+                //see if they intersect
+                if (toSeeIfTouches.DoesIntersect(polygon))
+                {
+                    touchingPolygons.Add(polygon);
+                }
+                //they will not intersect if the are coplanar so we check here if we want to include contained ones
+                else if (includeContained && toSeeIfTouches.Contains(polygon))
+                {
+                    touchingPolygons.Add(polygon);
+                }
+            }
+
+            return touchingPolygons;
         }
     }
 }
