@@ -552,6 +552,23 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns whether ot not this line itnersects the Polyhedron
+        /// </summary>
+        /// <param name="passedPolyhedron"></param>
+        /// <returns>Returns true if the Line intersected the Polyhedron or false if it did not</returns>
+        public virtual bool DoesIntersect(Polyhedron passedPolyhedron)
+        {
+            foreach (Polygon polygon in passedPolyhedron.Polygons)
+            {
+                if (this.DoesIntersect(polygon))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+       
+        /// <summary>
         /// Rotates a line about the given axis by the amount of the passed angle
         /// </summary>
         /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
