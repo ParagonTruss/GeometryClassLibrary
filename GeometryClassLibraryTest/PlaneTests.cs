@@ -135,6 +135,8 @@ namespace GeometryClassLibraryTests
 
             test12Intersect.Should().Be(test21Intersect);
             test21Intersect.Should().Be(expectedLine);
+
+            (testPlane1.Intersection(testPlane1) == null).Should().BeTrue();
         }
 
         [Test()]

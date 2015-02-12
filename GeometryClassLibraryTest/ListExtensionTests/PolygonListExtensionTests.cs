@@ -83,5 +83,43 @@ namespace GeometryClassLibraryTest
 
             (resultsNull == null).Should().BeTrue();
         }
+
+        [Test()]
+        public void PolygonList_FindPolygonsTouchingPlane()
+        {
+            List<LineSegment> lineSegments1 = new List<LineSegment>();
+            lineSegments1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 4), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 4), PointGenerator.MakePointWithInches(0, 0, 4)));
+            lineSegments1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon1 = new Polygon(lineSegments1);
+
+            List<LineSegment> lineSegments2 = new List<LineSegment>();
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 0), PointGenerator.MakePointWithInches(-3, 0, 0)));
+            lineSegments2.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon2 = new Polygon(lineSegments2);
+
+            List<LineSegment> lineSegments3 = new List<LineSegment>();
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 2, 4)));
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 4), PointGenerator.MakePointWithInches(0, 2, 4)));
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 2, 4), PointGenerator.MakePointWithInches(-3, 0, 4)));
+            lineSegments3.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, 0, 4), PointGenerator.MakePointWithInches(0, 0, 4)));
+            Polygon testPolygon3 = new Polygon(lineSegments3);
+
+            List<Polygon> testList = new List<Polygon>() { testPolygon1, testPolygon2, testPolygon3};
+
+            Plane planeToCheck = Plane.XY;
+
+            List<Polygon> touchedInclusive = testList.FindPolygonsTouchingPlane(planeToCheck, true);
+            (touchedInclusive.Count == 2).Should().BeTrue();
+            touchedInclusive.Contains(testPolygon1).Should().BeTrue();
+            touchedInclusive.Contains(testPolygon2).Should().BeTrue();
+
+            List<Polygon> touchedExclusive = testList.FindPolygonsTouchingPlane(planeToCheck, false);
+            (touchedExclusive.Count == 1).Should().BeTrue();
+            touchedExclusive.Contains(testPolygon1).Should().BeTrue();
+        }
     }
 }
