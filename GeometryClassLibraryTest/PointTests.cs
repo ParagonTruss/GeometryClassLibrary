@@ -312,20 +312,21 @@ namespace GeometryClassLibraryTests
             //now make yet another CoordinateSystem point
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-7.345, -4.11, -0.4435), new Angle(AngleType.Degree, 176), new Angle(AngleType.Degree, 4), new Angle(AngleType.Degree, -222));
             Point notAtWorld2 = testPoint.SystemShift(testSystem2);
-
+            //make 2 in terms of 1
+            Point notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
 
 
             //now test shifting from world to another
-            Point worldTo1 = testPoint.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == notAtWorld).Should().BeTrue();
+            Point worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
+            (worldTo1 == testPoint).Should().BeTrue();
 
             //now from another to the world
-            Point twoToWorld = notAtWorld2.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == testPoint).Should().BeTrue();
+            Point twoToWorld = testPoint.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
+            (twoToWorld == notAtWorld2).Should().BeTrue();
 
             //now from one to another
-            Point oneToTwo = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == notAtWorld2).Should().BeTrue();
+            Point oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
+            (oneToTwo == testPoint).Should().BeTrue();
         }
     }
 }

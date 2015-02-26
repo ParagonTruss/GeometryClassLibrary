@@ -153,20 +153,21 @@ namespace GeometryClassLibraryTest
             //now make yet another CoordinateSystem vector
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
             Vector notAtWorld2 = testVector.SystemShift(testSystem2);
-
+            //make 2 in terms of 1
+            Vector notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
 
 
             //now test shifting from world to another
-            Vector worldTo1 = testVector.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == notAtWorld).Should().BeTrue();
+            Vector worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
+            (worldTo1 == testVector).Should().BeTrue();
 
             //now from another to the world
-            Vector twoToWorld = notAtWorld2.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == testVector).Should().BeTrue();
+            Vector twoToWorld = testVector.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
+            (twoToWorld == notAtWorld2).Should().BeTrue();
 
             //now from one to another
-            Vector oneToTwo = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == notAtWorld2).Should().BeTrue();
+            Vector oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
+            (oneToTwo == testVector).Should().BeTrue();
         }
     }
 }

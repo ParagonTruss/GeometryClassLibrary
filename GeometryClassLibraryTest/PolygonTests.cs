@@ -715,20 +715,21 @@ namespace GeometryClassLibraryTests
             //now make yet another CoordinateSystem polyhedron
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
             Polygon notAtWorld2 = testPolygon.SystemShift(testSystem2);
-
+            //make 2 in terms of 1
+            Polygon notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
 
 
             //now test shifting from world to another
-            Polygon worldTo1 = testPolygon.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == notAtWorld).Should().BeTrue();
+            Polygon worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
+            (worldTo1 == testPolygon).Should().BeTrue();
 
             //now from another to the world
-            Polygon twoToWorld = notAtWorld2.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == testPolygon).Should().BeTrue();
+            Polygon twoToWorld = testPolygon.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
+            (twoToWorld == notAtWorld2).Should().BeTrue();
 
             //now from one to another
-            Polygon oneToTwo = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == notAtWorld2).Should().BeTrue();
+            Polygon oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
+            (oneToTwo == testPolygon).Should().BeTrue();
         }
     }
 }

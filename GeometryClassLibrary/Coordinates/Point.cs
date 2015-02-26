@@ -548,12 +548,31 @@ namespace GeometryClassLibrary
             {
                 from = CoordinateSystem.WorldCoordinateSystem;
             }
+            if(to == null)
+            {
+                to = CoordinateSystem.WorldCoordinateSystem;
+            }
 
-            //shift it from where it is to the world coordinate system
-            Point shiftedPoint = this.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
-
-            //then Shift it to the new Cordinate system
-            return shiftedPoint.SystemShift(to);
+            if(from != CoordinateSystem.WorldCoordinateSystem && to != CoordinateSystem.WorldCoordinateSystem)
+            {
+                //we have to undo both of the shifts
+                Point test = this.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
+                return test.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem()); 
+            }
+            else if(from != CoordinateSystem.WorldCoordinateSystem)
+            {
+                //shift it from where it is to the world coordinate system 
+                 return this.SystemShift(from);  
+            }
+            else if(to != CoordinateSystem.WorldCoordinateSystem)
+            {
+                //then Shift it to the new Cordinate system
+                return this.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem());  
+            }
+            else
+            {
+                return this;
+            }
         }
 
         #endregion

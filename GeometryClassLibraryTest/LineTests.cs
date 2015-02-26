@@ -504,20 +504,21 @@ namespace ClearspanTypeLibrary.Tests
             //now make yet another CoordinateSystem Line
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
             Line notAtWorld2 = testLine.SystemShift(testSystem2);
-
+            //make 2 in terms of 1
+            Line notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
 
 
             //now test shifting from world to another
-            Line worldTo1 = testLine.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == notAtWorld).Should().BeTrue();
+            Line worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
+            (worldTo1 == testLine).Should().BeTrue();
 
             //now from another to the world
-            Line twoToWorld = notAtWorld2.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == testLine).Should().BeTrue();
+            Line twoToWorld = testLine.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
+            (twoToWorld == notAtWorld2).Should().BeTrue();
 
             //now from one to another
-            Line oneToTwo = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == notAtWorld2).Should().BeTrue();
+            Line oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
+            (oneToTwo == testLine).Should().BeTrue();
         }
     }
 }
