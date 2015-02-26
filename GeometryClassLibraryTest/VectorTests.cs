@@ -150,7 +150,7 @@ namespace GeometryClassLibraryTest
             CoordinateSystem testSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(4, -2, 1), new Angle(), new Angle(AngleType.Degree, 43), new Angle());
             Vector notAtWorld = testVector.SystemShift(testSystem);
 
-            //now make yet another CoordinateSystem polyhedron
+            //now make yet another CoordinateSystem vector
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
             Vector notAtWorld2 = testVector.SystemShift(testSystem2);
 
