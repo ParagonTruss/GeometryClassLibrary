@@ -260,6 +260,29 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// shifts this LineSegment with the passed Coordinate System
+        /// </summary>
+        /// <param name="toShiftWith">the Coordinate System to shift this LineSegment with</param>
+        /// <returns>A new LineSegment that has been shifted with the given Coordinate System</returns>
+        public new LineSegment SystemShift(CoordinateSystem toShiftWith)
+        {
+            return new LineSegment(base.SystemShift(toShiftWith));
+        }
+
+        /// <summary>
+        /// Shifts this LineSegment from one Coordinate System to the other
+        /// </summary>
+        /// <param name="to">The Coordinate System to shift this LineSegment to</param>
+        /// <param name="from">The coordinate System this LineSegment is currently in. If left out it defaults to the 
+        /// World Coordinate System</param>
+        /// <returns>Returns a new LineSegment that has been shifted to the given Coordinate System</returns>
+        /// 
+        public new LineSegment ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
+        {
+            return new LineSegment(base.ShiftCoordinateSystemsToFrom(to, from));
+        }
+
+        /// <summary>
         /// Allows for generic shifting on an IEdge
         /// </summary>
         /// <param name="passedShift"></param>

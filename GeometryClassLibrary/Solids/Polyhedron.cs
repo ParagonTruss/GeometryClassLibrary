@@ -688,29 +688,8 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new Polyhedron that has been shifted to the given Coordinate System</returns>
         public Polyhedron ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
         {
-            //use our coordinate system if none is passed in
-            if (from == null)
-            {
-                from = CoordinateSystem.WorldCoordinateSystem;
-            }
-
-            Polyhedron shiftedPolyhedron = this;
-
-            //shift it to its member coordinate system if it is not already
-            if (from != to)
-            {     
-                //shift it from where it is to the world coordinate system
-                ////shiftedPolyhedron = shiftedPolyhedron.SystemShift(from);
-                shiftedPolyhedron = shiftedPolyhedron.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
-
-
-                //then Shift it to the new Cordinate system
-                //fromshiftedPolyhedron = shiftedPolyhedron.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem());
-                shiftedPolyhedron = shiftedPolyhedron.SystemShift(to);
-
-
-            }
-            return shiftedPolyhedron;
+            List<Polygon> shiftedRegions = this.Polygons.ShiftCoordinateSystemsToFrom(to, from);
+            return new Polyhedron(shiftedRegions);
         }
 
         /// <summary>

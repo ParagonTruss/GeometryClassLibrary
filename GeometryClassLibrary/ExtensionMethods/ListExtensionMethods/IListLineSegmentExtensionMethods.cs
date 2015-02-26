@@ -312,6 +312,12 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        /// <summary>
+        /// Shifts the List of LineSegments with the given shift
+        /// </summary>
+        /// <param name="passedLineSegments">The List of Line Segments to Shift</param>
+        /// <param name="passedShift">the Shift to apply to the List of LineSegmnets</param>
+        /// <returns>a new List of LineSegmnets that have been shifted with the given shift</returns>
         public static List<LineSegment> Shift(this IList<LineSegment> passedLineSegments, Shift passedShift)
         {
             List<LineSegment> shiftedSegments = new List<LineSegment>();
@@ -319,6 +325,26 @@ namespace GeometryClassLibrary
             foreach (var segment in passedLineSegments)
             {
                 shiftedSegments.Add(  segment.Shift(passedShift));
+            }
+
+            return shiftedSegments;
+        }
+
+        /// <summary>
+        /// Shifts this List of LineSegments from one Coordinate System to the other
+        /// </summary>
+        /// <param name="passedLineSegments">The List of LineSegments to Shift from one Coordinate System to the other</param>
+        /// <param name="to">The Coordinate System to shift this List of LineSegments to</param>
+        /// <param name="from">The coordinate System this List of LineSegments is currently in. If left out it defaults to the 
+        /// World Coordinate Systemm</param>
+        /// <returns>Returns a new List of LineSegments that has been shifted to the given Coordinate System</returns>
+        public static List<LineSegment> ShiftCoordinateSystemsToFrom(this IList<LineSegment> passedLineSegments, CoordinateSystem to, CoordinateSystem from = null)
+        {
+            List<LineSegment> shiftedSegments = new List<LineSegment>();
+
+            foreach (var segment in passedLineSegments)
+            {
+                shiftedSegments.Add(segment.ShiftCoordinateSystemsToFrom(to, from));
             }
 
             return shiftedSegments;

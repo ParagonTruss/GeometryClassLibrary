@@ -385,6 +385,18 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Shifts this Polygon from one Coordinate System to the other
+        /// </summary>
+        /// <param name="to">The Coordinate System to shift this polygon to</param>
+        /// <param name="from">The coordinate System this Polygon is currently in. If left out it defaults to the 
+        /// World Coordinate Systemm</param>
+        /// <returns>Returns a new Polygon that has been shifted to the given Coordinate System</returns>
+        public Polygon ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
+        {
+            return new Polygon(this.LineSegments.ShiftCoordinateSystemsToFrom(to, from));
+        }
+
+        /// <summary>
         /// Rotates the polygon about the given axis by the specified angle
         /// </summary>
         /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the point</param>

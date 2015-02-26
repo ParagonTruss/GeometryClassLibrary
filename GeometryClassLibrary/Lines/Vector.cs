@@ -637,6 +637,28 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Shifts the Given vector with the passed CoordinateSystem
+        /// </summary>
+        /// <param name="toShiftWith">The CoordinateSystem to shift this vector with</param>
+        /// <returns>A new vector that has been shifted with the given CoordinateSystem</returns>
+        public Vector SystemShift(CoordinateSystem toShiftWith)
+        {
+            return this.Shift(new Shift(toShiftWith));
+        }
+
+        /// <summary>
+        /// Shifts this Vector from one Coordinate System to the other
+        /// </summary>
+        /// <param name="to">The Coordinate System to shift this Vector to</param>
+        /// <param name="from">The coordinate System this Vector is currently in. If left out it defaults to the 
+        /// World Coordinate Systemm</param>
+        /// <returns>Returns a new Vector that has been shifted to the given Coordinate System</returns>
+        public Vector ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
+        {
+            return new Vector(BasePoint.ShiftCoordinateSystemsToFrom(to, from), EndPoint.ShiftCoordinateSystemsToFrom(to, from));
+        }
+
+        /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
         /// <param name="passedDirection"></param>

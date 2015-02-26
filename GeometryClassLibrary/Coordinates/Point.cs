@@ -494,6 +494,11 @@ namespace GeometryClassLibrary
             return this.ConvertToVector().ConvertToMatrixColumn();
         }
 
+        /// <summary>
+        /// Shifts the Point with the given Shift
+        /// </summary>
+        /// <param name="passedShift">The Shift to apply to this Point</param>
+        /// <returns>returns a new Point that has been shifted</returns>
         public Point Shift(Shift passedShift)
         {
             Point pointToReturn = this;
@@ -517,6 +522,38 @@ namespace GeometryClassLibrary
                 pointToReturn = pointToReturn.Translate(passedShift.Displacement);
             }
             return pointToReturn;
+        }
+
+        /// <summary>
+        /// Shifts the Popint with the given coordinateSystem
+        /// </summary>
+        /// <param name="toShiftWith">the Coordinate System to shift this Point with</param>
+        /// <returns>returns a New Point that has been shifted with the CoordinateSystem</returns>
+        public Point SystemShift(CoordinateSystem toShiftWith)
+        {
+            return this.Shift(new Shift(toShiftWith));
+        }
+
+        /// <summary>
+        /// Shifts this Point from one Coordinate System to the other
+        /// </summary>
+        /// <param name="to">The Coordinate System to shift this Point to</param>
+        /// <param name="from">The coordinate System this Point is currently in. If left out it defaults to the 
+        /// World Coordinate Systemm</param>
+        /// <returns>Returns a new Point that has been shifted to the given Coordinate System</returns>
+        public Point ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
+        {
+            //use our coordinate system if none is passed in
+            if (from == null)
+            {
+                from = CoordinateSystem.WorldCoordinateSystem;
+            }
+
+            //shift it from where it is to the world coordinate system
+            Point shiftedPoint = this.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
+
+            //then Shift it to the new Cordinate system
+            return shiftedPoint.SystemShift(to);
         }
 
         #endregion
