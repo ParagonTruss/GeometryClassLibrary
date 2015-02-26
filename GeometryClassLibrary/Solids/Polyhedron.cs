@@ -665,7 +665,11 @@ namespace GeometryClassLibrary
             return new Polyhedron(shiftedRegions);
         }
 
-
+        /// <summary>
+        /// Shifts the Polyhedron with the given coordinate System
+        /// </summary>
+        /// <param name="systemToShiftTo">the System to shift with</param>
+        /// <returns>a new Polyhedron that has been shifted with the given CoordinateSystem</returns>
         public Polyhedron SystemShift(CoordinateSystem systemToShiftTo)
         {
             Polyhedron toReturn = this.Shift(new Shift(systemToShiftTo));
@@ -675,6 +679,39 @@ namespace GeometryClassLibrary
             return toReturn;
         }
 
+        /// <summary>
+        /// Shifts this Polyhedron from one Coordinate System to the other
+        /// </summary>
+        /// <param name="to">The Coordinate System to shift this polyhedron to</param>
+        /// <param name="from">The coordinate System this Polyhedron is currently in. If left out it defaults to the 
+        /// World Coordinate Systemm</param>
+        /// <returns>Returns a new Polyhedron that has been shifted to the given Coordinate System</returns>
+        public Polyhedron ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
+        {
+            //use our coordinate system if none is passed in
+            if (from == null)
+            {
+                from = CoordinateSystem.WorldCoordinateSystem;
+            }
+
+            Polyhedron shiftedPolyhedron = this;
+
+            //shift it to its member coordinate system if it is not already
+            if (from != to)
+            {     
+                //shift it from where it is to the world coordinate system
+                ////shiftedPolyhedron = shiftedPolyhedron.SystemShift(from);
+                shiftedPolyhedron = shiftedPolyhedron.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
+
+
+                //then Shift it to the new Cordinate system
+                //fromshiftedPolyhedron = shiftedPolyhedron.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem());
+                shiftedPolyhedron = shiftedPolyhedron.SystemShift(to);
+
+
+            }
+            return shiftedPolyhedron;
+        }
 
         /// <summary>
         /// Returns whether or not the polygan has a common side that is exactly the same as that of the polyhedron / any of the polyhedrons sides
