@@ -804,6 +804,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_AllIntersectingPoints()
         {
+            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
 
             Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
             Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
