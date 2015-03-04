@@ -762,6 +762,7 @@ namespace ClearspanTypeLibrary.Tests
             Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
             Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
             Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
+			
             Polygon testPolygon = new Polygon(new List<Point>() {bottomLeft, bottomRight, topRight, topLeft});
             Polyhedron testPolyhedron = new Polyhedron(new List<Polygon>(){testPolygon});
 
@@ -797,6 +798,51 @@ namespace ClearspanTypeLibrary.Tests
 
             Polyhedron twoToOne = notAtWorld1In2Coords.ShiftCoordinateSystemsToFrom(testSystem, testSystem2);
             (twoToOne == testPolyhedron).Should().BeTrue();
+
+		}
+		
+        [Test()]
+        public void Polyhedron_AllIntersectingPoints()
+        {
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point topRightBack = PointGenerator.MakePointWithInches(4, 12, 2);
+
+            List<Polygon> planes = new List<Polygon>();
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            planes.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            planes.Add(new Polygon(new List<Point> { topLeft, topRight, topRightBack, topLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, bottomRight, bottomRightBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topLeftBack, bottomLeftBack }));
+            planes.Add(new Polygon(new List<Point> { bottomRight, topRight, topRightBack, bottomRightBack }));
+            Polyhedron testPolyhedron = new Polyhedron(planes);
+
+            //now make some lines that will intersect it
+            Line intersecting1 = new Line(PointGenerator.MakePointWithInches(2, 0, 1), PointGenerator.MakePointWithInches(2, 1, 1));
+            Line intersecting2 = new Line(PointGenerator.MakePointWithInches(1, 0, .5), PointGenerator.MakePointWithInches(5, 12, 1.5));
+            Line intersectingAlongSide = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
+            Line noIntersect = new Line(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0));
+
+            List<Point> points1 = testPolyhedron.FindAllIntersectionPoints(intersecting1);
+            List<Point> points2 = testPolyhedron.FindAllIntersectionPoints(intersecting2);
+            List<Point> pointsAlongSide = testPolyhedron.FindAllIntersectionPoints(intersectingAlongSide);
+            List<Point> pointsNone = testPolyhedron.FindAllIntersectionPoints(noIntersect);
+
+            (points1.Count == 2).Should().BeTrue();
+            points1.Contains(PointGenerator.MakePointWithInches(2, 0, 1)).Should().BeTrue();
+            points1.Contains(PointGenerator.MakePointWithInches(2, 12, 1)).Should().BeTrue();
+
+            (points2.Count == 2).Should().BeTrue();
+            points2.Contains(PointGenerator.MakePointWithInches(1, 0, 0.5)).Should().BeTrue();
+            points2.Contains(PointGenerator.MakePointWithInches(4, 9, 1.25)).Should().BeTrue();
+
+            (pointsAlongSide.Count == 2).Should().BeTrue();
+            pointsAlongSide.Contains(PointGenerator.MakePointWithInches(0, 0, 0)).Should().BeTrue();
+            pointsAlongSide.Contains(PointGenerator.MakePointWithInches(0, 12, 0)).Should().BeTrue();
+
+            (pointsNone.Count == 0).Should().BeTrue();
         }
     }
 }

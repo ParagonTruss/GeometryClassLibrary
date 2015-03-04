@@ -1313,6 +1313,22 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Finds the intersection between this polygon and the line
+        /// </summary>
+        /// <param name="passedLine">The line to see if it intersects</param>
+        /// <returns>Returns the point of intersection or null if it does not intersect</returns>
+        public new Point Intersection(Line passedLine)
+        {
+            Point intersection = ((Plane)this).Intersection(passedLine);
+
+            if(intersection != null && this.ContainsInclusive(intersection))
+            {
+                return intersection;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
         /// </summary>
         /// <param name="passedLine"></param>
