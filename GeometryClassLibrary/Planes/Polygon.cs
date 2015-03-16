@@ -427,7 +427,7 @@ namespace GeometryClassLibrary
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.LineSegments)
             {
-                newBoundaryList.Add(segment.Translate(translation));
+                newBoundaryList.Add(segment.Translate(new Translation(translation)));
             }
             return new Polygon(newBoundaryList);
         }
@@ -730,8 +730,8 @@ namespace GeometryClassLibrary
             {
                 List<LineSegment> polygonConstruct = new List<LineSegment>();
 
-                Point newBackBasePoint = linesegment.BasePoint.Translate(directionVector.EndPoint);
-                Point newBackEndPoint = linesegment.EndPoint.Translate(directionVector.EndPoint);
+                Point newBackBasePoint = linesegment.BasePoint.Translate(new Translation(directionVector.EndPoint));
+                Point newBackEndPoint = linesegment.EndPoint.Translate(new Translation(directionVector.EndPoint));
                 LineSegment newBackLine = new LineSegment(newBackBasePoint, newBackEndPoint);
                 backPolygonLines.Add(newBackLine);
 

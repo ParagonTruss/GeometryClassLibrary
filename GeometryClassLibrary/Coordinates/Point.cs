@@ -13,29 +13,15 @@ namespace GeometryClassLibrary
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
-    [DebuggerDisplay("{X.Inches}, {Y.Inches}, {Z.Inches}")]
-
     public class Point : IComparable
     {
         #region Properties and Fields
 
-        public Distance X
-        {
-            get { return _x; }
-        }
-        private Distance _x;
+        public Distance X { get; set; }
 
-        public Distance Y
-        {
-            get { return _y; }
-        }
-        private Distance _y;
+        public Distance Y { get; set; }
 
-        public Distance Z
-        {
-            get { return _z; }
-        }
-        private Distance _z;
+        public Distance Z { get; set; }
 
         #endregion
 
@@ -46,45 +32,34 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point()
         {
-            _x = new Distance();
-            _y = new Distance();
-            _z = new Distance();
+            X = new Distance();
+            Y = new Distance();
+            Z = new Distance();
         }
 
         /// <summary>
         /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation
         /// </summary>
-        /// <param name="Distance1"></param>
-        /// <param name="Distance2"></param>
-        public Point(Distance Distance1, Distance Distance2)
+        /// <param name="passedX"></param>
+        /// <param name="passedY"></param>
+        public Point(Distance passedX, Distance passedY)
         {
-            _x = Distance1;
-            _y = Distance2;
-            _z = new Distance(DistanceType.Inch, 0);
+            X = passedX;
+            Y = passedY;
+            Z = new Distance(DistanceType.Inch, 0);
         }
 
         /// <summary>
-        /// 
+        /// Three Dimensional Constructor for a Point
         /// </summary>
-        /// <param name="Distance1"></param>
-        /// <param name="Distance2"></param>
-        /// <param name="Distance3"></param>
-        public Point(Distance Distance1, Distance Distance2, Distance Distance3)
+        /// <param name="passedX"></param>
+        /// <param name="passedY"></param>
+        /// <param name="passedZ"></param>
+        public Point(Distance passedX, Distance passedY, Distance passedZ)
         {
-            _x = Distance1;
-            _y = Distance2;
-            _z = Distance3;
-        }
-
-        /// <summary>
-        /// Cylindrical
-        /// </summary>
-        /// <param name="Distance1"></param>
-        /// <param name="Distance2"></param>
-        /// <param name="angle"></param>
-        public Point(Distance Distance1, Distance Distance2, Angle angle)
-        {
-            throw new NotImplementedException();
+            X = passedX;
+            Y = passedY;
+            Z = passedZ;
         }
 
         /// <summary>
@@ -102,14 +77,14 @@ namespace GeometryClassLibrary
         /// Creates a new point with the given values with the given Distance type
         /// </summary>
         /// <param name="passedType"></param>
-        /// <param name="Distance1"></param>
-        /// <param name="Distance2"></param>
-        /// <param name="Distance3"></param>
-        public Point(DistanceType passedType, double Distance1, double Distance2, double Distance3)
+        /// <param name="passedX"></param>
+        /// <param name="passedY"></param>
+        /// <param name="passedZ"></param>
+        public Point(DistanceType passedType, double passedX, double passedY, double passedZ)
         {
-            _x = new Distance(passedType, Distance1);
-            _y = new Distance(passedType, Distance2);
-            _z = new Distance(passedType, Distance3);
+            X = new Distance(passedType, passedX);
+            Y = new Distance(passedType, passedY);
+            Z = new Distance(passedType, passedZ);
         }
 
         /// <summary>
@@ -117,18 +92,14 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Point toCopy)
         {
-            _x = toCopy._x;
-            _y = toCopy._y;
-            _z = toCopy._z;
+            X = toCopy.X;
+            Y = toCopy.Y;
+            Z = toCopy.Z;
         }
 
         #endregion
 
         #region Overloaded Operators
-
-        /* You may notice that we do not overload the increment and decrement operators nor do we overload multiplication and division.
-         * This is because the user of this library does not know what is being internally stored and those operations will not return useful information. 
-         */
 
         public override int GetHashCode()
         {
@@ -139,13 +110,13 @@ namespace GeometryClassLibrary
         public static Point operator +(Point point1, Point point2)
         {
             //first calculate the new x
-            Distance newX = point1._x + point2._x;
+            Distance newX = point1.X + point2.X;
 
             //then calcutate the new y
-            Distance newY = point1._y + point2._y;
+            Distance newY = point1.Y + point2.Y;
 
             //then calcutate the new z
-            Distance newZ = point1._z + point2._z;
+            Distance newZ = point1.Z + point2.Z;
 
             //create a new Point object with your new values
             return new Point(newX, newY, newZ);
@@ -154,13 +125,13 @@ namespace GeometryClassLibrary
         public static Point operator -(Point point1, Point point2)
         {
             //first calculate the new x
-            Distance newX = point1._x - point2._x;
+            Distance newX = point1.X - point2.X;
 
             //then calcutate the new y
-            Distance newY = point1._y - point2._y;
+            Distance newY = point1.Y - point2.Y;
 
             //then calcutate the new z
-            Distance newZ = point1._z - point2._z;
+            Distance newZ = point1.Z - point2.Z;
 
             //create a new Point object with your new values
             return new Point(newX, newY, newZ);
@@ -172,16 +143,16 @@ namespace GeometryClassLibrary
         public static bool operator ==(Point point1, Point point2)
         {
             // covers null reference checks
-            if ((object)point1 == null)
+            if ((object) point1 != null)
             {
-                if ((object)point2 == null)
-                {
-                    return true;
-                }
-                return false;
+                return point1.Equals(point2);
             }
+            if ((object) point2 == null)
+            {
+                return true;
+            }
+            return false;
             // if the two points' x and y and z are equal, returns true
-            return point1.Equals(point2);
         }
 
         /// <summary>
@@ -236,42 +207,12 @@ namespace GeometryClassLibrary
             }
 
             // if the two points' x, y, and z are equal, returns true
-            return (this._x.Equals(comparablePoint.X) && this._y.Equals(comparablePoint.Y) && this._z.Equals(comparablePoint.Z));
-        }
-
-        /// <summary>
-        /// Returns the a string converted to a desired unitType
-        /// </summary>
-        /// <param name="unitType"></param>
-        /// <returns></returns>
-        public string ToString(DistanceType unitType)
-        {
-            switch (unitType)
-            {
-                case DistanceType.Millimeter:
-                    return "X= " + _x.Millimeters.ToString() + " Millimeters, Y= " + _y.Millimeters.ToString() + " Millimeters, Z=" + _z.Millimeters.ToString();
-                case DistanceType.Centimeter:
-                    return "X= " + _x.Centimeters.ToString() + " Centimeters, Y= " + _y.Centimeters.ToString() + " Centimeters, Z=" + _z.Centimeters.ToString();
-                case DistanceType.Meter:
-                    return "X= " + _x.Meters.ToString() + " Meters, Y= " + _y.Meters.ToString() + " Meters, Z=" + _z.Meters.ToString();
-                case DistanceType.Kilometer:
-                    return "X= " + _x.Kilometers.ToString() + " Kilometers, Y= " + _y.Kilometers.ToString() + " Kilometers, Z=" + _z.Kilometers.ToString();
-                case DistanceType.Inch:
-                    return "X= " + _x.Inches.ToString() + " Inches, Y= " + _y.Inches.ToString() + " Inches, Z=" + _z.Inches.ToString();
-                case DistanceType.Foot:
-                    return "X= " + _x.Feet.ToString() + " Feet, Y= " + _y.Feet.ToString() + " Feet, Z=" + _z.Feet.ToString();
-                case DistanceType.Yard:
-                    return "X= " + _x.Yards.ToString() + " Yards, Y= " + _y.Yards.ToString() + " Yards, Z=" + _z.Yards.ToString();
-                case DistanceType.Mile:
-                    return "X= " + _x.Miles.ToString() + " Miles, Y= " + _y.Miles.ToString() + " Miles, Z=" + _z.Miles.ToString();
-            }
-            //code should never be run
-            return "We were unable to identify your desired Unit Type";
+            return (this.X.Equals(comparablePoint.X) && this.Y.Equals(comparablePoint.Y) && this.Z.Equals(comparablePoint.Z));
         }
 
         public override string ToString()
         {
-            return ToString(DistanceType.Inch);
+            return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
         }
 
         #endregion
@@ -281,7 +222,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates one point around another
         /// </summary>
-        /// <param name="pointToRotate">The point to rotate.</param>
         /// <param name="centerPoint">The centre point of rotation.</param>
         /// <param name="rotateAngle">The rotation angle</param>
         /// <returns>Rotated point</returns>
@@ -304,9 +244,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Moves the point by the specified amount based on the passed point
         /// </summary>
-        public Point Translate(Point passedDisplacementPoint)
+        /// <param name="passedTranslation"></param>
+        public Point Translate(Translation passedTranslation)
         {
-            return (this + passedDisplacementPoint);
+            return (this + passedTranslation);
         }
 
         /// <summary>
@@ -321,19 +262,19 @@ namespace GeometryClassLibrary
         /// <summary>
         /// uses the distance formula to find a the distance between this point and another
         /// </summary>
-        /// <param name="_endPoint"></param>
+        /// <param name="endPoint"></param>
         /// <returns>new Distance representing the distance</returns>
-        public Distance DistanceTo(Point _endPoint)
+        public Distance DistanceTo(Point endPoint)
         {
-            if (this == _endPoint)
+            if (this == endPoint)
             {
                 return new Distance();
             }
 
             //distance formula
-            double term1 = Math.Pow((_x - _endPoint._x).Inches, 2);
-            double term2 = Math.Pow((_y - _endPoint._y).Inches, 2);
-            double term3 = Math.Pow((_z - _endPoint._z).Inches, 2);
+            double term1 = Math.Pow((X - endPoint.X).Inches, 2);
+            double term2 = Math.Pow((Y - endPoint.Y).Inches, 2);
+            double term3 = Math.Pow((Z - endPoint.Z).Inches, 2);
 
             double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
@@ -376,7 +317,7 @@ namespace GeometryClassLibrary
                 //Must translate everything so that the axis line goes through the origin before rotating
 
                 //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Point() - rotationToApply.AxisToRotateAround.BasePoint);
+                pointForRotating = this.Translate(new Translation(new Point() - rotationToApply.AxisToRotateAround.BasePoint));
 
                 //Make the axis go through the origin
                 axisForRotating = new Line(rotationToApply.AxisToRotateAround.Direction, originPoint);
@@ -431,7 +372,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed line, false otherwise
         /// </summary>
-        /// <param name="passedPoint"></param>
+        /// <param name="passedLine"></param>
         /// <returns></returns>
         public bool IsOnLine(Line passedLine)
         {
@@ -479,7 +420,7 @@ namespace GeometryClassLibrary
             return IsOnVector(passedLineSegment);
         }
 
-        public Vector VectorFromOriginToPoint()
+        public Vector VectorFromOriginToThisPoint()
         {
             Point origin = PointGenerator.MakePointWithInches(0, 0, 0);
             Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
@@ -507,7 +448,7 @@ namespace GeometryClassLibrary
             //correcly - for a full explaination look in Shift.cs where isNegatedShift is declared
             if (passedShift.isNegatedShift)
             {
-                pointToReturn = pointToReturn.Translate(passedShift.Displacement);
+                pointToReturn = pointToReturn.Translate(new Translation(passedShift.Displacement));
             }
 
             //we need to apply each rotation in order to the point
@@ -519,7 +460,7 @@ namespace GeometryClassLibrary
             //and then we translate it (unless is a negating shift) so the shift is more intuitive
             if (!passedShift.isNegatedShift)
             {
-                pointToReturn = pointToReturn.Translate(passedShift.Displacement);
+                pointToReturn = pointToReturn.Translate(new Translation(passedShift.Displacement));
             }
             return pointToReturn;
         }

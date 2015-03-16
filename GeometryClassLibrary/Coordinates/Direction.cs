@@ -13,7 +13,6 @@ namespace GeometryClassLibrary
     /// Note: there are singularities (basically a point where the system breaks down) in this system
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
-    [DebuggerDisplay("Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
     public class Direction
     {
         #region Properties and Fields

@@ -7,7 +7,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Size = {NumberOfRows} x {NumberOfColumns} |  First Row = {this.GetElement(0,0)} {this.GetElement(0,1)}... |  Second Row = {this.GetElement(1,0)} {this.GetElement(1,1)}...")]
+
     public class Matrix
     {
         #region Properties and Fields
@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
             }
         }
 
-#endregion
+        #endregion
 
         #region Constructors
 
@@ -64,7 +64,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="numRows">The desired number of rows in the new matrix</param>
         /// <param name="numCols">The desired number of columns in the new matrix</param>
-        public Matrix (int numRows, int numCols) 
+        public Matrix(int numRows, int numCols)
         {
             _matrix = new double[numRows, numCols];
         }
@@ -75,7 +75,7 @@ namespace GeometryClassLibrary
         /// <param name="passedNumRows"></param>
         /// <param name="passedNumColumns"></param>
         /// <param name="passedValuesInMatrix"></param>
-        public Matrix (int passedNumRows, int passedNumColumns, double[] passedValuesInMatrix)
+        public Matrix(int passedNumRows, int passedNumColumns, double[] passedValuesInMatrix)
         {
             Matrix newMatrix = new Matrix(passedNumRows, passedNumColumns);
             int arrayIndex = 0;
@@ -112,8 +112,8 @@ namespace GeometryClassLibrary
             this.InsertMatrixAt(passedMatrix, 0, 0);
         }
 
-        #endregion      
-  
+        #endregion
+
         #region Overloaded Operators
         public override int GetHashCode()
         {
@@ -158,7 +158,7 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the passed obj is not null
-            if(obj == null)
+            if (obj == null)
             {
                 return false;
             }
@@ -234,7 +234,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Matrix operator *(Matrix m1, double scalarMultiplier)
         {
-            for (int i = 0; i < m1.NumberOfRows; i++ )
+            for (int i = 0; i < m1.NumberOfRows; i++)
             {
                 for (int j = 0; j < m1.NumberOfColumns; j++)
                 {
@@ -264,7 +264,24 @@ namespace GeometryClassLibrary
             return m1;
         }
 
-       
+        public override string ToString()
+        {
+            string returnString = "";
+
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                for (int j = 0; j < this.NumberOfColumns -1; j++)
+                {
+                    returnString += GetElement(i,j).ToString() + " | ";
+                }
+                returnString += GetElement(i, this.NumberOfColumns-1).ToString();
+                returnString += "\r\n";
+            }
+
+            return returnString;
+
+        }
+
         #endregion
 
         #region Methods
@@ -350,7 +367,7 @@ namespace GeometryClassLibrary
             {
                 SetElement(rowIndex, passedColumnIndex, passedColumn[rowIndex]);
             }
-        }       
+        }
 
 
         /// <summary>
@@ -370,9 +387,9 @@ namespace GeometryClassLibrary
             //Try getting the angles out of the matrix (this works)
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
             List<Angle> extractedAngles = new List<Angle>();
-            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(1, 1)))); //z
-            extractedAngles.Add( new Angle(AngleType.Radian, -Math.Asin(this.GetElement(1, 2)))); //x
-            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(0, 2), this.GetElement(2, 2)))); //y
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(1, 1)))); //z
+            extractedAngles.Add(new Angle(AngleType.Radian, -Math.Asin(this.GetElement(1, 2)))); //x
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(this.GetElement(0, 2), this.GetElement(2, 2)))); //y
 
             return extractedAngles;
         }
@@ -513,7 +530,7 @@ namespace GeometryClassLibrary
             {
                 throw new Exception("The two matrices cannot be added");
             }
-            
+
             // Nested loops to travel through the matrices row by row
             for (int rowIndex = 0; rowIndex < resultingMatrix.NumberOfRows; rowIndex++)
             {
@@ -609,7 +626,7 @@ namespace GeometryClassLibrary
 
             return result;
         }
-        
+
         /// <summary>
         /// Computes the determinant of a matrix
         /// </summary>
@@ -623,7 +640,7 @@ namespace GeometryClassLibrary
             }
 
             // Check to see if the matrix has Distances 1x1.  The determinant of a 1x1 matrix is equal to the single value in the matrix.
-            if(this.NumberOfRows == 1)
+            if (this.NumberOfRows == 1)
             {
                 return this.GetElement(0, 0);
             }
@@ -638,7 +655,7 @@ namespace GeometryClassLibrary
             }
 
             return determinant;
-        }       
+        }
 
         /// <summary>
         /// Inserts the passed Matrix into this Matrix starting at the specified index
@@ -677,7 +694,7 @@ namespace GeometryClassLibrary
             //Give the cofactor the correct sign (+/-) based on its position in the matrix
             int indexSum = rowIndex + columnIndex;
             double cofactor = determinantOfSubMatrix * Math.Pow(-1, indexSum);
-            
+
             return cofactor;
         }
 
@@ -692,7 +709,7 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-            
+
             return false;
         }
 
@@ -703,7 +720,7 @@ namespace GeometryClassLibrary
         public Matrix AbsoluteValue()
         {
             Matrix resultingMatrix = new Matrix(NumberOfRows, NumberOfColumns);
-            
+
             for (int i = 0; i < NumberOfRows; i++)
             {
                 for (int j = 0; j < NumberOfColumns; j++)
@@ -745,8 +762,8 @@ namespace GeometryClassLibrary
             Matrix rotationMatrix = new Matrix(3);
 
             double[] row1 = { 1, 0, 0 };
-            double[] row2 = { 0, Math.Cos(rotationAngle.Radians), -Math.Sin(rotationAngle.Radians)};
-            double[] row3 = { 0, Math.Sin(rotationAngle.Radians), Math.Cos(rotationAngle.Radians)};
+            double[] row2 = { 0, Math.Cos(rotationAngle.Radians), -Math.Sin(rotationAngle.Radians) };
+            double[] row3 = { 0, Math.Sin(rotationAngle.Radians), Math.Cos(rotationAngle.Radians) };
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -764,9 +781,9 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { Math.Cos(rotationAngle.Radians), 0, Math.Sin(rotationAngle.Radians)};
-            double[] row2 = { 0, 1, 0};
-            double[] row3 = { -Math.Sin(rotationAngle.Radians), 0, Math.Cos(rotationAngle.Radians)};
+            double[] row1 = { Math.Cos(rotationAngle.Radians), 0, Math.Sin(rotationAngle.Radians) };
+            double[] row2 = { 0, 1, 0 };
+            double[] row3 = { -Math.Sin(rotationAngle.Radians), 0, Math.Cos(rotationAngle.Radians) };
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -844,7 +861,7 @@ namespace GeometryClassLibrary
             bool AreAllZeros = true;
             for (int i = 0; i < passedArray.Length; i++)
             {
-                if(passedArray[i] != 0)
+                if (passedArray[i] != 0)
                 {
                     AreAllZeros = false;
                 }
@@ -896,7 +913,7 @@ namespace GeometryClassLibrary
 
             //We want to keep all of the columns except the one to be deleted
             int[] columnsToKeep = new int[this.NumberOfColumns - 1];
-            
+
             int indexOfColumnArray = 0;
             for (int i = 0; i < this.NumberOfColumns; i++)
             {
@@ -928,7 +945,7 @@ namespace GeometryClassLibrary
         /// <param name="toggle">is +1 or -1 (even or odd)</param>
         /// <returns></returns>
         public Matrix Decompose(out int[] permutationArray, out int toggle)
-        {            
+        {
             if (!this.IsSquare())
             {
                 throw new Exception("LU-Decomposition can only be found for a square matrix");
@@ -939,25 +956,25 @@ namespace GeometryClassLibrary
             permutationArray = new int[NumberOfRows]; // set up row permutation result
             for (int i = 0; i < NumberOfRows; ++i)
             {
-                permutationArray[i] = i; 
+                permutationArray[i] = i;
             }
-            
+
             toggle = 1; // toggle tracks row swaps. +1 -> even, -1 -> odd
 
             //Loop through the columns
-            for (int columnIndex = 0; columnIndex < NumberOfRows - 1; columnIndex++) 
+            for (int columnIndex = 0; columnIndex < NumberOfRows - 1; columnIndex++)
             {
                 //Find largest value in the current column
-                double maxOfColumn = Math.Abs(decomposedMatrix.GetElement(columnIndex, columnIndex)); 
-                
+                double maxOfColumn = Math.Abs(decomposedMatrix.GetElement(columnIndex, columnIndex));
+
                 int pivotRowIndex = columnIndex;
 
                 // loop through all of the rows in this column
                 for (int rowIndex = columnIndex + 1; rowIndex < NumberOfRows; rowIndex++)
                 {
-                    if (Math.Abs(decomposedMatrix.GetElement(rowIndex,columnIndex)) > maxOfColumn)
+                    if (Math.Abs(decomposedMatrix.GetElement(rowIndex, columnIndex)) > maxOfColumn)
                     {
-                        maxOfColumn = Math.Abs(decomposedMatrix.GetElement(rowIndex,columnIndex));
+                        maxOfColumn = Math.Abs(decomposedMatrix.GetElement(rowIndex, columnIndex));
                         pivotRowIndex = rowIndex;
                     }
                 }
@@ -1021,7 +1038,7 @@ namespace GeometryClassLibrary
                         decomposedMatrix.SetElement(rowIndex, nextColumnIndex, valueToStore2);
                     }
                 }
-                
+
             } // main column loop
 
             return decomposedMatrix;
@@ -1046,7 +1063,7 @@ namespace GeometryClassLibrary
 
                 return inverseOfMatrixA;
             }
-            
+
             else
             {
                 throw new Exception("The matrix cannot be inverted");
@@ -1065,16 +1082,16 @@ namespace GeometryClassLibrary
             {
                 for (int columnIndex = 0; columnIndex < NumberOfColumns; columnIndex++)
                 {
-                    double cofactor = GetCofactor(rowIndex,columnIndex);
+                    double cofactor = GetCofactor(rowIndex, columnIndex);
                     cofactorMatrix.SetElement(rowIndex, columnIndex, cofactor);
                 }
             }
 
             return cofactorMatrix;
-        }        
-        
+        }
+
         // --------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>
         /// Helper method for System Solve
         /// </summary>
@@ -1119,13 +1136,13 @@ namespace GeometryClassLibrary
 
         // --------------------------------------------------------------------------------------------------------------
 
-        public double [] SystemSolve(double[] b)
+        public double[] SystemSolve(double[] b)
         {
             Matrix matrixA = this;
             // Solve Ax = b
 
             while (!matrixA.IsSquare())
-            {                
+            {
                 if (this.NumberOfRows > this.NumberOfColumns)
                 {
                     matrixA = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
@@ -1137,7 +1154,7 @@ namespace GeometryClassLibrary
                     matrixA = new Matrix(this.NumberOfRows + 1, this.NumberOfColumns);
                     matrixA.InsertMatrixAt(this, 0, 0);
                     matrixA.SetRow(this.NumberOfRows - 1, matrixA.GetRow(0));
-                }                
+                }
             }
 
             // 1. decompose A

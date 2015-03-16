@@ -10,7 +10,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A vector is a line segment that has a direction
     /// </summary>
-    [DebuggerDisplay("Components = {XComponentOfDirection.Millimeters}, {YComponentOfDirection.Millimeters}, {ZComponentOfDirection.Millimeters}, Magnitude = {Magnitude.Millimeters}")]
     public class Vector : Line
     {
         #region Properties and Fields
@@ -589,7 +588,7 @@ namespace GeometryClassLibrary
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);
 
             //next translate the vector to the correct position
-            return flipped.Translate(flipped.BasePoint);
+            return flipped.Translate(new Translation(flipped.BasePoint));
         }
 
 
@@ -599,7 +598,7 @@ namespace GeometryClassLibrary
             Vector flipped = new Vector(this.EndPoint, this.BasePoint);
 
             //next translate the vector to the correct position
-            return flipped.Translate(flipped.EndPoint);
+            return flipped.Translate(new Translation(flipped.EndPoint));
         }
 
         /// <summary>
@@ -664,7 +663,7 @@ namespace GeometryClassLibrary
         /// <param name="passedDirection"></param>
         /// <param name="passedDisplacement"></param>
         /// <returns></returns>
-        public new Vector Translate(Point translation)
+        public new Vector Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
             Point newEndPoint = this.EndPoint.Translate(translation);

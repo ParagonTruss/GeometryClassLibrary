@@ -285,7 +285,7 @@ namespace ClearspanTypeLibrary.Tests
             //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
 
-            Line actualLine1 = line1.Translate(testDisplacement);
+            Line actualLine1 = line1.Translate(new Translation(testDisplacement));
 
             Line expectedLine1 = new Line(PointGenerator.MakePointWithInches(-1, 12, 11), PointGenerator.MakePointWithInches(-5, 8, 8));
 

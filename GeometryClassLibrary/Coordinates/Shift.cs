@@ -8,7 +8,6 @@ using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Displacement = {Displacement.X.Inches}, {Displacement.Y.Inches}, {Displacement.Z.Inches}, Rotations Count = {RotationsToApply.Count}")]
     public class Shift
     {
         #region Properties and Fields

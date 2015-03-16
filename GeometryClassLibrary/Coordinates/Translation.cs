@@ -7,7 +7,6 @@ using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Displacement = {X.Inches}, {Y.Inches}, {Z.Inches}")]
     public class Translation : Point
     {
         #region Constructors

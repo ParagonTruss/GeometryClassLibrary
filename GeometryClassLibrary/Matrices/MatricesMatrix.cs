@@ -6,7 +6,6 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Size = {NumberOfRows} x {NumberOfColumns}")] 
     public class MatricesMatrix
     {
         #region Properties and Fields

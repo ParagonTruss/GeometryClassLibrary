@@ -286,7 +286,7 @@ namespace GeometryClassLibrary
                     foreach (Point vertex in verticies)
                     {
                         //take the cross product of them (relative to the origin)
-                        Vector crossProduct = vertex.VectorFromOriginToPoint().CrossProduct(previousVertex.VectorFromOriginToPoint());
+                        Vector crossProduct = vertex.VectorFromOriginToThisPoint().CrossProduct(previousVertex.VectorFromOriginToThisPoint());
 
                         //now we add the magnitute to the area
                         //areaDistance += crossProduct.Magnitude;

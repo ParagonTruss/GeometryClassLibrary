@@ -10,8 +10,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
-    [DebuggerDisplay("UNITS = Inches, Base Point = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, End Point = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Length = {Length.Inches},  Direction Vector = {XComponentOfDirection.Inches}, {YComponentOfDirection.Inches}, {ZComponentOfDirection.Inches}")]
-
     public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties and Fields
@@ -297,7 +295,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="translation">The Translation to apply to the lineSegment</param>
         /// <returns>returns a new LineSegment as a IEdge that has been translated</returns>
-        public new LineSegment Translate(Point translation)
+        public new LineSegment Translate(Translation translation)
         {
             return new LineSegment(base.Translate(translation));
         }
@@ -307,7 +305,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedTranslation"The Translation to apply></param>
         /// <returns>A new LineSegment as a IEdge that has been translated</returns>
-        IEdge IEdge.Translate(Point passedTranslation)
+        IEdge IEdge.Translate(Translation passedTranslation)
         {
             return this.Translate(passedTranslation);
         }
@@ -323,7 +321,9 @@ namespace GeometryClassLibrary
 
         #endregion
 
-
-
+        public override string ToString()
+        {
+                return string.Format("BasePoint= {0}, EndPoint= {1}, Length={2}", this.BasePoint.ToString(), this.EndPoint.ToString(), this.Length.ToString());
+        }
     }
 }

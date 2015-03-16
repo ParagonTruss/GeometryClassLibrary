@@ -10,7 +10,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved as around a circle.
     /// </summary>
-    [DebuggerDisplay("BasePoint = {BasePoint.X.Inches}, {BasePoint.Y.Inches}, {BasePoint.Z.Inches}, EndPoint = {EndPoint.X.Inches}, {EndPoint.Y.Inches}, {EndPoint.Z.Inches}, Direction: Azumuth = {Direction.Phi.Degrees}, Inclination{Direction.Theta.Degrees}")]
     public class Arc : IEdge, IComparable<Arc>
     {
         #region Properties and Fields
@@ -495,7 +494,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="translation">The translation to apply to the Arc</param>
         /// <returns>A new Arc object that has been translated</returns>
-        public Arc Translate(Point translation)
+        public Arc Translate(Translation translation)
         {
             Point newBasePoint = BasePoint.Translate(translation);
             Point newEndPoint = EndPoint.Translate(translation);
@@ -508,7 +507,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="translation">The translation to apply to the Arc</param>
         /// <returns>A new Arc object as an IEdge that has been translated</returns>
-        IEdge IEdge.Translate(Point translation)
+        IEdge IEdge.Translate(Translation translation)
         {
             return this.Translate(translation);
         }

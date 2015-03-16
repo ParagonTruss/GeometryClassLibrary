@@ -7,8 +7,6 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Base Point = {BasePoint}")]
-
     public class Polyhedron : Solid
     {
         #region Properties and Fields
