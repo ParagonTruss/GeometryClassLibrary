@@ -175,18 +175,32 @@ namespace GeometryClassLibrary
                 }
                 else
                 {
-                    //set the angle based on if the y is positive or negative
-                    //if y is also zero, just make the xy an angle of 0
-                    //Note: we called the base contructor first so it is already 0 unless we change it
-                    //Also we already know x is zero so we only care about the Y direction and we use inches
-                    //in case the passed deviation is smaller than the default
-                    if (directionPoint.Y.Inches > 0)
+                    if (!directionPoint.Y.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant))
                     {
-                        this.Phi = new Angle(AngleType.Degree, 90);
+                        //set the angle based on if the y is positive or negative
+                        //if y is also zero, just make the xy an angle of 0
+                        //Note: we called the base contructor first so it is already 0 unless we change it
+                        //Also we already know x is zero so we only care about the Y direction and we use inches
+                        //in case the passed deviation is smaller than the default
+                        if (directionPoint.Y.Inches > 0)
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 90);
+                        }
+                        else if (directionPoint.Y.Inches < 0)
+                        {
+                            this.Phi = new Angle(AngleType.Degree, 270);
+                        }
                     }
-                    else if (directionPoint.Y.Inches < 0)
+                    else
                     {
-                        this.Phi = new Angle(AngleType.Degree, 270);
+                        if(this.Theta == new Angle())
+                        {
+                            this.Theta = new Angle();
+                        }
+                        else
+                        {
+                            this.Theta = new Angle(AngleType.Degree, 180);
+                        }
                     }
                 }
             }
