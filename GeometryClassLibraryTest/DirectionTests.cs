@@ -49,7 +49,7 @@ namespace GeometryClassLibraryTest
             Direction expectedErrorDirection0 = new Direction(new Angle(), new Angle());
             (testErrorHandling0 == expectedErrorDirection0).Should().BeTrue();
 
-            Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1 / 32, 0.006, 1.488);
+            Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1.0 / 32, 0.006, 1.488);
             Direction testErrorNotEqualTo0 = new Direction(testPointPassedEqualityTo0);
             (testErrorNotEqualTo0 == expectedErrorDirection0).Should().BeFalse();
         }
