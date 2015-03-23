@@ -22,6 +22,7 @@ namespace GeometryClassLibraryTest
             direction1.Should().NotBe(direction4);
 
             direction2.Should().NotBe(direction3);
+            (direction2 == direction4).Should().BeTrue();
             direction2.Should().Be(direction4);
 
             direction3.Should().NotBe(direction4);
@@ -36,6 +37,21 @@ namespace GeometryClassLibraryTest
             (direction5 != null).Should().BeFalse();
             (direction1 != direction5).Should().BeTrue();
             (direction5 != direction1).Should().BeTrue();
+
+            Point testPoint = PointGenerator.MakePointWithInches(0.006, 0.003, -1.4999);
+            Direction testErrorHandling = new Direction(testPoint);
+            Direction expectedErrorDirection = new Direction(new Angle(), new Angle(AngleType.Degree, 180));
+            (testErrorHandling == expectedErrorDirection).Should().BeTrue();
+
+            //now try the 0 Direction too
+            Point testPoint0 = PointGenerator.MakePointWithInches(0.006, 0.003, 1.4999);
+            Direction testErrorHandling0 = new Direction(testPoint0);
+            Direction expectedErrorDirection0 = new Direction(new Angle(), new Angle());
+            (testErrorHandling0 == expectedErrorDirection0).Should().BeTrue();
+
+            Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1.0 / 32, 0.006, 1.488);
+            Direction testErrorNotEqualTo0 = new Direction(testPointPassedEqualityTo0);
+            (testErrorNotEqualTo0 == expectedErrorDirection0).Should().BeFalse();
         }
     }
 }
