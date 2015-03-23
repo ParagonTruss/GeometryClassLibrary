@@ -1390,50 +1390,6 @@ namespace ClearspanLibraryUnitTest
             (actualMatrix == expectedMatrix).Should().BeTrue();
         }
 
-        [Test()]
-        public void Matrix_ArrayConstructorTest()
-        {
-            Matrix expectedMatrix1 = new Matrix(3);
-
-            double[] matrix1Row1 = { 1, 5, 6 };
-            double[] matrix1Row2 = { 2, 4, 7 };
-            double[] matrix1Row3 = { 3, 6, 8 };
-
-            expectedMatrix1.SetRow(0, matrix1Row1);
-            expectedMatrix1.SetRow(1, matrix1Row2);
-            expectedMatrix1.SetRow(2, matrix1Row3);
-
-            Matrix expectedMatrix2 = new Matrix(3,4);
-
-            double[] matrix2Row1 = { 1, 5, 6, 2 };
-            double[] matrix2Row2 = { 4, 7, 3, 6 };
-            double[] matrix2Row3 = { 8, 0, 0, 0 };
-
-            expectedMatrix2.SetRow(0, matrix2Row1);
-            expectedMatrix2.SetRow(1, matrix2Row2);
-            expectedMatrix2.SetRow(2, matrix2Row3);
-
-            Matrix expectedMatrix3 = new Matrix(2, 3);
-
-            double[] matrix3Row1 = { 1, 5, 6 }; 
-            double[] matrix3Row2 = { 2, 4, 7 }; 
-
-            expectedMatrix3.SetRow(0, matrix3Row1);
-            expectedMatrix3.SetRow(1, matrix3Row2);
-
-            double[] matrixArray = { 1, 5, 6, 2, 4, 7, 3, 6, 8 };
-
-            Matrix actualMatrix1 = new Matrix(3, 3, matrixArray);
-            Matrix actualMatrix2 = new Matrix(3, 4, matrixArray);
-            Matrix actualMatrix3 = new Matrix(2, 3, matrixArray);
-
-
-            (actualMatrix1 == expectedMatrix1).Should().BeTrue();
-            (actualMatrix2 == expectedMatrix2).Should().BeTrue();
-            (actualMatrix3 == expectedMatrix3).Should().BeTrue();
-
-        }
-
         #endregion
 
     }

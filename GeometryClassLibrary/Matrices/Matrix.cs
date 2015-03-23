@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         // declares a two Distanceal array named _matrix. The "," denotes that it is 2d
-        double[,] _matrix;
+        public double[,] _matrix;
 
 
         /// <summary>
@@ -70,46 +70,24 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a matrix with the specified number of rows and columns, and containing the values in the given array, filled in from top-to-bottom and left-to-right
-        /// </summary>
-        /// <param name="passedNumRows"></param>
-        /// <param name="passedNumColumns"></param>
-        /// <param name="passedValuesInMatrix"></param>
-        public Matrix(int passedNumRows, int passedNumColumns, double[] passedValuesInMatrix)
-        {
-            Matrix newMatrix = new Matrix(passedNumRows, passedNumColumns);
-            int arrayIndex = 0;
-            for (int i = 0; i < passedNumRows; i++) //row loop
-            {
-                for (int j = 0; j < passedNumColumns; j++) //column loop
-                {
-                    if (arrayIndex < passedValuesInMatrix.Count())
-                    {
-                        newMatrix.SetElement(i, j, passedValuesInMatrix[arrayIndex]);
-                        arrayIndex++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            _matrix = newMatrix.getMatrixAs2DArray;
-        }
-
-        /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
         /// <param name="passedMatrix"></param>
         public Matrix(Matrix passedMatrix)
         {
             int rows = passedMatrix.NumberOfRows;
-            int cols = passedMatrix.NumberOfColumns;
+            int columns = passedMatrix.NumberOfColumns;
 
-            _matrix = new double[rows, cols];
+            _matrix = new double[rows, columns];
 
             this.InsertMatrixAt(passedMatrix, 0, 0);
+        }
+
+
+        /// <summary> Constructs Matrix object from a 2dArray </summary>
+        public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
+        {
+            this._matrix = passed2DArray;
         }
 
         #endregion
@@ -371,11 +349,11 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// For internal use only. Returns the matrix as a double[,]
+        /// Returns the matrix as a double[,]
         /// </summary>
-        internal double[,] getMatrixAs2DArray
+        public double[,] As2DArray()
         {
-            get { return _matrix; }
+             return _matrix;
         }
 
         /// <summary>
