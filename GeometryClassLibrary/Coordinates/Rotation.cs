@@ -11,26 +11,22 @@ namespace GeometryClassLibrary
     public class Rotation
     {
         #region Properties and Fields
+        private Angle _angleToRotate;
+        private Line _axisToRotateAround;
 
-        /// <summary>
-        /// The 3x3 matrix which performs the rotation via premultiplication
-        /// </summary>
         public Angle AngleToRotate
         {
             get
             {
-                throw new NotImplementedException();
+                return _angleToRotate;
             }
         }
 
-        /// <summary>
-        /// The 3x3 matrix which performs the rotation via premultiplication
-        /// </summary>
         public Line AxisToRotateAround
         {
             get
             {
-                throw new NotImplementedException();
+                return _axisToRotateAround;
             }
         }
 
@@ -39,15 +35,16 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates the identity rotation matrix
+        /// Creates the identity rotation
         /// </summary>
         public Rotation()
         {
-            this._rotationMatrix = Matrix.CreateIdentityMatrix(3);
+            this._angleToRotate = new Angle();
+            this._axisToRotateAround = new Line();
         }
        
         /// <summary>
-        /// Creates a rotation about the input Axis and with the input Angle or 0 if the angle is omitted
+        /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
         /// <param name="howFarToRotate">The Angle that specifies how far to rotate</param>
@@ -55,13 +52,13 @@ namespace GeometryClassLibrary
         {
             if ((object)howFarToRotate == null)
             {
-                howFarToRotate = new Angle();
+                this._angleToRotate = new Angle();
             }
             else
             {
- //               this._angleToRotate = howFarToRotate;
+                this._angleToRotate = howFarToRotate;
             }
- //           this._axisToRotateAround = axisOfRotation;
+            this._axisToRotateAround = axisOfRotation;
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            _rotationMatrix = toCopy.RotationMatrix;
+            throw new NotImplementedException();
         }
 
         #endregion 
@@ -143,9 +140,9 @@ namespace GeometryClassLibrary
             {
                 Rotation rotate = (Rotation)obj;
 
-                return this._rotationMatrix == rotate._rotationMatrix;
+                return Matrix.RotationMatrixAboutAxis(this) == Matrix.RotationMatrixAboutAxis(rotate);
             }
-            //if it wasnt a rotation than its not equal
+            //if it wasn't a rotation than it's not equal
             catch (InvalidCastException)
             {
                 return false;

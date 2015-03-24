@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     /// the transformation of the original coordinate system which results in the new system.
     /// The transformation has two parts: a translation and a rotation.  The translation moves from the world origin to the local origin.
     /// The rotation is a series of three separate rotations in order, about the x-axis, then the y-axis, then the z-axis.
-    /// The rotations are "intrinsic," which means that the are performed about the local axes, not the global axes.
+    /// The rotations are "extrinsic," which means that the are performed about the global axes, not the local axes.
     /// This link is helpful when trying to understand the rotations: http://en.wikipedia.org/wiki/Euler_angles#Intrinsic_rotations
     /// Note: the "world" coordinate system refers to how we normally perceive the world. The world coordinate system is static,
     /// but objects can be moved around in it and represented in different local coordinate systems based on the world system.
@@ -229,7 +229,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Creates a new coordinate system with the given origin point and with the given rotations.
-        /// The inputs are extrinsic angle, i.e. about the global axes, but they are converted to intrinsic rotations 
+        /// The inputs are extrinsic angle, i.e. about the global axes
         /// </summary>
         /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
         /// <param name="passedXRotation">The rotation around the world coordinate system's X axis to rotate around to get to this
@@ -280,7 +280,6 @@ namespace GeometryClassLibrary
                 }
                 return false;
             }
-            // if the two points' x and y and z are equal, returns true
             return system1.Equals(system2);
         }
 
