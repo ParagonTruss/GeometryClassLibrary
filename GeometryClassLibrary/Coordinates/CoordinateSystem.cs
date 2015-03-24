@@ -34,6 +34,7 @@ namespace GeometryClassLibrary
         {
             get
             {
+                //note: we have to multiply "backwards" of the order we rotate in to make this work correctly because how matrix multiplication works
                 return Matrix.RotationMatrixAboutZ(ZAxisRotationAngle) * Matrix.RotationMatrixAboutY(YAxisRotationAngle) * Matrix.RotationMatrixAboutX(XAxisRotationAngle);
             }
         }
@@ -206,9 +207,6 @@ namespace GeometryClassLibrary
 
             //now first find out the amount we need to rotate around the y axis to line up z in the yz plane
 
-
-
-
             //First project the z axis onto the xz plane
             Line projectedZAxis = ((Line)zAxis).ProjectOntoPlane(new Plane(Line.XAxis, Line.ZAxis));
 
@@ -220,7 +218,6 @@ namespace GeometryClassLibrary
             {
                 angleBetweenCurrentZAndYZPlane = angleBetweenCurrentZAndYZPlane.Negate();
             }
-
 
             //http://www.vitutor.com/geometry/distance/line_plane.html
             //we can simplify the equation as this since it is unit vectors
@@ -450,10 +447,10 @@ namespace GeometryClassLibrary
             toReturn._translationToOrigin = _translationToOrigin.Shift(new Shift(passedCoordinateSystem));
 
             // s1(t2) + t1 [add passedCS translation]
-            toReturn._translationToOrigin = toReturn.TranslationToOrigin + passedCoordinateSystem.TranslationToOrigin;
+            //toReturn._translationToOrigin = toReturn.TranslationToOrigin + passedCoordinateSystem.TranslationToOrigin;
 
             //now find the resulting rotaions
-            Matrix resultingSystem = passedCoordinateSystem.RotationMatrix * this.RotationMatrix;
+            Matrix resultingSystem = this.RotationMatrix * passedCoordinateSystem.RotationMatrix;
 
             //then pull out the angle data from the rotation matrix
             //r2(r1)

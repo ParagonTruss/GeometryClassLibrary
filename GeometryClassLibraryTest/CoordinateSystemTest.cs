@@ -36,7 +36,7 @@ namespace GeometryClassLibraryTest
         {
             CoordinateSystem same = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
             CoordinateSystem same2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
-            
+
             CoordinateSystem equivalent = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
             same.AreDirectionsEquivalent(same2).Should().BeTrue();
@@ -75,19 +75,19 @@ namespace GeometryClassLibraryTest
         public void CoordinateSystem_FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem()
         {
             CoordinateSystem testCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
-  
+
             CoordinateSystem testRelativeToCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, 1), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90), new Angle());
 
             CoordinateSystem basedOnWorld = testRelativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent);
 
-            Point expectedOrigin = PointGenerator.MakePointWithInches(1 + 1, 2 + 1, 3 -2); //2,3,1
-            Angle zExpected = new Angle(AngleType.Degree, 135);
+            Point expectedOrigin = PointGenerator.MakePointWithInches(1 + 1, 2 + 1, 3 - 2); //2,3,1
             Angle xExpected = new Angle(AngleType.Degree, 0);
             Angle yExpected = new Angle(AngleType.Degree, 0);
+            Angle zExpected = new Angle(AngleType.Degree, 135);
 
-            CoordinateSystem expected = new CoordinateSystem(expectedOrigin, zExpected, xExpected, yExpected);
+            CoordinateSystem expected = new CoordinateSystem(expectedOrigin, xExpected, yExpected, zExpected);
 
-            basedOnWorld.Should().Be(expected);
+            (basedOnWorld == expected).Should().BeTrue();
 
 
             //now try another test to make sure it works
@@ -97,14 +97,14 @@ namespace GeometryClassLibraryTest
 
             CoordinateSystem basedOnWorld2 = testRelativeToCurrent2.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent2);
 
-            Point expectedOrigin2 = PointGenerator.MakePointWithInches(1 - 1, 1 - 0, -1 + 2); //0, 1, 1
+            Point expectedOrigin2 = PointGenerator.MakePointWithInches(1, 1 + 2, -1 - 1); //1, 3, -2
+            Angle xExpected2 = new Angle(AngleType.Degree, -90);
+            Angle yExpected2 = new Angle(AngleType.Degree, 0);
             Angle zExpected2 = new Angle(AngleType.Degree, -135);
-            Angle xExpected2 = new Angle(AngleType.Degree, 90);
-            Angle yExpected2= new Angle(AngleType.Degree, 0);
 
-            CoordinateSystem expected2 = new CoordinateSystem(expectedOrigin2, zExpected2, xExpected2, yExpected2);
+            CoordinateSystem expected2 = new CoordinateSystem(expectedOrigin2, xExpected2, yExpected2, zExpected2);
 
-            basedOnWorld2.Should().Be(expected2);
+            (basedOnWorld2 == expected2).Should().BeTrue() ;
 
 
             //test that negates the coordinate system
@@ -117,7 +117,7 @@ namespace GeometryClassLibraryTest
             CoordinateSystem expected3 = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
 
             basedOnWorld3.Should().Be(expected3);
-            
+
         }
 
         //these methods are for checking and demonstrating how coordinate systems can/should be used
