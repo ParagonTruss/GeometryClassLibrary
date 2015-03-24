@@ -13,17 +13,16 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_PlaneAndVectorConstuctorTests()
         {
-            CoordinateSystem expected = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), 
-                new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45));
+            CoordinateSystem expected = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
 
             Vector xVector = new Vector(PointGenerator.MakePointWithInches(-.5, -.707106781, -.5));
             Vector yVector = new Vector(PointGenerator.MakePointWithInches(.707106781, 0, -.707106781));
             Vector zVector = new Vector(PointGenerator.MakePointWithInches(.5, -.707106781, .5));
 
-            /*make sure our vectors are right
+            //make sure our vectors are right
             xVector.IsPerpindicularTo(yVector).Should().BeTrue();
             yVector.IsPerpindicularTo(zVector).Should().BeTrue();
-            zVector.IsPerpindicularTo(xVector).Should().BeTrue();*/
+            zVector.IsPerpindicularTo(xVector).Should().BeTrue();
 
             Plane xyPlane = new Plane(xVector, yVector);
             CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
@@ -63,9 +62,9 @@ namespace GeometryClassLibraryTest
             //it ends up being what we inputted because it shift reflects the movement of the objects so it is by definition the negative of the 
             //coordinate system. Therfore, whenever we want to revert it we are taking a "double negative" in implementation, giving us the original
             List<Rotation> expectedRotations = new List<Rotation>();
-            expectedRotations.Add(new Rotation(Line.YAxis, new Angle(AngleType.Degree, -243)));
-            expectedRotations.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, -23.6)));
-            expectedRotations.Add(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 45)));
+            expectedRotations.Add(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -243)));
+            expectedRotations.Add(new Rotation(Line.YAxis, new Angle(AngleType.Degree, -23.6)));
+            expectedRotations.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45)));
             Shift expected = new Shift(expectedRotations, PointGenerator.MakePointWithInches(-1, 2, 3));
 
             //ignore this for now

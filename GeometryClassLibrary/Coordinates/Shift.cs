@@ -116,11 +116,11 @@ namespace GeometryClassLibrary
         /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
         public Shift(CoordinateSystem coordinateSystemToShiftTo)
         {
-            //put the rotations on in the right order (Z,X,Y)
+            //put the rotations on in the right order (XYZ)
             _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle));
             _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle));
             _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle));
 
             //Then put the displacement to the origin
             _displacement = new Point(coordinateSystemToShiftTo.Translation);

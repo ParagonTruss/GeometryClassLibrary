@@ -362,17 +362,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the euler angles (in z, x, y order) assuming this matrix is a pure rotation matrix
+        /// Returns the euler angles (in x, y,z order) assuming this matrix is a pure rotation matrix
         /// </summary>
-        /// <returns>Returns a list of the euler angles in this order: z, x, y</returns>
+        /// <returns>Returns a list of the euler angles in this order: x, y, z</returns>
         public List<Angle> GetAnglesOutOfRotationMatrix()
         {
             //Try getting the angles out of the matrix (this works)
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
             List<Angle> extractedAngles = new List<Angle>();
-            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(1, 1)))); //z
-            extractedAngles.Add( new Angle(AngleType.Radian, -Math.Asin(this.GetElement(1, 2)))); //x
-            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(0, 2), this.GetElement(2, 2)))); //y
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(-this.GetElement(1, 2), this.GetElement(2, 2)))); //x
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Asin(this.GetElement(0, 2)))); //y
+            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(-this.GetElement(0, 1), this.GetElement(0, 0)))); //z
 
             return extractedAngles;
         }

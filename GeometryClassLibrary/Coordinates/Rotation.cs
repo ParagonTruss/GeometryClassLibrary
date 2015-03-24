@@ -67,7 +67,8 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            throw new NotImplementedException();
+            this._angleToRotate = new Angle(toCopy._angleToRotate);
+            this._axisToRotateAround = new Line(toCopy._axisToRotateAround);
         }
 
         #endregion 
