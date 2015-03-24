@@ -34,29 +34,45 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return Matrix.RotationMatrixAboutZ(ZAngle) * Matrix.RotationMatrixAboutY(YAngle) * Matrix.RotationMatrixAboutX(XAngle);
+                return Matrix.RotationMatrixAboutZ(ZAxisRotationAngle) * Matrix.RotationMatrixAboutY(YAxisRotationAngle) * Matrix.RotationMatrixAboutX(XAxisRotationAngle);
             }
         }
 
         /// <summary>
-        /// The rotation matrix that describes the rotation about the local x axis, which is performed first.
+        /// The Angle to rotate around the global/external x axis, which is performed first.
         /// </summary>
-        public Angle XAngle;
+        public Angle XAxisRotationAngle
+        {
+            get { return _xAxisRotationAngle; }
+        }
+        private Angle _xAxisRotationAngle;
 
         /// <summary>
-        /// The rotation matrix that describes the rotation about the local y axis, which is performed second.
+        /// The Angle to rotate around the global/external y axis, which is performed second.
         /// </summary>
-        public Angle YAngle;
+        public Angle YAxisRotationAngle
+        {
+            get { return _yAxisRotationAngle; }
+        }
+        private Angle _yAxisRotationAngle;
 
         /// <summary>
-        /// The rotation matrix that describes the rotation about the local z axis, which is performed third.
+        /// The Angle to rotate around the global/external z axis, which is performed third.
         /// </summary>
-        public Angle ZAngle;
+        public Angle ZAxisRotationAngle
+        {
+            get { return _zAxisRotationAngle; }
+        }
+        private Angle _zAxisRotationAngle;
 
         /// <summary>
         /// The translation from the world coordinate system's origin to the local coordinate system's origin
         /// </summary>
-        public Point Translation;
+        public Point TranslationToOrigin
+        {
+            get { return _translationToOrigin; }
+        }
+        private Point _translationToOrigin;
 
         #endregion
 
@@ -67,10 +83,10 @@ namespace GeometryClassLibrary
         /// </summary>
         public CoordinateSystem()
         {
-            this.Translation = new Point();
-            this.XAngle = new Angle();
-            this.YAngle = new Angle();
-            this.ZAngle = new Angle();
+            _translationToOrigin = new Point();
+            _xAxisRotationAngle = new Angle();
+            _yAxisRotationAngle = new Angle();
+            _zAxisRotationAngle = new Angle();
         }
 
         /// <summary>
@@ -79,10 +95,10 @@ namespace GeometryClassLibrary
         /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
         public CoordinateSystem(Point passedOrigin)
         {
-            this.Translation = new Point(passedOrigin);
-            this.XAngle = new Angle();
-            this.YAngle = new Angle();
-            this.ZAngle = new Angle();
+            _translationToOrigin = new Point(passedOrigin);
+            _yAxisRotationAngle = new Angle();
+            _yAxisRotationAngle = new Angle();
+            _zAxisRotationAngle = new Angle();
         }
 
         /// <summary>
@@ -93,7 +109,7 @@ namespace GeometryClassLibrary
             Enums.Axis whichAxisIsPassed = Enums.Axis.X, Enums.AxisPlanes whichAxisPlaneIsPassed = Enums.AxisPlanes.XYPlane)
         {
             //use the base point of the passed axis as the origin point
-            this.Translation = new Point(axisInPassedPlaneToUseAsBase.BasePoint);
+            _translationToOrigin = new Point(axisInPassedPlaneToUseAsBase.BasePoint);
 
             //make sure the passed vector is in our plane
             if (!planeContainingTwoOfTheAxes.Contains(axisInPassedPlaneToUseAsBase))
@@ -232,9 +248,9 @@ namespace GeometryClassLibrary
 
             //now we know all our angles, but we have to take the negative of them because we were transforming back to
             //the origin and we store the tranform from the origin
-            this.ZAngle = angleBetweenXAndXAxis.Negate();
-            this.XAngle = angleBetweenZAndZAxis.Negate();
-            this.YAngle = angleBetweenCurrentZAndYZPlane.Negate();
+            _xAxisRotationAngle = angleBetweenZAndZAxis.Negate();
+            _yAxisRotationAngle = angleBetweenCurrentZAndYZPlane.Negate();
+            _zAxisRotationAngle = angleBetweenXAndXAxis.Negate();
         }
 
         /// <summary>
@@ -250,10 +266,10 @@ namespace GeometryClassLibrary
         /// coordinate system</param>
         public CoordinateSystem(Point passedOrigin, Angle passedXRotation, Angle passedYRotation, Angle passedZRotation)
         {
-            Translation = new Point(passedOrigin);
-            this.XAngle = passedXRotation;
-            this.YAngle = passedYRotation;
-            this.ZAngle = passedZRotation;
+            _translationToOrigin = new Point(passedOrigin);
+            _xAxisRotationAngle = passedXRotation;
+            _yAxisRotationAngle = passedYRotation;
+            _zAxisRotationAngle = passedZRotation;
         }
 
         /// <summary>
@@ -262,10 +278,10 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Coordinate System to copy</param>
         public CoordinateSystem(CoordinateSystem toCopy)
         {
-            Translation = new Point(toCopy.Translation);
-            this.XAngle = new Angle(toCopy.XAngle);
-            this.YAngle = new Angle(toCopy.YAngle);
-            this.ZAngle = new Angle(toCopy.ZAngle);
+            _translationToOrigin = new Point(toCopy.TranslationToOrigin);
+            _xAxisRotationAngle = new Angle(toCopy.XAxisRotationAngle);
+            _yAxisRotationAngle = new Angle(toCopy.YAxisRotationAngle);
+            _zAxisRotationAngle = new Angle(toCopy.ZAxisRotationAngle);
         }
 
         #endregion
@@ -327,7 +343,7 @@ namespace GeometryClassLibrary
             {
                 CoordinateSystem comparableSystem = (CoordinateSystem)obj;
 
-                bool areOriginsEqual = this.Translation == comparableSystem.Translation;
+                bool areOriginsEqual = _translationToOrigin == comparableSystem.TranslationToOrigin;
 
                 return areOriginsEqual && this.AreDirectionsEquivalent(comparableSystem);
             }
@@ -431,10 +447,10 @@ namespace GeometryClassLibrary
 
             //first find the translation
             //s1(t2) [shift this translation based on passed cs]
-            toReturn.Translation = this.Translation.Shift(new Shift(passedCoordinateSystem));
+            toReturn._translationToOrigin = _translationToOrigin.Shift(new Shift(passedCoordinateSystem));
 
             // s1(t2) + t1 [add passedCS translation]
-            toReturn.Translation = toReturn.Translation + passedCoordinateSystem.Translation;
+            toReturn._translationToOrigin = toReturn.TranslationToOrigin + passedCoordinateSystem.TranslationToOrigin;
 
             //now find the resulting rotaions
             Matrix resultingSystem = passedCoordinateSystem.RotationMatrix * this.RotationMatrix;
@@ -444,9 +460,9 @@ namespace GeometryClassLibrary
             List<Angle> resultingAngles = resultingSystem.GetAnglesOutOfRotationMatrix();
 
             //and assign the values to our angles
-            toReturn.XAngle = resultingAngles[0];
-            toReturn.YAngle = resultingAngles[1];
-            toReturn.ZAngle = resultingAngles[2];
+            toReturn._xAxisRotationAngle = resultingAngles[0];
+            toReturn._yAxisRotationAngle = resultingAngles[1];
+            toReturn._zAxisRotationAngle = resultingAngles[2];
 
             return toReturn;
         }
@@ -479,7 +495,7 @@ namespace GeometryClassLibrary
         {
             CoordinateSystem toReturn = new CoordinateSystem(this);
 
-            toReturn.Translation = this.Translation.Shift(passedShift);
+            toReturn._translationToOrigin = _translationToOrigin.Shift(passedShift);
 
             //now we need to shift the angles
             Matrix coordinateMatrix = this.RotationMatrix;

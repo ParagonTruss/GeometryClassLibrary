@@ -118,12 +118,12 @@ namespace GeometryClassLibrary
         {
             //put the rotations on in the right order (XYZ)
             _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle));
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle));
+            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAxisRotationAngle));
+            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAxisRotationAngle));
+            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAxisRotationAngle));
 
             //Then put the displacement to the origin
-            _displacement = new Point(coordinateSystemToShiftTo.Translation);
+            _displacement = new Point(coordinateSystemToShiftTo.TranslationToOrigin);
         }
 
         /// <summary>
