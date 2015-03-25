@@ -373,10 +373,28 @@ namespace GeometryClassLibrary
         /// perform this shift it will move it from the world coordinates to coordinates that are opposite to this one!
         /// </summary>
         /// <returns>Returns the shift to apply to Objects in order to return them from this coordinate system to the world coordinate system</returns>
-        public Shift ShiftThatReturnsThisToWorldCoordinateSystem()
+        public Shift ShiftFromThisToWorld()
+        {
+            //put the rotations on in the right order (XYZ)
+            List<Rotation> rotations = new List<Rotation>();
+            rotations.Add(new Rotation(Line.XAxis, this.XAxisRotationAngle));
+            rotations.Add(new Rotation(Line.YAxis, this.YAxisRotationAngle));
+            rotations.Add(new Rotation(Line.ZAxis, this.ZAxisRotationAngle));
+
+            //Then put the displacement to the origin
+            Point displacement = new Point(this.TranslationToOrigin);
+
+            return new Shift(rotations, displacement);
+        }
+
+        /// <summary>
+        /// Creates a shift that represents going from this coordinate system to the World Coordinates
+        /// </summary>
+        /// <returns>Returns a shft to be applied to an obect to put it back to the world coordinate system from this one</returns>
+        public Shift ShiftToThisFromWorld()
         {
             //the simple way is just to create a shift with this coordinate system and then negate it
-            return new Shift(this).Negate();
+            return ShiftFromThisToWorld().Negate();
         }
 
         /// <summary>
@@ -444,13 +462,13 @@ namespace GeometryClassLibrary
 
             //first find the translation
             //s1(t2) [shift this translation based on passed cs]
-            toReturn._translationToOrigin = _translationToOrigin.Shift(new Shift(passedCoordinateSystem));
+            toReturn._translationToOrigin = _translationToOrigin.Shift(passedCoordinateSystem.ShiftFromThisToWorld());
 
             // s1(t2) + t1 [add passedCS translation]
             //toReturn._translationToOrigin = toReturn.TranslationToOrigin + passedCoordinateSystem.TranslationToOrigin;
 
             //now find the resulting rotaions
-            Matrix resultingSystem = this.RotationMatrix * passedCoordinateSystem.RotationMatrix;
+            Matrix resultingSystem = passedCoordinateSystem.RotationMatrix * this.RotationMatrix;
 
             //then pull out the angle data from the rotation matrix
             //r2(r1)

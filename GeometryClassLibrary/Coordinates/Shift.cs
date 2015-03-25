@@ -111,22 +111,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a Shift that represents a shift so that the object will be oriented in the passed coordinate system
-        /// </summary>
-        /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
-        public Shift(CoordinateSystem coordinateSystemToShiftTo)
-        {
-            //put the rotations on in the right order (XYZ)
-            _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAxisRotationAngle));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAxisRotationAngle));
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAxisRotationAngle));
-
-            //Then put the displacement to the origin
-            _displacement = new Point(coordinateSystemToShiftTo.TranslationToOrigin);
-        }
-
-        /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>
         /// <param name="passedRotation">The rotations that make up and are represented by this shift</param>

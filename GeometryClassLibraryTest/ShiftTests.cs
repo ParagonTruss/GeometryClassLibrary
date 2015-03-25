@@ -27,13 +27,13 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Polygon shifted = testPolygon.Shift(new Shift(system));
+            Polygon shifted = testPolygon.Shift(system.ShiftToThisFromWorld());
 
             List<LineSegment> expectedBounds = new List<LineSegment>();
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -1, -4), PointGenerator.MakePointWithInches(1, 1, -4)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -1, -4), PointGenerator.MakePointWithInches(5, -1, -4)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -4), PointGenerator.MakePointWithInches(5, 1, -4)));
-            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(5, -1, -4), PointGenerator.MakePointWithInches(5, 1, -4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 3, 4), PointGenerator.MakePointWithInches(-1, 5, 4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 3, 4), PointGenerator.MakePointWithInches(3, 3, 4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(3, 5, 4)));
+            expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 3, 4), PointGenerator.MakePointWithInches(3, 5, 4)));
             Polygon expectedPolygon = new Polygon(expectedBounds);
 
             shifted.Should().Be(expectedPolygon);
@@ -42,22 +42,22 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_RotateUsingCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -45), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
 
-            Point testPoint = PointGenerator.MakePointWithInches(0, 0, 3);
+            Point testPoint = PointGenerator.MakePointWithInches(0, 3, 0);
 
-            Point shifted = testPoint.Shift(new Shift(system));
+            Point shifted = testPoint.Shift(system.ShiftToThisFromWorld());
 
-            Point expected = PointGenerator.MakePointWithInches(1.5, 1.5, 2.12132034);
+            Point expected = PointGenerator.MakePointWithInches(2.12132034, 1.5, -1.5);
 
             shifted.Should().Be(expected);
 
             //try to get the point we had before we switched order of shifting
-            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -30), new Angle(AngleType.Degree, -54.7356104), new Angle());
+            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 30), new Angle(AngleType.Degree, 54.7356104), new Angle());
 
-            Point shifted2 = testPoint.Shift(new Shift(system2));
+            Point shifted2 = testPoint.Shift(system2.ShiftToThisFromWorld());
 
-            Point expected2 = PointGenerator.MakePointWithInches(-2.12132034, 1.5, 1.5);
+            Point expected2 = PointGenerator.MakePointWithInches(0, 2.59807621, -1.5);
 
             shifted2.Should().Be(expected2);
         }
@@ -69,9 +69,9 @@ namespace GeometryClassLibraryTest
 
             Point testPoint = PointGenerator.MakePointWithInches(0, 3, 0);
 
-            Point shifted = testPoint.Shift(new Shift(system));
+            Point shifted = testPoint.Shift(system.ShiftToThisFromWorld());
 
-            Point expected = PointGenerator.MakePointWithInches(-2.12132034356 + 1, 0 - 2, 2.12132034356 - 4);
+            Point expected = PointGenerator.MakePointWithInches(2.12132034356, 3.53553391, 5);
 
             shifted.Should().Be(expected);
         }
@@ -88,7 +88,7 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Polygon shifted = testPolygon.Shift(new Shift(system));
+            Polygon shifted = testPolygon.Shift(system.ShiftToThisFromWorld());
 
             List<LineSegment> expectedBounds = new List<LineSegment>();
             expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-0.5 - 0.75, 0.707106781 + 2, 0.5 + 1.5), PointGenerator.MakePointWithInches(-1.5 - 0.75, 2.12132034 + 2, 1.5 + 1.5)));
@@ -112,8 +112,8 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Polygon shifted = testPolygon.Shift(new Shift(system));
-            Polygon shifted2 = shifted.Shift(system.ShiftThatReturnsThisToWorldCoordinateSystem());
+            Polygon shifted = testPolygon.Shift(system.ShiftToThisFromWorld());
+            Polygon shifted2 = shifted.Shift(system.ShiftFromThisToWorld());
 
             testPolygon.Should().Be(shifted2);
         }

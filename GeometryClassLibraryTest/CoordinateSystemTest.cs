@@ -57,7 +57,7 @@ namespace GeometryClassLibraryTest
         {
             CoordinateSystem test = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -3), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 23.6), new Angle(AngleType.Degree, 243));
 
-            Shift result = test.ShiftThatReturnsThisToWorldCoordinateSystem();
+            Shift result = test.ShiftFromThisToWorld();
 
             //it ends up being what we inputted because it shift reflects the movement of the objects so it is by definition the negative of the 
             //coordinate system. Therfore, whenever we want to revert it we are taking a "double negative" in implementation, giving us the original
@@ -74,18 +74,24 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem()
         {
-            CoordinateSystem testCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
+            CoordinateSystem testCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
 
-            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, 1), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, 1), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
 
             CoordinateSystem basedOnWorld = testRelativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent);
 
-            Point expectedOrigin = PointGenerator.MakePointWithInches(1 + 1, 2 + 1, 3 - 2); //2,3,1
+            Point expectedOrigin = PointGenerator.MakePointWithInches(3, 3, 4); 
             Angle xExpected = new Angle(AngleType.Degree, 0);
             Angle yExpected = new Angle(AngleType.Degree, 0);
             Angle zExpected = new Angle(AngleType.Degree, 135);
 
             CoordinateSystem expected = new CoordinateSystem(expectedOrigin, xExpected, yExpected, zExpected);
+
+            Point testPointWorld = PointGenerator.MakePointWithInches(-1.2426, 3, 7);
+            Point ro1 = testPointWorld.Shift(testCurrent.ShiftToThisFromWorld());
+            Point ro2 = ro1.Shift(testRelativeToCurrent.ShiftToThisFromWorld());
+            Point ro12 = testPointWorld.Shift(basedOnWorld.ShiftToThisFromWorld());
+            Point roExpected = testPointWorld.Shift(expected.ShiftToThisFromWorld());
 
             (basedOnWorld == expected).Should().BeTrue();
 
@@ -103,6 +109,12 @@ namespace GeometryClassLibraryTest
             Angle zExpected2 = new Angle(AngleType.Degree, -135);
 
             CoordinateSystem expected2 = new CoordinateSystem(expectedOrigin2, xExpected2, yExpected2, zExpected2);
+
+
+            Point r1 = testPointWorld.Shift(testCurrent2.ShiftToThisFromWorld()); 
+            Point r2 = r1.Shift(testRelativeToCurrent2.ShiftToThisFromWorld());
+            Point r12 = testPointWorld.Shift(basedOnWorld2.ShiftToThisFromWorld());
+            Point rExpected = testPointWorld.Shift(expected2.ShiftToThisFromWorld());
 
             (basedOnWorld2 == expected2).Should().BeTrue() ;
 
@@ -166,7 +178,7 @@ namespace GeometryClassLibraryTest
             toReturn.BlockSystem = blocksCoordinateSystem.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(CURRENT_COORDINATE_SYSTEM);
 
             //now move it so it is in ouur current coordinate system
-            toReturn.Geometry = toReturn.Geometry.Shift(new Shift(CURRENT_COORDINATE_SYSTEM));
+            toReturn.Geometry = toReturn.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFromWorld());
 
             //then return it
             return toReturn;
