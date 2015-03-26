@@ -246,6 +246,12 @@ namespace GeometryClassLibrary
             {
                 Shift comparableShift = (Shift)obj;
 
+                //see if one is negated and the other isnt then negate the passed one and then continue
+                //if()
+                //{
+                //    comparableShift = comparableShift.Negate();
+                //}
+
                 //check that the rotations are all the same
                 //make sure the are equal in number
                 if (this.RotationsToApply.Count != comparableShift.RotationsToApply.Count)
@@ -263,7 +269,7 @@ namespace GeometryClassLibrary
                 }
 
                 //now we check if the displacements are the same because at this point the rotations 
-                return this.Displacement == comparableShift.Displacement;
+                return this.Displacement == comparableShift.Displacement && this._isNegatedShift == comparableShift._isNegatedShift;
             }
             //if it was not a shift than it was not equal
             catch (InvalidCastException)

@@ -1445,9 +1445,9 @@ namespace ClearspanLibraryUnitTest
             Matrix yMatrix = Matrix.RotationMatrixAboutY(yAngle);
             Matrix zMatrix = Matrix.RotationMatrixAboutZ(zAngle);
 
-            Matrix xyzRotation = xMatrix * yMatrix * zMatrix;
+            Matrix xyzRotation = zMatrix * yMatrix * xMatrix;
 
-            List<Angle> results = xyzRotation.GetAnglesOutOfRotationMatrix();
+            List<Angle> results = xyzRotation.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
             (results[0] == xAngle).Should().BeTrue();
             (results[1] == yAngle).Should().BeTrue();
@@ -1461,9 +1461,9 @@ namespace ClearspanLibraryUnitTest
             Matrix yMatrix2 = Matrix.RotationMatrixAboutY(yAngle2);
             Matrix zMatrix2 = Matrix.RotationMatrixAboutZ(zAngle2);
 
-            Matrix xyzRotation2 = xMatrix2 * yMatrix2 * zMatrix2;
+            Matrix xyzRotation2 = zMatrix2 * yMatrix2 * xMatrix2;
 
-            List<Angle> results2 = xyzRotation2.GetAnglesOutOfRotationMatrix();
+            List<Angle> results2 = xyzRotation2.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
             (results2[0] == xAngle2).Should().BeTrue();
             (results2[1] == yAngle2).Should().BeTrue();

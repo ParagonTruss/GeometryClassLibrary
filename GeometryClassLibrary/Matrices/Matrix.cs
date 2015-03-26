@@ -362,19 +362,97 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the euler angles (in x, y,z order) assuming this matrix is a pure rotation matrix
+        /// Returns the euler angles (for rotations in x, y,z order) assuming this matrix is a pure rotation matrix
         /// </summary>
         /// <returns>Returns a list of the euler angles in this order: x, y, z</returns>
-        public List<Angle> GetAnglesOutOfRotationMatrix()
+        public List<Angle> GetAnglesOutOfRotationMatrixForXYZRotationOrder()
         {
-            //Try getting the angles out of the matrix (this works)
+            //Try getting the angles out of the matrix (based of of the following question but modified for x,y,z rotation order)
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
+            //Note the Matrix is formed by multiplying together in the z,y,x order and so we need to multipy the matricies in that order as well
+            //but this gets the angle for the x,y,z order shift. This is due to how matricies are multiplied together and is difficult to grasp conceptually
             List<Angle> extractedAngles = new List<Angle>();
-            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(-this.GetElement(1, 2), this.GetElement(2, 2)))); //x
-            extractedAngles.Add(new Angle(AngleType.Radian, Math.Asin(this.GetElement(0, 2)))); //y
-            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(-this.GetElement(0, 1), this.GetElement(0, 0)))); //z
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(this.GetElement(2, 1), this.GetElement(2, 2)))); //x
+            extractedAngles.Add(new Angle(AngleType.Radian, Math.Asin(-this.GetElement(2, 0)))); //y
+            extractedAngles.Add( new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(0, 0)))); //z
 
             return extractedAngles;
+        }
+
+        /// <summary>
+        /// Converts the given rotation Matrix into a Quaternion, which also represents orientation but in a more mathematically unique way
+        /// since only two quaternions represent the same orientation, and they have the following relation to each other: q = -q
+        /// </summary>
+        /// <returns>Returns the Quarternion representation of this Rotation Matrix, stored in a 4x1 Matrix</returns>
+        public Matrix ConvertRotationMatrixToQuaternion()
+        {
+            //Follows this question asked by user1283674 on stack overflow
+            //http://stackoverflow.com/questions/21455139/matrix-rotation-to-quaternion
+
+            // Output quaternion
+            double w,x,y,z;
+
+            // Determine which of w,x,y, or z has the largest absolute value
+            double fourWSquaredMinus1 = this.GetElement(0, 0) + this.GetElement(1, 1) + this.GetElement(2, 2);
+            double fourXSquaredMinus1 = this.GetElement(0, 0) - this.GetElement(1, 1) - this.GetElement(2, 2);
+            double fourYSquaredMinus1 = this.GetElement(1, 1) - this.GetElement(0, 0) - this.GetElement(2, 2);
+            double fourZSquaredMinus1 = this.GetElement(2, 2) - this.GetElement(0, 0) - this.GetElement(1, 1);
+
+            int biggestIndex = 0;
+            double fourBiggestSquaredMinus1 = fourWSquaredMinus1;
+
+            if(fourXSquaredMinus1 > fourBiggestSquaredMinus1) {
+                fourBiggestSquaredMinus1 = fourXSquaredMinus1;
+                biggestIndex = 1;
+            }
+            if (fourYSquaredMinus1 > fourBiggestSquaredMinus1) {
+                fourBiggestSquaredMinus1 = fourYSquaredMinus1;
+                biggestIndex = 2;
+            }
+            if (fourZSquaredMinus1 > fourBiggestSquaredMinus1) {
+                fourBiggestSquaredMinus1 = fourZSquaredMinus1;
+                biggestIndex = 3;
+            }
+
+            // Per form square root and division
+            //(I have also seen it this way: mult = 0.25 * Math.Sqrt (fourBiggestSquaredMinus1 + 1.0 ) * 2
+            //  and then you divide by mult below instead of * i.e  x = (this.GetElement(1, 2) - this.GetElement(2, 1)) / mult;
+            //  and both ways seem to work the same)
+            double biggestVal = Math.Sqrt (fourBiggestSquaredMinus1 + 1.0 ) * 0.5;
+            double mult = 0.25 / biggestVal;
+
+            // Apply table to compute quaternion values
+            switch (biggestIndex) 
+            {
+                case 0:
+                    w = biggestVal;
+                    x = (this.GetElement(1, 2) - this.GetElement(2, 1)) * mult;
+                    y = (this.GetElement(2, 0) - this.GetElement(0, 2)) * mult;
+                    z = (this.GetElement(0, 1) - this.GetElement(1, 0)) * mult;
+                    break;
+                case 1:
+                    x = biggestVal;
+                    w = (this.GetElement(1, 2) - this.GetElement(2, 1)) * mult;
+                    y = (this.GetElement(0, 1) + this.GetElement(1, 0)) * mult;
+                    z = (this.GetElement(2, 0) + this.GetElement(0, 2)) * mult;
+                    break;
+                case 2:
+                    y = biggestVal;
+                    w = (this.GetElement(2, 0) - this.GetElement(0, 2)) * mult;
+                    x = (this.GetElement(0, 1) + this.GetElement(1, 0)) * mult;
+                    z = (this.GetElement(1, 2) + this.GetElement(2, 1)) * mult;
+                    break;
+                case 3:
+                    z = biggestVal;
+                    w = (this.GetElement(0, 1) - this.GetElement(1, 0)) * mult;
+                    x = (this.GetElement(2, 0) + this.GetElement(0, 2)) * mult;
+                    y = (this.GetElement(1, 2) + this.GetElement(2, 1)) * mult;
+                    break;
+                default:
+                    throw new Exception("Error creating quaternion");
+            }
+
+            return new Matrix(4, 1, new double[] { w, x, y, z });
         }
 
         #endregion
