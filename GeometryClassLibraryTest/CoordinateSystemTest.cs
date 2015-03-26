@@ -301,6 +301,58 @@ namespace GeometryClassLibraryTest
             return toReturn;
         }
 
+        public Polyhedron _makeExpectedBlock1InWorld()
+        {
+            //make the points
+            Point bottomLeft = PointGenerator.MakePointWithInches(2, -4, 1);
+            Point topLeft = PointGenerator.MakePointWithInches(2, -2, 1); 
+            Point topRight = PointGenerator.MakePointWithInches(6, -2, 1);
+            Point bottomRight = PointGenerator.MakePointWithInches(6, -4, 1);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(2, -4, 0);
+            Point topLeftBack = PointGenerator.MakePointWithInches(2, -2, 0); 
+            Point topRightBack = PointGenerator.MakePointWithInches(6, -2, 0); 
+            Point bottomRightBack = PointGenerator.MakePointWithInches(6, -4, 0);
+
+            //make the faces
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight,bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
+            faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
+            faces.Add(new Polygon(new List<Point> { topRight, topRightBack, bottomRightBack, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomRight, bottomRightBack, bottomLeftBack, bottomLeft }));
+
+            //make the Polyhedron
+            return new Polyhedron(faces);
+        }
+
+        public Polyhedron _makeExpectedBlock2InWorld()
+        {
+            //make the points
+            Point bottomLeft = PointGenerator.MakePointWithInches(-3, -3, 3);
+            Point topLeft = PointGenerator.MakePointWithInches(-3, -5, 3);
+            Point topRight = PointGenerator.MakePointWithInches(-3, -5, -1);
+            Point bottomRight = PointGenerator.MakePointWithInches(-3, -3, -1);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(-4, -3, 3);
+            Point topLeftBack = PointGenerator.MakePointWithInches(-4, -5, 3);
+            Point topRightBack = PointGenerator.MakePointWithInches(-4, -5, -1);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(-4, -3, -1);
+
+            //make the faces
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
+            faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
+            faces.Add(new Polygon(new List<Point> { topRight, topRightBack, bottomRightBack, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomRight, bottomRightBack, bottomLeftBack, bottomLeft }));
+
+            //make the Polyhedron
+            return new Polyhedron(faces);
+        }
+
         #endregion
 
         [Test]
@@ -310,18 +362,28 @@ namespace GeometryClassLibraryTest
             CoordinateSystem LegoSetSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
             CURRENT_COORDINATE_SYSTEM = LegoSetSystem;
 
-            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(), new Angle(new Angle(AngleType.Degree, -90)));
+            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
             CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
 
-            LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 6), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
+            LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
             LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 6), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
 
             //check their locations relative to the origin
             CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
-            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(-3, -3, 3), new Angle(), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), new Angle());
 
             block1.BlockSystem.Should().Be(block1ExpectedCoords);
             block2.BlockSystem.Should().Be(block2ExpectedCoords);
+
+            //now check the points to make sure the blocks were made right
+
+            //Here--- need to retry the expected to make sure thats right - otherwise uhoh!
+            (block1.Geometry.Verticies == _makeExpectedBlock1InWorld().Verticies).Should().BeTrue();
+            (block2.Geometry.Verticies == _makeExpectedBlock2InWorld().Verticies).Should().BeTrue();
+
+            //then try swapping around the coordinate systems some
+
+            Assert.Fail();
         }
     }
 }
