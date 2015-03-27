@@ -26,6 +26,6 @@ Make your life easier, use a [Recommended Programming Environment](https://bitbu
 For a road map of what needs to be worked on next visit the [Road Map](https://bitbucket.org/Clearspan/geometry-class-library/wiki/Road%20Map).
 
 ## Issues and Questions
-If you have found a bug or have an issue you would like to discuss about the project add an issue to the [Issues page](https://bitbucket.org/Clearspan/geometry-class-library/issues?status=new&status=open).
+If you have found a bug or have an issue you would like to discuss about the project add an issue to the [Issues page](https://clearspan.atlassian.net/projects/GEOMETRY).
 
 For anything else send an email to thomas.holland.john@gmail.com
