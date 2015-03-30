@@ -61,8 +61,8 @@ namespace GeometryClassLibraryTest
             Shift resultShift2 = new Shift(resultRotations2, origin);
 
             Point testPoint = PointGenerator.MakePointWithInches(3, -1, -20);
-            Point expectedPoint = testPoint.Shift(testSystem.ShiftToThisFromWorld());
-            Point expectedPoint2 = testPoint.Shift(testSystem.ShiftFromThisToWorld());
+            Point expectedPoint = testPoint.Shift(testSystem.ShiftToThisFrom());
+            Point expectedPoint2 = testPoint.Shift(testSystem.ShiftFromThisTo());
             Point resultPoint = testPoint.Shift(resultShift);
             Point resultPoint2 = testPoint.Shift(resultShift.Negate());
             Point resultPoint3 = testPoint.Shift(resultShift2);
@@ -99,8 +99,8 @@ namespace GeometryClassLibraryTest
         {
             CoordinateSystem test = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -3), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 23.6), new Angle(AngleType.Degree, 243));
 
-            Shift resultFrom = test.ShiftFromThisToWorld();
-            Shift resultTo = test.ShiftToThisFromWorld();
+            Shift resultFrom = test.ShiftFromThisTo();
+            Shift resultTo = test.ShiftToThisFrom();
 
             List<Rotation> expectedRotations = new List<Rotation>();
             expectedRotations.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, -45)));
@@ -131,8 +131,8 @@ namespace GeometryClassLibraryTest
 
             //this just helps with debugging and is redundent
             Point testPointWorld1 = PointGenerator.MakePointWithInches(3 - 2.12132034356, 3 - 0.70710678118, 7);
-            Point resultPoint1 = testPointWorld1.Shift(basedOnWorld1.ShiftToThisFromWorld()); //1,2,3
-            Point expectedPoint1 = testPointWorld1.Shift(expectedCombined1.ShiftToThisFromWorld()); //1,2,3
+            Point resultPoint1 = testPointWorld1.Shift(basedOnWorld1.ShiftToThisFrom()); //1,2,3
+            Point expectedPoint1 = testPointWorld1.Shift(expectedCombined1.ShiftToThisFrom()); //1,2,3
 
             (basedOnWorld1 == expectedCombined1).Should().BeTrue();
 
@@ -147,8 +147,8 @@ namespace GeometryClassLibraryTest
 
             //this just helps with debugging and is redundent
             Point testPointWorld2 = PointGenerator.MakePointWithInches(3, -2, 3);
-            Point resultPoint2 = testPointWorld2.Shift(basedOnWorld2.ShiftToThisFromWorld()); //1,2,3
-            Point expectedPoint2 = testPointWorld2.Shift(expectedCombined2.ShiftToThisFromWorld()); //1,2,3
+            Point resultPoint2 = testPointWorld2.Shift(basedOnWorld2.ShiftToThisFrom()); //1,2,3
+            Point expectedPoint2 = testPointWorld2.Shift(expectedCombined2.ShiftToThisFrom()); //1,2,3
 
             basedOnWorld2.Should().Be(expectedCombined2);
 
@@ -185,8 +185,8 @@ namespace GeometryClassLibraryTest
 
             //this just helps with debugging and is redundent
             Point testPointWorld4 = PointGenerator.MakePointWithInches(1 - 3.53553390611, 3 + 0.70710678032, -3);
-            Point resultPoint4 = testPointWorld4.Shift(basedOnWorld4.ShiftToThisFromWorld()); //1,2,3
-            Point expectedPoint4 = testPointWorld4.Shift(expectedCombined4.ShiftToThisFromWorld()); //1,2,3
+            Point resultPoint4 = testPointWorld4.Shift(basedOnWorld4.ShiftToThisFrom()); //1,2,3
+            Point expectedPoint4 = testPointWorld4.Shift(expectedCombined4.ShiftToThisFrom()); //1,2,3
 
             (basedOnWorld4 == expectedCombined4).Should().BeTrue();
         }
@@ -207,9 +207,9 @@ namespace GeometryClassLibraryTest
             CoordinateSystem expectedCombined1 = new CoordinateSystem(expectedOrigin1, xExpected1, yExpected1, zExpected1);
 
             Point testPointWorld1 = PointGenerator.MakePointWithInches(3 - 2.12132034356, 3 - 0.70710678118, 7);
-            Point point1InCurrent = testPointWorld1.Shift(testCurrent.ShiftToThisFromWorld());
-            Point point1DoubleShifted = point1InCurrent.Shift(testRelativeToCurrent.ShiftToThisFromWorld());
-            Point point1Combined = testPointWorld1.Shift(expectedCombined1.ShiftToThisFromWorld());
+            Point point1InCurrent = testPointWorld1.Shift(testCurrent.ShiftToThisFrom());
+            Point point1DoubleShifted = point1InCurrent.Shift(testRelativeToCurrent.ShiftToThisFrom());
+            Point point1Combined = testPointWorld1.Shift(expectedCombined1.ShiftToThisFrom());
 
             (expectedPoint == point1DoubleShifted).Should().BeTrue();
             (expectedPoint == point1Combined).Should().BeTrue();
@@ -226,9 +226,9 @@ namespace GeometryClassLibraryTest
 
 
             Point testPointWorld2 = PointGenerator.MakePointWithInches(1 - 3.53553390611, 3 + 0.70710678032, -3);
-            Point point2InCurrent = testPointWorld2.Shift(testCurrent2.ShiftToThisFromWorld());
-            Point point2DoubleShifted = point2InCurrent.Shift(testRelativeToCurrent2.ShiftToThisFromWorld());
-            Point point2Combined = testPointWorld2.Shift(expectedCombined2.ShiftToThisFromWorld());
+            Point point2InCurrent = testPointWorld2.Shift(testCurrent2.ShiftToThisFrom());
+            Point point2DoubleShifted = point2InCurrent.Shift(testRelativeToCurrent2.ShiftToThisFrom());
+            Point point2Combined = testPointWorld2.Shift(expectedCombined2.ShiftToThisFrom());
 
             (expectedPoint == point2DoubleShifted).Should().BeTrue();
             (expectedPoint == point2Combined).Should().BeTrue();
@@ -240,9 +240,9 @@ namespace GeometryClassLibraryTest
             CoordinateSystem expectedCombined3 = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
 
             Point testPointWorld3 = PointGenerator.MakePointWithInches(3, -2, 3);
-            Point point3InCurrent = testPointWorld3.Shift(testCurrent3.ShiftToThisFromWorld());
-            Point point3DoubleShifted = point3InCurrent.Shift(testRelativeToCurrent3.ShiftToThisFromWorld());
-            Point point3Combined = testPointWorld3.Shift(expectedCombined3.ShiftToThisFromWorld());
+            Point point3InCurrent = testPointWorld3.Shift(testCurrent3.ShiftToThisFrom());
+            Point point3DoubleShifted = point3InCurrent.Shift(testRelativeToCurrent3.ShiftToThisFrom());
+            Point point3Combined = testPointWorld3.Shift(expectedCombined3.ShiftToThisFrom());
 
             (expectedPoint == point3DoubleShifted).Should().BeTrue();
             (expectedPoint == point3Combined).Should().BeTrue();
@@ -295,28 +295,54 @@ namespace GeometryClassLibraryTest
             toReturn.BlockSystem = blocksCoordinateSystem.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(CURRENT_COORDINATE_SYSTEM);
 
             //now move it so it is in ouur current coordinate system
-            toReturn.Geometry = toReturn.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFromWorld());
+            toReturn.Geometry = toReturn.Geometry.Shift(blocksCoordinateSystem.ShiftFromThisTo());
 
             //then return it
             return toReturn;
+        }
+
+        public Polyhedron _makeExpectedBlockInLocal()
+        {
+            //make the points
+            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 1);
+            Point topLeft = PointGenerator.MakePointWithInches(0, 2, 1);
+            Point topRight = PointGenerator.MakePointWithInches(4, 2, 1);
+            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 1);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 2, 0);
+            Point topRightBack = PointGenerator.MakePointWithInches(4, 2, 0);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 0);
+
+            //make the faces
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
+            faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
+            faces.Add(new Polygon(new List<Point> { topRight, topRightBack, bottomRightBack, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomRight, bottomRightBack, bottomLeftBack, bottomLeft }));
+
+            //make the Polyhedron
+            return new Polyhedron(faces);
         }
 
         public Polyhedron _makeExpectedBlock1InWorld()
         {
             //make the points
             Point bottomLeft = PointGenerator.MakePointWithInches(2, -4, 1);
-            Point topLeft = PointGenerator.MakePointWithInches(2, -2, 1); 
+            Point topLeft = PointGenerator.MakePointWithInches(2, -2, 1);
             Point topRight = PointGenerator.MakePointWithInches(6, -2, 1);
             Point bottomRight = PointGenerator.MakePointWithInches(6, -4, 1);
 
             Point bottomLeftBack = PointGenerator.MakePointWithInches(2, -4, 0);
-            Point topLeftBack = PointGenerator.MakePointWithInches(2, -2, 0); 
-            Point topRightBack = PointGenerator.MakePointWithInches(6, -2, 0); 
+            Point topLeftBack = PointGenerator.MakePointWithInches(2, -2, 0);
+            Point topRightBack = PointGenerator.MakePointWithInches(6, -2, 0);
             Point bottomRightBack = PointGenerator.MakePointWithInches(6, -4, 0);
 
             //make the faces
             List<Polygon> faces = new List<Polygon>();
-            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight,bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
             faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
             faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
             faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
@@ -353,6 +379,58 @@ namespace GeometryClassLibraryTest
             return new Polyhedron(faces);
         }
 
+        public Polyhedron _makeExpectedBlock1InCurrent()
+        {
+            //make the points
+            Point bottomLeft = PointGenerator.MakePointWithInches(-2, 0, 0);
+            Point topLeft = PointGenerator.MakePointWithInches(0 , 0, 0); 
+            Point topRight = PointGenerator.MakePointWithInches(0, 0, 4);
+            Point bottomRight = PointGenerator.MakePointWithInches(-2, 0, 4);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(-2, 1, 0);
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 1, 0); 
+            Point topRightBack = PointGenerator.MakePointWithInches(0, 1, 4); 
+            Point bottomRightBack = PointGenerator.MakePointWithInches(-2, 1, 4);
+
+            //make the faces
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
+            faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
+            faces.Add(new Polygon(new List<Point> { topRight, topRightBack, bottomRightBack, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomRight, bottomRightBack, bottomLeftBack, bottomLeft }));
+
+            //make the Polyhedron
+            return new Polyhedron(faces);
+        }
+
+        public Polyhedron _makeExpectedBlock2InCurrent()
+        {
+            //make the points
+            Point bottomLeft = PointGenerator.MakePointWithInches(-1, 3, -5);
+            Point topLeft = PointGenerator.MakePointWithInches(-3, 3, -5);
+            Point topRight = PointGenerator.MakePointWithInches(-3, -1, -5);
+            Point bottomRight = PointGenerator.MakePointWithInches(-1, -1, -5);
+
+            Point bottomLeftBack = PointGenerator.MakePointWithInches(-1, 3, -6);
+            Point topLeftBack = PointGenerator.MakePointWithInches(-3, 3, -6);
+            Point topRightBack = PointGenerator.MakePointWithInches(-3, -1, -6);
+            Point bottomRightBack = PointGenerator.MakePointWithInches(-1, -1, -6);
+
+            //make the faces
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
+            faces.Add(new Polygon(new List<Point> { bottomLeft, bottomLeftBack, topLeftBack, topLeft }));
+            faces.Add(new Polygon(new List<Point> { topLeft, topLeftBack, topRightBack, topRight }));
+            faces.Add(new Polygon(new List<Point> { topRight, topRightBack, bottomRightBack, bottomRight }));
+            faces.Add(new Polygon(new List<Point> { bottomRight, bottomRightBack, bottomLeftBack, bottomLeft }));
+
+            //make the Polyhedron
+            return new Polyhedron(faces);
+        }
+
         #endregion
 
         [Test]
@@ -366,7 +444,11 @@ namespace GeometryClassLibraryTest
             CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
 
             LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
-            LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 6), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
+            LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
+
+            //make sure the blocks were made right
+            (block1.Geometry == _makeExpectedBlock1InCurrent()).Should().BeTrue();
+            (block2.Geometry == _makeExpectedBlock2InCurrent()).Should().BeTrue();
 
             //check their locations relative to the origin
             CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
@@ -375,15 +457,69 @@ namespace GeometryClassLibraryTest
             block1.BlockSystem.Should().Be(block1ExpectedCoords);
             block2.BlockSystem.Should().Be(block2ExpectedCoords);
 
-            //now check the points to make sure the blocks were made right
+            //now that we know the blocks are made correctly, lets test shifting them to see if that works correctly too
+            //Note: many of these shifts "cheat" and do not use the block in the current coordinate system.
+            //      The ones that are realistic in how and when the would be used are noted as so in the comments 
+            //      before their blocks, but are the ones that use "block1.geometry.shift(" (or the smae for block2)
+            //      and use "CURRENT_COORDINATE_SYSTEM" as one of the systems in the shift
 
-            //Here--- need to retry the expected to make sure thats right - otherwise uhoh!
-            (block1.Geometry.Verticies == _makeExpectedBlock1InWorld().Verticies).Should().BeTrue();
-            (block2.Geometry.Verticies == _makeExpectedBlock2InWorld().Verticies).Should().BeTrue();
+            //create our expected polyhedrons for the block in different coordinates here
+            Polyhedron blockInLocal = _makeExpectedBlockInLocal();
+            Polyhedron block1InCurrent = _makeExpectedBlock1InCurrent();
+            Polyhedron block2InCurrent = _makeExpectedBlock2InCurrent();
+            Polyhedron block1InWorld = _makeExpectedBlock1InWorld();
+            Polyhedron block2InWorld = _makeExpectedBlock2InWorld();
 
-            //then try swapping around the coordinate systems some
+            //try going from the lego systems to world system
+            //this would model how you can shift using coordinate systems in actual pratice
+            Polyhedron block1FromCurrentToWorld = block1.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
+            Polyhedron block2FromCurrentToWorld = block2.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
+            (block1FromCurrentToWorld == block1InWorld).Should().BeTrue();
+            (block2FromCurrentToWorld == block2InWorld).Should().BeTrue();
 
-            Assert.Fail();
+            //now try switching to world Coordinates
+            Polyhedron block1FromLocalToWorld = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo());
+            Polyhedron block2FromLocalToWorld = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo());
+            (block1FromLocalToWorld == block1InWorld).Should().BeTrue();
+            (block2FromLocalToWorld == block2InWorld).Should().BeTrue();
+
+            //try going from local coordinates to current Coords
+            Polyhedron block1FromLocalToCurrent = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2FromLocalToCurrent = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
+            (block1FromLocalToCurrent == block1InCurrent).Should().BeTrue();
+            (block2FromLocalToCurrent == block2InCurrent).Should().BeTrue();
+
+            //now try some shiftTo ones
+
+            //shift to the current from the world
+            Polyhedron block1ToCurrentFromWorld = block1InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
+            Polyhedron block2ToCurrentFromWorld = block2InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
+            (block1ToCurrentFromWorld == block1InCurrent).Should().BeTrue();
+            (block2ToCurrentFromWorld == block2InCurrent).Should().BeTrue();
+
+            //to the local from the world
+            Polyhedron block1ToLocalFromWorld = block1InWorld.Shift(block1.BlockSystem.ShiftToThisFrom());
+            Polyhedron block2ToLocalFromWorld = block2InWorld.Shift(block2.BlockSystem.ShiftToThisFrom());
+            (block1ToLocalFromWorld == blockInLocal).Should().BeTrue();
+            (block2ToLocalFromWorld == blockInLocal).Should().BeTrue();
+
+            //these last two exhibit how these coordinate systems would likely be used in a real context
+            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
+            //to the world from the current
+            Polyhedron block1ToWorldFromCurrent = block1.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2ToWorldFromCurrent = block2.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            (block1ToWorldFromCurrent == block1InWorld).Should().BeTrue();
+            (block2ToWorldFromCurrent == block2InWorld).Should().BeTrue();
+
+            //to the local from the current
+            Polyhedron block1ToLocalFromCurrent = block1.Geometry.Shift(block1.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2ToLocalFromCurrent = block2.Geometry.Shift(block2.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            (block1ToLocalFromCurrent == blockInLocal).Should().BeTrue();
+            (block2ToLocalFromCurrent == blockInLocal).Should().BeTrue();
+
+            //this shows the follwoing relationship is true
+            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
+            (block2ToWorldFromCurrent == block2FromCurrentToWorld).Should().BeTrue();
         }
     }
 }

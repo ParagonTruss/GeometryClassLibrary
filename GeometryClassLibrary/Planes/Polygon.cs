@@ -360,7 +360,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new Polygon that has been shifted</returns>
         public Polygon SystemShift(CoordinateSystem systemToShiftTo)
         {
-            Shift shiftToUse = systemToShiftTo.ShiftToThisFromWorld();
+            Shift shiftToUse = systemToShiftTo.ShiftToThisFrom();
 
             List<LineSegment> shiftedBoundaries = new List<LineSegment>();
 

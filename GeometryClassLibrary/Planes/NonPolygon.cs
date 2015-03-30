@@ -90,7 +90,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new NonPolygon that has been shifted</returns>
         public NonPolygon SystemShift(CoordinateSystem systemToShiftTo)
         {
-            Shift shiftToUse = systemToShiftTo.ShiftToThisFromWorld();
+            Shift shiftToUse = systemToShiftTo.ShiftToThisFrom();
 
             List<IEdge> shiftedBoundaries = new List<IEdge>();
 

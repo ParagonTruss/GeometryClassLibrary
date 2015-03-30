@@ -374,36 +374,102 @@ namespace GeometryClassLibrary
             bool areOpposite = thisQuaternion == otherQuaternion * -1;
             return areSame || areOpposite;
         }
-        
+
         /// <summary>
-        /// Returns the shift for this coordinate system to apply to objects in order to orient them back to the origin
-        /// Note: Only works if this is the current shift on the object! if it is already in world coordinates and you 
-        /// perform this shift it will move it from the world coordinates to coordinates that are opposite to this one!
+        /// Returns only the rotation shift for this coordinate system to apply to objects in order to only orient them in the passed system, but not move them.
+        /// If the system to rotate to is left out, it rotates it back to the world coordinate System
+        /// Note: Only works if this is the current shift on the object! if it is in other coordinates and you 
+        /// perform this rotation it will casue incorrect results!
         /// </summary>
-        /// <returns>Returns the shift to apply to Objects in order to return them from this coordinate system to the world coordinate system</returns>
-        public Shift ShiftFromThisToWorld()
+        /// <param name="systemToRotateTo">The coordinate system to Rotate from into this coordinate system. defaults to the World Coordinate System if left out</param>
+        /// <returns>Returns the shift to apply to Objects in order to Orient them in the same way as the passed system</returns>
+        public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
         {
-            //put the rotations on in the right order (XYZ)
-            List<Rotation> rotations = new List<Rotation>();
-            rotations.Add(new Rotation(Line.XAxis, this.XAxisRotationAngle));
-            rotations.Add(new Rotation(Line.YAxis, this.YAxisRotationAngle));
-            rotations.Add(new Rotation(Line.ZAxis, this.ZAxisRotationAngle));
-
-            //Then put the displacement to the origin
-            Point displacement = new Point(this.TranslationToOrigin);
-
-            return new Shift(rotations, displacement);
+            Shift shiftTo = ShiftFromThisTo(systemToRotateTo);
+            return new Shift(shiftTo.RotationsToApply);
         }
 
         /// <summary>
-        /// Creates a shift that represents going from this coordinate system to the World Coordinates
+        /// Returns only the rotation shift to apply to objects in order to only orient them in this coordinate system when they are currently oriented in the passed system, but does not move them.
+        /// If the system to rotate from is left out, it assumes it is oriented in world coordinate System
+        /// Note: Only works if the passed coordinate system is the current shift on the object! if it is in other coordinates and you 
+        /// perform this rotation it will casue incorrect results!
         /// </summary>
+        /// <param name="systemToRotateTo">The coordinate system to Rotate to from this coordinate system. defaults to the World Coordinate System if left out</param>
+        /// <returns>Returns the shift to apply to Objects in order to Orient them in this system assuming they are based on the passed system</returns>
+        public Shift RotateToThisFrom(CoordinateSystem rotateFrom = null)
+        {
+            Shift shiftFrom = ShiftToThisFrom(rotateFrom);
+            return new Shift(shiftFrom.RotationsToApply);
+        }
+
+        /// <summary>
+        /// Returns the shift for this coordinate system to apply to objects in order to postition and orient them in the passed system.
+        /// If the system to shift to is left out, it shifts it back to the world coordinate System
+        /// Note: Only works if this is the current shift on the object! if it is in other coordinates and you 
+        /// perform this shift it will give incorrect results!
+        /// </summary>
+        /// <param name="systemToShiftFrom">The coordinate system to shift to from this coordinate system. defaults to the World Coordinate System if left out</param>
+        /// <returns>Returns the shift to apply to Objects in order to shift them from this coordinate system to the passed coordinate system</returns>
+        public Shift ShiftFromThisTo(CoordinateSystem systemToShiftTo = null)
+        {
+            if (systemToShiftTo == null || systemToShiftTo == WorldCoordinateSystem)
+            {
+                //put the rotations on in the right order (XYZ)
+                List<Rotation> rotations = new List<Rotation>();
+                rotations.Add(new Rotation(Line.XAxis, this.XAxisRotationAngle));
+                rotations.Add(new Rotation(Line.YAxis, this.YAxisRotationAngle));
+                rotations.Add(new Rotation(Line.ZAxis, this.ZAxisRotationAngle));
+
+                //Then put the displacement to the origin
+                Point displacement = new Point(this.TranslationToOrigin);
+
+                return new Shift(rotations, displacement);
+            }
+            else
+            {
+                //the displacements just add(but we do the opposite of shiftTo hence the negative)
+                //also we need to the rotate the displacement so that it is in terms of the one we are going to
+                Point combinedDisplacement = (this.TranslationToOrigin - systemToShiftTo.TranslationToOrigin).Shift(systemToShiftTo.RotateToThisFrom());
+            
+                //We need to figure out the equivalent matrix to the two shifts so we multiply them together
+                //Note: Order is Improtant!!!
+                //Note: the shiftTo is inverted because it normally is how to get to the world coordinate from its coordinates, 
+                //      but we want how to get to it from the world coodinates
+                Matrix shiftMatrix = (systemToShiftTo.RotationMatrix.Invert()) * this.RotationMatrix;
+
+                //now get the angles out of equivalent rotation matrix
+                List<Angle> shiftAngles = shiftMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+                List<Rotation> shiftRotations = new List<Rotation>();
+                shiftRotations.Add(new Rotation(Line.XAxis, shiftAngles[0]));
+                shiftRotations.Add(new Rotation(Line.YAxis, shiftAngles[1]));
+                shiftRotations.Add(new Rotation(Line.ZAxis, shiftAngles[2]));
+
+                //and then make and return the new shift
+                return new Shift(shiftRotations, combinedDisplacement);
+            }
+        }
+
+        /// <summary>
+        /// Creates a shift that represents going to this coordinate system fromt the passed coordinate system
+        /// If the system to shift from is left out, it shifts it back to the world coordinate System
+        /// Note: Only works if the passed coordinate system is the current system of the object! if it is in other coordinates and you 
+        /// perform this shift it will give incorrect results!
+        /// </summary>
+        /// <param name="systemToShiftFrom">The coordinate system to shift to this one from. defaults to the World Coordinate System if left out</param>
         /// <returns>Returns a shft to be applied to an obect to put it back to the world coordinate system from this one</returns>
-        public Shift ShiftToThisFromWorld()
+        public Shift ShiftToThisFrom(CoordinateSystem systemToShiftFrom = null)
         {
             //the simple way is just to create a shift with this coordinate system and then negate it
-            return ShiftFromThisToWorld().Negate();
+            Shift shift =  ShiftFromThisTo(systemToShiftFrom).Negate();
+            return shift;
         }
+
+
+        //CONTINUE WORKING ON COMMENT CLARITY AND COOMETNING METHODS
+        //ALSO MAKE SURE THAT THER IS NO SHIFT CONSTRUCTOR FOR SYSTEMS
+
+
 
         /// <summary>
         /// Find this coordinate system's (which is currently based on the passed system) shifts relative to the world coordinate 
@@ -422,7 +488,7 @@ namespace GeometryClassLibrary
 
             //first find the translation
             //r1(t2) + t1 [does both parts - shifts the point and then adds the origin point
-            Point newOrigin = this.TranslationToOrigin.Shift(thisRelativeTo.ShiftFromThisToWorld());
+            Point newOrigin = this.TranslationToOrigin.Shift(thisRelativeTo.ShiftFromThisTo());
 
             //now find the resulting rotaions
             //r1(r2)
