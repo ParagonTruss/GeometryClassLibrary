@@ -45,7 +45,7 @@ namespace GeometryClassLibraryTest
             Matrix test2 = Matrix.RotationMatrixAboutX(angleX) * Matrix.RotationMatrixAboutY(angleY) * Matrix.RotationMatrixAboutZ(angleZ);
             List<Angle> results2 = test2.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
-            Matrix testMatrix = testSystem.RotationMatrix;
+            Matrix testMatrix = testSystem.RotationMatrixFromThisToWorld();
             List<Angle> results = testMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
             List<Rotation> resultRotations = new List<Rotation>();
@@ -115,6 +115,24 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
+        public void CoordinateSystem_ShiftThenUnShift()
+        {
+            CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4), new Angle(AngleType.Degree, 123), new Angle(AngleType.Degree, -22), new Angle(AngleType.Degree, 78));
+
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            Polygon testPolygon = new Polygon(bounds);
+
+            Polygon shifted = testPolygon.Shift(system.ShiftToThisFrom());
+            Polygon shifted2 = shifted.Shift(system.ShiftFromThisTo());
+
+            testPolygon.Should().Be(shifted2);
+        }
+
+        [Test]
         public void CoordinateSystem_FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem()
         {
             //test one that really is more just an origin test
@@ -164,9 +182,9 @@ namespace GeometryClassLibraryTest
             Angle zExpected3 = new Angle(AngleType.Degree, -45);
             CoordinateSystem expectedCombined3 = new CoordinateSystem(expectedOrigin3, xExpected3, yExpected3, zExpected3);
 
-            Matrix e = expectedCombined3.RotationMatrix;
+            Matrix e = expectedCombined3.RotationMatrixFromThisToWorld();
             List<Angle> ea = e.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
-            Matrix r = basedOnWorld3.RotationMatrix;
+            Matrix r = basedOnWorld3.RotationMatrixFromThisToWorld();
             List<Angle> ra = r.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
             (basedOnWorld3 == expectedCombined3).Should().BeTrue();
@@ -248,7 +266,178 @@ namespace GeometryClassLibraryTest
             (expectedPoint == point3Combined).Should().BeTrue();
         }
 
+        [Test()]
+        public void CoordinateSystem_Shift_SingleAxisRotation()
+        {
+            CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0));  
+            Shift testShift1 = new Shift(new Rotation(Line.YAxis, new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
+            CoordinateSystem results1 = testSystem1.Shift(testShift1);
+            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 3, 5), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 135), new Angle(AngleType.Degree, 0));
+            (results1 == expectedSystem1).Should().BeTrue();
 
+            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90));  
+            Shift testShift2 = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45)), PointGenerator.MakePointWithInches(2, -1, -1));
+            CoordinateSystem results2 = testSystem2.Shift(testShift2);
+            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(3, 1, 2), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90));
+            (results2 == expectedSystem2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void CoordinateSystem_Shift_MultipleAxisRotations()
+        {
+            CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 30), new Angle(AngleType.Degree, 0));
+            
+            List<Rotation> testRotations1 = new List<Rotation>();
+            testRotations1.Add(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)));
+            testRotations1.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 30)));
+            Shift testShift1 = new Shift(testRotations1, PointGenerator.MakePointWithInches(0, -2, 5));
+            
+            CoordinateSystem results1 = testSystem1.Shift(testShift1);
+            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 0, 8), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 60), new Angle(AngleType.Degree, -90));
+            (results1 == expectedSystem1).Should().BeTrue();
+
+            //now try another
+            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -30));
+            
+            List<Rotation> testRotations2 = new List<Rotation>();
+            testRotations2.Add(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -15)));
+            testRotations2.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
+            testRotations2.Add(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 90)));
+            testRotations2.Add(new Rotation(Line.XAxis, new Angle(AngleType.Degree, -90)));
+            Shift testShift2 = new Shift(testRotations2, PointGenerator.MakePointWithInches(2, 0, -1));
+            
+            CoordinateSystem results2 = testSystem2.Shift(testShift2);
+            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0));
+            (results2 == expectedSystem2).Should().BeTrue();
+        }
+        
+        [Test()]
+        public void CoordinateSystem_Shift_NonAxisRotation()
+        {
+            CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
+            Shift testShift1 = new Shift(new Rotation(new Line(new Direction(new Angle(AngleType.Degree, 45))), new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
+            CoordinateSystem results1 = testSystem1.Shift(testShift1);
+            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 3, 5), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 45));
+            (results1 == expectedSystem1).Should().BeTrue();
+
+            //now try another
+            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90));
+            Shift testShift2 = new Shift(new Rotation(new Line(new Direction(new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 45))), new Angle(AngleType.Degree, -90)), PointGenerator.MakePointWithInches(2, -1, -1));
+            CoordinateSystem results2 = testSystem2.Shift(testShift2);
+            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(3, 1, 2), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 180));
+            (results2 == expectedSystem2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void CoordinateSystem_Shift_InNonWorldCoords()
+        {
+            CoordinateSystem currrentSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, -1, 1), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
+            CoordinateSystem testSystem1BasedOnCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
+            
+            Shift testShift1 = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
+            CoordinateSystem results1 = testSystem1BasedOnCurrent.Shift(testShift1, currrentSystem1);
+            
+            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -1, 4), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
+            (results1 == expectedSystem1).Should().BeTrue();
+
+            //now try another one
+            CoordinateSystem currrentSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33, -72, 9), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
+            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -11, -27), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90));
+            Shift testShift2 = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, -45)), PointGenerator.MakePointWithInches(2, 3, 8));
+            CoordinateSystem results2 = testSystem2.Shift(testShift2, currrentSystem2);
+            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33 + 5.65685424949 - 13.4350288425, -72 + 7, 9 - 5.65685424949 - 13.4350288425), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 0));
+            (results2 == expectedSystem2).Should().BeTrue();
+        }
+
+        [Test]
+        public void CoordinateSystem_CoordinateSystemShifting()
+        {
+            //neither of these work right now
+            CoordinateSystem LegoSetSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
+            CURRENT_COORDINATE_SYSTEM = LegoSetSystem;
+
+            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
+
+            LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
+            LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
+
+            //make sure the blocks were made right
+            (block1.Geometry == _makeExpectedBlock1InCurrent()).Should().BeTrue();
+            (block2.Geometry == _makeExpectedBlock2InCurrent()).Should().BeTrue();
+
+            //check their locations relative to the origin
+            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
+            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), new Angle());
+
+            block1.BlockSystem.Should().Be(block1ExpectedCoords);
+            block2.BlockSystem.Should().Be(block2ExpectedCoords);
+
+            //now that we know the blocks are made correctly, lets test shifting them to see if that works correctly too
+            //Note: many of these shifts "cheat" and do not use the block in the current coordinate system.
+            //      The ones that are realistic in how and when the would be used are noted as so in the comments 
+            //      before their blocks, but are the ones that use "block1.geometry.shift(" (or the smae for block2)
+            //      and use "CURRENT_COORDINATE_SYSTEM" as one of the systems in the shift
+
+            //create our expected polyhedrons for the block in different coordinates here
+            Polyhedron blockInLocal = _makeExpectedBlockInLocal();
+            Polyhedron block1InCurrent = _makeExpectedBlock1InCurrent();
+            Polyhedron block2InCurrent = _makeExpectedBlock2InCurrent();
+            Polyhedron block1InWorld = _makeExpectedBlock1InWorld();
+            Polyhedron block2InWorld = _makeExpectedBlock2InWorld();
+
+            //try going from the lego systems to world system
+            //this would model how you can shift using coordinate systems in actual pratice
+            Polyhedron block1FromCurrentToWorld = block1.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
+            Polyhedron block2FromCurrentToWorld = block2.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
+            (block1FromCurrentToWorld == block1InWorld).Should().BeTrue();
+            (block2FromCurrentToWorld == block2InWorld).Should().BeTrue();
+
+            //now try switching to world Coordinates
+            Polyhedron block1FromLocalToWorld = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo());
+            Polyhedron block2FromLocalToWorld = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo());
+            (block1FromLocalToWorld == block1InWorld).Should().BeTrue();
+            (block2FromLocalToWorld == block2InWorld).Should().BeTrue();
+
+            //try going from local coordinates to current Coords
+            Polyhedron block1FromLocalToCurrent = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2FromLocalToCurrent = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
+            (block1FromLocalToCurrent == block1InCurrent).Should().BeTrue();
+            (block2FromLocalToCurrent == block2InCurrent).Should().BeTrue();
+
+            //now try some shiftTo ones
+
+            //shift to the current from the world
+            Polyhedron block1ToCurrentFromWorld = block1InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
+            Polyhedron block2ToCurrentFromWorld = block2InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
+            (block1ToCurrentFromWorld == block1InCurrent).Should().BeTrue();
+            (block2ToCurrentFromWorld == block2InCurrent).Should().BeTrue();
+
+            //to the local from the world
+            Polyhedron block1ToLocalFromWorld = block1InWorld.Shift(block1.BlockSystem.ShiftToThisFrom());
+            Polyhedron block2ToLocalFromWorld = block2InWorld.Shift(block2.BlockSystem.ShiftToThisFrom());
+            (block1ToLocalFromWorld == blockInLocal).Should().BeTrue();
+            (block2ToLocalFromWorld == blockInLocal).Should().BeTrue();
+
+            //these last two exhibit how these coordinate systems would likely be used in a real context
+            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
+            //to the world from the current
+            Polyhedron block1ToWorldFromCurrent = block1.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2ToWorldFromCurrent = block2.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            (block1ToWorldFromCurrent == block1InWorld).Should().BeTrue();
+            (block2ToWorldFromCurrent == block2InWorld).Should().BeTrue();
+
+            //to the local from the current
+            Polyhedron block1ToLocalFromCurrent = block1.Geometry.Shift(block1.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            Polyhedron block2ToLocalFromCurrent = block2.Geometry.Shift(block2.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
+            (block1ToLocalFromCurrent == blockInLocal).Should().BeTrue();
+            (block2ToLocalFromCurrent == blockInLocal).Should().BeTrue();
+
+            //this shows the follwoing relationship is true
+            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
+            (block2ToWorldFromCurrent == block2FromCurrentToWorld).Should().BeTrue();
+        }
+        
         //these methods are for checking and demonstrating how coordinate systems can/should be used
         #region Coordinate System Switching Helper Stuff
 
@@ -383,13 +572,13 @@ namespace GeometryClassLibraryTest
         {
             //make the points
             Point bottomLeft = PointGenerator.MakePointWithInches(-2, 0, 0);
-            Point topLeft = PointGenerator.MakePointWithInches(0 , 0, 0); 
+            Point topLeft = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topRight = PointGenerator.MakePointWithInches(0, 0, 4);
             Point bottomRight = PointGenerator.MakePointWithInches(-2, 0, 4);
 
             Point bottomLeftBack = PointGenerator.MakePointWithInches(-2, 1, 0);
-            Point topLeftBack = PointGenerator.MakePointWithInches(0, 1, 0); 
-            Point topRightBack = PointGenerator.MakePointWithInches(0, 1, 4); 
+            Point topLeftBack = PointGenerator.MakePointWithInches(0, 1, 0);
+            Point topRightBack = PointGenerator.MakePointWithInches(0, 1, 4);
             Point bottomRightBack = PointGenerator.MakePointWithInches(-2, 1, 4);
 
             //make the faces
@@ -432,94 +621,5 @@ namespace GeometryClassLibraryTest
         }
 
         #endregion
-
-        [Test]
-        public void CoordinateSystem_CoordinateSystemShifting()
-        {
-            //neither of these work right now
-            CoordinateSystem LegoSetSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
-            CURRENT_COORDINATE_SYSTEM = LegoSetSystem;
-
-            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
-            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
-
-            LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
-            LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
-
-            //make sure the blocks were made right
-            (block1.Geometry == _makeExpectedBlock1InCurrent()).Should().BeTrue();
-            (block2.Geometry == _makeExpectedBlock2InCurrent()).Should().BeTrue();
-
-            //check their locations relative to the origin
-            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
-            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(PointGenerator.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), new Angle());
-
-            block1.BlockSystem.Should().Be(block1ExpectedCoords);
-            block2.BlockSystem.Should().Be(block2ExpectedCoords);
-
-            //now that we know the blocks are made correctly, lets test shifting them to see if that works correctly too
-            //Note: many of these shifts "cheat" and do not use the block in the current coordinate system.
-            //      The ones that are realistic in how and when the would be used are noted as so in the comments 
-            //      before their blocks, but are the ones that use "block1.geometry.shift(" (or the smae for block2)
-            //      and use "CURRENT_COORDINATE_SYSTEM" as one of the systems in the shift
-
-            //create our expected polyhedrons for the block in different coordinates here
-            Polyhedron blockInLocal = _makeExpectedBlockInLocal();
-            Polyhedron block1InCurrent = _makeExpectedBlock1InCurrent();
-            Polyhedron block2InCurrent = _makeExpectedBlock2InCurrent();
-            Polyhedron block1InWorld = _makeExpectedBlock1InWorld();
-            Polyhedron block2InWorld = _makeExpectedBlock2InWorld();
-
-            //try going from the lego systems to world system
-            //this would model how you can shift using coordinate systems in actual pratice
-            Polyhedron block1FromCurrentToWorld = block1.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
-            Polyhedron block2FromCurrentToWorld = block2.Geometry.Shift(CURRENT_COORDINATE_SYSTEM.ShiftFromThisTo());
-            (block1FromCurrentToWorld == block1InWorld).Should().BeTrue();
-            (block2FromCurrentToWorld == block2InWorld).Should().BeTrue();
-
-            //now try switching to world Coordinates
-            Polyhedron block1FromLocalToWorld = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo());
-            Polyhedron block2FromLocalToWorld = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo());
-            (block1FromLocalToWorld == block1InWorld).Should().BeTrue();
-            (block2FromLocalToWorld == block2InWorld).Should().BeTrue();
-
-            //try going from local coordinates to current Coords
-            Polyhedron block1FromLocalToCurrent = blockInLocal.Shift(block1.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
-            Polyhedron block2FromLocalToCurrent = blockInLocal.Shift(block2.BlockSystem.ShiftFromThisTo(CURRENT_COORDINATE_SYSTEM));
-            (block1FromLocalToCurrent == block1InCurrent).Should().BeTrue();
-            (block2FromLocalToCurrent == block2InCurrent).Should().BeTrue();
-
-            //now try some shiftTo ones
-
-            //shift to the current from the world
-            Polyhedron block1ToCurrentFromWorld = block1InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
-            Polyhedron block2ToCurrentFromWorld = block2InWorld.Shift(CURRENT_COORDINATE_SYSTEM.ShiftToThisFrom());
-            (block1ToCurrentFromWorld == block1InCurrent).Should().BeTrue();
-            (block2ToCurrentFromWorld == block2InCurrent).Should().BeTrue();
-
-            //to the local from the world
-            Polyhedron block1ToLocalFromWorld = block1InWorld.Shift(block1.BlockSystem.ShiftToThisFrom());
-            Polyhedron block2ToLocalFromWorld = block2InWorld.Shift(block2.BlockSystem.ShiftToThisFrom());
-            (block1ToLocalFromWorld == blockInLocal).Should().BeTrue();
-            (block2ToLocalFromWorld == blockInLocal).Should().BeTrue();
-
-            //these last two exhibit how these coordinate systems would likely be used in a real context
-            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
-            //to the world from the current
-            Polyhedron block1ToWorldFromCurrent = block1.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
-            Polyhedron block2ToWorldFromCurrent = block2.Geometry.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
-            (block1ToWorldFromCurrent == block1InWorld).Should().BeTrue();
-            (block2ToWorldFromCurrent == block2InWorld).Should().BeTrue();
-
-            //to the local from the current
-            Polyhedron block1ToLocalFromCurrent = block1.Geometry.Shift(block1.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
-            Polyhedron block2ToLocalFromCurrent = block2.Geometry.Shift(block2.BlockSystem.ShiftToThisFrom(CURRENT_COORDINATE_SYSTEM));
-            (block1ToLocalFromCurrent == blockInLocal).Should().BeTrue();
-            (block2ToLocalFromCurrent == blockInLocal).Should().BeTrue();
-
-            //this shows the follwoing relationship is true
-            //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
-            (block2ToWorldFromCurrent == block2FromCurrentToWorld).Should().BeTrue();
-        }
     }
 }

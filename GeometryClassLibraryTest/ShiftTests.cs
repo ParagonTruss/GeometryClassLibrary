@@ -14,7 +14,6 @@ namespace GeometryClassLibraryTest
     [TestFixture]
     public class ShiftTests
     {
-
         [Test]
         public void Shift_TranslateUsingToCoordinateSystem()
         {

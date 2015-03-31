@@ -352,39 +352,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts the polygon based on the passed coordinate system
-        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
-        /// is currently in the world coordinates
-        /// </summary>
-        /// <param name="systemToShiftTo">The system to use for the shift</param>
-        /// <returns>Returns a new Polygon that has been shifted</returns>
-        public Polygon SystemShift(CoordinateSystem systemToShiftTo)
-        {
-            Shift shiftToUse = systemToShiftTo.ShiftToThisFrom();
-
-            List<LineSegment> shiftedBoundaries = new List<LineSegment>();
-
-            foreach (var segment in LineSegments)
-            {
-                shiftedBoundaries.Add(segment.Shift(shiftToUse));
-            }
-
-            return new Polygon(shiftedBoundaries);
-        }
-
-        /// <summary>
-        /// Shifts the polygon as a generic planeRegion based on the passed coordinate system
-        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
-        /// is currently in the world coordinates
-        /// </summary>
-        /// <param name="systemToShiftTo">The system to use for the shift</param>
-        /// <returns>Returns a new Polygon as a PlaneRegion that has been shifted</returns>
-        public override PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo)
-        {
-            return this.SystemShift(systemToShiftTo);
-        }
-
-        /// <summary>
         /// Rotates the polygon about the given axis by the specified angle
         /// </summary>
         /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the point</param>
