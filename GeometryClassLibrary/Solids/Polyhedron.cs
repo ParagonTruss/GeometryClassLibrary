@@ -686,33 +686,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts the Polyhedron with the given coordinate System
-        /// </summary>
-        /// <param name="systemToShiftTo">the System to shift with</param>
-        /// <returns>a new Polyhedron that has been shifted with the given CoordinateSystem</returns>
-        public Polyhedron SystemShift(CoordinateSystem systemToShiftTo)
-        {
-            Polyhedron toReturn = this.Shift(new Shift(systemToShiftTo));
-
-            //CoordinateSystem.CurrentSystem = systemToShiftTo;
-
-            return toReturn;
-        }
-
-        /// <summary>
-        /// Shifts this Polyhedron from one Coordinate System to the other
-        /// </summary>
-        /// <param name="to">The Coordinate System to shift this polyhedron to</param>
-        /// <param name="from">The coordinate System this Polyhedron is currently in. If left out it defaults to the 
-        /// World Coordinate Systemm</param>
-        /// <returns>Returns a new Polyhedron that has been shifted to the given Coordinate System</returns>
-        public Polyhedron ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
-        {
-            List<Polygon> shiftedRegions = this.Polygons.ShiftCoordinateSystemsToFrom(to, from);
-            return new Polyhedron(shiftedRegions);
-        }
-
-        /// <summary>
         /// Returns whether or not the polygan has a common side that is exactly the same as that of the polyhedron / any of the polyhedrons sides
         /// </summary>
         /// <param name="polygon">The polygon to see if any of the the Polyhedrons side share a side with</param>

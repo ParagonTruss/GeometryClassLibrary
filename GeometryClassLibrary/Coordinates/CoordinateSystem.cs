@@ -483,25 +483,6 @@ namespace GeometryClassLibrary
             return toReturn;
         }
 
-        /*
-                /// <summary>
-                /// Makes a shift that can be used to move coordinate systems around
-                /// </summary>
-                /// <returns>Returns a shift to be used on a coordinate systems origin to move it to the corresponding spot</returns>
-                public Shift MakeIntoShiftForAnotherCoordinateSystemsOrigin()
-                {
-                    //we have to make the shift from scratch because
-                    Shift systemShift = new Shift();
-                    systemShift.RotationsToApply.Add(new Rotation(Line.XAxis, this.XRotation));
-                    systemShift.RotationsToApply.Add(new Rotation(Line.YAxis, this.YRotation));
-                    systemShift.RotationsToApply.Add(new Rotation(Line.ZAxis, this.ZRotation));
-
-                    systemShift.Displacement = this.Origin;
-
-                    return systemShift;
-                }*/
-
-
         /// <summary>
         /// This shifts the corrdinate system using the given shift
         /// </summary>
