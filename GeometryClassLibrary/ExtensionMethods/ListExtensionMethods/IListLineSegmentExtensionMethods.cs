@@ -278,12 +278,12 @@ namespace GeometryClassLibrary
                     //first sort them clockwise
                     List<LineSegment> sortedBorders = passedBorders.SortIntoClockWiseSegments();
 
-                    //get our verticies
-                    List<Point> verticies = sortedBorders.GetAllPoints();
+                    //get our vertices
+                    List<Point> vertices = sortedBorders.GetAllPoints();
 
-                    //for each of our verticies compare it to the previous one
-                    Point previousVertex = verticies[verticies.Count - 1];
-                    foreach (Point vertex in verticies)
+                    //for each of our vertices compare it to the previous one
+                    Point previousVertex = vertices[vertices.Count - 1];
+                    foreach (Point vertex in vertices)
                     {
                         //take the cross product of them (relative to the origin)
                         Vector crossProduct = vertex.VectorFromOriginToThisPoint().CrossProduct(previousVertex.VectorFromOriginToThisPoint());

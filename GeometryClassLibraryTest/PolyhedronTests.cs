@@ -591,7 +591,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Polyhedron_Verticies()
+        public void Polyhedron_vertices()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
@@ -612,7 +612,7 @@ namespace ClearspanTypeLibrary.Tests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            List<Point> results = testPolyhedron.Verticies;
+            List<Point> results = testPolyhedron.Vertices;
 
             //now test to see if we got what we expect
             results.Count.Should().Be(8);

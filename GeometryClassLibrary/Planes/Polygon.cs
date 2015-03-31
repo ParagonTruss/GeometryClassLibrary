@@ -39,23 +39,23 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds and returns a list of all the verticies of this polygon
+        /// Finds and returns a list of all the vertices of this polygon
         /// </summary>
-        public List<Point> Verticies
+        public List<Point> Vertices
         {
             get
             {
-                List<Point> verticiesFound = new List<Point>();
+                List<Point> verticesFound = new List<Point>();
 
                 foreach (Point point in this.LineSegments.GetAllPoints())
                 {
-                    if (!verticiesFound.Contains(point))
+                    if (!verticesFound.Contains(point))
                     {
-                        verticiesFound.Add(point);
+                        verticesFound.Add(point);
                     }
                 }
 
-                return verticiesFound;
+                return verticesFound;
             }
         }
 
@@ -1494,10 +1494,10 @@ namespace GeometryClassLibrary
         /// Finds a vertex of this polygon that is not contained by the given plane
         /// </summary>
         /// <param name="planeNotToFindTheVertexOn">The plane to find a vertex that is not contained by</param>
-        /// <returns>Returns one of the verticies that was not contained by the given plane or null if none were found</returns>
+        /// <returns>Returns one of the vertices that was not contained by the given plane or null if none were found</returns>
         public Point FindVertexNotOnTheGivenPlane(Plane planeNotToFindTheVertexOn)
         {
-            foreach (Point vertex in this.Verticies)
+            foreach (Point vertex in this.Vertices)
             {
                 if (!planeNotToFindTheVertexOn.Contains(vertex))
                 {

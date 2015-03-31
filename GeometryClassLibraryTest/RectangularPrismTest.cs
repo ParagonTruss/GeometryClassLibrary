@@ -22,7 +22,7 @@ namespace GeometryClassLibraryTest
             //make sure it was made right
             (prism.LineSegments.Count == 12).Should().BeTrue();
             (prism.Polygons.Count == 6).Should().BeTrue();
-            (prism.Verticies.Count == 8).Should().BeTrue();
+            (prism.Vertices.Count == 8).Should().BeTrue();
 
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 5, 0);
@@ -38,7 +38,7 @@ namespace GeometryClassLibraryTest
 
             foreach (Point point in expectedPoints)
             {
-                prism.Verticies.Contains(point).Should().BeTrue();
+                prism.Vertices.Contains(point).Should().BeTrue();
             }
         }
     }
