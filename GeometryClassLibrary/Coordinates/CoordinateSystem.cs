@@ -530,13 +530,16 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// This shifts the coordinate system relative to the origin using the given shift
+        /// This shifts the coordinate system relative to the origin using the given shift, assuming the Shift is in the passed CoordinateSystem
         /// </summary>
         /// <param name="passedShift">The shift to apply to the coordinate system</param>
+        /// <param name="shiftsCoordinateSystem">The CoordinateSystem that the Shift is created relative to. If left out it assumes it is in the WorldCoordinateSystem. 
+        /// Note: this is only in this Shift function becuase CoordinateSystems are in terms of the WorldCoordinateSystem. This is not done in the other Shifts because they 
+        /// should always be done in terms of the current CoordinateSystem and we do not need to keep track of how to get to them from the origin</param>
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
-        public CoordinateSystem Shift(Shift passedShift, CoordinateSystem currentCoordinateSystem = null)
+        public CoordinateSystem Shift(Shift passedShift, CoordinateSystem shiftsCoordinateSystem = null)
         {
-            //find the relative displacement by adding the displacement to this coordinate system's translation to origin
+            //find the relative displacement by adding the displacement to this coordinate system's translation to origin (this is relative to WoorldCoordinates though)
             Point displacementInCurrent = passedShift.Displacement + this.TranslationToOrigin;
 
             //Get the matrix representation of the coordinate system to start with as a base
@@ -560,14 +563,14 @@ namespace GeometryClassLibrary
             CoordinateSystem relativeToCurrent = new CoordinateSystem(displacementInCurrent, resultAngles[0], resultAngles[1], resultAngles[2]);
             
             //if its the world coordinates then we can just return it
-            if (currentCoordinateSystem == null || currentCoordinateSystem == CoordinateSystem.WorldCoordinateSystem)
+            if (shiftsCoordinateSystem == null || shiftsCoordinateSystem == CoordinateSystem.WorldCoordinateSystem)
             {
                 return relativeToCurrent;
             }
             //otherwise we have to tranform it to the origin based on the passed coords
             else
             {
-                return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(currentCoordinateSystem);
+                return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(shiftsCoordinateSystem);
             }
         }
 
