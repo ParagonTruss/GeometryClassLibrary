@@ -465,57 +465,6 @@ namespace GeometryClassLibrary
             return pointToReturn;
         }
 
-        /// <summary>
-        /// Shifts the Popint with the given coordinateSystem
-        /// </summary>
-        /// <param name="toShiftWith">the Coordinate System to shift this Point with</param>
-        /// <returns>returns a New Point that has been shifted with the CoordinateSystem</returns>
-        public Point SystemShift(CoordinateSystem toShiftWith)
-        {
-            return this.Shift(new Shift(toShiftWith));
-        }
-
-        /// <summary>
-        /// Shifts this Point from one Coordinate System to the other
-        /// </summary>
-        /// <param name="to">The Coordinate System to shift this Point to</param>
-        /// <param name="from">The coordinate System this Point is currently in. If left out it defaults to the 
-        /// World Coordinate Systemm</param>
-        /// <returns>Returns a new Point that has been shifted to the given Coordinate System</returns>
-        public Point ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
-        {
-            //use our coordinate system if none is passed in
-            if (from == null)
-            {
-                from = CoordinateSystem.WorldCoordinateSystem;
-            }
-            if(to == null)
-            {
-                to = CoordinateSystem.WorldCoordinateSystem;
-            }
-
-            if(from != CoordinateSystem.WorldCoordinateSystem && to != CoordinateSystem.WorldCoordinateSystem)
-            {
-                //we have to undo both of the shifts
-                Point test = this.Shift(from.ShiftThatReturnsThisToWorldCoordinateSystem());
-                return test.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem()); 
-            }
-            else if(from != CoordinateSystem.WorldCoordinateSystem)
-            {
-                //shift it from where it is to the world coordinate system 
-                 return this.SystemShift(from);  
-            }
-            else if(to != CoordinateSystem.WorldCoordinateSystem)
-            {
-                //then Shift it to the new Cordinate system
-                return this.Shift(to.ShiftThatReturnsThisToWorldCoordinateSystem());  
-            }
-            else
-            {
-                return this;
-            }
-        }
-
         #endregion
 
         public int CompareTo(object obj)

@@ -298,35 +298,5 @@ namespace GeometryClassLibraryTests
 
             actual1.Should().Be(expected1);
         }
-
-        [Test()]
-        public void Point_ShiftCoordinateSystemsToFrom()
-        {
-            //make our polyhedron
-            Point testPoint = PointGenerator.MakePointWithInches(25.62, -183.4, 2.6636);
-
-            //now make one not in the World coordinate system
-            CoordinateSystem testSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(12, -3.6, 0), new Angle(), new Angle(AngleType.Degree, 43), new Angle());
-            Point notAtWorld = testPoint.SystemShift(testSystem);
-
-            //now make yet another CoordinateSystem point
-            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-7.345, -4.11, -0.4435), new Angle(AngleType.Degree, 176), new Angle(AngleType.Degree, 4), new Angle(AngleType.Degree, -222));
-            Point notAtWorld2 = testPoint.SystemShift(testSystem2);
-            //make 2 in terms of 1
-            Point notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
-
-
-            //now test shifting from world to another
-            Point worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == testPoint).Should().BeTrue();
-
-            //now from another to the world
-            Point twoToWorld = testPoint.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == notAtWorld2).Should().BeTrue();
-
-            //now from one to another
-            Point oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == testPoint).Should().BeTrue();
-        }
     }
 }

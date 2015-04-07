@@ -70,39 +70,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts the nonPolygon as PlaneRegion based on the passed coordinate system
-        /// or can be thought of as putting this polygon in the perpective of the passsed coordinate system  assuming it
-        /// is currently in the world coordinates
-        /// </summary>
-        /// <param name="systemToShiftTo">The system to use for the shift</param>
-        /// <returns>Returns a new nonPolygon as a PlaneRegion that has been shifted</returns>
-        public override PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo)
-        {
-            return this.SystemShift(systemToShiftTo);
-        }
-
-        /// <summary>
-        /// Shifts the nonPolygon based on the passed coordinate system
-        /// or can be thought of as putting this nonPolygon in the perpective of the passsed coordinate system  assuming it
-        /// is currently in the world coordinates
-        /// </summary>
-        /// <param name="systemToShiftTo">The system to use for the shift</param>
-        /// <returns>Returns a new NonPolygon that has been shifted</returns>
-        public NonPolygon SystemShift(CoordinateSystem systemToShiftTo)
-        {
-            Shift shiftToUse = new Shift(systemToShiftTo);
-
-            List<IEdge> shiftedBoundaries = new List<IEdge>();
-
-            foreach (var edge in this.Edges)
-            {
-                shiftedBoundaries.Add(edge.Shift(shiftToUse));
-            }
-
-            return new NonPolygon(shiftedBoundaries);
-        }
-
-        /// <summary>
         /// Rotate the NonPolygon as a more generic PlaneRegion 
         /// </summary>
         /// <param name="passedRotation">The rotation to apply to the nonPolygon</param>
