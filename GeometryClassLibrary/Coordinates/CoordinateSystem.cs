@@ -540,7 +540,7 @@ namespace GeometryClassLibrary
         public CoordinateSystem Shift(Shift passedShift, CoordinateSystem shiftsCoordinateSystem = null)
         {
             //find the relative displacement by adding the displacement to this coordinate system's translation to origin (this is relative to WoorldCoordinates though)
-            Point displacementInCurrent = passedShift.Displacement + this.TranslationToOrigin;
+            Point displacementInCurrent = this.TranslationToOrigin.Shift(passedShift);
 
             //Get the matrix representation of the coordinate system to start with as a base
             Matrix cumulativeMatrix = this.RotationMatrixFromThisToWorld();
