@@ -491,36 +491,6 @@ namespace ClearspanTypeLibrary.Tests
             result.Should().Be(expected);
         }
 
-        [Test()]
-        public void Line_ShiftCoordinateSystemsToFrom()
-        {
-            //make our polyhedron
-            Line testLine = new Line(PointGenerator.MakePointWithInches(8, -3, 0.435), PointGenerator.MakePointWithInches(4, 1.47, 0));
-
-            //now make one not in the World coordinate system
-            CoordinateSystem testSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(4, -2, 1), new Angle(), new Angle(AngleType.Degree, 43), new Angle());
-            Line notAtWorld = testLine.SystemShift(testSystem);
-
-            //now make yet another CoordinateSystem Line
-            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
-            Line notAtWorld2 = testLine.SystemShift(testSystem2);
-            //make 2 in terms of 1
-            Line notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
-
-
-            //now test shifting from world to another
-            Line worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == testLine).Should().BeTrue();
-
-            //now from another to the world
-            Line twoToWorld = testLine.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == notAtWorld2).Should().BeTrue();
-
-            //now from one to another
-            Line oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == testLine).Should().BeTrue();
-		}
-
 		[Test()]
         public void Line_DoesIntersectPolyhedron()
         {

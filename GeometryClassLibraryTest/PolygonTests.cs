@@ -698,40 +698,6 @@ namespace GeometryClassLibraryTests
             resultsIntersecting.Should().BeFalse();
         }
 
-        [Test()]
-        public void Polygon_ShiftCoordinateSystemsToFrom()
-        {
-            //make our polyhedron
-            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeft = PointGenerator.MakePointWithInches(0, 4, 0);
-            Point bottomRight = PointGenerator.MakePointWithInches(7, 0, 0);
-            Point topRight = PointGenerator.MakePointWithInches(7, 4, 0);
-            Polygon testPolygon = new Polygon(new List<Point>() { bottomLeft, bottomRight, topRight, topLeft });
-
-            //now make one not in the World coordinate system
-            CoordinateSystem testSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(4, -2, 1), new Angle(), new Angle(AngleType.Degree, 43), new Angle());
-            Polygon notAtWorld = testPolygon.SystemShift(testSystem);
-
-            //now make yet another CoordinateSystem polyhedron
-            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 65), new Angle(AngleType.Degree, -27), new Angle());
-            Polygon notAtWorld2 = testPolygon.SystemShift(testSystem2);
-            //make 2 in terms of 1
-            Polygon notAtWorld2In1Coord = notAtWorld2.SystemShift(testSystem);
-
-
-            //now test shifting from world to another
-            Polygon worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == testPolygon).Should().BeTrue();
-
-            //now from another to the world
-            Polygon twoToWorld = testPolygon.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == notAtWorld2).Should().BeTrue();
-
-            //now from one to another
-            Polygon oneToTwo = notAtWorld2In1Coord.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == testPolygon).Should().BeTrue();
-        }
-
         public void Polygon_IntersectWithLine()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();

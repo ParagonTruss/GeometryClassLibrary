@@ -42,27 +42,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts this List of Polygons from one Coordinate System to the other
-        /// </summary>
-        /// <param name="passedPolygons">The List of Polygons to Shift from one Coordinate System to the other</param>
-        /// <param name="to">The Coordinate System to shift this List of Polygons to</param>
-        /// <param name="from">The coordinate System this List of Polygons is currently in. If left out it defaults to the 
-        /// World Coordinate Systemm</param>
-        /// <returns>Returns a new List of Polygons that has been shifted to the given Coordinate System</returns>
-        public static List<Polygon> ShiftCoordinateSystemsToFrom(this IList<Polygon> passedPolygons, CoordinateSystem to, CoordinateSystem from = null)
-        {
-            List<Polygon> shiftedPolygons = new List<Polygon>();
-
-            foreach (var polygon in passedPolygons)
-            {
-                shiftedPolygons.Add(polygon.ShiftCoordinateSystemsToFrom(to, from));
-            }
-
-            return shiftedPolygons;
-        }
-
-
-        /// <summary>
         /// Returns whether or not the polygon has a common side with any of the polygons in this list
         /// </summary>
         /// <param name="polygonsList">The List of Polygons to check if the passed polygon shares a side with</param>
