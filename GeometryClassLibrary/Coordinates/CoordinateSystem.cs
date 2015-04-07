@@ -2,137 +2,122 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// This represents a new coordinated system that is described using the world coordinate system. This class determines 
-    /// the translation from the origin to get to the new system as well as the angles about the world's x, y and z axes to 
-    /// rotate around in order to get to the desired coordinate system. (executes the rotations: x then y then z)
-    /// Note: the "world" coordinate system refers to how we normally percieve the world. The world coordinates are always the same,
-    /// but objects can be moved around in it and represent by different sub coordinate systems based on the world ones. This is
-    /// how this class works conceptually
-    /// Note: The coordinat system represents how we need to shift an object in order to get it in its coordinate system, thus the 
-    /// coordinate system is the "same" as the shift
+    /// Coordinate Systems can be thought of as where you are viewing the world from and this serves as a good conceptial model for how they are implemented in this Library. 
+    /// Following this model, if you shift based on a CoordinateSystem, the objects will shift in the opposite way because you are moving "yourself" and not the objects when 
+    /// you are changing CoordinateSystems. To see this, just look at an object infront of you. If you move left a step, it is percieved the same as if the object moved right 
+    /// and you stayed still and this is how the CoordinateSystems work. Because of this, CoordinateSystems are useful because we can switch easily to different view for certain
+    /// objects to see how they relate easier without losing how it is related to the rest of the objects. These can be used to simplify calculations from 3D to 2D and make them
+    /// much easier to preform by shifting to a CoordianteSystem in which the calculations done will have no component in one of the axis directions. Using CoordinateSystems this 
+    /// way is the same idea of reference frames (http://en.wikipedia.org/wiki/Frame_of_reference) and is actually a limited application of reference frames if that helps with 
+    /// conceptualizing them and their power.
+    /// 
+    /// Another concept that is used in this class is of a "WorldCoordinateSystem." This is an abitrary CoordinateSystem that is used as the basis and reference for all the
+    /// CoordinateSystems. Since it is abitrary and the reference, it's components will always be "zero" no matter where it is placed. This is the same as when you are graphing
+    /// a line for instance. You draw a X-Axis and an Y-Axis, which positions are abitrary, and then draw the line based on those axis.
+    /// 
+    /// 3D CoordinateSystems have two main parts: an origin and a set of axes. The origin is usually represented by a point in 3D space based on the WorldCoordinateSystem (the reference 
+    /// CoordinateSystem), but the axes can be represented in many different ways. The way we store the axes in this class is with 3 angles to rotate around each of the 
+    /// WorldCoordinateSytem's axes in X-Y-Z order, which as also refered to as euler angles(http://en.wikipedia.org/wiki/Euler_angles), but we do not limit beta to [0, pi] 
+    /// (http://en.wikipedia.org/wiki/Euler_angles#Signs_and_ranges). Both of these are stored realtive to the WorldCoordinates and so, in a sense, the World Coordinates are 
+    /// self defining. Note that the order we rotate around the axis IS important! If you do the same angles with Z-Y-X rotation, it most likely will result in a different 
+    /// orientation with respect to the WorldCoordinateSystem. Also, we rotate the angles around the WorldCoordinateSystem, meaning this is an extrinsic rotation approach to 
+    /// CoordinateSystems (http://en.wikipedia.org/wiki/Euler_angles#Extrinsic_rotations). We can store the axis as angles instead of lines because we make two assumptions that
+    /// are alway held in this class about the CoordinateSystems. First, it is a cartesian Coordinate System meaning that each axis is seperated from the other two by 90 degrees 
+    /// and the axes are formed by the intersection of 3 planes(http://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). Secondly, they follow the right hand 
+    /// rule for determining how the axes relate to each other(http://en.wikipedia.org/wiki/Right-hand_rule#Coordinate_orientation). 
+    /// 
+    /// Another thing to make note of is that Euler Angle, which we use to store the CoordinateSystems axes with, do NOT represent a unique orientation. Many different 
+    /// combinations of euler angle can lead to the same orientation based on the WorldCoordinateSystem. This is partly due to not limiting any of the angles from [0, pi] 
+    /// instead of [-pi, pi], but there are still ambiguous cases I belive even with the limit, but it is easier to leave them unlimited and then represent the orientation in 
+    /// a different form (we use Quaternions: http://en.wikipedia.org/wiki/Quaternion) to determine if they are the same orientation.
     /// </summary>
     public class CoordinateSystem
     {
         #region Properties and Fields
 
-        //public static CoordinateSystem CurrentSystem = new CoordinateSystem();
-
         /// <summary>
-        /// The world coordinate System
+        /// The world coordinate system
         /// </summary>
         public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem();
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's X axis to get to this coordinate system
+        /// The Angle to rotate around the global/external x axis, which is performed first.
         /// </summary>
-        public Angle XAngle;
-
-        /// <summary>
-        /// The x axis of this coordinate system
-        /// </summary>
-        public Direction XAxisDirection
+        public Angle XAxisRotationAngle
         {
-            get
-            {
-                return Line.XAxis.Rotate(this.CoordinateSystemRotations).Direction;
-            }
+            get { return _xAxisRotationAngle; }
         }
+        private Angle _xAxisRotationAngle;
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's Y axis to get to this coordinate system
+        /// The Angle to rotate around the global/external y axis, which is performed second.
         /// </summary>
-        public Angle YAngle;
-
-        /// <summary>
-        /// The y axis of this coordinate system
-        /// </summary>
-        public Direction YAxisDirection
+        public Angle YAxisRotationAngle
         {
-            get
-            {
-                return Line.YAxis.Rotate(this.CoordinateSystemRotations).Direction;
-            }
+            get { return _yAxisRotationAngle; }
         }
+        private Angle _yAxisRotationAngle;
 
         /// <summary>
-        /// The angle to rotate around the world coordinate system's Z axis to get to this coordinate system
+        /// The Angle to rotate around the global/external z axis, which is performed third.
         /// </summary>
-        public Angle ZAngle;
-
-        /// <summary>
-        /// The z axis of this coordinate system
-        /// </summary>
-        public Direction ZAxisDirection
+        public Angle ZAxisRotationAngle
         {
-            get
-            {
-                return Line.ZAxis.Rotate(this.CoordinateSystemRotations).Direction;
-            }
+            get { return _zAxisRotationAngle; }
         }
+        private Angle _zAxisRotationAngle;
 
         /// <summary>
-        /// This coordinate systems origin point relative to the world coordinate system
+        /// The translation from the world coordinate system's origin to the local coordinate system's origin
         /// </summary>
-        public Point Origin;
-
-        /// <summary>
-        /// The list of rotations that are applied to the world coordinate system to get the coordinate system to this one
-        /// </summary>
-        public List<Rotation> CoordinateSystemRotations
+        public Point TranslationToOrigin
         {
-            get
-            {
-                List<Rotation> rotations = new List<Rotation>();
-
-                rotations.Add(new Rotation(Line.ZAxis, this.ZAngle));
-                rotations.Add(new Rotation(Line.XAxis, this.XAngle));
-                rotations.Add(new Rotation(Line.YAxis, this.YAngle));
-
-                return rotations;
-            }
+            get { return _translationToOrigin; }
         }
+        private Point _translationToOrigin;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Creates a new intance of the world coordinate system
+        /// Creates a new instance of the world coordinate system
         /// </summary>
         public CoordinateSystem()
         {
-            this.Origin = new Point();
-            this.XAngle = new Angle();
-            this.YAngle = new Angle();
-            this.ZAngle = new Angle();
+            _translationToOrigin = new Point();
+            _xAxisRotationAngle = new Angle();
+            _yAxisRotationAngle = new Angle();
+            _zAxisRotationAngle = new Angle();
         }
 
         /// <summary>
-        /// Creates a new coordinate system that has the same axis as the world one and is only shifted to the given point
+        /// Creates a local coordinate system that has the same axes as the world coordinate system and has only been shifted to the given point
         /// </summary>
-        /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
-        public CoordinateSystem(Point passedOrigin)
+        /// <param name="passedTranslationToOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
+        public CoordinateSystem(Point passedTranslationToOrigin)
         {
-            Origin = new Point(passedOrigin);
-            this.XAngle = new Angle();
-            this.YAngle = new Angle();
-            this.ZAngle = new Angle();
+            _translationToOrigin = new Point(passedTranslationToOrigin);
+            _xAxisRotationAngle = new Angle();
+            _yAxisRotationAngle = new Angle();
+            _zAxisRotationAngle = new Angle();
         }
 
         /// <summary>
-        /// Creates a new coordinate system that has the same axis as the world one and is only shifted to the given point
+        /// 
         /// </summary>
         /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
-        public CoordinateSystem(Plane planeContainingTwoOfTheAxes, Vector axisInPassedPlaneToUseAsBase, 
+        public CoordinateSystem(Plane planeContainingTwoOfTheAxes, Vector axisInPassedPlaneToUseAsBase,
             Enums.Axis whichAxisIsPassed = Enums.Axis.X, Enums.AxisPlanes whichAxisPlaneIsPassed = Enums.AxisPlanes.XYPlane)
         {
             //use the base point of the passed axis as the origin point
-            Origin = new Point(axisInPassedPlaneToUseAsBase.BasePoint);
+            _translationToOrigin = new Point(axisInPassedPlaneToUseAsBase.BasePoint);
 
             //make sure the passed vector is in our plane
             if (!planeContainingTwoOfTheAxes.Contains(axisInPassedPlaneToUseAsBase))
@@ -145,7 +130,7 @@ namespace GeometryClassLibrary
             Vector zAxis = new Vector();
 
             //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
-            
+
             //Vector otherAxis;
 
             switch (whichAxisPlaneIsPassed)
@@ -171,7 +156,7 @@ namespace GeometryClassLibrary
                             throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
                     }
                     break;
-                case Enums.AxisPlanes.XZPlane: 
+                case Enums.AxisPlanes.XZPlane:
                     yAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
                     switch (whichAxisIsPassed)
                     {
@@ -229,9 +214,6 @@ namespace GeometryClassLibrary
 
             //now first find out the amount we need to rotate around the y axis to line up z in the yz plane
 
-
-
-
             //First project the z axis onto the xz plane
             Line projectedZAxis = ((Line)zAxis).ProjectOntoPlane(new Plane(Line.XAxis, Line.ZAxis));
 
@@ -243,7 +225,6 @@ namespace GeometryClassLibrary
             {
                 angleBetweenCurrentZAndYZPlane = angleBetweenCurrentZAndYZPlane.Negate();
             }
-
 
             //http://www.vitutor.com/geometry/distance/line_plane.html
             //we can simplify the equation as this since it is unit vectors
@@ -271,28 +252,28 @@ namespace GeometryClassLibrary
 
             //now we know all our angles, but we have to take the negative of them because we were transforming back to
             //the origin and we store the tranform from the origin
-            this.ZAngle = angleBetweenXAndXAxis.Negate();
-            this.XAngle = angleBetweenZAndZAxis.Negate();
-            this.YAngle = angleBetweenCurrentZAndYZPlane.Negate();
+            _xAxisRotationAngle = angleBetweenZAndZAxis.Negate();
+            _yAxisRotationAngle = angleBetweenCurrentZAndYZPlane.Negate();
+            _zAxisRotationAngle = angleBetweenXAndXAxis.Negate();
         }
 
         /// <summary>
-        /// Creates a new coordinate system with the given origin point and with the given rotations, all in repect to the
-        /// world coordinate system
+        /// Creates a new coordinate system with the given origin point and with the given rotations.
+        /// The inputs are extrinsic angle, i.e. about the global axes
         /// </summary>
-        /// <param name="passedOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
-        /// <param name="passedXRotation">The rotation around the world coordinate systems X axis to rotate around to get to this
+        /// <param name="passedTranslationToOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
+        /// <param name="passedXAxisRotation">The rotation around the world coordinate system's X axis to rotate around to get to this
         /// coordinate system</param>
-        /// <param name="passedYRotation">The rotation around the world coordinate systems Y axis to rotate around to get to this
+        /// <param name="passedYAxisRotation">The rotation around the world coordinate system's Y axis to rotate around to get to this
         /// coordinate system</param>
-        /// <param name="passedZRotation">The rotation around the world coordinate systems Z axis to rotate around to get to this
+        /// <param name="passedZAxisRotation">The rotation around the world coordinate system's Z axis to rotate around to get to this
         /// coordinate system</param>
-        public CoordinateSystem(Point passedOrigin, Angle passedZRotation, Angle passedXRotation, Angle passedYRotation)
+        public CoordinateSystem(Point passedTranslationToOrigin, Angle passedXAxisRotation, Angle passedYAxisRotation, Angle passedZAxisRotation)
         {
-            Origin = new Point(passedOrigin);
-            this.XAngle = new Angle(passedXRotation);
-            this.YAngle = new Angle(passedYRotation);
-            this.ZAngle = new Angle(passedZRotation);
+            _translationToOrigin = new Point(passedTranslationToOrigin);
+            _xAxisRotationAngle = new Angle(passedXAxisRotation);
+            _yAxisRotationAngle = new Angle(passedYAxisRotation);
+            _zAxisRotationAngle =new Angle( passedZAxisRotation);
         }
 
         /// <summary>
@@ -301,16 +282,15 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Coordinate System to copy</param>
         public CoordinateSystem(CoordinateSystem toCopy)
         {
-            Origin = new Point(toCopy.Origin);
-            this.XAngle = new Angle(toCopy.XAngle);
-            this.YAngle = new Angle(toCopy.YAngle);
-            this.ZAngle = new Angle(toCopy.ZAngle);
+            _translationToOrigin = new Point(toCopy.TranslationToOrigin);
+            _xAxisRotationAngle = new Angle(toCopy.XAxisRotationAngle);
+            _yAxisRotationAngle = new Angle(toCopy.YAxisRotationAngle);
+            _zAxisRotationAngle = new Angle(toCopy.ZAxisRotationAngle);
         }
 
         #endregion
 
         #region Overloaded Operators
-
 
         public override int GetHashCode()
         {
@@ -331,7 +311,6 @@ namespace GeometryClassLibrary
                 }
                 return false;
             }
-            // if the two points' x and y and z are equal, returns true
             return system1.Equals(system2);
         }
 
@@ -368,7 +347,7 @@ namespace GeometryClassLibrary
             {
                 CoordinateSystem comparableSystem = (CoordinateSystem)obj;
 
-                bool areOriginsEqual = this.Origin == comparableSystem.Origin;
+                bool areOriginsEqual = _translationToOrigin == comparableSystem.TranslationToOrigin;
 
                 return areOriginsEqual && this.AreDirectionsEquivalent(comparableSystem);
             }
@@ -384,129 +363,215 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
-        /// Returns this Coordinate System's axes rotations as a single rotation matrix
+        /// The rotation matrix that describes the local axes' orientation relative to the global axes.
+        /// This single rotation is the product of the three separate rotations that follow.
+        /// This rotation matrix is equivalent to switching the angles using the rotateFromThisTo(WorldCoordinateSystem) function
         /// </summary>
-        /// <returns></returns>
-        public Matrix GetRotationMatrix()
+        public Matrix RotationMatrixFromThisToWorld()
         {
-            return Matrix.RotationMatrixAboutZ(this.ZAngle) * Matrix.RotationMatrixAboutX(this.XAngle) * Matrix.RotationMatrixAboutY(this.YAngle);
+            //note: we have to multiply "backwards" of the order we rotate in to make this work correctly because how matrix multiplication works
+            return Matrix.RotationMatrixAboutZ(ZAxisRotationAngle) * Matrix.RotationMatrixAboutY(YAxisRotationAngle) * Matrix.RotationMatrixAboutX(XAxisRotationAngle);
         }
 
         /// <summary>
-        /// Determines if the two directions represented by the euler angles (x,y, and z angles) are equivalent 
-        /// Note: multiple combinations of euler triples can represent the same orientation
+        /// The rotation matrix that describes the local axes' orientation relative to the global axes.
+        /// This single rotation is the product of the three separate rotations that follow.
+        /// This rotation matrix is equivalent to switching the angles using the rotateToThisFrom(WorldCoordinateSystem) function
         /// </summary>
-        /// <param name="toCheckIfEquivalentTo">The Coordinate System to see if this one is equivalent in direction</param>
+        public Matrix RotationMatrixToThisFromWorld()
+        {
+            //note: we reverse the matrix by inverting it see:http://en.wikipedia.org/wiki/Rotation_matrix#Ambiguities (the part on alias or alibi)
+            //non inverted is like rotating the point and inverted is like rotating the axes
+            return this.RotationMatrixFromThisToWorld().Invert();
+        }
+
+        /// <summary>
+        /// Determines if the orientations of the axes of two different coordinate systems are identical. 
+        /// Note: a single orientation can be arrived at through several different sets of rotations.  Therefore,
+        /// this method simply checks if the overall rotations are the same.
+        /// </summary>
+        /// <param name="toCheckIfEquivalentTo">The coordinate system we are checking against</param>
         /// <returns>Returns a bool of whether or not the two directions are equivalent</returns>
         public bool AreDirectionsEquivalent(CoordinateSystem toCheckIfEquivalentTo)
         {
-            //we can check this by creating the axis and then seeing if they are the same (we actually only need to test two since we
-            //always follow the right hand rule)
-            bool sameXAxes = this.XAxisDirection == toCheckIfEquivalentTo.XAxisDirection;
-            bool sameYAxes = this.YAxisDirection == toCheckIfEquivalentTo.YAxisDirection;
+            //We have to convert the Matricies we are checking into Quarternions first because their orientations are easier to determine than matrices because only
+            //two Quaternion can represent the same orientation, q and -q, which is easy to check for.
+            //See: http://gamedev.stackexchange.com/a/75077
+            Matrix thisQuaternion = this.RotationMatrixFromThisToWorld().ConvertRotationMatrixToQuaternion();
+            Matrix otherQuaternion = toCheckIfEquivalentTo.RotationMatrixFromThisToWorld().ConvertRotationMatrixToQuaternion();
 
-            return sameXAxes && sameYAxes;
+            bool areSame = thisQuaternion == otherQuaternion;
+            bool areOpposite = thisQuaternion == otherQuaternion * -1;
+            return areSame || areOpposite; //since q == q && q == -q for Quaternion
         }
 
+        /// <summary>
+        /// Returns only the rotational Shift for this CoordinateSystem to apply to objects in order to only orient them in the passed CoordinateSystem, but not move them.
+        /// If the CoordinateSystem to rotate to is left out, it rotates it to the WorldCoordinateSystem
+        /// Note: Only works if this CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
+        /// perform this rotation it will casue incorrect results!
+        /// </summary>
+        /// <param name="systemToRotateTo">The CoordinateSystem to Rotate to from this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
+        /// <returns>Returns the Shift to apply to objects oriented in this CoordinateSystem in order to orient them in the same way as the passed CoordinateSystem</returns>
+        public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
+        {
+            //find the whole shift but then make a new one with only the rotations
+            Shift shiftTo = ShiftFromThisTo(systemToRotateTo);
+            return new Shift(shiftTo.RotationsToApply);
+        }
 
         /// <summary>
-        /// Returns the shift for this coordinate system to apply to objects in order to orient them back to the origin
-        /// Note: Only works if this is the current shift on the object! if it is already in world coordinates and you 
-        /// perform this shift it will move it from the world coordinates to coordinates that are opposite to this one!
+        /// Returns only the rotational Shift to apply to objects in order to only orient them in this CoordinateSystem when they are currently oriented in the passed CoordinateSystem, but does not move them.
+        /// If the CoordinateSystem to rotate from is left out, it assumes it is currently oriented in WorldCoordinateSystem
+        /// Note: Only works if the passed CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
+        /// perform this rotation it will casue incorrect results!
         /// </summary>
-        /// <returns>Returns the shift to apply to Objects in order to return them from this coordinate system to the world coordinate system</returns>
-        public Shift ShiftThatReturnsThisToWorldCoordinateSystem()
+        /// <param name="systemToRotateFrom">The CoordinateSystem to Rotate from to this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
+        /// <returns>Returns the Shift to apply to objects in order to orient them in this CoordinateSystem assuming they are oriented currently on the passed CoordinateSystem</returns>
+        public Shift RotateToThisFrom(CoordinateSystem systemToRotateFrom = null)
+        {
+            //find the whole shift but then make a new one with only the rotations
+            Shift shiftFrom = ShiftToThisFrom(systemToRotateFrom);
+            return new Shift(shiftFrom.RotationsToApply);
+        }
+
+        /// <summary>
+        /// Returns the Shift to apply to objects in order to postition and orient them in the passed CoordinateSystem when they are currently postioned in this CoordinateSystem.
+        /// If the system to shift to is left out, it defaults to the world coordinate System
+        /// Note: Only works if this CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
+        /// perform this shift it will give incorrect results!
+        /// </summary>
+        /// <param name="systemToShiftTo">The CoordinateSystem to shift to from this CoordinateSystem. Defaults to the WorldCoordinateSystem if left out</param>
+        /// <returns>Returns the Shift to apply to Objects in order to shift them from this CoordinateSystem to the passed CoordinateSystem</returns>
+        public Shift ShiftFromThisTo(CoordinateSystem systemToShiftTo = null)
+        {
+            //if its the world coordinates then just make the shift directly from the coordinate system since it is stored in terms of the world coordinates
+            if (systemToShiftTo == null || systemToShiftTo == CoordinateSystem.WorldCoordinateSystem)
+            {
+                //put the rotations on in the right order (XYZ)
+                List<Rotation> rotations = new List<Rotation>();
+                rotations.Add(new Rotation(Line.XAxis, this.XAxisRotationAngle));
+                rotations.Add(new Rotation(Line.YAxis, this.YAxisRotationAngle));
+                rotations.Add(new Rotation(Line.ZAxis, this.ZAxisRotationAngle));
+
+                //Then put the displacement to the origin
+                Point displacement = new Point(this.TranslationToOrigin);
+
+                //make and return the shift
+                return new Shift(rotations, displacement);
+            }
+            //If not then we need to figure out how to shift between the two coordinates
+            else
+            {
+                //the displacements just subtract since we want the passed system realtive to this system, but this is relative to the world coordinates
+                //so we have to rotate the result into this coordinates since we are shifting relative to this coordiantes
+                Point combinedDisplacement = (this.TranslationToOrigin - systemToShiftTo.TranslationToOrigin).Shift(systemToShiftTo.RotateToThisFrom());
+
+                //We need to figure out the equivalent matrix to the two shifts so we multiply them together
+                //Order is Important! (the first in multiplication order is the shift performed second and vice versa!)
+                //this rotation matrix is second because we have to find the equivalent of first shifting to the world from this coordinates and then again to the passed coordinates
+                Matrix shiftMatrix = systemToShiftTo.RotationMatrixToThisFromWorld() * this.RotationMatrixFromThisToWorld();
+
+                //now get the angles out of equivalent rotation matrix and put them into a rotation list for the shift
+                List<Angle> shiftAngles = shiftMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+                List<Rotation> shiftRotations = new List<Rotation>();
+                shiftRotations.Add(new Rotation(Line.XAxis, shiftAngles[0]));
+                shiftRotations.Add(new Rotation(Line.YAxis, shiftAngles[1]));
+                shiftRotations.Add(new Rotation(Line.ZAxis, shiftAngles[2]));
+
+                //and then make and return the new shift
+                return new Shift(shiftRotations, combinedDisplacement);
+            }
+        }
+
+        /// <summary>
+        /// Makes the Shift to apply to objects in order to postition and orient them in this CoordinateSystem when they are currently postioned in the passed CoordinateSystem.
+        /// If the system to shift from is left out, it defaults to the world coordinate System
+        /// Note: Only works if the passed CoordinateSystem is the current shift of the object! if it is in another CoordinateSystem and you 
+        /// perform this shift it will give incorrect results!
+        /// </summary>
+        /// <param name="systemToShiftFrom">The CoordinateSystem to shift from to this CoordinateSystem. Defaults to the WorldCoordinateSystem if left out</param>
+        /// <returns>Returns a Shft to be applied to an object to shift them from the passsed CoordinateSystem to this CoordinateSystem</returns>
+        public Shift ShiftToThisFrom(CoordinateSystem systemToShiftFrom = null)
         {
             //the simple way is just to create a shift with this coordinate system and then negate it
-            return new Shift(this).Negate();
+            Shift shift = ShiftFromThisTo(systemToShiftFrom).Negate();
+            return shift;
         }
 
         /// <summary>
         /// Find this coordinate system's (which is currently based on the passed system) shifts relative to the world coordinate 
         /// system instead of the passed coordinate system
         /// </summary>
-        /// <param name="passedCoordinateSystem">The coordinate System this coordinate system is currently based on</param>
+        /// <param name="thisRelativeTo">The coordinate System this coordinate system is currently based on</param>
         /// <returns>Returns a new Coordinate System that reflects this coordinate system based on the world coordinate system 
         /// instead of the passed one</returns>
-        public CoordinateSystem FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(CoordinateSystem passedCoordinateSystem)
+        public CoordinateSystem FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(CoordinateSystem thisRelativeTo)
         {
-            CoordinateSystem toReturn = new CoordinateSystem(this);
+            //coordinate system equations
+            //1 = passed (relative to world)
+            //2 = this (relative to s1)
+            //3 = this relative to world
 
-            //we have to shift our origin point first
-            //We need to rotate this origin based on the passed cordinate system in order to find out how its shifted relative
-            //to the world coordinate since this origin is stored relative to the passed one
-            toReturn.Origin = this.Origin.Shift(new Shift(passedCoordinateSystem.CoordinateSystemRotations));
+            //sys3 = rot1(rot2) + rot1(origin2) + origin1
 
-            //we then need to add the passed origin, since it is still relative in position to it
-            toReturn.Origin = toReturn.Origin + passedCoordinateSystem.Origin;
+            //first find the translation, which is the passedCordinates origin + this origin rotated from the passedSystem to the world system so it is in terms of the world system
+            //rot1(origin2) + origin1 [does both parts - shifts the point and then adds the origin point]
+            Point newOrigin = this.TranslationToOrigin.Shift(thisRelativeTo.ShiftFromThisTo());
 
-            //we can just add the rotations
-            //convert them to matricies
+            //now find the resulting rotaions and then pull out the angle data from the rotation matrix
+            //Note order of matrix multiplication is important! (the first in multiplication order is the shift performed second and vice versa!)
+            //rot1(rot2)
+            Matrix resultingMatrix = thisRelativeTo.RotationMatrixFromThisToWorld() * this.RotationMatrixFromThisToWorld();
+            List<Angle> resultingAngles = resultingMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
-            //this one - in terms of the passed one
-            //we need to invert this one
-            Matrix[] thisAnglesMatricies = new Matrix[] {
-                Matrix.RotationMatrixAboutX(this.XAngle),
-                Matrix.RotationMatrixAboutY(this.YAngle),
-                Matrix.RotationMatrixAboutZ(this.ZAngle)
-            };
-
-            //the passed one - in terms of the world
-            Matrix[] passedAnglesMatricies = new Matrix[] {
-                Matrix.RotationMatrixAboutX(passedCoordinateSystem.XAngle),
-                Matrix.RotationMatrixAboutY(passedCoordinateSystem.YAngle),
-                Matrix.RotationMatrixAboutZ(passedCoordinateSystem.ZAngle)
-            };
-
-            //multiply them (order is important! we multiply the passed coordinate system with this coordinate system
-            Matrix resultingSystem = (passedAnglesMatricies[0] * passedAnglesMatricies[1] * passedAnglesMatricies[2]) * (thisAnglesMatricies[0] *
-                thisAnglesMatricies[1] * thisAnglesMatricies[2]);
-
-            /*Matrix resultingSystem2 = (thisAnglesMatricies[0] * thisAnglesMatricies[1] * thisAnglesMatricies[2]) * (passedAnglesMatricies[0] *
-                passedAnglesMatricies[1] * passedAnglesMatricies[2]); 
-            Matrix resultingSystem3 = (passedAnglesMatricies[0] * thisAnglesMatricies[0]) * (passedAnglesMatricies[1] * thisAnglesMatricies[1]) * (passedAnglesMatricies[2] * thisAnglesMatricies[2]);
-            Matrix resultingSystem4 = (thisAnglesMatricies[0] * passedAnglesMatricies[0]) * (thisAnglesMatricies[1] * passedAnglesMatricies[1]) * (thisAnglesMatricies[2] * passedAnglesMatricies[2]);
-            */
-
-            //then pull out the angle data from the rotation matrix
-            List<Angle> resultingAngles = resultingSystem.GetAnglesOutOfRotationMatrix();
-
-            //List<Angle> resultingAngles2 = resultingSystem2.getAnglesOutOfRotationMatrix();
-            //List<Angle> resultingAngles3 = resultingSystem3.getAnglesOutOfRotationMatrix();
-            //List<Angle> resultingAngles4 = resultingSystem4.getAnglesOutOfRotationMatrix();
-
-            //and assign the values to our angles
-            toReturn.ZAngle = resultingAngles[0];
-            toReturn.XAngle = resultingAngles[1];
-            toReturn.YAngle = resultingAngles[2];
-
-            return toReturn;
+            //make and return our new system
+            return new CoordinateSystem(newOrigin, resultingAngles[0], resultingAngles[1], resultingAngles[2]);
         }
 
         /// <summary>
-        /// This shifts the corrdinate system using the given shift
+        /// This shifts the coordinate system relative to the origin using the given shift, assuming the Shift is in the passed CoordinateSystem
         /// </summary>
         /// <param name="passedShift">The shift to apply to the coordinate system</param>
+        /// <param name="shiftsCoordinateSystem">The CoordinateSystem that the Shift is created relative to. If left out it assumes it is in the WorldCoordinateSystem. 
+        /// Note: this is only in this Shift function becuase CoordinateSystems are in terms of the WorldCoordinateSystem. This is not done in the other Shifts because they 
+        /// should always be done in terms of the current CoordinateSystem and we do not need to keep track of how to get to them from the origin</param>
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
-        public CoordinateSystem Shift(Shift passedShift)
+        public CoordinateSystem Shift(Shift passedShift, CoordinateSystem shiftsCoordinateSystem = null)
         {
-            Point resultOrigin = this.Origin.Shift(passedShift);
+            //find the relative displacement by adding the displacement to this coordinate system's translation to origin (this is relative to WoorldCoordinates though)
+            Point displacementInCurrent = passedShift.Displacement + this.TranslationToOrigin;
 
-            //now we need to shift the angles
-            Matrix coordinateMatrix = this.GetRotationMatrix();
+            //Get the matrix representation of the coordinate system to start with as a base
+            Matrix cumulativeMatrix = this.RotationMatrixFromThisToWorld();
 
+            //for each of our rotations we need to figure out how that affects our resulting/cumulative matrix
             foreach (Rotation rotation in passedShift.RotationsToApply)
             {
                 //make the rotations into a matrix
                 Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(rotation);
 
-                //we need to figure out how to add the angles to get the resulting one
-                coordinateMatrix = coordinateMatrix.MultiplyBy(rotationMatrix);
+                //Multiply the new matrix by the cumulative one we have already
+                //Order is Important! (the first in multiplication order is the shift performed second and vice versa!)
+                cumulativeMatrix = rotationMatrix * cumulativeMatrix;
             }
 
-            List<Angle> resultAngles = coordinateMatrix.GetAnglesOutOfRotationMatrix();
+            //get the angles out of our final matrx
+            List<Angle> resultAngles = cumulativeMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
-            return new CoordinateSystem(resultOrigin, resultAngles[0], resultAngles[1], resultAngles[2]);
+            //create the coordinate system relative to the passed current one
+            CoordinateSystem relativeToCurrent = new CoordinateSystem(displacementInCurrent, resultAngles[0], resultAngles[1], resultAngles[2]);
+            
+            //if its the world coordinates then we can just return it
+            if (shiftsCoordinateSystem == null || shiftsCoordinateSystem == CoordinateSystem.WorldCoordinateSystem)
+            {
+                return relativeToCurrent;
+            }
+            //otherwise we have to tranform it to the origin based on the passed coords
+            else
+            {
+                return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(shiftsCoordinateSystem);
+            }
         }
 
         #endregion
