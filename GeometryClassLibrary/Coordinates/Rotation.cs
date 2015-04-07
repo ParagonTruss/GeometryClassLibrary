@@ -7,36 +7,44 @@ using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
+    [DebuggerDisplay("Angle to Rotate = {AngleToRotate.Degrees}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.Inches}, {AxisToRotateAround.BasePoint.Y.Inches}, {AxisToRotateAround.BasePoint.Z.Inches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.Inches}")]
     public class Rotation
     {
         #region Properties and Fields
-
-        /// <summary>
-        /// The angle around the given axis that this rotation reperesents
-        /// </summary>
         private Angle _angleToRotate;
+        private Line _axisToRotateAround;
+
         public Angle AngleToRotate
         {
-            get { return _angleToRotate; }
+            get
+            {
+                return _angleToRotate;
+            }
         }
 
-        /// <summary>
-        /// The axis around which this rotation reperesents
-        /// </summary>
-        private Line _axisToRotateAround;
         public Line AxisToRotateAround
         {
-            get { return _axisToRotateAround; }
+            get
+            {
+                return _axisToRotateAround;
+            }
         }
 
         #endregion
 
         #region Constructors
 
-        //There is no empty constructor because a rotation needs an axis to rotate around at the least
+        /// <summary>
+        /// Creates the identity rotation
+        /// </summary>
+        public Rotation()
+        {
+            this._angleToRotate = new Angle();
+            this._axisToRotateAround = new Line();
+        }
        
         /// <summary>
-        /// Creates a rotation about the inputted Axis and with the inputted Angle or 0 if the angle is omitted
+        /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
         /// <param name="howFarToRotate">The Angle that specifies how far to rotate</param>
@@ -44,7 +52,7 @@ namespace GeometryClassLibrary
         {
             if ((object)howFarToRotate == null)
             {
-                howFarToRotate = new Angle();
+                this._angleToRotate = new Angle();
             }
             else
             {
@@ -59,8 +67,8 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            _angleToRotate = toCopy.AngleToRotate;
-            _axisToRotateAround = new Line(toCopy.AxisToRotateAround);
+            this._angleToRotate = new Angle(toCopy._angleToRotate);
+            this._axisToRotateAround = new Line(toCopy._axisToRotateAround);
         }
 
         #endregion 
@@ -133,12 +141,9 @@ namespace GeometryClassLibrary
             {
                 Rotation rotate = (Rotation)obj;
 
-                bool axesEqual = this._axisToRotateAround == rotate._axisToRotateAround;
-                bool anglesEqual = this._angleToRotate == rotate._angleToRotate;
-
-                return anglesEqual && axesEqual;
+                return Matrix.RotationMatrixAboutAxis(this) == Matrix.RotationMatrixAboutAxis(rotate);
             }
-            //if it wasnt a rotation than its not equal
+            //if it wasn't a rotation than it's not equal
             catch (InvalidCastException)
             {
                 return false;

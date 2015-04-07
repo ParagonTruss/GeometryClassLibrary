@@ -4,6 +4,7 @@ using FluentAssertions;
 using ClearspanTypeLibrary;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using System.Collections.Generic;
 
 namespace ClearspanLibraryUnitTest
 {
@@ -1390,7 +1391,42 @@ namespace ClearspanLibraryUnitTest
             (actualMatrix == expectedMatrix).Should().BeTrue();
         }
 
-        #endregion
+        [Test()]
+        public void Matrix_GetAnglesOutOfRotationMatrix()
+        {
+            Angle xAngle = new Angle(AngleType.Degree, 90);
+            Angle yAngle = new Angle(AngleType.Degree, -33);
+            Angle zAngle = new Angle(AngleType.Degree, 40);
 
+            Matrix xMatrix = Matrix.RotationMatrixAboutX(xAngle);
+            Matrix yMatrix = Matrix.RotationMatrixAboutY(yAngle);
+            Matrix zMatrix = Matrix.RotationMatrixAboutZ(zAngle);
+
+            Matrix xyzRotation = zMatrix * yMatrix * xMatrix;
+
+            List<Angle> results = xyzRotation.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+
+            (results[0] == xAngle).Should().BeTrue();
+            (results[1] == yAngle).Should().BeTrue();
+            (results[2] == zAngle).Should().BeTrue();
+
+            Angle xAngle2 = new Angle(AngleType.Degree, -124);
+            Angle yAngle2 = new Angle(AngleType.Degree, -56.32);
+            Angle zAngle2 = new Angle(AngleType.Degree, 6.221);
+
+            Matrix xMatrix2 = Matrix.RotationMatrixAboutX(xAngle2);
+            Matrix yMatrix2 = Matrix.RotationMatrixAboutY(yAngle2);
+            Matrix zMatrix2 = Matrix.RotationMatrixAboutZ(zAngle2);
+
+            Matrix xyzRotation2 = zMatrix2 * yMatrix2 * xMatrix2;
+
+            List<Angle> results2 = xyzRotation2.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+
+            (results2[0] == xAngle2).Should().BeTrue();
+            (results2[1] == yAngle2).Should().BeTrue();
+            (results2[2] == zAngle2).Should().BeTrue();
+        }
+        
+        #endregion
     }
 }

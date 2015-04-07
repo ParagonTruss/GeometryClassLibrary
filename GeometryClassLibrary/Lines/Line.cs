@@ -470,7 +470,7 @@ namespace GeometryClassLibrary
 
             if (this.Equals(passedLine))
             {
-                return null;
+                return this.BasePoint;
             }
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
