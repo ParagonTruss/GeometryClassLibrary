@@ -13,22 +13,20 @@ namespace GeometryClassLibrary
     public class RectangularPrism : Polyhedron
     {
         /// <summary>
-        /// Creates a rectangular prism with the given Distances in the (repsective) z,y and x directions
+        /// Creates a rectangular prism with the given Distances in the x,y,z directions
         /// </summary>
-        /// <param name="passedWidth">The length of the prism in the Z direction</param>
-        /// <param name="passedHeight">The length of the prism in the Y direction</param>
-        /// <param name="passedLength">The length of the prism in the X direction</param>
-        public RectangularPrism(Distance passedWidth, Distance passedHeight, Distance passedLength)
+
+        public RectangularPrism(Distance passedWidth, Distance passedHeight, Distance passedLength )
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, passedLength.Inches, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(0, passedHeight.Inches, 0);
             Point bottomRightPoint = PointGenerator.MakePointWithInches(passedWidth.Inches, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(passedWidth.Inches, passedLength.Inches, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(passedWidth.Inches, passedHeight.Inches, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, passedHeight.Inches);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, passedLength.Inches, passedHeight.Inches);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, 0, passedHeight.Inches);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, passedLength.Inches, passedHeight.Inches);
+            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, passedLength.Inches);
+            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, passedHeight.Inches, passedLength.Inches);
+            Point backbottomrightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, 0, passedLength.Inches);
+            Point backtoprightpoint = PointGenerator.MakePointWithInches(passedWidth.Inches, passedHeight.Inches, passedLength.Inches);
 
             List<Polygon> polygonsMade = new List<Polygon>();
             polygonsMade.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));

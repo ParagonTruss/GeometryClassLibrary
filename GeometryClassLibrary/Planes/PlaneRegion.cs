@@ -208,8 +208,6 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new PlaneRegion that has been shifted</returns>
         public abstract PlaneRegion ShiftAsPlaneRegion(Shift passedShift);
 
-        public abstract PlaneRegion SystemShiftAsPlaneRegion(CoordinateSystem systemToShiftTo);
-
         /// <summary>
         /// Rotates the given Plane Region
         /// </summary>

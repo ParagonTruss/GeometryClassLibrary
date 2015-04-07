@@ -664,30 +664,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts the Line with the given Coordinate System
-        /// </summary>
-        /// <param name="toShiftWith">The coordinate System to shift the Line with</param>
-        /// <returns>Returhns a new Line that has been shifted with the Coordinate System</returns>
-        public Line SystemShift(CoordinateSystem toShiftWith)
-        {
-            return this.Shift(new Shift(toShiftWith));
-        }
-
-        /// <summary>
-        /// Shifts the Line from being in one coordinate system to another
-        /// </summary>
-        /// <param name="to">The coordinate System to shift the Line to</param>
-        /// <param name="from">The Coordinate System the Line is imn and to shift from</param>
-        /// <returns>returns a new Line that has been shifted to the new Coordinate System</returns>
-        public Line ShiftCoordinateSystemsToFrom(CoordinateSystem to, CoordinateSystem from = null)
-        {
-            //shift the parts anmd then put them together
-            Vector shifted = this.UnitVector(DistanceType.Inch).ShiftCoordinateSystemsToFrom(to, from);
-            Point shiftedBase = this.BasePoint.ShiftCoordinateSystemsToFrom(to, from);
-            return new Line(shifted.Direction, shiftedBase);
-        }
-
-        /// <summary>
         /// Makes the line into a plane perindicular to the xy plane
         /// </summary>
         /// <returns>returns a plane perpindicular to the XY-Plane that contains the given line</returns>

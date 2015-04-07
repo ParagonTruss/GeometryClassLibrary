@@ -331,26 +331,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts this List of LineSegments from one Coordinate System to the other
-        /// </summary>
-        /// <param name="passedLineSegments">The List of LineSegments to Shift from one Coordinate System to the other</param>
-        /// <param name="to">The Coordinate System to shift this List of LineSegments to</param>
-        /// <param name="from">The coordinate System this List of LineSegments is currently in. If left out it defaults to the 
-        /// World Coordinate Systemm</param>
-        /// <returns>Returns a new List of LineSegments that has been shifted to the given Coordinate System</returns>
-        public static List<LineSegment> ShiftCoordinateSystemsToFrom(this IList<LineSegment> passedLineSegments, CoordinateSystem to, CoordinateSystem from = null)
-        {
-            List<LineSegment> shiftedSegments = new List<LineSegment>();
-
-            foreach (var segment in passedLineSegments)
-            {
-                shiftedSegments.Add(segment.ShiftCoordinateSystemsToFrom(to, from));
-            }
-
-            return shiftedSegments;
-        }
-
-        /// <summary>
         /// Returns true if all of the passed LineSegments are in the same plane, false otherwise
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>

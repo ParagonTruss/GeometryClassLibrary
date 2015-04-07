@@ -753,54 +753,7 @@ namespace ClearspanTypeLibrary.Tests
             Polygon overlap23 = testPolyhedron2.OverlappingPolygon(testPolyhedron3);
             (overlap23 == null).Should().BeTrue();
         }
-
-        [Test()]
-        public void Polyhedron_ShiftCoordinateSystemsToFrom()
-        {
-            //make our polyhedron
-            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
-			
-            Polygon testPolygon = new Polygon(new List<Point>() {bottomLeft, bottomRight, topRight, topLeft});
-            Polyhedron testPolyhedron = new Polyhedron(new List<Polygon>(){testPolygon});
-
-            //now make one not in the World coordinate system
-            CoordinateSystem testSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -1, 1), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
-            Polyhedron notAtWorld = testPolyhedron.SystemShift(testSystem);
-
-            //now make yet another CoordinateSystem polyhedron
-            CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 0, 1), new Angle(AngleType.Degree, 45), new Angle(), new Angle());
-            Polyhedron notAtWorld2 = testPolyhedron.SystemShift(testSystem2);
-
-            //make 2 in terms of 1 and 1 in terms of 2
-            Polyhedron notAtWorld2In1Coords = notAtWorld2.SystemShift(testSystem);
-            Polyhedron notAtWorld1In2Coords = notAtWorld.SystemShift(testSystem2);
-
-            //now test shifting from world to another
-            Polyhedron worldTo1 = notAtWorld.ShiftCoordinateSystemsToFrom(testSystem);
-            (worldTo1 == testPolyhedron).Should().BeTrue();
-
-            Polyhedron worldTo2 = notAtWorld2.ShiftCoordinateSystemsToFrom(testSystem2);
-            (worldTo2 == testPolyhedron).Should().BeTrue();
-
-            //now from another to the world
-            Polyhedron oneToWorld = testPolyhedron.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem);
-            (oneToWorld == notAtWorld).Should().BeTrue();
-
-            Polyhedron twoToWorld = testPolyhedron.ShiftCoordinateSystemsToFrom(CoordinateSystem.WorldCoordinateSystem, testSystem2);
-            (twoToWorld == notAtWorld2).Should().BeTrue();
-
-            //now from one to another
-            Polyhedron oneToTwo = notAtWorld2In1Coords.ShiftCoordinateSystemsToFrom(testSystem2, testSystem);
-            (oneToTwo == testPolyhedron).Should().BeTrue();
-
-            Polyhedron twoToOne = notAtWorld1In2Coords.ShiftCoordinateSystemsToFrom(testSystem, testSystem2);
-            (twoToOne == testPolyhedron).Should().BeTrue();
-
-		}
-		
+	
         [Test()]
         public void Polyhedron_AllIntersectingPoints()
         {
