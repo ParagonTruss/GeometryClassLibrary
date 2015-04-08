@@ -110,22 +110,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a Shift that represents a shift so that the object will be oriented in the passed coordinate system
-        /// </summary>
-        /// <param name="coordinateSystemToShiftTo">The coordinate System to create the shift to reperesent</param>
-        public Shift(CoordinateSystem coordinateSystemToShiftTo)
-        {
-            //put the rotations on in the right order (Z,X,Y)
-            _rotationsToApply = new List<Rotation>();
-            _rotationsToApply.Add(new Rotation(Line.ZAxis, coordinateSystemToShiftTo.ZAngle));
-            _rotationsToApply.Add(new Rotation(Line.XAxis, coordinateSystemToShiftTo.XAngle));
-            _rotationsToApply.Add(new Rotation(Line.YAxis, coordinateSystemToShiftTo.YAngle));
-
-            //Then put the displacement to the origin
-            _displacement = new Point(coordinateSystemToShiftTo.Origin);
-        }
-
-        /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>
         /// <param name="passedRotation">The rotations that make up and are represented by this shift</param>
@@ -261,6 +245,12 @@ namespace GeometryClassLibrary
             {
                 Shift comparableShift = (Shift)obj;
 
+                //see if one is negated and the other isnt then negate the passed one and then continue
+                //if()
+                //{
+                //    comparableShift = comparableShift.Negate();
+                //}
+
                 //check that the rotations are all the same
                 //make sure the are equal in number
                 if (this.RotationsToApply.Count != comparableShift.RotationsToApply.Count)
@@ -278,7 +268,7 @@ namespace GeometryClassLibrary
                 }
 
                 //now we check if the displacements are the same because at this point the rotations 
-                return this.Displacement == comparableShift.Displacement;
+                return this.Displacement == comparableShift.Displacement && this._isNegatedShift == comparableShift._isNegatedShift;
             }
             //if it was not a shift than it was not equal
             catch (InvalidCastException)

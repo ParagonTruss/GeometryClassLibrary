@@ -111,9 +111,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a list of all the verticies in the Polyhedron
+        /// Returns a list of all the vertices in the Polyhedron
         /// </summary>
-        public override List<Point> Verticies
+        public override List<Point> Vertices
         {
             get
             {
@@ -276,19 +276,19 @@ namespace GeometryClassLibrary
 
             foreach (Polygon face in this.Faces)
             {
-                List<Point> verticies = face.Verticies;
-                Point previousVertex = verticies[verticies.Count - 1];
-                Point twoPreviousVertex = verticies[verticies.Count - 2];
+                List<Point> vertices = face.Vertices;
+                Point previousVertex = vertices[vertices.Count - 1];
+                Point twoPreviousVertex = vertices[vertices.Count - 2];
 
-                for (int i = 0; i < verticies.Count - 3; i++)
+                for (int i = 0; i < vertices.Count - 3; i++)
                 {
-                    Vector normalVector = new Vector(previousVertex - verticies[i]).CrossProduct(new Vector(twoPreviousVertex - verticies[i]));
-                    volume = volume + new Volume(VolumeType.CubicInches, (new Vector(verticies[i]) * normalVector / 6).Inches);
+                    Vector normalVector = new Vector(previousVertex - vertices[i]).CrossProduct(new Vector(twoPreviousVertex - vertices[i]));
+                    volume = volume + new Volume(VolumeType.CubicInches, (new Vector(vertices[i]) * normalVector / 6).Inches);
 
 
-                    Distance newX = normalVector.XComponent * (((verticies[i].X + previousVertex.X) ^ 2) + ((previousVertex.X + twoPreviousVertex.X) ^ 2) + ((twoPreviousVertex.X + verticies[i].X) ^ 2)).Inches;
-                    Distance newY = normalVector.XComponent * (((verticies[i].Y + previousVertex.Y) ^ 2) + ((previousVertex.Y + twoPreviousVertex.Y) ^ 2) + ((twoPreviousVertex.Y + verticies[i].Y) ^ 2)).Inches;
-                    Distance newZ = normalVector.XComponent * (((verticies[i].Z + previousVertex.Z) ^ 2) + ((previousVertex.Z + twoPreviousVertex.Z) ^ 2) + ((twoPreviousVertex.Z + verticies[i].Z) ^ 2)).Inches;
+                    Distance newX = normalVector.XComponent * (((vertices[i].X + previousVertex.X) ^ 2) + ((previousVertex.X + twoPreviousVertex.X) ^ 2) + ((twoPreviousVertex.X + vertices[i].X) ^ 2)).Inches;
+                    Distance newY = normalVector.XComponent * (((vertices[i].Y + previousVertex.Y) ^ 2) + ((previousVertex.Y + twoPreviousVertex.Y) ^ 2) + ((twoPreviousVertex.Y + vertices[i].Y) ^ 2)).Inches;
+                    Distance newZ = normalVector.XComponent * (((vertices[i].Z + previousVertex.Z) ^ 2) + ((previousVertex.Z + twoPreviousVertex.Z) ^ 2) + ((twoPreviousVertex.Z + vertices[i].Z) ^ 2)).Inches;
 
                     centroid = new Point(newX + centroid.X, newY + centroid.Y, newZ + centroid.Z);
                 }
@@ -313,17 +313,17 @@ namespace GeometryClassLibrary
 
                 foreach (Polygon face in this.Faces)
                 {
-                    //redo how the verticies are cycled through so one stays contant
-                    List<Point> faceVerticies = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2, 6, 1)).GetAllPoints();
-                    Point baseVertex = faceVerticies[0];
-                    Point previousVertex = faceVerticies[1];
+                    //redo how the vertices are cycled through so one stays contant
+                    List<Point> faceVertices = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2, 6, 1)).GetAllPoints();
+                    Point baseVertex = faceVertices[0];
+                    Point previousVertex = faceVertices[1];
 
-                    for (int i = 2; i < faceVerticies.Count; i++)
+                    for (int i = 2; i < faceVertices.Count; i++)
                     {
-                        Vector normalVector = new Vector(faceVerticies[i] - baseVertex).CrossProduct(new Vector(previousVertex - baseVertex));
+                        Vector normalVector = new Vector(faceVertices[i] - baseVertex).CrossProduct(new Vector(previousVertex - baseVertex));
                         volume = volume + new Volume(VolumeType.CubicInches, (new Vector(baseVertex) * normalVector / 6).Inches);
 
-                        previousVertex = faceVerticies[i];
+                        previousVertex = faceVertices[i];
                     }
                 }
                 throw new NotImplementedException();
@@ -332,23 +332,23 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds the Centroid of the Polyhedron by averaging the verticies
+        /// Finds the Centroid of the Polyhedron by averaging the vertices
         /// </summary>
-        /// <returns>The centroid of the Polyhedron based only on its verticies</returns>
+        /// <returns>The centroid of the Polyhedron based only on its vertices</returns>
         public Point Centroid()
         {
             Distance xValues = new Distance();
             Distance yValues = new Distance();
             Distance zValues = new Distance();
 
-            foreach (Point vertex in this.Verticies)
+            foreach (Point vertex in this.Vertices)
             {
                 xValues += vertex.X;
                 yValues += vertex.Y;
                 zValues += vertex.Z;
             }
 
-            int vertexCount = this.Verticies.Count();
+            int vertexCount = this.Vertices.Count();
             return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
         }
 
