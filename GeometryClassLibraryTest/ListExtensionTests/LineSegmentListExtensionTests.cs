@@ -30,12 +30,12 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
 
-            List<Point> verticies = lineSegments.GetAllPoints();
+            List<Point> vertices = lineSegments.GetAllPoints();
 
-            verticies.Count.Should().Be(3);
-            verticies.Contains(PointGenerator.MakePointWithInches(0, 2, 3)).Should().BeTrue();
-            verticies.Contains(PointGenerator.MakePointWithInches(-3, -2, 0)).Should().BeTrue();
-            verticies.Contains(PointGenerator.MakePointWithInches(1, 1, -1)).Should().BeTrue();
+            vertices.Count.Should().Be(3);
+            vertices.Contains(PointGenerator.MakePointWithInches(0, 2, 3)).Should().BeTrue();
+            vertices.Contains(PointGenerator.MakePointWithInches(-3, -2, 0)).Should().BeTrue();
+            vertices.Contains(PointGenerator.MakePointWithInches(1, 1, -1)).Should().BeTrue();
 
             List<LineSegment> nonClosed = new List<LineSegment>();
             nonClosed.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0)));
