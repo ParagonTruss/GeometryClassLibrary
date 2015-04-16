@@ -530,12 +530,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// This shifts the coordinate system relative to the origin using the given shift, assuming the Shift is in the passed CoordinateSystem
+        /// This shifts the coordinate system relative to the world system with the given shift
         /// </summary>
         /// <param name="passedShift">The shift to apply to the coordinate system</param>
-        /// <param name="shiftsCoordinateSystem">The CoordinateSystem that the Shift is created relative to. If left out it assumes it is in the WorldCoordinateSystem. 
-        /// Note: this is only in this Shift function becuase CoordinateSystems are in terms of the WorldCoordinateSystem. This is not done in the other Shifts because they 
-        /// should always be done in terms of the current CoordinateSystem and we do not need to keep track of how to get to them from the origin</param>
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
         public CoordinateSystem Shift(Shift passedShift)
         {
@@ -564,36 +561,21 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Shifts a coordinate system that is currently based on the passed coordinate and not the world coordinates with the given shift that is in terms of the current 
-        /// CoordinateSystem as well and returns it in terms of the world coordinates
+        /// Shifts this system which is based on the world system with a shift that is relative to (in terms of) the passed system.
+        /// This shifts this system relative to the world system with the equivalent of the shift in terms of the world system.
+        /// ".Shift()" can be viewed as a special case of this relative shift where the system the shift is in terms of happens to be the world system
         /// </summary>
-        /// <param name="passedShift">The shift to apply that is in terms of the current coordinate system</param>
-        /// <param name="shiftsCoordinateSystem">The coordinate system this coordinate system is relative to and that the shif is in terms of</param>
-        /// <returns>Returns a new Coordinate System that is based on the World coordinate systems that has been shifted with the given shift relative to the passed coordiante system</returns>
-        public CoordinateSystem ShiftSystemBasedOnPassedSystemAndReturnBasedOnWorld(Shift passedShift, CoordinateSystem shiftsCoordinateSystem)
-        {
-            //first shift it based on the shift 
-            CoordinateSystem relativeToCurrent = this.Shift(passedShift);
-            //and then return the newlyshifted system in terms of the world when it is currently raltive to the passed system
-            return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(shiftsCoordinateSystem);
-        }
-
-        /// <summary>
-        /// Shifts a coordinate system that is based on the world coordinate systems with a shift that is in terms of the passed coordinate system so that this coordiante
-        /// system is moved with the shift in terms of the passed system, but relative to the world coordinate system so that the effects are the same
-        /// </summary>
-        /// <param name="passedShift">The shift that is in terms of the passed system to apply to this coordinate system</param>
-        /// <param name="systemCurrentlyIn">The Coordinate system the shift is in terms of</param>
-        /// <returns>Returns a new Coordinate System that has been shifted relative to the world coordinate system so that it has been shifted equivalently to the shift 
-        /// in the passed system</returns>
-        public CoordinateSystem ShiftSystemBasedOnWorldCoordinatesShiftInPassedSystem(Shift passedShift, CoordinateSystem systemCurrentlyIn)
+        /// <param name="passedShift">The shift that is based on the passed system to apply to this system</param>
+        /// <param name="systemShiftIsRelativeTo">The system the shift is based in/ in terms of/ relative to</param>
+        /// <returns>Returns a new CoordinateSystem that is based on the world system and has been shifted with the equivalent of the passed shift put in terms of world system</returns>
+        public CoordinateSystem RelativeShift(Shift passedShift, CoordinateSystem systemShiftIsRelativeTo)
         {
             //change the coordinate system so that it is in terms of the current system so we can shift it relative to that system and 
             //then we need to shift it so its back on the worldCoordinates
-            CoordinateSystem inCurrent = this.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftFromThisTo(systemCurrentlyIn));
+            CoordinateSystem inCurrent = this.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftFromThisTo(systemShiftIsRelativeTo));
             CoordinateSystem shiftedInCurrent = inCurrent.Shift(passedShift);
             //now put it back in terms of the world and return it
-            return shiftedInCurrent.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(systemCurrentlyIn));
+            return shiftedInCurrent.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(systemShiftIsRelativeTo));
         }
 
         #endregion
