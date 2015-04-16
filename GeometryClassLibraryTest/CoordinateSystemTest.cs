@@ -269,7 +269,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void CoordinateSystem_Shift_SingleAxisRotation()
         {
-            CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0));  
+            CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0));
             Shift testShift1 = new Shift(new Rotation(new Line(Line.YAxis.Direction, testSystem1.TranslationToOrigin), new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
             CoordinateSystem results1 = testSystem1.Shift(testShift1);
             CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 3, 5), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 135), new Angle(AngleType.Degree, 0));
@@ -286,31 +286,31 @@ namespace GeometryClassLibraryTest
         public void CoordinateSystem_Shift_MultipleAxisRotations()
         {
             CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 30), new Angle(AngleType.Degree, 0));
-            
+
             List<Rotation> testRotations1 = new List<Rotation>();
             testRotations1.Add(new Rotation(new Line(Line.ZAxis.Direction, testSystem1.TranslationToOrigin), new Angle(AngleType.Degree, -90)));
             testRotations1.Add(new Rotation(new Line(Line.XAxis.Direction, testSystem1.TranslationToOrigin), new Angle(AngleType.Degree, 30)));
             Shift testShift1 = new Shift(testRotations1, PointGenerator.MakePointWithInches(0, -2, 5));
-            
+
             CoordinateSystem results1 = testSystem1.Shift(testShift1);
             CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 0, 8), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 60), new Angle(AngleType.Degree, -90));
             (results1 == expectedSystem1).Should().BeTrue();
 
             //now try another
             CoordinateSystem testSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -30));
-            
+
             List<Rotation> testRotations2 = new List<Rotation>();
             testRotations2.Add(new Rotation(new Line(Line.ZAxis.Direction, testSystem2.TranslationToOrigin), new Angle(AngleType.Degree, -15)));
             testRotations2.Add(new Rotation(new Line(Line.XAxis.Direction, testSystem2.TranslationToOrigin), new Angle(AngleType.Degree, 90)));
             testRotations2.Add(new Rotation(new Line(Line.ZAxis.Direction, testSystem2.TranslationToOrigin), new Angle(AngleType.Degree, 90)));
             testRotations2.Add(new Rotation(new Line(Line.XAxis.Direction, testSystem2.TranslationToOrigin), new Angle(AngleType.Degree, -90)));
             Shift testShift2 = new Shift(testRotations2, PointGenerator.MakePointWithInches(2, 0, -1));
-            
+
             CoordinateSystem results2 = testSystem2.Shift(testShift2);
             CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0));
             (results2 == expectedSystem2).Should().BeTrue();
         }
-        
+
         [Test()]
         public void CoordinateSystem_Shift_NonAxisRotation()
         {
@@ -329,27 +329,6 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void CoordinateSystem_Shift_InNonWorldCoords()
-        {
-            CoordinateSystem currrentSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, -1, 1), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testSystem1BasedOnCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
-
-            Shift testShift1 = new Shift(new Rotation(new Line(Line.ZAxis.Direction, testSystem1BasedOnCurrent.TranslationToOrigin), new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
-            CoordinateSystem results1 = testSystem1BasedOnCurrent.Shift(testShift1, currrentSystem1);
-            
-            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -1, 4), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
-            (results1 == expectedSystem1).Should().BeTrue();
-
-            //now try another one
-            CoordinateSystem currrentSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33, -72, 9), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testSystem2BasedOnCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -11, -27), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90));
-            Shift testShift2 = new Shift(new Rotation(new Line(Line.XAxis.Direction, testSystem2BasedOnCurrent.TranslationToOrigin), new Angle(AngleType.Degree, -45)), PointGenerator.MakePointWithInches(2, 3, 8));
-            CoordinateSystem results2 = testSystem2BasedOnCurrent.Shift(testShift2, currrentSystem2);
-            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33 + 5.65685424949 - 13.4350288425, -72 + 7, 9 - 5.65685424949 - 13.4350288425), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 0));
-            (results2 == expectedSystem2).Should().BeTrue();
-        }
-
-        [Test()]
         public void CoordinateSystem_Shift_NotThroughOrigin()
         {
             CoordinateSystem testSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0));
@@ -364,6 +343,49 @@ namespace GeometryClassLibraryTest
             CoordinateSystem results2 = testSystem2.Shift(testShift2);
             CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -1, 2), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
             (results2 == expectedSystem2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void CoordinateSystem_Shift_CoordinatesBasedOnOtherSystem()
+        {
+            CoordinateSystem currrentSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(0, -1, 1), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
+            CoordinateSystem testSystem1BasedOnCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 2, 3), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
+
+            Shift testShift1 = new Shift(new Rotation(new Line(Line.ZAxis.Direction, testSystem1BasedOnCurrent.TranslationToOrigin), new Angle(AngleType.Degree, 90)), PointGenerator.MakePointWithInches(-1, 1, 2));
+            CoordinateSystem results1 = testSystem1BasedOnCurrent.ShiftSystemBasedOnPassedSystemAndReturnBasedOnWorld(testShift1, currrentSystem1);
+
+            CoordinateSystem expectedSystem1 = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -1, 4), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 0));
+            (results1 == expectedSystem1).Should().BeTrue();
+
+            //now try another one
+            CoordinateSystem currrentSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33, -72, 9), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 90));
+            CoordinateSystem testSystem2BasedOnCurrent = new CoordinateSystem(PointGenerator.MakePointWithInches(5, -11, -27), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90));
+            Shift testShift2 = new Shift(new Rotation(new Line(Line.XAxis.Direction, testSystem2BasedOnCurrent.TranslationToOrigin), new Angle(AngleType.Degree, -45)), PointGenerator.MakePointWithInches(2, 3, 8));
+            CoordinateSystem results2 = testSystem2BasedOnCurrent.ShiftSystemBasedOnPassedSystemAndReturnBasedOnWorld(testShift2, currrentSystem2);
+            CoordinateSystem expectedSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(33 + 5.65685424949 - 13.4350288425, -72 + 7, 9 - 5.65685424949 - 13.4350288425), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 0));
+            (results2 == expectedSystem2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void CoordinateSystem_Shift_CoordinateBasedOnWorldShiftBasedOnOther()
+        {
+            //a nice simple test
+            CoordinateSystem testOriginalCoords = new CoordinateSystem(CoordinateSystem.WorldCoordinateSystem);
+            CoordinateSystem testCurrentSystem = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 0, -1), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
+
+            //now shift it a bit
+            CoordinateSystem shifted = testOriginalCoords.ShiftSystemBasedOnWorldCoordinatesShiftInPassedSystem(new Shift(PointGenerator.MakePointWithInches(2, 0, 1)), testCurrentSystem);
+            (shifted == new CoordinateSystem(PointGenerator.MakePointWithInches(1.4, 1.4, 1))).Should().BeTrue();
+
+            //now do one with more complicated shifts
+            CoordinateSystem secondTest = new CoordinateSystem(PointGenerator.MakePointWithInches(2, -3, 3), new Angle(AngleType.Degree, 90), new Angle(), new Angle());
+            CoordinateSystem testCurrentSystem2 = new CoordinateSystem(PointGenerator.MakePointWithInches(1, 0, -1), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
+
+            Shift secondShift = new Shift(new List<Rotation>() { new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)) }, PointGenerator.MakePointWithInches(2, -2, -2));
+            CoordinateSystem shifted2 = secondTest.ShiftSystemBasedOnWorldCoordinatesShiftInPassedSystem(secondShift, testCurrentSystem2);
+
+            CoordinateSystem expected2 = new CoordinateSystem(PointGenerator.MakePointWithInches(7, -1, -4), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), new Angle());
+            (shifted2 == expected2).Should().BeTrue();
         }
 
         [Test]
@@ -454,7 +476,7 @@ namespace GeometryClassLibraryTest
             //note: WorldCoords.ShiftToThisFrom(CURRENT_COORDS) is equivalent to CURRENT_COORDS.ShiftFromThisTo(WorldCoords)
             (block2ToWorldFromCurrent == block2FromCurrentToWorld).Should().BeTrue();
         }
-        
+
         //these methods are for checking and demonstrating how coordinate systems can/should be used
         #region Coordinate System Switching Helper Stuff
 

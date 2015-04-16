@@ -537,7 +537,7 @@ namespace GeometryClassLibrary
         /// Note: this is only in this Shift function becuase CoordinateSystems are in terms of the WorldCoordinateSystem. This is not done in the other Shifts because they 
         /// should always be done in terms of the current CoordinateSystem and we do not need to keep track of how to get to them from the origin</param>
         /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
-        public CoordinateSystem Shift(Shift passedShift, CoordinateSystem shiftsCoordinateSystem = null)
+        public CoordinateSystem Shift(Shift passedShift)
         {
             //find the relative displacement by adding the displacement to this coordinate system's translation to origin (this is relative to WoorldCoordinates though)
             Point displacementInCurrent = this.TranslationToOrigin.Shift(passedShift);
@@ -560,18 +560,40 @@ namespace GeometryClassLibrary
             List<Angle> resultAngles = cumulativeMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
 
             //create the coordinate system relative to the passed current one
-            CoordinateSystem relativeToCurrent = new CoordinateSystem(displacementInCurrent, resultAngles[0], resultAngles[1], resultAngles[2]);
-            
-            //if its the world coordinates then we can just return it
-            if (shiftsCoordinateSystem == null || shiftsCoordinateSystem == CoordinateSystem.WorldCoordinateSystem)
-            {
-                return relativeToCurrent;
-            }
-            //otherwise we have to tranform it to the origin based on the passed coords
-            else
-            {
-                return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(shiftsCoordinateSystem);
-            }
+            return new CoordinateSystem(displacementInCurrent, resultAngles[0], resultAngles[1], resultAngles[2]);
+        }
+
+        /// <summary>
+        /// Shifts a coordinate system that is currently based on the passed coordinate and not the world coordinates with the given shift that is in terms of the current 
+        /// CoordinateSystem as well and returns it in terms of the world coordinates
+        /// </summary>
+        /// <param name="passedShift">The shift to apply that is in terms of the current coordinate system</param>
+        /// <param name="shiftsCoordinateSystem">The coordinate system this coordinate system is relative to and that the shif is in terms of</param>
+        /// <returns>Returns a new Coordinate System that is based on the World coordinate systems that has been shifted with the given shift relative to the passed coordiante system</returns>
+        public CoordinateSystem ShiftSystemBasedOnPassedSystemAndReturnBasedOnWorld(Shift passedShift, CoordinateSystem shiftsCoordinateSystem)
+        {
+            //first shift it based on the shift 
+            CoordinateSystem relativeToCurrent = this.Shift(passedShift);
+            //and then return the newlyshifted system in terms of the world when it is currently raltive to the passed system
+            return relativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(shiftsCoordinateSystem);
+        }
+
+        /// <summary>
+        /// Shifts a coordinate system that is based on the world coordinate systems with a shift that is in terms of the passed coordinate system so that this coordiante
+        /// system is moved with the shift in terms of the passed system, but relative to the world coordinate system so that the effects are the same
+        /// </summary>
+        /// <param name="passedShift">The shift that is in terms of the passed system to apply to this coordinate system</param>
+        /// <param name="systemCurrentlyIn">The Coordinate system the shift is in terms of</param>
+        /// <returns>Returns a new Coordinate System that has been shifted relative to the world coordinate system so that it has been shifted equivalently to the shift 
+        /// in the passed system</returns>
+        public CoordinateSystem ShiftSystemBasedOnWorldCoordinatesShiftInPassedSystem(Shift passedShift, CoordinateSystem systemCurrentlyIn)
+        {
+            //change the coordinate system so that it is in terms of the current system so we can shift it relative to that system and 
+            //then we need to shift it so its back on the worldCoordinates
+            CoordinateSystem inCurrent = this.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftFromThisTo(systemCurrentlyIn));
+            CoordinateSystem shiftedInCurrent = inCurrent.Shift(passedShift);
+            //now put it back in terms of the world and return it
+            return shiftedInCurrent.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(systemCurrentlyIn));
         }
 
         #endregion
