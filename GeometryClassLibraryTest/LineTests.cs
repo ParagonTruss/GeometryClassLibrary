@@ -465,9 +465,9 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
             Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
             Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
-            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
-            List<Line> lines = new List<Line> { line2, line3, line5, line4, line1 };
+            List<Line> lines = new List<Line> { line2, line3, line4, line1 };
+
 
             lines.Sort();
 
@@ -475,7 +475,6 @@ namespace ClearspanTypeLibrary.Tests
             lines[1].Should().Be(line3);
             lines[2].Should().Be(line4);
             lines[3].Should().Be(line2);
-            lines[4].Should().Be(line5);
         }
 
         [Test()]
