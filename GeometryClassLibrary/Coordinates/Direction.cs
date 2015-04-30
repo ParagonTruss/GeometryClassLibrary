@@ -16,6 +16,31 @@ namespace GeometryClassLibrary
     public class Direction
     {
         #region Properties and Fields
+        /// <summary>
+        /// A staticly defined Direction that is positive in the X direction, which can be thought of as going "right" in the XY plane.
+        /// This is also the "zero" equivalent and is the same as new Direction()
+        /// </summary>
+        public static readonly Direction Right = new Direction();
+        /// <summary>
+        /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
+        /// </summary>
+        public static readonly Direction Up = new Direction(new Angle(AngleType.Degree, 90));
+        /// <summary>
+        /// A staticly defined Direction that is negative in the X direction, which can be thought of as going "left" in the XY plane
+        /// </summary>
+        public static readonly Direction Left = new Direction(new Angle(AngleType.Degree, 180));
+        /// <summary>
+        /// A staticly defined Direction that is negative in the Y direction, which can be thought of as going "down" in the XY plane
+        /// </summary>
+        public static readonly Direction Down = new Direction(new Angle(AngleType.Degree, 270));
+        /// <summary>
+        /// A staticly defined Direction that is positive in the Z direction, which can be thought of comming out of the screen towards you when viewing the XY plane
+        /// </summary>
+        public static readonly Direction Out = new Direction(new Angle(), new Angle(AngleType.Degree, 0));
+        /// <summary>
+        /// A staticly defined Direction that is negative in the Z direction, which can be thought of going back out of the screen away you when viewing the XY plane
+        /// </summary>
+        public static readonly Direction Back = new Direction(new Angle(), new Angle(AngleType.Degree, 180));
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azumuth)

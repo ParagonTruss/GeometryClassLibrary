@@ -11,9 +11,9 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Direction_ConstuctorsAndEquality()
         {
-            Direction direction1 = new Direction();
+            Direction direction1 = Direction.Up;
             Direction direction2 = new Direction(new Angle(AngleType.Degree, 33));
-            Direction direction3 = new Direction(new Angle(AngleType.Degree, 0), new Angle(AngleType.Degree, 0));
+            Direction direction3 = Direction.Out;
             Direction direction4 = new Direction(new Angle(AngleType.Degree, 33), new Angle(AngleType.Degree, 90));
             Direction direction5 = null;
 
@@ -40,13 +40,13 @@ namespace GeometryClassLibraryTest
 
             Point testPoint = PointGenerator.MakePointWithInches(0.006, 0.003, -1.4999);
             Direction testErrorHandling = new Direction(testPoint);
-            Direction expectedErrorDirection = new Direction(new Angle(), new Angle(AngleType.Degree, 180));
+            Direction expectedErrorDirection = Direction.Back;
             (testErrorHandling == expectedErrorDirection).Should().BeTrue();
 
             //now try the 0 Direction too
             Point testPoint0 = PointGenerator.MakePointWithInches(0.006, 0.003, 1.4999);
             Direction testErrorHandling0 = new Direction(testPoint0);
-            Direction expectedErrorDirection0 = new Direction(new Angle(), new Angle());
+            Direction expectedErrorDirection0 = Direction.Out;
             (testErrorHandling0 == expectedErrorDirection0).Should().BeTrue();
 
             Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1.0 / 32, 0.006, 1.488);
