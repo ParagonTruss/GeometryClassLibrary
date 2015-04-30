@@ -81,9 +81,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Makes a polygon by connecting the points with line segments in the order they are in the list
+        /// Makes a polygon by connecting the points with line segments in the order they are in the list. If they are not in the correct order you can tell it
+        /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
-        /// <param name="passedPoints"></param>
+        /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
         public Polygon(List<Point> passedPoints)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
 
@@ -94,7 +95,6 @@ namespace GeometryClassLibrary
         public Polygon(List<LineSegment> passedBoundaries)
             : base()
         {
-
             bool isClosed = passedBoundaries.DoFormClosedRegion();
             bool areCoplanar = passedBoundaries.AreAllCoplanar();
 
@@ -341,7 +341,7 @@ namespace GeometryClassLibrary
 
         }
 
-        public Polygon Shift(Shift passedShift)
+        public new Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.LineSegments.Shift(passedShift));
         }

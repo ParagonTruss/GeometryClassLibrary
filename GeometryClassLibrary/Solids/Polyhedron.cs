@@ -746,6 +746,7 @@ namespace GeometryClassLibrary
             //just brute force the sides until we find one and then return it
             foreach (Polygon side in this.Polygons)
             {
+                //shoot a line out from the normal and see if it intesects th other?
                 foreach (Polygon sideOther in toFindOverlapWith.Polygons)
                 {
                     if (side.Contains(sideOther))

@@ -273,7 +273,7 @@ namespace GeometryClassLibrary
             _translationToOrigin = new Point(passedTranslationToOrigin);
             _xAxisRotationAngle = new Angle(passedXAxisRotation);
             _yAxisRotationAngle = new Angle(passedYAxisRotation);
-            _zAxisRotationAngle =new Angle( passedZAxisRotation);
+            _zAxisRotationAngle =new Angle(passedZAxisRotation);
         }
 
         /// <summary>

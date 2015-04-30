@@ -64,7 +64,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift">The shift to apply to the nonPolygon</param>
         /// <returns>A new nonPolygon that has been shifted</returns>
-        public NonPolygon Shift(Shift passedShift)
+        public new NonPolygon Shift(Shift passedShift)
         {
             return new NonPolygon(this.Edges.Shift(passedShift));
         }
