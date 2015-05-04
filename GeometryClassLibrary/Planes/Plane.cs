@@ -290,6 +290,18 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Shifts the plane region with the given shift
+        /// </summary>
+        /// <param name="shiftToApply">The shift to apply to this plane</param>
+        /// <returns>Returns a new object of Plane that has been shifted</returns>
+        public Plane Shift(Shift shiftToApply)
+        {
+            Point newBasePoint = this.BasePoint.Shift(shiftToApply);
+            Vector newNormalVector = this.NormalVector.Shift(shiftToApply);
+            return new Plane(newNormalVector.Direction, newBasePoint);
+        }
+
+        /// <summary>
         /// This function returns true if both the points are on the same side of this plane. 
         /// If either point is on the plane it will return false
         /// </summary>

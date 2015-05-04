@@ -168,10 +168,6 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
-        /* You may notice that we do not overload the increment and decrement operators nor do we overload multiplication and division.
-         * This is because the user of this library does not know what is being internally stored and those operations will not return useful information. 
-         */
-
         /** For now these dont really make sense
          * public static Shift operator +(Shift d1, Shift d2)
         {
