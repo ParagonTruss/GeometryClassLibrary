@@ -13,4 +13,9 @@
     <copyright>Copyright Clearspan Components Inc 2014</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
   </metadata>
+  <dependencies>
+    <dependency id="UnitClassLibrary" version="[1.2.5598.23349]" />
+    <dependency id="StyleCopSettings" version="[1.0.2]" />
+    <dependency id="StyleCop.MSBuild" version="[4.7.49.1]" />
+  </dependencies>
 </package>
