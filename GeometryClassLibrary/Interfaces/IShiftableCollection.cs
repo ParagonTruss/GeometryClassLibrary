@@ -16,7 +16,8 @@ namespace PrefabricatedComponentTypeLibrary
         /// because if we do this outside, we will lose our home coordinates
         /// </summary>
         /// <param name="shiftToApply">The shift to apply to this object's geometry</param>
-        void ShiftGeometry(Shift shiftToApply);
+        /// <param name="systemShiftIsBasedOn">The coordinate system the shift is based on and to shift in</param>
+        void ShiftGeometry(Shift shiftToApply, CoordinateSystem systemShiftIsBasedOn);
 
         /// <summary>
         /// Shifts this object's geometry to the given coordinate system. This is distinct form the other

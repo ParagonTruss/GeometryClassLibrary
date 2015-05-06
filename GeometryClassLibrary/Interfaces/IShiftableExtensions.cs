@@ -17,8 +17,13 @@ namespace PrefabricatedComponentTypeLibrary
         /// </summary>
         /// <param name="shiftableObject">The shiftable object to shift the coodinate system of</param>
         /// <param name="passedShift">The shift to apply to this object's coordinate system</param>
-        public static void Shift(this IShiftable shiftableObject, Shift passedShift)
+        /// <param name="systemShiftIsBasedOn">The coordinate system the shift is based on and to shift in. If left out it defaults to the current coordinate system</param>
+        public static void Shift(this IShiftable shiftableObject, Shift passedShift, CoordinateSystem systemShiftIsBasedOn = null)
         {
+            if(systemShiftIsBasedOn == null)
+            {
+                systemShiftIsBasedOn = shiftableObject.CurrentCoordinateSystem;
+            }
             shiftableObject.HomeCoordinateSystem = shiftableObject.HomeCoordinateSystem.RelativeShift(passedShift, shiftableObject.CurrentCoordinateSystem);
         }
 
