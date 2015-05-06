@@ -20,7 +20,7 @@ namespace PrefabricatedComponentTypeLibrary
         public static void Shift(this IShiftableCollection shiftableObject, Shift passedShift)
         {
             shiftableObject.ShiftGeometry(passedShift);
-            shiftableObject.CoordinateSystem = shiftableObject.CoordinateSystem.RelativeShift(passedShift, shiftableObject.CurrentCoordinateSystem);
+            shiftableObject.HomeCoordinateSystem = shiftableObject.HomeCoordinateSystem.RelativeShift(passedShift, shiftableObject.CurrentCoordinateSystem);
         }
 
         /// <summary>
@@ -28,9 +28,9 @@ namespace PrefabricatedComponentTypeLibrary
         /// </summary>
         /// <param name="shiftableObject">The shiftable object to change the Coordinate System to</param>
         /// <param name="toShiftTo">The CoordianteSystem to shift this object into the perspective of</param>
-        public static void ShiftToAnotherCoordinateSystem(this IShiftableCollection shiftableObject, CoordinateSystem toShiftTo)
+        public static void ShiftToCoordinateSystem(this IShiftableCollection shiftableObject, CoordinateSystem toShiftTo)
         {
-            shiftableObject.ShiftGeometryToAnotherCoordinateSystem(toShiftTo);
+            shiftableObject.ShiftGeometryToCoordinateSystem(toShiftTo);
             shiftableObject.CurrentCoordinateSystem = toShiftTo;
         }
     }

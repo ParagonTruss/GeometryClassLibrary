@@ -7,7 +7,7 @@ namespace PrefabricatedComponentTypeLibrary
         /// <summary>
         /// The coordinate system that has this object at the base point
         /// </summary>
-        CoordinateSystem CoordinateSystem { get; set; }
+        CoordinateSystem HomeCoordinateSystem { get; set; }
 
         /// <summary>
         /// The coordinate system that this object is currently oriented in

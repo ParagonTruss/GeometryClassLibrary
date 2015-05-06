@@ -27,6 +27,6 @@ namespace PrefabricatedComponentTypeLibrary
         /// because if we do this outside, we will lose our home coordinates
         /// </summary>
         /// <param name="toShiftTo"></param>
-        void ShiftGeometryToAnotherCoordinateSystem(CoordinateSystem toShiftTo);
+        void ShiftGeometryToCoordinateSystem(CoordinateSystem toShiftTo);
     }
 }
