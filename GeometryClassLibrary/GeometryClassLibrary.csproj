@@ -48,10 +48,14 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.2.5598.23349\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5582.25508\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IShiftable.cs" />
+    <Compile Include="Interfaces\IShiftableCollection.cs" />
+    <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
+    <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Planes\Circle.cs" />
     <Compile Include="Planes\RightTriangle.cs" />
@@ -119,6 +123,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
