@@ -494,8 +494,9 @@ namespace GeometryClassLibrary
                         //}
                     }
                     catch (ArgumentException) { }
-
-                    List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(unconstructedInsidePolyhedron), new Polyhedron(unconstructedOutsidePolyhedron) };
+                    Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
+                    Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
+                    List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
                     //toReturn.Sort();
                     //toReturn.Reverse();
                     return toReturn;

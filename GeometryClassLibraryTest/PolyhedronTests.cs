@@ -220,7 +220,7 @@ namespace ClearspanTypeLibrary.Tests
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
 
-        [Ignore()]
+        
         [Test()]
         public void Polyhedron_SimpleSlice()
         {
