@@ -201,11 +201,11 @@ namespace GeometryClassLibraryTests
             Line perpindicular1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
             Line perpindicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 2, -4));
 
-            testPlane1.IsPerpindicularTo(perpindicular1).Should().BeTrue();
-            testPlane1.IsPerpindicularTo(perpindicular2).Should().BeFalse();
+            testPlane1.IsPerpendicularTo(perpindicular1).Should().BeTrue();
+            testPlane1.IsPerpendicularTo(perpindicular2).Should().BeFalse();
 
-            testPlane2.IsPerpindicularTo(perpindicular1).Should().BeFalse();
-            testPlane2.IsPerpindicularTo(perpindicular2).Should().BeTrue();
+            testPlane2.IsPerpendicularTo(perpindicular1).Should().BeFalse();
+            testPlane2.IsPerpendicularTo(perpindicular2).Should().BeTrue();
         }
 
         [Test()]

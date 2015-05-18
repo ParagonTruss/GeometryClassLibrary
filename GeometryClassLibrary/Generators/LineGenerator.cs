@@ -18,7 +18,7 @@ namespace GeometryClassLibrary.Generators
             return new Line(PointGenerator.MakePointWithInches(x1, y1, z1), PointGenerator.MakePointWithInches(x2, y2, z2));
         }
 
-        public static Line MakeLineOffsetByInchesAndParalell(Line originalLine, double passedOffset, Vector offsetDirection)
+        public static Line MakeLineOffsetByInchesAndParallel(Line originalLine, double passedOffset, Vector offsetDirection)
         {
             throw new NotImplementedException();
             //Vector shiftVector = new Vector(

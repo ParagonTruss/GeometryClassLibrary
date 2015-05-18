@@ -187,6 +187,7 @@ namespace GeometryClassLibrary
             this.Direction = new Direction(passedDirection);
         }
 
+
         /// <summary>
         /// Constructs a line through any 2 points
         /// </summary>
@@ -438,8 +439,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            return passedLine.UnitVector(DistanceType.Inch).PointInSameDirection(this.UnitVector(DistanceType.Inch)) ||
-                passedLine.UnitVector(DistanceType.Inch).PointInOppositeDirections(this.UnitVector(DistanceType.Inch));
+            return passedLine.UnitVector(DistanceType.Inch).CrossProduct(this.UnitVector(DistanceType.Inch)).Magnitude == new Distance();
         }
 
         /// <summary>
@@ -447,9 +447,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsPerpindicularTo(Line passedLine)
+        public virtual bool IsPerpendicularTo(Line passedLine)
         {
-            //if they are perpindicular then the dot product should be 0
+            //if they are perpendicular then the dot product should be 0
             //Distance dotted = passedLine.Direction.UnitVector(DistanceType.Inch) * this.Direction.UnitVector(DistanceType.Inch);
             //return (dotted == new Distance());
             return passedLine.UnitVector(DistanceType.Inch).DotProductIsEqualToZero(this.UnitVector(DistanceType.Inch));
@@ -523,14 +523,15 @@ namespace GeometryClassLibrary
             Line newLine = new Line(passedVector);
             Point intersect = this.Intersection(newLine);
 
-            if (!ReferenceEquals(intersect, null))
-                return intersect.IsOnVector(passedVector);
-            else
+            if (intersect == null)
+            {
                 return false;
+            }
+            return intersect.IsOnVector(passedVector);
         }
 
         /// <summary>
-        /// Determines wheter or not the linesegment and line intersect
+        /// Determines whether or not the line and linesegment intersect
         /// </summary>
         /// <param name="passedSegment"></param>
         /// <returns></returns>
@@ -646,6 +647,12 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Translates the Line, so its base goes through the origin
+        /// </summary>
+        /// <returns></returns>
+       
+
+        /// <summary>
         /// Shifts the Line with the given shift
         /// </summary>
         /// <param name="passedShift">The shift to apply to the Line</param>
@@ -667,7 +674,7 @@ namespace GeometryClassLibrary
         /// Makes the line into a plane perindicular to the xy plane
         /// </summary>
         /// <returns>returns a plane perpindicular to the XY-Plane that contains the given line</returns>
-        public Plane MakeIntoPlanePerpindicularToXYPlane()
+        public Plane MakeIntoPlanePerpendicularToXYPlane()
         {
             //we use the base point and another point on the line so we know that the plane will contain the given line
             //then we use the base point but moved in the z direction so that we know it will also contain that line, which
@@ -708,12 +715,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="planeToMakePerpindicularLineIn">The plane in which this line and the perpindicular line should both contain</param>
         /// <returns>A new Line that is in the passed plane and perpindicular to this line</returns>
-        public Line MakePerpindicularLineInGivenPlane(Plane planeToMakePerpindicularLineIn)
-        {
-            if (planeToMakePerpindicularLineIn.IsParallelTo(this))
+        public Line MakePerpendicularLineInGivenPlane(Plane planeToMakePerpendicularLineIn)        {
+            if (planeToMakePerpendicularLineIn.IsParallelTo(this))
             {
                 //rotate it 90 degrees in the nornal of the plane and it will be perpindicular to the original
-                return this.Rotate(new Rotation(planeToMakePerpindicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
+                return this.Rotate(new Rotation(planeToMakePerpendicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
             }
             else
             {
@@ -734,6 +740,16 @@ namespace GeometryClassLibrary
             Vector projectionVector = projectOnto.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(aCrossB);
 
             return new Line(projectionVector.Direction, this.BasePoint);
+        }
+
+        public virtual bool Contains(Point point)
+        {
+            if (point == null)
+            {
+                return false;
+            }
+            Vector checkVector = new Vector(BasePoint, point);
+            return checkVector.IsParallelTo(this);
         }
 
         #endregion

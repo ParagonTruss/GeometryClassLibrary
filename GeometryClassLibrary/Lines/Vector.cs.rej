@@ -1,0 +1,9 @@
+diff a/GeometryClassLibrary/Lines/Vector.cs b/GeometryClassLibrary/Lines/Vector.cs	(rejected hunks)
+@@ -500,6 +500,7 @@
+         {
+             Area magnitudes = this.Magnitude*passedVector.Magnitude;
+ 
++            Area dotProduct = new Area(AreaType.InchesSquared, DotProduct(passedVector, AreaType.InchesSquared));
+ 
+             return (dotProduct == magnitudes);
+         }

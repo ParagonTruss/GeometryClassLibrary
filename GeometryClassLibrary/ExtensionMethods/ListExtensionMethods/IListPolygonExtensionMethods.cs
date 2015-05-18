@@ -130,5 +130,59 @@ namespace GeometryClassLibrary
 
             return touchingPolygons;
         }
+
+        public static List<LineSegment> GetAllEdges(this List<Polygon> polygonList)
+        {
+            List<LineSegment> edges = new List<LineSegment>();
+            foreach(Polygon polygon in polygonList)
+            {
+                foreach(LineSegment edge in polygon.LineSegments)
+                {
+                    if (!edges.Contains(edge))
+                    {
+                        edges.Add(edge);
+                    }
+                }
+            }
+            return edges;
+        }
+
+        private static bool _everyEdgeIsOntwoFaces(this List<Polygon> polygonList, List<LineSegment> edges)
+        {
+            foreach(LineSegment edge in edges)
+            {
+                int count = 0;
+                foreach(Polygon polygon in polygonList)
+                {
+                    if (polygon.LineSegments.Contains(edge))
+                    {
+                        count++;
+                    }
+                }
+                if (count != 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the set of polygons forms a single closed region.
+        /// </summary>
+        /// <returns></returns>
+        public static bool DoesFormSingleClosedRegion(this List<Polygon> polygonList)
+        {
+            List<LineSegment> edges = polygonList.GetAllEdges();
+            //First check to that every edge sits on exactly two faces.
+            if (!polygonList._everyEdgeIsOntwoFaces(edges))
+            {
+                return false;
+            }
+
+
+
+            return false;
+        }
     }
 }

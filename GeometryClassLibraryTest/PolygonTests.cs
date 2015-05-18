@@ -124,39 +124,6 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_Centorid()
-        {
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-4, 2, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-4, 2, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
-            Polygon testPolygon = new Polygon(bounds);
-
-            Point center = testPolygon.Centroid();
-            Point expected = PointGenerator.MakePointWithInches(-2.5, 3, 0);
-
-            center.Should().Be(expected);
-
-            //make sure the centroid is in the region
-            testPolygon.Contains(center).Should().BeTrue();
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-
-            Point center2 = testPolygon2.Centroid();
-            Point expected2 = PointGenerator.MakePointWithInches(-0.6666667, 0.33333333, 0.66666667);
-
-            center2.Should().Be(expected2);
-
-            //make sure the centroid is in the region
-            testPolygon2.Contains(center2).Should().BeTrue();
-        }
-
-        [Test()]
         public void Polygon_Copy()
         {
             List<LineSegment> bounds = new List<LineSegment>();
@@ -200,7 +167,7 @@ namespace GeometryClassLibraryTests
             Point insidePlane1 = PointGenerator.MakePointWithInches(-2, 2, 0);
             Point insidePlane2 = PointGenerator.MakePointWithInches(-2, 2, 1);
 
-            Point center1 = testPolygon.Centroid();
+            Point center1 = testPolygon.Centroid;
 
             //make sure the sides are not included
             Point sideTest = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -213,7 +180,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             //make sure the PlaneRegion contains the centroid
-            Point center2 = testPolygon2.Centroid();
+            Point center2 = testPolygon2.Centroid;
 
             Point notOnPlane = center2.Shift(new Shift(PointGenerator.MakePointWithInches(.5, 0, 0)));
 
@@ -301,7 +268,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_OverlappingPolygonIntersectingBoundriesTest()
+        public void Polygon_OverlappingPolygonIntersectingBoundariesTest()
         {
             //changed to inches because mm were gave results smaller than what we are considering equivalent
             List<LineSegment> bounds = new List<LineSegment>();
@@ -373,20 +340,172 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_AreaTest()
+        public void Polygon_NormalVector()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(0, 1, 0);
+            Point point2 = PointGenerator.MakePointWithInches(0, 3, 0);
+            Point point3 = PointGenerator.MakePointWithInches(4, 3, 0);
+            Point point4 = PointGenerator.MakePointWithInches(4, 1, 0);
+            List<Point> vertices1 = new List<Point>(){ point1, point2, point3, point4 };
+            Polygon upsideDownSquare = new Polygon(vertices1);
+           
+            Vector normal1 = upsideDownSquare.NormalVector;
+            (normal1 == new Vector(PointGenerator.MakePointWithInches(0, 0 ,-1))).Should().BeTrue();
+
+
+            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 5);
+            Point topPoint2 = PointGenerator.MakePointWithInches(1, 1, 5);
+            Point topPoint3 = PointGenerator.MakePointWithInches(2, 0, 5);
+            Point topPoint4 = PointGenerator.MakePointWithInches(2, 2, 5);
+            Point topPoint5 = PointGenerator.MakePointWithInches(0, 2, 5);
+            
+            Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 });
+
+            Vector normal2 = concavePentagon.NormalVector;
+            (normal2 == new Vector(PointGenerator.MakePointWithInches(0, 0, 1))).Should().BeTrue();
+
+
+            List<LineSegment> bounds3 = new List<LineSegment>();
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(3, 2, 1)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 2, 1), PointGenerator.MakePointWithInches(4, 3, 0)));
+            Polygon testPolygon3 = new Polygon(bounds3);
+            
+            Vector normal3 = testPolygon3.NormalVector;
+            (normal3.Magnitude != new Distance()).Should().BeTrue();
+
+            foreach (var edge in testPolygon3.LineSegments)
+            {
+                (normal3.IsPerpendicularTo(edge)).Should().BeTrue();
+            }
+        }
+
+        
+
+        [Test()]
+        public void Polygon_AreaOfRectangle()
         {
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 3, 0)));
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
-            Polygon testPolygon = new Polygon(bounds);
+            Polygon testPolygon1 = new Polygon(bounds);
 
             //check to see if its what we expected
-            Area testArea = testPolygon.Area;
-            testArea.Should().Be(new Area(AreaType.InchesSquared, 8));
+            Area testArea1 = testPolygon1.Area;
+            testArea1.Should().Be(new Area(AreaType.InchesSquared, 8));
         }
 
+        [Test()]
+        public void Polygon_AreaOf3DTriangle()
+        {
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
+            Polygon testPolygon2 = new Polygon(lineSegments);
+
+            Area area = testPolygon2.Area;
+            Area expected2 = new Area(AreaType.InchesSquared, 10.52);
+
+            (area == expected2).Should().BeTrue();
+
+        }
+        [Test()]
+        public void Polygon_AreaOfConcaveQuadrilateral()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 2, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
+            Polygon testPolygon2 = new Polygon(bounds);
+
+            //check to see if its what we expected
+            Area testArea2 = testPolygon2.Area;
+            testArea2.Should().Be(new Area(AreaType.InchesSquared, 3));
+        }
+
+        [Test()]
+        public void Polygon_AreaOfConcavePentagon()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(0, 0, -1);
+            Point point2 = PointGenerator.MakePointWithInches(2, 0, -1);
+            Point point3 = PointGenerator.MakePointWithInches(2, 2, -1);
+            Point point4 = PointGenerator.MakePointWithInches(0, 2, -1);
+            Point point5 = PointGenerator.MakePointWithInches(1, 1, -1);
+         
+            Polygon concavePentagon = new Polygon(new List<Point> { point1, point2, point3, point4, point5 });
+            Area area = concavePentagon.Area;
+            Area expected = new Area(AreaType.InchesSquared, 3);
+            (area == expected).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Polygon_AreaOfSquareInXZPlane()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(4, 0, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 4), PointGenerator.MakePointWithInches(0, 0, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon1 = new Polygon(bounds);
+
+            //check to see if its what we expected
+            Area testArea1 = testPolygon1.Area;
+            testArea1.Should().Be(new Area(AreaType.InchesSquared, 16));
+        }
+
+        [Test()]
+        public void Polygon_AreaOfSquareInYZPlane()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 4, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 4), PointGenerator.MakePointWithInches(0, 0, 4)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 4), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Polygon testPolygon1 = new Polygon(bounds);
+
+            //check to see if its what we expected
+            Area testArea1 = testPolygon1.Area;
+            testArea1.Should().Be(new Area(AreaType.InchesSquared, 16));
+        }
+
+        [Test()]
+        public void Polygon_Centroid()
+        {
+            List<LineSegment> bounds = new List<LineSegment>();
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-4, 2, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
+            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 0), PointGenerator.MakePointWithInches(-5, 5, 0)));
+            Polygon testPolygon = new Polygon(bounds);
+
+            Point center = testPolygon.Centroid;
+            Point expected = PointGenerator.MakePointWithInches(-2.33, 3, 0);
+
+            center.Should().Be(expected);
+
+            //make sure the centroid is in the region
+            testPolygon.Contains(center).Should().BeTrue();
+            //Note: The Centroid is always contained within the region of a convex polygon.
+            //However, for concave polygons this is not the case....
+
+            List<LineSegment> lineSegments = new List<LineSegment>();
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-3, -2, 0), PointGenerator.MakePointWithInches(1, 1, -1)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
+            Polygon testPolygon2 = new Polygon(lineSegments);
+
+            Point center2 = testPolygon2.Centroid;
+            Point expected2 = PointGenerator.MakePointWithInches(-0.6666667, 0.33333333, 0.66666667);
+
+            center2.Should().Be(expected2);
+
+            //make sure the centroid is in the region
+            testPolygon2.Contains(center2).Should().BeTrue();
+        }
         [Test()]
         public void Polygon_SliceOnLineTest()
         {
@@ -558,7 +677,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon2 = new Polygon(bounds2);
 
             //check for generic overlapping
-            Point result12 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon2);
+            Point result12 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon2);
             (result12 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result12).Should().BeTrue();
 
@@ -571,7 +690,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon3 = new Polygon(bounds3);
 
             //check when one contains the other
-            Point result13 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon3);
+            Point result13 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon3);
             (result13 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result13).Should().BeTrue();
 
@@ -584,7 +703,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon4 = new Polygon(bounds4);
 
             //check when they touch sides but dont overlap
-            Point result14 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon4);
+            Point result14 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon4);
             (result14 != null).Should().BeFalse();
 
 
@@ -596,7 +715,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon5 = new Polygon(bounds5);
 
             //check for overlapping when both centroids arent contained
-            Point result15 = testPolygon1.SharedPointNotOnThisPolygonsBoundary(testPolygon5);
+            Point result15 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon5);
             (result15 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result15).Should().BeTrue();
 
@@ -616,7 +735,7 @@ namespace GeometryClassLibraryTests
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             Polygon testPolygon7 = new Polygon(bounds7);
 
-            Point result67 = testPolygon6.SharedPointNotOnThisPolygonsBoundary(testPolygon7);
+            Point result67 = testPolygon6.SharedPointNotOnEitherBoundary(testPolygon7);
             (result67 != null).Should().BeFalse();
         }
 
@@ -694,10 +813,11 @@ namespace GeometryClassLibraryTests
             bool resultsIntersecting = testPolygon.DoesShareOrContainSide(testIntersecting);
 
             resultsExact.Should().BeTrue();
-            resultsOverlapping.Should().BeTrue();
+            resultsOverlapping.Should().BeFalse();
             resultsIntersecting.Should().BeFalse();
         }
 
+        [Test()]
         public void Polygon_IntersectWithLine()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -718,5 +838,76 @@ namespace GeometryClassLibraryTests
             (intersectSide == PointGenerator.MakePointWithInches(0, 1, 0)).Should().BeTrue();
             (none == null).Should().BeTrue();
         }
+
+        [Test()]
+        public void Polygon_DoesIntersectNotCoplanar()
+        {
+            Point front1 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point front2 = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point front3 = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point front4 = PointGenerator.MakePointWithInches(0, 0, 2);
+            
+            Point back1 = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point back2 = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point back3 = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point back4 = PointGenerator.MakePointWithInches(0, 12, 2);
+
+            Polygon frontFace = new Polygon(new List<Point> { front1, front2, front3, front4 });
+            Polygon backFace = new Polygon(new List<Point> { back1, back2, back3, back4 });
+           
+            Line intersecting1 = new Line(PointGenerator.MakePointWithInches(2, 0, 1), PointGenerator.MakePointWithInches(2, 1, 1));
+            Line intersecting2 = new Line(PointGenerator.MakePointWithInches(2, 0, .5), PointGenerator.MakePointWithInches(5, 12, 1));
+            Line intersectingAlongSide = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
+            Line noIntersect = new Line(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0));
+
+            
+            frontFace.DoesIntersect(intersecting1).Should().BeTrue();
+            backFace.DoesIntersect(intersecting1).Should().BeTrue();
+            
+        }
+
+        [Test()]
+        public void Polygon_DoesContainLineSegment()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(0, 0);
+            Point point2 = PointGenerator.MakePointWithInches(2, 0);
+            Point point3 = PointGenerator.MakePointWithInches(2, 1);
+            Point point4 = PointGenerator.MakePointWithInches(1, 1);
+            Point point5 = PointGenerator.MakePointWithInches(1, 2);
+            Point point6 = PointGenerator.MakePointWithInches(2, 2);
+            Point point7 = PointGenerator.MakePointWithInches(2, 3);
+            Point point8 = PointGenerator.MakePointWithInches(0, 3);
+            List<Point> vertices = new List<Point>(){point1, point2, point3, point4, point5, point6, point7, point8};
+            Polygon cShape = new Polygon(vertices);
+
+            Point basePoint1 = PointGenerator.MakePointWithInches(1, 0);
+            Point endPoint1 = PointGenerator.MakePointWithInches(1, 3);
+            LineSegment segmentTouchesInsideEdge = new LineSegment(basePoint1, endPoint1);
+
+            Point basePoint2 = PointGenerator.MakePointWithInches(0, 0);
+            Point endPoint2 = PointGenerator.MakePointWithInches(2, 2);
+            LineSegment segmentCutsThroughVertices = new LineSegment(basePoint2, endPoint2);
+
+            Point basePoint3 = PointGenerator.MakePointWithInches(1.5, 0);
+            Point endPoint3 = PointGenerator.MakePointWithInches(.5, 4);
+            LineSegment segmentCutsThroughVertexAndEdge = new LineSegment(basePoint3, endPoint3);
+
+            Point basePoint4 = PointGenerator.MakePointWithInches(1.5, 0);
+            Point endPoint4 = PointGenerator.MakePointWithInches(1.5, 3);
+            LineSegment segmentCutsThroughEdges = new LineSegment(basePoint4, endPoint4);
+
+            Point basePoint5 = PointGenerator.MakePointWithInches(0.5, 0);
+            Point endPoint5 = PointGenerator.MakePointWithInches(0.5, 3);
+            LineSegment segmentIsChord = new LineSegment(basePoint5, endPoint5);
+
+
+            cShape.DoesContainLineSegment(segmentTouchesInsideEdge).Should().BeTrue();
+            cShape.DoesContainLineSegment(segmentCutsThroughVertices).Should().BeFalse();
+            cShape.DoesContainLineSegment(segmentCutsThroughVertexAndEdge).Should().BeFalse();
+            cShape.DoesContainLineSegment(segmentIsChord).Should().BeTrue();
+
+
+        }
+       
     }
 }

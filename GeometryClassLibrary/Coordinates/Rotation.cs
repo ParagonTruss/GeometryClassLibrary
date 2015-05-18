@@ -151,5 +151,19 @@ namespace GeometryClassLibrary
         }
 
         #endregion 
+
+        #region Methods
+
+        /// <summary>
+        /// Returns the inverse rotation.
+        /// </summary>
+        /// <returns></returns>
+        public Rotation Inverse()
+        {
+            Angle inverseAngle = new Angle(AngleType.Radian, this.AngleToRotate.Radians * -1);
+            return new Rotation(this.AxisToRotateAround, inverseAngle);
+        }
+
+        #endregion
     }
 }

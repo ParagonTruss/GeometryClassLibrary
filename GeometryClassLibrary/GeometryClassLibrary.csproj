@@ -48,34 +48,30 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.2.5609.16609\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5598.23349\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IShiftable.cs" />
-    <Compile Include="Interfaces\IShiftableCollection.cs" />
-    <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
-    <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
-    <Compile Include="Planes\Circle.cs" />
-    <Compile Include="Planes\RightTriangle.cs" />
-    <Compile Include="Planes\Triangle.cs" />
+    <Compile Include="Planes\OtherShapes\Circle.cs" />
+    <Compile Include="Planes\OtherShapes\RightTriangle.cs" />
+    <Compile Include="Planes\OtherShapes\Triangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solids\ConeClass.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Coordinates\CoordinateSystem.cs" />
     <Compile Include="Coordinates\Direction.cs" />
-    <Compile Include="Planes\EquilateralTriangle.cs" />
+    <Compile Include="Planes\OtherShapes\EquilateralTriangle.cs" />
     <Compile Include="Solids\Cube.cs" />
     <Compile Include="Solids\Cylinder.cs" />
-    <Compile Include="Planes\Ellipse.cs" />
+    <Compile Include="Planes\OtherShapes\Ellipse.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="ExtensionMethods\AngleExtensions.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
     <Compile Include="Lines\IEdge.cs" />
-    <Compile Include="Planes\IrregularPolygon.cs" />
+    <Compile Include="Planes\OtherShapes\IrregularPolygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineSegmentExtensionMethods.cs" />
     <Compile Include="Lines\Line.cs" />
@@ -85,9 +81,9 @@
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListPolygonExtensionMethods.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
     <Compile Include="Matrices\Matrix.cs" />
-    <Compile Include="Planes\NonPolygon.cs" />
+    <Compile Include="Planes\OtherShapes\NonPolygon.cs" />
     <Compile Include="Solids\NonPolyhedron.cs" />
-    <Compile Include="Planes\Pentagon.cs" />
+    <Compile Include="Planes\OtherShapes\Pentagon.cs" />
     <Compile Include="Planes\Plane.cs" />
     <Compile Include="Planes\PlaneRegion.cs" />
     <Compile Include="Planes\Polygon.cs" />
@@ -103,14 +99,14 @@
     <Compile Include="Solids\TriangularPrism.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Planes\Rectangle.cs" />
-    <Compile Include="Planes\RegularPolygon.cs" />
-    <Compile Include="Planes\Rhombus.cs" />
+    <Compile Include="Planes\OtherShapes\Rectangle.cs" />
+    <Compile Include="Planes\OtherShapes\RegularPolygon.cs" />
+    <Compile Include="Planes\OtherShapes\Rhombus.cs" />
     <Compile Include="Coordinates\Rotation.cs" />
     <Compile Include="Coordinates\Shift.cs" />
     <Compile Include="Solids\Solid.cs" />
     <Compile Include="Solids\Sphere.cs" />
-    <Compile Include="Planes\Square.cs" />
+    <Compile Include="Planes\OtherShapes\Square.cs" />
     <Compile Include="Coordinates\Translation.cs" />
     <Compile Include="Lines\Vector.cs" />
   </ItemGroup>
@@ -123,7 +119,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

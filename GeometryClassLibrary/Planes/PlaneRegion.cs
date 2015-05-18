@@ -13,6 +13,18 @@ namespace GeometryClassLibrary
         protected List<IEdge> Edges = new List<IEdge>();
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
+        /// <summary>
+        /// Returns the centroid (geometric center point) of the Region
+        /// </summary>
+        /// <returns>the region's center as a point</returns>
+        public virtual Point Centroid
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -187,15 +199,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Returns the centoid (geometric center point) of the Region
-        /// </summary>
-        /// <returns>the region's center as a point</returns>
-        public virtual Point Centroid()
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public virtual Solid Extrude(Vector directionVector)
         {
             throw new NotImplementedException();

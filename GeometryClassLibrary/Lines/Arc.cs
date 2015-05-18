@@ -99,10 +99,10 @@ namespace GeometryClassLibrary
                 Plane containingPlane = new Plane(tangentLine, straightLineSegment);
 
                 //now we can find the direction to the center point by finding the perpindicular of the tangent line
-                Line toCenterPointFromTangent = tangentLine.MakePerpindicularLineInGivenPlane(containingPlane);
+                Line toCenterPointFromTangent = tangentLine.MakePerpendicularLineInGivenPlane(containingPlane);
 
                 //now we can find the center point of the arc and the direction to the center of the arc from there based on the lineSegment to the endpoint
-                Direction toCenterFromMidPoint = straightLineSegment.MakePerpindicularLineInGivenPlane(containingPlane).Direction;
+                Direction toCenterFromMidPoint = straightLineSegment.MakePerpendicularLineInGivenPlane(containingPlane).Direction;
 
                 Line arcCenterLine = new Line(toCenterFromMidPoint, straightLineSegment.MidPoint);
 
@@ -255,7 +255,7 @@ namespace GeometryClassLibrary
             LineSegment toStartPointFromCenter = new LineSegment(passedCenterPoint, passedBasePoint);
 
             //now find the tangent line in the plane were in to find the initial direction
-            Line tangentLine = toStartPointFromCenter.MakePerpindicularLineInGivenPlane(planeToBeContainedIn);
+            Line tangentLine = toStartPointFromCenter.MakePerpendicularLineInGivenPlane(planeToBeContainedIn);
             _initialDirection = tangentLine.Direction;
 
             //now we can use our central angle to find a line that will point to our endpoint

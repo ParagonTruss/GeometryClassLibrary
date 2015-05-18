@@ -3,44 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using FluentAssertions;
 using NUnit.Framework;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using GeometryClassLibraryTest;
 namespace ClearspanTypeLibrary.Tests
 {
     [TestFixture()]
     public class PolyhedronTests
     {
         [Test()]
-        public void Polyhedron_MakeCoplanarLineSegmentsIntoPolygons()
-        {
-            List<LineSegment> lineSegments =
-                new List<Point> {
-                    PointGenerator.MakePointWithInches(0.000,  0.000),
-                    PointGenerator.MakePointWithInches(0.000,  0.250),
-                    PointGenerator.MakePointWithInches(6.500,  3.500),
-                    PointGenerator.MakePointWithInches(144.000,  3.500),
-                    PointGenerator.MakePointWithInches(144.000,  0.000)
-                }.MakeIntoLineSegmentsThatMeet();
-
-            List<Polygon> polygons = lineSegments.MakeCoplanarLineSegmentsIntoPolygons();
-
-            Polyhedron testPoly = new Polyhedron(polygons);
-
-            testPoly.LineSegments.Should().BeEquivalentTo(lineSegments);
-        }
-
-        [Test()]
         public void Polyhedron_ShiftXYTest()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees towards x
             Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)), PointGenerator.MakePointWithInches(8, 0));
@@ -56,12 +35,9 @@ namespace ClearspanTypeLibrary.Tests
         public void Polyhedron_ShiftYZTest()
         {
 
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees towards z
             Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
@@ -76,12 +52,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_MultiShiftReturnToOriginalTest()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees towards z
             Angle zAngle = new Angle(AngleType.Degree, 90);
@@ -105,12 +78,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_RotationOnly()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
@@ -130,14 +100,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_TranslationOnly()
         {
-            Polyhedron Polyhedron = new Polyhedron();
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron.Polygons.Add(new Polygon(lineSegments));
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //Move 5 in. in z direction
             Point displacementPoint = PointGenerator.MakePointWithInches(0, 0, 5);
@@ -149,7 +114,7 @@ namespace ClearspanTypeLibrary.Tests
             //Angle rotationAngle2 = new Angle(); //No rotation, just displacement
             Shift shift2 = new Shift(displacementPoint2);
 
-            Polyhedron s1 = Polyhedron.Shift(shift);
+            Polyhedron s1 = polyhedron.Shift(shift);
             Polyhedron s2 = s1.Shift(shift2);
 
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(0, 7, 5)));
@@ -161,12 +126,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_RotateAndTranslate()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
@@ -186,12 +148,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_RotateAndTranslate_ThenReturnToOriginal()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 63);
@@ -212,12 +171,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, -90);
@@ -238,12 +194,9 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0, 0), PointGenerator.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
+            Polygon rectangle = new TestRectangle();
+            Vector upward = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            Polyhedron polyhedron = rectangle.Extrude(upward);
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
@@ -318,6 +271,7 @@ namespace ClearspanTypeLibrary.Tests
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
+
         [Test()]
         public void Polyhedron_DiagonalSlice()
         {
@@ -338,34 +292,34 @@ namespace ClearspanTypeLibrary.Tests
             planes.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
-            Polyhedron testPolyhedron = new Polyhedron(planes);
+            Polyhedron testPolyhedron = new TestRectangularBox();
 
             Plane slicingPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
             //make our results
-            Point slicedBottom = PointGenerator.MakePointWithInches(1, 0, 0);
-            Point slicedTop = PointGenerator.MakePointWithInches(0, 1, 0);
-            Point slicedBottomBack = PointGenerator.MakePointWithInches(1, 0, 2);
-            Point slicedTopBack = PointGenerator.MakePointWithInches(0, 1, 2);
+            Point slicedBottomRight = PointGenerator.MakePointWithInches(1, 0, 0);
+            Point slicedBottomLeft = PointGenerator.MakePointWithInches(0, 1, 0);
+            Point slicedTopRight = PointGenerator.MakePointWithInches(1, 0, 2);
+            Point slicedTopLeft = PointGenerator.MakePointWithInches(0, 1, 2);
 
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, topLeftPoint, topRightPoint, bottomRightPoint }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomBack, slicedTopBack, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomRight, slicedBottomLeft, topLeftPoint, topRightPoint, bottomRightPoint }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedTopRight, slicedTopLeft, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
             ExpectedPlanes1.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, bottomRightPoint, backbottomrightpoint, slicedBottomBack }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedTop, topLeftPoint, backtopleftpoint, slicedTopBack }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomRight, bottomRightPoint, backbottomrightpoint, slicedTopRight }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomLeft, topLeftPoint, backtopleftpoint, slicedTopLeft }));
             ExpectedPlanes1.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
-            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, slicedTopBack, slicedBottomBack }));
+            ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottomRight, slicedBottomLeft, slicedTopLeft, slicedTopRight }));
             Polyhedron ExpectedPolyhedron1 = new Polyhedron(ExpectedPlanes1);
 
             List<Polygon> ExpectedPlanes2 = new List<Polygon>();
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedTop, slicedBottom }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { backbasepoint, slicedTopBack, slicedBottomBack }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedBottom, slicedBottomBack, backbasepoint }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedTop, slicedTopBack, backbasepoint }));
-            ExpectedPlanes2.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, slicedTopBack, slicedBottomBack }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedBottomLeft, slicedBottomRight }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { backbasepoint, slicedTopLeft, slicedTopRight }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedBottomRight, slicedTopRight, backbasepoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { basePoint, slicedBottomLeft, slicedTopLeft, backbasepoint }));
+            ExpectedPlanes2.Add(new Polygon(new List<Point> { slicedBottomRight, slicedBottomLeft, slicedTopLeft, slicedTopRight }));
             Polyhedron ExpectedPolyhedron2 = new Polyhedron(ExpectedPlanes2);
 
             //now test to see if we got what we expect
@@ -590,6 +544,23 @@ namespace ClearspanTypeLibrary.Tests
             {
                 results.Should().Contain(point);
             }
+        }
+
+        
+        [Test()]
+        public void Polyhedron_VolumeTest()
+        {
+            TestTetrahedron testTetrahedron = new TestTetrahedron();
+            Volume volume1 = testTetrahedron.Volume;
+            volume1.Should().Be(TestTetrahedron.ExpectedVolume);
+
+            TestRectangularBox testBox = new TestRectangularBox();
+            Volume volume2 = testBox.Volume;
+            volume2.Should().Be(TestRectangularBox.ExpectedVolume);
+
+            TestConcavePentagonalPrism testSolid = new TestConcavePentagonalPrism();
+            Volume volume3 = testSolid.Volume;
+            volume3.Should().Be(TestConcavePentagonalPrism.ExpectedVolume);
         }
     }
 }

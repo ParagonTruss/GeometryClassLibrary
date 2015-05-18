@@ -121,6 +121,77 @@ namespace GeometryClassLibrary
             }
         }
 
+
+        /// <summary>
+        /// Finds the CenterPoint of the Polyhedron by averaging the vertices
+        /// </summary>
+        public override Point CenterPoint
+        {
+            get
+            {
+                Distance xValues = new Distance();
+                Distance yValues = new Distance();
+                Distance zValues = new Distance();
+
+                foreach (Point vertex in this.Vertices)
+                {
+                    xValues += vertex.X;
+                    yValues += vertex.Y;
+                    zValues += vertex.Z;
+                }
+
+                int vertexCount = this.Vertices.Count();
+                return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
+            }
+        }
+
+        /// <summary>
+        /// The volume of the Polyhedron. Uses the 1st method described on this webpage: http://www.ecse.rpi.edu/~wrf/Research/Short_Notes/volume.html
+        /// </summary>
+        public override Volume Volume
+        {
+            get
+            {
+                Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
+
+                foreach (Polygon face in this.Faces)
+                {
+                    Point basePoint = face.Vertices[0];
+                    Vector vector1 = new Vector(basePoint, face.Vertices[1]);
+                    Vector vector2 = new Vector(basePoint, face.Vertices[2]);
+                    Vector normalDirection = new Vector(vector1).CrossProduct(vector2);
+                    Line normalLine = new Line(new Direction(normalDirection), basePoint);
+                    Vector vectorToOrigin = new Vector(basePoint, new Point());
+                    Vector normalVector = vectorToOrigin.ProjectOntoLine(normalLine);
+
+                    Area area = face.Area;
+                    Distance height = normalVector.Magnitude;
+                    Volume volume = new Volume(VolumeType.CubicInches, area.InchesSquared * height.Inches);
+
+                    bool volumeIsPositive = normalDirection.IsPerpendicularTo(normalVector);
+                    if (volumeIsPositive)
+                    {
+                        totalVolume += volume;
+                    }
+                    else
+                    {
+                        totalVolume -= volume;
+                    }
+                }
+                return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
+
+            }
+        }
+
+        public override Point Centroid
+        {
+            get
+            {
+                throw new NotImplementedException();
+
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -156,7 +227,10 @@ namespace GeometryClassLibrary
             {
                 polygonsToUse.Add(polygon);
             }
-
+            if (!polygonsToUse.DoesFormSingleClosedRegion())
+            {
+                throw new Exception("The polygons you're attempting to use do not form a single closed region.");
+            }
             this.Polygons = polygonsToUse;
         }
 
@@ -263,94 +337,10 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        /// <summary>
-        /// Finds the center point of this polyhedron
-        /// </summary>
-        /// <returns></returns>
-        public override Point CenterPoint()
-        {
+        
 
-            Volume volume = new Volume();
+      
 
-            Point centroid = new Point();
-
-            foreach (Polygon face in this.Faces)
-            {
-                List<Point> vertices = face.Vertices;
-                Point previousVertex = vertices[vertices.Count - 1];
-                Point twoPreviousVertex = vertices[vertices.Count - 2];
-
-                for (int i = 0; i < vertices.Count - 3; i++)
-                {
-                    Vector normalVector = new Vector(previousVertex - vertices[i]).CrossProduct(new Vector(twoPreviousVertex - vertices[i]));
-                    volume = volume + new Volume(VolumeType.CubicInches, (new Vector(vertices[i]) * normalVector / 6).Inches);
-
-
-                    Distance newX = normalVector.XComponent * (((vertices[i].X + previousVertex.X) ^ 2) + ((previousVertex.X + twoPreviousVertex.X) ^ 2) + ((twoPreviousVertex.X + vertices[i].X) ^ 2)).Inches;
-                    Distance newY = normalVector.XComponent * (((vertices[i].Y + previousVertex.Y) ^ 2) + ((previousVertex.Y + twoPreviousVertex.Y) ^ 2) + ((twoPreviousVertex.Y + vertices[i].Y) ^ 2)).Inches;
-                    Distance newZ = normalVector.XComponent * (((vertices[i].Z + previousVertex.Z) ^ 2) + ((previousVertex.Z + twoPreviousVertex.Z) ^ 2) + ((twoPreviousVertex.Z + vertices[i].Z) ^ 2)).Inches;
-
-                    centroid = new Point(newX + centroid.X, newY + centroid.Y, newZ + centroid.Z);
-                }
-            }
-
-            centroid = new Point(centroid.X * 1 / (24 * 2 * volume.CubicInches), centroid.X * 1 / (24 * 2 * volume.CubicInches), centroid.X * 1 / (24 * 2 * volume.CubicInches));
-            //return centroid;
-
-
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// The volume of the Polyhedron
-        /// </summary>
-        public override Volume Volume
-        {
-            get
-            {
-                Volume volume = new Volume();
-
-                foreach (Polygon face in this.Faces)
-                {
-                    //redo how the vertices are cycled through so one stays contant
-                    List<Point> faceVertices = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2, 6, 1)).GetAllPoints();
-                    Point baseVertex = faceVertices[0];
-                    Point previousVertex = faceVertices[1];
-
-                    for (int i = 2; i < faceVertices.Count; i++)
-                    {
-                        Vector normalVector = new Vector(faceVertices[i] - baseVertex).CrossProduct(new Vector(previousVertex - baseVertex));
-                        volume = volume + new Volume(VolumeType.CubicInches, (new Vector(baseVertex) * normalVector / 6).Inches);
-
-                        previousVertex = faceVertices[i];
-                    }
-                }
-                throw new NotImplementedException();
-                //return volume;
-            }
-        }
-
-        /// <summary>
-        /// Finds the Centroid of the Polyhedron by averaging the vertices
-        /// </summary>
-        /// <returns>The centroid of the Polyhedron based only on its vertices</returns>
-        public Point Centroid()
-        {
-            Distance xValues = new Distance();
-            Distance yValues = new Distance();
-            Distance zValues = new Distance();
-
-            foreach (Point vertex in this.Vertices)
-            {
-                xValues += vertex.X;
-                yValues += vertex.Y;
-                zValues += vertex.Z;
-            }
-
-            int vertexCount = this.Vertices.Count();
-            return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
-        }
 
         public override Line MidLine()
         {

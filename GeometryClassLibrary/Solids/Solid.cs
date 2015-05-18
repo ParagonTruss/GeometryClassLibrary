@@ -42,9 +42,29 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Finds the Center Point of the Solid
+        /// </summary>
+        /// <returns>A Point that reperesents the center of the solid</returns>
+        public virtual Point CenterPoint
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// The volume of this solid / the space enclosed by this solid
         /// </summary>
         public virtual Volume Volume
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public virtual Point Centroid
         {
             get
             {
@@ -86,14 +106,7 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        /// <summary>
-        /// Finds the Center Point of the Solid
-        /// </summary>
-        /// <returns>A Point that reperesents the center of the solid</returns>
-        public virtual Point CenterPoint()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         /// <summary>
         /// Finds the midline of the Solid that goes parallel to the longest side?
@@ -114,6 +127,12 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Performs a slive on the given solid, and returns two solids in a list
+        /// with the larger piece first
+        /// </summary>
+        /// <param name="slicingPlane"></param>
+        /// <returns></returns>
         public virtual List<Solid> Slice(Plane slicingPlane)
         {
             throw new NotImplementedException();
