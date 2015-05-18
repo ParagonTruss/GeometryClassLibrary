@@ -62,6 +62,11 @@ namespace GeometryClassLibrary
                 return verticesFound;
             }
         }
+        
+        /// <summary>
+        /// determines if the polygon is convex
+        /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
+        /// </summary>
         public bool isConvex
         {
             get
@@ -79,9 +84,9 @@ namespace GeometryClassLibrary
                     }
                 }
                 return true;
-
             }
         }
+
         // _findArea returns a possibly negative area to make the centroid formula work right
         // the Area property takes absolute value before returning
         public override Area Area
@@ -1439,6 +1444,22 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        /// <summary>
+        /// determines if the polygon contains this segment as an edge
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
+        public bool HasSide(LineSegment segment)
+        {
+            foreach(LineSegment edge in LineSegments)
+            {
+                if (edge == segment)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         /// <summary>
         /// Returns whether or not the two Polygons share a common side meaning that the side is exactly the same as the other's side
         /// </summary>

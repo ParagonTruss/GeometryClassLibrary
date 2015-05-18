@@ -121,7 +121,30 @@ namespace GeometryClassLibrary
             }
         }
 
-
+         /// <summary>
+        /// determines if the polygon is convex
+        /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
+        /// </summary>
+        public bool isConvex
+        {
+            get
+            {
+                //LineSegment currentSegment = null;
+                //foreach (var vertex1 in Vertices)
+                //{
+                //    foreach (var vertex2 in Vertices)
+                //    {
+                //        currentSegment = new LineSegment(vertex1, vertex2);
+                //        if (!this.DoesContainLineSegment(currentSegment))
+                //        {
+                //            return false;
+                //        }
+                //    }
+                //}
+                //return true;
+                throw new NotImplementedException();
+            }
+        }
         /// <summary>
         /// Finds the CenterPoint of the Polyhedron by averaging the vertices
         /// </summary>
@@ -752,6 +775,16 @@ namespace GeometryClassLibrary
             }
 
             return null;
+        }
+
+        private bool _doesContainSegmentAlongBoundary(LineSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DoesContainLineSegment(LineSegment segment)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

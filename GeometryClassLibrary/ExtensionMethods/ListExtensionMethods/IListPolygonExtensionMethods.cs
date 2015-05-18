@@ -152,16 +152,18 @@ namespace GeometryClassLibrary
             foreach(LineSegment edge in edges)
             {
                 int count = 0;
+                Polygon temp = new Polygon();
                 foreach(Polygon polygon in polygonList)
                 {
-                    if (polygon.LineSegments.Contains(edge))
+                    if (polygon.HasSide(edge))
                     {
                         count++;
+                        temp = polygon;
                     }
                 }
                 if (count != 2)
                 {
-                    return false;
+                    throw new Exception("count =" + count + "side = " + edge + ". On face = " + temp);
                 }
             }
             return true;
@@ -182,7 +184,7 @@ namespace GeometryClassLibrary
 
 
 
-            return false;
+            return true;
         }
     }
 }
