@@ -201,7 +201,8 @@ namespace GeometryClassLibrary
                         totalVolume -= volume;
                     }
                 }
-                return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
+                throw new NotImplementedException();
+                //return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
 
             }
         }

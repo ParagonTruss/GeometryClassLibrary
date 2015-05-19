@@ -79,10 +79,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_MultiShiftReturnToOriginal()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
@@ -109,10 +109,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_Shift_RotationOnly()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
@@ -165,10 +165,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_Shift_RotateAndTranslate()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
@@ -191,10 +191,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_Shift_RotateAndTranslate_ThenReturnToOriginal()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
@@ -218,10 +218,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_Shift_RotateNotThroughOriginAndTranslate()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
@@ -245,10 +245,10 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 0), PointGenerator.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 8), PointGenerator.MakePointWithInches(0, 8)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(8, 0)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(8, 4), PointGenerator.MakePointWithInches(0, 4)));
+            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 4), PointGenerator.MakePointWithInches(0, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
 
 
