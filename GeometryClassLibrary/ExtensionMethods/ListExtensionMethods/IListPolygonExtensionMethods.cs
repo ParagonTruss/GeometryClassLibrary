@@ -149,11 +149,11 @@ namespace GeometryClassLibrary
 
         private static bool _everyEdgeIsOntwoFaces(this List<Polygon> polygonList, List<LineSegment> edges)
         {
-            foreach(LineSegment edge in edges)
+            foreach (LineSegment edge in edges)
             {
                 int count = 0;
                 Polygon temp = new Polygon();
-                foreach(Polygon polygon in polygonList)
+                foreach (Polygon polygon in polygonList)
                 {
                     if (polygon.HasSide(edge))
                     {
@@ -163,7 +163,7 @@ namespace GeometryClassLibrary
                 }
                 if (count != 2)
                 {
-                    throw new Exception("count =" + count + "side = " + edge + ". On face = " + temp);
+                    return false;
                 }
             }
             return true;
@@ -181,9 +181,6 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-
-
-
             return true;
         }
     }

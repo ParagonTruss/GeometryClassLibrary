@@ -195,7 +195,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_RotateTest()
+        public void Arc_Rotate()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);

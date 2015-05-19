@@ -60,9 +60,9 @@ namespace GeometryClassLibrary
                 Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
                 for (int i = 1; i < passedLineListCasted.Count; i++)
                 {
-                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
-                    if (!this.NormalVector.Equals(new Vector()))
-                        i = passedLineListCasted.Count;
+                    //this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
+                    //if (!this.NormalVector.Equals(new Vector()))
+                    //    i = passedLineListCasted.Count;
                 }
             }
             else

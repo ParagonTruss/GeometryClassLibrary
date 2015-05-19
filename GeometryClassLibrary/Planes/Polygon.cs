@@ -1710,16 +1710,6 @@ namespace GeometryClassLibrary
             return centroid;
 
         }
-
-        public override String ToString()
-        {
-            String result = "";
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                result += "P" + i + "= ("+ Vertices[i] + ", ";
-            }
-            return result.Substring(0, result.Length - 2);
-        }
        
    
         #endregion

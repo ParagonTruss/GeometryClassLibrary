@@ -230,6 +230,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Makes a Polyhedron using the giving line segments made into polygons based on if they are coplanar and share a point
+        /// WARNING: THIS CONSTRUCTOR LEADS TO AMBIGUOUS CASES, DON'T USE IT!
         /// </summary>
         /// <param name="passedLineSegments">The line segments that define this Polyhedron</param>
         public Polyhedron(List<LineSegment> passedLineSegments)
@@ -250,10 +251,10 @@ namespace GeometryClassLibrary
             {
                 polygonsToUse.Add(polygon);
             }
-            if (!polygonsToUse.DoesFormSingleClosedRegion())
-            {
-                throw new Exception("The polygons you're attempting to use do not form a single closed region.");
-            }
+            //if (!polygonsToUse.DoesFormSingleClosedRegion())
+            //{
+            //    throw new Exception("The polygons you're attempting to use do not form a single closed region.");
+            //}
             this.Polygons = polygonsToUse;
         }
 
@@ -455,7 +456,7 @@ namespace GeometryClassLibrary
 
                     bool wasAdded = _addPolygonToCorrectPolyhedron(slicedPolygons, unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, slicingPlane);
 
-                    //if we failed to find which one to add it too hang on to it and take care of it after we have found the rest
+                    //if we failed to find which one to add it to hang on to it and take care of it after we have found the rest
                     if (!wasAdded)
                     {
                         if (slicedPolygons.Count == 1)
