@@ -125,7 +125,7 @@ namespace GeometryClassLibrary
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
-        public bool isConvex
+        public bool IsConvex
         {
             get
             {
@@ -201,8 +201,8 @@ namespace GeometryClassLibrary
                         totalVolume -= volume;
                     }
                 }
-                throw new NotImplementedException();
-                //return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
+                
+                return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
 
             }
         }
@@ -247,16 +247,14 @@ namespace GeometryClassLibrary
         public Polyhedron(List<Polygon> passedPolygons)
             : base()
         {
-            List<Polygon> polygonsToUse = new List<Polygon>();
-            foreach (Polygon polygon in passedPolygons)
+            List<Polygon> newFaces = _makeFacesWithProperOrientation(passedPolygons);
+            
+            if ( newFaces == null || newFaces.Count == 0)
             {
-                polygonsToUse.Add(polygon);
+                throw new Exception("The polygons you're attempting to use do not form a single closed region.");
             }
-            //if (!polygonsToUse.DoesFormSingleClosedRegion())
-            //{
-            //    throw new Exception("The polygons you're attempting to use do not form a single closed region.");
-            //}
-            this.Polygons = polygonsToUse;
+
+            this.Polygons = newFaces;
         }
 
         /// <summary>
@@ -361,11 +359,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-
-        
-
-      
-
 
         public override Line MidLine()
         {
@@ -789,6 +782,138 @@ namespace GeometryClassLibrary
         {
             throw new NotImplementedException();
         }
+
+
+        /// <summary>
+        ///Checks if the polygons form a closed bounded region.
+        ///If they don't returns null. Otherwise it reorients every face, so that they all normalVectors point outward
+        ///and every set of edges on each face circulates counterclockwise when looked at from outside to inside
+        ///i.e. right hand rule
+        ///returns the oriented faces
+        /// </summary>
+        private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> passedPolygons)
+        {
+            List<Polygon> polygonList = passedPolygons.CopyList();
+
+            List<LineSegment> edges = polygonList.GetAllEdges();
+
+            //First check to that every edge sits on exactly two faces.
+            bool everyEdgeIsOntwoFaces = _everyEdgeIsOntwoFaces(polygonList, edges);
+            if (!everyEdgeIsOntwoFaces)
+            {
+                return null;
+            }
+
+            //Now we try to build piecewise the polyhedron from the faces
+            //we abort and return null if run out of faces, but have unmet edges, or
+            //all edges have two faces but we have faces left over
+            List<Polygon> placedFaces = new List<Polygon>();
+            List<Polygon> unplacedFaces = polygonList;
+
+            //keeps track of all edges in placedFaces that don't have neighboring faces
+            //Should be empty by the end of this algorithm
+            List<LineSegment> edgesWithoutNeighboringFace = new List<LineSegment>();
+
+            //we find the face with the lowest z value
+            Polygon lowestFace = polygonList[0];
+
+            foreach (Polygon face in polygonList)
+            {
+                if (face.CenterPoint.Z < lowestFace.CenterPoint.Z)
+                {
+                    lowestFace = face;
+                }
+            }
+            //place the first face
+            _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
+
+            LineSegment currentEdge = null;
+            Polygon nextFace = null;
+            
+            while (edgesWithoutNeighboringFace.Count != 0)
+            {
+                currentEdge = edgesWithoutNeighboringFace[0];
+                nextFace = _findAndOrientNextFace(currentEdge, unplacedFaces);
+                _placeFace(nextFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
+            }
+
+            if (unplacedFaces.Count == 0)
+            {
+                return placedFaces;
+            }
+            return null;
+            
+        }
+
+        /// <summary>
+        /// Checks that every edge exists on two distinct faces
+        /// </summary>
+        private static bool _everyEdgeIsOntwoFaces(List<Polygon> polygonList, List<LineSegment> edges)
+        {
+            if (edges == null)
+            {
+                return false;
+            }
+            foreach (LineSegment edge in edges)
+            {
+                int count = 0;
+                Polygon temp = new Polygon();
+                foreach (Polygon polygon in polygonList)
+                {
+                    if (polygon.HasSide(edge))
+                    {
+                        count++;
+                        temp = polygon;
+                    }
+                }
+                if (count != 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Places the face by updating all relevant lists 
+        /// </summary>
+        private static void _placeFace(Polygon face, List<Polygon> placedFaces, List<Polygon> unplacedFaces, List<LineSegment> edgesWithoutNeighboringFace)
+        {
+            placedFaces.Add(face);
+            unplacedFaces.Remove(face);
+            
+            //adds the new edges and removes the edges that now have two neighbor faces
+            var intersection = edgesWithoutNeighboringFace.Intersect(face.LineSegments).ToList();
+            edgesWithoutNeighboringFace.AddRange(face.LineSegments);
+            edgesWithoutNeighboringFace = edgesWithoutNeighboringFace.Except(intersection).ToList();
+        }
+
+        private static Polygon _findAndOrientNextFace(LineSegment currentEdge, List<Polygon> unplacedFaces)
+        {
+            foreach (Polygon polygon in unplacedFaces)
+            {
+                foreach (LineSegment edge in polygon.LineSegments)
+                {
+                    if (currentEdge == edge)
+                    {
+                        //checks for same direction by comparing basepoints
+                        if (currentEdge.BasePoint == edge.BasePoint)
+                        {
+                            //every edge should have opposite orientations on neighboring faces
+                            //this is a simple consequence of the right hand rule and the convention that normal vectors should point outward
+                            return polygon.ReverseOrientation();
+                        }
+                        else
+                        {
+                            return polygon;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
 
         #endregion
     }

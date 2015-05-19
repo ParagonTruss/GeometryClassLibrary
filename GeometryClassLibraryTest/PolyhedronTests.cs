@@ -13,6 +13,7 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class PolyhedronTests
     {
+        [Ignore()]
         [Test()]
         public void Polyhedron_MakeCoplanarLineSegmentsIntoPolygons()
         {
@@ -32,8 +33,8 @@ namespace GeometryClassLibraryTest
             testPoly.LineSegments.Should().BeEquivalentTo(lineSegments);
         }
 
+        [Ignore()]
         [Test()]
-
         public void Polyhedron_ShiftXY()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -54,6 +55,7 @@ namespace GeometryClassLibraryTest
             result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, -4), PointGenerator.MakePointWithInches(16, -4))).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_ShiftYZ()
         {
@@ -75,6 +77,7 @@ namespace GeometryClassLibraryTest
             result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 8), PointGenerator.MakePointWithInches(0, 0, 8))).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_MultiShiftReturnToOriginal()
         {
@@ -105,6 +108,7 @@ namespace GeometryClassLibraryTest
 
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Shift_RotationOnly()
         {
@@ -131,6 +135,7 @@ namespace GeometryClassLibraryTest
 
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Shift_TranslationOnly()
         {
@@ -161,6 +166,7 @@ namespace GeometryClassLibraryTest
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 7, 5), PointGenerator.MakePointWithInches(0, 3, 9)));
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Shift_RotateAndTranslate()
         {
@@ -187,6 +193,7 @@ namespace GeometryClassLibraryTest
 
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Shift_RotateAndTranslate_ThenReturnToOriginal()
         {
@@ -214,6 +221,7 @@ namespace GeometryClassLibraryTest
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Shift_RotateNotThroughOriginAndTranslate()
         {
@@ -241,6 +249,7 @@ namespace GeometryClassLibraryTest
 
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
         {
@@ -268,7 +277,8 @@ namespace GeometryClassLibraryTest
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 4, 0), PointGenerator.MakePointWithInches(0, 4, 0))).Should().BeTrue();
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
-        
+
+        [Ignore()]
         [Test()]
         public void Polyhedron_SimpleSlice()
         {
@@ -325,6 +335,7 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_DiagonalSlice()
         {
@@ -381,6 +392,7 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_MultiSlice()
         {
@@ -475,6 +487,7 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron4).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_SliceAtVertex()
         {
@@ -528,6 +541,7 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_DoesContainPointAlongSides()
         {
@@ -563,6 +577,7 @@ namespace GeometryClassLibraryTest
             resultNotOn.Should().BeFalse();
         }
 
+        [Ignore()]
         [Test()]
         public void Polyhedron_Vertices()
         {

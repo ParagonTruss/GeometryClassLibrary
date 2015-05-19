@@ -87,6 +87,23 @@ namespace GeometryClassLibrary
             }
         }
 
+        //finds the average of the vertices.
+        //Not the same as centroid, but close enough for smallish convex polygons
+        //is the same for every triangle
+        //faster algorithm running time than centroid
+        public Point CenterPoint
+        {
+            get
+            {
+                Vector sum = new Vector();
+                foreach(Point vertex in Vertices)
+                {
+                    sum += new Vector(vertex);
+                }
+                return (sum/Vertices.Count).EndPoint;
+            }
+        }
+
         // _findArea returns a possibly negative area to make the centroid formula work right
         // the Area property takes absolute value before returning
         public override Area Area
@@ -99,7 +116,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the centoid (geometric center point) of the Polygon
+        /// Returns the centroid (geometric center point) of the Polygon
+        /// i.e. the center of mass for a plate of uniform density
+        /// slower than CenterPoint algorithm
         /// </summary>
         /// <returns>the region's center as a point</returns>
         public override Point Centroid
@@ -146,7 +165,7 @@ namespace GeometryClassLibrary
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries)
+        public Polygon(List<LineSegment> passedBoundaries, bool shouldSort = true)
             : base()
         {
             bool isClosed = passedBoundaries.DoFormClosedRegion();
@@ -160,7 +179,10 @@ namespace GeometryClassLibrary
             {
                 this.Edges = new List<IEdge>(passedBoundaries);
 
-                this.LineSegments = this.LineSegments.SortIntoClockWiseSegments();
+                if (shouldSort)
+                {
+                    this.LineSegments = this.LineSegments.SortIntoClockWiseSegments();
+                }
 
                 this.BasePoint = LineSegments[0].BasePoint;
 
@@ -1709,6 +1731,24 @@ namespace GeometryClassLibrary
             
             return centroid;
 
+        }
+
+        /// <summary>
+        /// Returns the polygon with every linesegment's orientation reversed
+        /// and the linesegments listed in opposite order
+        /// so that vertices are also listed in this new order
+        /// If the polygon already circulates in a consistent direction,
+        /// Then this swaps the polygon's inside face with its outside one
+        /// </summary>
+        public Polygon ReverseOrientation()
+        {
+            List<LineSegment> flippedEdges = new List<LineSegment>();
+            foreach(LineSegment edge in LineSegments)
+            {
+                flippedEdges.Add(edge.Reverse());
+            }
+            flippedEdges.Reverse();
+            return new Polygon(flippedEdges, false);
         }
        
    

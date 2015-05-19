@@ -131,6 +131,11 @@ namespace GeometryClassLibrary
             return touchingPolygons;
         }
 
+        /// <summary>
+        /// returns all the edges from a list of polygons
+        /// </summary>
+        /// <param name="polygonList"></param>
+        /// <returns></returns>
         public static List<LineSegment> GetAllEdges(this List<Polygon> polygonList)
         {
             List<LineSegment> edges = new List<LineSegment>();
@@ -147,41 +152,19 @@ namespace GeometryClassLibrary
             return edges;
         }
 
-        private static bool _everyEdgeIsOntwoFaces(this List<Polygon> polygonList, List<LineSegment> edges)
-        {
-            foreach (LineSegment edge in edges)
-            {
-                int count = 0;
-                Polygon temp = new Polygon();
-                foreach (Polygon polygon in polygonList)
-                {
-                    if (polygon.HasSide(edge))
-                    {
-                        count++;
-                        temp = polygon;
-                    }
-                }
-                if (count != 2)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         /// <summary>
-        /// Checks if the set of polygons forms a single closed region.
+        /// Copies the list
+        /// Note: the edges may be oriented differently
         /// </summary>
-        /// <returns></returns>
-        public static bool DoesFormSingleClosedRegion(this List<Polygon> polygonList)
+        public static List<Polygon> CopyList(this List<Polygon> polygonList)
         {
-            List<LineSegment> edges = polygonList.GetAllEdges();
-            //First check to that every edge sits on exactly two faces.
-            if (!polygonList._everyEdgeIsOntwoFaces(edges))
+            List<Polygon> copiedList = new List<Polygon>();
+            foreach(Polygon polygon in polygonList)
             {
-                return false;
+                copiedList.Add(new Polygon(polygon));
             }
-            return true;
+
+            return copiedList;
         }
     }
 }
