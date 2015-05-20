@@ -155,8 +155,8 @@ namespace GeometryClassLibrary
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
-        public Polygon(List<Point> passedPoints)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) 
+        public Polygon(List<Point> passedPoints, bool shouldSort = true)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldSort) 
         {
             
         }
@@ -1750,8 +1750,25 @@ namespace GeometryClassLibrary
             flippedEdges.Reverse();
             return new Polygon(flippedEdges, false);
         }
-       
-   
+
+        /// <summary>
+        /// Splits the polygon into connecting triangles and returns them as a list
+        /// Note: the triangles will overlap if the polygon is concave
+        /// </summary>
+        /// <returns></returns>
+        public List<Polygon> SplitIntoTriangles()
+        {
+            List<Polygon> triangles = new List<Polygon>();
+
+            for (int i = 0; i < Vertices.Count - 2; i++)
+            {
+                List<Point> points = new List<Point>() { Vertices[0], Vertices[i + 1], Vertices[i + 2] };
+                Polygon triangle = new Polygon(points, false);
+                triangles.Add(triangle);
+            }
+            return triangles;
+        }
+
         #endregion
     }
 }

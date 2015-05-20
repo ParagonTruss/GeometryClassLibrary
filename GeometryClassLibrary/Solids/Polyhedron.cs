@@ -170,6 +170,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// The volume of the Polyhedron. Uses the 1st method described on this webpage: http://www.ecse.rpi.edu/~wrf/Research/Short_Notes/volume.html
+        /// Now using this formula instead: http://stackoverflow.com/a/1849746/4875161
         /// </summary>
         public override Volume Volume
         {
@@ -177,33 +178,44 @@ namespace GeometryClassLibrary
             {
                 Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
 
-                foreach (Polygon face in this.Faces)
+                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
+
+                foreach (Polygon triangle in triangles)
                 {
-                    Point basePoint = face.Vertices[0];
-                    Vector vector1 = new Vector(basePoint, face.Vertices[1]);
-                    Vector vector2 = new Vector(basePoint, face.Vertices[2]);
-                    Vector normalDirection = new Vector(vector1).CrossProduct(vector2);
-                    Line normalLine = new Line(new Direction(normalDirection), basePoint);
-                    Vector vectorToOrigin = new Vector(basePoint, new Point());
-                    Vector normalVector = vectorToOrigin.ProjectOntoLine(normalLine);
+                    double X1 = triangle.Vertices[0].X.Inches;
+                    double X2 = triangle.Vertices[1].X.Inches;
+                    double X3 = triangle.Vertices[2].X.Inches;
 
-                    Area area = face.Area;
-                    Distance height = normalVector.Magnitude;
-                    Volume volume = new Volume(VolumeType.CubicInches, area.InchesSquared * height.Inches);
+                    double Y1 = triangle.Vertices[0].Y.Inches;
+                    double Y2 = triangle.Vertices[1].Y.Inches;
+                    double Y3 = triangle.Vertices[2].Y.Inches;
 
-                    bool volumeIsPositive = normalDirection.IsPerpendicularTo(normalVector);
-                    if (volumeIsPositive)
-                    {
-                        totalVolume += volume;
-                    }
-                    else
-                    {
-                        totalVolume -= volume;
-                    }
+                    double Z1 = triangle.Vertices[0].Z.Inches;
+                    double Z2 = triangle.Vertices[1].Z.Inches;
+                    double Z3 = triangle.Vertices[2].Z.Inches;
+
+                    double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
+
+                    Matrix volumeMatrix = new Matrix(array);
+
+                    Volume volume = new Volume(VolumeType.CubicInches, volumeMatrix.Determinant() / 6);
+
+                    totalVolume += volume;
                 }
-                
-                return new Volume(VolumeType.CubicInches, Math.Abs(totalVolume.CubicInches));
+                return totalVolume;
 
+
+                //foreach (Polygon face in this.Faces)
+                //{
+                //    Area area = face.Area;
+                //    Distance height = (new Point()).DistanceTo(face);
+
+                //    double volumeInCubicInches = (area.InchesSquared * height.Inches) / 3;
+                //    Volume volume = new Volume(VolumeType.CubicInches, volumeInCubicInches);
+
+                //    totalVolume += volume;
+                //}
+                //return totalVolume;
             }
         }
 
@@ -857,13 +869,11 @@ namespace GeometryClassLibrary
             foreach (LineSegment edge in edges)
             {
                 int count = 0;
-                Polygon temp = new Polygon();
                 foreach (Polygon polygon in polygonList)
                 {
                     if (polygon.HasSide(edge))
                     {
                         count++;
-                        temp = polygon;
                     }
                 }
                 if (count != 2)
@@ -883,11 +893,26 @@ namespace GeometryClassLibrary
             unplacedFaces.Remove(face);
             
             //adds the new edges and removes the edges that now have two neighbor faces
-            var intersection = edgesWithoutNeighboringFace.Intersect(face.LineSegments).ToList();
-            edgesWithoutNeighboringFace.AddRange(face.LineSegments);
-            edgesWithoutNeighboringFace = edgesWithoutNeighboringFace.Except(intersection).ToList();
+            _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments);
         }
 
+        private static void _disjointUnion(List<LineSegment> passedList, List<LineSegment> otherList)
+        {
+            LineSegment[] array = new LineSegment[otherList.Count];
+            otherList.CopyTo(array);
+            List<LineSegment> list2 = array.ToList<LineSegment>();
+            List<LineSegment> list1 = passedList;
+            for (int i = 0; i < list2.Count; i++)
+            {
+                if (list1.Contains(list2[i]))
+                {
+                    list1.Remove(list2[i]);
+                    list2.Remove(list2[i]);
+                    i = -1;
+                }
+            }
+            list1.AddRange(list2);
+        }
         private static Polygon _findAndOrientNextFace(LineSegment currentEdge, List<Polygon> unplacedFaces)
         {
             foreach (Polygon polygon in unplacedFaces)

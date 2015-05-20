@@ -17,6 +17,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_MakeCoplanarLineSegmentsIntoPolygons()
         {
+            //Should probably be deleted because the
+            //ToDo: Remove? Polyhedron_MakeCoplanarLineSegmentsIntoPolygons
+
             List<LineSegment> lineSegments =
                 new List<Point> {
                     PointGenerator.MakePointWithInches(0.000,  0.000),
@@ -278,7 +281,6 @@ namespace GeometryClassLibraryTest
             s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 4, 0), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_SimpleSlice()
         {
@@ -335,7 +337,6 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_DiagonalSlice()
         {
@@ -392,7 +393,6 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_MultiSlice()
         {
@@ -487,7 +487,6 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron4).Should().BeTrue();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_SliceAtVertex()
         {
@@ -541,7 +540,6 @@ namespace GeometryClassLibraryTest
             results.Contains(ExpectedPolyhedron2).Should().BeTrue();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_DoesContainPointAlongSides()
         {
@@ -577,7 +575,6 @@ namespace GeometryClassLibraryTest
             resultNotOn.Should().BeFalse();
         }
 
-        [Ignore()]
         [Test()]
         public void Polyhedron_Vertices()
         {
@@ -615,19 +612,27 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polyhedron_Volume()
+        public void Polyhedron_Volume_Tetrahedron()
         {
             TestTetrahedron testTetrahedron = new TestTetrahedron();
-            Volume volume1 = testTetrahedron.Volume;
-            volume1.Should().Be(TestTetrahedron.ExpectedVolume);
+            Volume volume = testTetrahedron.Volume;
+            volume.Should().Be(TestTetrahedron.ExpectedVolume);
+        }
 
+        [Test()]
+        public void Polyhedron_Volume_RectangularBox()
+        {
             TestRectangularBox testBox = new TestRectangularBox();
-            Volume volume2 = testBox.Volume;
-            volume2.Should().Be(TestRectangularBox.ExpectedVolume);
+            Volume volume = testBox.Volume;
+            volume.Should().Be(TestRectangularBox.ExpectedVolume);
+        }
 
+        [Test()]
+        public void Polyhedron_Volume_ConcavePentagonalPrism()
+        {
             TestConcavePentagonalPrism testSolid = new TestConcavePentagonalPrism();
-            Volume volume3 = testSolid.Volume;
-            volume3.Should().Be(TestConcavePentagonalPrism.ExpectedVolume);
+            Volume volume = testSolid.Volume;
+            volume.Should().Be(TestConcavePentagonalPrism.ExpectedVolume);
         }
     }
 }

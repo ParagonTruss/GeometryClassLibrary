@@ -166,5 +166,17 @@ namespace GeometryClassLibrary
 
             return copiedList;
         }
+
+        public static List<Polygon> SplitIntoTriangles(this List<Polygon> polygonList)
+        {
+            List<Polygon> listOfTriangles = new List<Polygon>();
+            
+            foreach(Polygon polygon in polygonList)
+            {
+                listOfTriangles.AddRange(polygon.SplitIntoTriangles());
+            }
+
+            return listOfTriangles;
+        }
     }
 }

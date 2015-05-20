@@ -642,7 +642,7 @@ namespace GeometryClassLibrary
             else return Direction.UnitVector(passedType);
         }
         /// <summary>
-        /// Returns the DotProduct between two Vectors as double in terms of the passed Area Type
+        /// Returns the DotProduct between two Vectors as a distance
         /// </summary>
         public Distance DotProduct(Vector vector)
         {

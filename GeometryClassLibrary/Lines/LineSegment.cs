@@ -103,7 +103,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return this.GetHashCode();
+            return base.GetHashCode();
         }
 
         /// <summary>

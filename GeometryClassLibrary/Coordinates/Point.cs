@@ -296,11 +296,25 @@ namespace GeometryClassLibrary
             return new Distance(DistanceType.Inch, distanceInInches);
         }
 
+        /// <summary>
+        /// returns the shortest distance from the line to the point
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
         public Distance DistanceTo(Line passedLine)
         {
             Line perpLine = this.MakePerpendicularLineSegment(passedLine);
             double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
             return new Distance(DistanceType.Inch, distance);
+        }
+
+        public Distance DistanceTo(Plane passedPlane)
+        {
+            Vector planeToPointVector = new Vector(passedPlane.BasePoint, this);
+            Vector normalVector = planeToPointVector.ProjectOntoLine(passedPlane.NormalVector);
+            
+            Distance distance = normalVector.Magnitude;
+            return distance;
         }
 
         /// <summary>
@@ -422,16 +436,6 @@ namespace GeometryClassLibrary
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
             return IsOnVector(passedLineSegment);
-        }
-
-        public Vector VectorFromOriginToThisPoint()
-        {
-            Point origin = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
-
-            Vector returnVector = new Vector(origin, thisPoint);
-
-            return returnVector;
         }
 
         public Matrix ConvertToMatrixColumn()
