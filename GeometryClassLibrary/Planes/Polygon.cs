@@ -129,14 +129,6 @@ namespace GeometryClassLibrary
             }
         }
 
-        public override Vector NormalVector
-        {
-            get
-            {
-                return _getUnitNormalVector();
-            }
-        }
-
         #endregion
 
         #region Constructors
@@ -177,15 +169,20 @@ namespace GeometryClassLibrary
             }
             else if (isClosed && areCoplanar)
             {
-                this.Edges = new List<IEdge>(passedBoundaries);
-
                 if (shouldSort)
                 {
-                    this.LineSegments = this.LineSegments.SortIntoClockWiseSegments();
+                    this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
+                }
+                else
+                {
+                    this.LineSegments = passedBoundaries;
                 }
 
                 this.BasePoint = LineSegments[0].BasePoint;
+                
+                this.Edges = new List<IEdge>(LineSegments);
 
+                this.NormalVector = this._getUnitNormalVector();
             }
             else
             {

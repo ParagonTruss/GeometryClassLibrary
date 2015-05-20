@@ -207,11 +207,11 @@ namespace GeometryClassLibrary
 
                 //foreach (Polygon face in this.Faces)
                 //{
-                //    Area area = face.Area;
-                //    Distance height = (new Point()).DistanceTo(face);
+                //    Vector areaVector = face.NormalVector*face.Area.InchesSquared;
+                //    Vector heightVector = new Vector(face.BasePoint);
 
-                //    double volumeInCubicInches = (area.InchesSquared * height.Inches) / 3;
-                //    Volume volume = new Volume(VolumeType.CubicInches, volumeInCubicInches);
+                //    Distance volumeAsDistance = areaVector.DotProduct(heightVector);
+                //    Volume volume = new Volume(VolumeType.CubicInches, volumeAsDistance.Inches);
 
                 //    totalVolume += volume;
                 //}

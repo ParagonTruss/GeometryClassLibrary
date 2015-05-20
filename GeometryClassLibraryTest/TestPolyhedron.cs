@@ -41,7 +41,7 @@ namespace GeometryClassLibraryTest
     }
     public class TestTetrahedron : Polyhedron
     {
-        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 144);
+        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 48);
         public TestTetrahedron() : base(_makeFaces())
         {
 

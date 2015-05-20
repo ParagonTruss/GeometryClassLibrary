@@ -350,7 +350,7 @@ namespace GeometryClassLibraryTests
             Polygon upsideDownSquare = new Polygon(vertices1);
            
             Vector normal1 = upsideDownSquare.NormalVector;
-            (normal1 == new Vector(PointGenerator.MakePointWithInches(0, 0 ,-1))).Should().BeTrue();
+            (normal1 == new Vector(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 1, -1))).Should().BeTrue();
 
 
             Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 5);
@@ -362,7 +362,7 @@ namespace GeometryClassLibraryTests
             Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 });
 
             Vector normal2 = concavePentagon.NormalVector;
-            (normal2 == new Vector(PointGenerator.MakePointWithInches(0, 0, 1))).Should().BeTrue();
+            (normal2 == new Vector(PointGenerator.MakePointWithInches(0, 0, 5), PointGenerator.MakePointWithInches(0, 0, 6))).Should().BeTrue();
 
 
             List<LineSegment> bounds3 = new List<LineSegment>();
