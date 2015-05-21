@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace GeometryClassLibrary
 {
@@ -13,7 +15,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         // declares a two Distanceal array named _matrix. The "," denotes that it is 2d
-        public double[,] _matrix;
+        public Matrix<double> _matrix;
 
 
         /// <summary>
@@ -23,7 +25,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return _matrix.GetLength(0);
+                return _matrix.RowCount;
             }
         }
 
@@ -34,15 +36,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                // Check to make sure that there is at least one row
-                if (_matrix.Length != 0)
-                {
-                    return _matrix.GetLength(1);
-                }
-                else
-                {
-                    return 0;
-                }
+                return _matrix.ColumnCount;
             }
         }
 
@@ -56,8 +50,9 @@ namespace GeometryClassLibrary
         /// <param name="numRowsAndColumns"></param>
         public Matrix(int numRowsAndColumns)
         {
-            _matrix = new double[numRowsAndColumns, numRowsAndColumns];
+            _matrix = DenseMatrix.OfArray(new double[numRowsAndColumns, numRowsAndColumns]);
         }
+
 
         /// <summary>
         ///the constructor that is called when you say "new Matrix(numberOfRows, numberOfColumns);"
@@ -66,28 +61,23 @@ namespace GeometryClassLibrary
         /// <param name="numCols">The desired number of columns in the new matrix</param>
         public Matrix(int numRows, int numCols)
         {
-            _matrix = new double[numRows, numCols];
+            _matrix = DenseMatrix.OfArray(new double[numRows, numCols]);
         }
 
         /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
         /// <param name="passedMatrix"></param>
-        public Matrix(Matrix passedMatrix)
+        public Matrix(Matrix<double> passedMatrix)
         {
-            int rows = passedMatrix.NumberOfRows;
-            int columns = passedMatrix.NumberOfColumns;
-
-            _matrix = new double[rows, columns];
-
-            this.InsertMatrixAt(passedMatrix, 0, 0);
+            passedMatrix.CopyTo(_matrix);
         }
 
 
         /// <summary> Constructs Matrix object from a 2dArray </summary>
         public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
         {
-            this._matrix = passed2DArray;
+            this._matrix = DenseMatrix.OfArray(new double[passed2DArray.GetLength(0), passed2DArray.GetLength(1)]);
         }
 
         #endregion
