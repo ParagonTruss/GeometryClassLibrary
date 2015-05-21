@@ -129,20 +129,25 @@ namespace GeometryClassLibrary
         {
             get
             {
-                //LineSegment currentSegment = null;
-                //foreach (var vertex1 in Vertices)
-                //{
-                //    foreach (var vertex2 in Vertices)
-                //    {
-                //        currentSegment = new LineSegment(vertex1, vertex2);
-                //        if (!this.DoesContainLineSegment(currentSegment))
-                //        {
-                //            return false;
-                //        }
-                //    }
-                //}
-                //return true;
-                throw new NotImplementedException();
+                //First we check the Euler Characteristic: http://en.wikipedia.org/wiki/Euler_characteristic#Polyhedra
+                //Concave polyhedra sometimes have a characteristic other than 2.
+                int eulerCharacteristic = Vertices.Count - LineSegments.Count + Faces.Count;
+                if (eulerCharacteristic != 2)
+                {
+                    return false;
+                }
+
+                //Now we check to see if any of the faces are concave, which would make the polyhedron concave
+                foreach(Polygon face in Polygons)
+                {
+                    if (!face.IsConvex)
+                    {
+                        return false;
+                    }
+                }
+
+                //ToDo: We need a final catch all check, because this test will return false postives
+                return true;
             }
         }
         /// <summary>
