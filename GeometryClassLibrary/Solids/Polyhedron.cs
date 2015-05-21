@@ -122,7 +122,7 @@ namespace GeometryClassLibrary
         }
 
          /// <summary>
-        /// determines if the polygon is convex
+        /// determines if the polyhedron is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
         public bool IsConvex
@@ -146,7 +146,23 @@ namespace GeometryClassLibrary
                     }
                 }
 
-                //ToDo: We need a final catch all check, because this test will return false postives
+                //Now we check that for every face all the remaining vertices are on the same side of that plane
+                //http://stackoverflow.com/a/30380541/4875161
+                foreach (Polygon face in Polygons)
+                {
+                    List<Point> verticesToCheck = this.Vertices;
+                    foreach (Point vertex in face.Vertices)
+                    {
+                        verticesToCheck.Remove(vertex);
+                    }
+                    for (int i = 1; i < verticesToCheck.Count; i++)
+			        {
+			             if (!face.PointIsOnSameSideAs(verticesToCheck[0], verticesToCheck[i]))
+                         {
+                             return false;
+                         }
+			        } 
+                }
                 return true;
             }
         }
