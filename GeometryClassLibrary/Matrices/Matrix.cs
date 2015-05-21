@@ -167,9 +167,9 @@ namespace GeometryClassLibrary
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <returns></returns>
-        public static Matrix operator +(Matrix m1, Matrix m2)
+        public static Matrix<double> operator +(Matrix<double> m1, Matrix<double> m2)
         {
-            return m1.AddTo(m2);
+            return m1.Add(m2);
         }
 
         /// <summary>
@@ -178,9 +178,9 @@ namespace GeometryClassLibrary
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <returns></returns>
-        public static Matrix operator -(Matrix m1, Matrix m2)
+        public static Matrix<double> operator -(Matrix<double> m1, Matrix<double> m2)
         {
-            return m1.AddTo(m2 * -1);
+            return m1.Subtract(m2);
         }
 
         /// <summary>
