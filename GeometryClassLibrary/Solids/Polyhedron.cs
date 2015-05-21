@@ -122,27 +122,48 @@ namespace GeometryClassLibrary
         }
 
          /// <summary>
-        /// determines if the polygon is convex
+        /// determines if the polyhedron is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
         public bool IsConvex
         {
             get
             {
-                //LineSegment currentSegment = null;
-                //foreach (var vertex1 in Vertices)
-                //{
-                //    foreach (var vertex2 in Vertices)
-                //    {
-                //        currentSegment = new LineSegment(vertex1, vertex2);
-                //        if (!this.DoesContainLineSegment(currentSegment))
-                //        {
-                //            return false;
-                //        }
-                //    }
-                //}
-                //return true;
-                throw new NotImplementedException();
+                //First we check the Euler Characteristic: http://en.wikipedia.org/wiki/Euler_characteristic#Polyhedra
+                //Concave polyhedra sometimes have a characteristic other than 2.
+                int eulerCharacteristic = Vertices.Count - LineSegments.Count + Faces.Count;
+                if (eulerCharacteristic != 2)
+                {
+                    return false;
+                }
+
+                //Now we check to see if any of the faces are concave, which would make the polyhedron concave
+                foreach(Polygon face in Polygons)
+                {
+                    if (!face.IsConvex)
+                    {
+                        return false;
+                    }
+                }
+
+                //Now we check that for every face all the remaining vertices are on the same side of that plane
+                //http://stackoverflow.com/a/30380541/4875161
+                foreach (Polygon face in Polygons)
+                {
+                    List<Point> verticesToCheck = this.Vertices;
+                    foreach (Point vertex in face.Vertices)
+                    {
+                        verticesToCheck.Remove(vertex);
+                    }
+                    for (int i = 1; i < verticesToCheck.Count; i++)
+			        {
+			             if (!face.PointIsOnSameSideAs(verticesToCheck[0], verticesToCheck[i]))
+                         {
+                             return false;
+                         }
+			        } 
+                }
+                return true;
             }
         }
         /// <summary>

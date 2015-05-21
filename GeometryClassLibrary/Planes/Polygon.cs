@@ -67,20 +67,16 @@ namespace GeometryClassLibrary
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
-        public bool isConvex
+        public bool IsConvex
         {
             get
             {
-                LineSegment currentSegment = null;
-                foreach (var vertex1 in Vertices)
+                for (int i = 0; i + 1 < LineSegments.Count; i++)
                 {
-                    foreach (var vertex2 in Vertices)
+                   Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
+                    if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
                     {
-                        currentSegment = new LineSegment(vertex1, vertex2);
-                        if (!this.DoesContainLineSegment(currentSegment))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
                 return true;

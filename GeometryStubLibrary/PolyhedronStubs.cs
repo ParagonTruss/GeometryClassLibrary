@@ -126,5 +126,44 @@ namespace GeometryStubLibrary
 
             return faces;
         }
+
+        
+    }
+
+    public class ConcaveDecahedron : Polyhedron
+    {
+        public ConcaveDecahedron() : base(_makeFaces()) { }
+
+        private static List<Polygon> _makeFaces()
+        {
+            Point bottomPoint1 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point bottomPoint2 = PointGenerator.MakePointWithInches(0, 4, 0);
+            Point bottomPoint3 = PointGenerator.MakePointWithInches(4, 4, 0);
+            Point bottomPoint4 = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point middlePoint1 = PointGenerator.MakePointWithInches(1, 1, 5);
+            Point middlePoint2 = PointGenerator.MakePointWithInches(1, 3, 5);
+            Point middlePoint3 = PointGenerator.MakePointWithInches(3, 3, 5);
+            Point middlePoint4 = PointGenerator.MakePointWithInches(3, 1, 5);
+            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 10);
+            Point topPoint2 = PointGenerator.MakePointWithInches(0, 4, 10);
+            Point topPoint3 = PointGenerator.MakePointWithInches(4, 4, 10);
+            Point topPoint4 = PointGenerator.MakePointWithInches(4, 0, 10);
+
+            Polygon bottomFace = new Polygon(new List<Point>() { bottomPoint1, bottomPoint2, bottomPoint3, bottomPoint4 });
+            Polygon topFace = new Polygon(new List<Point>() { topPoint1, topPoint2, topPoint3, topPoint4 });
+            Polygon bottomSideFace1 = new Polygon(new List<Point>() { bottomPoint1, bottomPoint2, middlePoint2, middlePoint1 });
+            Polygon bottomSideFace2 = new Polygon(new List<Point>() { bottomPoint2, bottomPoint3, middlePoint3, middlePoint2 });
+            Polygon bottomSideFace3 = new Polygon(new List<Point>() { bottomPoint3, bottomPoint4, middlePoint4, middlePoint3 });
+            Polygon bottomSideFace4 = new Polygon(new List<Point>() { bottomPoint4, bottomPoint1, middlePoint1, middlePoint4 });
+            Polygon topSideFace1 = new Polygon(new List<Point>() { topPoint1, topPoint2, middlePoint2, middlePoint1 });
+            Polygon topSideFace2 = new Polygon(new List<Point>() { topPoint2, topPoint3, middlePoint3, middlePoint2 });
+            Polygon topSideFace3 = new Polygon(new List<Point>() { topPoint3, topPoint4, middlePoint4, middlePoint3 });
+            Polygon topSideFace4 = new Polygon(new List<Point>() { topPoint4, topPoint1, middlePoint1, middlePoint4 });
+
+            return new List<Polygon>(){ bottomFace, topFace,
+                                        bottomSideFace1, bottomSideFace2, bottomSideFace3, bottomSideFace4, 
+                                        topSideFace1, topSideFace2, topSideFace3, topSideFace4 };
+
+        }
     }
 }
