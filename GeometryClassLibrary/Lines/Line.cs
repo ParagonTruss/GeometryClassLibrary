@@ -499,6 +499,16 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// return the point of intersection, if any, between this line and the passed polygon
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public virtual Point Intersection(Polygon polygon)
+        {
+            return polygon.Intersection(this);
+        }
+
+        /// <summary>
         /// Returns whether or not the two lines intersect
         /// </summary>
         /// <param name="passedLine"></param>

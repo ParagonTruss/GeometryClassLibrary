@@ -4,6 +4,7 @@ using FluentAssertions;
 using System.Collections.Generic;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using GeometryStubLibrary;
 
 namespace GeometryClassLibraryTests
 {
@@ -380,7 +381,17 @@ namespace GeometryClassLibraryTests
             }
         }
 
-        
+        [Test()]
+        public void Polygon_IsConvex()
+        {
+            Polygon concaveQuadrilateral = new ConcaveQuadrilateral();
+            Polygon concavePentagon = new ConcavePentagon();
+            Polygon triangle = new Polygon7();
+
+            concaveQuadrilateral.IsConvex.Should().BeFalse();
+            concavePentagon.IsConvex.Should().BeFalse();
+            triangle.IsConvex.Should().BeTrue();
+        }
 
         [Test()]
         public void Polygon_AreaOfRectangle()
@@ -415,28 +426,17 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_AreaOfConcaveQuadrilateral()
         {
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(4, 1, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 2, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
-            bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 1, 0), PointGenerator.MakePointWithInches(4, 3, 0)));
-            Polygon testPolygon2 = new Polygon(bounds);
+            Polygon testPolygon = new ConcaveQuadrilateral();
 
             //check to see if its what we expected
-            Area testArea2 = testPolygon2.Area;
+            Area testArea2 = testPolygon.Area;
             testArea2.Should().Be(new Area(AreaType.InchesSquared, 3));
         }
 
         [Test()]
         public void Polygon_AreaOfConcavePentagon()
         {
-            Point point1 = PointGenerator.MakePointWithInches(0, 0, -1);
-            Point point2 = PointGenerator.MakePointWithInches(2, 0, -1);
-            Point point3 = PointGenerator.MakePointWithInches(2, 2, -1);
-            Point point4 = PointGenerator.MakePointWithInches(0, 2, -1);
-            Point point5 = PointGenerator.MakePointWithInches(1, 1, -1);
-         
-            Polygon concavePentagon = new Polygon(new List<Point> { point1, point2, point3, point4, point5 });
+            Polygon concavePentagon = new ConcavePentagon();
             Area area = concavePentagon.Area;
             Area expected = new Area(AreaType.InchesSquared, 3);
             (area == expected).Should().BeTrue();
