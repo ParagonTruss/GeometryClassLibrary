@@ -551,5 +551,29 @@ namespace GeometryClassLibraryTest
             Volume volume = testSolid.Volume;
             volume.Should().Be(TestConcavePentagonalPrism.ExpectedVolume);
         }
+
+        [Test()]
+        public void Polyhedron_Centroid_Tetrahedron()
+        {
+            TestTetrahedron testTetrahedron = new TestTetrahedron();
+            Point centroid = testTetrahedron.Centroid;
+            centroid.Should().Be(TestTetrahedron.ExpectedCentroid);
+        }
+
+        [Test()]
+        public void Polyhedron_Centroid_RectangularBox()
+        {
+            TestRectangularBox1 testBox = new TestRectangularBox1();
+            Point centroid = testBox.Centroid;
+            centroid.Should().Be(TestRectangularBox1.ExpectedCentroid);
+        }
+
+        [Test()]
+        public void Polyhedron_Centroid_ConcavePentagonalPrism()
+        {
+            TestConcavePentagonalPrism testSolid = new TestConcavePentagonalPrism();
+            Point centroid = testSolid.Centroid;
+            centroid.Should().Be(TestConcavePentagonalPrism.ExpectedCentroid);
+        }
     }
 }

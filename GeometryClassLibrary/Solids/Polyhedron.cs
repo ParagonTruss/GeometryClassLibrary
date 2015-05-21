@@ -182,29 +182,11 @@ namespace GeometryClassLibrary
 
                 foreach (Polygon triangle in triangles)
                 {
-                    double X1 = triangle.Vertices[0].X.Inches;
-                    double X2 = triangle.Vertices[1].X.Inches;
-                    double X3 = triangle.Vertices[2].X.Inches;
-
-                    double Y1 = triangle.Vertices[0].Y.Inches;
-                    double Y2 = triangle.Vertices[1].Y.Inches;
-                    double Y3 = triangle.Vertices[2].Y.Inches;
-
-                    double Z1 = triangle.Vertices[0].Z.Inches;
-                    double Z2 = triangle.Vertices[1].Z.Inches;
-                    double Z3 = triangle.Vertices[2].Z.Inches;
-
-                    double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
-
-                    Matrix volumeMatrix = new Matrix(array);
-
-                    Volume volume = new Volume(VolumeType.CubicInches, volumeMatrix.Determinant() / 6);
+                    Volume volume = new Volume(VolumeType.CubicInches, _volumeOfTetrahedronFormedWithTheOrigin(triangle));
 
                     totalVolume += volume;
                 }
                 return totalVolume;
-
-
                 //foreach (Polygon face in this.Faces)
                 //{
                 //    Vector areaVector = face.NormalVector*face.Area.InchesSquared;
@@ -219,12 +201,46 @@ namespace GeometryClassLibrary
             }
         }
 
+        private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
+        {
+            double X1 = triangle.Vertices[0].X.Inches;
+            double X2 = triangle.Vertices[1].X.Inches;
+            double X3 = triangle.Vertices[2].X.Inches;
+
+            double Y1 = triangle.Vertices[0].Y.Inches;
+            double Y2 = triangle.Vertices[1].Y.Inches;
+            double Y3 = triangle.Vertices[2].Y.Inches;
+
+            double Z1 = triangle.Vertices[0].Z.Inches;
+            double Z2 = triangle.Vertices[1].Z.Inches;
+            double Z3 = triangle.Vertices[2].Z.Inches;
+
+            double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
+
+            Matrix volumeMatrix = new Matrix(array);
+
+            return volumeMatrix.Determinant() / 6;
+        }
+
         public override Point Centroid
         {
             get
             {
-                throw new NotImplementedException();
+                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
+                Vector weightedSum = new Vector();
+                double totalVolume = 0;
 
+                foreach (Polygon triangle in triangles)
+                {
+                    double volume = _volumeOfTetrahedronFormedWithTheOrigin(triangle);
+
+                    Vector currentCentroidAsVector = new Vector(triangle.Vertices[0] + triangle.Vertices[1] + triangle.Vertices[2])/4;
+
+                    weightedSum += volume * currentCentroidAsVector;
+                    totalVolume += volume;
+
+                }
+                return (weightedSum/totalVolume).EndPoint;
             }
         }
 
