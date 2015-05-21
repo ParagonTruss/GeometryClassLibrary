@@ -329,7 +329,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
+            //try to cast the object to a polyhedron, if it fails then we know the user passed in the wrong type of object
             try
             {
                 Polyhedron comparablePolyhedron = (Polyhedron)obj;

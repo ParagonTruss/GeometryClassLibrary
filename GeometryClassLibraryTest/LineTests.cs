@@ -42,13 +42,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IntersectionTest_Millimeters()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
+            Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
+            Point basePointLine2 = PointGenerator.MakePointWithMillimeters(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithMillimeters(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithMillimeters(-2, 1, 3));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(0, 2.5, 1.5);
+            Point expectedResult = PointGenerator.MakePointWithMillimeters(0, 2.5, 1.5);
             Point actualResult = line1.Intersection(line2);
 
             actualResult.Should().Be(expectedResult);
