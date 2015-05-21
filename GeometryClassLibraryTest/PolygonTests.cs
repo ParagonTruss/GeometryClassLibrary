@@ -168,7 +168,7 @@ namespace GeometryClassLibraryTests
             Point insidePlane1 = PointGenerator.MakePointWithInches(-2, 2, 0);
             Point insidePlane2 = PointGenerator.MakePointWithInches(-2, 2, 1);
 
-            Point center1 = testPolygon.Centroid;
+            Point center1 = testPolygon.CenterPoint;
 
             //make sure the sides are not included
             Point sideTest = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -180,8 +180,8 @@ namespace GeometryClassLibraryTests
             lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(0, 2, 3)));
             Polygon testPolygon2 = new Polygon(lineSegments);
 
-            //make sure the PlaneRegion contains the centroid
-            Point center2 = testPolygon2.Centroid;
+            //make sure the PlaneRegion contains the CenterPoint
+            Point center2 = testPolygon2.CenterPoint;
 
             Point notOnPlane = center2.Shift(new Shift(PointGenerator.MakePointWithInches(.5, 0, 0)));
 
@@ -194,7 +194,7 @@ namespace GeometryClassLibraryTests
             testPolygon.ContainsInclusive(insidePlane2).Should().BeFalse();
             testPolygon.Touches(insidePlane2).Should().BeFalse();
 
-            //make sure the PlaneRegion contains the centroid (true for exclusive and inclusive, false for touching)
+            //make sure the PlaneRegion contains the CenterPoint (true for exclusive and inclusive, false for touching)
             testPolygon.ContainsExclusive(center1).Should().BeTrue();
             testPolygon.ContainsInclusive(center1).Should().BeTrue();
             testPolygon.Touches(center1).Should().BeFalse();
@@ -714,7 +714,7 @@ namespace GeometryClassLibraryTests
             bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, .5, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
             Polygon testPolygon5 = new Polygon(bounds5);
 
-            //check for overlapping when both centroids arent contained
+            //check for overlapping when both CenterPoints arent contained
             Point result15 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon5);
             (result15 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result15).Should().BeTrue();
