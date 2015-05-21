@@ -41,9 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
-    <Reference Include="GeometryStubLibrary">
-      <HintPath>..\..\geometry-stub-library\GeometryStubLibrary\bin\Debug\GeometryStubLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
@@ -102,6 +99,10 @@
     <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
       <Project>{be165769-e5c6-4d8e-ae6a-7075b1dd3d2d}</Project>
       <Name>GeometryClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GeometryStubLibrary\GeometryStubLibrary.csproj">
+      <Project>{0547226e-2a1a-4aaa-b91d-2ae879504706}</Project>
+      <Name>GeometryStubLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
