@@ -504,20 +504,13 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = passedVector;
 
-            if (vector2 == null)
+            if (vector2 == null || vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
             {
                 return true;
             }
-            else if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
-            {
-                return true;
-            }
-            
             return vector1.Direction == vector2.Direction;
             
         }
-
-
 
         /// <summary>
         /// determines whether two vectors point in opposite directions 
