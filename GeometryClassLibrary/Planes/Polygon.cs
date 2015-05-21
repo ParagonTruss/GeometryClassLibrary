@@ -30,10 +30,14 @@ namespace GeometryClassLibrary
             internal set
             {
                 List<IEdge> convertedList = new List<IEdge>();
-                foreach (var item in value)
+                if (value != null)
                 {
-                    convertedList.Add(item);
+                    foreach (var item in value)
+                    {
+                        convertedList.Add(item);
+                    }
                 }
+               
                 this.Edges = convertedList;
             }
         }
@@ -58,12 +62,70 @@ namespace GeometryClassLibrary
                 return verticesFound;
             }
         }
+        
+        /// <summary>
+        /// determines if the polygon is convex
+        /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
+        /// </summary>
+        public bool isConvex
+        {
+            get
+            {
+                LineSegment currentSegment = null;
+                foreach (var vertex1 in Vertices)
+                {
+                    foreach (var vertex2 in Vertices)
+                    {
+                        currentSegment = new LineSegment(vertex1, vertex2);
+                        if (!this.DoesContainLineSegment(currentSegment))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
 
+        //finds the average of the vertices.
+        //Not the same as centroid, but close enough for smallish convex polygons
+        //is the same for every triangle
+        //faster algorithm running time than centroid
+        public Point CenterPoint
+        {
+            get
+            {
+                Vector sum = new Vector();
+                foreach(Point vertex in Vertices)
+                {
+                    sum += new Vector(vertex);
+                }
+                return (sum/Vertices.Count).EndPoint;
+            }
+        }
+
+        // _findArea returns a possibly negative area to make the centroid formula work right
+        // the Area property takes absolute value before returning
         public override Area Area
         {
             get
             {
-                return this.LineSegments.FindAreaOfPolygon();
+                Area area = new Area(AreaType.InchesSquared, Math.Abs(_findArea().InchesSquared));
+                return area;
+            }
+        }
+
+        /// <summary>
+        /// Returns the centroid (geometric center point) of the Polygon
+        /// i.e. the center of mass for a plate of uniform density
+        /// slower than CenterPoint algorithm
+        /// </summary>
+        /// <returns>the region's center as a point</returns>
+        public override Point Centroid
+        {
+            get
+            {
+                return _findCentroid();
             }
         }
 
@@ -85,51 +147,42 @@ namespace GeometryClassLibrary
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
-        public Polygon(List<Point> passedPoints)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet()) { }
+        public Polygon(List<Point> passedPoints, bool shouldSort = true)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldSort) 
+        {
+            
+        }
 
         /// <summary>
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries)
+        public Polygon(List<LineSegment> passedBoundaries, bool shouldSort = true)
             : base()
         {
             bool isClosed = passedBoundaries.DoFormClosedRegion();
             bool areCoplanar = passedBoundaries.AreAllCoplanar();
-
-            if (isClosed && areCoplanar)
+           
+            if (passedBoundaries == null)
             {
-                this.LineSegments = new List<LineSegment>(passedBoundaries);
-                this.BasePoint = passedBoundaries[0].BasePoint;
-
-
-
-                this.NormalVector = passedBoundaries[0].CrossProduct(passedBoundaries[1]);
-
-                int i = 1;
-                while (this.NormalVector.Magnitude == new Distance())
+                this.LineSegments = new List<LineSegment>();
+            }
+            else if (isClosed && areCoplanar)
+            {
+                if (shouldSort)
                 {
-                    if (i + 1 > passedBoundaries.Count - 1)
-                    {
-                        this.NormalVector = passedBoundaries[passedBoundaries.Count - 1].CrossProduct(passedBoundaries[0]);
-                        break;
-                    }
-                    else
-                    {
-                        this.NormalVector = passedBoundaries[i].CrossProduct(passedBoundaries[i + 1]);
-                    }
-
-                    i++;
+                    this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
+                }
+                else
+                {
+                    this.LineSegments = passedBoundaries;
                 }
 
-                this.Edges = new List<IEdge>();
+                this.BasePoint = LineSegments[0].BasePoint;
+                
+                this.Edges = new List<IEdge>(LineSegments);
 
-                foreach (var edge in passedBoundaries)
-                {
-                    this.Edges.Add(edge);
-                }
-
+                this.NormalVector = this._getUnitNormalVector();
             }
             else
             {
@@ -196,8 +249,7 @@ namespace GeometryClassLibrary
         //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
         //constructing a plane fron a List<LineSegment>
         {
-            this.NormalVector = polygonToCopy.NormalVector;
-            this.BasePoint = polygonToCopy.BasePoint;
+            
         }
 
 
@@ -311,35 +363,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Returns the centoid (geometric center point) of the Polygon
-        /// </summary>
-        /// <returns>the region's center as a point</returns>
-        public override Point Centroid()
-        {
-            //the centorid is the average of all the points
-            Distance xSum = new Distance();
-            Distance ySum = new Distance();
-            Distance zSum = new Distance();
-
-            //we count each point twice
-            //the reason why we have to add all of the points twice is because we do not know which way the 
-            //boundaries may be facing, so if we only add the beginPoints we may get one point twice and skip a point
-            int count = this.LineSegments.Count * 2;
-
-            //sum up each of the points
-            foreach (LineSegment line in this.LineSegments)
-            {
-                xSum += line.BasePoint.X + line.EndPoint.X;
-                ySum += line.BasePoint.Y + line.EndPoint.Y;
-                zSum += line.BasePoint.Z + line.EndPoint.Z;
-            }
-
-            //now divide it by the number of points to find the average values
-            return PointGenerator.MakePointWithMillimeters(xSum.Millimeters / count, ySum.Millimeters / count, zSum.Millimeters / count);
-
-        }
 
         public new Polygon Shift(Shift passedShift)
         {
@@ -743,16 +766,16 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="otherPlane">Other plane region to find a shared point with</param>
         /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
-        public Point SharedPointNotOnThisPolygonsBoundary(Polygon otherPolygon)
+        public Point SharedPointNotOnEitherBoundary(Polygon otherPolygon)
         {
             //check the centroids
-            if (otherPolygon.ContainsInclusive(this.Centroid()))
+            if (otherPolygon.ContainsInclusive(this.Centroid))
             {
-                return this.Centroid();
+                return this.Centroid;
             }
-            if (this.ContainsExclusive(otherPolygon.Centroid()))
+            if (this.ContainsExclusive(otherPolygon.Centroid))
             {
-                return otherPolygon.Centroid();
+                return otherPolygon.Centroid;
             }
 
             //if we still havent found it try looking at the veticies of the otherPlane
@@ -822,7 +845,7 @@ namespace GeometryClassLibrary
                 Polygon overlapping = new Polygon(polygonToBeClipped);
 
                 //find a point where they overlap
-                Point referencePoint = this.SharedPointNotOnThisPolygonsBoundary(polygonToBeClipped);
+                Point referencePoint = this.SharedPointNotOnEitherBoundary(polygonToBeClipped);
 
                 //if we couldnt find a shared point than they must not overlap
                 if (referencePoint != null)
@@ -1284,6 +1307,58 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns a list of the points that line intersects the edges of the polygon
+        /// </summary>
+        public List<Point> CoplanarPointsOfIntersection(Line passedLine)
+        {
+            List<Point> intersections = new List<Point>();
+
+            foreach (LineSegment edge in this.LineSegments)
+            {
+
+                intersections.Add(edge.Intersection(passedLine));
+            }
+            return intersections;
+        }
+
+        /// <summary>
+        /// Returns a list of the points where the linesegment intersects the edges of the polygon
+        /// </summary>
+        public List<Point> CoplanarPointsOfIntersection(LineSegment linesegment)
+        {
+            List<Point> intersections = new List<Point>();
+
+            foreach (LineSegment edge in this.LineSegments)
+            {
+                Point intersection = edge.Intersection(linesegment);
+                if (intersection != null && !intersections.Contains(intersection))
+                {
+                    intersections.Add(intersection);
+                }
+               
+            }
+            return intersections;
+        }
+
+
+        /// <summary>
+        /// Returns a list of the lineSegments of intersection through the interior of the polygon
+        /// </summary>
+        public List<LineSegment> CoplanarLineSegmentsOfIntersection(Line passedLine)
+        {
+            
+            List<LineSegment> lineSegmentsOfIntersection = new List<LineSegment>();
+
+            List<Point> pointsOfIntersection = CoplanarPointsOfIntersection(passedLine);
+
+            for (int i = 0; 2*i + 1 < pointsOfIntersection.Count; i++ )
+            {
+                LineSegment newLineSegment = new LineSegment(pointsOfIntersection[2*i], pointsOfIntersection[2*i + 1]);
+                lineSegmentsOfIntersection.Add(newLineSegment);
+            }
+            return lineSegmentsOfIntersection;
+        }
+        /// <summary>
         /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
         /// </summary>
         /// <param name="passedLine"></param>
@@ -1354,7 +1429,7 @@ namespace GeometryClassLibrary
                     Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);
 
                     //if the point is on the side outside of our region we know it is not in it and can return
-                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid()))
+                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid))
                     {
                         //since its inclusive, if the point is on the plane its still good
                         if (!divisionPlane.Contains(passedPoint))
@@ -1389,6 +1464,22 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// determines if the polygon contains this segment as an edge
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
+        public bool HasSide(LineSegment segment)
+        {
+            foreach(LineSegment edge in LineSegments)
+            {
+                if (edge == segment)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
         /// Returns whether or not the two Polygons share a common side meaning that the side is exactly the same as the other's side
         /// </summary>
         /// <param name="otherPolygon">The other polygon to see if we share an exact side with</param>
@@ -1409,7 +1500,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not any side in this polygon contains a side of the other polygon. If this polygons side is larger but contains the others it will return true
+        /// Returns whether or not any side in this polygon contains a side of the other polygon. If this polygons side is larger but contains the other it will return true
         /// </summary>
         /// <param name="otherPolygon">The other polygon to see if we share or contain in one of our sides one of its sides</param>
         /// <returns>Returns true if any of this polygon's sides contain any of the other Polygon's sides</returns>
@@ -1419,7 +1510,7 @@ namespace GeometryClassLibrary
             {
                 foreach (LineSegment segmentOther in otherPolygon.LineSegments)
                 {
-                    if (segment.DoesOverlapInSameDirection(segmentOther))
+                    if (segment.Contains(segmentOther))
                     {
                         return true;
                     }
@@ -1445,6 +1536,38 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        //Warning: should not be used outside of certain applications. This assumes, that you are looking at a segment through adjacent intersectionpoints.
+        public bool _doesContainSegmentAlongBoundary(LineSegment linesegment)
+        {
+            return DoesContainPointAlongSides(linesegment.BasePoint) && DoesContainPointAlongSides(linesegment.MidPoint) && DoesContainPointAlongSides(linesegment.EndPoint);
+        }
+
+        /// <summary>
+        /// checks if a linesegment is a chord. i.e. endpoints on boundary & all other points interior.
+        /// </summary>
+        public bool DoesContainLineSegment(LineSegment lineSegment)
+        {
+            List<Point> points = CoplanarPointsOfIntersection(lineSegment);
+            int numberOfIntersections = points.Count;
+            if (numberOfIntersections <= 2)
+            {
+                 return true;
+            }
+            else
+            {
+                for (int i = 1; 2*i < numberOfIntersections; i++)
+                {
+                    LineSegment segment = new LineSegment(points[2 * i - 1], points[2 * i]);
+                    if (!_doesContainSegmentAlongBoundary(segment))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+           
+        }
+
         /// <summary>
         /// Finds a vertex of this polygon that is not contained by the given plane
         /// </summary>
@@ -1462,7 +1585,186 @@ namespace GeometryClassLibrary
 
             return null;
         }
+        // Returns a normalVector of the polygon.
+        // or the zero vector, if the polygon has no sides.
+        private Vector _getUnitNormalVector()
+        {
+            if (this.isValidPolygon())
+            {
+                LineSegment baseSegment = this.LineSegments[0];
+                LineSegment otherSegment = new LineSegment();
+                Vector normalVector = new Vector();
+                foreach (Point vertex in this.Vertices)
+                {
+                    otherSegment = new LineSegment(BasePoint, vertex);
 
+                    if (this.DoesContainLineSegment(otherSegment))
+                    {
+                        normalVector = baseSegment.CrossProduct(otherSegment);
+                    }
+                    else
+                    {
+                        normalVector = otherSegment.CrossProduct(baseSegment);
+                    }
+
+                    if (normalVector.Magnitude != new Distance())
+                    {
+                        break;
+                    }
+                }
+                return normalVector / normalVector.Magnitude.Inches;
+            }
+            return new Vector(BasePoint, BasePoint);
+        }
+
+
+      
+        //Determines the plane which we will rotate and project onto.
+        private Plane _planeWithSmallestAngleBetween()
+        {
+            double angleXY = this.SmallestAngleBetween(Plane.XY).Degrees;
+            double angleXZ = this.SmallestAngleBetween(Plane.XZ).Degrees;
+            double angleYZ = this.SmallestAngleBetween(Plane.YZ).Degrees;
+
+            double smallest = Math.Min(Math.Min(angleXY, angleXZ), angleYZ);
+            if (angleXY == smallest)
+            {
+                return Plane.XY;
+            }
+            else if (angleYZ == smallest)
+            {
+                return Plane.YZ;
+            }
+            return Plane.XZ;
+        }
+      
+        //Returns the necessary rotation, before we project
+        private Rotation _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane()
+        {
+            Plane plane = _planeWithSmallestAngleBetween();
+            if (plane == Plane.YZ)
+            {
+                return new Rotation(new Line(Direction.Up), new Angle(AngleType.Degree, 90));
+            }
+            else if (plane == Plane.XZ)
+            {
+                return new Rotation(new Line(Direction.Right), new Angle(AngleType.Degree, 90));
+            }
+            else
+            {
+                return new Rotation();
+            }
+        }
+
+        private Polygon _projectOntoXYPlane()
+        {
+            List<Point> projectedVertices = new List<Point>();
+            foreach(Point vertex in Vertices)
+            {
+                projectedVertices.Add(new Point(vertex.X, vertex.Y, new Distance()));
+            }
+            return new Polygon(projectedVertices);
+        }
+
+        //Assumes the segments are ordered and circulating in a consistent direction
+        //First finds which of XY, XZ, and YZ planes makes the smallest angle with the polygon
+        //then rotates so that the polygon makes the smallest angle with XY
+        //then we project downard and calculate area by this formula in XY:
+        //Uses this formula: http://en.wikipedia.org/wiki/Polygon#Area_and_centroid
+        //then we divide by cos(angle), where thats the angle between the (rotated) polygon and XY.
+        //_findArea returns a possibly negative area to make centroid formula work right
+        //the Area property takes absolute value before returning
+        private Area _findArea()
+        {
+            Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
+            Polygon rotated = this.Rotate(rotation);
+            Polygon projected = rotated._projectOntoXYPlane();
+
+            List<Point> vertices = projected.Vertices;
+
+            Area sum = new Area(AreaType.InchesSquared, 0);
+            Point previousVertex = vertices[vertices.Count - 1];
+
+            foreach(Point vertex in vertices)
+            {
+                sum += previousVertex.X * vertex.Y - vertex.X * previousVertex.Y;
+                previousVertex = vertex;
+            }
+
+            Angle angle = rotated.SmallestAngleBetween(Plane.XY);
+            
+            double area = sum.InchesSquared / (2 * Math.Cos(angle.Radians));
+            
+            return new Area(AreaType.InchesSquared, area);
+        }
+
+        private Point _findCentroid()
+        {
+            Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
+            Polygon rotated = this.Rotate(rotation);
+            Polygon projected = rotated._projectOntoXYPlane();
+
+            List<Point> vertices = projected.Vertices;
+
+            Distance sumX = new Distance(DistanceType.Inch, 0);
+            Distance sumY = new Distance(DistanceType.Inch, 0);
+            Point previousVertex = vertices[vertices.Count - 1];
+
+            foreach (Point vertex in vertices)
+            {
+                sumX += (previousVertex.X + vertex.X) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
+                sumY += (previousVertex.Y + vertex.Y) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
+                previousVertex = vertex;
+            }
+            double areaOfProjected = projected._findArea().InchesSquared;
+            Distance xComp = sumX / (6 * areaOfProjected);
+            Distance yComp = sumY / (6 * areaOfProjected);
+
+            Point centroidOfProjected = new Point(xComp, yComp);
+
+            Line lineOfProjection = new Line(Direction.Out, centroidOfProjected);
+            Point centroidRotated = ((Plane)rotated).Intersection(lineOfProjection);
+            Point centroid = centroidRotated.Rotate3D(rotation.Inverse());
+            
+            return centroid;
+
+        }
+
+        /// <summary>
+        /// Returns the polygon with every linesegment's orientation reversed
+        /// and the linesegments listed in opposite order
+        /// so that vertices are also listed in this new order
+        /// If the polygon already circulates in a consistent direction,
+        /// Then this swaps the polygon's inside face with its outside one
+        /// </summary>
+        public Polygon ReverseOrientation()
+        {
+            List<LineSegment> flippedEdges = new List<LineSegment>();
+            foreach(LineSegment edge in LineSegments)
+            {
+                flippedEdges.Add(edge.Reverse());
+            }
+            flippedEdges.Reverse();
+            return new Polygon(flippedEdges, false);
+        }
+
+        /// <summary>
+        /// Splits the polygon into connecting triangles and returns them as a list
+        /// Note: the triangles will overlap if the polygon is concave
+        /// </summary>
+        /// <returns></returns>
+        public List<Polygon> SplitIntoTriangles()
+        {
+            List<Polygon> triangles = new List<Polygon>();
+
+            for (int i = 0; i < Vertices.Count - 2; i++)
+            {
+                List<Point> points = new List<Point>() { Vertices[0], Vertices[i + 1], Vertices[i + 2] };
+                Polygon triangle = new Polygon(points, false);
+                triangles.Add(triangle);
+            }
+            return triangles;
+        }
 
         #endregion
     }

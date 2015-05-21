@@ -52,5 +52,18 @@ namespace GeometryClassLibraryTest
             (rotation1 == rotation4).Should().BeFalse();
             (rotation3 != rotation4).Should().BeTrue();
         }
+
+        [Test()]
+        public void Rotation_Inverse()
+        {
+            Line axis = new Line(PointGenerator.MakePointWithInches(-2, 7, 0), PointGenerator.MakePointWithInches(0, 1, 1));
+            Rotation rotation = new Rotation(axis, new Angle(AngleType.Degree, 42));
+            Point point = PointGenerator.MakePointWithInches(1, 1, 1);
+            
+            Point rotated = point.Rotate3D(rotation);
+            Point unrotated = rotated.Rotate3D(rotation.Inverse());
+           
+            (point == unrotated).Should().BeTrue();
+        }
     }
 }

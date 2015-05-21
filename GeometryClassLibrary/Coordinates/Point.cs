@@ -212,7 +212,14 @@ namespace GeometryClassLibrary
 
         public override string ToString()
         {
-            return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
+            if (this.Z != new Distance())
+            {
+                return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
+            }
+            else
+            {
+                return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString();
+            }
         }
 
         #endregion
@@ -258,6 +265,14 @@ namespace GeometryClassLibrary
         {
             return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));
         }
+        /// <summary>
+        /// Flips the sign of each coordinate
+        /// </summary>
+        /// <returns>a new point in the new location</returns>
+        public Point Negate()
+        {
+            return new Point(X * -1, Y * -1, Z * -1);
+        }
 
         /// <summary>
         /// uses the distance formula to find a the distance between this point and another
@@ -281,11 +296,25 @@ namespace GeometryClassLibrary
             return new Distance(DistanceType.Inch, distanceInInches);
         }
 
+        /// <summary>
+        /// returns the shortest distance from the line to the point
+        /// </summary>
+        /// <param name="passedLine"></param>
+        /// <returns></returns>
         public Distance DistanceTo(Line passedLine)
         {
             Line perpLine = this.MakePerpendicularLineSegment(passedLine);
             double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
             return new Distance(DistanceType.Inch, distance);
+        }
+
+        public Distance DistanceTo(Plane passedPlane)
+        {
+            Vector planeToPointVector = new Vector(passedPlane.BasePoint, this);
+            Vector normalVector = planeToPointVector.ProjectOntoLine(passedPlane.NormalVector);
+            
+            Distance distance = normalVector.Magnitude;
+            return distance;
         }
 
         /// <summary>
@@ -396,18 +425,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsOnVector(Vector passedVector)
         {
-            if (this.IsOnLine(passedVector))
-            {
-                Vector vectorFromStartPointToPoint = new Vector(passedVector.BasePoint, this);
-                Vector vectorFromEndPointToPoint = new Vector(passedVector.EndPoint, this);
-
-                // if the vectors point in opposite directions (towards the middle) or the point is an endpoint, it's true
-                return vectorFromStartPointToPoint.PointInOppositeDirections(vectorFromEndPointToPoint) ||
-                    this.Equals(passedVector.BasePoint) ||
-                    this.Equals(passedVector.EndPoint);
-            }
-
-            return false;
+            return passedVector.Contains(this);
         }
 
         /// <summary>
@@ -418,16 +436,6 @@ namespace GeometryClassLibrary
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
             return IsOnVector(passedLineSegment);
-        }
-
-        public Vector VectorFromOriginToThisPoint()
-        {
-            Point origin = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point thisPoint = PointGenerator.MakePointWithInches(X.Inches, Y.Inches, Z.Inches);
-
-            Vector returnVector = new Vector(origin, thisPoint);
-
-            return returnVector;
         }
 
         public Matrix ConvertToMatrixColumn()
@@ -445,7 +453,7 @@ namespace GeometryClassLibrary
             Point pointToReturn = this;
 
             //we need to untranslate the point first if we are negating a previous shift so that it returns 
-            //correcly - for a full explaination look in Shift.cs where isNegatedShift is declared
+            //correcly - for a full explanation look in Shift.cs where isNegatedShift is declared
             if (passedShift.isNegatedShift)
             {
                 pointToReturn = pointToReturn.Translate(new Translation(passedShift.Displacement));

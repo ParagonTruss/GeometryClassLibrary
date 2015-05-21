@@ -9,6 +9,7 @@ namespace GeometryClassLibrary
 {
     /// <summary>
     /// A vector is a line segment that has a direction
+    /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
     public class Vector : Line
     {
@@ -56,25 +57,25 @@ namespace GeometryClassLibrary
             get { return new Point(XComponent, YComponent, ZComponent) + BasePoint; }
         }
 
-        /// <summary>
-        /// Allows the xyz components of the vector to be able to be accessed as an array
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        private Distance this[int i]
-        {
-            get
-            {
-                if (i == 0)
-                    return XComponent;
-                else if (i == 1)
-                    return YComponent;
-                else if (i == 2)
-                    return ZComponent;
-                else
-                    throw new Exception("No item of that index!");
-            }
-        }
+        ///// <summary>
+        ///// Allows the xyz components of the vector to be able to be accessed as an array
+        ///// </summary>
+        ///// <param name="i"></param>
+        ///// <returns></returns>
+        //private Distance this[int i]
+        //{
+        //    get
+        //    {
+        //        if (i == 0)
+        //            return XComponent;
+        //        else if (i == 1)
+        //            return YComponent;
+        //        else if (i == 2)
+        //            return ZComponent;
+        //        else
+        //            throw new Exception("No item of that index!");
+        //    }
+        //}
 
         #endregion
 
@@ -206,7 +207,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a new Vector with each component multiplied by the acalar (order of terms does not matter)
+        /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
         /// <param name="passedVector"></param>
         /// <param name="scalar"></param>
@@ -277,10 +278,10 @@ namespace GeometryClassLibrary
             {
                 Vector vec = (Vector)obj;
 
-                bool areInSameDirection = PointInSameDirection(vec);
-                bool magnitudesEqual = Magnitude == vec.Magnitude;
+                bool basePointsEqual = (this.BasePoint == vec.BasePoint);
+                bool endPointsEqual = (this.EndPoint == vec.EndPoint);
 
-                return areInSameDirection && magnitudesEqual;
+                return basePointsEqual && endPointsEqual;
             }
             //if it was not a vector than it cant be equal
             catch (InvalidCastException)
@@ -301,6 +302,15 @@ namespace GeometryClassLibrary
                 return 0;
             else
                 return this._magnitude.CompareTo(other._magnitude);
+        }
+
+        /// <summary>
+        /// returns the vector as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("BasePoint= {0}, EndPoint= {1}, Magnitude= {2}", this.BasePoint.ToString(), this.EndPoint.ToString(), this.Magnitude.ToString());
         }
 
         #endregion
@@ -365,17 +375,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector">The Vector to see if is contained in this one</param>
         /// <returns>Returns a bool of whether or not the Vector is contained</returns>
-        public bool Contains(Vector passedVector)
+        public bool Contains(Vector vector)
         {
-            //and their directions to the points need to be the same as ours
-            Vector toOtherBasePoint = new Vector(this.BasePoint, passedVector.BasePoint);
-            Vector toOtherEndPoint = new Vector(this.BasePoint, passedVector.EndPoint);
+            bool containsBasePoint = (this.Contains(vector.BasePoint));
+            bool containsEndPoint = (this.Contains(vector.EndPoint));
 
-            bool areBothInSameDirectionAsThisOrAreBasePoint = (this.Direction == toOtherBasePoint.Direction || toOtherBasePoint.Magnitude == new Distance())
-                && (this.Direction == toOtherEndPoint.Direction || toOtherEndPoint.Magnitude == new Distance());
-            bool bothMagnitudesAreSmaller = toOtherBasePoint.Magnitude < this.Magnitude && toOtherEndPoint.Magnitude < this.Magnitude;
-
-            return areBothInSameDirectionAsThisOrAreBasePoint && bothMagnitudesAreSmaller;
+            return containsBasePoint && containsEndPoint;
         }
 
         /// <summary>
@@ -383,12 +388,15 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="pointToSeeIfIsContained">The point to see if is on the vector</param>
         /// <returns>Returns a bool of whether or not the point is contained</returns>
-        public bool Contains(Point pointToSeeIfIsContained)
+        public override bool Contains(Point point)
         {
             //make a vector from this line to the point and then see if the vector is contained
-            Vector pointVector = new Vector(this.BasePoint, pointToSeeIfIsContained);
+            Vector pointVector = new Vector(this.BasePoint, point);
 
-            return this.Contains(pointVector);
+            bool sameDirection = this.PointInSameDirection(pointVector);
+            bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
+
+            return sameDirection && greaterMagnitude;
         }
 
         /// <summary>
@@ -456,21 +464,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the cross product of the 2 vectors(i.e. a vector that is perpendicular to both this vector and the passed Vector)
+        /// Returns the cross product of the 2 vectors
+        /// which is always perpendicular to both vectors
+        /// and whose magnitude is the area of the parellelogram spanned by those two vectors
+        /// Consequently if they point in the same (or opposite) direction, than the cross product is zero
         /// </summary>
         /// <param name="?"></param>
         /// <returns></returns>
         public Vector CrossProduct(Vector passedVector)
         {
-            Point originPoint = new Point();
             Vector v1 = new Vector(this);
             Vector v2 = new Vector(passedVector);
-
-            if (this.BasePoint != originPoint || passedVector.BasePoint != originPoint)
-            {
-                v1.BasePoint = originPoint;
-                v2.BasePoint = originPoint;
-            }
 
             //Find each component 
 
@@ -483,80 +487,49 @@ namespace GeometryClassLibrary
             double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
             double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
 
-            Distance newX = Distance.MakeDistanceWithInches((xProduct1) - (xProduct2));
-            Distance newY = Distance.MakeDistanceWithInches((yProduct1) - (yProduct2));
-            Distance newZ = Distance.MakeDistanceWithInches((zProduct1) - (zProduct2));
+            double newX = (xProduct1) - (xProduct2);
+            double newY = (yProduct1) - (yProduct2);
+            double newZ = (zProduct1) - (zProduct2);
 
-            return new Vector(PointGenerator.MakePointWithInches(newX.Inches, newY.Inches, newZ.Inches));
+            return new Vector(PointGenerator.MakePointWithInches(newX, newY, newZ));
         }
 
         /// <summary>
-        /// determines whether two vectors point in the same direction using comparisons of x, y, and z components
+        /// determines whether two vectors point in the same direction
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
         public bool PointInSameDirection(Vector passedVector)
         {
-            // checks to see if there's more than 1 nonzero component
-            int componentIndex1 = -1;
-            int componentIndex2 = -1;
-            int numberOfZeroComponents1 = 0;
-            int numberOfZeroComponents2 = 0;
+            Vector vector1 = this;
+            Vector vector2 = passedVector;
 
-            // checks the first Vector
-            for (int i = 0; i < 3; i++)
+            if (vector2 == null)
             {
-                if (this[i] == new Distance())
-                    numberOfZeroComponents1++;
-                else
-                    componentIndex1 = i;
+                return true;
             }
-
-            // checks the second Vector
-            for (int j = 0; j < 3; j++)
+            else if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
             {
-                if (passedVector[j] == new Distance())
-                    numberOfZeroComponents2++;
-                else
-                    componentIndex2 = j;
+                return true;
             }
-
-            // if there's only one, our job becomes a lot simpler
-            // make sure it's the same component, and then check to see if multiplying them creates a number greater than 0, which means they have different signs
-            if (numberOfZeroComponents1 == 2 && numberOfZeroComponents2 == 2 && componentIndex1 == componentIndex2)
-                return this[componentIndex1] * passedVector[componentIndex2] > new Area();
-
-            // uses compareTo as a factor and compares it to the other quotients, determining whether the
-            // component is a multiple of the other component.  Negate() is used for opposite directions
-            double compareTo;
-
-            // determines a component that does not equal 0 to use as a probable factor
-            if (this.XComponent != new Distance())
-                compareTo = Math.Abs(this.XComponent / passedVector.XComponent);
-            else if (this.YComponent != new Distance())
-                compareTo = Math.Abs(this.YComponent / passedVector.YComponent);
-            else if (this.ZComponent != new Distance())
-                compareTo = Math.Abs(this.ZComponent / passedVector.ZComponent);
-            else
-                compareTo = 0;
-
-            return passedVector.XComponent * compareTo == this.XComponent &&
-                passedVector.YComponent * compareTo == this.YComponent &&
-                passedVector.ZComponent * compareTo == this.ZComponent;
+            
+            return vector1.Direction == vector2.Direction;
+            
         }
 
+
+
         /// <summary>
-        /// determines whether two vectors point in opposite directions using comparisons of x, y, and z components
+        /// determines whether two vectors point in opposite directions 
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
         public bool PointInOppositeDirections(Vector passedVector)
         {
-            //flip one of the vectors
-            Vector passedVectorInOppositeDirection = passedVector.Reverse();
-
-            //then check if they are in the same direction
-            return this.PointInSameDirection(passedVectorInOppositeDirection);
+            Vector vector1 = this;
+            Vector vector2 = passedVector;
+            
+            return (vector1.Direction == vector2.Direction.Reverse());
         }
 
         /// <summary>
@@ -573,32 +546,31 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// creates a new vector towards acting on the same point but from the opposite side. 
-        /// 
-        /// In other words does not do this  <-------|------->
-        /// 
-        /// It does this: ------>|<-------
-        /// 
-        /// 
+        /// Switches the a vectors head with its tail.
         /// </summary>
-        /// <returns>a negative instance of this Vector</returns>
-        public Vector Negate()
-        {
-            //first flip the vector about itself
-            Vector flipped = new Vector(this.EndPoint, this.BasePoint);
-
-            //next translate the vector to the correct position
-            return flipped.Translate(new Translation(flipped.BasePoint));
-        }
-
-
+        /// <returns></returns>
         public Vector Reverse()
         {
-            //first flip the vector about itself
-            Vector flipped = new Vector(this.EndPoint, this.BasePoint);
+            return new Vector(this.EndPoint, this.BasePoint);
+        }
+       /// <summary>
+        /// Flips the vector about its tail.
+        /// Like this:  <-------|------->
+       /// </summary>
+       /// <returns></returns>
+        public Vector FlipAboutTail()
+        {
+            Vector reversed = this.Reverse();
+            return new Vector(this.BasePoint, (reversed + reversed).EndPoint);
+        }
 
-            //next translate the vector to the correct position
-            return flipped.Translate(new Translation(flipped.EndPoint));
+        /// <summary>
+        /// Flips the vector about its head.
+        /// Like this: ------>|<-------
+        /// </summary><
+        public Vector FlipAboutHead()
+        {
+            return new Vector((this + this).EndPoint, this.BasePoint);
         }
 
         /// <summary>
@@ -649,6 +621,11 @@ namespace GeometryClassLibrary
             return new Vector(newBasePoint, newEndPoint);
         }
 
+        public Vector TranslateToOrigin()
+        {
+            Translation ontoOrigin = new Translation(BasePoint.Negate());
+            return Translate(ontoOrigin);
+        }
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
@@ -664,7 +641,26 @@ namespace GeometryClassLibrary
             }
             else return Direction.UnitVector(passedType);
         }
+        /// <summary>
+        /// Returns the DotProduct between two Vectors as a distance
+        /// </summary>
+        public Distance DotProduct(Vector vector)
+        {
+            Vector vector1 = this;
+            Vector vector2 = vector;
 
+            var xTerm = vector1.XComponent * vector2.XComponent;
+            var yTerm = vector1.YComponent * vector2.YComponent;
+            var zTerm = vector1.ZComponent * vector2.ZComponent;
+            
+            var sum = xTerm + yTerm + zTerm;
+            return new Distance(DistanceType.Inch, sum.InchesSquared);
+        }
+        public bool DotProductIsPositive(Vector vector)
+        {
+            var product = DotProduct(vector);
+            return (product > new Distance());
+        }
         /// <summary>
         /// Returns whether or not the dot product between the two vectors is approximately equal to 0
         /// This takes into account the magnitude of the vectors and scales them in a way in which you
@@ -675,20 +671,36 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool DotProductIsEqualToZero(Vector other)
         {
-            //find out how to scale them so their multiplied magnitudes are 25
-            double scale = 25 / (other.Magnitude.Inches * this.Magnitude.Inches);
-            scale = Math.Sqrt(scale);
 
-            Vector scaledVector1 = new Vector(new Point(), this.Direction, new Distance(DistanceType.Inch, scale * this.Magnitude.Inches));
-            Vector scaledVector2 = new Vector(new Point(), other.Direction, new Distance(DistanceType.Inch, scale * other.Magnitude.Inches));
-
-            //now get the result
-            Distance dotResult = scaledVector1 * scaledVector2;
+            Distance dotResult = this.DotProduct(other);
 
             //and return if its close to zero
-            return dotResult == new Distance();
+            return (dotResult == new Distance());
         }
 
+        
+        /// <summary>
+        /// Returns the angle between the vectors (as if one were translated so that they had the same base point)
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Angle AngleBetween(Vector vector)
+        {
+            Vector vector1 = this;
+            Vector vector2 = vector;
+
+            double dotProduct = vector1.DotProduct(vector2).Inches;
+            double magnitudes = (vector1.Magnitude * vector2.Magnitude).InchesSquared;
+            double divided = dotProduct / magnitudes;
+
+            Angle angleBetween = new Angle(AngleType.Radian, Math.Acos(divided));
+            return angleBetween;
+        }
+
+
         #endregion
+
     }
+
+
 }

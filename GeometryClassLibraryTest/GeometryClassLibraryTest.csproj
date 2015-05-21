@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.Core.dll</HintPath>
     </Reference>
+    <Reference Include="GeometryStubLibrary">
+      <HintPath>..\..\geometry-stub-library\GeometryStubLibrary\bin\Debug\GeometryStubLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
@@ -55,8 +58,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.2.5609.16609\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
+    <Reference Include="UnitClassLibrary, Version=1.2.5582.25508, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5582.25508\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +68,6 @@
     <Compile Include="NonPolygonTests.cs" />
     <Compile Include="CoordinateSystemTest.cs" />
     <Compile Include="RectangularPrismTest.cs" />
-    <Compile Include="TestPolyhedron.cs" />
     <Compile Include="TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
@@ -87,7 +90,7 @@
     <Compile Include="PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VectorTests.cs" />
-    <Compile Include="ZeroLenghtLineSegment.cs" />
+    <Compile Include="ZeroLengthLineSegment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

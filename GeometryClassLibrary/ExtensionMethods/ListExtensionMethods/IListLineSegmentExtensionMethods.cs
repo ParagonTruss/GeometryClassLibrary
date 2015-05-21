@@ -100,7 +100,11 @@ namespace GeometryClassLibrary
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
         {
-            if (borders.AreAllCoplanar() && borders.DoFormClosedRegion())
+            bool areCoplanar = borders.AreAllCoplanar();
+            bool isClosed = borders.DoFormClosedRegion();
+            bool nonEmpty = borders != null && borders.Count != 0;
+            
+            if (areCoplanar && isClosed && nonEmpty)
             {
                 List<LineSegment> sortedSegments = new List<LineSegment>();
                 Point minXPoint = null;
@@ -148,7 +152,7 @@ namespace GeometryClassLibrary
                     sortedSegments.Add(maxYLine.Reverse());
                 }
 
-                //create a shalloe copy of the borders to find out which we have checked
+                //create a shallow copy of the borders to find out which we have checked
                 List<LineSegment> hasNotAdded = new List<LineSegment>(borders);
                 hasNotAdded.Remove(maxYLine);
 
@@ -185,23 +189,7 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        public static List<LineSegment> SortIntoClockWiseSegmentsRelativeToPoint(this List<LineSegment> borders, Point relativeToPoint)
-        {
-            List<LineSegment> inAnOrder = borders.SortIntoClockWiseSegments();
-
-            //test the normal and see how it relates to our point
-            //http://stackoverflow.com/questions/1988100/how-to-determine-ordering-of-3d-vertices
-            Vector segmentsNormal = new Vector(inAnOrder[1].BasePoint - inAnOrder[0].BasePoint).CrossProduct(new Vector(inAnOrder[2].BasePoint - inAnOrder[0].BasePoint));
-
-            Distance towardsPoint = segmentsNormal * (new Vector(inAnOrder[0].BasePoint - relativeToPoint));
-
-            //if it is negative than it is counter clockwise and needs to be reversed
-            if(towardsPoint < new Distance())
-            {
-                inAnOrder.Reverse();
-            }
-            return inAnOrder;
-        }
+        
 
 
         /// <summary>
@@ -259,58 +247,6 @@ namespace GeometryClassLibrary
             return points;
         }
 
-        /// <summary>
-        /// finds the area of an irregular polygon.  ASSUMES THAT LINESEGMENTS ARE IN CLOCKWISE ORDER!!!!!  May need to change later
-        /// </summary>
-        /// <param name="passedBorders"></param>
-        /// <returns></returns>
-        public static Area FindAreaOfPolygon(this List<LineSegment> passedBorders)
-        {
-            if (passedBorders.AreAllCoplanar())
-            {
-                Distance areaDistance = new Distance();
-                Vector areaVector = new Vector();
-
-                if (passedBorders != null && passedBorders.Count() > 2)
-                {
-                    //following the method here of projecting the triangles formed with an arbitrary point onto the plane: http://geomalgorithms.com/a01-_area.html
-
-                    //first sort them clockwise
-                    List<LineSegment> sortedBorders = passedBorders.SortIntoClockWiseSegments();
-
-                    //get our vertices
-                    List<Point> vertices = sortedBorders.GetAllPoints();
-
-                    //for each of our vertices compare it to the previous one
-                    Point previousVertex = vertices[vertices.Count - 1];
-                    foreach (Point vertex in vertices)
-                    {
-                        //take the cross product of them (relative to the origin)
-                        Vector crossProduct = vertex.VectorFromOriginToThisPoint().CrossProduct(previousVertex.VectorFromOriginToThisPoint());
-
-                        //now we add the magnitute to the area
-                        //areaDistance += crossProduct.Magnitude;
-                        areaVector += crossProduct;
-
-                        previousVertex = vertex;
-                    }
-                }
-
-                areaDistance = areaVector.Magnitude;
-
-                if (areaDistance > new Distance())
-                {
-                    //the area is really units squared so we need to return it that way - not as a Distance
-                    //also we need to divide it in half (we were using triangles)
-                    return new Area(AreaType.InchesSquared, areaDistance.Inches / 2);
-                }
-                else
-                {
-                    return new Area();
-                }
-            }
-            return null;
-        }
 
         /// <summary>
         /// Shifts the List of LineSegments with the given shift
@@ -324,7 +260,7 @@ namespace GeometryClassLibrary
 
             foreach (var segment in passedLineSegments)
             {
-                shiftedSegments.Add(  segment.Shift(passedShift));
+                shiftedSegments.Add(segment.Shift(passedShift));
             }
 
             return shiftedSegments;

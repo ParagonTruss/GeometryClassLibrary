@@ -27,12 +27,12 @@ namespace GeometryClassLibrary
         /// being the same as the basepoint of the plane
         /// </summary>
         private Vector _normalVector;
-        public Vector NormalVector
+        public virtual Vector NormalVector
         {
             get { return _normalVector; }
             protected set
             {
-                //make sure that the Normal's base point is always the same as the planes base point for convinience
+                //make sure that the Normal's base point is always the same as the planes base point for convenience
                 _normalVector = value;
                 _normalVector.BasePoint = this.BasePoint;
             }
@@ -55,14 +55,14 @@ namespace GeometryClassLibrary
             {
                 this.BasePoint = passedLineListCasted[0].BasePoint;
 
-                //we have to check against vectors until we find one that is not parralel with the first line we passed in
+                //we have to check against vectors until we find one that is not parallel with the first line we passed in
                 //or else the normal vector will be zero (cross product of parralel lines is 0)
                 Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
                 for (int i = 1; i < passedLineListCasted.Count; i++)
                 {
-                    this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
-                    if (!this.NormalVector.Equals(new Vector()))
-                        i = passedLineListCasted.Count;
+                    //this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
+                    //if (!this.NormalVector.Equals(new Vector()))
+                    //    i = passedLineListCasted.Count;
                 }
             }
             else
@@ -219,7 +219,7 @@ namespace GeometryClassLibrary
                 Plane comparablePlane = (Plane)obj;
 
                 bool checkPoint = this.Contains(comparablePlane.BasePoint);
-                bool checkVector = this.NormalVector.PointInSameOrOppositeDirections(comparablePlane.NormalVector);
+                bool checkVector = this.NormalVector.IsParallelTo(comparablePlane.NormalVector);
 
                 return checkPoint && checkVector;
             }
@@ -236,7 +236,7 @@ namespace GeometryClassLibrary
 
         public bool Contains(Polygon passedPlaneRegion)
         {
-            // checks to make sure that every line is on the line segment
+            // checks to make sure that every linesegment is on the plane
             foreach (LineSegment segment in passedPlaneRegion.LineSegments)
             {
                 if (!this.Contains(segment))
@@ -250,17 +250,11 @@ namespace GeometryClassLibrary
 
         public bool Contains(Line passedLine)
         {
-            // weird calculus voodoo
-           /* Vector planeVector = new Vector(passedLine.BasePoint, BasePoint);
-            Distance dotProduct1 = planeVector.UnitVector(DistanceType.Inch) * NormalVector.UnitVector(DistanceType.Inch);
-            Distance dotProduct2 = passedLine.UnitVector(DistanceType.Inch) * NormalVector.UnitVector(DistanceType.Inch);*/
-
-            // if both of the vectors' dotproducts come out to 0, the line is on the plane
-            return (this.IsParallelTo(passedLine) && this.Contains(passedLine.BasePoint));
+            return (this.Contains(passedLine.BasePoint) && NormalVector.IsPerpendicularTo(passedLine));
         }
 
         /// <summary>
-        /// Returns wether or not the Point passed in is in this Plane
+        /// Returns whether or not the Point passed in is in this Plane
         /// </summary>
         /// <param name="passedPoint">Point to see if the Plane contains</param>
         /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
@@ -575,7 +569,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Plane passedPlane)
         {
-            return this.NormalVector.PointInSameOrOppositeDirections(passedPlane.NormalVector);
+            return (this.NormalVector.CrossProduct((passedPlane.NormalVector)).Magnitude == new Distance());
         }
 
         /// <summary>
@@ -583,9 +577,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsPerpindicularTo(Plane passedPlane)
+        public bool IsPerpendicularTo(Plane passedPlane)
         {
-            return this.NormalVector.IsPerpindicularTo(passedPlane.NormalVector);
+            return this.NormalVector.IsPerpendicularTo(passedPlane.NormalVector);
         }
 
         /// <summary>
@@ -595,9 +589,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            //check to see if it is perpindicular to the normal vector and if it is then it is parallel to the plane because the plane id
+            //check to see if it is perpendicular to the normal vector and if it is then it is parallel to the plane because the plane id
             //by definition perpinducluar to the normal
-            return this.NormalVector.IsPerpindicularTo(passedLine);
+            return this.NormalVector.IsPerpendicularTo(passedLine);
         }
         
         /// <summary>
@@ -605,7 +599,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsPerpindicularTo(Line passedLine)
+        public bool IsPerpendicularTo(Line passedLine)
         {
             //check to see if it is parallel to the normal vector and if it is then it is perpindicular to the plane because the plane is
             //by definition perpinducluar to the normal
@@ -620,6 +614,31 @@ namespace GeometryClassLibrary
         public bool IsCoplanarTo(Plane passedPlane)
         {
             return IsParallelTo(passedPlane) && this.Contains(passedPlane.BasePoint);
+        }
+
+        /// <summary>
+        /// returns the smallest angle between planes.
+        /// (if they're parallel returns 0, otherwise the planes intersect and make 4 angles)
+        /// (returns the smallest of those);
+        /// </summary>
+        /// <param name="passedPlane"></param>
+        /// <returns></returns>
+        public Angle SmallestAngleBetween(Plane passedPlane)
+        {
+            Vector normal1 = this.NormalVector;
+            Vector normal2 = passedPlane.NormalVector;
+
+            Angle angle1 = normal1.AngleBetween(normal2);
+            Angle angle2 = normal1.AngleBetween(normal2.Reverse());
+            
+            if (angle1 < angle2)
+            {
+                return angle1;
+            }
+            else
+            {
+                return angle2;
+            }
         }
 
         #endregion

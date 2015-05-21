@@ -242,7 +242,7 @@ namespace GeometryClassLibraryTests
 
             List<Line> expectedParallel = new List<Line>() { parallel1, parallel2, parallel3, parallel4 };
 
-            resultsParallel.Should().BeEquivalentTo(expectedParallel);
+            resultsParallel.Should().Contain(expectedParallel);
         }
     }
 }

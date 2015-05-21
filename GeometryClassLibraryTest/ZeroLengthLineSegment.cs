@@ -8,9 +8,9 @@ using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTest
 {
-    public class ZeroLenghtLineSegment : LineSegment
+    public class ZeroLengthLineSegment : LineSegment
     {
-        public ZeroLenghtLineSegment(): base(new Point(), new Point())
+        public ZeroLengthLineSegment(): base(new Point(), new Point())
         {
         }
 

@@ -180,6 +180,14 @@ namespace GeometryClassLibrary
                 return this.Length.CompareTo(other.Length);
         }
 
+        /// <summary>
+        /// returns the line segment as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("BasePoint= {0}, EndPoint= {1}, Length={2}", this.BasePoint.ToString(), this.EndPoint.ToString(), this.Length.ToString());
+        }
         #endregion
 
         #region Methods
@@ -297,10 +305,5 @@ namespace GeometryClassLibrary
         }
 
         #endregion
-
-        public override string ToString()
-        {
-                return string.Format("BasePoint= {0}, EndPoint= {1}, Length={2}", this.BasePoint.ToString(), this.EndPoint.ToString(), this.Length.ToString());
-        }
     }
 }

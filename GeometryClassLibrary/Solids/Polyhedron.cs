@@ -121,6 +121,129 @@ namespace GeometryClassLibrary
             }
         }
 
+         /// <summary>
+        /// determines if the polygon is convex
+        /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
+        /// </summary>
+        public bool IsConvex
+        {
+            get
+            {
+                //LineSegment currentSegment = null;
+                //foreach (var vertex1 in Vertices)
+                //{
+                //    foreach (var vertex2 in Vertices)
+                //    {
+                //        currentSegment = new LineSegment(vertex1, vertex2);
+                //        if (!this.DoesContainLineSegment(currentSegment))
+                //        {
+                //            return false;
+                //        }
+                //    }
+                //}
+                //return true;
+                throw new NotImplementedException();
+            }
+        }
+        /// <summary>
+        /// Finds the CenterPoint of the Polyhedron by averaging the vertices
+        /// </summary>
+        public override Point CenterPoint
+        {
+            get
+            {
+                Distance xValues = new Distance();
+                Distance yValues = new Distance();
+                Distance zValues = new Distance();
+
+                foreach (Point vertex in this.Vertices)
+                {
+                    xValues += vertex.X;
+                    yValues += vertex.Y;
+                    zValues += vertex.Z;
+                }
+
+                int vertexCount = this.Vertices.Count();
+                return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
+            }
+        }
+
+        /// <summary>
+        /// The volume of the Polyhedron. Uses the 1st method described on this webpage: http://www.ecse.rpi.edu/~wrf/Research/Short_Notes/volume.html
+        /// Now using this formula instead: http://stackoverflow.com/a/1849746/4875161
+        /// </summary>
+        public override Volume Volume
+        {
+            get
+            {
+                Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
+
+                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
+
+                foreach (Polygon triangle in triangles)
+                {
+                    Volume volume = new Volume(VolumeType.CubicInches, _volumeOfTetrahedronFormedWithTheOrigin(triangle));
+
+                    totalVolume += volume;
+                }
+                return totalVolume;
+                //foreach (Polygon face in this.Faces)
+                //{
+                //    Vector areaVector = face.NormalVector*face.Area.InchesSquared;
+                //    Vector heightVector = new Vector(face.BasePoint);
+
+                //    Distance volumeAsDistance = areaVector.DotProduct(heightVector);
+                //    Volume volume = new Volume(VolumeType.CubicInches, volumeAsDistance.Inches);
+
+                //    totalVolume += volume;
+                //}
+                //return totalVolume;
+            }
+        }
+
+        private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
+        {
+            double X1 = triangle.Vertices[0].X.Inches;
+            double X2 = triangle.Vertices[1].X.Inches;
+            double X3 = triangle.Vertices[2].X.Inches;
+
+            double Y1 = triangle.Vertices[0].Y.Inches;
+            double Y2 = triangle.Vertices[1].Y.Inches;
+            double Y3 = triangle.Vertices[2].Y.Inches;
+
+            double Z1 = triangle.Vertices[0].Z.Inches;
+            double Z2 = triangle.Vertices[1].Z.Inches;
+            double Z3 = triangle.Vertices[2].Z.Inches;
+
+            double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
+
+            Matrix volumeMatrix = new Matrix(array);
+
+            return volumeMatrix.Determinant() / 6;
+        }
+
+        public override Point Centroid
+        {
+            get
+            {
+                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
+                Vector weightedSum = new Vector();
+                double totalVolume = 0;
+
+                foreach (Polygon triangle in triangles)
+                {
+                    double volume = _volumeOfTetrahedronFormedWithTheOrigin(triangle);
+
+                    Vector currentCentroidAsVector = new Vector(triangle.Vertices[0] + triangle.Vertices[1] + triangle.Vertices[2])/4;
+
+                    weightedSum += volume * currentCentroidAsVector;
+                    totalVolume += volume;
+
+                }
+                return (weightedSum/totalVolume).EndPoint;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -136,6 +259,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Makes a Polyhedron using the giving line segments made into polygons based on if they are coplanar and share a point
+        /// WARNING: THIS CONSTRUCTOR LEADS TO AMBIGUOUS CASES, DON'T USE IT!
         /// </summary>
         /// <param name="passedLineSegments">The line segments that define this Polyhedron</param>
         public Polyhedron(List<LineSegment> passedLineSegments)
@@ -151,13 +275,14 @@ namespace GeometryClassLibrary
         public Polyhedron(List<Polygon> passedPolygons)
             : base()
         {
-            List<Polygon> polygonsToUse = new List<Polygon>();
-            foreach (Polygon polygon in passedPolygons)
+            List<Polygon> newFaces = _makeFacesWithProperOrientation(passedPolygons);
+            
+            if ( newFaces == null || newFaces.Count == 0)
             {
-                polygonsToUse.Add(polygon);
+                throw new Exception("The polygons you're attempting to use do not form a single closed region.");
             }
 
-            this.Polygons = polygonsToUse;
+            this.Polygons = newFaces;
         }
 
         /// <summary>
@@ -220,7 +345,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
+            //try to cast the object to a polyhedron, if it fails then we know the user passed in the wrong type of object
             try
             {
                 Polyhedron comparablePolyhedron = (Polyhedron)obj;
@@ -262,95 +387,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Finds the center point of this polyhedron
-        /// </summary>
-        /// <returns></returns>
-        public override Point CenterPoint()
-        {
-
-            Volume volume = new Volume();
-
-            Point centroid = new Point();
-
-            foreach (Polygon face in this.Faces)
-            {
-                List<Point> vertices = face.Vertices;
-                Point previousVertex = vertices[vertices.Count - 1];
-                Point twoPreviousVertex = vertices[vertices.Count - 2];
-
-                for (int i = 0; i < vertices.Count - 3; i++)
-                {
-                    Vector normalVector = new Vector(previousVertex - vertices[i]).CrossProduct(new Vector(twoPreviousVertex - vertices[i]));
-                    volume = volume + new Volume(VolumeType.CubicInches, (new Vector(vertices[i]) * normalVector / 6).Inches);
-
-
-                    Distance newX = normalVector.XComponent * (((vertices[i].X + previousVertex.X) ^ 2) + ((previousVertex.X + twoPreviousVertex.X) ^ 2) + ((twoPreviousVertex.X + vertices[i].X) ^ 2)).Inches;
-                    Distance newY = normalVector.XComponent * (((vertices[i].Y + previousVertex.Y) ^ 2) + ((previousVertex.Y + twoPreviousVertex.Y) ^ 2) + ((twoPreviousVertex.Y + vertices[i].Y) ^ 2)).Inches;
-                    Distance newZ = normalVector.XComponent * (((vertices[i].Z + previousVertex.Z) ^ 2) + ((previousVertex.Z + twoPreviousVertex.Z) ^ 2) + ((twoPreviousVertex.Z + vertices[i].Z) ^ 2)).Inches;
-
-                    centroid = new Point(newX + centroid.X, newY + centroid.Y, newZ + centroid.Z);
-                }
-            }
-
-            centroid = new Point(centroid.X * 1 / (24 * 2 * volume.CubicInches), centroid.X * 1 / (24 * 2 * volume.CubicInches), centroid.X * 1 / (24 * 2 * volume.CubicInches));
-            //return centroid;
-
-
-
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// The volume of the Polyhedron
-        /// </summary>
-        public override Volume Volume
-        {
-            get
-            {
-                Volume volume = new Volume();
-
-                foreach (Polygon face in this.Faces)
-                {
-                    //redo how the vertices are cycled through so one stays contant
-                    List<Point> faceVertices = face.LineSegments.SortIntoClockWiseSegmentsRelativeToPoint(PointGenerator.MakePointWithInches(2, 6, 1)).GetAllPoints();
-                    Point baseVertex = faceVertices[0];
-                    Point previousVertex = faceVertices[1];
-
-                    for (int i = 2; i < faceVertices.Count; i++)
-                    {
-                        Vector normalVector = new Vector(faceVertices[i] - baseVertex).CrossProduct(new Vector(previousVertex - baseVertex));
-                        volume = volume + new Volume(VolumeType.CubicInches, (new Vector(baseVertex) * normalVector / 6).Inches);
-
-                        previousVertex = faceVertices[i];
-                    }
-                }
-                throw new NotImplementedException();
-                //return volume;
-            }
-        }
-
-        /// <summary>
-        /// Finds the Centroid of the Polyhedron by averaging the vertices
-        /// </summary>
-        /// <returns>The centroid of the Polyhedron based only on its vertices</returns>
-        public Point Centroid()
-        {
-            Distance xValues = new Distance();
-            Distance yValues = new Distance();
-            Distance zValues = new Distance();
-
-            foreach (Point vertex in this.Vertices)
-            {
-                xValues += vertex.X;
-                yValues += vertex.Y;
-                zValues += vertex.Z;
-            }
-
-            int vertexCount = this.Vertices.Count();
-            return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
-        }
 
         public override Line MidLine()
         {
@@ -442,7 +478,7 @@ namespace GeometryClassLibrary
 
                     bool wasAdded = _addPolygonToCorrectPolyhedron(slicedPolygons, unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, slicingPlane);
 
-                    //if we failed to find which one to add it too hang on to it and take care of it after we have found the rest
+                    //if we failed to find which one to add it to hang on to it and take care of it after we have found the rest
                     if (!wasAdded)
                     {
                         if (slicedPolygons.Count == 1)
@@ -481,8 +517,9 @@ namespace GeometryClassLibrary
                         //}
                     }
                     catch (ArgumentException) { }
-
-                    List<Polyhedron> toReturn = new List<Polyhedron>() { new Polyhedron(unconstructedInsidePolyhedron), new Polyhedron(unconstructedOutsidePolyhedron) };
+                    Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
+                    Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
+                    List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
                     //toReturn.Sort();
                     //toReturn.Reverse();
                     return toReturn;
@@ -763,6 +800,161 @@ namespace GeometryClassLibrary
 
             return null;
         }
+
+        private bool _doesContainSegmentAlongBoundary(LineSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DoesContainLineSegment(LineSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        ///Checks if the polygons form a closed bounded region.
+        ///If they don't returns null. Otherwise it reorients every face, so that they all normalVectors point outward
+        ///and every set of edges on each face circulates counterclockwise when looked at from outside to inside
+        ///i.e. right hand rule
+        ///returns the oriented faces
+        /// </summary>
+        private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> passedPolygons)
+        {
+            List<Polygon> polygonList = passedPolygons.CopyList();
+
+            List<LineSegment> edges = polygonList.GetAllEdges();
+
+            //First check to that every edge sits on exactly two faces.
+            bool everyEdgeIsOntwoFaces = _everyEdgeIsOntwoFaces(polygonList, edges);
+            if (!everyEdgeIsOntwoFaces)
+            {
+                return null;
+            }
+
+            //Now we try to build piecewise the polyhedron from the faces
+            //we abort and return null if run out of faces, but have unmet edges, or
+            //all edges have two faces but we have faces left over
+            List<Polygon> placedFaces = new List<Polygon>();
+            List<Polygon> unplacedFaces = polygonList;
+
+            //keeps track of all edges in placedFaces that don't have neighboring faces
+            //Should be empty by the end of this algorithm
+            List<LineSegment> edgesWithoutNeighboringFace = new List<LineSegment>();
+
+            //we find the face with the lowest z value
+            Polygon lowestFace = polygonList[0];
+
+            foreach (Polygon face in polygonList)
+            {
+                if (face.CenterPoint.Z < lowestFace.CenterPoint.Z)
+                {
+                    lowestFace = face;
+                }
+            }
+            //place the first face
+            _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
+
+            LineSegment currentEdge = null;
+            Polygon nextFace = null;
+            
+            while (edgesWithoutNeighboringFace.Count != 0)
+            {
+                currentEdge = edgesWithoutNeighboringFace[0];
+                nextFace = _findAndOrientNextFace(currentEdge, unplacedFaces);
+                _placeFace(nextFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
+            }
+
+            if (unplacedFaces.Count == 0)
+            {
+                return placedFaces;
+            }
+            return null;
+            
+        }
+
+        /// <summary>
+        /// Checks that every edge exists on two distinct faces
+        /// </summary>
+        private static bool _everyEdgeIsOntwoFaces(List<Polygon> polygonList, List<LineSegment> edges)
+        {
+            if (edges == null)
+            {
+                return false;
+            }
+            foreach (LineSegment edge in edges)
+            {
+                int count = 0;
+                foreach (Polygon polygon in polygonList)
+                {
+                    if (polygon.HasSide(edge))
+                    {
+                        count++;
+                    }
+                }
+                if (count != 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Places the face by updating all relevant lists 
+        /// </summary>
+        private static void _placeFace(Polygon face, List<Polygon> placedFaces, List<Polygon> unplacedFaces, List<LineSegment> edgesWithoutNeighboringFace)
+        {
+            placedFaces.Add(face);
+            unplacedFaces.Remove(face);
+            
+            //adds the new edges and removes the edges that now have two neighbor faces
+            _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments);
+        }
+
+        private static void _disjointUnion(List<LineSegment> passedList, List<LineSegment> otherList)
+        {
+            LineSegment[] array = new LineSegment[otherList.Count];
+            otherList.CopyTo(array);
+            List<LineSegment> list2 = array.ToList<LineSegment>();
+            List<LineSegment> list1 = passedList;
+            for (int i = 0; i < list2.Count; i++)
+            {
+                if (list1.Contains(list2[i]))
+                {
+                    list1.Remove(list2[i]);
+                    list2.Remove(list2[i]);
+                    i = -1;
+                }
+            }
+            list1.AddRange(list2);
+        }
+        private static Polygon _findAndOrientNextFace(LineSegment currentEdge, List<Polygon> unplacedFaces)
+        {
+            foreach (Polygon polygon in unplacedFaces)
+            {
+                foreach (LineSegment edge in polygon.LineSegments)
+                {
+                    if (currentEdge == edge)
+                    {
+                        //checks for same direction by comparing basepoints
+                        if (currentEdge.BasePoint == edge.BasePoint)
+                        {
+                            //every edge should have opposite orientations on neighboring faces
+                            //this is a simple consequence of the right hand rule and the convention that normal vectors should point outward
+                            return polygon.ReverseOrientation();
+                        }
+                        else
+                        {
+                            return polygon;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
 
         #endregion
     }

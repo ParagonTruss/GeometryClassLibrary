@@ -51,7 +51,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineSegmentList_SortClockwiseTest()
+        public void LineSegmentList_SortIntoClockWiseSegments()
         {
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(0, 4, 2));
             LineSegment segment2 = new LineSegment(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(3, 1, 0));

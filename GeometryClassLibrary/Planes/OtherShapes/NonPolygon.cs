@@ -19,6 +19,25 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual List<IEdge> NonPolygonBoundaries { get; set; }
 
+        /// <summary>
+        /// returns the area enclosed by this nonPolygon
+        /// </summary>
+        public override Area Area
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// Finds the centroid (geometric center) of this nonPolygon
+        /// </summary>
+        /// <returns>Returns a Point that is the centroid of this NonPolygon</returns>
+        public override Point Centroid
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
         #endregion
 
         #region Constructors
@@ -95,13 +114,7 @@ namespace GeometryClassLibrary
             return new NonPolygon(newEdges);
         }
 
-        /// <summary>
-        /// returns the area enclosed by this nonPolygon
-        /// </summary>
-        public override Area Area
-        {
-            get { throw new NotImplementedException(); }
-        }
+      
 
         /// <summary>
         /// Finds the smalles rectangle that can contain this nonPolygon that is coplanar with it
@@ -112,14 +125,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Finds the centriod (geometric center) of this nonPolygon
-        /// </summary>
-        /// <returns>Returns a Point that is the centroid of this NonPolygon</returns>
-        public override Point Centroid()
-        {
-            throw new NotImplementedException();
-        }
+     
 
         /// <summary>
         /// Extrudes this NonPolygon into a 3 Distanceal prism

@@ -9,19 +9,20 @@ namespace GeometryClassLibrary
 
     public class RegularPolygon : Polygon
     {
+
         #region Constructors
 
         /// <summary>
         /// Creates a regular polygon from the given line segments if they are are equal and have the same angles between
         /// neighboring segments
         /// </summary>
-        /// <param name="passedLineSegments"></param>
-        public RegularPolygon(List<LineSegment> passedLineSegments)
+        /// <param name="lineSegments"></param>
+        public RegularPolygon(List<LineSegment> lineSegments)
         {
             //make sure the linesegments are equidistant and all angles equal
-            if (AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(passedLineSegments))
+            if (AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(lineSegments))
             {
-                this.LineSegments = passedLineSegments;
+                this.LineSegments = lineSegments;
             }
         }
 
@@ -33,6 +34,12 @@ namespace GeometryClassLibrary
         /// <param name="passedSideLength"></param>
         /// <param name="passedRotationAngle"></param>
         public RegularPolygon(int passedNumberOfSides, Distance passedSideLength, Angle passedRotationAngle = null)
+            : base(_createRegularPolygonPoints(passedNumberOfSides, passedSideLength, passedRotationAngle))
+        {
+            
+        }
+
+        private static List<Point> _createRegularPolygonPoints(int passedNumberOfSides, Distance passedSideLength, Angle passedRotationAngle)
         {
             if (passedNumberOfSides < 3)
             {
@@ -53,7 +60,7 @@ namespace GeometryClassLibrary
                 passedRotationAngle += step;
             }
 
-            points.MakeIntoLineSegmentsThatMeet();
+            return points;
         }
 
         #endregion
@@ -63,7 +70,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Calculates a point that is at an angle from the passedPoint, in XY (0 is to the right)
         /// </summary>
-        private Point DegreesToXY(Angle passedAngle, Distance distance, Point passedPoint)
+        private static Point DegreesToXY(Angle passedAngle, Distance distance, Point passedPoint)
         {
             Point newPoint = new Point(
                 new Distance(DistanceType.Inch, Math.Cos(passedAngle.Radians) * distance.Inches + passedPoint.X.Inches),

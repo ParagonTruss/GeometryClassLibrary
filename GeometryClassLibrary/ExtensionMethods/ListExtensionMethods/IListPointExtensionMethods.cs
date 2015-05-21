@@ -17,17 +17,28 @@ namespace GeometryClassLibrary
         {
             List<LineSegment> toReturn = new List<LineSegment>();
 
-            for (int l = 0; l < points.Count(); l++)
+            for (int k = 0; k < points.Count(); k++)
             {
-                if (l != points.Count() - 1)
+                if (k != points.Count() - 1)
                 {
-                    LineSegment newLine = new LineSegment(points[l], points[l + 1]);
-                    Point ponte = newLine.EndPoint;
+                    LineSegment newLine = new LineSegment(points[k], points[k + 1]);
+                    
+                    foreach(var edge in toReturn)
+                    {
+                        if (edge.DoesIntersect(newLine))
+                        {
+                            if (!(edge.Intersection(newLine) == newLine.BasePoint) && !(edge.Intersection(newLine) == newLine.EndPoint))
+                            {
+                                throw new Exception("Edges of a Polygon should not self intersect!");
+                            }
+                        }
+                    }
+
                     toReturn.Add(newLine);
                 }
                 else
                 {
-                    toReturn.Add(new LineSegment(points[l], points[0]));
+                    toReturn.Add(new LineSegment(points[k], points[0]));
                 }
             }
 

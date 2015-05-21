@@ -130,5 +130,53 @@ namespace GeometryClassLibrary
 
             return touchingPolygons;
         }
+
+        /// <summary>
+        /// returns all the edges from a list of polygons
+        /// </summary>
+        /// <param name="polygonList"></param>
+        /// <returns></returns>
+        public static List<LineSegment> GetAllEdges(this List<Polygon> polygonList)
+        {
+            List<LineSegment> edges = new List<LineSegment>();
+            foreach(Polygon polygon in polygonList)
+            {
+                foreach(LineSegment edge in polygon.LineSegments)
+                {
+                    if (!edges.Contains(edge))
+                    {
+                        edges.Add(edge);
+                    }
+                }
+            }
+            return edges;
+        }
+
+        /// <summary>
+        /// Copies the list
+        /// Note: the edges may be oriented differently
+        /// </summary>
+        public static List<Polygon> CopyList(this List<Polygon> polygonList)
+        {
+            List<Polygon> copiedList = new List<Polygon>();
+            foreach(Polygon polygon in polygonList)
+            {
+                copiedList.Add(new Polygon(polygon));
+            }
+
+            return copiedList;
+        }
+
+        public static List<Polygon> SplitIntoTriangles(this List<Polygon> polygonList)
+        {
+            List<Polygon> listOfTriangles = new List<Polygon>();
+            
+            foreach(Polygon polygon in polygonList)
+            {
+                listOfTriangles.AddRange(polygon.SplitIntoTriangles());
+            }
+
+            return listOfTriangles;
+        }
     }
 }

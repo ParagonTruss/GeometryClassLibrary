@@ -42,13 +42,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IntersectionTest_Millimeters()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
+            Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
+            Point basePointLine2 = PointGenerator.MakePointWithMillimeters(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithMillimeters(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithMillimeters(-2, 1, 3));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(0, 2.5, 1.5);
+            Point expectedResult = PointGenerator.MakePointWithMillimeters(0, 2.5, 1.5);
             Point actualResult = line1.Intersection(line2);
 
             actualResult.Should().Be(expectedResult);
@@ -100,7 +100,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void IntersectionTest_Origin()
+        public void Line_IntersectionTest_Origin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -146,7 +146,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void AngleBetweenIntersectingLineTest_IntersectAtOrigin()
+        public void Line_AngleBetweenIntersectingLineTest_IntersectAtOrigin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -212,7 +212,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_PerpindicularTest()
+        public void Line_PerpendicularTest()
         {
             Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
             Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
@@ -222,17 +222,17 @@ namespace ClearspanTypeLibrary.Tests
             Line line5 = new LineSegment(PointGenerator.MakePointWithInches(1, -2, 1));
             Line line6 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, -3), PointGenerator.MakePointWithInches(5, 1, -4)); //4, -1, -1
 
-            line1.IsPerpindicularTo(line2).Should().BeTrue();
-            line1.IsPerpindicularTo(line3).Should().BeTrue();
-            line2.IsPerpindicularTo(line3).Should().BeTrue();
-            line3.IsPerpindicularTo(line1).Should().BeTrue(); //check its reversable
+            line1.IsPerpendicularTo(line2).Should().BeTrue();
+            line1.IsPerpendicularTo(line3).Should().BeTrue();
+            line2.IsPerpendicularTo(line3).Should().BeTrue();
+            line3.IsPerpendicularTo(line1).Should().BeTrue(); //check its reversable
 
-            line4.IsPerpindicularTo(line5).Should().BeTrue();
-            line4.IsPerpindicularTo(line6).Should().BeTrue();
-            line5.IsPerpindicularTo(line6).Should().BeFalse();
-            line6.IsPerpindicularTo(line4).Should().BeTrue(); //check its reversable
+            line4.IsPerpendicularTo(line5).Should().BeTrue();
+            line4.IsPerpendicularTo(line6).Should().BeTrue();
+            line5.IsPerpendicularTo(line6).Should().BeFalse();
+            line6.IsPerpendicularTo(line4).Should().BeTrue(); //check its reversable
 
-            line1.IsPerpindicularTo(line4).Should().BeFalse();
+            line1.IsPerpendicularTo(line4).Should().BeFalse();
             
         }
 
@@ -494,24 +494,32 @@ namespace ClearspanTypeLibrary.Tests
         public void Line_DoesIntersectPolyhedron()
         {
             //make a polyhedron
-            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point bottom1 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point bottom2 = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point bottom3 = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point bottom4 = PointGenerator.MakePointWithInches(0, 12, 0);
 
-            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point topRightBack = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point top1 = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point top2 = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point top3 = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point top4 = PointGenerator.MakePointWithInches(0, 12, 2);
 
-            List<Polygon> planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
-            planes.Add(new Polygon(new List<Point> { bottomLeftBack, topLeftBack, topRightBack, bottomRightBack }));
-            planes.Add(new Polygon(new List<Point> { topLeft, topRight, topRightBack, topLeftBack }));
-            planes.Add(new Polygon(new List<Point> { bottomLeft, bottomRight, bottomRightBack, bottomLeftBack }));
-            planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topLeftBack, bottomLeftBack }));
-            planes.Add(new Polygon(new List<Point> { bottomRight, topRight, topRightBack, bottomRightBack }));
-            Polyhedron testPolyhedron = new Polyhedron(planes);
+            List<Polygon> faces = new List<Polygon>();
+            Polygon bottomFace = new Polygon(new List<Point> {bottom1, bottom2, bottom3, bottom4});
+            Polygon topFace = new Polygon(new List<Point> { top1, top2, top3, top4 });
+            Polygon frontFace = new Polygon(new List<Point> { bottom1, bottom2, top2, top1 });
+            Polygon rightFace = new Polygon(new List<Point> { bottom2, bottom3, top3, top2 });
+            Polygon backFace = new Polygon(new List<Point> { bottom3, bottom4, top4, top3 });
+            Polygon leftFace = new Polygon(new List<Point> { bottom4, bottom1, top1, top4 });
+            
+            faces.Add(bottomFace);
+            faces.Add(topFace);
+            faces.Add(frontFace);
+            faces.Add(rightFace);
+            faces.Add(backFace);
+            faces.Add(leftFace);
+            
+            Polyhedron testPolyhedron = new Polyhedron(faces);
 
             //now make some lines that will intersect it
             Line intersecting1 = new Line(PointGenerator.MakePointWithInches(2, 0, 1), PointGenerator.MakePointWithInches(2, 1, 1));
@@ -519,10 +527,31 @@ namespace ClearspanTypeLibrary.Tests
             Line intersectingAlongSide = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
             Line noIntersect = new Line(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0));
 
+            // Temporary
+            frontFace.DoesIntersect(intersecting1).Should().BeTrue();
+            backFace.DoesIntersect(intersecting1).Should().BeTrue();
+            // Temporary
+
+
             intersecting1.DoesIntersect(testPolyhedron).Should().BeTrue();
             intersecting2.DoesIntersect(testPolyhedron).Should().BeTrue();
             intersectingAlongSide.DoesIntersect(testPolyhedron).Should().BeTrue();
             noIntersect.DoesIntersect(testPolyhedron).Should().BeFalse();
+        }
+
+        [Test()]
+        public void Line_Contains()
+        {
+            
+            Line line = new Line(Direction.Right, PointGenerator.MakePointWithInches(1, 2, 3));
+            Point notThere = null;
+            Point offLine = PointGenerator.MakePointWithInches(0, 0, 3);
+            Point onLine = PointGenerator.MakePointWithInches(0, 2, 3);
+
+            
+            (line.Contains(notThere)).Should().BeFalse();
+            (line.Contains(offLine)).Should().BeFalse();
+            (line.Contains(onLine)).Should().BeTrue();
         }
     }
 }

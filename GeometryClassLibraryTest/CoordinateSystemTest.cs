@@ -20,9 +20,9 @@ namespace GeometryClassLibraryTest
             Vector zVector = new Vector(PointGenerator.MakePointWithInches(.5, -.707106781, .5));
 
             //make sure our vectors are right
-            xVector.IsPerpindicularTo(yVector).Should().BeTrue();
-            yVector.IsPerpindicularTo(zVector).Should().BeTrue();
-            zVector.IsPerpindicularTo(xVector).Should().BeTrue();
+            xVector.IsPerpendicularTo(yVector).Should().BeTrue();
+            yVector.IsPerpendicularTo(zVector).Should().BeTrue();
+            zVector.IsPerpendicularTo(xVector).Should().BeTrue();
 
             Plane xyPlane = new Plane(xVector, yVector);
             CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
