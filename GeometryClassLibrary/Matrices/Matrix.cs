@@ -549,7 +549,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix MultiplyBy(Matrix passedMatrix)
         {
-            return passedMatrix * new Matrix(_matrix);
+            return new Matrix(_matrix) * passedMatrix;
         }
 
         /// <summary>
