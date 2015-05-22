@@ -189,9 +189,9 @@ namespace GeometryClassLibrary
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <returns></returns>
-        public static Matrix operator *(Matrix m1, Matrix m2)
+        public static Matrix<double> operator *(Matrix<double> m1, Matrix<double> m2)
         {
-            return m1.MultiplyBy(m2);
+            return m1.Multiply(m2);
         }
 
         /// <summary>
@@ -200,16 +200,9 @@ namespace GeometryClassLibrary
         /// <param name="m1"></param>
         /// <param name="scalarMultiplier"></param>
         /// <returns></returns>
-        public static Matrix operator *(Matrix m1, double scalarMultiplier)
+        public static Matrix<double> operator *(Matrix<double> m1, double scalarMultiplier)
         {
-            for (int i = 0; i < m1.NumberOfRows; i++)
-            {
-                for (int j = 0; j < m1.NumberOfColumns; j++)
-                {
-                    double newElement = scalarMultiplier * m1.GetElement(i, j);
-                    m1.SetElement(i, j, newElement);
-                }
-            }
+            m1.Multiply(scalarMultiplier, m1);
             return m1;
         }
 
@@ -219,35 +212,15 @@ namespace GeometryClassLibrary
         /// <param name="scalarMultiplier"></param>
         /// <param name="m1"></param>
         /// <returns></returns>
-        public static Matrix operator *(double scalarMultiplier, Matrix m1)
+        public static Matrix<double> operator *(double scalarMultiplier, Matrix<double> m1)
         {
-            for (int i = 0; i < m1.NumberOfRows; i++)
-            {
-                for (int j = 0; j < m1.NumberOfColumns; j++)
-                {
-                    double newElement = scalarMultiplier * m1.GetElement(i, j);
-                    m1.SetElement(i, j, newElement);
-                }
-            }
+            m1.Multiply(scalarMultiplier, m1);
             return m1;
         }
 
         public override string ToString()
         {
-            string returnString = "";
-
-            for (int i = 0; i < this.NumberOfRows; i++)
-            {
-                for (int j = 0; j < this.NumberOfColumns -1; j++)
-                {
-                    returnString += GetElement(i,j).ToString() + " | ";
-                }
-                returnString += GetElement(i, this.NumberOfColumns-1).ToString();
-                returnString += "\r\n";
-            }
-
-            return returnString;
-
+            return _matrix.ToString();
         }
 
         #endregion
