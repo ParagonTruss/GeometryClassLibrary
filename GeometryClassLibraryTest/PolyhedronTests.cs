@@ -577,16 +577,34 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polyhedron_IsConvex()
+        public void Polyhedron_IsConvex_ConcavePentagonalPrism()
         {
             Polyhedron testSolid = new TestConcavePentagonalPrism();
-            Polyhedron testBox = new TestRectangularBox1();
-            Polyhedron testTetrahedron = new TestTetrahedron();
-            Polyhedron testDecahedron = new ConcaveDecahedron();
 
             testSolid.IsConvex.Should().BeFalse();
+        }
+
+        [Test()]
+        public void Polyhedron_IsConvex_RectangularBox()
+        {
+            Polyhedron testBox = new TestRectangularBox1();
+
             testBox.IsConvex.Should().BeTrue();
+        }
+
+        [Test()]
+        public void Polyhedron_IsConvex_Tetrahedron()
+        {
+            Polyhedron testTetrahedron = new TestTetrahedron();
+
             testTetrahedron.IsConvex.Should().BeTrue();
+        }
+
+        [Test()]
+        public void Polyhedron_IsConvex_Decahedron()
+        {
+            Polyhedron testDecahedron = new ConcaveDecahedron();
+
             testDecahedron.IsConvex.Should().BeFalse();
         }
     }

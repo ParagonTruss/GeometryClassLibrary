@@ -66,16 +66,21 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>
+        private Point _pointOnSolid;
         public override Point PointOnSolid
         {
             get
             {
-                Point returnPoint = null;
-                if (this.Polygons.Count > 0)
+                if (_pointOnSolid == null)
                 {
-                    returnPoint = this.Polygons[0].LineSegments[0].BasePoint;
+                    Point returnPoint = null;
+                    if (this.Polygons.Count > 0)
+                    {
+                        returnPoint = this.Polygons[0].LineSegments[0].BasePoint;
+                    }
+                    _pointOnSolid = returnPoint;
                 }
-                return returnPoint;
+                return _pointOnSolid;
             }
         }
 
@@ -169,23 +174,28 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds the CenterPoint of the Polyhedron by averaging the vertices
         /// </summary>
+        private Point _centerPoint;
         public override Point CenterPoint
         {
             get
             {
-                Distance xValues = new Distance();
-                Distance yValues = new Distance();
-                Distance zValues = new Distance();
-
-                foreach (Point vertex in this.Vertices)
+                if (_centerPoint == null)
                 {
-                    xValues += vertex.X;
-                    yValues += vertex.Y;
-                    zValues += vertex.Z;
-                }
+                    Distance xValues = new Distance();
+                    Distance yValues = new Distance();
+                    Distance zValues = new Distance();
 
-                int vertexCount = this.Vertices.Count();
-                return new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
+                    foreach (Point vertex in this.Vertices)
+                    {
+                        xValues += vertex.X;
+                        yValues += vertex.Y;
+                        zValues += vertex.Z;
+                    }
+
+                    int vertexCount = this.Vertices.Count();
+                    _centerPoint = new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
+                }
+                return _centerPoint;
             }
         }
 
@@ -193,35 +203,33 @@ namespace GeometryClassLibrary
         /// The volume of the Polyhedron. Uses the 1st method described on this webpage: http://www.ecse.rpi.edu/~wrf/Research/Short_Notes/volume.html
         /// Now using this formula instead: http://stackoverflow.com/a/1849746/4875161
         /// </summary>
+        private Volume _volume;
         public override Volume Volume
         {
             get
             {
-                Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
-
-                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
-
-                foreach (Polygon triangle in triangles)
+                if (_volume == null)
                 {
-                    Volume volume = new Volume(VolumeType.CubicInches, _volumeOfTetrahedronFormedWithTheOrigin(triangle));
+                    Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
 
-                    totalVolume += volume;
+                    List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
+
+                    foreach (Polygon triangle in triangles)
+                    {
+                        Volume volume = new Volume(VolumeType.CubicInches, _volumeOfTetrahedronFormedWithTheOrigin(triangle));
+
+                        totalVolume += volume;
+                    }
+                    _volume = totalVolume;
                 }
-                return totalVolume;
-                //foreach (Polygon face in this.Faces)
-                //{
-                //    Vector areaVector = face.NormalVector*face.Area.InchesSquared;
-                //    Vector heightVector = new Vector(face.BasePoint);
-
-                //    Distance volumeAsDistance = areaVector.DotProduct(heightVector);
-                //    Volume volume = new Volume(VolumeType.CubicInches, volumeAsDistance.Inches);
-
-                //    totalVolume += volume;
-                //}
-                //return totalVolume;
+                return _volume;
             }
         }
-
+        /// <summary>
+        /// returns as a double the volume of the tetrahedron with that triangle as a base
+        /// </summary>
+        /// <param name="triangle"></param>
+        /// <returns></returns>
         private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
         {
             double X1 = triangle.Vertices[0].X.Inches;

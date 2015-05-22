@@ -45,24 +45,30 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds and returns a list of all the vertices of this polygon
         /// </summary>
+        private List<Point> _vertices;
         public List<Point> Vertices
         {
             get
             {
-                List<Point> verticesFound = new List<Point>();
-
-                foreach (Point point in this.LineSegments.GetAllPoints())
+                if (_vertices == null)
                 {
-                    if (!verticesFound.Contains(point))
-                    {
-                        verticesFound.Add(point);
-                    }
-                }
+                    List<Point> verticesFound = new List<Point>();
 
-                return verticesFound;
+                    foreach (Point point in this.LineSegments.GetAllPoints())
+                    {
+                        if (!verticesFound.Contains(point))
+                        {
+                            verticesFound.Add(point);
+                        }
+                    }
+                    _vertices = verticesFound;
+                }
+                return _vertices;
             }
         }
-        
+
+        private bool? _isConvex = null;
+
         /// <summary>
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
@@ -71,43 +77,63 @@ namespace GeometryClassLibrary
         {
             get
             {
+                if (_isConvex == null)
+                {
+                    _isConvex = _getIsConvex();
+                }
+                return (bool)_isConvex;
+            }
+        }
+
+        private bool _getIsConvex()
+        {
                 for (int i = 0; i + 1 < LineSegments.Count; i++)
                 {
-                   Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
+                    Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
                     if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
                     {
                         return false;
                     }
                 }
-                return true;
-            }
+
+            return true;
         }
 
         //finds the average of the vertices.
         //Not the same as centroid, but close enough for smallish convex polygons
         //is the same for every triangle
         //faster algorithm running time than centroid
+        private Point _centerPoint;
         public Point CenterPoint
         {
             get
             {
-                Vector sum = new Vector();
-                foreach(Point vertex in Vertices)
+                if (_centerPoint == null)
                 {
-                    sum += new Vector(vertex);
+                    Vector sum = new Vector();
+                    foreach (Point vertex in Vertices)
+                    {
+                        sum += new Vector(vertex);
+                    }
+                    _centerPoint = (sum / Vertices.Count).EndPoint;
                 }
-                return (sum/Vertices.Count).EndPoint;
+                return _centerPoint;
             }
         }
 
         // _findArea returns a possibly negative area to make the centroid formula work right
         // the Area property takes absolute value before returning
+        private Area _area;
         public override Area Area
         {
             get
-            {
-                Area area = new Area(AreaType.InchesSquared, Math.Abs(_findArea().InchesSquared));
-                return area;
+            {   
+                if (_area == null)
+                {
+                    Area area = new Area(AreaType.InchesSquared, Math.Abs(_findArea().InchesSquared));
+                    _area = area;
+                }
+                return _area;
             }
         }
 
@@ -117,11 +143,16 @@ namespace GeometryClassLibrary
         /// slower than CenterPoint algorithm
         /// </summary>
         /// <returns>the region's center as a point</returns>
+        private Point _centroid;
         public override Point Centroid
         {
             get
             {
-                return _findCentroid();
+                if (_centroid == null)
+                {
+                    _centroid = _findCentroid();
+                }
+                return _centroid;
             }
         }
 

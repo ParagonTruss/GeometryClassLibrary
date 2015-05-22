@@ -382,14 +382,26 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_IsConvex()
+        public void Polygon_IsConvex_Quadrilateral()
         {
             Polygon concaveQuadrilateral = new ConcaveQuadrilateral();
-            Polygon concavePentagon = new ConcavePentagon();
-            Polygon triangle = new Polygon7();
 
             concaveQuadrilateral.IsConvex.Should().BeFalse();
+        }
+
+        [Test()]
+        public void Polygon_IsConvex_ConcavePentagon()
+        {
+            Polygon concavePentagon = new ConcavePentagon();
+
             concavePentagon.IsConvex.Should().BeFalse();
+        }
+
+        [Test()]
+        public void Polygon_IsConvex_Triangle()
+        {
+            Polygon triangle = new Polygon7();
+
             triangle.IsConvex.Should().BeTrue();
         }
 
