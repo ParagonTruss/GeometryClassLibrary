@@ -80,7 +80,7 @@ namespace GeometryClassLibrary
         /// <param name="passedMatrix"></param>
         public Matrix(Matrix passedMatrix)
         {
-            passedMatrix._matrix.CopyTo(_matrix);
+            _matrix = passedMatrix._matrix.Clone();
         }
 
 
