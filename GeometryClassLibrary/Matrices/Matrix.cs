@@ -667,7 +667,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="rotationAngle"></param>
         /// <returns></returns>
-        public Matrix RotationMatrixAboutX(Angle rotationAngle)
+        public static Matrix RotationMatrixAboutX(Angle rotationAngle)
         {
             Matrix rotationMatrix = new Matrix(3);
 
