@@ -432,7 +432,12 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix GetSubMatrix(int indexOfRowToLeaveOut, int indexOfColumnToLeaveOut)
         {
-            return new Matrix(_matrix.SubMatrix(indexOfColumnToLeaveOut, this.NumberOfColumns - 1, indexOfColumnToLeaveOut, this.NumberOfRows - 1));
+            Matrix subMatrix = new Matrix(this.NumberOfRows - 1, this.NumberOfColumns - 1);
+
+            subMatrix = this.RemoveRow(indexOfRowToLeaveOut);
+            subMatrix = subMatrix.RemoveColumn(indexOfColumnToLeaveOut);
+            return subMatrix;
+            //return new Matrix(_matrix.SubMatrix(indexOfColumnToLeaveOut, this.NumberOfColumns - 1, indexOfColumnToLeaveOut, this.NumberOfRows - 1));
         }
 
         /// <summary>
