@@ -6,6 +6,7 @@ using System.Text;
 using UnitClassLibrary;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics;
 
 namespace GeometryClassLibrary
 {
@@ -333,6 +334,9 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Quarternion representation of this Rotation Matrix, stored in a 4x1 Matrix</returns>
         public Matrix ConvertRotationMatrixToQuaternion()
         {
+
+            
+
             //Follows this question asked by user1283674 on stack overflow
             //http://stackoverflow.com/questions/21455139/matrix-rotation-to-quaternion
 
@@ -417,14 +421,9 @@ namespace GeometryClassLibrary
         /// <param name="indexOfRowToLeaveOut"></param>
         /// <param name="indexOfColumnToLeaveOut"></param>
         /// <returns></returns>
-        public Matrix GetSubMatrix(int indexOfRowToLeaveOut, int indexOfColumnToLeaveOut)
+        public Matrix<double> GetSubMatrix(int indexOfRowToLeaveOut, int indexOfColumnToLeaveOut)
         {
-            Matrix subMatrix = new Matrix(this.NumberOfRows - 1, this.NumberOfColumns - 1);
-
-            subMatrix = this.RemoveRow(indexOfRowToLeaveOut);
-            subMatrix = subMatrix.RemoveColumn(indexOfColumnToLeaveOut);
-
-            return subMatrix;
+            return _matrix.SubMatrix(indexOfColumnToLeaveOut, this.NumberOfColumns - 1, indexOfColumnToLeaveOut, this.NumberOfRows - 1); ;
         }
 
         /// <summary>
@@ -462,29 +461,14 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="indicesOfRowsToRemove"></param> 
         /// <returns></returns>
-        public Matrix RemoveRows(int[] passedIndicesOfRowsToRemove)
+        public Matrix<double> RemoveRows(int[] passedIndicesOfRowsToRemove)
         {
-            Matrix returnMatrix = new Matrix(this);
-            int[] indicesOfRowsToRemove = new int[passedIndicesOfRowsToRemove.Count()];
-            passedIndicesOfRowsToRemove.CopyTo(indicesOfRowsToRemove, 0);
-
-            foreach (int rowToRemove in indicesOfRowsToRemove)
-            {
-                returnMatrix = returnMatrix.RemoveRow(rowToRemove);
-
-                //Now that the matrix has shrunk by 1 row, all of the indices at or after that row need to be decreased by 1
-                int arrayIndex = 0;
-                foreach (int index in indicesOfRowsToRemove)
-                {
-                    if (index >= rowToRemove)
-                    {
-                        indicesOfRowsToRemove[arrayIndex] = index - 1;
-                    }
-                    arrayIndex++;
-                }
+            for (int i=0; i<passedIndicesOfRowsToRemove.Length; i++) {
+                _matrix.RemoveRow(passedIndicesOfRowsToRemove[i]);
             }
 
-            return returnMatrix;
+            return _matrix;
+            
         }
 
         /// <summary>
@@ -492,29 +476,15 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="indicesOfColumnsToRemove"></param>
         /// <returns></returns>
-        public Matrix RemoveColumns(int[] passedIndicesOfColumnsToRemove)
+        public Matrix<double> RemoveColumns(int[] passedIndicesOfColumnsToRemove)
         {
-            Matrix returnMatrix = new Matrix(this);
-            int[] indicesOfColumnsToRemove = new int[passedIndicesOfColumnsToRemove.Count()];
-            passedIndicesOfColumnsToRemove.CopyTo(indicesOfColumnsToRemove, 0);
-
-            foreach (int columnToRemove in indicesOfColumnsToRemove)
+            for (int i = 0; i < passedIndicesOfColumnsToRemove.Length; i++)
             {
-                returnMatrix = returnMatrix.RemoveColumn(columnToRemove);
-
-                //Now that the matrix has shrunk by 1 column, all of the indices at or after that column need to be decreased by 1
-                int arrayIndex = 0;
-                foreach (int index in indicesOfColumnsToRemove)
-                {
-                    if (index >= columnToRemove)
-                    {
-                        indicesOfColumnsToRemove[arrayIndex] = index - 1;
-                    }
-                    arrayIndex++;
-                }
+                _matrix.RemoveColumn(passedIndicesOfColumnsToRemove[i]);
             }
 
-            return returnMatrix;
+            return _matrix;
+
         }
 
         /// <summary>
@@ -533,30 +503,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedMatrix"></param>
         /// <returns></returns>
-        public Matrix AddTo(Matrix passedMatrix)
+        public Matrix<double> AddTo(Matrix<double> passedMatrix)
         {
-            Matrix resultingMatrix;
-
-            if (this.CanBeAddedTo(passedMatrix))
-            {
-                resultingMatrix = new Matrix(this.NumberOfRows, this.NumberOfColumns);
-            }
-            else
-            {
-                throw new Exception("The two matrices cannot be added");
-            }
-
-            // Nested loops to travel through the matrices row by row
-            for (int rowIndex = 0; rowIndex < resultingMatrix.NumberOfRows; rowIndex++)
-            {
-                for (int columnIndex = 0; columnIndex < resultingMatrix.NumberOfColumns; columnIndex++)
-                {
-                    double sum = (this.GetElement(rowIndex, columnIndex) + passedMatrix.GetElement(rowIndex, columnIndex));
-                    resultingMatrix.SetElement(rowIndex, columnIndex, sum);
-                }
-            }
-
-            return resultingMatrix;
+            return passedMatrix + _matrix;
         }
 
         /// <summary>
@@ -583,33 +532,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedMatrix"></param>
         /// <returns></returns>
-        public Matrix MultiplyBy(Matrix passedMatrix)
+        public Matrix<double> MultiplyBy(Matrix<double> passedMatrix)
         {
-            Matrix resultingMatrix;
-
-            if (this.CanBeMultipliedBy(passedMatrix))
-            {
-                resultingMatrix = new Matrix(this.NumberOfRows, passedMatrix.NumberOfColumns);
-            }
-            else
-            {
-                throw new Exception("The two Matrices cannot be multiplied");
-            }
-
-            for (int rowIndex = 0; rowIndex < resultingMatrix.NumberOfRows; rowIndex++)
-            {
-                for (int columnIndex = 0; columnIndex < resultingMatrix.NumberOfColumns; columnIndex++)
-                {
-                    double sum = 0;
-                    for (int term = 0; term < this.NumberOfColumns; term++)
-                    {
-                        sum += (this.GetElement(rowIndex, term) * passedMatrix.GetElement(term, columnIndex));
-                    }
-                    resultingMatrix.SetElement(rowIndex, columnIndex, sum);
-                }
-            }
-
-            return resultingMatrix;
+            return passedMatrix * _matrix;
         }
 
         /// <summary>
@@ -632,8 +557,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedNumberOfRowsAndColumns"></param>
         /// <returns></returns>
-        public static Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
+        public Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
         {
+
             // returns an n x n Identity matrix
             Matrix result = new Matrix(passedNumberOfRowsAndColumns);
             for (int i = 0; i < passedNumberOfRowsAndColumns; i++)
@@ -648,28 +574,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double Determinant()
         {
-            // Check to make sure the matrix is square.  Only square matrices have determinants.
-            if (!this.IsSquare())
-            {
-                throw new Exception("The matrix is not square; it does not have a determinant");
-            }
-
-            // Check to see if the matrix has Distances 1x1.  The determinant of a 1x1 matrix is equal to the single value in the matrix.
-            if (this.NumberOfRows == 1)
-            {
-                return this.GetElement(0, 0);
-            }
-
-            double determinant = 0;
-
-            // Loop through the top row of the matrix.
-            for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
-            {
-                //The determinant is the sum of all the elements of one row multiplied by their respective cofactors
-                determinant += this.GetElement(0, columnIndex) * this.GetCofactor(0, columnIndex);
-            }
-
-            return determinant;
+            return _matrix.Determinant();
         }
 
         /// <summary>
