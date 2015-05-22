@@ -5,6 +5,7 @@ using ClearspanTypeLibrary;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 using System.Collections.Generic;
+using MathNet.Numerics;
 
 namespace ClearspanLibraryUnitTest
 {

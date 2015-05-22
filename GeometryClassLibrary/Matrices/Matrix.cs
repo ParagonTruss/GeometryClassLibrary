@@ -74,6 +74,15 @@ namespace GeometryClassLibrary
             passedMatrix.CopyTo(_matrix);
         }
 
+        /// <summary>
+        /// Makes a copy of the passed matrix
+        /// </summary>
+        /// <param name="passedMatrix"></param>
+        public Matrix(Matrix passedMatrix)
+        {
+            passedMatrix._matrix.CopyTo(_matrix);
+        }
+
 
         /// <summary> Constructs Matrix object from a 2dArray </summary>
         public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
@@ -558,9 +567,8 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedNumberOfRowsAndColumns"></param>
         /// <returns></returns>
-        public Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
+        public static Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
         {
-            
             // returns an n x n Identity matrix
             Matrix result = new Matrix(passedNumberOfRowsAndColumns);
             for (int i = 0; i < passedNumberOfRowsAndColumns; i++)

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using FluentAssertions;
 using ClearspanTypeLibrary;
 using GeometryClassLibrary;
+using MathNet.Numerics;
 
 namespace ClearspanLibraryUnitTest
 {
