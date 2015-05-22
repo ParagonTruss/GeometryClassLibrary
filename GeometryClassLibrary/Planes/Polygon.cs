@@ -393,7 +393,9 @@ namespace GeometryClassLibrary
 
         public new Polygon Shift(Shift passedShift)
         {
-            return new Polygon(this.LineSegments.Shift(passedShift));
+            Polygon shiftedPolygon = new Polygon();
+            shiftedPolygon.LineSegments = this.LineSegments.Shift(passedShift);
+            return shiftedPolygon;
         }
 
         public override PlaneRegion ShiftAsPlaneRegion(Shift passedShift)

@@ -417,11 +417,6 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        public override Line MidLine()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Returns whether or not the given plane intersects with the polyhedron but is not coplanar with any of its sides
         /// also can be thought of as if it has a single distinct intersect point or line
@@ -747,8 +742,9 @@ namespace GeometryClassLibrary
         public new Polyhedron Shift(Shift passedShift)
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
-
-            return new Polyhedron(shiftedRegions);
+            Polyhedron shiftedPolyhedron = new Polyhedron(this);
+            shiftedPolyhedron.Polygons = shiftedRegions;
+            return shiftedPolyhedron;
         }
 
         /// <summary>

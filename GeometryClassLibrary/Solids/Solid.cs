@@ -106,17 +106,6 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        
-
-        /// <summary>
-        /// Finds the midline of the Solid that goes parallel to the longest side?
-        /// </summary>
-        /// <returns></returns>
-        public virtual Line MidLine()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Performs the given shift on the Solid
         /// </summary>

@@ -8,12 +8,12 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// Coordinate Systems can be thought of as where you are viewing the world from and this serves as a good conceptial model for how they are implemented in this Library. 
+    /// Coordinate Systems can be thought of as where you are viewing the world from and this serves as a good conceptual model for how they are implemented in this Library. 
     /// Following this model, if you shift based on a CoordinateSystem, the objects will shift in the opposite way because you are moving "yourself" and not the objects when 
-    /// you are changing CoordinateSystems. To see this, just look at an object infront of you. If you move left a step, it is percieved the same as if the object moved right 
-    /// and you stayed still and this is how the CoordinateSystems work. Because of this, CoordinateSystems are useful because we can switch easily to different view for certain
-    /// objects to see how they relate easier without losing how it is related to the rest of the objects. These can be used to simplify calculations from 3D to 2D and make them
-    /// much easier to preform by shifting to a CoordianteSystem in which the calculations done will have no component in one of the axis directions. Using CoordinateSystems this 
+    /// you are changing CoordinateSystems. To see this, just look at an object in front of you. If you move left a step, it is perceived the same as if the object moved right 
+    /// and you stayed still and this is how the CoordinateSystems work. CoordinateSystems are useful because we can switch easily to a different view for a certain
+    /// object to see how it relates easier without losing how it is related to the rest of the objects. These can be used to simplify calculations from 3D to 2D and make them
+    /// much easier to preform by shifting to a CoordinateSystem in which the calculations done will have no component in one of the axis directions. Using CoordinateSystems this 
     /// way is the same idea of reference frames (http://en.wikipedia.org/wiki/Frame_of_reference) and is actually a limited application of reference frames if that helps with 
     /// conceptualizing them and their power.
     /// 
@@ -24,7 +24,7 @@ namespace GeometryClassLibrary
     /// 3D CoordinateSystems have two main parts: an origin and a set of axes. The origin is usually represented by a point in 3D space based on the WorldCoordinateSystem (the reference 
     /// CoordinateSystem), but the axes can be represented in many different ways. The way we store the axes in this class is with 3 angles to rotate around each of the 
     /// WorldCoordinateSytem's axes in X-Y-Z order, which as also refered to as euler angles(http://en.wikipedia.org/wiki/Euler_angles), but we do not limit beta to [0, pi] 
-    /// (http://en.wikipedia.org/wiki/Euler_angles#Signs_and_ranges). Both of these are stored realtive to the WorldCoordinates and so, in a sense, the World Coordinates are 
+    /// (http://en.wikipedia.org/wiki/Euler_angles#Signs_and_ranges). Both of these are stored relative to the WorldCoordinates and so, in a sense, the World Coordinates are 
     /// self defining. Note that the order we rotate around the axis IS important! If you do the same angles with Z-Y-X rotation, it most likely will result in a different 
     /// orientation with respect to the WorldCoordinateSystem. Also, we rotate the angles around the WorldCoordinateSystem, meaning this is an extrinsic rotation approach to 
     /// CoordinateSystems (http://en.wikipedia.org/wiki/Euler_angles#Extrinsic_rotations). We can store the axis as angles instead of lines because we make two assumptions that
