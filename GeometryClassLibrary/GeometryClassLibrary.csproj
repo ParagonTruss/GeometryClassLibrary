@@ -52,6 +52,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IShiftable.cs" />
+    <Compile Include="Interfaces\IShiftableCollection.cs" />
+    <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
+    <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Planes\OtherShapes\Circle.cs" />
     <Compile Include="Planes\OtherShapes\RightTriangle.cs" />
