@@ -71,7 +71,7 @@ namespace GeometryClassLibrary
         /// <param name="passedMatrix"></param>
         public Matrix(Matrix<double> passedMatrix)
         {
-            passedMatrix.CopyTo(_matrix);
+            _matrix = passedMatrix.Clone();
         }
 
         /// <summary>
