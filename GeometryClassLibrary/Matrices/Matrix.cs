@@ -235,7 +235,7 @@ namespace GeometryClassLibrary
         /// <param name="element"></param>
         public void SetElement(int rowIndex, int columnIndex, double element)
         {
-            _matrix[rowIndex, columnIndex] = element;
+            _matrix.At(rowIndex, columnIndex, element);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double GetElement(int rowIndex, int columnIndex)
         {
-            return _matrix[rowIndex, columnIndex];
+            return _matrix.At(rowIndex, columnIndex);
         }
 
 
@@ -257,14 +257,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double[] GetRow(int passedrowIndex)
         {
-            double[] rowToReturn = new double[NumberOfColumns];
-
-            for (int columnIndex = 0; columnIndex < NumberOfColumns; columnIndex++)
-            {
-                rowToReturn[columnIndex] = GetElement(passedrowIndex, columnIndex);
-            }
-
-            return rowToReturn;
+            Vector <double> row = _matrix.Row(passedrowIndex);
+            return row.ToArray();
         }
 
         /// <summary>
@@ -287,14 +281,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double[] GetColumn(int passedColumnIndex)
         {
-            double[] columnToReturn = new double[NumberOfRows];
-
-            for (int rowIndex = 0; rowIndex < NumberOfRows; rowIndex++)
-            {
-                columnToReturn[rowIndex] = GetElement(rowIndex, passedColumnIndex);
-            }
-
-            return columnToReturn;
+            Vector<double> column = _matrix.Column(passedColumnIndex);
+            return column.ToArray();
         }
 
         /// <summary>
@@ -316,7 +304,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public double[,] As2DArray()
         {
-             return _matrix;
+            return _matrix.ToArray();
         }
 
         /// <summary>
