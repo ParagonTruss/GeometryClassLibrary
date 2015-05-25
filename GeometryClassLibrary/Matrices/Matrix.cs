@@ -478,11 +478,27 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix RemoveRows(int[] passedIndicesOfRowsToRemove)
         {
-            for (int i=0; i<passedIndicesOfRowsToRemove.Length; i++) {
-                _matrix.RemoveRow(passedIndicesOfRowsToRemove[i]);
+            Matrix returnMatrix = new Matrix(this);
+            int[] indicesOfRowsToRemove = new int[passedIndicesOfRowsToRemove.Count()];
+            passedIndicesOfRowsToRemove.CopyTo(indicesOfRowsToRemove, 0);
+
+            foreach (int rowToRemove in indicesOfRowsToRemove)
+            {
+                returnMatrix = returnMatrix.RemoveRow(rowToRemove);
+
+                //Now that the matrix has shrunk by 1 row, all of the indices at or after that row need to be decreased by 1
+                int arrayIndex = 0;
+                foreach (int index in indicesOfRowsToRemove)
+                {
+                    if (index >= rowToRemove)
+                    {
+                        indicesOfRowsToRemove[arrayIndex] = index - 1;
+                    }
+                    arrayIndex++;
+                }
             }
 
-            return new Matrix(_matrix);
+            return returnMatrix;
             
         }
 
@@ -493,12 +509,27 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix RemoveColumns(int[] passedIndicesOfColumnsToRemove)
         {
-            for (int i = 0; i < passedIndicesOfColumnsToRemove.Length; i++)
+            Matrix returnMatrix = new Matrix(this);
+            int[] indicesOfColumnsToRemove = new int[passedIndicesOfColumnsToRemove.Count()];
+            passedIndicesOfColumnsToRemove.CopyTo(indicesOfColumnsToRemove, 0);
+
+            foreach (int columnToRemove in indicesOfColumnsToRemove)
             {
-                _matrix.RemoveColumn(passedIndicesOfColumnsToRemove[i]);
+                returnMatrix = returnMatrix.RemoveColumn(columnToRemove);
+
+                //Now that the matrix has shrunk by 1 column, all of the indices at or after that column need to be decreased by 1
+                int arrayIndex = 0;
+                foreach (int index in indicesOfColumnsToRemove)
+                {
+                    if (index >= columnToRemove)
+                    {
+                        indicesOfColumnsToRemove[arrayIndex] = index - 1;
+                    }
+                    arrayIndex++;
+                }
             }
 
-            return new Matrix(_matrix);
+            return returnMatrix;
 
         }
 
