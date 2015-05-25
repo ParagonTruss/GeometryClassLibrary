@@ -87,7 +87,7 @@ namespace GeometryClassLibrary
         /// <summary> Constructs Matrix object from a 2dArray </summary>
         public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
         {
-            this._matrix = DenseMatrix.OfArray(new double[passed2DArray.GetLength(0), passed2DArray.GetLength(1)]);
+            this._matrix = DenseMatrix.OfArray(passed2DArray);
         }
 
         #endregion
