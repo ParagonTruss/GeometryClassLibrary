@@ -323,7 +323,7 @@ namespace GeometryClassLibrary
             //create and return new shift
             Shift toReturn = new Shift(returnRotations, returnDisplacement);
 
-            //make our negated flag the oppsotie of what it was (becuase if we negate a negated shift we want to get a normal one)
+            //make our negated flag the opposite of what it was (becuase if we negate a negated shift we want to get a normal one)
             toReturn._isNegatedShift = !this._isNegatedShift;
 
             return toReturn;

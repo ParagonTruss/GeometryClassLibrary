@@ -742,9 +742,8 @@ namespace GeometryClassLibrary
         public new Polyhedron Shift(Shift passedShift)
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
-            Polyhedron shiftedPolyhedron = new Polyhedron(this);
-            shiftedPolyhedron.Polygons = shiftedRegions;
-            return shiftedPolyhedron;
+
+            return new Polyhedron(shiftedRegions);
         }
 
         /// <summary>
