@@ -498,6 +498,11 @@ namespace GeometryClassLibrary
             return intersectionPoint;
         }
 
+        public virtual Point Intersection(Plane plane)
+        {
+            return plane.Intersection(this);
+        }
+
         /// <summary>
         /// return the point of intersection, if any, between this line and the passed polygon
         /// </summary>
