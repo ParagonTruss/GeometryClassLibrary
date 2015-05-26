@@ -390,7 +390,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the point is contained</returns>
         public override bool Contains(Point point)
         {
-            //make a vector from this line to the point and then see if the vector is contained
+            //first check both endpoints
+            if (point == this.BasePoint || point == this.EndPoint)
+            {
+                return true;
+            }
+
+            //check the vector with the same basepoi
             Vector pointVector = new Vector(this.BasePoint, point);
 
             bool sameDirection = this.PointInSameDirection(pointVector);

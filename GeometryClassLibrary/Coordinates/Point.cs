@@ -435,7 +435,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
-            return IsOnVector(passedLineSegment);
+            return passedLineSegment.Contains(this);
         }
 
         public Matrix ConvertToMatrixColumn()

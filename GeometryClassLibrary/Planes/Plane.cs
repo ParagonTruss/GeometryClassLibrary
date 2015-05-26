@@ -414,12 +414,11 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual Point Intersection(Line passedLine)
         {
-            //if they are parallel than we know that they do not intersect in a point
-            if (this.IsParallelTo(passedLine))
+            //Test if the plane contains the line's basePoint
+            if (this.Contains(passedLine.BasePoint))
             {
-                return null;
+                return passedLine.BasePoint;
             }
-            //otherwise they should
 
             //Following formula from http://www.netcomuk.co.uk/~jenolive/vect18c.html
 
@@ -432,14 +431,14 @@ namespace GeometryClassLibrary
             Distance tCoefficient = this.NormalVector.XComponent * passedLine.Direction.XComponentOfDirection +
                 this.NormalVector.YComponent * passedLine.Direction.YComponentOfDirection + this.NormalVector.ZComponent * passedLine.Direction.ZComponentOfDirection;
 
-            //find the part it equals ffom the line
+            //find the part it equals from the line
             double equationEquals = this.NormalVector.XComponent.Inches * passedLine.BasePoint.X.Inches +
                 this.NormalVector.YComponent.Inches * passedLine.BasePoint.Y.Inches + this.NormalVector.ZComponent.Inches * passedLine.BasePoint.Z.Inches;
 
             //subtract the one from the line from the one from the plane
             double equals = thisPlaneEqualsValue - equationEquals;
 
-            //to keep it from dividing by zero, which means there is not intersection in this case and it should be caught by cheking
+            //to keep it from dividing by zero, which means there is not intersection in this case and it should be caught by checking
             //if they are parallel, but just in case
             if (tCoefficient == new Distance())
             {
@@ -589,8 +588,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            //check to see if it is perpendicular to the normal vector and if it is then it is parallel to the plane because the plane id
-            //by definition perpinducluar to the normal
+            //check to see if it is perpendicular to the normal vector and if it is then it is parallel to the plane because the plane is
+            //by definition perpendicular to the normal
             return this.NormalVector.IsPerpendicularTo(passedLine);
         }
         
@@ -601,8 +600,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsPerpendicularTo(Line passedLine)
         {
-            //check to see if it is parallel to the normal vector and if it is then it is perpindicular to the plane because the plane is
-            //by definition perpinducluar to the normal
+            //check to see if it is parallel to the normal vector and if it is then it is perpendicular to the plane because the plane is
+            //by definition perpendicular to the normal
             return this.NormalVector.IsParallelTo(passedLine);
         }
 

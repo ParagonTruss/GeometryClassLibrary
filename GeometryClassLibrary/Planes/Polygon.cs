@@ -1393,7 +1393,7 @@ namespace GeometryClassLibrary
         public new bool DoesIntersectNotCoplanar(Line passedLine)
         {
             Point intersection = this.Intersection(passedLine);
-            if (intersection != null && this.ContainsInclusive(intersection))
+            if (intersection != null)
             {
                 return true;
             }

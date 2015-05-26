@@ -542,7 +542,6 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Contains()
         {
-            
             Line line = new Line(Direction.Right, PointGenerator.MakePointWithInches(1, 2, 3));
             Point notThere = null;
             Point offLine = PointGenerator.MakePointWithInches(0, 0, 3);
@@ -552,6 +551,17 @@ namespace ClearspanTypeLibrary.Tests
             (line.Contains(notThere)).Should().BeFalse();
             (line.Contains(offLine)).Should().BeFalse();
             (line.Contains(onLine)).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Line_Contains_PrecisionErrorTest()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point point2 = PointGenerator.MakePointWithInches(-2.5, 73, 3.5);
+            Line testLine = new Line(point1, point2);
+
+            testLine.Contains(point1).Should().BeTrue();
+            testLine.Contains(point2).Should().BeTrue();
         }
     }
 }

@@ -439,7 +439,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Line passedLine)
         {
-            return passedLine.UnitVector(DistanceType.Inch).CrossProduct(this.UnitVector(DistanceType.Inch)).Magnitude == new Distance();
+            return (passedLine.Direction == this.Direction || passedLine.Direction == this.Direction.Reverse());
         }
 
         /// <summary>
@@ -758,6 +758,11 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
+            if (point == BasePoint)
+            {
+                return true;
+            }
+
             Vector checkVector = new Vector(BasePoint, point);
             return checkVector.IsParallelTo(this);
         }

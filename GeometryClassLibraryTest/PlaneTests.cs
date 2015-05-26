@@ -193,7 +193,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Plane_PrepindicularLineTest()
+        public void Plane_PerpendicularLineTest()
         {
             Plane testPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(2, -1, 1)), PointGenerator.MakePointWithInches(2, 1, 2));
             Plane testPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, -1)), PointGenerator.MakePointWithInches(1, 3, 3));
@@ -214,18 +214,40 @@ namespace GeometryClassLibraryTests
             Plane testPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(2, -1, 1)), PointGenerator.MakePointWithInches(2, -1, 1));
             Plane testPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 2, -1)), PointGenerator.MakePointWithInches(2, -1, 1));
 
-            Line perpindicular1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
-            Line perpindicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 3, -4)); //1, 2, -1
+            Line perpendicular1 = new Line(PointGenerator.MakePointWithInches(2, -1, 1));
+            Line perpendicular2 = new Line(PointGenerator.MakePointWithInches(3, 1, -3), PointGenerator.MakePointWithInches(4, 3, -4)); //1, 2, -1
 
-            Point intersection11 = testPlane1.Intersection(perpindicular1);
-            Point intersection12 = testPlane1.Intersection(perpindicular2);
-            Point intersection21 = testPlane2.Intersection(perpindicular1);
-            Point intersection22 = testPlane2.Intersection(perpindicular2);
+            Point intersection11 = testPlane1.Intersection(perpendicular1);
+            Point intersection12 = testPlane1.Intersection(perpendicular2);
+            Point intersection21 = testPlane2.Intersection(perpendicular1);
+            Point intersection22 = testPlane2.Intersection(perpendicular2);
 
             intersection11.Should().Be(PointGenerator.MakePointWithInches(2, -1, 1));
             intersection21.Should().Be(PointGenerator.MakePointWithInches(2, -1, 1));
             intersection12.Should().Be(PointGenerator.MakePointWithInches(-1, -7, 1));
             intersection22.Should().Be(PointGenerator.MakePointWithInches(1.5, -2, -1.5));
+        }
+
+        [Test()]
+        public void Plane_IntersectLineOnPlane()
+        {
+            Plane testPlane = new Plane(Direction.Out);
+            Line lineOnPlane = new Line(PointGenerator.MakePointWithInches(2, 1, 0));
+
+            testPlane.Intersection(lineOnPlane).Should().Be(new Point());
+        }
+
+        [Test()]
+        public void Plane_IntersectLine_PrecisionError()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(-2.5, 73, 3.5);
+            Point point2 = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point point3 = PointGenerator.MakePointWithInches(0, 0, 2);
+            
+            Plane testPlane = new Plane(Direction.Out, point3);
+            Line line = new Line(point1, point2);
+
+            testPlane.Intersection(line).Should().Be(point2);
         }
     }
 }
