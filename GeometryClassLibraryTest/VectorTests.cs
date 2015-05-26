@@ -57,10 +57,12 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_Reverse()
         {
-            Vector v = new Vector(PointGenerator.MakePointWithInches(2, 2), PointGenerator.MakePointWithInches(4, 3));
+            Point point1 = PointGenerator.MakePointWithInches(2, 2);
+            Point point2 = PointGenerator.MakePointWithInches(4, 3);
+            Vector v = new Vector(point1, point2);
 
-            v.FlipAboutHead().Should().Be(new Vector(PointGenerator.MakePointWithInches(4, 3), PointGenerator.MakePointWithInches(2, 2)));
-            v.FlipAboutHead().Should().NotBe(new Vector(PointGenerator.MakePointWithInches(5, 3), PointGenerator.MakePointWithInches(3, 2)));
+            v.Reverse().Should().Be(new Vector(point2, point1));
+            v.Reverse().Should().NotBe(new Vector(PointGenerator.MakePointWithInches(5, 3), PointGenerator.MakePointWithInches(3, 2)));
         }
         [Test()]
         public void Vector_FlipAboutTail()

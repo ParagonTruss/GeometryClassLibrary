@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Distance XInterceptIn2D
         {
-            //if we are ignoring z, we can just take the x component of wher it intersects the xz plane
+            //if we are ignoring z, we can just take the x component of where it intersects the xz plane
             get
             {
                 if (XZIntercept == null)
@@ -65,7 +65,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Distance YInterceptIn2D
         {
-            //if we are ignoring z, we can just take the y component of whery it intersects the yz plane
+            //if we are ignoring z, we can just take the y component of where it intersects the yz plane
             get
             {
                 if (YZIntercept == null)

@@ -63,8 +63,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnitClassLibrary">
-      <HintPath>..\packages\UnitClassLibrary.1.2.5598.23349\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
+    <Reference Include="UnitClassLibrary, Version=1.2.5623.24298, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5623.24298\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

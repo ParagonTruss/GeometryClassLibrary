@@ -424,37 +424,36 @@ namespace GeometryClassLibrary
 
             //substitute the x,y and z part of the lines into the plane equation
             //find what the plane is equal to
-            double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
-                this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
+            Distance thisPlaneEqualsValue = this.NormalVector.DotProduct(new Vector(this.BasePoint));
 
             //find t's coefficent
-            Distance tCoefficient = this.NormalVector.XComponent * passedLine.Direction.XComponentOfDirection +
-                this.NormalVector.YComponent * passedLine.Direction.YComponentOfDirection + this.NormalVector.ZComponent * passedLine.Direction.ZComponentOfDirection;
+            Distance tCoefficient = this.NormalVector.DotProduct(passedLine.Direction.UnitVector(DistanceType.Inch));
 
             //find the part it equals from the line
-            double equationEquals = this.NormalVector.XComponent.Inches * passedLine.BasePoint.X.Inches +
-                this.NormalVector.YComponent.Inches * passedLine.BasePoint.Y.Inches + this.NormalVector.ZComponent.Inches * passedLine.BasePoint.Z.Inches;
+            Distance equationEquals = this.NormalVector.DotProduct(new Vector(passedLine.BasePoint));
 
             //subtract the one from the line from the one from the plane
-            double equals = thisPlaneEqualsValue - equationEquals;
+            Distance equals = thisPlaneEqualsValue - equationEquals;
 
-            //to keep it from dividing by zero, which means there is not intersection in this case and it should be caught by checking
-            //if they are parallel, but just in case
-            if (tCoefficient == new Distance())
+            //now get the value for t
+            double t = equals / tCoefficient;
+
+            if (t == double.NaN)
             {
                 return null;
             }
-
-            //now get the value for t
-            double t = equals / tCoefficient.Inches;
-
-            //now just plug t back into the line equations to find the x,y amd z
+            //now just plug it back into the line equations to find the x,y amd z
             //Distance xComponent = this.BasePoint.X + new Distance(DistanceType.Inch, this.Direction.XComponentOfDirection * t);
             //Distance yComponent = this.BasePoint.Y + new Distance(DistanceType.Inch, this.Direction.YComponentOfDirection * t);
             //Distance zComponent = this.BasePoint.Z + new Distance(DistanceType.Inch, this.Direction.ZComponentOfDirection * t);
 
             //Point intersectionPoint = new Point(xComponent, yComponent, zComponent);
             Point intersectionPoint = passedLine.GetPointOnLine(t);
+
+            //if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
+            //{
+            //    return null;
+            //}
 
             return intersectionPoint;
         }
