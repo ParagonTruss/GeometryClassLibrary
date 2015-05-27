@@ -1336,7 +1336,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a list of the points that line intersects the edges of the polygon
         /// </summary>
-        public List<Point> CoplanarPointsOfIntersection(Line passedLine)
+        public List<Point> IntersectionCoplanarPoints(Line passedLine)
         {
             List<Point> intersections = new List<Point>();
 
@@ -1351,7 +1351,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a list of the points where the linesegment intersects the edges of the polygon
         /// </summary>
-        public List<Point> CoplanarPointsOfIntersection(LineSegment linesegment)
+        public List<Point> IntersectionCoplanarPoints(LineSegment linesegment)
         {
             List<Point> intersections = new List<Point>();
 
@@ -1371,12 +1371,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a list of the lineSegments of intersection through the interior of the polygon
         /// </summary>
-        public List<LineSegment> CoplanarLineSegmentsOfIntersection(Line passedLine)
+        public List<LineSegment> IntersectionCoplanarLineSegments(Line passedLine)
         {
             
             List<LineSegment> lineSegmentsOfIntersection = new List<LineSegment>();
 
-            List<Point> pointsOfIntersection = CoplanarPointsOfIntersection(passedLine);
+            List<Point> pointsOfIntersection = IntersectionCoplanarPoints(passedLine);
 
             for (int i = 0; 2*i + 1 < pointsOfIntersection.Count; i++ )
             {
@@ -1574,7 +1574,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool DoesContainLineSegment(LineSegment lineSegment)
         {
-            List<Point> points = CoplanarPointsOfIntersection(lineSegment);
+            List<Point> points = IntersectionCoplanarPoints(lineSegment);
             int numberOfIntersections = points.Count;
             if (numberOfIntersections <= 2)
             {

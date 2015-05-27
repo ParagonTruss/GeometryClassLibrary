@@ -450,10 +450,10 @@ namespace GeometryClassLibrary
             //Point intersectionPoint = new Point(xComponent, yComponent, zComponent);
             Point intersectionPoint = passedLine.GetPointOnLine(t);
 
-            //if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
-            //{
-            //    return null;
-            //}
+            if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
+            {
+                return null;
+            }
 
             return intersectionPoint;
         }

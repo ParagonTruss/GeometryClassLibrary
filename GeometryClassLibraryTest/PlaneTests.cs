@@ -238,7 +238,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Plane_IntersectLine_PrecisionError()
+        public void Plane_IntersectLine_PrecisionCheck()
         {
             Point point1 = PointGenerator.MakePointWithInches(-2.5, 73, 3.5);
             Point point2 = PointGenerator.MakePointWithInches(1, 1, 2);

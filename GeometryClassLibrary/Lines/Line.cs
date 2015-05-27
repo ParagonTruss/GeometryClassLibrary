@@ -513,6 +513,11 @@ namespace GeometryClassLibrary
             return polygon.Intersection(this);
         }
 
+        public virtual List<Point> IntersectionCoplanarPoints(Polygon polygon)
+        {
+            return polygon.IntersectionCoplanarPoints(this);
+        }
+
         /// <summary>
         /// Returns whether or not the two lines intersect
         /// </summary>

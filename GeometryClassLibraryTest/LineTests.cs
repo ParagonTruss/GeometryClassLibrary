@@ -554,7 +554,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_Contains_PrecisionErrorTest()
+        public void Line_Contains_PrecisionCheck()
         {
             Point point1 = PointGenerator.MakePointWithInches(1, 1, 2);
             Point point2 = PointGenerator.MakePointWithInches(-2.5, 73, 3.5);

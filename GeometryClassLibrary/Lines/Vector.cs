@@ -399,7 +399,7 @@ namespace GeometryClassLibrary
             //check the vector with the same basepoi
             Vector pointVector = new Vector(this.BasePoint, point);
 
-            bool sameDirection = this.PointInSameDirection(pointVector);
+            bool sameDirection = this.HasSameDirectionAs(pointVector);
             bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
 
             return sameDirection && greaterMagnitude;
@@ -414,7 +414,7 @@ namespace GeometryClassLibrary
         {
             //see if we partially overlap
             bool doesSharePoint = this.Contains(potentiallyOverlappingVector.EndPoint) || this.Contains(potentiallyOverlappingVector.BasePoint);
-            bool partiallyOverlap = this.PointInSameOrOppositeDirections(potentiallyOverlappingVector) && doesSharePoint;
+            bool partiallyOverlap = this.HasSameDirectionAs(potentiallyOverlappingVector) && doesSharePoint;
 
             //or completely contain the other
             bool doesContainOneOrOther = this.Contains(potentiallyOverlappingVector) || potentiallyOverlappingVector.Contains(this);
@@ -505,7 +505,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
-        public bool PointInSameDirection(Vector passedVector)
+        public bool HasSameDirectionAs(Vector passedVector)
         {
             Vector vector1 = this;
             Vector vector2 = passedVector;
@@ -523,7 +523,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
-        public bool PointInOppositeDirections(Vector passedVector)
+        public bool HasOppositeDirectionOf(Vector passedVector)
         {
             Vector vector1 = this;
             Vector vector2 = passedVector;
@@ -536,10 +536,10 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="v1">vector to compare against</param>
         /// <returns></returns>
-        public bool PointInSameOrOppositeDirections(Vector v1)
+        public bool HasSameOrOppositeDirectionAs(Vector v1)
         {
-            bool sameDirection = this.PointInSameDirection(v1);
-            bool oppositeDirections = this.PointInOppositeDirections(v1);
+            bool sameDirection = this.HasSameDirectionAs(v1);
+            bool oppositeDirections = this.HasOppositeDirectionOf(v1);
 
             return sameDirection || oppositeDirections;
         }
@@ -552,6 +552,7 @@ namespace GeometryClassLibrary
         {
             return new Vector(this.EndPoint, this.BasePoint);
         }
+        
        /// <summary>
         /// Flips the vector about its tail.
         /// Like this:  <-------|------->
