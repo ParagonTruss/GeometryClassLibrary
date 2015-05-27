@@ -212,14 +212,7 @@ namespace GeometryClassLibrary
 
         public override string ToString()
         {
-            if (this.Z != new Distance())
-            {
-                return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
-            }
-            else
-            {
-                return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString();
-            }
+            return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
         }
 
         #endregion
@@ -416,6 +409,7 @@ namespace GeometryClassLibrary
 
             //if the above cross product is the 0 vector, the point is on the given line
             return crossProduct.Magnitude == new Distance();
+            //return passedLine.Contains(this); // should work but breaks stuff.
         }
 
         /// <summary>
