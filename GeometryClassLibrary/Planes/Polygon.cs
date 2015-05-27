@@ -1385,6 +1385,7 @@ namespace GeometryClassLibrary
             }
             return lineSegmentsOfIntersection;
         }
+
         /// <summary>
         /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
         /// </summary>

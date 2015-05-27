@@ -213,7 +213,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
+            //try to cast the object to a Plane, if it fails then we know the user passed in the wrong type of object
             try
             {
                 Plane comparablePlane = (Plane)obj;

@@ -95,7 +95,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void CoordinateSystem_ShiftFromAndTo()
+        public void CoordinateSystem_Shift_FromAndTo()
         {
             CoordinateSystem test = new CoordinateSystem(PointGenerator.MakePointWithInches(1, -2, -3), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 23.6), new Angle(AngleType.Degree, 243));
 
@@ -115,7 +115,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void CoordinateSystem_ShiftThenUnShift()
+        public void CoordinateSystem_Shift_UndoShift()
         {
             CoordinateSystem system = new CoordinateSystem(PointGenerator.MakePointWithInches(-1, 2, 4), new Angle(AngleType.Degree, 123), new Angle(AngleType.Degree, -22), new Angle(AngleType.Degree, 78));
 
