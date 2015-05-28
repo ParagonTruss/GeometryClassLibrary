@@ -11,7 +11,7 @@ namespace GeometryClassLibraryTest
     public class CoordinateSystemTest
     {
         [Test]
-        public void CoordinateSystem_PlaneAndVectorConstuctorTests()
+        public void CoordinateSystem_PlaneAndVectorConstuctor()
         {
             CoordinateSystem expected = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
 
@@ -74,7 +74,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void CoordinateSystem_AreDirectionsEquivalentTests()
+        public void CoordinateSystem_AreDirectionsEquivalent()
         {
             CoordinateSystem same = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
             CoordinateSystem same2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
@@ -380,7 +380,7 @@ namespace GeometryClassLibraryTest
         //      since you only need to changeit once. However, if the current system is changed and the geometry is not shifted, it would lose how it should be positioned in the world system
 
         [Test]
-        public void CoordinateSystem_DemoTest_CoordinateSystemShifting()
+        public void CoordinateSystem_Demo_CoordinateSystemShifting()
         {
             //This test demonstrated how you could shift between one coordinate system view and another for an object that stores its "home" coordinateSystem based on the world system
             //and how the geometry of the Systems would need to be shifted
@@ -470,7 +470,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void CoordinateSystem_DemoTest_ShiftingCoordinateSystems()
+        public void CoordinateSystem_Demo_ShiftingCoordinateSystems()
         {
             //This test demonstrates how you would shift a coordinate system and the difference between a Shift and a RelativeShift as well as giving examples of when each would be used.
 

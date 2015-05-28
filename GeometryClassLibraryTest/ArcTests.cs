@@ -43,7 +43,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_PropertiesTests_Quarter_Circle()
+        public void Arc_Properties_Quarter_Circle()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -88,7 +88,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_PropertiesTests_Half_Circle()
+        public void Arc_Properties_Half_Circle()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -133,7 +133,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_PropertiesTests_Three_Quarters_Circle()
+        public void Arc_Properties_Three_Quarters_Circle()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -178,7 +178,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_TranslateTest()
+        public void Arc_Translate()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -219,7 +219,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Arc_ShiftTest()
+        public void Arc_Shift()
         {
             //make our default arc
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);

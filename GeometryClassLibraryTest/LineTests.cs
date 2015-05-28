@@ -13,7 +13,7 @@ namespace ClearspanTypeLibrary.Tests
     public class LineTests
     {
         [Test()]
-        public void Line_GetPointOnLineTest()
+        public void Line_GetPointOnLine()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
 
@@ -25,7 +25,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_IntersectionTest_Inches()
+        public void Line_Intersection_Inches()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
@@ -40,7 +40,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_IntersectionTest_Millimeters()
+        public void Line_Intersection_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
             Point basePointLine2 = PointGenerator.MakePointWithMillimeters(2, 4, 0);
@@ -100,7 +100,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_IntersectionTest_Origin()
+        public void Line_Intersection_Origin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -116,7 +116,7 @@ namespace ClearspanTypeLibrary.Tests
 
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLineTest_Inches()
+        public void Line_AngleBetweenIntersectingLine_Inches()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
@@ -131,7 +131,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLineTest_Millimeters()
+        public void Line_AngleBetweenIntersectingLine_Millimeters()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
@@ -146,7 +146,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLineTest_IntersectAtOrigin()
+        public void Line_AngleBetweenIntersectingLine_IntersectAtOrigin()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -161,7 +161,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLinePerpendicularTest()
+        public void Line_AngleBetweenIntersectingLinePerpendicular()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
@@ -177,7 +177,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_CoplanarTest()
+        public void Line_IsCoplanarWith()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
             Line line2 = new Line(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
@@ -191,7 +191,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_ParallelTest()
+        public void Line_IsParallelTo()
         {
             Line line1 = new LineSegment(PointGenerator.MakePointWithInches(0,0), PointGenerator.MakePointWithInches(5,0));
             Line line2 = new LineSegment(PointGenerator.MakePointWithInches(-3,-3), PointGenerator.MakePointWithInches(8,-3));
@@ -212,7 +212,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_PerpendicularTest()
+        public void Line_IsPerpendicularTo()
         {
             Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
             Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
@@ -237,7 +237,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_RotateTest_AboutZAxis()
+        public void Line_Rotate_AboutZAxis()
         {
             Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
             Point otherPointLine1 = PointGenerator.MakePointWithInches(3, 3, 3);
@@ -257,7 +257,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_RotateTest_AboutReferencePoint()
+        public void Line_Rotate_AboutReferencePoint()
         {
             Point start = PointGenerator.MakePointWithInches(0, 1, 3);
             Point end = PointGenerator.MakePointWithInches(0, 1, 5);
@@ -277,7 +277,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_TranslateTest()
+        public void Line_Translate()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
 
@@ -293,7 +293,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_DoesIntersectLineTest()
+        public void Line_DoesIntersectLine()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
             Line line2 = new Line(PointGenerator.MakePointWithInches(5, 0), PointGenerator.MakePointWithInches(-3, 0));
@@ -310,7 +310,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_DoesIntersectLineSegmentTest()
+        public void Line_DoesIntersectLineSegment()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(-3, 0, 0));
             LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(3, -3, 0), PointGenerator.MakePointWithInches(2, 0, 0));

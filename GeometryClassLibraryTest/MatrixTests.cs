@@ -1038,7 +1038,7 @@ namespace ClearspanLibraryUnitTest
         }
 
         [Test()]
-        public void DeterminantSmallMatrixTest()
+        public void DeterminantSmallMatrix()
         {
             Matrix matrix1 = new Matrix(2, 2);
 

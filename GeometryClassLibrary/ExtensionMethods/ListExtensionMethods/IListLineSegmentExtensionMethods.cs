@@ -273,19 +273,26 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
         {
-            List<Line> passedLineListCasted = new List<Line>(passedLineList);
-
-            for (int i = 0; i < passedLineList.Count(); i++)
+            List<Point> listOfPoints = passedLineList.GetAllPoints();
+            Vector whatTheNormalShouldBe = null;
+            for (int i = 1; i + 1 < listOfPoints.Count(); i++)
             {
-                for (int j = 0; j < passedLineList.Count(); j++)
+                Vector vector1 = new Vector(listOfPoints[0], listOfPoints[i]);
+                Vector vector2 = new Vector(listOfPoints[0], listOfPoints[i+1]);
+                Vector normal = vector1.CrossProduct(vector2);
+                if (normal.Magnitude != new Distance())
                 {
-                    if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[j]))
+                    //All the normal vectors have the origin as their base, because of how cross products are coded
+                    if (whatTheNormalShouldBe == null)
+                    {
+                        whatTheNormalShouldBe = normal;
+                    }
+                    if (!normal.HasSameOrOppositeDirectionAs(whatTheNormalShouldBe))
                     {
                         return false;
                     }
                 }
             }
-
             return true;
         }
 
@@ -296,13 +303,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllParallel(this List<LineSegment> passedLineList)
         {
-
-            List<Line> convertedList = new List<Line>();
-            foreach (var item in passedLineList)
+            for (int i = 0; i < passedLineList.Count - 1; i++)
+            {
+                if (!passedLineList[i].IsParallelTo(passedLineList[i + 1]))
                 {
-                    convertedList.Add(item);
+                    return false;
                 }
-            return convertedList.AreAllParallel();
+            }
+
+            return true;
         }
     }
 }

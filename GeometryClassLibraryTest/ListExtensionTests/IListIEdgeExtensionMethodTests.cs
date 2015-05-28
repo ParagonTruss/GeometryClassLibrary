@@ -10,7 +10,7 @@ namespace GeometryClassLibraryTest
     public class IListIEdgeExtensionMethodTests
     {
         [Test]
-        public void IEdge_ShiftTest()
+        public void IEdge_Shift()
         {
             //make a bunch of edges and shift 'em
             List<IEdge> edges = new List<IEdge>();

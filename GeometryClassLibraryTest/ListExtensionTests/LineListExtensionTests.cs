@@ -12,9 +12,9 @@ namespace GeometryClassLibraryTests
     public class LineListExtensionTests
     {
         [Test]
-        public void LineListExtension_AreAllCoplanarTest()
+        public void LineList_AreAllCoplanar()
         {
-            List<LineSegment> testList = new List<Point>
+            List<LineSegment> testList1 = new List<Point>
                 {
                     PointGenerator.MakePointWithInches(1,1,1),
                     PointGenerator.MakePointWithInches(1,2,1),
@@ -23,11 +23,25 @@ namespace GeometryClassLibraryTests
                 }
                 .MakeIntoLineSegmentsThatMeet();
 
-            testList.AreAllCoplanar().Should().BeTrue();
+            testList1.AreAllCoplanar().Should().BeTrue();
+
+            List<LineSegment> testList2 = new List<LineSegment>();
+            testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0)));
+            testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 1), PointGenerator.MakePointWithInches(0, 1, 1)));
+            testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 1, 0)));
+
+            //Pairwise these segments are coplanar, but as a set they are not. 
+            bool bool2 = testList2.AreAllCoplanar();
+            bool2.Should().BeFalse();
+
+
+
+            //null case; should be vacuosly true
+            (new List<LineSegment>()).AreAllCoplanar().Should().BeTrue();
         }
 
         [Test()]
-        public void LineListExtension_AreAllParallelTest()
+        public void LineList_AreAllParallel()
         {
             List<LineSegment> horizontalList = new List<LineSegment>
                 {
@@ -37,10 +51,17 @@ namespace GeometryClassLibraryTests
                 };
 
             horizontalList.AreAllParallel().Should().BeTrue();
+
+            horizontalList.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 1), PointGenerator.MakePointWithInches(5, 0)));
+
+            horizontalList.AreAllParallel().Should().BeFalse();
+
+            //null case; should be vacuosly true
+            (new List<LineSegment>()).AreAllParallel().Should().BeTrue();
         }
 
         [Test()]
-        public void LineListExtension_SmallestXInterceptIn2D()
+        public void LineList_SmallestXInterceptIn2D()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
@@ -63,7 +84,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LargestXInterceptIn2D()
+        public void LineList_LargestXInterceptIn2D()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
@@ -86,7 +107,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LineWithXInterceptIn2DClosestTo()
+        public void LineList_LineWithXInterceptIn2DClosestTo()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
@@ -109,7 +130,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LineWithXInterceptIn2DFarthestFrom()
+        public void LineList_LineWithXInterceptIn2DFarthestFrom()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6
@@ -132,7 +153,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_SmallestYInterceptIn2D()
+        public void LineList_SmallestYInterceptIn2D()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
@@ -155,7 +176,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LargestYInterceptIn2D()
+        public void LineList_LargestYInterceptIn2D()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
@@ -178,7 +199,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LineWithYInterceptIn2DClosestTo()
+        public void LineList_LineWithYInterceptIn2DClosestTo()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
@@ -201,7 +222,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_LineWithYInterceptIn2DFarthestFrom()
+        public void LineList_LineWithYInterceptIn2DFarthestFrom()
         {
             Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
             Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
@@ -224,7 +245,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void LineListExtension_OnlyLinesParallelTo()
+        public void LineList_OnlyLinesParallelTo()
         {
             Line referenceLine = new Line(PointGenerator.MakePointWithInches(0, 2, 1), PointGenerator.MakePointWithInches(2, -1, 0));
 
