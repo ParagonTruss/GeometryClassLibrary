@@ -793,115 +793,156 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="otherPlane">Other plane region to find a shared point with</param>
         /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
-        public Point SharedPointNotOnEitherBoundary(Polygon otherPolygon)
+        public Point SharedInteriorPointNotOnEitherBoundary(Polygon otherPolygon)
         {
-            //check the centroids
-            if (otherPolygon.ContainsInclusive(this.Centroid))
-            {
-                return this.Centroid;
-            }
-            if (this.ContainsExclusive(otherPolygon.Centroid))
-            {
-                return otherPolygon.Centroid;
-            }
+            ////check the centerPoints
+            //if (otherPolygon.ContainsExclusive(this.CenterPoint))
+            //{
+            //    return this.CenterPoint;
+            //}
+            //if (this.ContainsExclusive(otherPolygon.CenterPoint))
+            //{
+            //    return otherPolygon.CenterPoint;
+            //}
 
-            //if we still havent found it try looking at the veticies of the otherPlane
-            foreach (Point vertex in otherPolygon.LineSegments.GetAllPoints())
-            {
-                if (this.ContainsExclusive(vertex))
-                {
-                    return vertex;
-                }
-            }
+            //Point averageOfCenterPoints = ((new Vector(this.CenterPoint) + new Vector(otherPolygon.CenterPoint))/2).EndPoint;
+            
+            //if (this.ContainsExclusive(otherPolygon.CenterPoint))
+            //{
+            //    return otherPolygon.CenterPoint;
+            //}
 
-            //still still havent found it check if the sides overlap
-            //we know one line at least must intersect this planes boundaries twice
-            foreach (LineSegment line in otherPolygon.LineSegments)
-            {
-                //keep track of our intersection
-                Point firstIntesect = null;
+            ////if we still havent found it try looking at the veticies of the otherPlane
+            //foreach (Point vertex in otherPolygon.LineSegments.GetAllPoints())
+            //{
+            //    if (this.ContainsExclusive(vertex))
+            //    {
+            //        return vertex;
+            //    }
+            //}
 
-                //look at all the bounding planes
-                foreach (LineSegment otherLine in this.LineSegments)
-                {
-                    //see if they intersect
-                    Point intersection = line.Intersection(otherLine);
-                    if (intersection != null)
-                    {
-                        //if we havent found a first intersection
-                        if (firstIntesect == null)
-                        {
-                            firstIntesect = intersection;
-                        }
-                        //if we already found one than this is the second and we can interpolate the point between
-                        else
-                        {
-                            //find the point between them by making a line between them and then finding the midpoint of it
-                            LineSegment betweenIntersects = new LineSegment(firstIntesect, intersection);
+            ////still still havent found it check if the sides overlap
+            ////we know one line at least must intersect this planes boundaries twice
+            //foreach (LineSegment line in otherPolygon.LineSegments)
+            //{
+            //    //keep track of our intersection
+            //    Point firstIntesect = null;
 
-                            if (!this.Touches(betweenIntersects.MidPoint))
-                            {
-                                //we have to return here instead of breaking because breaking will only take us out of onw
-                                return betweenIntersects.MidPoint;
-                            }
-                        }
-                    }
-                }
-            }
+            //    //look at all the bounding planes
+            //    foreach (LineSegment otherLine in this.LineSegments)
+            //    {
+            //        //see if they intersect
+            //        Point intersection = line.Intersection(otherLine);
+            //        if (intersection != null)
+            //        {
+            //            //if we havent found a first intersection
+            //            if (firstIntesect == null)
+            //            {
+            //                firstIntesect = intersection;
+            //            }
+            //            //if we already found one than this is the second and we can interpolate the point between
+            //            else
+            //            {
+            //                //find the point between them by making a line between them and then finding the midpoint of it
+            //                LineSegment betweenIntersects = new LineSegment(firstIntesect, intersection);
 
-            //if we didnt find any return null
-            return null;
+            //                if (!this.Touches(betweenIntersects.MidPoint))
+            //                {
+            //                    //we have to return here instead of breaking because breaking will only take us out of onw
+            //                    return betweenIntersects.MidPoint;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+            ////if we didnt find any return null
+            //return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
-        /// overlap (or if they are only touching - the overlap region has an area o 0). The plane this function 
-        /// is called on must a convex polygon or else the function will not return the proper region
+        /// the polygons must be convex for this to work
         /// </summary>
         /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
         /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
         /// or only touch</returns>
-        public Polygon OverlappingPolygon(Polygon polygonToBeClipped)
+        public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            //if they are coplanar
-            if (((Plane)this).Contains(polygonToBeClipped))
+            if (!this.IsConvex || !otherPolygon.IsConvex)
             {
-                //using the the idea of the Sutherland-Hodgman algoritm
+                throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
+            }
 
-                //create the plane we will be trimming so we dont mess up the original one
-                Polygon overlapping = new Polygon(polygonToBeClipped);
-
-                //find a point where they overlap
-                Point referencePoint = this.SharedPointNotOnEitherBoundary(polygonToBeClipped);
-
-                //if we couldnt find a shared point than they must not overlap
-                if (referencePoint != null)
+            //if they are coplanar
+            if (((Plane)this).Contains(otherPolygon))
+            {
+                List<Point> newVertices = IntersectionPoints(otherPolygon);
+                
+                foreach(Point vertex in this.Vertices)
                 {
-                    //then find where the sides overlap
-                    foreach (Line divisionLine in this.LineSegments)
+                    if (otherPolygon.ContainsInclusive(vertex))
                     {
-                        List<Polygon> slicedPlane = overlapping.Slice(divisionLine);
-
-                        //findout which one we want to keep and we dont need the other part
-                        overlapping = slicedPlane[0];
-                        if (slicedPlane.Count > 1 && slicedPlane[1].ContainsInclusive(referencePoint))
-                        {
-                            overlapping = slicedPlane[1];
-                        }
+                        _addToList(newVertices, vertex);
                     }
-                    //make sure that our Polygon is valid (coplanar and enclosed) and that the area is not equal 
-                    //to zero (this would mean the Polygons are only touching not overlapping so we dont want to return it) 
-                    //before returning the region ( for now we just say if there are more than two sides - area not implemented correctly
-                    //right now and this should work for how the function is set up)
-                    if (overlapping.isValidPolygon() && overlapping.LineSegments.Count > 2)
-                        return overlapping;
                 }
+                foreach(Point vertex in otherPolygon.Vertices)
+                {
+                    if (this.ContainsInclusive(vertex))
+                    {
+                       _addToList(newVertices, vertex);
+                    }
+                }
+                return newVertices.ConvexHull(true);
             }
 
             //if we fail to find a valid Polygon of intersection return null
             return null;
         }
 
+        /// <summary>
+        /// returns a list of the points of intersection between these polygons
+        /// if there are any overlapping sides, the endpoints of the shared segment are included in the list
+        /// </summary>
+        /// <param name="otherPolygon"></param>
+        /// <returns></returns>
+        public List<Point> IntersectionPoints(Polygon otherPolygon)
+        {
+            List<Point> newVertices = new List<Point>();
+            foreach (LineSegment segment in this.LineSegments)
+            {
+                foreach (LineSegment otherSegment in otherPolygon.LineSegments)
+                {
+                    if (segment.IsParallelTo(otherSegment))
+                    {
+                        LineSegment overlap = segment.OverlappingSegment(otherSegment);
+                        if (overlap != null)
+                        {
+                            _addToList(newVertices, overlap.BasePoint);
+                            _addToList(newVertices, overlap.EndPoint);
+                        }
+                    }
+                    else
+                    {
+                        Point intersection = segment.Intersection(otherSegment);
+                        if (intersection != null)
+                        {
+                            _addToList(newVertices, intersection);
+                        }
+                    }
+                }
+            }
+            return newVertices;
+        }
+
+        private static void _addToList(List<Point> list, Point point)
+        {
+            if (point != null && !list.Contains(point))
+            {
+                list.Add(point);
+            }
+        }
         /// <summary>
         /// This function Slices a plane and returns both halves of the plane, with the larger piece returning first. If the
         /// Line is not in this Plane it will return a copy of the original Polygon in a list
@@ -1471,6 +1512,39 @@ namespace GeometryClassLibrary
 
             //if its not in the Plane than it is obviously not in the PlaneRegion
             return false;
+        }
+
+        /// <summary>
+        /// determines if this polygon contains the entirety of the other polygon
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public new bool Contains(Polygon polygon)
+        {
+            //First check all vertices
+            foreach(Point vertex in polygon.Vertices)
+            {
+                if (!this.ContainsInclusive(vertex))
+                {
+                    return false;
+                }
+            }
+
+            //if this is convex than we're done
+            if (this.IsConvex)
+            {
+                return true;
+            }
+
+            //if not, we have to check that none of the outside vertices are inside the interior polygon
+            foreach(Point vertex in this.Vertices)
+            {
+                if (polygon.ContainsExclusive(vertex))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

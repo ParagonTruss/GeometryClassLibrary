@@ -304,6 +304,45 @@ namespace GeometryClassLibrary
             return new LineSegment(this);
         }
 
+        /// <summary>
+        /// returns the line segment of overlap, they don't then it returns null
+        /// </summary>
+        public LineSegment OverlappingSegment(LineSegment segment)
+        {
+            bool flag = true;
+            List<LineSegment> list = new List<LineSegment>();
+            if (this.Contains(segment.BasePoint))
+            {
+                flag = false;
+                if (segment.Contains(this.BasePoint))
+                {
+                    list.Add(new LineSegment(segment.BasePoint, this.BasePoint));
+                }
+                if (segment.Contains(this.EndPoint))
+                {
+                    list.Add(new LineSegment(segment.BasePoint, this.EndPoint));
+                }
+            }
+            if (this.Contains(segment.EndPoint))
+            {
+                flag = false;
+                if (segment.Contains(this.BasePoint))
+                {
+                    list.Add(new LineSegment(segment.EndPoint, this.BasePoint));
+                }
+                if (segment.Contains(this.EndPoint))
+                {
+                    list.Add(new LineSegment(segment.EndPoint, this.EndPoint));
+                }
+            }
+            if (flag)
+            {
+                return null;
+            }
+            list.Sort();
+            list.Reverse();
+            return list[0];
+        }
         #endregion
     }
 }

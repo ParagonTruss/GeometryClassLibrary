@@ -214,6 +214,12 @@ namespace GeometryClassLibraryTests
             testPolygon2.Touches(notOnPlane).Should().BeFalse();
         }
 
+        [Ignore()]
+        [Test()]
+        public void Polygon_ContainsPolygon()
+        {
+            //ToDo: Need to write this test
+        }
 
         [Test()]
         public void Polygon_OverlappingPolygonOneEnclosedInOtherTest()
@@ -689,7 +695,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon2 = new Polygon(bounds2);
 
             //check for generic overlapping
-            Point result12 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon2);
+            Point result12 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon2);
             (result12 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result12).Should().BeTrue();
 
@@ -702,7 +708,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon3 = new Polygon(bounds3);
 
             //check when one contains the other
-            Point result13 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon3);
+            Point result13 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon3);
             (result13 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result13).Should().BeTrue();
 
@@ -715,7 +721,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon4 = new Polygon(bounds4);
 
             //check when they touch sides but dont overlap
-            Point result14 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon4);
+            Point result14 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon4);
             (result14 != null).Should().BeFalse();
 
 
@@ -727,7 +733,7 @@ namespace GeometryClassLibraryTests
             Polygon testPolygon5 = new Polygon(bounds5);
 
             //check for overlapping when both CenterPoints arent contained
-            Point result15 = testPolygon1.SharedPointNotOnEitherBoundary(testPolygon5);
+            Point result15 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon5);
             (result15 != null).Should().BeTrue();
             testPolygon1.ContainsExclusive(result15).Should().BeTrue();
 
@@ -747,7 +753,7 @@ namespace GeometryClassLibraryTests
             bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
             Polygon testPolygon7 = new Polygon(bounds7);
 
-            Point result67 = testPolygon6.SharedPointNotOnEitherBoundary(testPolygon7);
+            Point result67 = testPolygon6.SharedInteriorPointNotOnEitherBoundary(testPolygon7);
             (result67 != null).Should().BeFalse();
         }
 

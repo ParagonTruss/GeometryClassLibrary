@@ -804,26 +804,26 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="toFindOverlapWith">The Polyhedron to find the overlap with</param>
         /// <returns>The overlapping region of the two Polyhedrons as a Polygon or null if they do not overlap</returns>
-        public Polygon OverlappingPolygon(Polyhedron toFindOverlapWith)
+        public Polygon OverlappingPolygon(Polyhedron polyhedron)
         {
-            if (this.IsConvex && toFindOverlapWith.IsConvex)
+            if (this.IsConvex && polyhedron.IsConvex)
             {
+                List<Polygon> faces1 = this.Polygons;
+                List<Polygon> faces2 = polyhedron.Polygons;
+                
                 //Loop through the faces until we find overlapping faces
-                foreach (Polygon face in this.Polygons)
-                {
-                    foreach (Polygon otherFace in toFindOverlapWith.Polygons)
-                    {
-                        if ((Plane)face == (Plane)otherFace)
+                for (int i = 0; i < faces1.Count; i++)
+			    {
+			        for (int j = 0; j < faces2.Count; j++)
+			        {
+                        //find the overlap
+                        Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
+                        if (intersectionPlane != null)
                         {
-                            //find the middle between them
-                            Polygon intersectionPlane = face.OverlappingPolygon(otherFace);
-                            if (intersectionPlane != null)
-                            {
-                                return intersectionPlane;
-                            }
+                            return intersectionPlane;
                         }
-                    }
-                }
+			        }
+			    }
                 return null;
             }
             throw new NotImplementedException();
