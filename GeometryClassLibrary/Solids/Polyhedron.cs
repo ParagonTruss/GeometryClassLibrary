@@ -798,31 +798,35 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds the overlap between two polyhedrons and returns the polygon formed by that overlap
+        /// If these Polyhedrons touch along their faces, this returns the region of those overlapping faces as a polygon
+        /// Note: this method assumes, the faces only have one possible side touching
+        /// Needs Implementation for non convex bodies
         /// </summary>
-        /// <param name="toFindOverlapWith">The Polyhedron to fins the overlap with</param>
+        /// <param name="toFindOverlapWith">The Polyhedron to find the overlap with</param>
         /// <returns>The overlapping region of the two Polyhedrons as a Polygon or null if they do not overlap</returns>
         public Polygon OverlappingPolygon(Polyhedron toFindOverlapWith)
         {
-            //just brute force the sides until we find one and then return it
-            foreach (Polygon side in this.Polygons)
+            if (this.IsConvex && toFindOverlapWith.IsConvex)
             {
-                //shoot a line out from the normal and see if it intesects th other?
-                foreach (Polygon sideOther in toFindOverlapWith.Polygons)
+                //Loop through the faces until we find overlapping faces
+                foreach (Polygon face in this.Polygons)
                 {
-                    if (side.Contains(sideOther))
+                    foreach (Polygon otherFace in toFindOverlapWith.Polygons)
                     {
-                        //find the middle between them
-                        Polygon intersectionPlane = side.OverlappingPolygon(sideOther);
-                        if (intersectionPlane != null)
+                        if (face.Contains(otherFace))
                         {
-                            return intersectionPlane;
+                            //find the middle between them
+                            Polygon intersectionPlane = face.OverlappingPolygon(otherFace);
+                            if (intersectionPlane != null)
+                            {
+                                return intersectionPlane;
+                            }
                         }
                     }
                 }
+                return null;
             }
-
-            return null;
+            throw new NotImplementedException();
         }
 
         private bool _doesContainSegmentAlongBoundary(LineSegment segment)
@@ -953,6 +957,7 @@ namespace GeometryClassLibrary
             }
             list1.AddRange(list2);
         }
+
         private static Polygon _findAndOrientNextFace(LineSegment currentEdge, List<Polygon> unplacedFaces)
         {
             foreach (Polygon polygon in unplacedFaces)

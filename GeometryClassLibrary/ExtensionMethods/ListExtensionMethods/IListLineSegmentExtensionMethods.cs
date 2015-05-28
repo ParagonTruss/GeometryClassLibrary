@@ -273,14 +273,20 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
         {
-            List<Line> convertedList = new List<Line>();
-            foreach (var item in passedLineList)
+            List<Line> passedLineListCasted = new List<Line>(passedLineList);
+
+            for (int i = 0; i < passedLineList.Count(); i++)
             {
-                convertedList.Add(item);
+                for (int j = 0; j < passedLineList.Count(); j++)
+                {
+                    if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[j]))
+                    {
+                        return false;
+                    }
+                }
             }
 
-            return convertedList.AreAllCoplanar();
-
+            return true;
         }
 
         /// <summary>
