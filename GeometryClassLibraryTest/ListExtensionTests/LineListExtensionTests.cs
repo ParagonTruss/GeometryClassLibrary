@@ -34,9 +34,7 @@ namespace GeometryClassLibraryTests
             bool bool2 = testList2.AreAllCoplanar();
             bool2.Should().BeFalse();
 
-
-
-            //null case; should be vacuosly true
+            //null case; should be vacuously true
             (new List<LineSegment>()).AreAllCoplanar().Should().BeTrue();
         }
 
@@ -56,7 +54,7 @@ namespace GeometryClassLibraryTests
 
             horizontalList.AreAllParallel().Should().BeFalse();
 
-            //null case; should be vacuosly true
+            //null case; should be vacuously true
             (new List<LineSegment>()).AreAllParallel().Should().BeTrue();
         }
 
