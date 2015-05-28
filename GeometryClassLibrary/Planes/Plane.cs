@@ -236,16 +236,7 @@ namespace GeometryClassLibrary
 
         public bool Contains(Polygon passedPlaneRegion)
         {
-            // checks to make sure that every linesegment is on the plane
-            foreach (LineSegment segment in passedPlaneRegion.LineSegments)
-            {
-                if (!this.Contains(segment))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return this == (Plane)passedPlaneRegion;
         }
 
         public bool Contains(Line passedLine)

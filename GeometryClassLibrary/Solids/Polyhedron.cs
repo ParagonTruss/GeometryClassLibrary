@@ -813,7 +813,7 @@ namespace GeometryClassLibrary
                 {
                     foreach (Polygon otherFace in toFindOverlapWith.Polygons)
                     {
-                        if (face.Contains(otherFace))
+                        if ((Plane)face == (Plane)otherFace)
                         {
                             //find the middle between them
                             Polygon intersectionPlane = face.OverlappingPolygon(otherFace);
