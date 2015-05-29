@@ -77,11 +77,14 @@ namespace GeometryClassLibrary
         {
             Dictionary<Angle, Point> myDictionary = new Dictionary<Angle, Point>();
             Vector referenceVector;
-            if (!pointList._xCompIsConstant())
+            if (pointList._xCompIsConstant())
+            {
+                referenceVector = Direction.Out.UnitVector(DistanceType.Inch);
+            }
+            else
             {
                 referenceVector = Direction.Right.UnitVector(DistanceType.Inch);
             }
-            referenceVector = Direction.Out.UnitVector(DistanceType.Inch);
             
             foreach (Point vertex in pointList)
             {
