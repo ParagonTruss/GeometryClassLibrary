@@ -38,13 +38,13 @@ namespace GeometryClassLibrary
             this.Edges = new List<IEdge>();
         }
 
-        /// <summary>
-        /// Creates a new planeregion with the passed in LineSegments
-        /// Note: they must all be coplanar
-        /// </summary>
-        /// <param name="passedLines"></param>
-        public PlaneRegion(IList<Line> passedLines)
-            :base(passedLines) { }
+        ///// <summary>
+        ///// Creates a new planeregion with the passed in LineSegments
+        ///// Note: they must all be coplanar
+        ///// </summary>
+        ///// <param name="passedLines"></param>
+        //public PlaneRegion(IList<Line> passedLines)
+        //    :base(passedLines) { }
 
         /// <summary>
         /// Makes a PlaneRegion Using the given boundaries to define it

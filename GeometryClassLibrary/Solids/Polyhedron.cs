@@ -486,7 +486,7 @@ namespace GeometryClassLibrary
             if (this.DoesIntersect(slicingPlane))
             {
                 //make a list to keep track of all the points we sliced at
-                List<Line> slicingPlaneLines = new List<Line>();
+                List<LineSegment> slicingPlaneLineSegments = new List<LineSegment>();
 
                 List<Polygon> unknownPolygons = new List<Polygon>();
                 List<Polygon> unknownPolygonsOther = new List<Polygon>();
@@ -518,7 +518,7 @@ namespace GeometryClassLibrary
                     }
 
                     //keep track of the lines we sliced on so we can easily make a new plane to cover the face
-                    _addSlicingLine(slicingPlane, polygon, slicingPlaneLines);
+                    _addSlicingLine(slicingPlane, polygon, slicingPlaneLineSegments);
                 }
 
                 //figure out where our undetermined polygons go
@@ -531,18 +531,20 @@ namespace GeometryClassLibrary
                     //create a new plane based on the intersections
                     try
                     {
-                        Polygon slicingPlanePolygon = new Polygon(slicingPlaneLines);
-                        Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLines);
+                        Polygon slicingPlanePolygon = new Polygon(slicingPlaneLineSegments);
+                        Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLineSegments);
 
-                        //if (slicingPlanePolygon.isValidPolygon())
-                        //{
                         unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
                         unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
-                        //}
                     }
                     catch (ArgumentException) { }
                     Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
                     Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
+
+                    Volume volume1 = insidePolyhedron.Volume;
+                    Volume volume2 = outsidePolyhedron.Volume;
+                    bool volumeIsNegative = (volume1 < new Volume() || volume2 < new Volume());
+
                     List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
                     //toReturn.Sort();
                     //toReturn.Reverse();
@@ -691,9 +693,9 @@ namespace GeometryClassLibrary
         /// <param name="slicingPlane">The plane that is slicing the polygon</param>
         /// <param name="polygon">The polygon the is being sliced</param>
         /// <param name="slicingPlaneLines">The list of lines creates by the slicing plane</param>
-        private void _addSlicingLine(Plane slicingPlane, Polygon polygon, List<Line> slicingPlaneLines)
+        private void _addSlicingLine(Plane slicingPlane, Polygon polygon, List<LineSegment> slicingPlaneLines)
         {
-            Line slicingLine = polygon.Intersection(slicingPlane);
+            LineSegment slicingLine = polygon.Intersection(slicingPlane);
             if (slicingLine != null && polygon.DoesIntersect(slicingLine))
             {
                 if (!slicingPlaneLines.Contains(slicingLine))

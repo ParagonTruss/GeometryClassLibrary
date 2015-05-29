@@ -322,28 +322,28 @@ namespace GeometryClassLibrary
             return true;
         }
 
-        /// <summary>
-        /// Returns true if all of the passed lines are in the same plane, false otherwise
-        /// </summary>
-        /// <param name="passedLine">passed lines</param>
-        /// <returns>returns a bool of whether or not they are all coplanar</returns>
-        public static bool AreAllCoplanar(this IList<Line> passedLineList)
-        {
-            List<Line> passedLineListCasted = new List<Line>(passedLineList);
+        ///// <summary>
+        ///// Returns true if all of the passed lines are in the same plane, false otherwise
+        ///// </summary>
+        ///// <param name="passedLine">passed lines</param>
+        ///// <returns>returns a bool of whether or not they are all coplanar</returns>
+        //public static bool AreAllCoplanar(this IList<Line> passedLineList)
+        //{
+        //    List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
-            for (int i = 0; i < passedLineList.Count(); i++)
-            {
-                for (int j = 0; j < passedLineList.Count(); j++)
-                {
-                    if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[j]))
-                    {
-                        return false;
-                    }
-                }
-            }
+        //    for (int i = 0; i < passedLineList.Count(); i++)
+        //    {
+        //        for (int j = 0; j < passedLineList.Count(); j++)
+        //        {
+        //            if (!passedLineListCasted[i].IsCoplanarWith(passedLineListCasted[j]))
+        //            {
+        //                return false;
+        //            }
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         /// <summary>
         /// Sorts out and returns only the lines in this list that are parallel to the passed Line

@@ -199,7 +199,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polyhedron_SimpleSlice()
+        public void Polyhedron_Slice_Across()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
@@ -255,7 +255,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polyhedron_DiagonalSlice()
+        public void Polyhedron_Slice_Diagonal()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
@@ -311,7 +311,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polyhedron_MultiSlice()
+        public void Polyhedron_Slice_Multiple()
         {
             Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);

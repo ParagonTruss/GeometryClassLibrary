@@ -192,7 +192,7 @@ namespace GeometryClassLibrary
             : base()
         {
             bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.AreAllCoplanar();
+            bool areCoplanar = passedBoundaries.ArePairwiseCoplanar();
            
             if (passedBoundaries == null)
             {
@@ -220,59 +220,59 @@ namespace GeometryClassLibrary
                 throw new Exception("The linesegments you are attempting to make a polygon from are either not closed or not coplanar.");
             }
         }
+        ///// <summary>
+        ///// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
+        ///// NOTE: Will not work for concave polygons
+        ///// </summary>
+        ///// <param name="passedBoundaries"></param>
+        //public Polygon(List<Line> passedLines)
+        //    : base(passedLines)
+        //{
+        //    List<LineSegment> toUse = new List<LineSegment>();
+
+        //    if (passedLines.AreAllCoplanar())
+        //    {
+        //        //find where they each intersect
+        //        foreach (Line line in passedLines)
+        //        {
+        //            List<Point> intersections = new List<Point>();
+
+        //            foreach (Line other in passedLines)
+        //            {
+        //                if (line != other)
+        //                {
+        //                    Point intersection = line.Intersection(other);
+        //                    if (intersection != null && !intersections.Contains(intersection))
+        //                    {
+        //                        intersections.Add(intersection);
+        //                    }
+        //                }
+        //            }
+        //            if (intersections.Count == 2)
+        //            {
+        //                toUse.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
+        //            }
+        //            else
+        //            {
+        //                throw new ArgumentException("lines are invalid");
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new ArgumentException("lines are not coplanar");
+        //    }
+
+        //    if (!this.LineSegments.DoFormClosedRegion())
+        //    {
+        //        throw new ArgumentException("generated line segments from lines are invalid");
+        //    }
+
+        //    this.LineSegments = toUse;
+        //}
+
         /// <summary>
-        /// Defines a plane region using the given lines and where they intersect as long as the line are all coplanar
-        /// NOTE:Will not work for concave polygons
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<Line> passedLines)
-            : base(passedLines)
-        {
-            List<LineSegment> toUse = new List<LineSegment>();
-
-            if (passedLines.AreAllCoplanar())
-            {
-                //find where they each intersect
-                foreach (Line line in passedLines)
-                {
-                    List<Point> intersections = new List<Point>();
-
-                    foreach (Line other in passedLines)
-                    {
-                        if (line != other)
-                        {
-                            Point intersection = line.Intersection(other);
-                            if (intersection != null && !intersections.Contains(intersection))
-                            {
-                                intersections.Add(intersection);
-                            }
-                        }
-                    }
-                    if (intersections.Count == 2)
-                    {
-                        toUse.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
-                    }
-                    else
-                    {
-                        throw new ArgumentException("lines are invalid");
-                    }
-                }
-            }
-            else
-            {
-                throw new ArgumentException("lines are not coplanar");
-            }
-
-            if (!this.LineSegments.DoFormClosedRegion())
-            {
-                throw new ArgumentException("generated line segments from lines are invalid");
-            }
-
-            this.LineSegments = toUse;
-        }
-
-        /// <summary>
-        /// creates a new Polygon that is a copy of the inputted Polygon
+        /// creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
@@ -783,7 +783,7 @@ namespace GeometryClassLibrary
         public bool isValidPolygon()
         {
             bool isClosed = LineSegments.DoFormClosedRegion();
-            bool areCoplanar = LineSegments.AreAllCoplanar();
+            bool areCoplanar = LineSegments.ArePairwiseCoplanar();
 
             if (isClosed && areCoplanar)
             {
@@ -1380,6 +1380,29 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// returns the linesegment of the intersection between the polygon and the plane
+        /// should not be used unless the polygon is convex
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public new LineSegment Intersection(Plane plane)
+        {
+            List<Point> pointsOfIntersection = new List<Point>();
+            foreach(LineSegment segment in this.LineSegments)
+            {
+                Point point = plane.Intersection(segment);
+                if (point != null && !pointsOfIntersection.Contains(point))
+                {
+                    pointsOfIntersection.Add(point);
+                }
+            }
+            if (pointsOfIntersection.Count == 2)
+            {
+                return new LineSegment(pointsOfIntersection[0], pointsOfIntersection[1]);
+            }
+            return null;
+        }
+        /// <summary>
         /// Returns a list of the points that line intersects the edges of the polygon
         /// </summary>
         public List<Point> IntersectionCoplanarPoints(Line passedLine)
@@ -1503,7 +1526,7 @@ namespace GeometryClassLibrary
                     Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);
 
                     //if the point is on the side outside of our region we know it is not in it and can return
-                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, Centroid))
+                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, CenterPoint))
                     {
                         //since its inclusive, if the point is on the plane its still good
                         if (!divisionPlane.Contains(passedPoint))

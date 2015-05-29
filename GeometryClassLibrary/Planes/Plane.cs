@@ -42,35 +42,35 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        /// <summary>
-        /// Creates a Plane base on the list of passed in lines
-        /// Note: the lines must be all coplanar
-        /// </summary>
-        /// <param name="passedLineList">A list of coplanar lines to define the plane with</param>
-        public Plane(IList<Line> passedLineList)
-        {
-            List<Line> passedLineListCasted = new List<Line>(passedLineList);
+        ///// <summary>
+        ///// Creates a Plane base on the list of passed in lines
+        ///// Note: the lines must be all coplanar
+        ///// </summary>
+        ///// <param name="passedLineList">A list of coplanar lines to define the plane with</param>
+        //public Plane(IList<Line> passedLineList)
+        //{
+        //    List<Line> passedLineListCasted = new List<Line>(passedLineList);
 
-            if (passedLineListCasted.AreAllCoplanar())
-            {
-                this.BasePoint = passedLineListCasted[0].BasePoint;
+        //    if (passedLineListCasted.AreAllCoplanar())
+        //    {
+        //        this.BasePoint = passedLineListCasted[0].BasePoint;
 
-                //we have to check against vectors until we find one that is not parallel with the first line we passed in
-                //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
-                for (int i = 1; i < passedLineListCasted.Count; i++)
-                {
-                    //this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
-                    //if (!this.NormalVector.Equals(new Vector()))
-                    //    i = passedLineListCasted.Count;
-                }
-            }
-            else
-            {
-                throw new Exception();
-            }
+        //        //we have to check against vectors until we find one that is not parallel with the first line we passed in
+        //        //or else the normal vector will be zero (cross product of parralel lines is 0)
+        //        Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
+        //        for (int i = 1; i < passedLineListCasted.Count; i++)
+        //        {
+        //            //this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
+        //            //if (!this.NormalVector.Equals(new Vector()))
+        //            //    i = passedLineListCasted.Count;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new Exception();
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// Creates a Plane that contains the given point and has a normalVector of length 1 in inches in the passed in direction
@@ -456,6 +456,16 @@ namespace GeometryClassLibrary
             }
 
             return intersectionPoint;
+        }
+
+        public Point Intersection(LineSegment segment)
+        {
+            Point possibleIntersection = this.Intersection((Line)segment);
+            if (possibleIntersection != null && possibleIntersection.IsOnLineSegment(segment))
+            {
+                return possibleIntersection;
+            }
+            return null;
         }
 
         /// <summary>
