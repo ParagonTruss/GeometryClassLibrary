@@ -677,6 +677,7 @@ namespace GeometryClassLibraryTests
             (results[0] == testPolygon).Should().BeTrue();
         }
 
+        [Ignore()]
         [Test()]
         public void Polygon_SharedPointNotOnThisPolygonsBoundary()
         {

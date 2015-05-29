@@ -707,7 +707,7 @@ namespace GeometryClassLibrary
             double magnitudes = (vector1.Magnitude * vector2.Magnitude).InchesSquared;
             double divided = dotProduct / magnitudes;
 
-            Angle angleBetween = new Angle(AngleType.Radian, Math.Acos(divided));
+            Angle angleBetween = new Angle(AngleType.Degree, Math.Acos(divided)*180.0/Math.PI);
             return angleBetween;
         }
 

@@ -65,6 +65,10 @@ namespace GeometryClassLibrary
                 }
                 return _vertices;
             }
+            internal set
+            {
+                _vertices = value;
+            }
         }
 
         private bool? _isConvex = null;

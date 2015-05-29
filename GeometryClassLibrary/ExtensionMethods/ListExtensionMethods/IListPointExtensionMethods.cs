@@ -56,7 +56,7 @@ namespace GeometryClassLibrary
 
             //the each point to the initial point forms a segment which has some angle against the x axis
             //sort by those angles
-            List<Point> pointsInOrder = _sortByAngles(pointList, initial);
+            List<Point> pointsInOrder = pointList._sortByAngles(initial);
 
             //we can create the polygon now if we know that none of the points would make this concave
             if (!allPointsShouldBeVertices)
@@ -69,14 +69,20 @@ namespace GeometryClassLibrary
             return new Polygon(pointsInOrder, false);
         }
 
-        private static List<Point> _sortByAngles(List<Point> pointList, Point initial)
+        private static List<Point> _sortByAngles(this List<Point> pointList, Point initial)
         {
             Dictionary<Angle, Point> myDictionary = new Dictionary<Angle, Point>();
-            Vector rightVector = Direction.Right.UnitVector(DistanceType.Inch);
+            Vector referenceVector;
+            if (!pointList._xCompIsConstant())
+            {
+                referenceVector = Direction.Right.UnitVector(DistanceType.Inch);
+            }
+            referenceVector = Direction.Out.UnitVector(DistanceType.Inch);
+            
             foreach (Point vertex in pointList)
             {
                 Vector currentVector = new Vector(initial, vertex);
-                Angle currentAngle = rightVector.AngleBetween(currentVector);
+                Angle currentAngle = new Angle(referenceVector.AngleBetween(currentVector));
 
                 //This is to catch error margins
                 //We don't want a "359 degree" angle to accidentally be sorted as largest.
@@ -93,6 +99,19 @@ namespace GeometryClassLibrary
             }
             return (from entry in myDictionary orderby entry.Key ascending select entry)
             .ToDictionary(x => x.Key, x => x.Value).Values.ToList(); 
+        }
+
+        private static bool _xCompIsConstant(this List<Point> pointList)
+        {
+            Distance xComp = pointList[0].X;
+            for (int i = 1; i < pointList.Count; i++)
+            {
+                if (pointList[i].X != xComp)
+                { 
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static void _removeInteriorPoints(Point initial, List<Point> pointsInOrder)
