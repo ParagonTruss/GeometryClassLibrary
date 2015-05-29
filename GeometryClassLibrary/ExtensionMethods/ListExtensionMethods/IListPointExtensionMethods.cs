@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using GeometryClassLibrary.ComparisonMethods;
 //
 
 namespace GeometryClassLibrary
@@ -23,17 +24,6 @@ namespace GeometryClassLibrary
                 if (k != points.Count() - 1)
                 {
                     LineSegment newLine = new LineSegment(points[k], points[k + 1]);
-                    
-                    foreach(var edge in toReturn)
-                    {
-                        if (edge.DoesIntersect(newLine))
-                        {
-                            if (!(edge.Intersection(newLine) == newLine.BasePoint) && !(edge.Intersection(newLine) == newLine.EndPoint))
-                            {
-                                throw new Exception("Edges of a Polygon should not self intersect!");
-                            }
-                        }
-                    }
 
                     toReturn.Add(newLine);
                 }
@@ -57,26 +47,37 @@ namespace GeometryClassLibrary
         {
             //First clone our list of points
             List<Point> pointList = new List<Point>(passedPointList);
-            
-            //Find the point with the lowest y value
+
+            //Now sort the points by Y component (Z then X for tiebreakers)
+            //and take the initial point out.
+            pointList.Sort((new CompareInOrderYZX()));
             Point initial = pointList[0];
-            for (int i = 1; i < pointList.Count; i++)
-            {
-                if (pointList[i].Y < initial.Y)
-                {
-                    initial = pointList[i];
-                }
-            }
             pointList.Remove(initial);
 
-            //Now we sort the points by the angle the initial point to them makes with the x axis
+            //the each point to the initial point forms a segment which has some angle against the x axis
+            //sort by those angles
+            List<Point> pointsInOrder = _sortByAngles(pointList, initial);
+
+            //we can create the polygon now if we know that none of the points would make this concave
+            if (!allPointsShouldBeVertices)
+            {
+                //Now its time  to cut the chaff
+                _removeInteriorPoints(initial, pointsInOrder);
+            }
+            //The initial point will added to the end of the list, but since polygons are cyclic everything will still connect right
+            pointsInOrder.Add(initial);
+            return new Polygon(pointsInOrder, false);
+        }
+
+        private static List<Point> _sortByAngles(List<Point> pointList, Point initial)
+        {
             Dictionary<Angle, Point> myDictionary = new Dictionary<Angle, Point>();
             Vector rightVector = Direction.Right.UnitVector(DistanceType.Inch);
-            foreach(Point vertex in pointList)
+            foreach (Point vertex in pointList)
             {
                 Vector currentVector = new Vector(initial, vertex);
                 Angle currentAngle = rightVector.AngleBetween(currentVector);
-                
+
                 //This is to catch error margins
                 //We don't want a "359 degree" angle to accidentally be sorted as largest.
                 //angles larger than 180 shouldn't happen, so this sets those just shy of zero, to zero
@@ -90,18 +91,58 @@ namespace GeometryClassLibrary
                 }
                 catch { }
             }
-            myDictionary.Keys.ToList().Sort();
+            return (from entry in myDictionary orderby entry.Key ascending select entry)
+            .ToDictionary(x => x.Key, x => x.Value).Values.ToList(); 
+        }
 
-            //we can create the polygon now if we know that none of the points would make this concave
-            if (allPointsShouldBeVertices)
+        private static void _removeInteriorPoints(Point initial, List<Point> pointsInOrder)
+        {
+            //First we compute what the normal actually is
+            Vector last = new Vector(pointsInOrder[pointsInOrder.Count - 1], initial);
+            Vector first = new Vector(initial, pointsInOrder[0]);
+            Vector normal = last.CrossProduct(first);
+            
+            //Now we use a nested loop to allow us to actually edit the list we're looping through
+            //The top level allows us to loop atleast as many times as we need to edit.
+            //The inner loop restarts whenever we need to remove a point, but we keep track of where are index was
+            //the flag tracks when we exited the inner loop normally or because we needed to remove an item
+            //if we exited normally we're done
+            int numberOfIterations = pointsInOrder.Count;
+            int startingIndex = -1;
+            for (int j = 0; j < numberOfIterations; j++)
             {
-                List<Point> pointsToUse = myDictionary.Values.ToList();
-                pointsToUse.Add(initial);
-                return new Polygon(pointsToUse, false);
+                bool flag = false;
+                Point point1, point3, point2 = null;
+                for (int i = startingIndex; i + 1 < pointsInOrder.Count; i++)
+                {
+                    if (i == -1)
+                    {
+                        point1 = initial;
+                    }
+                    point1 = pointsInOrder[i];
+                    point2 = pointsInOrder[i + 1];
+                    point3 = pointsInOrder[i + 2];
+
+                    Vector vector1 = new Vector(point1, point2);
+                    Vector vector2 = new Vector(point2, point3);
+                    Vector shouldBeNormal = vector1.CrossProduct(vector2);
+
+                    if (shouldBeNormal.Magnitude == new Distance() || !shouldBeNormal.HasSameDirectionAs(normal))
+                    {
+                        flag = true;
+                        startingIndex = i;
+                        break;
+                    }
+                }
+                if (flag)
+                {
+                    pointsInOrder.Remove(point2);
+                }
+                else
+                {
+                    break;
+                }
             }
-
-            throw new NotImplementedException(); //ToDo: finish method
-
         }
     }
 }

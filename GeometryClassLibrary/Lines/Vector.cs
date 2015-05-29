@@ -396,7 +396,7 @@ namespace GeometryClassLibrary
                 return true;
             }
 
-            //check the vector with the same basepoi
+            //check the vector with the same basepoint
             Vector pointVector = new Vector(this.BasePoint, point);
 
             bool sameDirection = this.HasSameDirectionAs(pointVector);
@@ -510,7 +510,11 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = passedVector;
 
-            if (vector2 == null || vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
+            if (vector2 == null)
+            {
+                return false; //Doesn't have a direction. Should be false
+            }
+            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
             {
                 return true;
             }
@@ -688,6 +692,16 @@ namespace GeometryClassLibrary
         {
             Vector vector1 = this;
             Vector vector2 = vector;
+            
+            if (vector2 == null)
+            {
+                return null;
+            }
+
+            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
+            {
+                return new Angle();
+            }
 
             double dotProduct = vector1.DotProduct(vector2).Inches;
             double magnitudes = (vector1.Magnitude * vector2.Magnitude).InchesSquared;

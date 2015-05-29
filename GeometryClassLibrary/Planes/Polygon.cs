@@ -880,25 +880,33 @@ namespace GeometryClassLibrary
             {
                 List<Point> newVertices = IntersectionPoints(otherPolygon);
                 
-                foreach(Point vertex in this.Vertices)
-                {
-                    if (otherPolygon.ContainsInclusive(vertex))
-                    {
-                        _addToList(newVertices, vertex);
-                    }
-                }
-                foreach(Point vertex in otherPolygon.Vertices)
-                {
-                    if (this.ContainsInclusive(vertex))
-                    {
-                       _addToList(newVertices, vertex);
-                    }
-                }
+                this._addInteriorVerticesFrom(otherPolygon, newVertices);
+                otherPolygon._addInteriorVerticesFrom(this, newVertices);
+                
                 return newVertices.ConvexHull(true);
             }
 
             //if we fail to find a valid Polygon of intersection return null
             return null;
+        }
+
+        private void _addInteriorVerticesFrom(Polygon polygon, List<Point> newVertices)
+        {
+            foreach (Point vertex in polygon.Vertices)
+            {
+                if (this.ContainsInclusive(vertex))
+                {
+                    _addToList(newVertices, vertex);
+                }
+            }
+        }
+
+        private static void _addToList(List<Point> list, Point point)
+        {
+            if (point != null && !list.Contains(point))
+            {
+                list.Add(point);
+            }
         }
 
         /// <summary>
@@ -936,13 +944,6 @@ namespace GeometryClassLibrary
             return newVertices;
         }
 
-        private static void _addToList(List<Point> list, Point point)
-        {
-            if (point != null && !list.Contains(point))
-            {
-                list.Add(point);
-            }
-        }
         /// <summary>
         /// This function Slices a plane and returns both halves of the plane, with the larger piece returning first. If the
         /// Line is not in this Plane it will return a copy of the original Polygon in a list
