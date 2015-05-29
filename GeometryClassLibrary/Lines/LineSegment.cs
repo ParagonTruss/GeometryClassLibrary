@@ -309,11 +309,17 @@ namespace GeometryClassLibrary
         /// </summary>
         public LineSegment OverlappingSegment(LineSegment segment)
         {
-            bool flag = true;
+            if (this.Contains(segment))
+            {
+                return segment;
+            }
+            if (segment.Contains(this))
+            {
+                return this;
+            }
             List<LineSegment> list = new List<LineSegment>();
             if (this.Contains(segment.BasePoint))
             {
-                flag = false;
                 if (segment.Contains(this.BasePoint))
                 {
                     list.Add(new LineSegment(segment.BasePoint, this.BasePoint));
@@ -325,7 +331,6 @@ namespace GeometryClassLibrary
             }
             if (this.Contains(segment.EndPoint))
             {
-                flag = false;
                 if (segment.Contains(this.BasePoint))
                 {
                     list.Add(new LineSegment(segment.EndPoint, this.BasePoint));
@@ -335,7 +340,7 @@ namespace GeometryClassLibrary
                     list.Add(new LineSegment(segment.EndPoint, this.EndPoint));
                 }
             }
-            if (flag)
+            if (list.Count == 0)
             {
                 return null;
             }

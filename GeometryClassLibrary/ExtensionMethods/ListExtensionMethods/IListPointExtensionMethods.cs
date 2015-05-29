@@ -45,6 +45,10 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Polygon ConvexHull(this List<Point> passedPointList, bool allPointsShouldBeVertices = false)
         {
+            if (passedPointList.Count < 3)
+            {
+                return null;
+            }
             //First clone our list of points
             List<Point> pointList = new List<Point>(passedPointList);
 
