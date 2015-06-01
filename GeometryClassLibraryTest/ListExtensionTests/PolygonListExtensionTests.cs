@@ -70,8 +70,8 @@ namespace GeometryClassLibraryTest
             Plane containsFirstPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(1, 0, 0));
             Plane containsSecondPlane = new Plane(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(0, 0, 1));
 
-            Point results1 = polygonsList.FindVertexToUseAsReferenceNotOnThePlane(containsFirstPlane);
-            Point results2 = polygonsList.FindVertexToUseAsReferenceNotOnThePlane(containsSecondPlane);
+            Point results1 = polygonsList.FindVertexNotOnThePlane(containsFirstPlane);
+            Point results2 = polygonsList.FindVertexNotOnThePlane(containsSecondPlane);
 
             (results1 == PointGenerator.MakePointWithInches(0, 2, 5)).Should().BeTrue();
             (results2 == PointGenerator.MakePointWithInches(-3, 2, 0)).Should().BeTrue();
@@ -79,7 +79,7 @@ namespace GeometryClassLibraryTest
             //now test a list of one polygon
             List<Polygon> onePolygon = new List<Polygon>() { testPolygon };
 
-            Point resultsNull = onePolygon.FindVertexToUseAsReferenceNotOnThePlane(containsFirstPlane);
+            Point resultsNull = onePolygon.FindVertexNotOnThePlane(containsFirstPlane);
 
             (resultsNull == null).Should().BeTrue();
         }

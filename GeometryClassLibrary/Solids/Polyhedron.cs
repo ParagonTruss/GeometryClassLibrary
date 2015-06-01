@@ -499,30 +499,9 @@ namespace GeometryClassLibrary
                 foreach (var polygon in this.Polygons)
                 {
                     List<Polygon> slicedPolygons = polygon.Slice(slicingPlane);
-
-                    bool wasAdded = _addPolygonToCorrectPolyhedron(slicedPolygons, unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, slicingPlane);
-
-                    //if we failed to find which one to add it to hang on to it and take care of it after we have found the rest
-                    if (!wasAdded)
-                    {
-                        if (slicedPolygons.Count == 1)
-                        {
-                            unknownPolygons.Add(slicedPolygons[0]);
-                            unknownPolygonsOther.Add(null); //so the spacing stays the same
-                        }
-                        else
-                        {
-                            unknownPolygons.Add(slicedPolygons[0]);
-                            unknownPolygonsOther.Add(slicedPolygons[1]);
-                        }
-                    }
-
-                    //keep track of the lines we sliced on so we can easily make a new plane to cover the face
+                    _addPolygonToCorrectPolyhedron(slicedPolygons, unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, slicingPlane);
                     _addSlicingLine(slicingPlane, polygon, slicingPlaneLineSegments);
                 }
-
-                //figure out where our undetermined polygons go
-                _addUndeterminedPolygons(unconstructedInsidePolyhedron, unconstructedOutsidePolyhedron, unknownPolygons, unknownPolygonsOther);
 
                 //if we actually slice and did not just not overlap with a side then return two polygons
                 if (unconstructedInsidePolyhedron.Count != 0 && unconstructedOutsidePolyhedron.Count != 0)
@@ -554,65 +533,13 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Adds the previously unknown polygons to the correct Polyhedron
-        /// </summary>
-        /// <param name="unconstructedInsidePolyhedron">the "inside" polyhedron's list of polygons</param>
-        /// <param name="unconstructedOutsidePolyhedron">the "outside" polyhedron's list of polygons</param>
-        /// <param name="unknownPolygons">The list of unknown Polygons to add </param>
-        /// <param name="unknownPolygonsOther">The list of unknown Polygons to add that represents the other part of the first list</param>
-        private void _addUndeterminedPolygons(List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
-            List<Polygon> unknownPolygons, List<Polygon> unknownPolygonsOther)
-        {
-            List<Polygon> toAddInsides = new List<Polygon>();
-            List<Polygon> toAddOutsides = new List<Polygon>();
-            for (int i = 0; i < unknownPolygons.Count; i++)
-            {
-                Polygon polygon = unknownPolygons.ElementAt(i);
-                Polygon otherPolygon = unknownPolygonsOther.ElementAt(i);
-
-                if (unconstructedInsidePolyhedron.DoesShareSideWithPolygonInList(polygon))
-                {
-                    toAddInsides.Add(polygon);
-                    unknownPolygons.Remove(polygon);
-
-                    if (otherPolygon != null)
-                    {
-                        toAddOutsides.Add(otherPolygon);
-                        unknownPolygonsOther.Remove(otherPolygon);
-                    }
-                    i = -1; //start our loop over
-                }
-                else
-                {
-                    if (unconstructedOutsidePolyhedron.DoesShareSideWithPolygonInList(polygon))
-                    {
-                        toAddOutsides.Add(polygon);
-                        unknownPolygons.Remove(polygon);
-
-                        if (otherPolygon != null)
-                        {
-                            toAddInsides.Add(otherPolygon);
-                            unknownPolygonsOther.Remove(otherPolygon);
-                        }
-                        i = -1; //start our loop over
-                    }
-
-                    //if its not in either just leave it and it will get iterated through again after more have been placed
-                }
-            }
-
-            unconstructedInsidePolyhedron.AddRange(toAddInsides);
-            unconstructedOutsidePolyhedron.AddRange(toAddOutsides);
-        }
-
-        /// <summary>
         /// Adds the Polygons to the correct new Polyhedron
         /// </summary>
         /// <param name="slicedPolygons">The sliced Polygons</param>
         /// <param name="unconstructedInsidePolyhedron">the "inside" polyhedron's list of polygons</param>
         /// <param name="unconstructedOutsidePolyhedron">the "outside" polyhedron's list of polygons</param>
         /// <returns></returns>
-        private bool _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
+        private void _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
             Plane slicingPlane)
         {
             if (unconstructedInsidePolyhedron.Count == 0)
@@ -625,59 +552,30 @@ namespace GeometryClassLibrary
                 {
                     unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
                 }
-                return true;
             }
             else
             {
-                Polygon toAddInside = null;
-
-                Point insidePolyhedronReferencePoint = unconstructedInsidePolyhedron.FindVertexToUseAsReferenceNotOnThePlane(slicingPlane);
-                Point outsidePolyhedronReferencePoint = unconstructedOutsidePolyhedron.FindVertexToUseAsReferenceNotOnThePlane(slicingPlane);
+                Point insidePolyhedronReferencePoint = unconstructedInsidePolyhedron.FindVertexNotOnThePlane(slicingPlane);
                 Point slicedPolygonZeroReferencePoint = slicedPolygons[0].FindVertexNotOnTheGivenPlane(slicingPlane);
-                //we have to be careful initializing this one because there could be only one item in the list
-                Point slicedPolygonOneReferencePoint = null;
-                if (slicedPolygons.Count() > 1)
-                {
-                    slicedPolygonOneReferencePoint = slicedPolygons[1].FindVertexNotOnTheGivenPlane(slicingPlane);
-                }
 
-                //if the inside shares a point with the first sliced polygon
-                if (insidePolyhedronReferencePoint != null && slicedPolygonZeroReferencePoint != null &&
-                    slicingPlane.PointIsOnSameSideAs(insidePolyhedronReferencePoint, slicedPolygonZeroReferencePoint))
-                //unconstructedInsidePolyhedron.DoesShareSideWithPolygonInList(slicedPolygons[0]))
+                if (slicingPlane.PointIsOnSameSideAs(insidePolyhedronReferencePoint, slicedPolygonZeroReferencePoint))
                 {
-                    toAddInside = slicedPolygons[0];
+                    unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
 
                     if (slicedPolygons.Count > 1)
                     {
                         unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
                     }
                 }
-                //if the inside shares a point with the second sliced polygon
-                else if (insidePolyhedronReferencePoint != null && slicedPolygonOneReferencePoint != null &&
-                    slicingPlane.PointIsOnSameSideAs(insidePolyhedronReferencePoint, slicedPolygonOneReferencePoint))
-                //slicedPolygons.Count > 1 && unconstructedInsidePolyhedron.DoesShareSideWithPolygonInList(slicedPolygons[1]))
-                {
-
-                    unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
-                    toAddInside = slicedPolygons[1];
-                }
-
-                //If we found the polygon to add to the inside unconstructed polygon
-                if (toAddInside != null)
-                {
-                    unconstructedInsidePolyhedron.Add(toAddInside);
-                    return true;
-                }
-                //if we didnt find it inside see if it belongs outside
-                else if (slicedPolygons.Count == 1 && outsidePolyhedronReferencePoint != null && slicedPolygonZeroReferencePoint != null &&
-                    slicingPlane.PointIsOnSameSideAs(outsidePolyhedronReferencePoint, slicedPolygonZeroReferencePoint))
+                else
                 {
                     unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
-                    return true;
+                    
+                    if (slicedPolygons.Count > 1)
+                    {
+                        unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
+                    }
                 }
-
-                return false;
             }
         }
 

@@ -310,6 +310,11 @@ namespace GeometryClassLibrary
             //if it is negative than the point is on the opposite side of the normal
             //if it is 0 than it is on the plane
 
+            if (testPoint == null || referencePoint == null)
+            {
+                return false;
+            }
+
             //so find the dot products between the points and the normal of the plane
             Distance testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
             Distance referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
@@ -320,7 +325,7 @@ namespace GeometryClassLibrary
                 return true;
             }
 
-            //if they are on opposite sides of the plane or either of the points are on the plan than we will return false
+            //if they are on opposite sides of the plane or either of the points are on the plane than we will return false
             return false;
         }
 

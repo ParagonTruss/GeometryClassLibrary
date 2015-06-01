@@ -217,7 +217,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                throw new Exception("The linesegments you are attempting to make a polygon from are either not closed or not coplanar.");
+                throw new Exception("The linesegments you are attempting to make into a polygon are either not closed or not coplanar.");
             }
         }
         ///// <summary>
@@ -963,7 +963,7 @@ namespace GeometryClassLibrary
             //now make it with the normal we found anf the lines basepoint
             Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
 
-            return this.Slice(slicingLine, divisionPlane);
+            return this._slice(slicingLine, divisionPlane);
         }
 
         /// <summary>
@@ -977,12 +977,12 @@ namespace GeometryClassLibrary
             Line slicingLine = this.Intersection(slicingPlane);
 
             //if it doesnt intersect then return the original
-            if (slicingLine == null)
+            if (slicingLine == null || (Plane)this == slicingPlane)
             {
                 return new List<Polygon>() { new Polygon(this) };
             }
 
-            return this.Slice(slicingLine, slicingPlane);
+            return this._slice(slicingLine, slicingPlane);
         }
 
         /// <summary>
@@ -994,7 +994,7 @@ namespace GeometryClassLibrary
         /// <param name="slicingPlane">the plane to use to slice this planeRegion (corresponds to the slicing line)</param>
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first
         /// or just a copy of the planeRegion in a list if it does not intersect</returns>
-        private List<Polygon> Slice(Line slicingLine, Plane slicingPlane)
+        private List<Polygon> _slice(Line slicingLine, Plane slicingPlane)
         {
             //make sure the line is in this plane or else it shouldnt slice
             if (((Plane)this).Contains(slicingLine))
