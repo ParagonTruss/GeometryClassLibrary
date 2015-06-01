@@ -711,6 +711,16 @@ namespace GeometryClassLibrary
             return angleBetween;
         }
 
+        public Angle SmallestAngleBetween(Vector vector)
+        {
+            Angle angle = AngleBetween(vector);
+            if (angle > new Angle(AngleType.Degree, 90))
+            {
+                angle = new Angle(AngleType.Degree, 180) - angle;
+            }
+            return angle;
+        }
+
 
         #endregion
 

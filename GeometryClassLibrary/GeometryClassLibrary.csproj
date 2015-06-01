@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComparisonMethods\LineSegmentComparisons.cs" />
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />

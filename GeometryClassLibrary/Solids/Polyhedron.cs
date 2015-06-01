@@ -541,13 +541,7 @@ namespace GeometryClassLibrary
                     Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
                     Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
 
-                    Volume volume1 = insidePolyhedron.Volume;
-                    Volume volume2 = outsidePolyhedron.Volume;
-                    bool volumeIsNegative = (volume1 < new Volume() || volume2 < new Volume());
-
                     List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
-                    //toReturn.Sort();
-                    //toReturn.Reverse();
                     return toReturn;
                 }
                 //if we were slicing along a plane of the polyhedron so we didnt cut it any just return a copy of the original polyhedron
@@ -584,7 +578,7 @@ namespace GeometryClassLibrary
                     if (otherPolygon != null)
                     {
                         toAddOutsides.Add(otherPolygon);
-                        unknownPolygons.Remove(otherPolygon);
+                        unknownPolygonsOther.Remove(otherPolygon);
                     }
                     i = -1; //start our loop over
                 }
@@ -598,7 +592,7 @@ namespace GeometryClassLibrary
                         if (otherPolygon != null)
                         {
                             toAddInsides.Add(otherPolygon);
-                            unknownPolygons.Remove(otherPolygon);
+                            unknownPolygonsOther.Remove(otherPolygon);
                         }
                         i = -1; //start our loop over
                     }
@@ -912,6 +906,8 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
+            bool allTwos = true;
+            List<int> counts = new List<int>();
             foreach (LineSegment edge in edges)
             {
                 int count = 0;
@@ -924,10 +920,12 @@ namespace GeometryClassLibrary
                 }
                 if (count != 2)
                 {
-                    return false;
+                    //return false;
+                    allTwos = false;
                 }
+                counts.Add(count);
             }
-            return true;
+            return allTwos;
         }
 
         /// <summary>

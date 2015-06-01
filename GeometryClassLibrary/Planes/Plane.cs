@@ -131,7 +131,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Creates a Plane that contains the passed points, using the first one as the base point
-        /// Note: points must not bwe all along the same line
+        /// Note: points should not be all along the same line
         /// </summary>
         /// <param name="passedPoint1">The first point contained on the plane and to be used as the reference point</param>
         /// <param name="passedPoint2">The second point contained on the plane</param>

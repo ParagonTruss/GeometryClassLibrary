@@ -458,6 +458,55 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Polyhedron_SliceThroughOppositeEdges()
+        {
+            Point bottomPoint1 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point bottomPoint2 = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottomPoint3 = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point bottomPoint4 = PointGenerator.MakePointWithInches(4, 0, 0);
+
+            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 2);
+            Point topPoint2 = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point topPoint3 = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point topPoint4 = PointGenerator.MakePointWithInches(4, 0, 2);
+
+            List<Polygon> faces = new List<Polygon>();
+            faces.Add(new Polygon(new List<Point> { bottomPoint1, bottomPoint2, bottomPoint3, bottomPoint4 }));
+            faces.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4}));
+            faces.Add(new Polygon(new List<Point> { bottomPoint1, topPoint1, topPoint2, bottomPoint2}));
+            faces.Add(new Polygon(new List<Point> { bottomPoint2, topPoint2, topPoint3, bottomPoint3 }));
+            faces.Add(new Polygon(new List<Point> { bottomPoint3, topPoint3, topPoint4, bottomPoint4 }));
+            faces.Add(new Polygon(new List<Point> { bottomPoint4, topPoint4, topPoint1, bottomPoint1 }));
+            Polyhedron testPolyhedron = new Polyhedron(faces);
+
+            Plane slicingPlane = new Plane(bottomPoint1, bottomPoint4, topPoint2);
+            
+            List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
+
+
+            List<Polygon> polygons1 = new List<Polygon>();
+            polygons1.Add(new Polygon(new List<Point> { bottomPoint1, bottomPoint2, bottomPoint3, bottomPoint4 }));
+            polygons1.Add(new Polygon(new List<Point> { bottomPoint2, bottomPoint3, topPoint3, topPoint2 }));
+            polygons1.Add(new Polygon(new List<Point> { bottomPoint4, bottomPoint1, topPoint2, topPoint3 }));
+            polygons1.Add(new Polygon(new List<Point> { bottomPoint1, bottomPoint2, topPoint2 }));
+            polygons1.Add(new Polygon(new List<Point> { bottomPoint3, bottomPoint4, topPoint3 }));
+            Polyhedron expected1 = new Polyhedron(polygons1);
+
+            List<Polygon> polygons2 = new List<Polygon>();
+            polygons2.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4 }));
+            polygons2.Add(new Polygon(new List<Point> { topPoint4, topPoint1, bottomPoint1, bottomPoint4 }));
+            polygons2.Add(new Polygon(new List<Point> { bottomPoint4, bottomPoint1, topPoint2, topPoint3 }));
+            polygons2.Add(new Polygon(new List<Point> { topPoint1, topPoint2, bottomPoint1 }));
+            polygons2.Add(new Polygon(new List<Point> { topPoint3, topPoint4, bottomPoint4 }));
+            Polyhedron expected2 = new Polyhedron(polygons2);
+            
+            //now test to see if we got what we expect
+            results.Count.Should().Be(2);
+            results.Contains(expected1).Should().BeTrue();
+            results.Contains(expected2).Should().BeTrue();
+        }
+
+        [Test()]
         public void Polyhedron_DoesContainPointAlongSides()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
