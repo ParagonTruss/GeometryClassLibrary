@@ -192,7 +192,7 @@ namespace GeometryClassLibrary
             : base()
         {
             bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.ArePairwiseCoplanar();
+            bool areCoplanar = passedBoundaries.AreAllCoplanar();
            
             if (passedBoundaries == null)
             {
@@ -783,7 +783,7 @@ namespace GeometryClassLibrary
         public bool isValidPolygon()
         {
             bool isClosed = LineSegments.DoFormClosedRegion();
-            bool areCoplanar = LineSegments.ArePairwiseCoplanar();
+            bool areCoplanar = LineSegments.AreAllCoplanar();
 
             if (isClosed && areCoplanar)
             {

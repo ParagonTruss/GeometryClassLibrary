@@ -100,7 +100,7 @@ namespace GeometryClassLibrary
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
         {
-            bool areCoplanar = borders.ArePairwiseCoplanar();
+            bool areCoplanar = borders.AreAllCoplanar();
             bool isClosed = borders.DoFormClosedRegion();
             bool nonEmpty = borders != null && borders.Count != 0;
             
@@ -271,24 +271,30 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>
         /// <returns></returns>
-        public static bool ArePairwiseCoplanar(this List<LineSegment> passedLineList)
+        public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
         {
+            List<Point> vertices = passedLineList.GetAllPoints();
             Vector whatTheNormalShouldBe = null;
-            for (int i = 0; i < passedLineList.Count; i++)
+            for (int i = 0; i < vertices.Count; i++)
             {
-                for (int j = i + 1; j < passedLineList.Count(); j++)
+                for (int j = i + 1; j < vertices.Count(); j++)
                 {
-                    Vector normal = passedLineList[i].CrossProduct(passedLineList[j]);
-                    if (normal.Magnitude != new Distance())
+                    Vector vector1 = new Vector(vertices[i], vertices[j]);
+                    for (int k = j + 1; k < vertices.Count(); k++)
                     {
-                        //All the normal vectors have the origin as their base, because of how cross products are coded
-                        if (whatTheNormalShouldBe == null)
+                        Vector vector2 = new Vector(vertices[i], vertices[k]);
+                        Vector normal = vector1.CrossProduct(vector2);
+                        if (normal.Magnitude != new Distance())
                         {
-                            whatTheNormalShouldBe = normal;
-                        }
-                        if (!normal.HasSameOrOppositeDirectionAs(whatTheNormalShouldBe))
-                        {
-                            return false;
+                            //All the normal vectors have the origin as their base, because of how cross products are coded
+                            if (whatTheNormalShouldBe == null)
+                            {
+                                whatTheNormalShouldBe = normal;
+                            }
+                            if (!normal.HasSameOrOppositeDirectionAs(whatTheNormalShouldBe))
+                            {
+                                return false;
+                            }
                         }
                     }
                 }

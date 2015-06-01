@@ -12,7 +12,7 @@ namespace GeometryClassLibraryTests
     public class LineListExtensionTests
     {
         [Test]
-        public void LineList_ArePairwiseCoplanar()
+        public void LineList_AreAllCoplanar()
         {
             List<LineSegment> testList1 = new List<Point>
                 {
@@ -23,7 +23,7 @@ namespace GeometryClassLibraryTests
                 }
                 .MakeIntoLineSegmentsThatMeet();
 
-            testList1.ArePairwiseCoplanar().Should().BeTrue();
+            testList1.AreAllCoplanar().Should().BeTrue();
 
             List<LineSegment> testList2 = new List<LineSegment>();
             testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0)));
@@ -31,14 +31,15 @@ namespace GeometryClassLibraryTests
             testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 1, 0)));
 
             //Pairwise these segments are coplanar
-            bool bool2 = testList2.ArePairwiseCoplanar();
-            bool2.Should().BeTrue();
+            bool bool2 = testList2.AreAllCoplanar();
+            bool2.Should().BeFalse();
 
             testList2.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 2, 1), PointGenerator.MakePointWithInches(5, -11, 6)));
-            testList2.ArePairwiseCoplanar().Should().BeFalse();
+            bool bool3 = testList2.AreAllCoplanar();
+            bool3.Should().BeFalse();
 
             //null case; should be vacuously true
-            (new List<LineSegment>()).ArePairwiseCoplanar().Should().BeTrue();
+            (new List<LineSegment>()).AreAllCoplanar().Should().BeTrue();
         }
 
         [Test()]
