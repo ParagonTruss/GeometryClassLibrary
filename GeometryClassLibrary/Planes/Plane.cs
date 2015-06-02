@@ -420,6 +420,7 @@ namespace GeometryClassLibrary
         public virtual Point Intersection(Line passedLine)
         {
             //Test if the plane contains the line's basePoint
+            //This handles the case where the line is inside the plane
             if (this.Contains(passedLine.BasePoint))
             {
                 return passedLine.BasePoint;
@@ -540,7 +541,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            return this.DoesIntersect(passedLine);
+            Vector lineVector = passedLine.Direction.UnitVector(DistanceType.Inch);
+            Vector planeNormal = this.NormalVector;
+            return (lineVector.DotProductIsEqualToZero(planeNormal));
         }
 
         /// <summary>
@@ -550,8 +553,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Vector passedVector)
         {
-
-            return this.DoesIntersect(passedVector) || this.Contains(passedVector);
+            if (this.Contains(passedVector.BasePoint) || this.Contains(passedVector.EndPoint))
+            {
+                return true;
+            }
+            if (this.PointIsOnSameSideAs(passedVector.BasePoint, passedVector.EndPoint))
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

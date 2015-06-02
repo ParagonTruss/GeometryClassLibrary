@@ -462,15 +462,14 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual Point Intersection(Line passedLine)
         {
+            if (this.Equals(passedLine))
+            {
+                return this.BasePoint;
+            }
             if (!this.IsCoplanarWith(passedLine))
             {
                 //The lines do not intersect
                 return null;
-            }
-
-            if (this.Equals(passedLine))
-            {
-                return this.BasePoint;
             }
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)

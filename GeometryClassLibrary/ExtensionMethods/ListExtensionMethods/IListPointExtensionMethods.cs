@@ -11,6 +11,36 @@ namespace GeometryClassLibrary
     public static class IListPointExtensionMethods
     {
         /// <summary>
+        /// determines if the points in the list, all lie on the same side of the dividing plane.
+        /// Points on the plane are disregarded
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public static bool AllPointsAreOnTheSameSideOf(this List<Point> pointList, Plane plane)
+        {
+            int index = 0;
+            //find a reference point
+            for (int i = 0; i < pointList.Count; i++)
+		    {
+			    if (!plane.Contains(pointList[i]))
+                {
+                    index = i;
+                    break;
+                }
+		    }
+            Point referencePoint = pointList[index];   
+            
+            //Now check the remaining points
+            for (int i = index + 1; i < pointList.Count; i++)
+            {
+                if (!plane.Contains(pointList[i]) && !plane.PointIsOnSameSideAs(pointList[i], referencePoint))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        /// <summary>
         /// Makes line segments that connect the given points in the order the appear in the list
         /// </summary>
         /// <param name="points">The points to make the segments out of</param>

@@ -432,6 +432,16 @@ namespace GeometryClassLibrary
             return passedLineSegment.Contains(this);
         }
 
+        /// <summary>
+        /// Determines if the point is on the plane.
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public bool IsOnPlane(Plane plane)
+        {
+            return plane.Contains(this);
+        }
+
         public Matrix ConvertToMatrixColumn()
         {
             return this.ConvertToVector().ConvertToMatrixColumn();

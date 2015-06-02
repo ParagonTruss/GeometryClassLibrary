@@ -666,13 +666,9 @@ namespace GeometryClassLibrary
             return (product > new Distance());
         }
         /// <summary>
-        /// Returns whether or not the dot product between the two vectors is approximately equal to 0
-        /// This takes into account the magnitude of the vectors and scales them in a way in which you
-        /// should always get a result with a small fractional error
+        /// Determines if the Dotproduct is zero. This is used to determine when vectors are perpendicular
+        /// May be unnecessary as a method
         /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <returns></returns>
         public bool DotProductIsEqualToZero(Vector other)
         {
 
