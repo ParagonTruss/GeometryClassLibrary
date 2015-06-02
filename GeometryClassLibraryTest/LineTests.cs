@@ -117,6 +117,7 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_WillTwoLinesOnTopOfOneAnotherIntersectTest()
         {
+
             Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(10, 0, 0));
             Line line2 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(6, 0, 0));
             Line line3 = new Line(PointGenerator.MakePointWithInches(3, 2, 0), PointGenerator.MakePointWithInches(-2, 5, 3));
