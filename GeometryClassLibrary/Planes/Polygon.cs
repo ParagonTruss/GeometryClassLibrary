@@ -192,13 +192,13 @@ namespace GeometryClassLibrary
             : base()
         {
             bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.AreAllCoplanar();
-           
+            bool areCoplanar = passedBoundaries.AreAllCoplanar(); 
+            bool notSelfIntersecting = !passedBoundaries.AtleastOneIntersection();
             if (passedBoundaries == null)
             {
                 this.LineSegments = new List<LineSegment>();
             }
-            else if (isClosed && areCoplanar)
+            else if (isClosed && areCoplanar && notSelfIntersecting)
             {
                 if (shouldSort)
                 {

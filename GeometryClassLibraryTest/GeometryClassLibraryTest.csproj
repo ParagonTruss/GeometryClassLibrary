@@ -74,7 +74,9 @@
     <Compile Include="ListExtensionTests\PlaneRegionListExtensionTests.cs" />
     <Compile Include="ShiftTests.cs" />
     <Compile Include="PointListTests.cs" />
-    <Compile Include="PolygonTests.cs" />
+    <Compile Include="PolygonTests.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="PolyhedronTests.cs" />
     <Compile Include="RotationTests.cs" />
     <Compile Include="SolidTests.cs" />

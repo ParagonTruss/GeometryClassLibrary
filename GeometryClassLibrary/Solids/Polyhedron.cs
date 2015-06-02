@@ -222,6 +222,10 @@ namespace GeometryClassLibrary
                     }
                     _volume = totalVolume;
                 }
+                if (_volume < new Volume())
+                {
+                    throw new Exception("Bad Polyhedron! Volume should not be negative.");
+                }
                 return _volume;
             }
         }

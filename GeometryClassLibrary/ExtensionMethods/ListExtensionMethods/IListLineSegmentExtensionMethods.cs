@@ -92,6 +92,21 @@ namespace GeometryClassLibrary
             return true;
         }
 
+        public static bool AtleastOneIntersection(this List<LineSegment> listOfSegments)
+        {
+            for (int i = 0; i < listOfSegments.Count; i++)
+            {
+                for (int j = i + 1; j < listOfSegments.Count; j++)
+                {
+                    if (listOfSegments[i].DoesIntersectNotTouching(listOfSegments[j]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Will break down all line segments into points and form them into clockwise traveling segments
         /// Segments must be coplanar and closed or else it will return null

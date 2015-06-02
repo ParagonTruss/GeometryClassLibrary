@@ -12,6 +12,25 @@ namespace GeometryClassLibraryTests
     public class PolygonTests
     {
         [Test()]
+        [ExpectedException(typeof(Exception))]
+        public void Polygon_Constructor_NoSelfIntersections()
+        {
+            Point point1 = PointGenerator.MakePointWithInches(0, 0);
+            Point point2 = PointGenerator.MakePointWithInches(1, 0);
+            Point point3 = PointGenerator.MakePointWithInches(1, 1);
+            Point point4 = PointGenerator.MakePointWithInches(0, 1);
+
+            List<Point> verticesInCorrectOrder = new List<Point>() { point1, point2, point3, point4 };
+            List<Point> verticesInWrongOrder = new List<Point>() { point1, point2, point4, point3 };
+
+            Polygon correctPolygon = new Polygon(verticesInCorrectOrder);
+            Area area = correctPolygon.Area;
+            area.Should().Be(new Area(AreaType.InchesSquared, 1));
+
+            //this part should throw an exception
+            Polygon badPolygon = new Polygon(verticesInWrongOrder);
+        }
+        [Test()]
         public void Polygon_ExtrudePolygon()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);

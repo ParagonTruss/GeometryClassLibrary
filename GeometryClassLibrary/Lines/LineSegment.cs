@@ -309,44 +309,37 @@ namespace GeometryClassLibrary
         /// </summary>
         public LineSegment OverlappingSegment(LineSegment segment)
         {
-            if (this.Contains(segment))
-            {
-                return segment;
-            }
-            if (segment.Contains(this))
-            {
-                return this;
-            }
-            List<LineSegment> list = new List<LineSegment>();
             if (this.Contains(segment.BasePoint))
             {
-                if (segment.Contains(this.BasePoint))
+                if (this.Contains(segment.EndPoint))
                 {
-                    list.Add(new LineSegment(segment.BasePoint, this.BasePoint));
+                    return segment;
                 }
+                if (this.HasSameDirectionAs(segment))
+                {
+                    return new LineSegment(segment.BasePoint, this.EndPoint);
+                }
+                if (this.HasOppositeDirectionOf(segment))
+                {
+                    return new LineSegment(segment.BasePoint, this.BasePoint);
+                }
+            }
+            if (segment.Contains(this.BasePoint))
+            {
                 if (segment.Contains(this.EndPoint))
                 {
-                    list.Add(new LineSegment(segment.BasePoint, this.EndPoint));
+                    return segment;
                 }
-            }
-            if (this.Contains(segment.EndPoint))
-            {
-                if (segment.Contains(this.BasePoint))
+                if (segment.HasSameDirectionAs(this))
                 {
-                    list.Add(new LineSegment(segment.EndPoint, this.BasePoint));
+                    return new LineSegment(this.BasePoint, segment.EndPoint);
                 }
-                if (segment.Contains(this.EndPoint))
+                if (segment.HasOppositeDirectionOf(this))
                 {
-                    list.Add(new LineSegment(segment.EndPoint, this.EndPoint));
+                    return new LineSegment(this.BasePoint, segment.BasePoint);
                 }
             }
-            if (list.Count == 0)
-            {
-                return null;
-            }
-            list.Sort();
-            list.Reverse();
-            return list[0];
+            return null;
         }
 
         public bool DoesIntersectNotTouching(Plane passedPlane)
@@ -362,6 +355,35 @@ namespace GeometryClassLibrary
             return true;
         }
 
+        public bool DoesIntersectNotTouching(LineSegment segment)
+        {
+            LineSegment overlap = this.OverlappingSegment(segment);
+            if (overlap != null && overlap.Magnitude != new Distance())
+            {
+                return true;
+            }
+            if (this.IsParallelTo(segment))
+            {
+                return false;
+            }
+            if (this.Magnitude == new Distance() || segment.Magnitude == new Distance())
+            {
+                return false;
+            }
+            Vector crossProduct1 = this.CrossProduct(new Vector(this.BasePoint, segment.BasePoint));
+            Vector crossProduct2 = this.CrossProduct(new Vector(this.BasePoint, segment.EndPoint));
+            if (!crossProduct1.HasOppositeDirectionOf(crossProduct2))
+            {
+                return false;
+            }
+            crossProduct1 = segment.CrossProduct(new Vector(segment.BasePoint, this.BasePoint));
+            crossProduct2 = segment.CrossProduct(new Vector(segment.BasePoint, this.EndPoint));
+            if (!crossProduct1.HasOppositeDirectionOf(crossProduct2))
+            {
+                return false;
+            }
+            return true;
+        }
         #endregion
     }
 }
