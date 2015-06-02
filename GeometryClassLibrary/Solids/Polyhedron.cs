@@ -418,22 +418,11 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
-        /// Returns whether or not the given plane intersects with the polyhedron but is not coplanar with any of its sides
-        /// also can be thought of as if it has a single distinct intersect point or line
+        /// Determines if the the plane intersects the polyhedron and not just along a face, segment or vertex.
         /// </summary>
-        /// <param name="passedPolyhedron">The polyghedron to check if it intersects with but not coplanar to any of its sides</param>
-        /// <returns>Returns a bool of whether or not the Polyhedron intersects the plane and is not coplanar with it</returns>
-        public virtual bool DoesIntersectNotCoplanar(Plane passedPlane)
+        public bool DoesIntersectNotTouching(Plane passedPlane)
         {
-            foreach (Polygon polygon in this.Polygons)
-            {
-                if (this.DoesIntersectNotCoplanar(polygon))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return (!this.Vertices.AllPointsAreOnTheSameSideOf(passedPlane));
         }
 
         /// <summary>
@@ -483,7 +472,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns two new Polyhedrons created by the slice in order of size</returns>
         public new List<Polyhedron> Slice(Plane slicingPlane)
         {
-            if (this.DoesIntersect(slicingPlane))
+            if (this.DoesIntersectNotTouching(slicingPlane))
             {
                 //make a list to keep track of all the points we sliced at
                 List<LineSegment> slicingPlaneLineSegments = new List<LineSegment>();

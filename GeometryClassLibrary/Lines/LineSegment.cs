@@ -348,6 +348,20 @@ namespace GeometryClassLibrary
             list.Reverse();
             return list[0];
         }
+
+        public bool DoesIntersectNotTouching(Plane passedPlane)
+        {
+            if (passedPlane.Contains(this.BasePoint) || passedPlane.Contains(this.EndPoint))
+            {
+                return false;
+            }
+            if (passedPlane.PointIsOnSameSideAs(this.BasePoint, this.EndPoint))
+            {
+                return false;
+            }
+            return true;
+        }
+
         #endregion
     }
 }
