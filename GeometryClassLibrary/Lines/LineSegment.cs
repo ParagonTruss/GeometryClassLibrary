@@ -44,25 +44,31 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        /// <summary>
-        /// Default zero constructor
-        /// </summary>
-        public LineSegment()
-            : base() { }
+        ///// <summary>
+        ///// Default zero constructor
+        ///// </summary>
+        //public LineSegment()
+        //    : base() { }
 
         /// <summary>
         /// Creates a Line Segment that extends from the origin to the given end point
         /// </summary>
         /// <param name="passedEndPoint"></param>
         public LineSegment(Point passedEndPoint)
-            : base(passedEndPoint) { }
+            : base(passedEndPoint)
+        {
+            _checkSegment();
+        }
 
         /// <summary>
         /// Constructs a line segment that corresponds to the given vector, with the smae basepoint, direction and length
         /// </summary>
         /// <param name="passedVector"></param>
         public LineSegment(Vector passedVector)
-            : base(passedVector) { }
+            : base(passedVector)
+        {
+            _checkSegment();
+        }
 
         /// <summary>
         /// Constructs a line segment from a given start point to a given end point
@@ -70,15 +76,21 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedEndPoint"></param>
         public LineSegment(Point passedBasePoint, Point passedEndPoint)
-            : base(passedBasePoint, passedEndPoint) { }
+            : base(passedBasePoint, passedEndPoint)
+        {
+            _checkSegment();
+        }
         
         /// <summary>
-        /// Creates a new ineSegment with the given BasePoint in the same direction and magnitude as the passed Vector
+        /// Creates a new line segment with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         public LineSegment(Point passedBasePoint, Vector passedVector)
-            : base(passedBasePoint, passedVector) { }
+            : base(passedBasePoint, passedVector)
+        {
+            _checkSegment();
+        }
 
         /// <summary>
         /// Creates a new LineSegment with the given BasePoint in the given direction with the given length, or 0 if it is omitted
@@ -87,7 +99,10 @@ namespace GeometryClassLibrary
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
         public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
-            : base(passedBasePoint, passedDirection, passedLength) { }
+            : base(passedBasePoint, passedDirection, passedLength)
+        {
+            _checkSegment();
+        }
 
         /// <summary>
         /// Copies a Linesegment creating new objects so the original is not changed with the copy
@@ -96,6 +111,14 @@ namespace GeometryClassLibrary
         public LineSegment(LineSegment toCopy)
             : base(toCopy) { }
 
+
+        private void _checkSegment()
+        {
+            if (this.BasePoint == this.EndPoint)
+            {
+                throw new Exception("LineSegment has no breadth!");
+            }
+        }
         #endregion
 
         #region Overloaded Operators
@@ -136,6 +159,38 @@ namespace GeometryClassLibrary
                 return true;
             }
             return !segment1.Equals(segment2);
+        }
+
+        /// <summary>
+        /// Determines if the first segment is longer than the second.
+        /// </summary>
+        public static bool operator >(LineSegment segment1, LineSegment segment2)
+        {
+            if (segment1 == null || segment2 == null)
+            {
+                throw new Exception("No comparison can be made, objects don't exist!");
+            }
+            if (segment1.Magnitude > segment2.Magnitude)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the first segment is shorter than the second.
+        /// </summary>
+        public static bool operator <(LineSegment segment1, LineSegment segment2)
+        {
+            if (segment1 == null || segment2 == null)
+            {
+                throw new Exception("No comparison can be made, objects don't exist!");
+            }
+            if (segment1.Magnitude < segment2.Magnitude)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -228,7 +283,12 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public new LineSegment ProjectOntoLine(Line projectOnto)
         {
-            return new LineSegment(base.ProjectOntoLine(projectOnto));
+            Vector projection = base.ProjectOntoLine(projectOnto);
+            if (projection.Magnitude != new Distance())
+            {
+                return new LineSegment(projection);
+            }
+            return null;
         }
 
         /// <summary>
@@ -305,39 +365,46 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// returns the line segment of overlap, they don't then it returns null
+        /// returns the line segment of overlap, if they don't then it returns null
         /// </summary>
         public LineSegment OverlappingSegment(LineSegment segment)
         {
+            //variable to store the overlap, in.
+            //check if its null before returning it
+            Vector vector = null;
             if (this.Contains(segment.BasePoint))
             {
                 if (this.Contains(segment.EndPoint))
                 {
-                    return segment;
+                    return new LineSegment(segment);
                 }
                 if (this.HasSameDirectionAs(segment))
                 {
-                    return new LineSegment(segment.BasePoint, this.EndPoint);
+                    vector = new Vector(segment.BasePoint, this.EndPoint);
                 }
                 if (this.HasOppositeDirectionOf(segment))
                 {
-                    return new LineSegment(segment.BasePoint, this.BasePoint);
+                    vector = new Vector(segment.BasePoint, this.BasePoint);
                 }
             }
             if (segment.Contains(this.BasePoint))
             {
                 if (segment.Contains(this.EndPoint))
                 {
-                    return segment;
+                    return new LineSegment(this);
                 }
                 if (segment.HasSameDirectionAs(this))
                 {
-                    return new LineSegment(this.BasePoint, segment.EndPoint);
+                    vector = new Vector(this.BasePoint, segment.EndPoint);
                 }
                 if (segment.HasOppositeDirectionOf(this))
                 {
-                    return new LineSegment(this.BasePoint, segment.BasePoint);
+                    vector = new Vector(this.BasePoint, segment.BasePoint);
                 }
+            }
+            if (vector != null && vector.Magnitude != new Distance())
+            {
+                return new LineSegment(vector);
             }
             return null;
         }
@@ -357,32 +424,25 @@ namespace GeometryClassLibrary
 
         public bool DoesIntersectNotTouching(LineSegment segment)
         {
-            LineSegment overlap = this.OverlappingSegment(segment);
-            if (overlap != null && overlap.Magnitude != new Distance())
+            Point point = ((Line)this).Intersection((Line)segment);
+            if (point != null)
             {
-                return true;
+                //LineSegment overlap = this.OverlappingSegment(segment);
+                //if (overlap != null && overlap.Magnitude > new Distance())
+                //{
+                //    return true;
+                //}
+                if (point.IsOnLineSegment(this) && point.IsOnLineSegment(segment))
+                {
+                    if (point.IsBaseOrEndPointOf(this) ||
+                        point.IsBaseOrEndPointOf(segment))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
             }
-            if (this.IsParallelTo(segment))
-            {
-                return false;
-            }
-            if (this.Magnitude == new Distance() || segment.Magnitude == new Distance())
-            {
-                return false;
-            }
-            Vector crossProduct1 = this.CrossProduct(new Vector(this.BasePoint, segment.BasePoint));
-            Vector crossProduct2 = this.CrossProduct(new Vector(this.BasePoint, segment.EndPoint));
-            if (!crossProduct1.HasOppositeDirectionOf(crossProduct2))
-            {
-                return false;
-            }
-            crossProduct1 = segment.CrossProduct(new Vector(segment.BasePoint, this.BasePoint));
-            crossProduct2 = segment.CrossProduct(new Vector(segment.BasePoint, this.EndPoint));
-            if (!crossProduct1.HasOppositeDirectionOf(crossProduct2))
-            {
-                return false;
-            }
-            return true;
+            return false;
         }
         #endregion
     }

@@ -526,10 +526,11 @@ namespace GeometryClassLibrary
         {
             Point intersect = this.Intersection(passedLine);
 
-            if (!ReferenceEquals(intersect, null))
+            if (intersect != null)
+            {
                 return true;
-            else
-                return false;
+            }
+            return false;
         }
 
         /// <summary>

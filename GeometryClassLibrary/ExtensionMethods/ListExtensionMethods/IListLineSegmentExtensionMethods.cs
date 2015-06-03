@@ -334,5 +334,28 @@ namespace GeometryClassLibrary
 
             return true;
         }
+
+        /// <summary>
+        /// Finds all points that are points adjacent to this point via one of these linesegments
+        /// </summary>
+        /// <param name="edgeList"></param>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public static List<Point> AdjacentVertices(this List<LineSegment> edgeList, Point vertex)
+        {
+            List<Point> adjacentVertices = new List<Point>();
+            foreach(LineSegment segment in edgeList)
+            {
+                if (vertex == segment.BasePoint)
+                {
+                    adjacentVertices.Add(segment.EndPoint);
+                }
+                else if (vertex == segment.EndPoint)
+                {
+                    adjacentVertices.Add(segment.BasePoint);
+                }
+            }
+            return adjacentVertices;
+        }
     }
 }

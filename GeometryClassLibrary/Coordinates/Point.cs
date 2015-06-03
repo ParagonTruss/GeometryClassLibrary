@@ -376,19 +376,29 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public LineSegment MakePerpendicularLineSegment(Line passedDestinationLine)
         {
-            //Make line from this point to the base point of the destination line
-            Line hypotenuse = new Line(this, passedDestinationLine.BasePoint);
+            if (!this.IsOnLine(passedDestinationLine))
+            {
+                //Make line from this point to the base point of the destination line
+                Vector hypotenuse = new Vector(passedDestinationLine.BasePoint, this);
+                Vector projection = hypotenuse.ProjectOntoLine(passedDestinationLine);
+                LineSegment normalSegment = new LineSegment(projection.EndPoint, hypotenuse.EndPoint);
+                return normalSegment;
+            }
+            return null;
+        }
 
-            //Find smallest angle between new line and destination line
-            Angle angleBetweenLines = hypotenuse.SmallestAngleBetweenIntersectingLine(passedDestinationLine);
-
-            //Make a line segment from the base point of destination line to the point on the destination line that is on a line perpendicular to this point
-            double distanceToBasePoint = this.DistanceTo(passedDestinationLine.BasePoint).Inches;
-            double distanceToPerpPoint = distanceToBasePoint * (Math.Cos(angleBetweenLines.Radians)); //This is the distance to a point on the destination line that is perpendicular to this point
-            LineSegment lineSegmentOnDestinationLine = new LineSegment(passedDestinationLine.BasePoint, passedDestinationLine.Direction, new Distance(DistanceType.Inch, distanceToPerpPoint));
-
-            //Return a new line segment through this point and the end point of the line segment. It is perpendicular to the destination line
-            return new LineSegment(this, lineSegmentOnDestinationLine.EndPoint);
+        /// <summary>
+        /// Projects the point onto the line, by extending the normal direction from the line to the point.
+        /// </summary>
+        /// <param name="projectOnto"></param>
+        /// <returns></returns>
+        public Point ProjectOntoLine(Line projectOnto)
+        {
+            Vector hypotenuse = new Vector(projectOnto.BasePoint, this);
+            Direction lineDirection = projectOnto.Direction;
+            Vector unitVectorAlongLine = new Vector(projectOnto.BasePoint, lineDirection, Distance.Inch);
+            double dotProduct = hypotenuse.DotProduct(unitVectorAlongLine)/(Distance.Inch);
+            return (unitVectorAlongLine * dotProduct).EndPoint;
         }
 
         /// <summary>
@@ -430,6 +440,15 @@ namespace GeometryClassLibrary
         public bool IsOnLineSegment(LineSegment passedLineSegment)
         {
             return passedLineSegment.Contains(this);
+        }
+
+        public bool IsBaseOrEndPointOf(LineSegment lineSegment)
+        {
+           if (this == lineSegment.BasePoint || this == lineSegment.EndPoint)
+           {
+               return true;
+           }
+           return false;
         }
 
         /// <summary>

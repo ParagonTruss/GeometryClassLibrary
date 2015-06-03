@@ -429,32 +429,13 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Vector ProjectOntoLine(Line projectOnto)
         {
-            //we can do this by making the points into vectors with the basepoint of the line as the basepoint and the endpoint of the 
-            //point we want to project then using the dot product to find its relative vector and then position it 
-            //relative to the clipping basepoint. We have to make the basepoint to the divisionLine's so that the vectors
-            //intersect, allowing us to project the one onto the other easily
-            Vector basePointVector = new Vector(projectOnto.BasePoint, BasePoint);
-
-            //now we can project the basepointvector onto the division line's unit vector to find the scalar length of the projection
-            //  note: we use the unit vector because it has a length of 1 and will not affect the scaling of the projected vector
-            Distance basePointProjectedLength = basePointVector * projectOnto.UnitVector(DistanceType.Inch);
-
-            //now make the projected vector using divisionLine's basePoint (our reference), the divisionLines unitVector (since we
-            //  are projecting onto it we know that it is the direction of the resulting vector), and then the length we
-            //  found for the projection
-            Vector basePointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, basePointProjectedLength);
-
-            //now the basepointProjection starts at the divisionLine's endpoint and ends at the projected point on itself
-            Point newBasePoint = basePointProjection.EndPoint;
-
-            //now we just need to do it all again to find the newEndpoint's projection
-            Vector endPointVector = new Vector(projectOnto.BasePoint, this.EndPoint);
-            Distance endPointProjectedLength = endPointVector * projectOnto.UnitVector(DistanceType.Inch);
-            Vector endPointProjection = new Vector(projectOnto.BasePoint, projectOnto.Direction, endPointProjectedLength);
-            Point newEndPoint = endPointProjection.EndPoint;
-
-            //now we have the two projected points and we can make a line segment which represents the porjected line
-            return new Vector(newBasePoint, newEndPoint);
+            if (this.IsCoplanarWith(projectOnto))
+            {
+                Point basePoint = this.BasePoint.ProjectOntoLine(projectOnto);
+                Point endPoint = this.EndPoint.ProjectOntoLine(projectOnto);
+                return new Vector(basePoint, endPoint);
+            }
+            throw new Exception("Cannot project a vector onto a line that its not coplanar with!");
         }
 
         /// <summary>

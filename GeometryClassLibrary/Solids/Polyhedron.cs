@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using UnitClassLibrary;
+using GeometryClassLibrary.ComparisonMethods;
 
 namespace GeometryClassLibrary
 {
@@ -737,10 +738,17 @@ namespace GeometryClassLibrary
         private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> passedPolygons)
         {
             List<Polygon> polygonList = passedPolygons.CopyList();
-
             List<LineSegment> edges = polygonList.GetAllEdges();
+            List<Point> vertices = edges.GetAllPoints();
 
-            //First check to that every edge sits on exactly two faces.
+            //First check the euler characteristic: V - E + F = 2
+            int eulerCharacteristic = vertices.Count - edges.Count + polygonList.Count;
+            if (eulerCharacteristic != 2)
+            {
+                return null;
+            }
+
+            //Now check that every edge sits on exactly two faces.
             bool everyEdgeIsOntwoFaces = _everyEdgeIsOntwoFaces(polygonList, edges);
             if (!everyEdgeIsOntwoFaces)
             {
@@ -757,16 +765,9 @@ namespace GeometryClassLibrary
             //Should be empty by the end of this algorithm
             List<LineSegment> edgesWithoutNeighboringFace = new List<LineSegment>();
 
-            //we find the face with the lowest z value
-            Polygon lowestFace = polygonList[0];
+            //we find the first face
+            Polygon lowestFace = _findLowestFace(polygonList, edges, vertices);
 
-            foreach (Polygon face in polygonList)
-            {
-                if (face.CenterPoint.Z < lowestFace.CenterPoint.Z)
-                {
-                    lowestFace = face;
-                }
-            }
             //place the first face
             _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
 
@@ -786,6 +787,37 @@ namespace GeometryClassLibrary
             }
             return null;
             
+        }
+
+        private static Polygon _findLowestFace(List<Polygon> polygonList, List<LineSegment> edges, List<Point> vertices)
+        {
+            Polygon lowestFace = null;
+            vertices.Sort(new CompareInOrderZXY());
+            Point lowestVertex = vertices[0];
+            List<Point> adjacentVertices = edges.AdjacentVertices(lowestVertex);
+            adjacentVertices.Sort(new CompareInOrderZXY());
+            LineSegment lowestEdge = new LineSegment(lowestVertex, adjacentVertices[0]);
+            List<Polygon> lowestFaces = new List<Polygon>();
+            foreach(Polygon face in polygonList)
+            {
+                if (face.HasSide(lowestEdge))
+                {
+                    lowestFaces.Add(face);
+                }
+            }
+            if ((new CompareByNormalAngleWithZ()).Compare(lowestFaces[0], lowestFaces[1]) == -1)
+            {
+                lowestFace = lowestFaces[0];
+            }
+            else
+            {
+                lowestFace = lowestFaces[1];
+            }
+            if (lowestFace.NormalVector.DotProduct(Direction.Out.UnitVector(DistanceType.Inch)) > new Distance())
+            {
+                lowestFace = lowestFace.ReverseOrientation();
+            }
+            return lowestFace;
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                LineSegment hypotenuse = new LineSegment();
+                LineSegment hypotenuse = LineSegments[0];
                 foreach (LineSegment side in this.LineSegments)
                 {
                     if (side.Length > hypotenuse.Length)
@@ -62,14 +62,16 @@ namespace GeometryClassLibrary
             {
                 List<LineSegment> legs = this.LineSegments;
                 legs.Remove(Hypotenuse);
+
+                LineSegment longLeg = null;
                 
-                LineSegment longLeg = new LineSegment();
-                foreach (LineSegment side in legs)
+                if (legs[0] > legs[1])
                 {
-                    if (side.Length > longLeg.Length)
-                    {
-                        longLeg = side;
-                    }
+                    longLeg = legs[0];
+                }
+                else
+                {
+                    longLeg = legs[1];
                 }
 
                 return longLeg;

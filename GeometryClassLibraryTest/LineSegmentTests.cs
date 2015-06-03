@@ -178,35 +178,18 @@ namespace ClearspanTypeLibrary.Tests
 
             LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(3.6, 1.8));
 
-            //make sure the result is actually along the projected direction
-            result.Direction.Should().Be(projectOnto.Direction);
-
-
-            //make sure the expected and result are along the same line
-            result.Direction.Should().Be(expected.Direction);
-
-            //now check the actual projected line
-            result.BasePoint.Should().Be(expected.BasePoint);
-            result.EndPoint.Should().Be(expected.EndPoint);
+            result.Should().Be(expected);
         }
 
         [Test()]
         public void LineSegment_ProjectOntoLine3DNotThroughOrigin()
         {
             LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(2, 0, 4), PointGenerator.MakePointWithInches(0, 2, 1));
-            Line projectOnto = new Line(PointGenerator.MakePointWithInches(5, 1, 2), PointGenerator.MakePointWithInches(1, 4, 0));
+            Line projectOnto = new Line(PointGenerator.MakePointWithInches(5, 1, 2), PointGenerator.MakePointWithInches(0, 0, 4.25));
             LineSegment result = testSegment.ProjectOntoLine(projectOnto);
 
-            LineSegment expected = new LineSegment(PointGenerator.MakePointWithInches(5 - 0.689655, 1 + 0.517242, 2 - 0.344828), PointGenerator.MakePointWithInches(5 - 3.448276, 1 + 2.586207, 2 - 1.724138));
-
-            //make sure the result is actually along the right line
-            result.Direction.Should().Be(projectOnto.Direction);
-
-            //make sure the expected and result are along the same line
-            result.Direction.Should().Be(expected.Direction);
-
-            result.BasePoint.Should().Be(expected.BasePoint);
-            result.EndPoint.Should().Be(expected.EndPoint);
+            result.Magnitude.Should().Be(new Distance(DistanceType.Inch, 0.22428));
+            ((Line)result).Should().Be(projectOnto);
         }
 
         [Test()]

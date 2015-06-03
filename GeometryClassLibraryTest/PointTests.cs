@@ -105,9 +105,11 @@ namespace GeometryClassLibraryTests
 
             bool result = pointOnLine.IsOnLine(testLine);
             bool result2 = pointOnLine2.IsOnLine(testLine2);
+            bool result3 = testBasePoint.IsOnLine(testLine2);
 
             result.Should().BeTrue();
             result2.Should().BeTrue();
+            result3.Should().BeFalse();
         }
 
         [Test()]

@@ -124,23 +124,26 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_TranslateTest()
         {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(1, -5, -4), PointGenerator.MakePointWithInches(0, 0, 0)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));
-            lineSegments.Add(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(1, -5, -4)));
-            Polygon testPolygon = new Polygon(lineSegments);
 
-            //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
-            //Distance testDisplacement = new Distance(DistanceType.Inch, Math.Sqrt(42));
+            Point point1 = PointGenerator.MakePointWithInches(1, -5, -4);
+            Point point2 = PointGenerator.MakePointWithInches(1, 0, 0);
+            Point point3 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point point4 = PointGenerator.MakePointWithInches(0, -5, -4);
+            List<Point> vertices = new List<Point>() { point1, point2, point3, point4 };
+            Polygon testPolygon = new Polygon(vertices);
+
             Point testDiplacement = PointGenerator.MakePointWithInches(-1, 5, 4);
 
             Polygon actualPolygon = testPolygon.Translate(testDiplacement);
 
-            actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 4)));
-            actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(-1, 5, 4), PointGenerator.MakePointWithInches(-2, 10, 8)));
-            actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(-2, 10, 8), PointGenerator.MakePointWithInches(-3, 15, 12)));
-            actualPolygon.Contains(new LineSegment(PointGenerator.MakePointWithInches(-3, 15, 12), PointGenerator.MakePointWithInches(0, 0, 0)));
+            Point point5 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point point6 = PointGenerator.MakePointWithInches(0, 5, 4);
+            Point point7 = PointGenerator.MakePointWithInches(-1, 5, 4);
+            Point point8 = PointGenerator.MakePointWithInches(-1, 0, 0);
+            List<Point> expectedVertices = new List<Point>() { point5, point6, point7, point8 };
+            Polygon expectedPolygon = new Polygon(expectedVertices);
+
+            actualPolygon.Should().Be(expectedPolygon);
         }
 
         [Test()]
@@ -385,7 +388,7 @@ namespace GeometryClassLibraryTests
             Point topPoint4 = PointGenerator.MakePointWithInches(2, 2, 5);
             Point topPoint5 = PointGenerator.MakePointWithInches(0, 2, 5);
             
-            Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 });
+            Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }, false);
 
             Vector normal2 = concavePentagon.NormalVector;
             (normal2 == new Vector(PointGenerator.MakePointWithInches(0, 0, 5), PointGenerator.MakePointWithInches(0, 0, 6))).Should().BeTrue();
@@ -694,87 +697,6 @@ namespace GeometryClassLibraryTests
             //should only return the original plane
             results.Count.Should().Be(1);
             (results[0] == testPolygon).Should().BeTrue();
-        }
-
-        [Ignore()]
-        [Test()]
-        public void Polygon_SharedPointNotOnThisPolygonsBoundary()
-        {
-            List<LineSegment> bounds1 = new List<LineSegment>();
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(3, 0, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 2, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
-            bounds1.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 2, 0), PointGenerator.MakePointWithInches(3, 2, 0)));
-            Polygon testPolygon1 = new Polygon(bounds1);
-
-            List<LineSegment> bounds2 = new List<LineSegment>();
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3.5, 0, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(3.5, 0, 0), PointGenerator.MakePointWithInches(3.5, 1, 0)));
-            bounds2.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(3.5, 1, 0)));
-            Polygon testPolygon2 = new Polygon(bounds2);
-
-            //check for generic overlapping
-            Point result12 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon2);
-            (result12 != null).Should().BeTrue();
-            testPolygon1.ContainsExclusive(result12).Should().BeTrue();
-
-
-            List<LineSegment> bounds3 = new List<LineSegment>();
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(5, 0, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(2, 1, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
-            bounds3.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
-            Polygon testPolygon3 = new Polygon(bounds3);
-
-            //check when one contains the other
-            Point result13 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon3);
-            (result13 != null).Should().BeTrue();
-            testPolygon1.ContainsExclusive(result13).Should().BeTrue();
-
-
-            List<LineSegment> bounds4 = new List<LineSegment>();
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(5, 0, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(3, 1, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
-            bounds4.Add(new LineSegment(PointGenerator.MakePointWithInches(3, 1, 0), PointGenerator.MakePointWithInches(5, 1, 0)));
-            Polygon testPolygon4 = new Polygon(bounds4);
-
-            //check when they touch sides but dont overlap
-            Point result14 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon4);
-            (result14 != null).Should().BeFalse();
-
-
-            List<LineSegment> bounds5 = new List<LineSegment>();
-            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(9, 0, 0)));
-            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, 0, 0), PointGenerator.MakePointWithInches(-1, .5, 0)));
-            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(9, 0, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
-            bounds5.Add(new LineSegment(PointGenerator.MakePointWithInches(-1, .5, 0), PointGenerator.MakePointWithInches(9, .5, 0)));
-            Polygon testPolygon5 = new Polygon(bounds5);
-
-            //check for overlapping when both CenterPoints arent contained
-            Point result15 = testPolygon1.SharedInteriorPointNotOnEitherBoundary(testPolygon5);
-            (result15 != null).Should().BeTrue();
-            testPolygon1.ContainsExclusive(result15).Should().BeTrue();
-
-
-            //one more becasue it was causing errors before in program implementing this
-            List<LineSegment> bounds6 = new List<LineSegment>();
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 6, 2), PointGenerator.MakePointWithInches(6, 5, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 6, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(6, 5, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
-            bounds6.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
-            Polygon testPolygon6 = new Polygon(bounds6);
-
-            List<LineSegment> bounds7 = new List<LineSegment>();
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(2, 1, 2)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(2, 1, 2), PointGenerator.MakePointWithInches(10, 1, 2)));
-            bounds7.Add(new LineSegment(PointGenerator.MakePointWithInches(10, 1, 2), PointGenerator.MakePointWithInches(12, 0, 2)));
-            Polygon testPolygon7 = new Polygon(bounds7);
-
-            Point result67 = testPolygon6.SharedInteriorPointNotOnEitherBoundary(testPolygon7);
-            (result67 != null).Should().BeFalse();
         }
 
         [Test()]

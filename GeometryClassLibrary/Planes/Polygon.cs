@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeometryClassLibrary.ComparisonMethods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -793,79 +794,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds and returns a Point that is on this PlaneRegion, but not on its boundaries, and the PlaneRegion passed in
-        /// </summary>
-        /// <param name="otherPlane">Other plane region to find a shared point with</param>
-        /// <returns>returns a point which both planes share on this plane but not on its boundaries or null if they do not overlap</returns>
-        public Point SharedInteriorPointNotOnEitherBoundary(Polygon otherPolygon)
-        {
-            ////check the centerPoints
-            //if (otherPolygon.ContainsExclusive(this.CenterPoint))
-            //{
-            //    return this.CenterPoint;
-            //}
-            //if (this.ContainsExclusive(otherPolygon.CenterPoint))
-            //{
-            //    return otherPolygon.CenterPoint;
-            //}
-
-            //Point averageOfCenterPoints = ((new Vector(this.CenterPoint) + new Vector(otherPolygon.CenterPoint))/2).EndPoint;
-            
-            //if (this.ContainsExclusive(otherPolygon.CenterPoint))
-            //{
-            //    return otherPolygon.CenterPoint;
-            //}
-
-            ////if we still havent found it try looking at the veticies of the otherPlane
-            //foreach (Point vertex in otherPolygon.LineSegments.GetAllPoints())
-            //{
-            //    if (this.ContainsExclusive(vertex))
-            //    {
-            //        return vertex;
-            //    }
-            //}
-
-            ////still still havent found it check if the sides overlap
-            ////we know one line at least must intersect this planes boundaries twice
-            //foreach (LineSegment line in otherPolygon.LineSegments)
-            //{
-            //    //keep track of our intersection
-            //    Point firstIntesect = null;
-
-            //    //look at all the bounding planes
-            //    foreach (LineSegment otherLine in this.LineSegments)
-            //    {
-            //        //see if they intersect
-            //        Point intersection = line.Intersection(otherLine);
-            //        if (intersection != null)
-            //        {
-            //            //if we havent found a first intersection
-            //            if (firstIntesect == null)
-            //            {
-            //                firstIntesect = intersection;
-            //            }
-            //            //if we already found one than this is the second and we can interpolate the point between
-            //            else
-            //            {
-            //                //find the point between them by making a line between them and then finding the midpoint of it
-            //                LineSegment betweenIntersects = new LineSegment(firstIntesect, intersection);
-
-            //                if (!this.Touches(betweenIntersects.MidPoint))
-            //                {
-            //                    //we have to return here instead of breaking because breaking will only take us out of onw
-            //                    return betweenIntersects.MidPoint;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            ////if we didnt find any return null
-            //return null;
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
         /// the polygons must be convex for this to work
         /// </summary>
@@ -882,7 +810,7 @@ namespace GeometryClassLibrary
             //if they are coplanar
             if (((Plane)this).Contains(otherPolygon))
             {
-                List<Point> newVertices = IntersectionPoints(otherPolygon);
+                List<Point> newVertices = this.IntersectionPoints(otherPolygon);
                 
                 this._addInteriorVerticesFrom(otherPolygon, newVertices);
                 otherPolygon._addInteriorVerticesFrom(this, newVertices);
@@ -1157,7 +1085,7 @@ namespace GeometryClassLibrary
             LineSegment projectedLineForOutside = insidePart.ProjectOntoLine(slicingLine);
 
             //and then add it to our new segments list if its not zero length
-            if (projectedLineForOutside.Length != new Distance())
+            if (projectedLineForOutside != null)
             {
                 newSegmentsGenerated[1].Add(projectedLineForOutside);
             }
@@ -1169,7 +1097,7 @@ namespace GeometryClassLibrary
             //Deal with the insidePlane and the inside part of the line
             //now do it all again for the outside line too (this is for the insidePlane)
             LineSegment projectedLineForInside = outsidePart.ProjectOntoLine(slicingLine);
-            if (projectedLineForInside.Length != new Distance())
+            if (projectedLineForInside != null)
             {
                 newSegmentsGenerated[0].Add(projectedLineForInside);
             }
@@ -1280,7 +1208,7 @@ namespace GeometryClassLibrary
         {
             //add the projection to our new segments list for the outside region
             LineSegment projectedLine = line.ProjectOntoLine(toProjectOnto);
-            if (projectedLine.Length != new Distance())
+            if (projectedLine != null)
             {
                 newSegmentsGeneratedList.Add(projectedLine);
             }
@@ -1721,34 +1649,17 @@ namespace GeometryClassLibrary
         {
             if (this.isValidPolygon())
             {
-                LineSegment baseSegment = this.LineSegments[0];
-                LineSegment otherSegment = new LineSegment();
-                Vector normalVector = new Vector();
-                foreach (Point vertex in this.Vertices)
-                {
-                    otherSegment = new LineSegment(BasePoint, vertex);
-
-                    if (this.DoesContainLineSegment(otherSegment))
-                    {
-                        normalVector = baseSegment.CrossProduct(otherSegment);
-                    }
-                    else
-                    {
-                        normalVector = otherSegment.CrossProduct(baseSegment);
-                    }
-
-                    if (normalVector.Magnitude != new Distance())
-                    {
-                        break;
-                    }
-                }
-                return normalVector / normalVector.Magnitude.Inches;
+                Point last = this.Vertices[Vertices.Count - 1];
+                Point first = BasePoint;
+                Point second = this.Vertices[1];
+                Vector vector1 = new Vector(last, first);
+                Vector vector2 = new Vector(first, second);
+                Vector normal = vector1.CrossProduct(vector2);
+                return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
             }
-            return new Vector(BasePoint, BasePoint);
+            throw new Exception("No normal Vector!");
         }
 
-
-      
         //Determines the plane which we will rotate and project onto.
         private Plane _planeWithSmallestAngleBetween()
         {
