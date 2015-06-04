@@ -331,7 +331,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Finds the line where the two planes intersect 
-        /// Note: covnerts the types to inches Internally so some percision might be lost
+        /// Note: converts the types to inches Internally so some percision might be lost
         /// </summary>
         /// <param name="otherPlane">the other plane to see where it intersects with this plane</param>
         /// <returns>returns the Line of intersection between the planes or null if they do not intersect</returns>

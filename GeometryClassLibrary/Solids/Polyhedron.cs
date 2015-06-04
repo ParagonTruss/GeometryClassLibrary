@@ -717,17 +717,6 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        private bool _doesContainSegmentAlongBoundary(LineSegment segment)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool DoesContainLineSegment(LineSegment segment)
-        {
-            throw new NotImplementedException();
-        }
-
-
         /// <summary>
         ///Checks if the polygons form a closed bounded region.
         ///If they don't returns null. Otherwise it reorients every face, so that they all normalVectors point outward

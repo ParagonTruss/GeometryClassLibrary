@@ -408,18 +408,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsOnLine(Line passedLine)
         {
-            //if we are the base point than we are on the line!
-            if (passedLine.BasePoint == this)
-                return true;
-
-            Vector vectorFromBasePointOfLineToPoint = new Vector(passedLine.BasePoint, this);
-
-            //Take the cross product of the vector from the base point of the line to the point and the line's direction vector
-            Vector crossProduct = vectorFromBasePointOfLineToPoint.CrossProduct(passedLine.UnitVector(DistanceType.Inch));
-
-            //if the above cross product is the 0 vector, the point is on the given line
-            return crossProduct.Magnitude == new Distance();
-            //return passedLine.Contains(this); // should work but breaks stuff.
+            return passedLine.Contains(this);
         }
 
         /// <summary>

@@ -246,12 +246,12 @@ namespace ClearspanTypeLibrary.Tests
             line1.IsPerpendicularTo(line2).Should().BeTrue();
             line1.IsPerpendicularTo(line3).Should().BeTrue();
             line2.IsPerpendicularTo(line3).Should().BeTrue();
-            line3.IsPerpendicularTo(line1).Should().BeTrue(); //check its reversable
+            line3.IsPerpendicularTo(line1).Should().BeTrue(); //check its symmetric
 
             line4.IsPerpendicularTo(line5).Should().BeTrue();
             line4.IsPerpendicularTo(line6).Should().BeTrue();
             line5.IsPerpendicularTo(line6).Should().BeFalse();
-            line6.IsPerpendicularTo(line4).Should().BeTrue(); //check its reversable
+            line6.IsPerpendicularTo(line4).Should().BeTrue(); //check its symmetric
 
             line1.IsPerpendicularTo(line4).Should().BeFalse();
             
@@ -583,6 +583,17 @@ namespace ClearspanTypeLibrary.Tests
 
             testLine.Contains(point1).Should().BeTrue();
             testLine.Contains(point2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Line_UnitVector()
+        {
+            Line testLine = new Line(PointGenerator.MakePointWithInches(2, 3, 1), PointGenerator.MakePointWithInches(5, -7, 0));
+            Vector unitVector = testLine.UnitVector(DistanceType.Inch);
+
+            unitVector.Magnitude.Should().Be(new Distance(DistanceType.Centimeter, 2.54));
+            unitVector.Direction.Should().Be(testLine.Direction);
+            unitVector.BasePoint.Should().Be(testLine.BasePoint);
         }
     }
 }

@@ -565,6 +565,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPolygon"></param>
         /// <returns></returns>
+        //ToDo: Needs unit Test
         public virtual bool DoesIntersect(Polygon passedPolygon)
         {
             return (passedPolygon.DoesIntersect(this));
@@ -667,66 +668,30 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Translates the Line, so its base goes through the origin
-        /// </summary>
-        /// <returns></returns>
-       
-
-        /// <summary>
         /// Shifts the Line with the given shift
         /// </summary>
         /// <param name="passedShift">The shift to apply to the Line</param>
         /// <returns>Returns a new Line that has been shifted with the given Shift</returns>
         public Line Shift(Shift passedShift)
         {
-            //shift it as a vector since we currently dont shift directions
+            //shift it as a vector since we currently don't shift directions
             Vector linesVector = this.UnitVector(DistanceType.Inch);
 
             Vector shifted = linesVector.Shift(passedShift);
 
-            Point shiftedBasePoint = this.BasePoint.Shift(passedShift);
-
             //then construct a new line with that information
-            return new Line(shifted.Direction, shiftedBasePoint);
-        }
-
-        /// <summary>
-        /// Makes the line into a plane perindicular to the xy plane
-        /// </summary>
-        /// <returns>returns a plane perpindicular to the XY-Plane that contains the given line</returns>
-        public Plane MakeIntoPlanePerpendicularToXYPlane()
-        {
-            //we use the base point and another point on the line so we know that the plane will contain the given line
-            //then we use the base point but moved in the z direction so that we know it will also contain that line, which
-            //will alway be perpindicular to XY because the only thing changing between the two points is the z.
-
-            return new Plane(this.BasePoint, this.GetPointOnLine(2), this.BasePoint + PointGenerator.MakePointWithInches(0, 0, 10));
+            return new Line(shifted);
         }
 
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// </summary>
-        /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
+        /// <param name="passedType">Dimension Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
         public virtual Vector UnitVector(DistanceType passedType)
         {
-            return Direction.UnitVector(passedType);
-        }
-
-        /// <summary>
-        /// Returns the Direction so that y is always positive, useful for comparing slopes
-        /// </summary>
-        /// <returns></returns>
-        public Direction DirectionAssumingPositiveY()
-        {
-            //if its greater than 360 we can subtract 180 from it to it is in the opposite direction and we need to flip it
-            if (this.Direction.Phi > new Angle(AngleType.Degree, 180))
-            {
-                return this.Direction.Reverse();
-            }
-
-            return new Direction(this.Direction);
+            return new Vector(this.BasePoint, this.Direction.UnitVector(passedType));
         }
 
         /// <summary>
@@ -738,7 +703,7 @@ namespace GeometryClassLibrary
         public Line MakePerpendicularLineInGivenPlane(Plane planeToMakePerpendicularLineIn)        {
             if (planeToMakePerpendicularLineIn.IsParallelTo(this))
             {
-                //rotate it 90 degrees in the nornal of the plane and it will be perpindicular to the original
+                //rotate it 90 degrees in the nornal of the plane and it will be perpendicular to the original
                 return this.Rotate(new Rotation(planeToMakePerpendicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
             }
             else
@@ -762,6 +727,11 @@ namespace GeometryClassLibrary
             return new Line(projectionVector.Direction, this.BasePoint);
         }
 
+        /// <summary>
+        /// Determines if the line contains the point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public virtual bool Contains(Point point)
         {
             if (point == null)

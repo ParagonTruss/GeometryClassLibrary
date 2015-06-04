@@ -388,7 +388,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="pointToSeeIfIsContained">The point to see if is on the vector</param>
         /// <returns>Returns a bool of whether or not the point is contained</returns>
-        public override bool Contains(Point point)
+        public new bool Contains(Point point)
         {
             //first check both endpoints
             if (point == this.BasePoint || point == this.EndPoint)
