@@ -240,7 +240,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_ContainsPolygon()
         {
-            //ToDo: Need to write this test
+            //ToDo: Need to write this test.
         }
 
         [Test()]
