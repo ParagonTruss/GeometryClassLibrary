@@ -48,7 +48,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="UnitClassLibrary">
-      <HintPath>..\..\unit-class-library\UnitClassLibrary\bin\Debug\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.1.2.5634.19541\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
