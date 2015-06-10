@@ -10,6 +10,16 @@ namespace GeometryClassLibrary
 {
     public static class IListPointExtensionMethods
     {
+
+        public static List<Point> Shift(this List<Point> pointList, Shift passedShift)
+        {
+            List<Point> shiftedPoints = new List<Point>();
+            foreach(Point point in pointList)
+            {
+                shiftedPoints.Add(point.Shift(passedShift));
+            }
+            return shiftedPoints;
+        }
         /// <summary>
         /// determines if the points in the list, all lie on the same side of the dividing plane.
         /// Points on the plane are disregarded
