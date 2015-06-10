@@ -306,17 +306,19 @@ namespace GeometryClassLibrary
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
         /// <param name="passedPolygons">The list of polygons that define this Polyhedron</param>
-        public Polyhedron(List<Polygon> passedPolygons)
+        public Polyhedron(List<Polygon> passedPolygons, bool checkAndRebuildValidPolyhedron = true)
             : base()
         {
-            List<Polygon> newFaces = _makeFacesWithProperOrientation(passedPolygons);
-            
-            if ( newFaces == null || newFaces.Count == 0)
+            if (checkAndRebuildValidPolyhedron)
+            {
+                passedPolygons = _makeFacesWithProperOrientation(passedPolygons);
+            }
+            if (passedPolygons == null || passedPolygons.Count == 0)
             {
                 throw new Exception("The polygons you're attempting to use do not form a single closed region.");
             }
 
-            this.Polygons = newFaces;
+            this.Polygons = passedPolygons;
         }
 
         /// <summary>
@@ -324,7 +326,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedSolid">The polyhedron to copy</param>
         public Polyhedron(Polyhedron toCopy)
-            : this(toCopy.Polygons) { }
+            : this(toCopy.Polygons, false) { }
 
         #endregion
 
@@ -631,7 +633,7 @@ namespace GeometryClassLibrary
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
-            return new Polyhedron(shiftedRegions);
+            return new Polyhedron(shiftedRegions, false);
         }
 
         /// <summary>
