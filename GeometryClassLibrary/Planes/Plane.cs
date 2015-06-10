@@ -93,6 +93,8 @@ namespace GeometryClassLibrary
             this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 
+        public Plane(Vector normal, Point basePoint = null) : this(normal.Direction, basePoint) { }
+
         /// <summary>
         /// Creates a plane that contains the two lines (they must not be equivalent Lines!)
         /// </summary>
@@ -339,6 +341,21 @@ namespace GeometryClassLibrary
         {
             //We make them all doubles because we need to ignore the dimesnions for this calculation to work correctly and then restore them
             //at the end, so we choose inches to use as the base to convert to
+
+            if (this == otherPlane)
+            {
+                if (BasePoint != otherPlane.BasePoint)
+                {
+                    return new Line(BasePoint, otherPlane.BasePoint);
+                }
+                Vector lineDirection = Direction.Right.UnitVector(DistanceType.Inch).CrossProduct(this.NormalVector);
+                if (lineDirection.Magnitude == new Distance())
+                {
+                    lineDirection = Direction.Out.UnitVector(DistanceType.Inch).CrossProduct(this.NormalVector);
+                }
+                return new Line(lineDirection.Direction, this.BasePoint);
+
+            }
 
             //Explains how to find where planes intersect: http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
             //if we have the normals we can cross them to find direction vector of the intersection

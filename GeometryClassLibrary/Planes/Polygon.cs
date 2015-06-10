@@ -277,7 +277,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy)
-            : this(polygonToCopy.LineSegments)
+            : this(polygonToCopy.LineSegments, false)
         //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
         //constructing a plane fron a List<LineSegment>
         {
