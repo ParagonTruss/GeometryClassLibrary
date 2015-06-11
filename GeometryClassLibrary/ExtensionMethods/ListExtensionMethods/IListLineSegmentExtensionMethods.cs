@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
                     if (segment1 != segment2 && segment1.IsCoplanarWith(segment2))
                     {
                         Plane possiblePlane = new Plane(segment1, segment2);
-                        if (segment1.DoesSharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
+                        if (segment1.DoesShareABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
                         {
                             planesList.Add(possiblePlane);
                         }
@@ -341,7 +341,7 @@ namespace GeometryClassLibrary
         /// <param name="edgeList"></param>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public static List<Point> AdjacentVertices(this List<LineSegment> edgeList, Point vertex)
+        public static List<Point> VerticesAdjacentTo(this List<LineSegment> edgeList, Point vertex)
         {
             List<Point> adjacentVertices = new List<Point>();
             foreach(LineSegment segment in edgeList)
@@ -356,6 +356,47 @@ namespace GeometryClassLibrary
                 }
             }
             return adjacentVertices;
+        }
+
+        /// <summary>
+        /// given a list of edges, and a vertex, this returns all the edges that use the vertex as a base or end point
+        /// NoteL this returns copies of those edges, and reorients them so that they use the vertex as a basepoint
+        /// </summary>
+        /// <param name="segmentList"></param>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public static List<LineSegment> SegmentsAdjacentTo(this List<LineSegment> segmentList, Point vertex)
+        {
+            List<LineSegment> segments = new List<LineSegment>();
+            foreach(LineSegment segment in segmentList)
+            {
+                if (segment.BasePoint == vertex)
+                {
+                    segments.Add(new LineSegment(segment));
+                }
+                else if (segment.EndPoint == vertex)
+                {
+                    segments.Add(segment.Reverse());
+                }
+            }
+            return segments;
+        }
+
+        /// <summary>
+        /// Note this will return two copies of the segment itself as well
+        /// </summary>
+        /// <param name="segmentList"></param>
+        /// <param name="lineSegment"></param>
+        /// <returns></returns>
+        public static List<LineSegment> SegmentsAdjacentTo(this List<LineSegment> segmentList, LineSegment lineSegment)
+        {
+            List<LineSegment> segments = new List<LineSegment>();
+            segments.AddRange(segmentList.SegmentsAdjacentTo(lineSegment.BasePoint));
+            segments.AddRange(segmentList.SegmentsAdjacentTo(lineSegment.EndPoint));
+            
+            Predicate<LineSegment> matching = (LineSegment s) => { return s == lineSegment; };
+            segments.RemoveAll(matching);
+            return segments;
         }
     }
 }

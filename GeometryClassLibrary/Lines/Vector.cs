@@ -137,7 +137,7 @@ namespace GeometryClassLibrary
         {
             if (passedMagnitude == null)
             {
-                _magnitude = new Distance();
+                _magnitude = Distance.Inch;
             }
             else
             {
@@ -362,7 +362,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public bool DoesSharesABaseOrEndPointWith(Vector passedVector)
+        public bool DoesShareABaseOrEndPointWith(Vector passedVector)
         {
             return (this.BasePoint == passedVector.EndPoint
                 || this.BasePoint == passedVector.BasePoint
@@ -606,11 +606,6 @@ namespace GeometryClassLibrary
             return new Vector(newBasePoint, newEndPoint);
         }
 
-        public Vector TranslateToOrigin()
-        {
-            Translation ontoOrigin = new Translation(BasePoint.Negate());
-            return Translate(ontoOrigin);
-        }
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them

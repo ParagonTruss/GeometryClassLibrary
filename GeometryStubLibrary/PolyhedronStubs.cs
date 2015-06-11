@@ -4,58 +4,20 @@ using UnitClassLibrary;
 
 namespace GeometryStubLibrary
 {
-    public class TestRectangularBox1 : Polyhedron
+    public class TestRectangularBox1 : RectangularPrism
     {
         public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 96);
         public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(2, 6, 1);
-        public TestRectangularBox1()
-            : base(_makeFaces())
-        {
-
-        }
-
-        private static List<Polygon> _makeFaces()
-        {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
-
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
-
-            List<Polygon> faces = new List<Polygon>();
-            faces.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
-            faces.Add(new Polygon(new List<Point> { backbasepoint, backtopleftpoint, backtoprightpoint, backbottomrightpoint }));
-            faces.Add(new Polygon(new List<Point> { topLeftPoint, topRightPoint, backtoprightpoint, backtopleftpoint }));
-            faces.Add(new Polygon(new List<Point> { basePoint, bottomRightPoint, backbottomrightpoint, backbasepoint }));
-            faces.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, backtopleftpoint, backbasepoint }));
-            faces.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
-            return faces;
-        }
+        public TestRectangularBox1() : base(PointGenerator.MakePointWithInches(4, 12, 2)) { }
     }
-    public class TestRectangularBox2 : Polyhedron
+
+    public class TestRectangularBox2 : RectangularPrism
     {
         public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 96);
         public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(2, 4, 1.5);
-        public TestRectangularBox2()
-            : base(_makePolyhedron())
-        {
-
-        }
-        private static Polyhedron _makePolyhedron()
-        {
-            List<Point> vertices = new List<Point>();
-            vertices.Add(PointGenerator.MakePointWithInches(0, 0));
-            vertices.Add(PointGenerator.MakePointWithInches(4, 0));
-            vertices.Add(PointGenerator.MakePointWithInches(4, 8));
-            vertices.Add(PointGenerator.MakePointWithInches(0, 8));
-            Polygon bottomFace = new Polygon(vertices);
-            return bottomFace.ExtrudeAsPolyhedron((Direction.Out.UnitVector(DistanceType.Inch))*3);
-        }
+        public TestRectangularBox2() : base(PointGenerator.MakePointWithInches(4, 8, 3)) { }
     }
+
     public class TestTetrahedron : Polyhedron
     {
         public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 48);
@@ -126,8 +88,6 @@ namespace GeometryStubLibrary
 
             return faces;
         }
-
-        
     }
 
     public class ConcaveDecahedron : Polyhedron

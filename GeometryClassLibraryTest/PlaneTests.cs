@@ -136,7 +136,7 @@ namespace GeometryClassLibraryTests
             test12Intersect.Should().Be(test21Intersect);
             test21Intersect.Should().Be(expectedLine);
 
-            (testPlane1.Intersection(testPlane1) == null).Should().BeTrue();
+            (testPlane1.Intersection(testPlane1)).Should().Be(new Line(new Direction(PointGenerator.MakePointWithInches(0, -1 , -1)), PointGenerator.MakePointWithInches(2, 1, 2)));
         }
 
         [Test()]
@@ -168,7 +168,7 @@ namespace GeometryClassLibraryTests
             testYZXZIntersect.Should().Be(Line.ZAxis);
 
             Line testXYXY = testPlaneXY.Intersection(testPlaneXY);
-            testXYXY.Should().Be(null);
+            testXYXY.Should().Be(Line.YAxis);
         }
 
         [Test()]

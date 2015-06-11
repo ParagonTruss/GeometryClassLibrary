@@ -25,6 +25,12 @@ namespace GeometryClassLibrary
             : base(translation) { }
 
         /// <summary>
+        /// Creates a Translation in the direction of the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public Translation(Vector vector) : base(vector.XComponent, vector.YComponent, vector.ZComponent) { }
+
+        /// <summary>
         /// Creates a translation with the given translation Dimesnions in each direction
         /// </summary>
         /// <param name="xTranslation">The distance to translate in the X direction</param>

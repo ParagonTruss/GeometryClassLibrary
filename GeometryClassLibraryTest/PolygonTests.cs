@@ -30,8 +30,9 @@ namespace GeometryClassLibraryTests
             //this part should throw an exception
             Polygon badPolygon = new Polygon(verticesInWrongOrder);
         }
+
         [Test()]
-        public void Polygon_ExtrudePolygon()
+        public void Polygon_ExtrudeAsPolyhedron()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 4, 0);
