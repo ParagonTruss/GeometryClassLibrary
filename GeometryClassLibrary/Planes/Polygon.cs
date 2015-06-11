@@ -398,7 +398,7 @@ namespace GeometryClassLibrary
 
         public new Polygon Shift(Shift passedShift)
         {
-            return new Polygon(this.Vertices.Shift(passedShift), false);
+            return new Polygon(this.LineSegments.Shift(passedShift), false);
         }
 
         public override PlaneRegion ShiftAsPlaneRegion(Shift passedShift)
@@ -712,58 +712,22 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public new Polyhedron Extrude(Vector directionVector)
         {
+            List<Polygon> faces = new List<Polygon>();
+            List<LineSegment> oppositeSegments = new List<LineSegment>();
 
-            // find two lines that are not parallel
-
-            LineSegment firstLine = this.LineSegments[0];
-            LineSegment secondLine = null;
-            foreach (var lineseg in this.LineSegments)
+            foreach (LineSegment segment in LineSegments)
             {
-                if (!lineseg.IsParallelTo(firstLine))
-                {
-                    secondLine = lineseg;
-                    break;
-                }
+                LineSegment opposite = segment.Translate(new Translation(directionVector));
+                oppositeSegments.Add(opposite);
+
+                Polygon sideFace = new Polygon(new List<Point>() { segment.BasePoint, segment.EndPoint, opposite.EndPoint, opposite.BasePoint });
+                faces.Add(sideFace);
             }
 
-            if (secondLine == null)
-            {
-                throw new Exception("There are no LineSegments in this plane region that are not parallel");
-            }
+            faces.Add(this);
+            faces.Add(new Polygon(oppositeSegments));
 
-            //create back Polygon
-            List<Polygon> unconstructedReturnGeometry = new List<Polygon>();
-            List<LineSegment> backPolygonLines = new List<LineSegment>();
-            List<LineSegment> otherPolygonLines = new List<LineSegment>();
-
-            foreach (var linesegment in this.LineSegments)
-            {
-                List<LineSegment> polygonConstruct = new List<LineSegment>();
-
-                Point newBackBasePoint = linesegment.BasePoint.Translate(new Translation(directionVector.EndPoint));
-                Point newBackEndPoint = linesegment.EndPoint.Translate(new Translation(directionVector.EndPoint));
-                LineSegment newBackLine = new LineSegment(newBackBasePoint, newBackEndPoint);
-                backPolygonLines.Add(newBackLine);
-
-                LineSegment newNormalLine1 = new LineSegment(newBackBasePoint, linesegment.BasePoint);
-                LineSegment newNormalLine2 = new LineSegment(newBackEndPoint, linesegment.EndPoint);
-
-                unconstructedReturnGeometry.Add(
-                    new Polygon(
-                        new List<LineSegment> {
-                            linesegment,
-                            newBackLine,
-                            newNormalLine1,
-                            newNormalLine2
-                        }
-                    )
-                );
-            }
-
-            unconstructedReturnGeometry.Add(this);
-            unconstructedReturnGeometry.Add(new Polygon(backPolygonLines));
-
-            return new Polyhedron(unconstructedReturnGeometry);
+            return new Polyhedron(faces);
         }
 
         /// <summary>
@@ -1807,6 +1771,39 @@ namespace GeometryClassLibrary
             return triangles;
         }
 
+        /// <summary>
+        /// Creates a parrelologram. 
+        /// shifts both vectors so their basepoints are the passed basepoint, and creates the parrelogram spanned by those sides.
+        /// </summary>
+        public static Polygon MakeParallelogram(Vector vector1, Vector vector2, Point basePoint = null)
+        {
+            if (basePoint == null)
+            {
+                basePoint = new Point();
+            }
+            Point point1 = basePoint;
+            Point point2 = new Vector(point1, vector1).EndPoint;
+            Point point3 = new Vector(point2, vector2).EndPoint;
+            Point point4 = new Vector(point3, vector1.Reverse()).EndPoint;
+
+            return new Polygon(new List<Point>() { point1, point2, point3, point4 });
+        }
+
+        public bool IsRectangle()
+        {
+            if (LineSegments.Count != 4)
+            {
+                return false;
+            }
+            for (int i = 0; i < 3; i++)//we only need to check 3 angles, because the last angle is determined by the need to close the polygon.
+            {
+                if (LineSegments[i].AngleBetween(LineSegments[i + 1]) != new Angle(AngleType.Degree, 90))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }

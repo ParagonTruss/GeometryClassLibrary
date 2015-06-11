@@ -127,7 +127,7 @@ namespace GeometryClassLibrary
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// determines if the polyhedron is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
@@ -144,7 +144,7 @@ namespace GeometryClassLibrary
                 }
 
                 //Now we check to see if any of the faces are concave, which would make the polyhedron concave
-                foreach(Polygon face in Polygons)
+                foreach (Polygon face in Polygons)
                 {
                     if (!face.IsConvex)
                     {
@@ -162,12 +162,12 @@ namespace GeometryClassLibrary
                         verticesToCheck.Remove(vertex);
                     }
                     for (int i = 1; i < verticesToCheck.Count; i++)
-			        {
-			             if (!face.PointIsOnSameSideAs(verticesToCheck[0], verticesToCheck[i]))
-                         {
-                             return false;
-                         }
-			        } 
+                    {
+                        if (!face.PointIsOnSameSideAs(verticesToCheck[0], verticesToCheck[i]))
+                        {
+                            return false;
+                        }
+                    }
                 }
                 return true;
             }
@@ -268,13 +268,13 @@ namespace GeometryClassLibrary
                 {
                     double volume = _volumeOfTetrahedronFormedWithTheOrigin(triangle);
 
-                    Vector currentCentroidAsVector = new Vector(triangle.Vertices[0] + triangle.Vertices[1] + triangle.Vertices[2])/4;
+                    Vector currentCentroidAsVector = new Vector(triangle.Vertices[0] + triangle.Vertices[1] + triangle.Vertices[2]) / 4;
 
                     weightedSum += volume * currentCentroidAsVector;
                     totalVolume += volume;
 
                 }
-                return (weightedSum/totalVolume).EndPoint;
+                return (weightedSum / totalVolume).EndPoint;
             }
         }
 
@@ -527,7 +527,7 @@ namespace GeometryClassLibrary
             }
             return new List<Polyhedron>() { new Polyhedron(this) };
         }
-
+        #region Slice _helper Methods
         /// <summary>
         /// Adds the Polygons to the correct new Polyhedron
         /// </summary>
@@ -566,7 +566,7 @@ namespace GeometryClassLibrary
                 else
                 {
                     unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
-                    
+
                     if (slicedPolygons.Count > 1)
                     {
                         unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
@@ -592,6 +592,7 @@ namespace GeometryClassLibrary
                 }
             }
         }
+        #endregion
 
         /// <summary>
         /// Returns all the Polyhedrons created by slices. In order of size.
@@ -634,6 +635,25 @@ namespace GeometryClassLibrary
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
             return new Polyhedron(shiftedRegions, false);
+        }
+
+        public bool Contains(Polyhedron polyhedron)
+        {
+            if (this.IsConvex)
+            {
+                foreach(Point vertex in polyhedron.Vertices)
+                {
+                    foreach(Plane face in this.Polygons)
+                    {
+                        if (face.PointIsOnSameSideAs(vertex, face.NormalVector.EndPoint))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -700,20 +720,20 @@ namespace GeometryClassLibrary
             {
                 List<Polygon> faces1 = this.Polygons;
                 List<Polygon> faces2 = polyhedron.Polygons;
-                
+
                 //Loop through the faces until we find overlapping faces
                 for (int i = 0; i < faces1.Count; i++)
-			    {
-			        for (int j = 0; j < faces2.Count; j++)
-			        {
+                {
+                    for (int j = 0; j < faces2.Count; j++)
+                    {
                         //find the overlap
                         Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
                         if (intersectionPlane != null)
                         {
                             return intersectionPlane;
                         }
-			        }
-			    }
+                    }
+                }
                 return null;
             }
             throw new NotImplementedException();
@@ -764,7 +784,7 @@ namespace GeometryClassLibrary
 
             LineSegment currentEdge = null;
             Polygon nextFace = null;
-            
+
             while (edgesWithoutNeighboringFace.Count != 0)
             {
                 currentEdge = edgesWithoutNeighboringFace[0];
@@ -777,7 +797,7 @@ namespace GeometryClassLibrary
                 return placedFaces;
             }
             return null;
-            
+
         }
 
         private static Polygon _findLowestFace(List<Polygon> polygonList, List<LineSegment> edges, List<Point> vertices)
@@ -785,11 +805,11 @@ namespace GeometryClassLibrary
             Polygon lowestFace = null;
             vertices.Sort(new CompareInOrderZXY());
             Point lowestVertex = vertices[0];
-            List<Point> adjacentVertices = edges.AdjacentVertices(lowestVertex);
+            List<Point> adjacentVertices = edges.VerticesAdjacentTo(lowestVertex);
             adjacentVertices.Sort(new CompareInOrderZXY());
             LineSegment lowestEdge = new LineSegment(lowestVertex, adjacentVertices[0]);
             List<Polygon> lowestFaces = new List<Polygon>();
-            foreach(Polygon face in polygonList)
+            foreach (Polygon face in polygonList)
             {
                 if (face.HasSide(lowestEdge))
                 {
@@ -849,7 +869,7 @@ namespace GeometryClassLibrary
         {
             placedFaces.Add(face);
             unplacedFaces.Remove(face);
-            
+
             //adds the new edges and removes the edges that now have two neighbor faces
             _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments);
         }
@@ -897,8 +917,32 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        /// <summary>
+        /// Creates a parralelepiped.
+        /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
+        /// </summary>
+        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
+        {
+            if (basePoint == null)
+            {
+                basePoint = new Point();
+            }
+            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
+            Polyhedron solid = bottom.ExtrudeAsPolyhedron(vector3);
+            return solid;
+        }
 
-
+        public bool IsRectangularPrism()
+        {
+            foreach(Polygon face in this.Polygons)
+            {
+                if (!face.IsRectangle())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }

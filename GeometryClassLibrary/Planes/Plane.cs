@@ -93,7 +93,7 @@ namespace GeometryClassLibrary
             this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 
-        public Plane(Vector normal, Point basePoint = null) : this(normal.Direction, basePoint) { }
+        public Plane(Vector normal) : this(normal.Direction, normal.BasePoint) { }
 
         /// <summary>
         /// Creates a plane that contains the two lines (they must not be equivalent Lines!)
