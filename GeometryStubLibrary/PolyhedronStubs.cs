@@ -6,22 +6,22 @@ namespace GeometryStubLibrary
 {
     public class TestRectangularBox1 : RectangularPrism
     {
-        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 96);
-        public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(2, 6, 1);
+        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
+        public override Point Centroid { get { return PointGenerator.MakePointWithInches(2, 6, 1); } }
         public TestRectangularBox1() : base(PointGenerator.MakePointWithInches(4, 12, 2)) { }
     }
 
     public class TestRectangularBox2 : RectangularPrism
     {
-        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 96);
-        public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(2, 4, 1.5);
+        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
+        public override Point Centroid  { get { return PointGenerator.MakePointWithInches(2, 4, 1.5); } }
         public TestRectangularBox2() : base(PointGenerator.MakePointWithInches(4, 8, 3)) { }
     }
 
     public class TestTetrahedron : Polyhedron
     {
-        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 48);
-        public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(1, 3, 1.5);
+        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 48); } }
+        public override Point Centroid { get { return PointGenerator.MakePointWithInches(1, 3, 1.5); } }
         public TestTetrahedron()
             : base(_makeFaces())
         {
@@ -47,8 +47,8 @@ namespace GeometryStubLibrary
 
     public class TestConcavePentagonalPrism : Polyhedron
     {
-        public static Volume ExpectedVolume = new Volume(VolumeType.CubicInches, 18);
-        public static Point ExpectedCentroid = PointGenerator.MakePointWithInches(11.0/9, 1, 2);
+        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 18); } }
+        public override Point Centroid { get { return PointGenerator.MakePointWithInches(11.0 / 9, 1, 2); } }
         public TestConcavePentagonalPrism()
             : base(_makeFaces())
         {
