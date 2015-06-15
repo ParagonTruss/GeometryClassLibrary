@@ -17,14 +17,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        public static Point MakePointWithInches(double inputValue1, double inputValue2)
-        {
-            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
-            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
-            return new Point(dim1, dim2);
-        }
-
-        public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3)
+        public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3 = 0)
         {
             Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
             Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
@@ -33,16 +26,7 @@ namespace GeometryClassLibrary
             return new Point(dim1, dim2, dim3);
         }
 
-        public static Point MakePointWithMillimeters(double inputValue1, double inputValue2)
-        {
-            Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
-            Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);
-            Distance dim3 = new Distance(DistanceType.Millimeter, 0);
-
-            return new Point(dim1, dim2, dim3);
-        }
-
-        public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3)
+        public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3 = 0)
         {
             Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
             Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);

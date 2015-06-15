@@ -402,6 +402,17 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// projects a point onto a plane from the normal direction.
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <returns></returns>
+        public Point ProjectOntoPlane(Plane plane)
+        {
+            Vector toPlane = new Vector(this, plane.NormalVector);
+            return ((Line)toPlane).Intersection(plane);
+        }
+
+        /// <summary>
         /// Returns true if the point is on the passed line, false otherwise
         /// </summary>
         /// <param name="passedLine"></param>
