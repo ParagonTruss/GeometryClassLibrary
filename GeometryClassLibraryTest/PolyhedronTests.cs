@@ -580,49 +580,49 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_Volume_Tetrahedron()
         {
-            Polyhedron testTetrahedron = new TestTetrahedron();
-            Volume volume = testTetrahedron.Volume;
-            volume.Should().Be(TestTetrahedron.ExpectedVolume);
+            TestTetrahedron testTetrahedron = new TestTetrahedron();
+            Volume volume = ((Polyhedron)testTetrahedron).Volume;
+            volume.Should().Be(testTetrahedron.Volume);
         }
 
         [Test()]
         public void Polyhedron_Volume_RectangularBox()
         {
-            Polyhedron testBox = new TestRectangularBox1();
-            Volume volume = testBox.Volume;
-            volume.Should().Be(TestRectangularBox1.ExpectedVolume);
+            TestRectangularBox1 testBox = new TestRectangularBox1();
+            Volume volume = ((Polyhedron) testBox).Volume;
+            volume.Should().Be(testBox.Volume);
         }
 
         [Test()]
         public void Polyhedron_Volume_ConcavePentagonalPrism()
         {
-            Polyhedron testSolid = new TestConcavePentagonalPrism();
-            Volume volume = testSolid.Volume;
-            volume.Should().Be(TestConcavePentagonalPrism.ExpectedVolume);
+            TestConcavePentagonalPrism testSolid = new TestConcavePentagonalPrism();
+            Volume volume = ((Polyhedron) testSolid).Volume;
+            volume.Should().Be(testSolid.Volume);
         }
 
         [Test()]
         public void Polyhedron_Centroid_Tetrahedron()
         {
-            Polyhedron testTetrahedron = new TestTetrahedron();
-            Point centroid = testTetrahedron.Centroid;
-            centroid.Should().Be(TestTetrahedron.ExpectedCentroid);
+            TestTetrahedron testTetrahedron = new TestTetrahedron();
+            Point centroid = ((Polyhedron) testTetrahedron).Centroid;
+            centroid.Should().Be(testTetrahedron.Centroid);
         }
 
         [Test()]
         public void Polyhedron_Centroid_RectangularBox()
         {
-            Polyhedron testBox = new TestRectangularBox1();
-            Point centroid = testBox.Centroid;
-            centroid.Should().Be(TestRectangularBox1.ExpectedCentroid);
+            TestRectangularBox1 testBox = new TestRectangularBox1();
+            Point centroid = ((Polyhedron) testBox).Centroid;
+            centroid.Should().Be(testBox.Centroid);
         }
 
         [Test()]
         public void Polyhedron_Centroid_ConcavePentagonalPrism()
         {
-            Polyhedron testSolid = new TestConcavePentagonalPrism();
-            Point centroid = testSolid.Centroid;
-            centroid.Should().Be(TestConcavePentagonalPrism.ExpectedCentroid);
+            TestConcavePentagonalPrism testSolid = new TestConcavePentagonalPrism();
+            Point centroid = ((Polyhedron) testSolid).Centroid;
+            centroid.Should().Be(testSolid.Centroid);
         }
 
         [Test()]

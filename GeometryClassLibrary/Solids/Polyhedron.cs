@@ -934,6 +934,10 @@ namespace GeometryClassLibrary
 
         public bool IsRectangularPrism()
         {
+            if (this.Polygons.Count != 6)
+            {
+                return false;
+            }
             foreach(Polygon face in this.Polygons)
             {
                 if (!face.IsRectangle())
