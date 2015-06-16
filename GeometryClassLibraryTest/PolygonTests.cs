@@ -67,7 +67,7 @@ namespace GeometryClassLibraryTests
             Polygon rightRegion = new Polygon(new List<LineSegment> { right, backRight, toprightConnector, bottomRightConnector });
 
 
-            Polyhedron extrudedResult = frontRegion.ExtrudeAsPolyhedron(new Vector(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, -4)));
+            Polyhedron extrudedResult = frontRegion.Extrude(new Vector(PointGenerator.MakePointWithInches(0, 0, -4)));
             extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
             extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();

@@ -443,11 +443,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="projectOnto">The Plane to project this Vector onto</param>
         /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
-        public new Vector ProjectOntoPlane(Plane projectOnto)
+        public new Vector ProjectOntoPlane(Plane plane)
         {
             //find the line in the plane and then project this line onto it
-            Line projectedLine = ((Line)this).ProjectOntoPlane(projectOnto);
-            return this.ProjectOntoLine(projectedLine);
+            Point newBasePoint = BasePoint.ProjectOntoPlane(plane);
+            Point newEndPoint = EndPoint.ProjectOntoPlane(plane);
+            return new Vector(newBasePoint, newEndPoint);
         }
 
         /// <summary>

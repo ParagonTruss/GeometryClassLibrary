@@ -730,16 +730,16 @@ namespace GeometryClassLibrary
             return new Polyhedron(faces);
         }
 
-        /// <summary>
-        /// Extrudes the plane region into a Polyhedron
-        /// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
-        /// </summary>
-        /// <param name="Distance"></param>
-        /// <returns></returns>
-        public Polyhedron ExtrudeAsPolyhedron(Vector extrusionVector)
-        {
-            return (Polyhedron)Extrude(extrusionVector);
-        }
+        ///// <summary>
+        ///// Extrudes the plane region into a Polyhedron
+        ///// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
+        ///// </summary>
+        ///// <param name="Distance"></param>
+        ///// <returns></returns>
+        //public Polyhedron ExtrudeAsPolyhedron(Vector extrusionVector)
+        //{
+        //    return (Polyhedron)Extrude(extrusionVector);
+        //}
 
         /// <summary>
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
@@ -1683,9 +1683,8 @@ namespace GeometryClassLibrary
         {
             Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
             Polygon rotated = this.Rotate(rotation);
-            Polygon projected = rotated._projectOntoXYPlane();
 
-            List<Point> vertices = projected.Vertices;
+            List<Point> vertices = rotated.Vertices;
 
             Area sum = new Area(AreaType.InchesSquared, 0);
             Point previousVertex = vertices[vertices.Count - 1];
@@ -1803,6 +1802,27 @@ namespace GeometryClassLibrary
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Returns the polygon projected onto a Plane
+        /// If the the polygon is perpendicular to the plane we return null
+        /// </summary>
+        public Polygon ProjectOntoPlane(Plane plane)
+        {
+            if (!this.IsPerpendicularTo(plane))
+            {
+                var newVertices = new List<Point>();
+                foreach (Point point in this.Vertices)
+                {
+                    newVertices.Add(point.ProjectOntoPlane(plane));
+                }
+
+                return new Polygon(newVertices, false);
+            }
+            //if the polygon is perpendicular to the plane, the projection is degenerate, we get just a linesegment;
+            return null;
+            
         }
         #endregion
     }
