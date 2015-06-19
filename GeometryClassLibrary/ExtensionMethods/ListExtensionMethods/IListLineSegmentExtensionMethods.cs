@@ -118,13 +118,13 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            bool areNotCoplanar = !segments.AreAllCoplanar();
-            if (areNotCoplanar)
+            bool notClosed = !segments.DoFormClosedRegion();
+            if (notClosed)
             {
                 return false;
             }
-            bool notClosed = !segments.DoFormClosedRegion();
-            if (notClosed)
+            bool areNotCoplanar = !segments.AreAllCoplanar();
+            if (areNotCoplanar)
             {
                 return false;
             }

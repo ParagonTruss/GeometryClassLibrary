@@ -263,14 +263,12 @@ namespace GeometryClassLibrary
         /// creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon polygonToCopy)
-            : this(polygonToCopy.LineSegments, false)
-        //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
-        //constructing a plane fron a List<LineSegment>
+        public Polygon(Polygon polygonToCopy) : base(polygonToCopy.Edges)
         {
-            
+            this.LineSegments = (polygonToCopy.LineSegments).ToList();
+            this.NormalVector = new Vector(polygonToCopy.NormalVector);
+            this.BasePoint = new Point(polygonToCopy.BasePoint);
         }
-
 
         #endregion
 
