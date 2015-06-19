@@ -179,8 +179,8 @@ namespace GeometryClassLibrary
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
-        public Polygon(List<Point> passedPoints, bool shouldSort = true)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldSort) 
+        public Polygon(List<Point> passedPoints, bool shouldValidate = true)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldValidate) 
         {
             
         }
@@ -189,38 +189,25 @@ namespace GeometryClassLibrary
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries, bool shouldSort = true)
+        public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
             : base()
         {
-            bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.AreAllCoplanar(); 
-            bool notSelfIntersecting = !passedBoundaries.AtleastOneIntersection();
-            if (passedBoundaries == null)
+            if (shouldValidate)
             {
-                this.LineSegments = new List<LineSegment>();
-            }
-            else if (isClosed && areCoplanar && notSelfIntersecting)
-            {
-                if (shouldSort)
-                {
-                    this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
-                }
-                else
-                {
-                    this.LineSegments = passedBoundaries;
-                }
-
-                this.BasePoint = LineSegments[0].BasePoint;
-                
-                this.Edges = new List<IEdge>(LineSegments);
-
-                this.NormalVector = this._getUnitNormalVector();
+                this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
             }
             else
             {
-                throw new Exception("The linesegments you are attempting to make into a polygon are either not closed or not coplanar.");
+                this.LineSegments = passedBoundaries;
             }
+
+            this.BasePoint = LineSegments[0].BasePoint;
+
+            this.Edges = new List<IEdge>(LineSegments);
+
+            this.NormalVector = this._getUnitNormalVector();
         }
+
         ///// <summary>
         ///// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
         ///// NOTE: Will not work for concave polygons
@@ -741,21 +728,7 @@ namespace GeometryClassLibrary
         //    return (Polyhedron)Extrude(extrusionVector);
         //}
 
-        /// <summary>
-        /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
-        /// </summary>
-        /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public bool isValidPolygon()
-        {
-            bool isClosed = LineSegments.DoFormClosedRegion();
-            bool areCoplanar = LineSegments.AreAllCoplanar();
-
-            if (isClosed && areCoplanar)
-            {
-                return true;
-            }
-            return false;
-        }
+    
 
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 

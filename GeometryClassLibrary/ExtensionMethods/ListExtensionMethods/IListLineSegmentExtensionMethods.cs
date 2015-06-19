@@ -108,24 +108,41 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
+        /// </summary>
+        /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
+        public static bool isValidForPolygon(this List<LineSegment> segments )
+        {
+            bool nonEmpty = (segments != null && segments.Count != 0);
+            bool areCoplanar = segments.AreAllCoplanar();
+            bool isClosed = segments.DoFormClosedRegion();
+            bool notSelfIntersecting = !segments.AtleastOneIntersection();
+            
+
+            if (isClosed && areCoplanar)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Will break down all line segments into points and form them into clockwise traveling segments
         /// Segments must be coplanar and closed or else it will return null
         /// </summary>
-        /// <param name="borders"></param>
+        /// <param name="segments"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> borders)
+        public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> segments)
         {
-            bool areCoplanar = borders.AreAllCoplanar();
-            bool isClosed = borders.DoFormClosedRegion();
-            bool nonEmpty = borders != null && borders.Count != 0;
-            
-            if (areCoplanar && isClosed && nonEmpty)
+           
+
+            if (segments.isValidForPolygon())
             {
                 List<LineSegment> sortedSegments = new List<LineSegment>();
                 Point minXPoint = null;
 
                 // find the Point with the smallest X
-                foreach (Point vertex in borders.GetAllPoints())
+                foreach (Point vertex in segments.GetAllPoints())
                 {
                     if (minXPoint == null || vertex.X < minXPoint.X)
                     {
@@ -137,7 +154,7 @@ namespace GeometryClassLibrary
                 LineSegment maxYLine = null;
                 Point maxYPoint = null;
 
-                foreach (LineSegment segment in borders)
+                foreach (LineSegment segment in segments)
                 {
                     if (segment.BasePoint == minXPoint)
                     {
@@ -168,7 +185,7 @@ namespace GeometryClassLibrary
                 }
 
                 //create a shallow copy of the borders to find out which we have checked
-                List<LineSegment> hasNotAdded = new List<LineSegment>(borders);
+                List<LineSegment> hasNotAdded = new List<LineSegment>(segments);
                 hasNotAdded.Remove(maxYLine);
 
                 //get our endpoint to find out which segment to process next
@@ -201,7 +218,7 @@ namespace GeometryClassLibrary
                 //now were all done and return the sorted segments
                 return sortedSegments;
             }
-            return null;
+            throw new Exception("The passed list of segments is either empty, does not form a closed region, are not coplanar, or are self intersecting.");
         }
 
         
