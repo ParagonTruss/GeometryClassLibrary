@@ -111,19 +111,46 @@ namespace GeometryClassLibrary
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
         /// </summary>
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public static bool isValidForPolygon(this List<LineSegment> segments )
+        public static bool AreValidForPolygon(this List<LineSegment> segments )
         {
-            bool nonEmpty = (segments != null && segments.Count != 0);
-            bool areCoplanar = segments.AreAllCoplanar();
-            bool isClosed = segments.DoFormClosedRegion();
-            bool notSelfIntersecting = !segments.AtleastOneIntersection();
-            
-
-            if (isClosed && areCoplanar)
+            bool notEnoughSegments = (segments == null || segments.Count < 3);
+            if (notEnoughSegments)
             {
-                return true;
+                return false;
             }
-            return false;
+            bool areNotCoplanar = !segments.AreAllCoplanar();
+            if (areNotCoplanar)
+            {
+                return false;
+            }
+            bool notClosed = !segments.DoFormClosedRegion();
+            if (notClosed)
+            {
+                return false;
+            }
+            bool selfIntersecting = segments.AtleastOneIntersection();
+            if (selfIntersecting)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
+        /// <summary>
+        /// Creates a polygon if its valid to, otherwise returns null
+        /// Use this over the ordinary constructor if you want to avoid a throw exception
+        /// </summary>
+        /// <param name="segments"></param>
+        /// <returns></returns>
+        public static Polygon CreatePolygonIfValid(this List<LineSegment> segments)
+        {
+            if (segments.AreValidForPolygon())
+            {
+                return new Polygon(segments);
+            }
+            return null;
+            
         }
 
         /// <summary>
@@ -136,7 +163,7 @@ namespace GeometryClassLibrary
         {
            
 
-            if (segments.isValidForPolygon())
+            if (segments.AreValidForPolygon())
             {
                 List<LineSegment> sortedSegments = new List<LineSegment>();
                 Point minXPoint = null;

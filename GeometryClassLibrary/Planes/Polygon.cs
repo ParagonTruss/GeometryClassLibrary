@@ -955,34 +955,18 @@ namespace GeometryClassLibrary
 
                 //now actually create the two Polygons so we can return them and make sure they are valid
                 List<Polygon> createdPolygons = new List<Polygon>();
-                createdPolygons.Add(new Polygon(slicedPolygonsLines[0]));
-                createdPolygons.Add(new Polygon(slicedPolygonsLines[1]));
-
-                //make sure that the polygons are actually cut
-                if (createdPolygons[0].LineSegments.Count <= 2 && createdPolygons[0].isValidPolygon())
+                var polygon1 = slicedPolygonsLines[0].CreatePolygonIfValid();
+                var polygon2 = slicedPolygonsLines[1].CreatePolygonIfValid();
+                if (polygon1 != null)
                 {
-                    if (createdPolygons[1] == this)
-                    {
-                        return new List<Polygon>() { createdPolygons[1] };
-                    }
-                    else //shouldnt ever get here
-                    {
-                        throw new Exception();
-                    }
+                    createdPolygons.Add(polygon1);
                 }
-                else if (createdPolygons[1].LineSegments.Count <= 2 && createdPolygons[1].isValidPolygon())
+                if (polygon2 != null)
                 {
-                    if (createdPolygons[0] == this)
-                    {
-                        return new List<Polygon>() { createdPolygons[0] };
-                    }
-                    else //shouldnt ever get here
-                    {
-                        throw new Exception();
-                    }
+                    createdPolygons.Add(polygon2);
                 }
 
-                //now return them in opposite order (largest first
+                //now return them in opposite order (largest first)
                 createdPolygons.Sort();
                 createdPolygons.Reverse();
                 return createdPolygons;
@@ -1583,18 +1567,14 @@ namespace GeometryClassLibrary
         // Returns a normalVector of the polygon.
         // or the zero vector, if the polygon has no sides.
         private Vector _getUnitNormalVector()
-        {
-            if (this.isValidPolygon())
-            {
-                Point last = this.Vertices[Vertices.Count - 1];
-                Point first = BasePoint;
-                Point second = this.Vertices[1];
-                Vector vector1 = new Vector(last, first);
-                Vector vector2 = new Vector(first, second);
-                Vector normal = vector1.CrossProduct(vector2);
-                return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
-            }
-            throw new Exception("No normal Vector!");
+        {   
+            Point last = this.Vertices[Vertices.Count - 1];
+            Point first = BasePoint;
+            Point second = this.Vertices[1];
+            Vector vector1 = new Vector(last, first);
+            Vector vector2 = new Vector(first, second);
+            Vector normal = vector1.CrossProduct(vector2);
+            return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
         }
 
         //Determines the plane which we will rotate and project onto.
