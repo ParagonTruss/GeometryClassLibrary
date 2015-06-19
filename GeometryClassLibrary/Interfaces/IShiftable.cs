@@ -1,6 +1,6 @@
-﻿using GeometryClassLibrary;
-using System;
-namespace PrefabricatedComponentTypeLibrary
+﻿using System;
+
+namespace GeometryClassLibrary
 {
     public interface IShiftable
     {

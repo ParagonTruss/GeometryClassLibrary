@@ -1,18 +1,17 @@
-﻿using GeometryClassLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrefabricatedComponentTypeLibrary
+namespace GeometryClassLibrary
 {
     public static class IShiftableExtensions
     {
         /// <summary>
         /// Shifts this object using the given shift
         /// Note: This shifts both the Geometry and the Coordinate System of this Shiftable Object and should only be used whrn
-        /// moving this object around in the world. If you are just swithcing Cooordinate Systems then ShiftToAnotherCoordinateSystem() 
+        /// moving this object around in the world. If you are just switching Cooordinate Systems then ShiftToAnotherCoordinateSystem() 
         /// should be used instead.
         /// </summary>
         /// <param name="shiftableObject">The shiftable object to shift the coodinate system of</param>

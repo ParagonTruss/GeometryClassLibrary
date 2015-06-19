@@ -92,9 +92,12 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Point toCopy)
         {
-            X = toCopy.X;
-            Y = toCopy.Y;
-            Z = toCopy.Z;
+            if (toCopy != null)
+            {
+                X = toCopy.X;
+                Y = toCopy.Y;
+                Z = toCopy.Z;
+            }
         }
 
         #endregion

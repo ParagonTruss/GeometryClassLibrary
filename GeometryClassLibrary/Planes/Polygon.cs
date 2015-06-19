@@ -179,8 +179,8 @@ namespace GeometryClassLibrary
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
-        public Polygon(List<Point> passedPoints, bool shouldSort = true)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldSort) 
+        public Polygon(List<Point> passedPoints, bool shouldValidate = true)
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldValidate) 
         {
             
         }
@@ -189,38 +189,25 @@ namespace GeometryClassLibrary
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries, bool shouldSort = true)
+        public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
             : base()
         {
-            bool isClosed = passedBoundaries.DoFormClosedRegion();
-            bool areCoplanar = passedBoundaries.AreAllCoplanar(); 
-            bool notSelfIntersecting = !passedBoundaries.AtleastOneIntersection();
-            if (passedBoundaries == null)
+            if (shouldValidate)
             {
-                this.LineSegments = new List<LineSegment>();
-            }
-            else if (isClosed && areCoplanar && notSelfIntersecting)
-            {
-                if (shouldSort)
-                {
-                    this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
-                }
-                else
-                {
-                    this.LineSegments = passedBoundaries;
-                }
-
-                this.BasePoint = LineSegments[0].BasePoint;
-                
-                this.Edges = new List<IEdge>(LineSegments);
-
-                this.NormalVector = this._getUnitNormalVector();
+                this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
             }
             else
             {
-                throw new Exception("The linesegments you are attempting to make into a polygon are either not closed or not coplanar.");
+                this.LineSegments = passedBoundaries;
             }
+
+            this.BasePoint = LineSegments[0].BasePoint;
+
+            this.Edges = new List<IEdge>(LineSegments);
+
+            this.NormalVector = this._getUnitNormalVector();
         }
+
         ///// <summary>
         ///// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
         ///// NOTE: Will not work for concave polygons
@@ -276,14 +263,12 @@ namespace GeometryClassLibrary
         /// creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon polygonToCopy)
-            : this(polygonToCopy.LineSegments, false)
-        //note: we do not need to call List<LineSegment>(newplaneToCopy.Edges) because it does this in the base case for 
-        //constructing a plane fron a List<LineSegment>
+        public Polygon(Polygon polygonToCopy) : base(polygonToCopy.Edges)
         {
-            
+            this.LineSegments = (polygonToCopy.LineSegments).ToList();
+            this.NormalVector = new Vector(polygonToCopy.NormalVector);
+            this.BasePoint = new Point(polygonToCopy.BasePoint);
         }
-
 
         #endregion
 
@@ -730,32 +715,18 @@ namespace GeometryClassLibrary
             return new Polyhedron(faces);
         }
 
-        /// <summary>
-        /// Extrudes the plane region into a Polyhedron
-        /// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
-        /// </summary>
-        /// <param name="Distance"></param>
-        /// <returns></returns>
-        public Polyhedron ExtrudeAsPolyhedron(Vector extrusionVector)
-        {
-            return (Polyhedron)Extrude(extrusionVector);
-        }
+        ///// <summary>
+        ///// Extrudes the plane region into a Polyhedron
+        ///// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
+        ///// </summary>
+        ///// <param name="Distance"></param>
+        ///// <returns></returns>
+        //public Polyhedron ExtrudeAsPolyhedron(Vector extrusionVector)
+        //{
+        //    return (Polyhedron)Extrude(extrusionVector);
+        //}
 
-        /// <summary>
-        /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
-        /// </summary>
-        /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public bool isValidPolygon()
-        {
-            bool isClosed = LineSegments.DoFormClosedRegion();
-            bool areCoplanar = LineSegments.AreAllCoplanar();
-
-            if (isClosed && areCoplanar)
-            {
-                return true;
-            }
-            return false;
-        }
+    
 
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
@@ -982,34 +953,18 @@ namespace GeometryClassLibrary
 
                 //now actually create the two Polygons so we can return them and make sure they are valid
                 List<Polygon> createdPolygons = new List<Polygon>();
-                createdPolygons.Add(new Polygon(slicedPolygonsLines[0]));
-                createdPolygons.Add(new Polygon(slicedPolygonsLines[1]));
-
-                //make sure that the polygons are actually cut
-                if (createdPolygons[0].LineSegments.Count <= 2 && createdPolygons[0].isValidPolygon())
+                var polygon1 = slicedPolygonsLines[0].CreatePolygonIfValid();
+                var polygon2 = slicedPolygonsLines[1].CreatePolygonIfValid();
+                if (polygon1 != null)
                 {
-                    if (createdPolygons[1] == this)
-                    {
-                        return new List<Polygon>() { createdPolygons[1] };
-                    }
-                    else //shouldnt ever get here
-                    {
-                        throw new Exception();
-                    }
+                    createdPolygons.Add(polygon1);
                 }
-                else if (createdPolygons[1].LineSegments.Count <= 2 && createdPolygons[1].isValidPolygon())
+                if (polygon2 != null)
                 {
-                    if (createdPolygons[0] == this)
-                    {
-                        return new List<Polygon>() { createdPolygons[0] };
-                    }
-                    else //shouldnt ever get here
-                    {
-                        throw new Exception();
-                    }
+                    createdPolygons.Add(polygon2);
                 }
 
-                //now return them in opposite order (largest first
+                //now return them in opposite order (largest first)
                 createdPolygons.Sort();
                 createdPolygons.Reverse();
                 return createdPolygons;
@@ -1610,18 +1565,14 @@ namespace GeometryClassLibrary
         // Returns a normalVector of the polygon.
         // or the zero vector, if the polygon has no sides.
         private Vector _getUnitNormalVector()
-        {
-            if (this.isValidPolygon())
-            {
-                Point last = this.Vertices[Vertices.Count - 1];
-                Point first = BasePoint;
-                Point second = this.Vertices[1];
-                Vector vector1 = new Vector(last, first);
-                Vector vector2 = new Vector(first, second);
-                Vector normal = vector1.CrossProduct(vector2);
-                return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
-            }
-            throw new Exception("No normal Vector!");
+        {   
+            Point last = this.Vertices[Vertices.Count - 1];
+            Point first = BasePoint;
+            Point second = this.Vertices[1];
+            Vector vector1 = new Vector(last, first);
+            Vector vector2 = new Vector(first, second);
+            Vector normal = vector1.CrossProduct(vector2);
+            return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
         }
 
         //Determines the plane which we will rotate and project onto.
@@ -1683,9 +1634,8 @@ namespace GeometryClassLibrary
         {
             Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
             Polygon rotated = this.Rotate(rotation);
-            Polygon projected = rotated._projectOntoXYPlane();
 
-            List<Point> vertices = projected.Vertices;
+            List<Point> vertices = rotated.Vertices;
 
             Area sum = new Area(AreaType.InchesSquared, 0);
             Point previousVertex = vertices[vertices.Count - 1];
@@ -1803,6 +1753,27 @@ namespace GeometryClassLibrary
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Returns the polygon projected onto a Plane
+        /// If the the polygon is perpendicular to the plane we return null
+        /// </summary>
+        public Polygon ProjectOntoPlane(Plane plane)
+        {
+            if (!this.IsPerpendicularTo(plane))
+            {
+                var newVertices = new List<Point>();
+                foreach (Point point in this.Vertices)
+                {
+                    newVertices.Add(point.ProjectOntoPlane(plane));
+                }
+
+                return new Polygon(newVertices, false);
+            }
+            //if the polygon is perpendicular to the plane, the projection is degenerate, we get just a linesegment;
+            return null;
+            
         }
         #endregion
     }
