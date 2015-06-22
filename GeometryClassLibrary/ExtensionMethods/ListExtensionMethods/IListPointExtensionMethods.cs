@@ -108,7 +108,7 @@ namespace GeometryClassLibrary
                 //Now its time  to cut the chaff
                 _removeInteriorPoints(initial, pointsInOrder);
             }
-            //The initial point will added to the end of the list, but since polygons are cyclic everything will still connect right
+            //The initial point will be added to the end of the list, but since polygons are cyclic everything will still connect right
             pointsInOrder.Add(initial);
             return new Polygon(pointsInOrder, false);
         }
