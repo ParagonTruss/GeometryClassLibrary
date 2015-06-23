@@ -947,6 +947,21 @@ namespace GeometryClassLibrary
             }
             return true;
         }
+
+        public bool HasOverlappingFace(Polygon polygon)
+        {
+            foreach(Polygon face in this.Polygons)
+            {
+                if (face.OverlappingPolygon(polygon) != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion
+
+        
     }
 }

@@ -115,12 +115,7 @@ namespace GeometryClassLibrary
             {
                 if (_centerPoint == null)
                 {
-                    Vector sum = new Vector();
-                    foreach (Point vertex in Vertices)
-                    {
-                        sum += new Vector(vertex);
-                    }
-                    _centerPoint = (sum / Vertices.Count).EndPoint;
+                    _centerPoint = this.Vertices.CenterPoint();
                 }
                 return _centerPoint;
             }

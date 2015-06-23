@@ -76,6 +76,16 @@ namespace GeometryClassLibrary
             return toReturn;
         }
 
+        public static Point CenterPoint(this List<Point> points)
+        {
+            Point sum = new Point();
+            foreach(Point point in points)
+            {
+                sum += point;
+            }
+            return ((new Vector(sum)) / points.Count).EndPoint;
+        }
+
         /// <summary>
         /// Creates the largest convex polygon whose vertices are from this list
         /// Uses the Graham Scan: http://en.wikipedia.org/wiki/Graham_scan
