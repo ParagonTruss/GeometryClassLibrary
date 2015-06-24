@@ -76,6 +76,16 @@ namespace GeometryClassLibrary
             return toReturn;
         }
 
+        public static Point CenterPoint(this List<Point> points)
+        {
+            Point sum = new Point();
+            foreach(Point point in points)
+            {
+                sum += point;
+            }
+            return ((new Vector(sum)) / points.Count).EndPoint;
+        }
+
         /// <summary>
         /// Creates the largest convex polygon whose vertices are from this list
         /// Uses the Graham Scan: http://en.wikipedia.org/wiki/Graham_scan
@@ -108,7 +118,7 @@ namespace GeometryClassLibrary
                 //Now its time  to cut the chaff
                 _removeInteriorPoints(initial, pointsInOrder);
             }
-            //The initial point will added to the end of the list, but since polygons are cyclic everything will still connect right
+            //The initial point will be added to the end of the list, but since polygons are cyclic everything will still connect right
             pointsInOrder.Add(initial);
             return new Polygon(pointsInOrder, false);
         }
