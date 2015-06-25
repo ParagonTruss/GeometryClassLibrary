@@ -1,0 +1,3 @@
+[submodule "unit-class-library"]
+	path = unit-class-library
+	url = https://sehcheese@bitbucket.org/Clearspan/unit-class-library.git
