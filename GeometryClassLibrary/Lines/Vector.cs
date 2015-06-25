@@ -390,7 +390,11 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the point is contained</returns>
         public new bool Contains(Point point)
         {
-            //first check both endpoints
+            if (point == null)
+            {
+                return false;
+            }
+            //check both endpoints
             if (point == this.BasePoint || point == this.EndPoint)
             {
                 return true;

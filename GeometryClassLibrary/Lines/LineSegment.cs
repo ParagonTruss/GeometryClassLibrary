@@ -444,6 +444,20 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+
+        public bool ContainsOnInside(Point point)
+        {
+            if (!point.IsBaseOrEndPointOf(this))
+            {
+                var vector1 = new Vector(this.BasePoint, point);
+                var vector2 = new Vector(point, this.EndPoint);
+                if (vector1.HasSameDirectionAs(this) && vector2.HasSameDirectionAs(this))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
     }
 }
