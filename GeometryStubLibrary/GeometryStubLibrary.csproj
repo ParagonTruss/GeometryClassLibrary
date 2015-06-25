@@ -63,10 +63,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnitClassLibrary, Version=1.2.5641.19906, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\UnitClassLibrary.1.2.5641.19906\lib\portable-net40+sl50+win+wp80\UnitClassLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StubPolyhedron.cs" />
@@ -81,12 +77,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Settings.StyleCop" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
       <Project>{be165769-e5c6-4d8e-ae6a-7075b1dd3d2d}</Project>
       <Name>GeometryClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
+      <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
+      <Name>UnitClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
