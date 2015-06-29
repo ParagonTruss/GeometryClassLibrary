@@ -471,7 +471,7 @@ namespace GeometryClassLibrary
             //Distance zComponent = this.BasePoint.Z + new Distance(DistanceType.Inch, this.Direction.ZComponentOfDirection * t);
 
             //Point intersectionPoint = new Point(xComponent, yComponent, zComponent);
-            Point intersectionPoint = passedLine.GetPointOnLine(t);
+            Point intersectionPoint = passedLine.GetPointAlongLine(new Distance(DistanceType.Inch, t));
 
             if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
             {

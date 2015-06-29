@@ -427,8 +427,19 @@ namespace GeometryClassLibrary
             Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
             Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
 
-            //Make sure point is on the line
+            return new Point(newX, newY, newZ);
+        }
 
+        /// <summary>
+        /// returns the point a given distance along the line.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <returns></returns>
+        public Point GetPointAlongLine(Distance distance)
+        {
+            Distance newX = _basePoint.X + distance * Direction.XComponentOfDirection;
+            Distance newY = _basePoint.Y + distance * Direction.YComponentOfDirection;
+            Distance newZ = _basePoint.Z + distance * Direction.ZComponentOfDirection;
             return new Point(newX, newY, newZ);
         }
 
@@ -492,7 +503,7 @@ namespace GeometryClassLibrary
             double solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
             Distance solutionVariableDistance = new Distance(DistanceType.Inch, solutionVariable);
 
-            Point intersectionPoint = this.GetPointOnLine(solutionVariableDistance.Inches);
+            Point intersectionPoint = this.GetPointAlongLine(solutionVariableDistance);
 
             return intersectionPoint;
         }
@@ -631,12 +642,12 @@ namespace GeometryClassLibrary
         {
             double[] point1Line1 = { this.BasePoint.X.Inches, this.BasePoint.Y.Inches, this.BasePoint.Z.Inches };
 
-            Point anotherPointOnLine1 = this.GetPointOnLine(2);
+            Point anotherPointOnLine1 = this.GetPointAlongLine(Distance.Inch);
             double[] point2Line1 = { anotherPointOnLine1.X.Inches, anotherPointOnLine1.Y.Inches, anotherPointOnLine1.Z.Inches };
 
             double[] point1Line2 = { passedLine.BasePoint.X.Inches, passedLine.BasePoint.Y.Inches, passedLine.BasePoint.Z.Inches };
 
-            Point anotherPointOnLine2 = passedLine.GetPointOnLine(2);
+            Point anotherPointOnLine2 = passedLine.GetPointAlongLine(Distance.Inch * 2);
             double[] point2Line2 = { anotherPointOnLine2.X.Inches, anotherPointOnLine2.Y.Inches, anotherPointOnLine2.Z.Inches };
 
             Matrix pointsMatrix = new Matrix(4, 4);
@@ -662,7 +673,7 @@ namespace GeometryClassLibrary
         public Line Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
-            Point newOtherPoint = this.GetPointOnLine(2).Translate(translation);
+            Point newOtherPoint = this.GetPointAlongLine(Distance.Inch * 2).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
         }
