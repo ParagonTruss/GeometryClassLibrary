@@ -716,8 +716,8 @@ namespace GeometryClassLibrary
         /// <returns>The overlapping region of the two Polyhedrons as a Polygon or null if they do not overlap</returns>
         public Polygon OverlappingPolygon(Polyhedron polyhedron)
         {
-            if (this.IsConvex && polyhedron.IsConvex)
-            {
+            //if (this.IsConvex && polyhedron.IsConvex)
+            //{
                 List<Polygon> faces1 = this.Polygons;
                 List<Polygon> faces2 = polyhedron.Polygons;
 
@@ -726,6 +726,7 @@ namespace GeometryClassLibrary
                 {
                     for (int j = 0; j < faces2.Count; j++)
                     {
+                        bool breakpoint = (i == 3 && j==2);
                         //find the overlap
                         Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
                         if (intersectionPlane != null)
@@ -735,8 +736,8 @@ namespace GeometryClassLibrary
                     }
                 }
                 return null;
-            }
-            throw new NotImplementedException();
+            //}
+            //throw new NotImplementedException();
         }
 
         /// <summary>

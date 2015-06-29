@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance XComponent
         {
-            get { return _magnitude * base.Direction.XComponentOfDirection; }
+            get { return _magnitude * base.Direction.XComponent; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance YComponent
         {
-            get { return _magnitude * base.Direction.YComponentOfDirection; }
+            get { return _magnitude * base.Direction.YComponent; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance ZComponent
         {
-            get { return _magnitude * base.Direction.ZComponentOfDirection; }
+            get { return _magnitude * base.Direction.ZComponent; }
         }
 
         /// <summary>

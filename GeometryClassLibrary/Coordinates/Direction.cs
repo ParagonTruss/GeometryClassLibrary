@@ -89,7 +89,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public double XComponentOfDirection
+        public double XComponent
         {
             get { return Math.Cos(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
         }
@@ -97,7 +97,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public double YComponentOfDirection
+        public double YComponent
         {
             get { return Math.Sin(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
         }
@@ -105,7 +105,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public double ZComponentOfDirection
+        public double ZComponent
         {
             get { return Math.Cos(this.Theta.Radians); }
         }
@@ -369,7 +369,7 @@ namespace GeometryClassLibrary
         public Vector UnitVector(DistanceType passedType)
         {
             Distance magnitude = new Distance(passedType, 1);
-            Direction direction = new Direction(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection), new Distance(DistanceType.Inch, 0.0001));
+            Direction direction = new Direction(new Point(passedType, XComponent, YComponent, ZComponent), new Distance(DistanceType.Inch, 0.0001));
             return new Vector(new Point(), direction, magnitude);
         }
 

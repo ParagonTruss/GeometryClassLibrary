@@ -31,9 +31,9 @@ namespace GeometryClassLibrary
             get
             {
                 //Find midpoint for each component
-                Distance xMid = (base.Magnitude / 2) * base.Direction.XComponentOfDirection;
-                Distance yMid = (base.Magnitude / 2) * base.Direction.YComponentOfDirection;
-                Distance zMid = (base.Magnitude / 2) * base.Direction.ZComponentOfDirection;
+                Distance xMid = (base.Magnitude / 2) * base.Direction.XComponent;
+                Distance yMid = (base.Magnitude / 2) * base.Direction.YComponent;
+                Distance zMid = (base.Magnitude / 2) * base.Direction.ZComponent;
 
                 //then add our base point so it is in the right location
                 return new Point(xMid, yMid, zMid) + this.BasePoint;

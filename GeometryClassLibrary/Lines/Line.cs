@@ -423,9 +423,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point GetPointOnLine(double multiplier)
         {
-            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponentOfDirection * multiplier);
-            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
-            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
+            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponent * multiplier);
+            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponent * multiplier);
+            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponent * multiplier);
 
             //Make sure point is on the line
 

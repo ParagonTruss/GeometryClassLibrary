@@ -221,7 +221,7 @@ namespace GeometryClassLibrary
             Angle angleBetweenCurrentZAndYZPlane = projectedZAxis.Direction.Theta;
 
             //if the projection is in the negative x direction we need to rotate negitively(clockwise) instead of positivly
-            if (projectedZAxis.Direction.XComponentOfDirection > 0)
+            if (projectedZAxis.Direction.XComponent > 0)
             {
                 angleBetweenCurrentZAndYZPlane = angleBetweenCurrentZAndYZPlane.Negate();
             }
@@ -241,7 +241,7 @@ namespace GeometryClassLibrary
 
             //now we need to rotate the x axis so we can line it up (the y and z we are done with)
             //if its negative we need to rotate it clockwise (negative) instead of ccw (positive)
-            if (zAxis.Direction.YComponentOfDirection < 0)
+            if (zAxis.Direction.YComponent < 0)
             {
                 angleBetweenZAndZAxis = angleBetweenZAndZAxis.Negate();
             }

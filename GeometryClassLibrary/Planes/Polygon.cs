@@ -732,13 +732,15 @@ namespace GeometryClassLibrary
         /// or only touch</returns>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            if (!this.IsConvex || !otherPolygon.IsConvex)
-            {
-                throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
-            }
+            //if (!this.IsConvex || !otherPolygon.IsConvex)
+            //{
+            //    throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
+            //}
 
-            //if they are coplanar
-            if (((Plane)this).Contains(otherPolygon))
+            bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
+            var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
+            bool sharedPoint = (vector.Magnitude.Inches < 0.05);
+            if (sameNormal && sharedPoint)
             {
                 List<Point> newVertices = this.IntersectionPoints(otherPolygon);
                 

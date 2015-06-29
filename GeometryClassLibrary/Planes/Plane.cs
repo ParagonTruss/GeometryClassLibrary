@@ -651,6 +651,11 @@ namespace GeometryClassLibrary
             }
         }
 
+        public Vector NormalVectorThrough(Point point)
+        {
+            var basePoint = point.ProjectOntoPlane(this);
+            return new Vector(basePoint, point);
+        }
         #endregion
     }
 }
