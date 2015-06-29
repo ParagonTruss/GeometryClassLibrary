@@ -21,7 +21,7 @@ namespace ClearspanTypeLibrary.Tests
 
             Point pointOnLine = PointGenerator.MakePointWithInches(3, 6, 0);
 
-            testLine.GetPointOnLine(6.62).Should().Be(pointOnLine);         
+            testLine.GetPointAlongLine(new Distance(DistanceType.Inch, 6.62)).Should().Be(pointOnLine);         
         }
 
         [Test()]
