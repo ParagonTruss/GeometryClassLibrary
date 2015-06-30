@@ -6,12 +6,26 @@ using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using Newtonsoft.Json;
 
 namespace ClearspanTypeLibrary.Tests
 {
     [TestFixture()]
     public class LineTests
     {
+        [Test()]
+        public void Line_JSON()
+        {
+            Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
+            Line line = new Line(testBasePoint, PointGenerator.MakePointWithInches(2, 3, 1));
+
+            var json = JsonConvert.SerializeObject(line);
+            Line deserializedLine = JsonConvert.DeserializeObject<Line>(json);
+
+            bool areEqual = (line == deserializedLine);
+            areEqual.Should().BeTrue();
+        }
+
         [Test()]
         public void Line_GetPointOnLine()
         {

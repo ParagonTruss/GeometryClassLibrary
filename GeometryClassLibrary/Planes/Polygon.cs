@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 
 namespace GeometryClassLibrary
@@ -11,10 +12,12 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Polygon : PlaneRegion, IComparable<Polygon>
     {
         #region Properties and Fields
 
+        [JsonProperty]
         public List<LineSegment> LineSegments
         {
             get
@@ -183,17 +186,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
+        /// <param name="LineSegments"></param>
+        [JsonConstructor]
+        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
             : base()
         {
             if (shouldValidate)
             {
-                this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
+                this.LineSegments = lineSegments.SortIntoClockWiseSegments();
             }
             else
             {
-                this.LineSegments = passedBoundaries;
+                this.LineSegments = lineSegments;
             }
 
             this.BasePoint = LineSegments[0].BasePoint;

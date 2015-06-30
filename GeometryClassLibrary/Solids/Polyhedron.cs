@@ -5,9 +5,11 @@ using System.Text;
 using System.Diagnostics;
 using UnitClassLibrary;
 using GeometryClassLibrary.ComparisonMethods;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Polyhedron : Solid
     {
         #region Properties and Fields
@@ -41,6 +43,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A list containing the polygons that make up this polyhedron
         /// </summary>
+        [JsonProperty]
         public virtual List<Polygon> Polygons
         {
             get
@@ -306,19 +309,20 @@ namespace GeometryClassLibrary
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
         /// <param name="passedPolygons">The list of polygons that define this Polyhedron</param>
-        public Polyhedron(List<Polygon> passedPolygons, bool checkAndRebuildValidPolyhedron = true)
+        [JsonConstructor]
+        public Polyhedron(List<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)
             : base()
         {
             if (checkAndRebuildValidPolyhedron)
             {
-                passedPolygons = _makeFacesWithProperOrientation(passedPolygons);
+                polygons = _makeFacesWithProperOrientation(polygons);
             }
-            if (passedPolygons == null || passedPolygons.Count == 0)
+            if (polygons == null || polygons.Count == 0)
             {
                 throw new Exception("The polygons you're attempting to use do not form a single closed region.");
             }
 
-            this.Polygons = passedPolygons;
+            this.Polygons = polygons;
         }
 
         /// <summary>

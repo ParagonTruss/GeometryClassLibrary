@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using UnitClassLibrary;
 //using VisualGeometryDebugger;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -13,14 +14,18 @@ namespace GeometryClassLibrary
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
+    [JsonObject(MemberSerialization.OptIn)]
     public class Point : IComparable
     {
         #region Properties and Fields
 
+        [JsonProperty]
         public Distance X { get; set; }
 
+        [JsonProperty]
         public Distance Y { get; set; }
 
+        [JsonProperty]
         public Distance Z { get; set; }
 
         #endregion
