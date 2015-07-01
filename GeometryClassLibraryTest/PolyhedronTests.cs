@@ -19,8 +19,7 @@ namespace GeometryClassLibraryTest
         public void Polyhedron_JSON()
         {
             Polyhedron polyhedron = new TestRectangularBox2();
-            var json = JsonConvert.SerializeObject(polyhedron, Formatting.Indented);
-            Console.WriteLine(json);
+            var json = JsonConvert.SerializeObject(polyhedron);
 
             Polyhedron deserializedPolyhedron = JsonConvert.DeserializeObject<Polyhedron>(json);
 

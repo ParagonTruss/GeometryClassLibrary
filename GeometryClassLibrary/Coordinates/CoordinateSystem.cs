@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -37,6 +38,7 @@ namespace GeometryClassLibrary
     /// instead of [-pi, pi], but there are still ambiguous cases I belive even with the limit, but it is easier to leave them unlimited and then represent the orientation in 
     /// a different form (we use Quaternions: http://en.wikipedia.org/wiki/Quaternion) to determine if they are the same orientation.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class CoordinateSystem
     {
         #region Properties and Fields
@@ -49,6 +51,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The Angle to rotate around the global/external x axis, which is performed first.
         /// </summary>
+        [JsonProperty]
         public Angle XAxisRotationAngle
         {
             get { return _xAxisRotationAngle; }
@@ -58,6 +61,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The Angle to rotate around the global/external y axis, which is performed second.
         /// </summary>
+        [JsonProperty]
         public Angle YAxisRotationAngle
         {
             get { return _yAxisRotationAngle; }
@@ -67,6 +71,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The Angle to rotate around the global/external z axis, which is performed third.
         /// </summary>
+        [JsonProperty]
         public Angle ZAxisRotationAngle
         {
             get { return _zAxisRotationAngle; }
@@ -76,6 +81,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The translation from the world coordinate system's origin to the local coordinate system's origin
         /// </summary>
+        [JsonProperty]
         public Point TranslationToOrigin
         {
             get { return _translationToOrigin; }
@@ -268,12 +274,13 @@ namespace GeometryClassLibrary
         /// coordinate system</param>
         /// <param name="passedZAxisRotation">The rotation around the world coordinate system's Z axis to rotate around to get to this
         /// coordinate system</param>
-        public CoordinateSystem(Point passedTranslationToOrigin, Angle passedXAxisRotation, Angle passedYAxisRotation, Angle passedZAxisRotation)
+        [JsonConstructor]
+        public CoordinateSystem(Point translationToOrigin, Angle xAxisRotationAngle, Angle yAxisRotationAngle, Angle zAxisRotationAngle)
         {
-            _translationToOrigin = new Point(passedTranslationToOrigin);
-            _xAxisRotationAngle = new Angle(passedXAxisRotation);
-            _yAxisRotationAngle = new Angle(passedYAxisRotation);
-            _zAxisRotationAngle =new Angle(passedZAxisRotation);
+            _translationToOrigin = new Point(translationToOrigin);
+            _xAxisRotationAngle = new Angle(xAxisRotationAngle);
+            _yAxisRotationAngle = new Angle(yAxisRotationAngle);
+            _zAxisRotationAngle = new Angle(zAxisRotationAngle);
         }
 
         /// <summary>

@@ -7,11 +7,25 @@ using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using Newtonsoft.Json;
+
 namespace ClearspanTypeLibrary.Tests
 {
     [TestFixture()]
     public class LineSegmentTests
     {
+        [Test()]
+        public void LineSegment_JSON()
+        {
+            LineSegment lineSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 1, 1));
+
+            var json = JsonConvert.SerializeObject(lineSegment);
+            LineSegment deserializedLineSegment = JsonConvert.DeserializeObject<LineSegment>(json);
+
+            bool areEqual = (lineSegment == deserializedLineSegment);
+            areEqual.Should().BeTrue();
+        }
+
         [Test()]
         public void LineSegment_ConstructorTest()
         {

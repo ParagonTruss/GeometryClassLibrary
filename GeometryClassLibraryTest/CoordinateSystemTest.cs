@@ -4,12 +4,25 @@ using FluentAssertions;
 using UnitClassLibrary;
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibraryTest
 {
     [TestFixture]
     public class CoordinateSystemTest
     {
+        [Test]
+        public void CoordinateSystem_JSON()
+        {
+            CoordinateSystem coordinateSystem = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
+
+            var json = JsonConvert.SerializeObject(coordinateSystem);
+            CoordinateSystem deserializedCoordinateSystem = JsonConvert.DeserializeObject<CoordinateSystem>(json);
+
+            bool areEqual = (coordinateSystem == deserializedCoordinateSystem);
+            areEqual.Should().BeTrue();
+        }
+
         [Test]
         public void CoordinateSystem_PlaneAndVectorConstuctor()
         {

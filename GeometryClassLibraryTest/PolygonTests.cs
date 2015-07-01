@@ -46,7 +46,7 @@ namespace GeometryClassLibraryTests
             LineSegment bottom = new LineSegment(basePoint, bottomRightPoint);
 
             Polygon polygon = new Polygon(new List<LineSegment> { left, top, bottom, right });
-            var json = JsonConvert.SerializeObject(polygon, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(polygon);
 
             Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
 
