@@ -961,6 +961,24 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        /// <summary>
+        /// Projects a polyhedron onto a plane, and returns a polygon.
+        /// Doesn't handle nonConvex polyhedra properly in some cases.
+        /// </summary>
+        public Polygon ProjectOntoPlane(Plane plane)
+        {
+            var newVertices = new List<Point>();
+            foreach(var vertex in this.Vertices)
+            {
+                var point = vertex.ProjectOntoPlane(plane);
+                if (!newVertices.Contains(point))
+                {
+                    newVertices.Add(point);
+                }
+            }
+            var polygon = newVertices.ConvexHull();
+            return polygon;
+        }
         #endregion
 
         

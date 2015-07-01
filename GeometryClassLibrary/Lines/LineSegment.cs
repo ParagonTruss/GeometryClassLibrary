@@ -291,6 +291,15 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        public new LineSegment ProjectOntoPlane(Plane plane)
+        {
+            Vector projection = base.ProjectOntoPlane(plane);
+            if (projection.Magnitude != new Distance())
+            {
+                return new LineSegment(projection);
+            }
+            return null;
+        }
         /// <summary>
         /// returns a copy of the line segment pointing in the opposite direction as the original
         /// </summary>
