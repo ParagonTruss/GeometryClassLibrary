@@ -681,11 +681,26 @@ namespace GeometryClassLibrary
             }
 
             double dotProduct = vector1.DotProduct(vector2).Inches;
-            double magnitudes = (vector1.Magnitude * vector2.Magnitude).InchesSquared;
+            double magnitudes = (vector1.Magnitude.Inches * vector2.Magnitude.Inches);
             double divided = dotProduct / magnitudes;
 
-            Angle angleBetween = new Angle(AngleType.Degree, Math.Acos(divided)*180.0/Math.PI);
+            Angle angleBetween = new Angle(AngleType.Radian, _arccos(divided));
             return angleBetween;
+        }
+
+        private double _arccos(double number)
+        {
+            if (number > 1 && number - 1 < 0.00001)
+            {
+                return 0;
+            }
+
+            if (number < -1 && number + 1 > - 0.00001)
+            {
+                return Math.PI;
+            }
+            return Math.Acos(number);
+
         }
 
         public Angle SmallestAngleBetween(Vector vector)

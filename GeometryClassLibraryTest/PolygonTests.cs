@@ -237,11 +237,36 @@ namespace GeometryClassLibraryTests
             testPolygon2.Touches(notOnPlane).Should().BeFalse();
         }
 
-        [Ignore()]
         [Test()]
         public void Polygon_ContainsPolygon()
         {
-            //ToDo: Need to write this test.
+            Point pentagonPoint1 = PointGenerator.MakePointWithInches(0, 0);
+            Point pentagonPoint2 = PointGenerator.MakePointWithInches(4, 0);
+            Point pentagonPoint3 = PointGenerator.MakePointWithInches(2, 2);
+            Point pentagonPoint4 = PointGenerator.MakePointWithInches(4, 4);
+            Point pentagonPoint5 = PointGenerator.MakePointWithInches(0, 4);
+            Polygon concavePentagon = new Polygon( new List<Point>(){ pentagonPoint1, pentagonPoint2, pentagonPoint3, pentagonPoint4, pentagonPoint5 });
+
+            Point rectanglePoint1 = PointGenerator.MakePointWithInches(1, 1);
+            Point rectanglePoint2 = PointGenerator.MakePointWithInches(2.5, 1);
+            Point rectanglePoint3 = PointGenerator.MakePointWithInches(2.5, 3);
+            Point rectanglePoint4 = PointGenerator.MakePointWithInches(1, 3);
+            Polygon rectangle = new Polygon( new List<Point>(){ rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4});
+
+            Point squarePoint1 = PointGenerator.MakePointWithInches(1, 1);
+            Point squarePoint2 = PointGenerator.MakePointWithInches(2, 1);
+            Point squarePoint3 = PointGenerator.MakePointWithInches(2, 2);
+            Point squarePoint4 = PointGenerator.MakePointWithInches(1, 2);
+            Polygon square = new Polygon( new List<Point>(){ squarePoint1, squarePoint2, squarePoint3, squarePoint4});
+
+            concavePentagon.Contains(rectangle).Should().BeFalse();
+            rectangle.Contains(concavePentagon).Should().BeFalse();
+
+            concavePentagon.Contains(square).Should().BeTrue();
+            square.Contains(concavePentagon).Should().BeFalse();
+
+            rectangle.Contains(square).Should().BeTrue();
+            square.Contains(rectangle).Should().BeFalse();
         }
 
         [Test()]
