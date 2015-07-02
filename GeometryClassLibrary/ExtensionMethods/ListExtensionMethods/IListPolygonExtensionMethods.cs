@@ -178,5 +178,19 @@ namespace GeometryClassLibrary
 
             return listOfTriangles;
         }
+
+        public static List<Polygon> ProjectAllOntoPlane(this List<Polygon> polygonList, Plane plane)
+        {
+            var listOfProjected = new List<Polygon>();
+            foreach(var polygon in polygonList)
+            {
+                var projected = polygon.ProjectOntoPlane(plane);
+                if (projected != null && !listOfProjected.Contains(projected))
+                {
+                    listOfProjected.Add(projected);
+                }
+            }
+            return listOfProjected;
+        }
     }
 }

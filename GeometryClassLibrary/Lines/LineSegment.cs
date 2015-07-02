@@ -467,6 +467,37 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+
+        /// <summary>
+        /// finds the signed angle between two vectors.
+        /// i.e. the order you input the vectors matters: the angle from vector1 to vector2 is negative the angle from vector2 to vector1
+        /// The reference normal is what counts as "up" for determining sign.
+        /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
+        /// </summary>
+        /// <returns></returns>
+        public AngularDistance SignedAngleBetween(Vector vector, Vector referenceNormal = null)
+        {
+            if (referenceNormal == null)
+            {
+                referenceNormal = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            }
+
+            AngularDistance testAngle = new AngularDistance(this.AngleBetween(vector));
+            Vector testNormal = this.CrossProduct(vector);
+
+            if (testNormal.HasSameDirectionAs(referenceNormal))
+            {
+                return testAngle;
+            }
+            if (testNormal.HasOppositeDirectionOf(referenceNormal))
+            {
+                return testAngle.Negate();
+            }
+            
+            throw new Exception("The reference normal is not perpendicular to these vectors");
+            
+        }
+
         #endregion
     }
 }

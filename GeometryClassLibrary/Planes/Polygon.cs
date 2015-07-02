@@ -758,7 +758,7 @@ namespace GeometryClassLibrary
         {
             foreach (Point vertex in polygon.Vertices)
             {
-                if (this.ContainsInclusive(vertex))
+                if (this.Contains(vertex))
                 {
                     _addToList(newVertices, vertex);
                 }
@@ -1216,7 +1216,7 @@ namespace GeometryClassLibrary
         {
             Point intersection = ((Plane)this).Intersection(passedLine);
 
-            if(intersection != null && this.ContainsInclusive(intersection))
+            if(intersection != null && this.Contains(intersection))
             {
                 return intersection;
             }
@@ -1343,15 +1343,15 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
         /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
-        public bool ContainsExclusive(Point passedPoint)
+        public bool ContainsNotOnBoundary(Point passedPoint)
         {
-            return (ContainsInclusive(passedPoint) && !Touches(passedPoint));
+            return (Contains(passedPoint) && !Touches(passedPoint));
         }
 
         /// <summary>
         /// Returns true if the point is on the PlaneRegion, including on its boundaries
         /// </summary>
-        public bool ContainsInclusive(Point passedPoint)
+        public new bool Contains(Point passedPoint)
         {
             //check if it is in our plane first
             if (((Plane)this).Contains(passedPoint))
@@ -1410,7 +1410,7 @@ namespace GeometryClassLibrary
             //First check all vertices
             foreach(Point vertex in polygon.Vertices)
             {
-                if (!this.ContainsInclusive(vertex))
+                if (!this.Contains(vertex))
                 {
                     return false;
                 }
@@ -1425,7 +1425,7 @@ namespace GeometryClassLibrary
             //if not, we have to check that none of the outside vertices are inside the interior polygon
             foreach(Point vertex in this.Vertices)
             {
-                if (polygon.ContainsExclusive(vertex))
+                if (polygon.ContainsNotOnBoundary(vertex))
                 {
                     return false;
                 }
@@ -1785,6 +1785,18 @@ namespace GeometryClassLibrary
             //if the polygon is perpendicular to the plane, the projection is degenerate, we get just a linesegment;
             return null;
             
+        }
+
+        public bool ContainsAll(IList<Point> pointList)
+        {
+            foreach (Point point in pointList)
+            {
+               if (!this.Contains(point))
+               {
+                   return false;
+               }
+            }
+            return true;
         }
         #endregion
     }

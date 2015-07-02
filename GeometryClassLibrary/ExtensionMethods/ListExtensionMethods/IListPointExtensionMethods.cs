@@ -220,5 +220,19 @@ namespace GeometryClassLibrary
                 }
             }
         }
+
+        public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
+        {
+            var results = new List<Point>();
+            foreach (var point in pointList)
+            {
+                var pointInPlane = point.ProjectOntoPlane(plane);
+                if (pointInPlane != null && !results.Contains(pointInPlane))
+                {
+                    results.Add(pointInPlane);
+                }
+            }
+            return results;
+        }
     }
 }

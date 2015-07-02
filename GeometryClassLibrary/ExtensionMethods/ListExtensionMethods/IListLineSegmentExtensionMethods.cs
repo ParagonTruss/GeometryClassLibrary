@@ -443,13 +443,13 @@ namespace GeometryClassLibrary
             return segments;
         }
 
-        public static List<LineSegment> ProjectOntoPlane(this IList<LineSegment> segmentList, Plane plane)
+        public static List<LineSegment> ProjectAllOntoPlane(this IList<LineSegment> segmentList, Plane plane)
         {
             var results = new List<LineSegment>();
             foreach(var segment in segmentList)
             {
                 var newSegment = segment.ProjectOntoPlane(plane);
-                if (!results.Contains(newSegment))
+                if (newSegment != null && !results.Contains(newSegment))
                 {
                     results.Add(newSegment);
                 }
