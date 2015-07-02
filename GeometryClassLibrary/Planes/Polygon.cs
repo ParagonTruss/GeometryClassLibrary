@@ -1408,12 +1408,9 @@ namespace GeometryClassLibrary
         public new bool Contains(Polygon polygon)
         {
             //First check all vertices
-            foreach(Point vertex in polygon.Vertices)
+            if (!this.ContainsAll(polygon.Vertices))
             {
-                if (!this.Contains(vertex))
-                {
-                    return false;
-                }
+                return false;
             }
 
             //if this is convex than we're done

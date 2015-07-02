@@ -726,7 +726,6 @@ namespace GeometryClassLibrary
                 {
                     for (int j = 0; j < faces2.Count; j++)
                     {
-                        bool breakpoint = (i == 3 && j==2);
                         //find the overlap
                         Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
                         if (intersectionPlane != null)
@@ -742,7 +741,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         ///Checks if the polygons form a closed bounded region.
-        ///If they don't returns null. Otherwise it reorients every face, so that they all normalVectors point outward
+        ///If they don't returns null. Otherwise it reorients every face, so that all their normalVectors point outward
         ///and every set of edges on each face circulates counterclockwise when looked at from outside to inside
         ///i.e. right hand rule
         ///returns the oriented faces
@@ -967,17 +966,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Polygon ProjectOntoPlane(Plane plane)
         {
-            var newVertices = new List<Point>();
-            foreach(var vertex in this.Vertices)
-            {
-                var point = vertex.ProjectOntoPlane(plane);
-                if (!newVertices.Contains(point))
-                {
-                    newVertices.Add(point);
-                }
-            }
-            var polygon = newVertices.ConvexHull();
-            return polygon;
+            var segments2D = this.LineSegments.ProjectAllOntoPlane(plane);
+
+            return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
         }
         #endregion
 

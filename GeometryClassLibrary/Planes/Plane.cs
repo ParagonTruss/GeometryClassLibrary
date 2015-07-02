@@ -583,7 +583,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the giving Plane is prepindicular to this plane
+        /// Returns whether or not the giving Plane is perpendicular to this plane
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
@@ -605,7 +605,7 @@ namespace GeometryClassLibrary
         }
         
         /// <summary>
-        /// Returns whether or not the giving line is prepindicular to this plane
+        /// Returns whether or not the giving line is perpendicular to this plane
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>

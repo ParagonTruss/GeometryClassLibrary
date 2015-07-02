@@ -456,5 +456,40 @@ namespace GeometryClassLibrary
             }
             return results;
         }
+
+       
+        public static Polygon ExteriorProfileFromSegments(this List<LineSegment> segments2D, Vector referenceNormal = null)
+        {
+            Point firstPoint = segments2D.GetAllPoints().OrderBy(p => p.X).ThenBy(p => p.Y).First();
+            List<LineSegment> profileSegments = new List<LineSegment>();
+
+            Point currentPoint = null;
+            Vector referenceVector = new Vector(PointGenerator.MakePointWithInches(0, -1));
+            while (currentPoint != firstPoint)
+            {
+                if (currentPoint == null)
+                {
+                    currentPoint = firstPoint;
+                }
+                var segmentsExtendingFromThisPoint = new List<LineSegment>();
+                foreach (var segment in segments2D)
+                {
+                    if (segment.EndPoint == currentPoint)
+                    {
+                        segmentsExtendingFromThisPoint.Add(segment.Reverse());
+                    }
+                    else if (segment.BasePoint == currentPoint)
+                    {
+                        segmentsExtendingFromThisPoint.Add(segment);
+                    }
+                }
+                var nextSegment = segmentsExtendingFromThisPoint.OrderBy(s => new Angle(s.SignedAngleBetween(referenceVector, referenceNormal))).First();
+                profileSegments.Add(nextSegment);
+                segments2D.Remove(nextSegment);
+                referenceVector = nextSegment.Reverse();
+                currentPoint = nextSegment.EndPoint;
+            }
+            return new Polygon(profileSegments, false);
+        }
     }
 }
