@@ -415,6 +415,14 @@ namespace GeometryClassLibrary
             return returnAngle;
         }
 
+        public AngularDistance SignedAngleBetween(Line line, Line referenceNormal = null)
+        {
+            Vector unitVector1 = this.UnitVector(DistanceType.Inch);
+            Vector unitVector2 = line.UnitVector(DistanceType.Inch);
+            
+            return unitVector1.SignedAngleBetween(unitVector2);
+        }
+
         /// <summary>
         /// Returns a point on the line based on the multiplier entered
         /// </summary>
@@ -448,7 +456,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsParallelTo(Line passedLine)
+        public virtual bool IsParallelTo(Line passedLine)
         {
             return (passedLine.Direction == this.Direction || passedLine.Direction == this.Direction.Reverse());
         }
@@ -463,7 +471,7 @@ namespace GeometryClassLibrary
             //if they are perpendicular then the dot product should be 0
             //Distance dotted = passedLine.Direction.UnitVector(DistanceType.Inch) * this.Direction.UnitVector(DistanceType.Inch);
             //return (dotted == new Distance());
-            return passedLine.UnitVector(DistanceType.Inch).DotProductIsEqualToZero(this.UnitVector(DistanceType.Inch));
+            return passedLine.UnitVector(DistanceType.Inch).IsPerpendicularTo(this.UnitVector(DistanceType.Inch));
         }
 
         /// <summary>
@@ -754,10 +762,11 @@ namespace GeometryClassLibrary
                 return true;
             }
 
-            Vector checkVector = new Vector(BasePoint, point);
-            return checkVector.IsParallelTo(this);
+            return point.DistanceTo(this) == new Distance();
         }
 
         #endregion
+
+        
     }
 }

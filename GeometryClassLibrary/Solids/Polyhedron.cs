@@ -726,11 +726,13 @@ namespace GeometryClassLibrary
                 {
                     for (int j = 0; j < faces2.Count; j++)
                     {
-                        //find the overlap
-                        Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
-                        if (intersectionPlane != null)
+                        if (faces1[i].NormalVector.HasOppositeDirectionOf(faces2[j].NormalVector))
                         {
-                            return intersectionPlane;
+                            Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
+                            if (intersectionPlane != null)
+                            {
+                                return intersectionPlane;
+                            }
                         }
                     }
                 }

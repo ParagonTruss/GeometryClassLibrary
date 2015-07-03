@@ -161,8 +161,6 @@ namespace GeometryClassLibrary
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> segments)
         {
-           
-
             if (segments.AreValidForPolygon())
             {
                 List<LineSegment> sortedSegments = new List<LineSegment>();

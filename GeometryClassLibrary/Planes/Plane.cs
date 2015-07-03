@@ -206,18 +206,19 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        public bool Contains(Polygon passedPlaneRegion)
+        public bool Contains(Polygon polygon)
         {
-            // checks to make sure that every linesegment is on the plane
-            foreach (LineSegment segment in passedPlaneRegion.LineSegments)
-            {
-                if (!this.Contains(segment))
-                {
-                    return false;
-                }
-            }
+            //// checks to make sure that every linesegment is on the plane
+            //foreach (LineSegment segment in polygon.LineSegments)
+            //{
+            //    if (!this.Contains(segment))
+            //    {
+            //        return false;
+            //    }
+            //}
 
-            return true;
+            //return true;
+            return this == (Plane)polygon;
         }
 
         public bool Contains(Line passedLine)
@@ -240,7 +241,7 @@ namespace GeometryClassLibrary
             //Distance dotProduct = planeVector * NormalVector;
             //return dotProduct == new Distance();
 
-            return planeVector.DotProductIsEqualToZero(NormalVector);
+            return planeVector.IsPerpendicularTo(NormalVector);
         }
 
         /// <summary>
@@ -530,7 +531,7 @@ namespace GeometryClassLibrary
         {
             Vector lineVector = passedLine.Direction.UnitVector(DistanceType.Inch);
             Vector planeNormal = this.NormalVector;
-            return (lineVector.DotProductIsEqualToZero(planeNormal));
+            return (lineVector.IsPerpendicularTo(planeNormal));
         }
 
         /// <summary>
