@@ -736,13 +736,15 @@ namespace GeometryClassLibrary
         /// or only touch</returns>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            if (!this.IsConvex || !otherPolygon.IsConvex)
-            {
-                throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
-            }
+            //if (!this.IsConvex || !otherPolygon.IsConvex)
+            //{
+            //    throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
+            //}
 
-            //if they are coplanar
-            if (((Plane)this).Contains(otherPolygon))
+            bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
+            var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
+            bool sharedPoint = (vector.Magnitude.Inches < 0.05);
+            if (sameNormal && sharedPoint)
             {
                 List<Point> newVertices = this.IntersectionPoints(otherPolygon);
                 
@@ -760,7 +762,7 @@ namespace GeometryClassLibrary
         {
             foreach (Point vertex in polygon.Vertices)
             {
-                if (this.ContainsInclusive(vertex))
+                if (this.Contains(vertex))
                 {
                     _addToList(newVertices, vertex);
                 }
@@ -1218,7 +1220,7 @@ namespace GeometryClassLibrary
         {
             Point intersection = ((Plane)this).Intersection(passedLine);
 
-            if(intersection != null && this.ContainsInclusive(intersection))
+            if(intersection != null && this.Contains(intersection))
             {
                 return intersection;
             }
@@ -1345,17 +1347,15 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
         /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
-        public bool ContainsExclusive(Point passedPoint)
+        public bool ContainsNotOnBoundary(Point passedPoint)
         {
-            return (ContainsInclusive(passedPoint) && !Touches(passedPoint));
+            return (Contains(passedPoint) && !Touches(passedPoint));
         }
 
         /// <summary>
         /// Returns true if the point is on the PlaneRegion, including on its boundaries
         /// </summary>
-        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
-        /// <returns>returns true if the Point is in this PlaneRegion or on its boundaries and false if it is not</returns>
-        public bool ContainsInclusive(Point passedPoint)
+        public new bool Contains(Point passedPoint)
         {
             //check if it is in our plane first
             if (((Plane)this).Contains(passedPoint))
@@ -1363,45 +1363,58 @@ namespace GeometryClassLibrary
                 //now check if it is in the bounds each line at a time
                 foreach (LineSegment line in LineSegments)
                 {
-                    //find the plane perpendicular to this plane that represents the side we are on
-
-                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = this.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(line.UnitVector(DistanceType.Inch));
-
-                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
-                    Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);
-
-                    //if the point is on the side outside of our region we know it is not in it and can return
-                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, CenterPoint))
+                    if (line.Contains(passedPoint))
                     {
-                        //since its inclusive, if the point is on the plane its still good
-                        if (!divisionPlane.Contains(passedPoint))
-                            return false;
+                        return true;
                     }
                 }
 
-                //if it is on the right side of all the sides than we know the point must be inside the region
-                return true;
-            }
+                AngularDistance angularDistance = new AngularDistance();
+                for (int i = 0; i < this.Vertices.Count; i++)
+                {
+                    Point previous;
+                    Point next = this.Vertices[i];
+                    if (i == 0)
+                    {
+                        previous = this.Vertices[this.Vertices.Count - 1];
+                    }
+                    else
+                    {
+                        previous = this.Vertices[i-1];
+                    }
+                    var segment1 = new LineSegment(passedPoint, previous);
+                    var segment2 = new LineSegment(passedPoint, next);
+                    
+                    var angle = new AngularDistance(segment1.AngleBetween(segment2));
+                    if (segment1.CrossProduct(segment2).HasOppositeDirectionOf(this.NormalVector))
+                    {
+                        angle = angle.Negate();
+                    }
+                    angularDistance += angle;
 
-            //if its not in the Plane than it is obviously not in the PlaneRegion
+                }
+               
+                if (angularDistance % new AngularDistance(AngleType.Degree, 720) == new AngularDistance())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
         /// <summary>
         /// determines if this polygon contains the entirety of the other polygon
         /// </summary>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
         public new bool Contains(Polygon polygon)
         {
             //First check all vertices
-            foreach(Point vertex in polygon.Vertices)
+            if (!this.ContainsAll(polygon.Vertices))
             {
-                if (!this.ContainsInclusive(vertex))
-                {
-                    return false;
-                }
+                return false;
             }
 
             //if this is convex than we're done
@@ -1413,7 +1426,7 @@ namespace GeometryClassLibrary
             //if not, we have to check that none of the outside vertices are inside the interior polygon
             foreach(Point vertex in this.Vertices)
             {
-                if (polygon.ContainsExclusive(vertex))
+                if (polygon.ContainsNotOnBoundary(vertex))
                 {
                     return false;
                 }
@@ -1773,6 +1786,18 @@ namespace GeometryClassLibrary
             //if the polygon is perpendicular to the plane, the projection is degenerate, we get just a linesegment;
             return null;
             
+        }
+
+        public bool ContainsAll(IList<Point> pointList)
+        {
+            foreach (Point point in pointList)
+            {
+               if (!this.Contains(point))
+               {
+                   return false;
+               }
+            }
+            return true;
         }
         #endregion
     }

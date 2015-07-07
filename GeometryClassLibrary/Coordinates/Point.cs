@@ -304,9 +304,12 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Distance DistanceTo(Line passedLine)
         {
-            Line perpLine = this.MakePerpendicularLineSegment(passedLine);
-            double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
-            return new Distance(DistanceType.Inch, distance);
+            //Line perpLine = this.MakePerpendicularLineSegment(passedLine);
+            //double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
+            //return new Distance(DistanceType.Inch, distance);
+            Point projected = this.ProjectOntoLine(passedLine);
+            Distance distance = this.DistanceTo(projected);
+            return distance;
         }
 
         public Distance DistanceTo(Plane passedPlane)

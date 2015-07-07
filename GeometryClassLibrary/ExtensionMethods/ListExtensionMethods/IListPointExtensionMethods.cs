@@ -135,27 +135,8 @@ namespace GeometryClassLibrary
             {
                 referenceVector = Direction.Right.UnitVector(DistanceType.Inch);
             }
-            
-            foreach (Point vertex in pointList)
-            {
-                Vector currentVector = new Vector(initial, vertex);
-                Angle currentAngle = new Angle(referenceVector.AngleBetween(currentVector));
-
-                //This is to catch error margins
-                //We don't want a "359 degree" angle to accidentally be sorted as largest.
-                //angles larger than 180 shouldn't happen, so this sets those just shy of zero, to zero
-                if (currentAngle == new Angle())
-                {
-                    currentAngle = new Angle();
-                }
-                try
-                {
-                    myDictionary.Add(currentAngle, vertex);
-                }
-                catch { }
-            }
-            return (from entry in myDictionary orderby entry.Key ascending select entry)
-            .ToDictionary(x => x.Key, x => x.Value).Values.ToList(); 
+            var orderedList = pointList.OrderBy(v => referenceVector.AngleBetween(new Vector(initial, v))).ToList();
+            return orderedList;
         }
 
         private static bool _xCompIsConstant(this List<Point> pointList)
@@ -219,6 +200,20 @@ namespace GeometryClassLibrary
                     break;
                 }
             }
+        }
+
+        public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
+        {
+            var results = new List<Point>();
+            foreach (var point in pointList)
+            {
+                var pointInPlane = point.ProjectOntoPlane(plane);
+                if (pointInPlane != null && !results.Contains(pointInPlane))
+                {
+                    results.Add(pointInPlane);
+                }
+            }
+            return results;
         }
     }
 }
