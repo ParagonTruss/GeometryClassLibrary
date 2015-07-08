@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
                 return convertedList;
 
             }
-            internal set
+            protected set
             {
                 List<IEdge> convertedList = new List<IEdge>();
                 if (value != null)
@@ -46,7 +46,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds and returns a list of all the vertices of this polygon
         /// </summary>
-        private List<Point> _vertices;
         public List<Point> Vertices
         {
             get
@@ -66,13 +65,8 @@ namespace GeometryClassLibrary
                 }
                 return _vertices;
             }
-            internal set
-            {
-                _vertices = value;
-            }
         }
-
-        private bool? _isConvex = null;
+        private List<Point> _vertices;
 
         /// <summary>
         /// determines if the polygon is convex
@@ -89,6 +83,7 @@ namespace GeometryClassLibrary
                 return (bool)_isConvex;
             }
         }
+        private bool? _isConvex = null;
 
         private bool _getIsConvex()
         {
@@ -104,11 +99,12 @@ namespace GeometryClassLibrary
             return true;
         }
 
-        //finds the average of the vertices.
-        //Not the same as centroid, but close enough for smallish convex polygons
-        //is the same for every triangle
-        //faster algorithm running time than centroid
-        private Point _centerPoint;
+        /// <summary>
+        /// finds the average of the vertices.
+        ///Not the same as centroid, but close enough for smallish convex polygons
+        ///is the same for every triangle
+        ///faster algorithm running time than centroid
+        /// </summary>
         public Point CenterPoint
         {
             get
@@ -120,10 +116,12 @@ namespace GeometryClassLibrary
                 return _centerPoint;
             }
         }
+        private Point _centerPoint;
 
-        // _findArea returns a possibly negative area to make the centroid formula work right
-        // the Area property takes absolute value before returning
-        private Area _area;
+        /// <summary>
+        /// _findArea returns a possibly negative area to make the centroid formula work right
+        /// the Area property takes absolute value before returning
+        /// </summary>
         public override Area Area
         {
             get
@@ -136,6 +134,7 @@ namespace GeometryClassLibrary
                 return _area;
             }
         }
+        private Area _area;
 
         /// <summary>
         /// Returns the centroid (geometric center point) of the Polygon
@@ -143,7 +142,6 @@ namespace GeometryClassLibrary
         /// slower than CenterPoint algorithm
         /// </summary>
         /// <returns>the region's center as a point</returns>
-        private Point _centroid;
         public override Point Centroid
         {
             get
@@ -155,6 +153,7 @@ namespace GeometryClassLibrary
                 return _centroid;
             }
         }
+        private Point _centroid;
 
         #endregion
 
@@ -163,8 +162,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Zero constructor
         /// </summary>
-        public Polygon()
-            : base()
+        protected Polygon()
+            : base(new List<IEdge>())
         {
             this.LineSegments = new List<LineSegment>();
         }
@@ -185,7 +184,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
-            : base()
+            : base(passedBoundaries)
         {
             if (shouldValidate)
             {
@@ -198,64 +197,50 @@ namespace GeometryClassLibrary
 
             this.BasePoint = LineSegments[0].BasePoint;
 
-            this.Edges = new List<IEdge>(LineSegments);
-
             this.NormalVector = this._getUnitNormalVector();
         }
 
-        ///// <summary>
-        ///// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
-        ///// NOTE: Will not work for concave polygons
-        ///// </summary>
-        ///// <param name="passedBoundaries"></param>
-        //public Polygon(List<Line> passedLines)
-        //    : base(passedLines)
-        //{
-        //    List<LineSegment> toUse = new List<LineSegment>();
+        /// <summary>
+        /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
+        /// ToDo: Needs a unit test
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(List<Line> passedLines)
+            : this(_generateLineSegmentsFromIntersectingLines(passedLines)) { }
 
-        //    if (passedLines.AreAllCoplanar())
-        //    {
-        //        //find where they each intersect
-        //        foreach (Line line in passedLines)
-        //        {
-        //            List<Point> intersections = new List<Point>();
+        private static List<LineSegment> _generateLineSegmentsFromIntersectingLines(List<Line> passedLines)
+        {
+            List<LineSegment> toUse = new List<LineSegment>();
 
-        //            foreach (Line other in passedLines)
-        //            {
-        //                if (line != other)
-        //                {
-        //                    Point intersection = line.Intersection(other);
-        //                    if (intersection != null && !intersections.Contains(intersection))
-        //                    {
-        //                        intersections.Add(intersection);
-        //                    }
-        //                }
-        //            }
-        //            if (intersections.Count == 2)
-        //            {
-        //                toUse.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
-        //            }
-        //            else
-        //            {
-        //                throw new ArgumentException("lines are invalid");
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentException("lines are not coplanar");
-        //    }
+            //find where they each intersect
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                List<Point> intersections = new List<Point>();
 
-        //    if (!this.LineSegments.DoFormClosedRegion())
-        //    {
-        //        throw new ArgumentException("generated line segments from lines are invalid");
-        //    }
+                for (int j = i + 1; j < passedLines.Count; j++)
+                {
+                    Point intersection = passedLines[i].Intersection(passedLines[j]);
+                    if (intersection != null && !intersections.Contains(intersection))
+                    {
+                        intersections.Add(intersection);
+                    }
 
-        //    this.LineSegments = toUse;
-        //}
+                    if (intersections.Count == 2)
+                    {
+                        toUse.Add(new LineSegment(intersections[0], intersections[1]));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("lines are invalid");
+                    }
+                }
+            }
+            
+            return toUse;
+        }
 
         /// <summary>
-        /// creates a new Polygon that is a copy of the passed polygon
+        /// Creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy) : base(polygonToCopy.Edges)

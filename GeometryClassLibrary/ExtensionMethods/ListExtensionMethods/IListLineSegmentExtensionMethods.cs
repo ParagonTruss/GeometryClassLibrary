@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
                 }
             }
 
-            //if everything passed than were good!
+            //if everything passed than we're good!
             return true;
         }
 
