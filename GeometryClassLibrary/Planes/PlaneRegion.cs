@@ -194,7 +194,7 @@ namespace GeometryClassLibrary
 
        #region Methods
 
-        public virtual Polygon SmallestRectangleThatCanSurroundThisShape()
+        public virtual Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
         }

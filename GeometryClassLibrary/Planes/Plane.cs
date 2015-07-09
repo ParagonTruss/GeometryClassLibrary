@@ -33,8 +33,7 @@ namespace GeometryClassLibrary
             protected set
             {
                 //make sure that the Normal's base point is always the same as the planes base point for convenience
-                _normalVector = value;
-                _normalVector.BasePoint = this.BasePoint;
+                _normalVector = new Vector(this.BasePoint, value);
             }
         }
 

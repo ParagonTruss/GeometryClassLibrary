@@ -407,7 +407,7 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
-        public override Polygon SmallestRectangleThatCanSurroundThisShape()
+        public override Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
         }
@@ -672,9 +672,6 @@ namespace GeometryClassLibrary
         ///   ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN?,                                                            
         ///  ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM$,                                                                 
         ///  
-        /// </summary>
-        /// <param name="directionVector">the value and direction that the polygon should be extruded</param>
-        /// <returns></returns>
         public new Polyhedron Extrude(Vector directionVector)
         {
             List<Polygon> faces = new List<Polygon>();
@@ -1722,7 +1719,7 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                basePoint = new Point();
+                basePoint = vector1.BasePoint;
             }
             Point point1 = basePoint;
             Point point2 = new Vector(point1, vector1).EndPoint;

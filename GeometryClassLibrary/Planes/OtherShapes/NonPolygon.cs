@@ -120,7 +120,7 @@ namespace GeometryClassLibrary
         /// Finds the smalles rectangle that can contain this nonPolygon that is coplanar with it
         /// </summary>
         /// <returns>Returns a Polygon that contains this NonPolygon</returns>
-        public override Polygon SmallestRectangleThatCanSurroundThisShape()
+        public override Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
         }
