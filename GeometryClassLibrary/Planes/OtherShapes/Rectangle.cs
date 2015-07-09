@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     public class Rectangle : Polygon
     {
         public Rectangle(LineSegment baseSegment, Distance height, Vector referencePlaneNormal = null)
-            : base(_makeRectangle(baseSegment, height, referencePlaneNormal) { }
+            : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }
 
         private static Polygon _makeRectangle(LineSegment baseSegment, Distance height, Vector referencePlaneNormal)
         {

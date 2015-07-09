@@ -927,7 +927,7 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                basePoint = new Point();
+                basePoint = vector1.BasePoint;
             }
             Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
             Polyhedron solid = bottom.Extrude(vector3);

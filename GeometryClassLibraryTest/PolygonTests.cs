@@ -894,6 +894,18 @@ namespace GeometryClassLibraryTests
 
 
         }
+
+        [Test()]
+        public void Rectangle_Constructor()
+        {
+            LineSegment testSegment = new LineSegment(new Vector(new Point(), Direction.Left));
+            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(Angle.Degree * 33)));
+            Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
+            
+            Area myArea = myRectangle.Area;
+            myRectangle.IsRectangle().Should().BeTrue();
+           
+        }
        
     }
 }

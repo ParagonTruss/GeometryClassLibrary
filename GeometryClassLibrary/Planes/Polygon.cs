@@ -412,7 +412,12 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
+        
         /// <summary>
+        /// 
+        /// </summary>
+        /// <example>
+        /// 
         ///                                                                                                                             
         ///                                                                                                                  
         ///                               ~~==============================================================================: 
@@ -671,7 +676,7 @@ namespace GeometryClassLibrary
         ///    7MMMMDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMNMMMMO=                                                          
         ///   ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN?,                                                            
         ///  ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM$,                                                                 
-        ///  
+        ///  </example>
         public new Polyhedron Extrude(Vector directionVector)
         {
             List<Polygon> faces = new List<Polygon>();
@@ -1721,12 +1726,12 @@ namespace GeometryClassLibrary
             {
                 basePoint = vector1.BasePoint;
             }
-            Point point1 = basePoint;
-            Point point2 = new Vector(point1, vector1).EndPoint;
-            Point point3 = new Vector(point2, vector2).EndPoint;
-            Point point4 = new Vector(point3, vector1.Reverse()).EndPoint;
+            LineSegment segment1 = new LineSegment(basePoint, vector1);
+            LineSegment segment2 = new LineSegment(vector1.BasePoint, vector2);
+            LineSegment segment3 = new LineSegment(segment2.EndPoint, vector1);
+            LineSegment segment4 = new LineSegment(vector1.EndPoint, vector2);
 
-            return new Polygon(new List<Point>() { point1, point2, point3, point4 });
+            return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
         }
 
         public bool IsRectangle()
