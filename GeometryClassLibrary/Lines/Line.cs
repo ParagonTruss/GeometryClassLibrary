@@ -155,7 +155,7 @@ namespace GeometryClassLibrary
         public Line()
         {
             _basePoint = new Point();
-            _direction = new Direction();
+            _direction = Direction.Right;
         }
 
         /// <summary>

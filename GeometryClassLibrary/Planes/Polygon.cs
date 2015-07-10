@@ -1727,9 +1727,9 @@ namespace GeometryClassLibrary
                 basePoint = vector1.BasePoint;
             }
             LineSegment segment1 = new LineSegment(basePoint, vector1);
-            LineSegment segment2 = new LineSegment(vector1.BasePoint, vector2);
+            LineSegment segment2 = new LineSegment(basePoint, vector2);
             LineSegment segment3 = new LineSegment(segment2.EndPoint, vector1);
-            LineSegment segment4 = new LineSegment(vector1.EndPoint, vector2);
+            LineSegment segment4 = new LineSegment(segment1.EndPoint, vector2);
 
             return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
         }

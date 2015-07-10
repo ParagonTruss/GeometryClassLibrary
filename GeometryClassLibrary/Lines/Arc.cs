@@ -21,9 +21,8 @@ namespace GeometryClassLibrary
         {
             get
             {
-                //length = r(theta), when theta is in radians
-                double lengthInInches = CentralAngle.Radians * Radius.Inches;
-                return new Distance(DistanceType.Inch, lengthInInches);
+                //length = r * theta, when theta is in radians
+                return Radius * CentralAngle.Radians;
             }
         }
 
@@ -92,22 +91,20 @@ namespace GeometryClassLibrary
             {
                 //we find two lines to define the plane: the initial direction and the straight line direction (we use
                 //LineSegment because we need it as a line segment later on and it saves us from creating another object)
-                Line tangentLine = new Line(_initialDirection, _basePoint);
+                LineSegment tangentLine = new LineSegment(_basePoint, _initialDirection, Distance.Inch);
                 LineSegment straightLineSegment = new LineSegment(_basePoint, _endPoint);
-
+                
                 //we need to find the plane it is in first
-                Plane containingPlane = new Plane(tangentLine, straightLineSegment);
+                Vector referenceNormal = tangentLine.CrossProduct(straightLineSegment);
 
                 //now we can find the direction to the center point by finding the perpindicular of the tangent line
-                Line toCenterPointFromTangent = tangentLine.MakePerpendicularLineInGivenPlane(containingPlane);
+                Vector toCenterPointFromTangent = new Vector(_basePoint, referenceNormal.CrossProduct(tangentLine));
 
                 //now we can find the center point of the arc and the direction to the center of the arc from there based on the lineSegment to the endpoint
-                Direction toCenterFromMidPoint = straightLineSegment.MakePerpendicularLineInGivenPlane(containingPlane).Direction;
-
-                Line arcCenterLine = new Line(toCenterFromMidPoint, straightLineSegment.MidPoint);
-
+                Vector toCenterFromMidPoint = new Vector(straightLineSegment.MidPoint, referenceNormal.CrossProduct(straightLineSegment));
+                
                 //now find where centerLine and the toCenterFromTagnent line intersect to get the center point
-                return toCenterPointFromTangent.Intersection(arcCenterLine);
+                return ((Line)toCenterPointFromTangent).Intersection((Line)toCenterFromMidPoint);
             }
         }
 
@@ -181,7 +178,7 @@ namespace GeometryClassLibrary
         {
             _basePoint = new Point();
             _endPoint = new Point();
-            _initialDirection = new Direction();
+            _initialDirection = Direction.Right;
         }
 
         /// <summary>

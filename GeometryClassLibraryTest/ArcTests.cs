@@ -13,7 +13,6 @@ namespace GeometryClassLibraryTest
     public class ArcTests
     {
         [Test()]
-        [Ignore]
         public void Arc_Constructors()
         {
             //make our default arc

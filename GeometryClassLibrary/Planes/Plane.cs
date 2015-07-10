@@ -55,7 +55,7 @@ namespace GeometryClassLibrary
 
             if (passedNormalDirection == null)
             {
-                passedNormalDirection = new Direction();
+                passedNormalDirection = Direction.Right;
             }
 
             this.BasePoint = passedBasePoint;
