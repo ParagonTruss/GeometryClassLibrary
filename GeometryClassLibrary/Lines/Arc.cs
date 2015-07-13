@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                //length = r * theta, when theta is in radians
+                //length = r * theta), when theta is in radians
                 return Radius * CentralAngle.Radians;
             }
         }
@@ -130,6 +130,13 @@ namespace GeometryClassLibrary
             }
         }
 
+        public virtual Direction NormalDirection
+        {
+            get
+            {
+                return _initialDirection.UnitVector(DistanceType.Inch).CrossProduct(StraightLineDirection.UnitVector(DistanceType.Inch)).Direction;
+            }
+        }
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between them.
         /// This is defined and used by IEdge
