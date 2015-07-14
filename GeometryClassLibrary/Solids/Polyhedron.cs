@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using UnitClassLibrary;
-using GeometryClassLibrary.ComparisonMethods;
 
 namespace GeometryClassLibrary
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GeometryClassLibrary.ComparisonMethods
+namespace GeometryClassLibrary
 {
     //ToDo: Ask John how to write this with Enums, and simplify this down to 2 classes
     public class CompareByX : IComparer<Point>

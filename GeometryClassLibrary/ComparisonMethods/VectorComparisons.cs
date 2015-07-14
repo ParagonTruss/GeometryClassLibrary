@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GeometryClassLibrary.ComparisonMethods
+namespace GeometryClassLibrary
 {
     public class CompareByMagnitude : IComparer<Vector>
     {

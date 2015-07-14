@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using UnitClassLibrary;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
     public class PlaneRegionTests

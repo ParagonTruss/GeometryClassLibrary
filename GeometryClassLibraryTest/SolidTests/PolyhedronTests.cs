@@ -9,7 +9,7 @@ using UnitClassLibrary;
 using GeometryClassLibrary;
 using GeometryStubLibrary;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture()]
     public class PolyhedronTests

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnitClassLibrary;
 
-namespace GeometryClassLibrary.ComparisonMethods
+namespace GeometryClassLibrary
 {
     public class CompareByNormalAngleWithZ : IComparer<Plane>
     {

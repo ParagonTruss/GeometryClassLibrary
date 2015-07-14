@@ -1,12 +1,11 @@
 ﻿using System;
 using NUnit.Framework;
 using FluentAssertions;
-using ClearspanTypeLibrary;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 using System.Collections.Generic;
 
-namespace ClearspanLibraryUnitTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture()]
     public class MatrixTests

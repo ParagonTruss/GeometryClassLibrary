@@ -385,13 +385,21 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Dot products the two Directions together
+        /// 
         /// </summary>
         /// <param name="otherDirection"></param>
         /// <returns></returns>
-        public Vector DotProduct(Direction otherDirection)
+        public double DotProduct(Direction otherDirection)
         {
             throw new NotImplementedException();
+        }
+
+        public Direction CrossProduct(Direction otherDirection)
+        {
+            Vector vector1 = this.UnitVector(DistanceType.Inch);
+            Vector vector2 = otherDirection.UnitVector(DistanceType.Inch);
+            Vector product = vector1.CrossProduct(vector2);
+            return product.Direction;
         }
 
         #endregion

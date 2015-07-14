@@ -81,7 +81,6 @@
     <Compile Include="Solids\OtherSolids\Cylinder.cs" />
     <Compile Include="Planes\OtherShapes\Ellipse.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="ExtensionMethods\AngleExtensions.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Generators\PointGenerator.cs" />
