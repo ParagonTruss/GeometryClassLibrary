@@ -384,14 +384,13 @@ namespace GeometryClassLibraryTests
             Polygon expected = new Polygon(expectedBound);
 
             //check to see if its what we expected
-            Polygon intersect = testPolygon.OverlappingPolygon(testPolygon2);
-            intersect.Equals(expected).Should().BeTrue();
+            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
+            intersect1.Should().Be(expected);
 
             //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
-            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
+            
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-
-            intersect1.Equals(intersect2).Should().BeTrue();
+            intersect2.Should().Be(expected);
         }
 
         [Test()]

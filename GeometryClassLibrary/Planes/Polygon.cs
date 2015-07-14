@@ -716,28 +716,35 @@ namespace GeometryClassLibrary
         /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
         /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
         /// or only touch</returns>
-        public Polygon OverlappingPolygon(Polygon otherPolygon)
+        public Polygon OverlappingPolygon(Polygon otherPolygon, bool checkIfTheyAreCoplanar = true)
         {
             //if (!this.IsConvex || !otherPolygon.IsConvex)
             //{
             //    throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
             //}
 
-            bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
-            var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
-            bool sharedPoint = (vector.Magnitude.Inches < 0.05);
-            if (sameNormal && sharedPoint)
+            if (checkIfTheyAreCoplanar)
             {
+                if ( new Plane(this) != new Plane(otherPolygon))
+                {
+                    return null;
+                }
+            }
+            //bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
+            //var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
+            //bool sharedPoint = (vector.Magnitude.Inches < 0.05);
+            //if (sameNormal && sharedPoint)
+            //{
                 List<Point> newVertices = this.IntersectionPoints(otherPolygon);
                 
                 this._addInteriorVerticesFrom(otherPolygon, newVertices);
                 otherPolygon._addInteriorVerticesFrom(this, newVertices);
                 
                 return newVertices.ConvexHull(true);
-            }
+            //}
 
             //if we fail to find a valid Polygon of intersection return null
-            return null;
+            //return null;
         }
 
         private void _addInteriorVerticesFrom(Polygon polygon, List<Point> newVertices)
