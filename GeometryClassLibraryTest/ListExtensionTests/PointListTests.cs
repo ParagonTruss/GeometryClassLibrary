@@ -3,7 +3,7 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using System.Collections.Generic;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
     public class PointListTests

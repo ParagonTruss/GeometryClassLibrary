@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
-namespace ClearspanTypeLibrary.Tests
+
+namespace GeometryClassLibraryTests
 {
     [TestFixture()]
     public class LineSegmentTests

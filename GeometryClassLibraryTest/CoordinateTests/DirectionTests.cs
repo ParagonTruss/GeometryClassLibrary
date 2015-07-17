@@ -3,7 +3,7 @@ using UnitClassLibrary;
 using GeometryClassLibrary;
 using FluentAssertions;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
     public class DirectionTests

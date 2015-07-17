@@ -1,13 +1,11 @@
 ﻿using NUnit.Framework;
 using UnitClassLibrary;
-
 using FluentAssertions;
-
 using System.Collections.Generic;
 using System;
 using GeometryClassLibrary;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
 
 

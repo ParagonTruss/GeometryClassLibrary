@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture()]
     public class RotationTests

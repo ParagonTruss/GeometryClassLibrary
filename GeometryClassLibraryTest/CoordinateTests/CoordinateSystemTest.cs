@@ -5,10 +5,10 @@ using UnitClassLibrary;
 using System.Collections.Generic;
 using System;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
-    public class CoordinateSystemTest
+    public class CoordinateSystemTests
     {
         [Test]
         public void CoordinateSystem_PlaneAndVectorConstuctor()

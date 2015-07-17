@@ -7,13 +7,13 @@ using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 
-namespace ClearspanTypeLibrary.Tests
+namespace GeometryClassLibraryTests
 {
     [TestFixture()]
     public class LineTests
     {
         [Test()]
-        public void Line_GetPointOnLine()
+        public void Line_GetPointAlongLine()
         {
             Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
 

@@ -6,10 +6,10 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using UnitClassLibrary;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
-    class RectangularPrismTest
+    public class RectangularPrismTests
     {
         [Test]
         public void RectangularPrism_ConstructorTest()

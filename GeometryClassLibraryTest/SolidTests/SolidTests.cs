@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace GeometryClassLibraryTest
+namespace GeometryClassLibraryTests
 {
     [TestFixture]
     public class SolidTests

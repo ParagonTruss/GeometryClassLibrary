@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
-using GeometryClassLibrary.ComparisonMethods;
-//
 
 namespace GeometryClassLibrary
 {
