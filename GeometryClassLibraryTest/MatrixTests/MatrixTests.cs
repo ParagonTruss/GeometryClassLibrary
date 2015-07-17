@@ -4,8 +4,9 @@ using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 using System.Collections.Generic;
+using MathNet.Numerics;
 
-namespace GeometryClassLibraryTests
+namespace ClearspanLibraryUnitTest
 {
     [TestFixture()]
     public class MatrixTests

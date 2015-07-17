@@ -2,8 +2,9 @@
 using NUnit.Framework;
 using FluentAssertions;
 using GeometryClassLibrary;
+using MathNet.Numerics;
 
-namespace GeometryClassLibraryTests
+namespace ClearspanLibraryUnitTest
 {
     [TestFixture()]
     public class MatricesMatrixTests
