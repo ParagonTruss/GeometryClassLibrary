@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance XComponent
         {
-            get { return _magnitude * base.Direction.XComponentOfDirection; }
+            get { return _magnitude * base.Direction.XComponent; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance YComponent
         {
-            get { return _magnitude * base.Direction.YComponentOfDirection; }
+            get { return _magnitude * base.Direction.YComponent; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance ZComponent
         {
-            get { return _magnitude * base.Direction.ZComponentOfDirection; }
+            get { return _magnitude * base.Direction.ZComponent; }
         }
 
         /// <summary>
@@ -390,19 +390,12 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the point is contained</returns>
         public new bool Contains(Point point)
         {
-            //first check both endpoints
-            if (point == this.BasePoint || point == this.EndPoint)
-            {
-                return true;
-            }
-
-            //check the vector with the same basepoint
             Vector pointVector = new Vector(this.BasePoint, point);
-
+            bool onLine = base.Contains(point);
             bool sameDirection = this.HasSameDirectionAs(pointVector);
             bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
 
-            return sameDirection && greaterMagnitude;
+            return onLine && sameDirection && greaterMagnitude;
         }
 
         /// <summary>
@@ -502,6 +495,7 @@ namespace GeometryClassLibrary
             }
             return vector1.Direction == vector2.Direction;
             
+            
         }
 
         /// <summary>
@@ -514,14 +508,13 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = passedVector;
             
-            return (vector1.Direction == vector2.Direction.Reverse());
+            //return (vector1.Direction == vector2.Direction.Reverse());
+            return vector1.AngleBetween(vector2) == new Angle(AngleType.Degree, 180);
         }
 
         /// <summary>
-        /// determines whether two vectors point in opposite directions using comparisons of x, y, and z components
+        /// determines whether two vectors point in the same or opposite directions.
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
         public bool HasSameOrOppositeDirectionAs(Vector v1)
         {
             bool sameDirection = this.HasSameDirectionAs(v1);
@@ -646,7 +639,7 @@ namespace GeometryClassLibrary
         /// Determines if the Dotproduct is zero. This is used to determine when vectors are perpendicular
         /// May be unnecessary as a method
         /// </summary>
-        public bool DotProductIsEqualToZero(Vector other)
+        public bool IsPerpendicularTo(Vector other)
         {
 
             Distance dotResult = this.DotProduct(other);
@@ -663,25 +656,22 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Angle AngleBetween(Vector vector)
         {
-            Vector vector1 = this;
-            Vector vector2 = vector;
-            
-            if (vector2 == null)
+            return new Angle(AngleType.Radian, _arccos(CosineOfAngleBetween(vector)));
+        }
+
+        private double _arccos(double number)
+        {
+            if (number > 1 && number - 1 < 0.00001)
             {
-                return null;
+                return 0;
             }
 
-            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
+            if (number < -1 && number + 1 > - 0.00001)
             {
-                return new Angle();
+                return Math.PI;
             }
+            return Math.Acos(number);
 
-            double dotProduct = vector1.DotProduct(vector2).Inches;
-            double magnitudes = (vector1.Magnitude * vector2.Magnitude).InchesSquared;
-            double divided = dotProduct / magnitudes;
-
-            Angle angleBetween = new Angle(AngleType.Degree, Math.Acos(divided)*180.0/Math.PI);
-            return angleBetween;
         }
 
         public Angle SmallestAngleBetween(Vector vector)
@@ -692,6 +682,58 @@ namespace GeometryClassLibrary
                 angle = new Angle(AngleType.Degree, 180) - angle;
             }
             return angle;
+        }
+
+        public bool IsParallelTo(Vector vector)
+        {
+            return this.CrossProduct(vector) == new Vector();
+        }
+
+        public double CosineOfAngleBetween(Vector vector)
+        {
+            Vector vector1 = this;
+            Vector vector2 = vector;
+
+            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
+            {
+                return 0;
+            }
+
+            double dotProduct = vector1.DotProduct(vector2).Inches;
+            double magnitudes = (vector1.Magnitude.Inches * vector2.Magnitude.Inches);
+            double divided = dotProduct / magnitudes;
+            
+            return divided;
+        }
+
+        /// <summary>
+        /// finds the signed angle between two vectors.
+        /// i.e. the order you input the vectors matters: the angle from vector1 to vector2 is negative the angle from vector2 to vector1
+        /// The reference normal is what counts as "up" for determining sign.
+        /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
+        /// </summary>
+        /// <returns></returns>
+        public AngularDistance SignedAngleBetween(Vector vector, Vector referenceNormal = null)
+        {
+            if (referenceNormal == null)
+            {
+                referenceNormal = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+            }
+
+            AngularDistance testAngle = new AngularDistance(this.AngleBetween(vector));
+            Vector testNormal = this.CrossProduct(vector);
+
+            if (testNormal.HasSameDirectionAs(referenceNormal))
+            {
+                return testAngle;
+            }
+            if (testNormal.HasOppositeDirectionOf(referenceNormal))
+            {
+                return testAngle.Negate();
+            }
+
+            throw new Exception("The reference normal is not perpendicular to these vectors");
+
         }
 
 

@@ -33,44 +33,13 @@ namespace GeometryClassLibrary
             protected set
             {
                 //make sure that the Normal's base point is always the same as the planes base point for convenience
-                _normalVector = value;
-                _normalVector.BasePoint = this.BasePoint;
+                _normalVector = new Vector(this.BasePoint, value);
             }
         }
 
         #endregion
 
         #region Constructors
-
-        ///// <summary>
-        ///// Creates a Plane base on the list of passed in lines
-        ///// Note: the lines must be all coplanar
-        ///// </summary>
-        ///// <param name="passedLineList">A list of coplanar lines to define the plane with</param>
-        //public Plane(IList<Line> passedLineList)
-        //{
-        //    List<Line> passedLineListCasted = new List<Line>(passedLineList);
-
-        //    if (passedLineListCasted.AreAllCoplanar())
-        //    {
-        //        this.BasePoint = passedLineListCasted[0].BasePoint;
-
-        //        //we have to check against vectors until we find one that is not parallel with the first line we passed in
-        //        //or else the normal vector will be zero (cross product of parralel lines is 0)
-        //        Vector vector1 = passedLineListCasted[0].UnitVector(DistanceType.Inch);
-        //        for (int i = 1; i < passedLineListCasted.Count; i++)
-        //        {
-        //            //this.NormalVector = vector1.CrossProduct(passedLineListCasted[i].UnitVector(DistanceType.Inch));
-        //            //if (!this.NormalVector.Equals(new Vector()))
-        //            //    i = passedLineListCasted.Count;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new Exception();
-        //    }
-
-        //}
 
         /// <summary>
         /// Creates a Plane that contains the given point and has a normalVector of length 1 in inches in the passed in direction
@@ -86,7 +55,7 @@ namespace GeometryClassLibrary
 
             if (passedNormalDirection == null)
             {
-                passedNormalDirection = new Direction();
+                passedNormalDirection = Direction.Right;
             }
 
             this.BasePoint = passedBasePoint;
@@ -236,18 +205,19 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        public bool Contains(Polygon passedPlaneRegion)
+        public bool Contains(Polygon polygon)
         {
-            // checks to make sure that every linesegment is on the plane
-            foreach (LineSegment segment in passedPlaneRegion.LineSegments)
-            {
-                if (!this.Contains(segment))
-                {
-                    return false;
-                }
-            }
+            //// checks to make sure that every linesegment is on the plane
+            //foreach (LineSegment segment in polygon.LineSegments)
+            //{
+            //    if (!this.Contains(segment))
+            //    {
+            //        return false;
+            //    }
+            //}
 
-            return true;
+            //return true;
+            return this == (Plane)polygon;
         }
 
         public bool Contains(Line passedLine)
@@ -270,7 +240,7 @@ namespace GeometryClassLibrary
             //Distance dotProduct = planeVector * NormalVector;
             //return dotProduct == new Distance();
 
-            return planeVector.DotProductIsEqualToZero(NormalVector);
+            return planeVector.IsPerpendicularTo(NormalVector);
         }
 
         /// <summary>
@@ -560,7 +530,7 @@ namespace GeometryClassLibrary
         {
             Vector lineVector = passedLine.Direction.UnitVector(DistanceType.Inch);
             Vector planeNormal = this.NormalVector;
-            return (lineVector.DotProductIsEqualToZero(planeNormal));
+            return (lineVector.IsPerpendicularTo(planeNormal));
         }
 
         /// <summary>
@@ -613,7 +583,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns whether or not the giving Plane is prepindicular to this plane
+        /// Returns whether or not the giving Plane is perpendicular to this plane
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
@@ -635,7 +605,7 @@ namespace GeometryClassLibrary
         }
         
         /// <summary>
-        /// Returns whether or not the giving line is prepindicular to this plane
+        /// Returns whether or not the giving line is perpendicular to this plane
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
@@ -681,6 +651,11 @@ namespace GeometryClassLibrary
             }
         }
 
+        public Vector NormalVectorThrough(Point point)
+        {
+            var basePoint = point.ProjectOntoPlane(this);
+            return new Vector(basePoint, point);
+        }
         #endregion
     }
 }

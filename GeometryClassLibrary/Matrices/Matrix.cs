@@ -887,9 +887,9 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = passedRotation.AxisToRotateAround.Direction;
 
-            double unitX = rotationUnitVector.XComponentOfDirection; //Projection onto x-axis?
-            double unitY = rotationUnitVector.YComponentOfDirection;
-            double unitZ = rotationUnitVector.ZComponentOfDirection;
+            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis?
+            double unitY = rotationUnitVector.YComponent;
+            double unitZ = rotationUnitVector.ZComponent;
             double theta = passedRotation.AngleToRotate.Radians;
 
             double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));

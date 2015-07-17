@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
                 return convertedList;
 
             }
-            internal set
+            protected set
             {
                 List<IEdge> convertedList = new List<IEdge>();
                 if (value != null)
@@ -46,7 +46,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds and returns a list of all the vertices of this polygon
         /// </summary>
-        private List<Point> _vertices;
         public List<Point> Vertices
         {
             get
@@ -66,13 +65,8 @@ namespace GeometryClassLibrary
                 }
                 return _vertices;
             }
-            internal set
-            {
-                _vertices = value;
-            }
         }
-
-        private bool? _isConvex = null;
+        private List<Point> _vertices;
 
         /// <summary>
         /// determines if the polygon is convex
@@ -89,6 +83,7 @@ namespace GeometryClassLibrary
                 return (bool)_isConvex;
             }
         }
+        private bool? _isConvex = null;
 
         private bool _getIsConvex()
         {
@@ -104,11 +99,12 @@ namespace GeometryClassLibrary
             return true;
         }
 
-        //finds the average of the vertices.
-        //Not the same as centroid, but close enough for smallish convex polygons
-        //is the same for every triangle
-        //faster algorithm running time than centroid
-        private Point _centerPoint;
+        /// <summary>
+        /// finds the average of the vertices.
+        ///Not the same as centroid, but close enough for smallish convex polygons
+        ///is the same for every triangle
+        ///faster algorithm running time than centroid
+        /// </summary>
         public Point CenterPoint
         {
             get
@@ -120,10 +116,12 @@ namespace GeometryClassLibrary
                 return _centerPoint;
             }
         }
+        private Point _centerPoint;
 
-        // _findArea returns a possibly negative area to make the centroid formula work right
-        // the Area property takes absolute value before returning
-        private Area _area;
+        /// <summary>
+        /// _findArea returns a possibly negative area to make the centroid formula work right
+        /// the Area property takes absolute value before returning
+        /// </summary>
         public override Area Area
         {
             get
@@ -136,6 +134,7 @@ namespace GeometryClassLibrary
                 return _area;
             }
         }
+        private Area _area;
 
         /// <summary>
         /// Returns the centroid (geometric center point) of the Polygon
@@ -143,7 +142,6 @@ namespace GeometryClassLibrary
         /// slower than CenterPoint algorithm
         /// </summary>
         /// <returns>the region's center as a point</returns>
-        private Point _centroid;
         public override Point Centroid
         {
             get
@@ -155,6 +153,7 @@ namespace GeometryClassLibrary
                 return _centroid;
             }
         }
+        private Point _centroid;
 
         #endregion
 
@@ -163,8 +162,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Zero constructor
         /// </summary>
-        public Polygon()
-            : base()
+        protected Polygon()
+            : base(new List<IEdge>())
         {
             this.LineSegments = new List<LineSegment>();
         }
@@ -185,7 +184,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
-            : base()
+            : base(passedBoundaries)
         {
             if (shouldValidate)
             {
@@ -198,64 +197,50 @@ namespace GeometryClassLibrary
 
             this.BasePoint = LineSegments[0].BasePoint;
 
-            this.Edges = new List<IEdge>(LineSegments);
-
             this.NormalVector = this._getUnitNormalVector();
         }
 
-        ///// <summary>
-        ///// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
-        ///// NOTE: Will not work for concave polygons
-        ///// </summary>
-        ///// <param name="passedBoundaries"></param>
-        //public Polygon(List<Line> passedLines)
-        //    : base(passedLines)
-        //{
-        //    List<LineSegment> toUse = new List<LineSegment>();
+        /// <summary>
+        /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
+        /// ToDo: Needs a unit test
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public Polygon(List<Line> passedLines)
+            : this(_generateLineSegmentsFromIntersectingLines(passedLines)) { }
 
-        //    if (passedLines.AreAllCoplanar())
-        //    {
-        //        //find where they each intersect
-        //        foreach (Line line in passedLines)
-        //        {
-        //            List<Point> intersections = new List<Point>();
+        private static List<LineSegment> _generateLineSegmentsFromIntersectingLines(List<Line> passedLines)
+        {
+            List<LineSegment> toUse = new List<LineSegment>();
 
-        //            foreach (Line other in passedLines)
-        //            {
-        //                if (line != other)
-        //                {
-        //                    Point intersection = line.Intersection(other);
-        //                    if (intersection != null && !intersections.Contains(intersection))
-        //                    {
-        //                        intersections.Add(intersection);
-        //                    }
-        //                }
-        //            }
-        //            if (intersections.Count == 2)
-        //            {
-        //                toUse.Add(new LineSegment(intersections.ElementAt(0), intersections.ElementAt(1)));
-        //            }
-        //            else
-        //            {
-        //                throw new ArgumentException("lines are invalid");
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentException("lines are not coplanar");
-        //    }
+            //find where they each intersect
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                List<Point> intersections = new List<Point>();
 
-        //    if (!this.LineSegments.DoFormClosedRegion())
-        //    {
-        //        throw new ArgumentException("generated line segments from lines are invalid");
-        //    }
+                for (int j = i + 1; j < passedLines.Count; j++)
+                {
+                    Point intersection = passedLines[i].Intersection(passedLines[j]);
+                    if (intersection != null && !intersections.Contains(intersection))
+                    {
+                        intersections.Add(intersection);
+                    }
 
-        //    this.LineSegments = toUse;
-        //}
+                    if (intersections.Count == 2)
+                    {
+                        toUse.Add(new LineSegment(intersections[0], intersections[1]));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("lines are invalid");
+                    }
+                }
+            }
+            
+            return toUse;
+        }
 
         /// <summary>
-        /// creates a new Polygon that is a copy of the passed polygon
+        /// Creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public Polygon(Polygon polygonToCopy) : base(polygonToCopy.Edges)
@@ -422,12 +407,17 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList);
         }
 
-        public override Polygon SmallestRectangleThatCanSurroundThisShape()
+        public override Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
         }
 
+        
         /// <summary>
+        /// 
+        /// </summary>
+        /// <example>
+        /// 
         ///                                                                                                                             
         ///                                                                                                                  
         ///                               ~~==============================================================================: 
@@ -686,10 +676,7 @@ namespace GeometryClassLibrary
         ///    7MMMMDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOMMMMMNMMMMO=                                                          
         ///   ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN?,                                                            
         ///  ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM$,                                                                 
-        ///  
-        /// </summary>
-        /// <param name="directionVector">the value and direction that the polygon should be extruded</param>
-        /// <returns></returns>
+        ///  </example>
         public new Polyhedron Extrude(Vector directionVector)
         {
             List<Polygon> faces = new List<Polygon>();
@@ -732,13 +719,15 @@ namespace GeometryClassLibrary
         /// or only touch</returns>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            if (!this.IsConvex || !otherPolygon.IsConvex)
-            {
-                throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
-            }
+            //if (!this.IsConvex || !otherPolygon.IsConvex)
+            //{
+            //    throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
+            //}
 
-            //if they are coplanar
-            if (((Plane)this).Contains(otherPolygon))
+            bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
+            var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
+            bool sharedPoint = (vector.Magnitude.Inches < 0.05);
+            if (sameNormal && sharedPoint)
             {
                 List<Point> newVertices = this.IntersectionPoints(otherPolygon);
                 
@@ -756,7 +745,7 @@ namespace GeometryClassLibrary
         {
             foreach (Point vertex in polygon.Vertices)
             {
-                if (this.ContainsInclusive(vertex))
+                if (this.Contains(vertex))
                 {
                     _addToList(newVertices, vertex);
                 }
@@ -1214,7 +1203,7 @@ namespace GeometryClassLibrary
         {
             Point intersection = ((Plane)this).Intersection(passedLine);
 
-            if(intersection != null && this.ContainsInclusive(intersection))
+            if(intersection != null && this.Contains(intersection))
             {
                 return intersection;
             }
@@ -1341,17 +1330,15 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
         /// <returns>returns true if the Point is in this PlaneRegion and false if it is not</returns>
-        public bool ContainsExclusive(Point passedPoint)
+        public bool ContainsNotOnBoundary(Point passedPoint)
         {
-            return (ContainsInclusive(passedPoint) && !Touches(passedPoint));
+            return (Contains(passedPoint) && !Touches(passedPoint));
         }
 
         /// <summary>
         /// Returns true if the point is on the PlaneRegion, including on its boundaries
         /// </summary>
-        /// <param name="passedPoint">The point to see if it is in this PlaneRegion</param>
-        /// <returns>returns true if the Point is in this PlaneRegion or on its boundaries and false if it is not</returns>
-        public bool ContainsInclusive(Point passedPoint)
+        public new bool Contains(Point passedPoint)
         {
             //check if it is in our plane first
             if (((Plane)this).Contains(passedPoint))
@@ -1359,45 +1346,58 @@ namespace GeometryClassLibrary
                 //now check if it is in the bounds each line at a time
                 foreach (LineSegment line in LineSegments)
                 {
-                    //find the plane perpendicular to this plane that represents the side we are on
-
-                    //find the direction of the plane's normal by crossing the line's direction and the plane's normal
-                    Vector divisionPlaneNormal = this.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(line.UnitVector(DistanceType.Inch));
-
-                    //now make it into a plane with the given normal and a point on the line so that it is alligned with the line
-                    Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, line.BasePoint);
-
-                    //if the point is on the side outside of our region we know it is not in it and can return
-                    if (!divisionPlane.PointIsOnSameSideAs(passedPoint, CenterPoint))
+                    if (line.Contains(passedPoint))
                     {
-                        //since its inclusive, if the point is on the plane its still good
-                        if (!divisionPlane.Contains(passedPoint))
-                            return false;
+                        return true;
                     }
                 }
 
-                //if it is on the right side of all the sides than we know the point must be inside the region
-                return true;
-            }
+                AngularDistance angularDistance = new AngularDistance();
+                for (int i = 0; i < this.Vertices.Count; i++)
+                {
+                    Point previous;
+                    Point next = this.Vertices[i];
+                    if (i == 0)
+                    {
+                        previous = this.Vertices[this.Vertices.Count - 1];
+                    }
+                    else
+                    {
+                        previous = this.Vertices[i-1];
+                    }
+                    var segment1 = new LineSegment(passedPoint, previous);
+                    var segment2 = new LineSegment(passedPoint, next);
+                    
+                    var angle = new AngularDistance(segment1.AngleBetween(segment2));
+                    if (segment1.CrossProduct(segment2).HasOppositeDirectionOf(this.NormalVector))
+                    {
+                        angle = angle.Negate();
+                    }
+                    angularDistance += angle;
 
-            //if its not in the Plane than it is obviously not in the PlaneRegion
+                }
+               
+                if (angularDistance % new AngularDistance(AngleType.Degree, 720) == new AngularDistance())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
         /// <summary>
         /// determines if this polygon contains the entirety of the other polygon
         /// </summary>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
         public new bool Contains(Polygon polygon)
         {
             //First check all vertices
-            foreach(Point vertex in polygon.Vertices)
+            if (!this.ContainsAll(polygon.Vertices))
             {
-                if (!this.ContainsInclusive(vertex))
-                {
-                    return false;
-                }
+                return false;
             }
 
             //if this is convex than we're done
@@ -1409,7 +1409,7 @@ namespace GeometryClassLibrary
             //if not, we have to check that none of the outside vertices are inside the interior polygon
             foreach(Point vertex in this.Vertices)
             {
-                if (polygon.ContainsExclusive(vertex))
+                if (polygon.ContainsNotOnBoundary(vertex))
                 {
                     return false;
                 }
@@ -1724,14 +1724,14 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                basePoint = new Point();
+                basePoint = vector1.BasePoint;
             }
-            Point point1 = basePoint;
-            Point point2 = new Vector(point1, vector1).EndPoint;
-            Point point3 = new Vector(point2, vector2).EndPoint;
-            Point point4 = new Vector(point3, vector1.Reverse()).EndPoint;
+            LineSegment segment1 = new LineSegment(basePoint, vector1);
+            LineSegment segment2 = new LineSegment(basePoint, vector2);
+            LineSegment segment3 = new LineSegment(segment2.EndPoint, vector1);
+            LineSegment segment4 = new LineSegment(segment1.EndPoint, vector2);
 
-            return new Polygon(new List<Point>() { point1, point2, point3, point4 });
+            return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
         }
 
         public bool IsRectangle()
@@ -1769,6 +1769,18 @@ namespace GeometryClassLibrary
             //if the polygon is perpendicular to the plane, the projection is degenerate, we get just a linesegment;
             return null;
             
+        }
+
+        public bool ContainsAll(IList<Point> pointList)
+        {
+            foreach (Point point in pointList)
+            {
+               if (!this.Contains(point))
+               {
+                   return false;
+               }
+            }
+            return true;
         }
         #endregion
     }

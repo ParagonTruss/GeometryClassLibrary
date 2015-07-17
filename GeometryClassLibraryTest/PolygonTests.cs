@@ -179,7 +179,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_ContainsExclusiveInclusiveAndTouchingPoint()
+        public void Polygon_Contains_ContainsNotOnBoundary_Touches()
         {
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-1, 5, 0)));
@@ -209,39 +209,64 @@ namespace GeometryClassLibraryTests
             Point notOnPlane = center2.Shift(new Shift(PointGenerator.MakePointWithInches(.5, 0, 0)));
 
             //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
-            testPolygon.ContainsExclusive(insidePlane1).Should().BeTrue();
-            testPolygon.ContainsInclusive(insidePlane1).Should().BeTrue();
+            testPolygon.ContainsNotOnBoundary(insidePlane1).Should().BeTrue();
+            testPolygon.Contains(insidePlane1).Should().BeTrue();
             testPolygon.Touches(insidePlane1).Should().BeFalse();
 
-            testPolygon.ContainsExclusive(insidePlane2).Should().BeFalse();
-            testPolygon.ContainsInclusive(insidePlane2).Should().BeFalse();
+            testPolygon.ContainsNotOnBoundary(insidePlane2).Should().BeFalse();
+            testPolygon.Contains(insidePlane2).Should().BeFalse();
             testPolygon.Touches(insidePlane2).Should().BeFalse();
 
             //make sure the PlaneRegion contains the CenterPoint (true for exclusive and inclusive, false for touching)
-            testPolygon.ContainsExclusive(center1).Should().BeTrue();
-            testPolygon.ContainsInclusive(center1).Should().BeTrue();
+            testPolygon.ContainsNotOnBoundary(center1).Should().BeTrue();
+            testPolygon.Contains(center1).Should().BeTrue();
             testPolygon.Touches(center1).Should().BeFalse();
 
-            testPolygon2.ContainsExclusive(center2).Should().BeTrue();
-            testPolygon2.ContainsInclusive(center2).Should().BeTrue();
+            testPolygon2.ContainsNotOnBoundary(center2).Should().BeTrue();
+            testPolygon2.Contains(center2).Should().BeTrue();
             testPolygon2.Touches(center2).Should().BeFalse();
 
             //check the side point (true for inclusive and touches, false for exclusive)
-            testPolygon.ContainsExclusive(sideTest).Should().BeFalse();
-            testPolygon.ContainsInclusive(sideTest).Should().BeTrue();
+            testPolygon.ContainsNotOnBoundary(sideTest).Should().BeFalse();
+            testPolygon.Contains(sideTest).Should().BeTrue();
             testPolygon.Touches(sideTest).Should().BeTrue();
 
             //not on plane (false for all)
-            testPolygon2.ContainsExclusive(notOnPlane).Should().BeFalse();
-            testPolygon2.ContainsInclusive(notOnPlane).Should().BeFalse();
+            testPolygon2.ContainsNotOnBoundary(notOnPlane).Should().BeFalse();
+            testPolygon2.Contains(notOnPlane).Should().BeFalse();
             testPolygon2.Touches(notOnPlane).Should().BeFalse();
         }
 
-        [Ignore()]
         [Test()]
         public void Polygon_ContainsPolygon()
         {
-            //ToDo: Need to write this test.
+            Point pentagonPoint1 = PointGenerator.MakePointWithInches(0, 0);
+            Point pentagonPoint2 = PointGenerator.MakePointWithInches(4, 0);
+            Point pentagonPoint3 = PointGenerator.MakePointWithInches(2, 2);
+            Point pentagonPoint4 = PointGenerator.MakePointWithInches(4, 4);
+            Point pentagonPoint5 = PointGenerator.MakePointWithInches(0, 4);
+            Polygon concavePentagon = new Polygon( new List<Point>(){ pentagonPoint1, pentagonPoint2, pentagonPoint3, pentagonPoint4, pentagonPoint5 });
+
+            Point rectanglePoint1 = PointGenerator.MakePointWithInches(1, 1);
+            Point rectanglePoint2 = PointGenerator.MakePointWithInches(2.5, 1);
+            Point rectanglePoint3 = PointGenerator.MakePointWithInches(2.5, 3);
+            Point rectanglePoint4 = PointGenerator.MakePointWithInches(1, 3);
+            Polygon rectangle = new Polygon( new List<Point>(){ rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4});
+
+            Point squarePoint1 = PointGenerator.MakePointWithInches(1, 1);
+            Point squarePoint2 = PointGenerator.MakePointWithInches(2, 1);
+            Point squarePoint3 = PointGenerator.MakePointWithInches(2, 2);
+            Point squarePoint4 = PointGenerator.MakePointWithInches(1, 2);
+            Polygon square = new Polygon( new List<Point>(){ squarePoint1, squarePoint2, squarePoint3, squarePoint4});
+
+            concavePentagon.Contains(rectangle).Should().BeFalse();
+            rectangle.Contains(concavePentagon).Should().BeFalse();
+
+            concavePentagon.Contains(square).Should().BeTrue();
+            square.Contains(concavePentagon).Should().BeFalse();
+
+            rectangle.Contains(square).Should().BeTrue();
+            square.Contains(rectangle).Should().BeFalse();
         }
 
         [Test()]
@@ -868,6 +893,18 @@ namespace GeometryClassLibraryTests
             cShape.DoesContainLineSegment(segmentIsChord).Should().BeTrue();
 
 
+        }
+
+        [Test()]
+        public void Rectangle_Constructor()
+        {
+            LineSegment testSegment = new LineSegment(new Vector(new Point(), Direction.Left));
+            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(Angle.Degree * 33)));
+            Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
+            
+            Area myArea = myRectangle.Area;
+            myRectangle.IsRectangle().Should().BeTrue();
+           
         }
        
     }

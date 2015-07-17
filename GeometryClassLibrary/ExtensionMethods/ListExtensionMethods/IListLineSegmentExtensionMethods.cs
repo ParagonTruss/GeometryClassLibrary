@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
                 }
             }
 
-            //if everything passed than were good!
+            //if everything passed than we're good!
             return true;
         }
 
@@ -111,29 +111,28 @@ namespace GeometryClassLibrary
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
         /// </summary>
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public static bool AreValidForPolygon(this List<LineSegment> segments )
+        public static void ValidateForPolygon(this List<LineSegment> segments )
         {
             bool notEnoughSegments = (segments == null || segments.Count < 3);
             if (notEnoughSegments)
             {
-                return false;
+                throw new Exception("The passed list is either null or has less than 3 segments.");
             }
             bool notClosed = !segments.DoFormClosedRegion();
             if (notClosed)
             {
-                return false;
+                throw new Exception("The passed list of segments do not form a closed region.");
             }
             bool areNotCoplanar = !segments.AreAllCoplanar();
             if (areNotCoplanar)
             {
-                return false;
+                throw new Exception("The passed list of segments are not coplanar.");
             }
             bool selfIntersecting = segments.AtleastOneIntersection();
             if (selfIntersecting)
             {
-                return false;
+                throw new Exception("The passed list of segments are self intersecting.");
             }
-            return true;
         }
 
         
@@ -145,12 +144,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Polygon CreatePolygonIfValid(this List<LineSegment> segments)
         {
-            if (segments.AreValidForPolygon())
+            try
             {
-                return new Polygon(segments);
+                var polygon = new Polygon(segments);
+                return polygon;
             }
-            return null;
-            
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -161,95 +163,88 @@ namespace GeometryClassLibrary
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> segments)
         {
-           
+            segments.ValidateForPolygon();
+            
+            List<LineSegment> sortedSegments = new List<LineSegment>();
+            Point minXPoint = null;
 
-            if (segments.AreValidForPolygon())
+            // find the Point with the smallest X
+            foreach (Point vertex in segments.GetAllPoints())
             {
-                List<LineSegment> sortedSegments = new List<LineSegment>();
-                Point minXPoint = null;
-
-                // find the Point with the smallest X
-                foreach (Point vertex in segments.GetAllPoints())
+                if (minXPoint == null || vertex.X < minXPoint.X)
                 {
-                    if (minXPoint == null || vertex.X < minXPoint.X)
-                    {
-                        minXPoint = vertex;
-                    }
+                    minXPoint = vertex;
                 }
-
-                //find the line with the highest Y that contains the smallestXPoint
-                LineSegment maxYLine = null;
-                Point maxYPoint = null;
-
-                foreach (LineSegment segment in segments)
-                {
-                    if (segment.BasePoint == minXPoint)
-                    {
-                        if (maxYPoint == null || maxYPoint.Y < segment.EndPoint.Y)
-                        {
-                            maxYPoint = segment.EndPoint;
-                            maxYLine = segment;
-                        }
-                    }
-                    else if (segment.EndPoint == minXPoint)
-                    {
-                        if (maxYPoint == null || maxYPoint.Y < segment.BasePoint.Y)
-                        {
-                            maxYPoint = segment.BasePoint;
-                            maxYLine = segment;
-                        }
-                    }
-                }
-
-                //now start at the first line and make sure it starts at the min and goes to the max y point
-                if (maxYLine.BasePoint == minXPoint)
-                {
-                    sortedSegments.Add(new LineSegment(maxYLine));
-                }
-                else
-                {
-                    sortedSegments.Add(maxYLine.Reverse());
-                }
-
-                //create a shallow copy of the borders to find out which we have checked
-                List<LineSegment> hasNotAdded = new List<LineSegment>(segments);
-                hasNotAdded.Remove(maxYLine);
-
-                //get our endpoint to find out which segment to process next
-                Point previousEndPoint = sortedSegments[0].EndPoint;
-
-                //now go through the rest and find the next Segment to use
-                for (int i = 0; i < hasNotAdded.Count; i++)
-                {
-                    LineSegment currentLine = hasNotAdded[i];
-
-                    //if our line contains the previous endpoint than it comes next and add it in the right direction
-                    if (currentLine.BasePoint == previousEndPoint)
-                    {
-                        sortedSegments.Add(new LineSegment(currentLine));
-                        previousEndPoint = currentLine.EndPoint;
-                        hasNotAdded.Remove(currentLine);
-                        //restart the looping (note it will increment before starting again hence the -1)
-                        i = -1;
-                    }
-                    else if (currentLine.EndPoint == previousEndPoint)
-                    {
-                        sortedSegments.Add(currentLine.Reverse());
-                        previousEndPoint = currentLine.BasePoint;
-                        hasNotAdded.Remove(currentLine);
-                        //restart the looping 
-                        i = -1;
-                    }
-                }
-
-                //now were all done and return the sorted segments
-                return sortedSegments;
             }
-            throw new Exception("The passed list of segments is either empty, does not form a closed region, are not coplanar, or are self intersecting.");
+
+            //find the line with the highest Y that contains the smallestXPoint
+            LineSegment maxYLine = null;
+            Point maxYPoint = null;
+
+            foreach (LineSegment segment in segments)
+            {
+                if (segment.BasePoint == minXPoint)
+                {
+                    if (maxYPoint == null || maxYPoint.Y < segment.EndPoint.Y)
+                    {
+                        maxYPoint = segment.EndPoint;
+                        maxYLine = segment;
+                    }
+                }
+                else if (segment.EndPoint == minXPoint)
+                {
+                    if (maxYPoint == null || maxYPoint.Y < segment.BasePoint.Y)
+                    {
+                        maxYPoint = segment.BasePoint;
+                        maxYLine = segment;
+                    }
+                }
+            }
+
+            //now start at the first line and make sure it starts at the min and goes to the max y point
+            if (maxYLine.BasePoint == minXPoint)
+            {
+                sortedSegments.Add(new LineSegment(maxYLine));
+            }
+            else
+            {
+                sortedSegments.Add(maxYLine.Reverse());
+            }
+
+            //create a shallow copy of the borders to find out which we have checked
+            List<LineSegment> hasNotAdded = new List<LineSegment>(segments);
+            hasNotAdded.Remove(maxYLine);
+
+            //get our endpoint to find out which segment to process next
+            Point previousEndPoint = sortedSegments[0].EndPoint;
+
+            //now go through the rest and find the next Segment to use
+            for (int i = 0; i < hasNotAdded.Count; i++)
+            {
+                LineSegment currentLine = hasNotAdded[i];
+
+                //if our line contains the previous endpoint than it comes next and add it in the right direction
+                if (currentLine.BasePoint == previousEndPoint)
+                {
+                    sortedSegments.Add(new LineSegment(currentLine));
+                    previousEndPoint = currentLine.EndPoint;
+                    hasNotAdded.Remove(currentLine);
+                    //restart the looping (note it will increment before starting again hence the -1)
+                    i = -1;
+                }
+                else if (currentLine.EndPoint == previousEndPoint)
+                {
+                    sortedSegments.Add(currentLine.Reverse());
+                    previousEndPoint = currentLine.BasePoint;
+                    hasNotAdded.Remove(currentLine);
+                    //restart the looping 
+                    i = -1;
+                }
+            }
+
+            //now were all done and return the sorted segments
+            return sortedSegments;
         }
-
-        
-
 
         /// <summary>
         /// takes the points from a list of line segments, rotates them, and turns them back into segments
@@ -441,6 +436,55 @@ namespace GeometryClassLibrary
             Predicate<LineSegment> matching = (LineSegment s) => { return s == lineSegment; };
             segments.RemoveAll(matching);
             return segments;
+        }
+
+        public static List<LineSegment> ProjectAllOntoPlane(this IList<LineSegment> segmentList, Plane plane)
+        {
+            var results = new List<LineSegment>();
+            foreach(var segment in segmentList)
+            {
+                var newSegment = segment.ProjectOntoPlane(plane);
+                if (newSegment != null && !results.Contains(newSegment))
+                {
+                    results.Add(newSegment);
+                }
+            }
+            return results;
+        }
+
+       
+        public static Polygon ExteriorProfileFromSegments(this List<LineSegment> segments2D, Vector referenceNormal = null)
+        {
+            Point firstPoint = segments2D.GetAllPoints().OrderBy(p => p.X).ThenBy(p => p.Y).First();
+            List<LineSegment> profileSegments = new List<LineSegment>();
+
+            Point currentPoint = null;
+            Vector referenceVector = new Vector(PointGenerator.MakePointWithInches(0, -1));
+            while (currentPoint != firstPoint)
+            {
+                if (currentPoint == null)
+                {
+                    currentPoint = firstPoint;
+                }
+                var segmentsExtendingFromThisPoint = new List<LineSegment>();
+                foreach (var segment in segments2D)
+                {
+                    if (segment.EndPoint == currentPoint)
+                    {
+                        segmentsExtendingFromThisPoint.Add(segment.Reverse());
+                    }
+                    else if (segment.BasePoint == currentPoint)
+                    {
+                        segmentsExtendingFromThisPoint.Add(segment);
+                    }
+                }
+                var nextSegment = segmentsExtendingFromThisPoint.OrderBy(s => new Angle(s.SignedAngleBetween(referenceVector, referenceNormal))).First();
+                profileSegments.Add(nextSegment);
+                segments2D.Remove(nextSegment);
+                referenceVector = nextSegment.Reverse();
+                currentPoint = nextSegment.EndPoint;
+            }
+            return new Polygon(profileSegments, false);
         }
     }
 }

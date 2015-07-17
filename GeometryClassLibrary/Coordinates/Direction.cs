@@ -18,9 +18,9 @@ namespace GeometryClassLibrary
         #region Properties and Fields
         /// <summary>
         /// A staticly defined Direction that is positive in the X direction, which can be thought of as going "right" in the XY plane.
-        /// This is also the "zero" equivalent and is the same as new Direction()
+        /// This is also the "zero" equivalent and is the same as Direction.Right
         /// </summary>
-        public static readonly Direction Right = new Direction();
+        public static readonly Direction Right = new Direction(new Angle(), new Angle(AngleType.Degree, 90));
         /// <summary>
         /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
         /// </summary>
@@ -89,7 +89,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public double XComponentOfDirection
+        public double XComponent
         {
             get { return Math.Cos(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
         }
@@ -97,7 +97,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public double YComponentOfDirection
+        public double YComponent
         {
             get { return Math.Sin(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
         }
@@ -105,7 +105,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public double ZComponentOfDirection
+        public double ZComponent
         {
             get { return Math.Cos(this.Theta.Radians); }
         }
@@ -114,14 +114,14 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        /// <summary>
-        /// Empty Constructor that makes a angle equivalent to 0 direction in the xy-plane (This means theta is 90)
-        /// </summary>
-        public Direction()
-        {
-            this.Phi = new Angle();
-            this.Theta = new Angle(AngleType.Degree, 90);
-        }
+        ///// <summary>
+        ///// Empty Constructor that makes a angle equivalent to 0 direction in the xy-plane (This means theta is 90)
+        ///// </summary>
+        //public Direction()
+        //{
+        //    this.Phi = new Angle();
+        //    this.Theta = new Angle(AngleType.Degree, 90);
+        //}
 
         /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)
@@ -147,8 +147,9 @@ namespace GeometryClassLibrary
         /// <param name="directionPoint">the point to find the angle to relative to the origin</param>
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
         public Direction(Point directionPoint, Distance acceptedDeviationConstant = null)
-            : this()
         {
+            this.Phi = new Angle();
+            this.Theta = new Angle(AngleType.Degree, 90);
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
             {
@@ -369,7 +370,7 @@ namespace GeometryClassLibrary
         public Vector UnitVector(DistanceType passedType)
         {
             Distance magnitude = new Distance(passedType, 1);
-            Direction direction = new Direction(new Point(passedType, XComponentOfDirection, YComponentOfDirection, ZComponentOfDirection), new Distance(DistanceType.Inch, 0.0001));
+            Direction direction = new Direction(new Point(passedType, XComponent, YComponent, ZComponent), new Distance(DistanceType.Inch, 0.0001));
             return new Vector(new Point(), direction, magnitude);
         }
 

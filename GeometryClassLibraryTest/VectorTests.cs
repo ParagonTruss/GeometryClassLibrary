@@ -85,7 +85,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_CrossProduct()
         {
-            Vector xAxis = new Vector(new Point(), new Direction());
+            Vector xAxis = new Vector(new Point(), Direction.Right);
             Vector yAxis = new Vector(new Point(), new Direction(new Angle(AngleType.Degree, 90)));
 
             Vector result = xAxis.CrossProduct(yAxis);

@@ -340,20 +340,20 @@ namespace ClearspanTypeLibrary.Tests
         }
 
 
-        [Test()]
-        public void Line_PlaneThroughLineInDirectionOf_ZAxis()
-        {
-            Line test1 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, 0));
-            Line test2 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1),  PointGenerator.MakePointWithMillimeters(-1, 5, 2));
+        //[Test()]
+        //public void Line_PlaneThroughLineInDirectionOf_ZAxis()
+        //{
+        //    Line test1 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, 0));
+        //    Line test2 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1),  PointGenerator.MakePointWithMillimeters(-1, 5, 2));
 
-            Plane result1 = test1.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
-            Plane result2 = test2.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
+        //    Plane result1 = test1.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
+        //    Plane result2 = test2.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
 
-            Plane expectedPlane = new Plane(PointGenerator.MakePointWithMillimeters(2, 1, 6), PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, -23));
+        //    Plane expectedPlane = new Plane(PointGenerator.MakePointWithMillimeters(2, 1, 6), PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, -23));
 
-            result1.Should().Be(result2);
-            result1.Should().Be(expectedPlane);
-        }
+        //    result1.Should().Be(result2);
+        //    result1.Should().Be(expectedPlane);
+        //}
 
         [Test()]
         public void Line_XZIntercept()

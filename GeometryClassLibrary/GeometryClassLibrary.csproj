@@ -20,7 +20,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <NuGetPackageImportStamp>4bd885be</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>c57ce870</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +42,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'charlesPersonal|AnyCPU'">
+    <OutputPath>bin\charlesPersonal\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'mySolution|AnyCPU'">
+    <OutputPath>bin\mySolution\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AnalysisEngineTests|AnyCPU'">
+    <OutputPath>bin\AnalysisEngineTests\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -123,10 +132,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
+    <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>
