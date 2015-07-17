@@ -369,7 +369,7 @@ namespace GeometryClassLibrary
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
         /// </summary>
-        /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
+        /// <param name="passedType">Dimension Type that will be used. The vector will have a length of 1 in this unit type</param>
         /// <returns></returns>
         public Vector UnitVector(DistanceType passedType)
         {
