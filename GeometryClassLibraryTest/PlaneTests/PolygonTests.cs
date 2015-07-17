@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnitClassLibrary;
 using GeometryClassLibrary;
 using GeometryStubLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibraryTests
 {
@@ -29,6 +30,28 @@ namespace GeometryClassLibraryTests
 
             //this part should throw an exception
             Polygon badPolygon = new Polygon(verticesInWrongOrder);
+        }
+
+        [Test()]
+        public void Polygon_JSON()
+        {
+            Point basePoint = PointGenerator.MakePointWithInches(4, 4, 0);
+            Point topLeftPoint = PointGenerator.MakePointWithInches(4, 8, 0);
+            Point bottomRightPoint = PointGenerator.MakePointWithInches(8, 4, 0);
+            Point topRightPoint = PointGenerator.MakePointWithInches(8, 8, 0);
+
+            LineSegment left = new LineSegment(basePoint, topLeftPoint);
+            LineSegment right = new LineSegment(bottomRightPoint, topRightPoint);
+            LineSegment top = new LineSegment(topLeftPoint, topRightPoint);
+            LineSegment bottom = new LineSegment(basePoint, bottomRightPoint);
+
+            Polygon polygon = new Polygon(new List<LineSegment> { left, top, bottom, right });
+            var json = JsonConvert.SerializeObject(polygon);
+
+            Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
+
+            bool areEqual = (polygon == deserializedPolygon);
+            areEqual.Should().BeTrue();
         }
 
         [Test()]

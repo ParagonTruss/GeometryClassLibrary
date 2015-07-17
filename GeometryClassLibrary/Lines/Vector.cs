@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -11,6 +12,7 @@ namespace GeometryClassLibrary
     /// A vector is a line segment that has a direction
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Vector : Line
     {
         #region Properties and Fields
@@ -18,6 +20,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
+        [JsonProperty]
         public virtual Distance Magnitude
         {
             get { return _magnitude; }

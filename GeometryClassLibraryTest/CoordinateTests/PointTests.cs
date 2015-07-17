@@ -4,6 +4,7 @@ using NUnit.Framework;
 using FluentAssertions;
 using UnitClassLibrary;
 using GeometryClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibraryTests
 {
@@ -38,6 +39,18 @@ namespace GeometryClassLibraryTests
             p.X.Should().Be(new Distance(DistanceType.Millimeter, 0));
             p.Y.Should().Be(new Distance(DistanceType.Millimeter, 0));
             p.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
+        }
+
+        [Test()]
+        public void Point_JSON()
+        {
+            Point point = PointGenerator.MakePointWithInches(1, 2, 2);
+
+            var json = JsonConvert.SerializeObject(point);
+            Point deserializedPoint = JsonConvert.DeserializeObject<Point>(json);
+
+            bool areEqual = (point == deserializedPoint);
+            areEqual.Should().BeTrue();
         }
 
         [Test()]

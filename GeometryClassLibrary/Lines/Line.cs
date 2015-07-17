@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// Represents an infinite Line
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Line : IComparable<Line>
     {
         #region Properties and Fields
@@ -22,6 +24,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A point on the line to use as a reference point
         /// </summary>
+        [JsonProperty]
         public virtual Point BasePoint
         {
             get { return _basePoint; }
@@ -33,6 +36,7 @@ namespace GeometryClassLibrary
         /// The direction the line is going out of the base point in one direction
         /// Note: it also extends out in the direction opposite of this one
         /// </summary>
+        [JsonProperty]
         public virtual Direction Direction
         {
             get { return _direction; }

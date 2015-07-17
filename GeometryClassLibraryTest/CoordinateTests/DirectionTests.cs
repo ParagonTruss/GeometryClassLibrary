@@ -2,6 +2,7 @@
 using UnitClassLibrary;
 using GeometryClassLibrary;
 using FluentAssertions;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibraryTests
 {
@@ -52,6 +53,18 @@ namespace GeometryClassLibraryTests
             Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1.0 / 32, 0.006, 1.488);
             Direction testErrorNotEqualTo0 = new Direction(testPointPassedEqualityTo0);
             (testErrorNotEqualTo0 == expectedErrorDirection0).Should().BeFalse();
+        }
+
+        [Test]
+        public void Direction_JSON()
+        {
+            Direction direction = Direction.Up;
+
+            var json = JsonConvert.SerializeObject(direction);
+            Direction deserializedDirection = JsonConvert.DeserializeObject<Direction>(json);
+
+            bool areEqual = (direction == deserializedDirection);
+            areEqual.Should().BeTrue();
         }
     }
 }

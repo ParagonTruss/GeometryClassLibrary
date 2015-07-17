@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties and Fields
@@ -98,8 +100,15 @@ namespace GeometryClassLibrary
         /// <param name="passedBasePoint"></param>
         /// <param name="passedDirection"></param>
         /// <param name="passedLength"></param>
-        public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
+        /*public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
             : base(passedBasePoint, passedDirection, passedLength)
+        {
+            _checkSegment();
+        }*/
+
+        [JsonConstructor]
+        public LineSegment(Point basePoint, Direction direction, Distance magnitude = null)
+            : base(basePoint, direction, magnitude)
         {
             _checkSegment();
         }

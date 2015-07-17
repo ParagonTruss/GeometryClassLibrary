@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -13,6 +14,7 @@ namespace GeometryClassLibrary
     /// Note: there are singularities (basically a point where the system breaks down) in this system
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class Direction
     {
         #region Properties and Fields
@@ -47,6 +49,7 @@ namespace GeometryClassLibrary
         /// currently, this should be between 0 and 360
         /// </summary>
         private Angle _phi;
+        [JsonProperty]
         public Angle Phi
         {
             get { return _phi; }
@@ -58,6 +61,7 @@ namespace GeometryClassLibrary
         /// Currently, this should be between 0 and 180
         /// </summary>
         private Angle _theta;
+        [JsonProperty]
         public Angle Theta
         {
             get { return _theta; }
