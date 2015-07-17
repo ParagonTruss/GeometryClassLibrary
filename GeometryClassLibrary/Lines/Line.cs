@@ -428,9 +428,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point GetPointOnLine(double multiplier)
         {
-            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponentOfDirection * multiplier);
-            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponentOfDirection * multiplier);
-            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponentOfDirection * multiplier);
+            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponent * multiplier);
+            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponent * multiplier);
+            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponent * multiplier);
 
             return new Point(newX, newY, newZ);
         }
@@ -440,9 +440,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point GetPointAlongLine(Distance distance)
         {
-            Distance newX = _basePoint.X + distance * Direction.XComponentOfDirection;
-            Distance newY = _basePoint.Y + distance * Direction.YComponentOfDirection;
-            Distance newZ = _basePoint.Z + distance * Direction.ZComponentOfDirection;
+            Distance newX = _basePoint.X + distance * Direction.XComponent;
+            Distance newY = _basePoint.Y + distance * Direction.YComponent;
+            Distance newZ = _basePoint.Z + distance * Direction.ZComponent;
             return new Point(newX, newY, newZ);
         }
 
