@@ -55,7 +55,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Polygon_ExtrudeAsPolyhedron()
+        public void Polygon_Extrude()
         {
             Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
             Point topLeftPoint = PointGenerator.MakePointWithInches(0, 4, 0);
@@ -371,14 +371,12 @@ namespace GeometryClassLibraryTests
             expectedBounds.Add(new LineSegment(PointGenerator.MakePointWithInches(4, 4, 4), PointGenerator.MakePointWithInches(4, 3.5, 4)));
             Polygon expected = new Polygon(expectedBounds);
 
-            //check to see if it is what we were expecting
-            Polygon intersect = testPolygon2.OverlappingPolygon(testPolygon);
-            intersect.Equals(expected).Should().BeTrue();
-
             //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
             Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-            intersect1.Equals(intersect2).Should().BeTrue();
+            intersect1.Should().Be(expected);
+            intersect1.Should().Be(intersect2);
+            
         }
 
         [Test()]
@@ -909,10 +907,10 @@ namespace GeometryClassLibraryTests
             LineSegment segmentIsChord = new LineSegment(basePoint5, endPoint5);
 
 
-            cShape.DoesContainLineSegment(segmentTouchesInsideEdge).Should().BeTrue();
-            cShape.DoesContainLineSegment(segmentCutsThroughVertices).Should().BeFalse();
-            cShape.DoesContainLineSegment(segmentCutsThroughVertexAndEdge).Should().BeFalse();
-            cShape.DoesContainLineSegment(segmentIsChord).Should().BeTrue();
+            cShape.Contains(segmentTouchesInsideEdge).Should().BeTrue();
+            cShape.Contains(segmentCutsThroughVertices).Should().BeFalse();
+            cShape.Contains(segmentCutsThroughVertexAndEdge).Should().BeFalse();
+            cShape.Contains(segmentIsChord).Should().BeTrue();
 
 
         }

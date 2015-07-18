@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnitClassLibrary;
 using Newtonsoft.Json;
+using MoreLinq;
 
 
 namespace GeometryClassLibrary
@@ -1273,6 +1274,7 @@ namespace GeometryClassLibrary
                 }
                
             }
+            intersections = intersections.OrderBy(point => point.DistanceTo(linesegment.BasePoint)).ToList();
             return intersections;
         }
 
@@ -1526,27 +1528,24 @@ namespace GeometryClassLibrary
         /// <summary>
         /// checks if a linesegment is a chord. i.e. endpoints on boundary & all other points interior.
         /// </summary>
-        public bool DoesContainLineSegment(LineSegment lineSegment)
+        public new bool Contains(LineSegment lineSegment)
         {
-            List<Point> points = IntersectionCoplanarPoints(lineSegment);
-            int numberOfIntersections = points.Count;
-            if (numberOfIntersections <= 2)
+            if (!this.Contains(lineSegment.BasePoint) || !this.Contains(lineSegment.EndPoint))
             {
-                 return true;
+                return false;
             }
-            else
+            var intersections = this.IntersectionCoplanarPoints(lineSegment);
+            
+            for(int i = 1; i < intersections.Count; i++)
             {
-                for (int i = 1; 2*i < numberOfIntersections; i++)
+                var tempSegment = new LineSegment(intersections[i - 1], intersections[i]);
+                if (!this.Contains(tempSegment.MidPoint))
                 {
-                    LineSegment segment = new LineSegment(points[2 * i - 1], points[2 * i]);
-                    if (!_doesContainSegmentAlongBoundary(segment))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-                return true;
             }
-           
+            return true;
+
         }
 
         /// <summary>
@@ -1791,6 +1790,18 @@ namespace GeometryClassLibrary
             }
             return true;
         }
+
+        ///// <summary>
+        ///// if the passed polygon is convex, this method returns the polygonn
+        ///// if the passed polygon is concave, this method returns a list of polygons:
+        ///// the first being the smallest convex polygon surrounding it, the next being the region removed from that
+        ///// and the next being the region removed from that, until we have a list of convex polygons
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<Polygon> AsDifferenceOfConvexPolygons()
+        //{
+        //    if
+        //}
         #endregion
     }
 }
