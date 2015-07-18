@@ -427,17 +427,17 @@ namespace GeometryClassLibrary
             return unitVector1.SignedAngleBetween(unitVector2);
 	}
 
-        /// <summary>
-        /// Returns a point on the line based on the multiplier entered
-        /// </summary>
-        public Point GetPointOnLine(double multiplier)
-        {
-            Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponent * multiplier);
-            Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponent * multiplier);
-            Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponent * multiplier);
+        ///// <summary>
+        ///// Returns a point on the line based on the multiplier entered
+        ///// </summary>
+        //public Point GetPointOnLine(double multiplier)
+        //{
+        //    Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponent * multiplier);
+        //    Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponent * multiplier);
+        //    Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponent * multiplier);
 
-            return new Point(newX, newY, newZ);
-        }
+        //    return new Point(newX, newY, newZ);
+        //}
 
         /// <summary>
         /// returns the point a given distance along the line.
@@ -758,8 +758,9 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-
-            return point.DistanceTo(this) == new Distance();
+            Distance distance = point.DistanceTo(this);
+            bool equal = distance.Equals(new Distance());
+            return equal;
         }
 
         #endregion

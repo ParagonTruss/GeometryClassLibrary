@@ -352,7 +352,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
         public Point Intersection(Vector passedVector)
         {
-            Point potentialIntersect = this.Intersection((Line)passedVector);
+            Point potentialIntersect = base.Intersection((Line)passedVector);
 
             if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector))
                 return potentialIntersect;

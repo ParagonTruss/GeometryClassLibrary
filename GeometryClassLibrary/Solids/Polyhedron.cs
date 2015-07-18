@@ -744,6 +744,9 @@ namespace GeometryClassLibrary
             //throw new NotImplementedException();
         }
 
+       
+       
+
         /// <summary>
         ///Checks if the polygons form a closed bounded region.
         ///If they don't returns null. Otherwise it reorients every face, so that all their normalVectors point outward

@@ -121,11 +121,11 @@ namespace GeometryClassLibrary
         ///// <summary>
         ///// Empty Constructor that makes a angle equivalent to 0 direction in the xy-plane (This means theta is 90)
         ///// </summary>
-        //public Direction()
-        //{
-        //    this.Phi = new Angle();
-        //    this.Theta = new Angle(AngleType.Degree, 90);
-        //}
+        public Direction()
+        {
+            this.Phi = new Angle();
+            this.Theta = new Angle(AngleType.Degree, 90);
+        }
 
         /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)
