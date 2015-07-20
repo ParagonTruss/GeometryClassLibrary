@@ -12,6 +12,9 @@ namespace GeometryClassLibrary
 
     public class RectangularPrism : Polyhedron
     {
+        #region Properties
+   
+        #endregion
         /// <summary>
         /// Constructs the rectangular prism between the origin and the given point as opposite corners.
         /// </summary>

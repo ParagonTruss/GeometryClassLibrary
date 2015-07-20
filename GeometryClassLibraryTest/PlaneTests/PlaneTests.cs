@@ -135,10 +135,11 @@ namespace GeometryClassLibraryTests
 
             test12Intersect.Should().Be(test21Intersect);
             test21Intersect.Should().Be(expectedLine);
-
-            (testPlane1.Intersection(testPlane1)).Should().Be(new Line(new Direction(PointGenerator.MakePointWithInches(0, -1 , -1)), PointGenerator.MakePointWithInches(2, 1, 2)));
-        }
-
+            var expectedLast = new Line(new Direction(PointGenerator.MakePointWithInches(0, -1 , -1)), PointGenerator.MakePointWithInches(2, 1, 2));
+        
+            var found =(testPlane1.Intersection(testPlane1));
+            (found == expectedLast).Should().BeTrue();
+            }
         [Test()]
         public void Plane_IntersectionLineWithPlane_ZeroCases()
         {

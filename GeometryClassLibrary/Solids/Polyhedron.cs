@@ -978,6 +978,8 @@ namespace GeometryClassLibrary
 
             return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
         }
+
+      
         #endregion
 
         

@@ -406,12 +406,11 @@ namespace GeometryClassLibraryTests
 
             //check to see if its what we expected
             Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
-            intersect1.Should().Be(expected);
-
-            //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
-            
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-            intersect2.Should().Be(expected);
+            bool overlapAsExpected1 = (intersect1 == expected);
+            bool overlapAsExpected2 = (intersect2 == expected);
+            overlapAsExpected1.Should().BeTrue();
+            overlapAsExpected2.Should().BeTrue();
         }
 
         [Test()]
