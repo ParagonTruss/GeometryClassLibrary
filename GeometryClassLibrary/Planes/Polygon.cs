@@ -186,16 +186,16 @@ namespace GeometryClassLibrary
         /// Defines a plane region using the given boundaries as long as the line segments form a closed region
         /// </summary>
         [JsonConstructor]
-        public Polygon(List<LineSegment> passedBoundaries, bool shouldValidate = true)
-            : base(passedBoundaries)
+        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
+            : base(lineSegments)
         {
             if (shouldValidate)
             {
-                this.LineSegments = passedBoundaries.SortIntoClockWiseSegments();
+                this.LineSegments = lineSegments.SortIntoClockWiseSegments();
             }
             else
             {
-                this.LineSegments = passedBoundaries;
+                this.LineSegments = lineSegments;
             }
 
             this.BasePoint = LineSegments[0].BasePoint;

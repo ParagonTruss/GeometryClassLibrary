@@ -51,7 +51,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         /// <returns></returns>
-        public static bool DoFormClosedRegion(this List<LineSegment> passedBoundaries)
+        public static bool DoFormClosedRegion(this IList<LineSegment> passedBoundaries)
         {
             //changed from this:
             //the problem with this is that it uses hashcode, which is based on intrinsic value and thus does not get the rounding
@@ -92,7 +92,7 @@ namespace GeometryClassLibrary
             return true;
         }
 
-        public static bool AtleastOneIntersection(this List<LineSegment> listOfSegments)
+        public static bool AtleastOneIntersection(this IList<LineSegment> listOfSegments)
         {
             for (int i = 0; i < listOfSegments.Count; i++)
             {
@@ -111,7 +111,7 @@ namespace GeometryClassLibrary
         /// Returns true if the Polygon is valid (is a closed region and the LineSegments are all coplaner)
         /// </summary>
         /// <returns>returns true if the LineSegments form a closed area and they are all coplaner</returns>
-        public static void ValidateForPolygon(this List<LineSegment> segments )
+        public static void ValidateForPolygon(this IList<LineSegment> segments )
         {
             bool notEnoughSegments = (segments == null || segments.Count < 3);
             if (notEnoughSegments)
@@ -161,7 +161,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="segments"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static List<LineSegment> SortIntoClockWiseSegments(this List<LineSegment> segments)
+        public static List<LineSegment> SortIntoClockWiseSegments(this IList<LineSegment> segments)
         {
             segments.ValidateForPolygon();
             
@@ -325,7 +325,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>
         /// <returns></returns>
-        public static bool AreAllCoplanar(this List<LineSegment> passedLineList)
+        public static bool AreAllCoplanar(this IList<LineSegment> passedLineList)
         {
             List<Point> vertices = passedLineList.GetAllPoints();
             Vector whatTheNormalShouldBe = null;

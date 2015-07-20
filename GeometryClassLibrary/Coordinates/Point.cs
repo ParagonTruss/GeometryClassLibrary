@@ -57,14 +57,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Three Dimensional Constructor for a Point
         /// </summary>
-        /// <param name="passedX"></param>
-        /// <param name="passedY"></param>
-        /// <param name="passedZ"></param>
-        public Point(Distance passedX, Distance passedY, Distance passedZ)
+        [JsonConstructor]
+        public Point(Distance x, Distance y, Distance z)
         {
-            X = passedX;
-            Y = passedY;
-            Z = passedZ;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         /// <summary>
