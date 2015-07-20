@@ -1528,7 +1528,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// checks if a linesegment is a chord. i.e. endpoints on boundary & all other points interior.
         /// </summary>
-        public new bool Contains(LineSegment lineSegment)
+        public bool Contains(LineSegment lineSegment)
         {
             if (!this.Contains(lineSegment.BasePoint) || !this.Contains(lineSegment.EndPoint))
             {
