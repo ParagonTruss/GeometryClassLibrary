@@ -475,7 +475,7 @@ namespace GeometryClassLibrary
             double newY = (yProduct1) - (yProduct2);
             double newZ = (zProduct1) - (zProduct2);
 
-            return new Vector(PointGenerator.MakePointWithInches(newX, newY, newZ));
+            return new Vector(Point.MakePointWithInches(newX, newY, newZ));
         }
 
         /// <summary>
@@ -720,7 +720,7 @@ namespace GeometryClassLibrary
         {
             if (referenceNormal == null)
             {
-                referenceNormal = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+                referenceNormal = new Vector(Point.MakePointWithInches(0, 0, 1));
             }
 
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(vector));

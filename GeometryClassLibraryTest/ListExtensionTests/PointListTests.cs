@@ -12,11 +12,11 @@ namespace GeometryClassLibraryTests
         public void PointList_MakeIntoLineSegmentsThatMeetTest()
         {
             List<Point> myPoints = new List<Point> {
-                    PointGenerator.MakePointWithInches(0.000,  0.000),
-                    PointGenerator.MakePointWithInches(0.000,  0.250),
-                    PointGenerator.MakePointWithInches(6.500,  3.500),
-                    PointGenerator.MakePointWithInches(144.000,  3.500),
-                    PointGenerator.MakePointWithInches(144.000,  0.000)
+                    Point.MakePointWithInches(0.000,  0.000),
+                    Point.MakePointWithInches(0.000,  0.250),
+                    Point.MakePointWithInches(6.500,  3.500),
+                    Point.MakePointWithInches(144.000,  3.500),
+                    Point.MakePointWithInches(144.000,  0.000)
                 };
 
             List<LineSegment> lines =  myPoints.MakeIntoLineSegmentsThatMeet();

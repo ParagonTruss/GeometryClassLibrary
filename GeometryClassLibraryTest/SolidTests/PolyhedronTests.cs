@@ -33,13 +33,13 @@ namespace GeometryClassLibraryTests
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees towards x
-            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)), PointGenerator.MakePointWithInches(8, 0));
+            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)), Point.MakePointWithInches(8, 0));
             Polyhedron result = polyhedron.Shift(ninetyShift);
 
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(16, 0))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 0), PointGenerator.MakePointWithInches(8, -4))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(16, 0), PointGenerator.MakePointWithInches(16, -4))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, -4), PointGenerator.MakePointWithInches(16, -4))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 0), Point.MakePointWithInches(16, 0))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 0), Point.MakePointWithInches(8, -4))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(16, 0), Point.MakePointWithInches(16, -4))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, -4), Point.MakePointWithInches(16, -4))).Should().BeTrue();
         }
 
         [Test()]
@@ -52,10 +52,10 @@ namespace GeometryClassLibraryTests
             Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
             Polyhedron result = polyhedron.Shift(nintyShift);
 
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 8))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(4, 0, 0))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 8))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 8), PointGenerator.MakePointWithInches(0, 0, 8))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 8))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
         }
 
         [Test()]
@@ -91,20 +91,20 @@ namespace GeometryClassLibraryTests
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(4, 0, 0))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, 0, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 8), PointGenerator.MakePointWithInches(0, 0, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 8), PointGenerator.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 8))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 8), Point.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, -3, 0), PointGenerator.MakePointWithInches(4, -3, 0))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, -3, 0), PointGenerator.MakePointWithInches(4, -3, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, -3, 8), PointGenerator.MakePointWithInches(0, -3, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, -3, 8), PointGenerator.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, -3, 0), Point.MakePointWithInches(4, -3, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, -3, 0), Point.MakePointWithInches(4, -3, 8))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, -3, 8), Point.MakePointWithInches(0, -3, 8))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, -3, 8), Point.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //from y axis to z axis
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //no change
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 0), PointGenerator.MakePointWithInches(4, -3, 0))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(4, 0, 8), PointGenerator.MakePointWithInches(4, -3, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 0, 8), PointGenerator.MakePointWithInches(0, -3, 8))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, -3, 0))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(4, -3, 8))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 8), Point.MakePointWithInches(0, -3, 8))).Should().BeTrue(); //from y axis to z axis
 
 
         }
@@ -116,22 +116,22 @@ namespace GeometryClassLibraryTests
 
 
             //Move 5 in. in z direction
-            Point displacementPoint = PointGenerator.MakePointWithInches(0, 0, 5);
+            Point displacementPoint = Point.MakePointWithInches(0, 0, 5);
             //Angle rotationAngle = new Angle(); //No rotation, just displacement
             Shift shift = new Shift(displacementPoint);
 
             //Move 3 in. in y direction
-            Point displacementPoint2 = PointGenerator.MakePointWithInches(0, 3, 0);
+            Point displacementPoint2 = Point.MakePointWithInches(0, 3, 0);
             //Angle rotationAngle2 = new Angle(); //No rotation, just displacement
             Shift shift2 = new Shift(displacementPoint2);
 
             Polyhedron s1 = polyhedron.Shift(shift);
             Polyhedron s2 = s1.Shift(shift2);
 
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(0, 7, 5)));
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(8, 3, 5)));
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 3, 5), PointGenerator.MakePointWithInches(8, 7, 5)));
-            s2.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 7, 5), PointGenerator.MakePointWithInches(0, 3, 9)));
+            s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 3, 5), Point.MakePointWithInches(0, 7, 5)));
+            s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 3, 5), Point.MakePointWithInches(8, 3, 5)));
+            s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 3, 5), Point.MakePointWithInches(8, 7, 5)));
+            s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 7, 5), Point.MakePointWithInches(0, 3, 9)));
         }
 
         [Test()]
@@ -142,15 +142,15 @@ namespace GeometryClassLibraryTests
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
-            Point displacementPoint = PointGenerator.MakePointWithInches(1, -2, 5);
+            Point displacementPoint = Point.MakePointWithInches(1, -2, 5);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 5), PointGenerator.MakePointWithInches(5, -2, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(5, -2, 5), PointGenerator.MakePointWithInches(5, -2, 13))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(5, -2, 13), PointGenerator.MakePointWithInches(1, -2, 13))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(1, -2, 13), PointGenerator.MakePointWithInches(1, -2, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(1, -2, 5), Point.MakePointWithInches(5, -2, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(5, -2, 5), Point.MakePointWithInches(5, -2, 13))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(5, -2, 13), Point.MakePointWithInches(1, -2, 13))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(1, -2, 13), Point.MakePointWithInches(1, -2, 5))).Should().BeTrue();
         }
 
         [Test()]
@@ -161,7 +161,7 @@ namespace GeometryClassLibraryTests
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 63);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
-            Point displacementPoint = PointGenerator.MakePointWithInches(0, 0, 1);
+            Point displacementPoint = Point.MakePointWithInches(0, 0, 1);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
@@ -178,17 +178,17 @@ namespace GeometryClassLibraryTests
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, -90);
-            Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
+            Line testAxis = new Line(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
-            Point displacementPoint = PointGenerator.MakePointWithInches(-1, 2, 5);
+            Point displacementPoint = Point.MakePointWithInches(-1, 2, 5);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
 
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, 3, 5), PointGenerator.MakePointWithInches(8, 3, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, 3, 5), PointGenerator.MakePointWithInches(8, -1, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(8, -1, 5), PointGenerator.MakePointWithInches(0, -1, 5))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(PointGenerator.MakePointWithInches(0, -1, 5), PointGenerator.MakePointWithInches(0, 3, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 3, 5), Point.MakePointWithInches(8, 3, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 3, 5), Point.MakePointWithInches(8, -1, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, -1, 5), Point.MakePointWithInches(0, -1, 5))).Should().BeTrue();
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, -1, 5), Point.MakePointWithInches(0, 3, 5))).Should().BeTrue();
 
         }
 
@@ -199,9 +199,9 @@ namespace GeometryClassLibraryTests
 
             //rotate 90 degrees toward z
             Angle xAngle = new Angle(AngleType.Degree, 90);
-            Line testAxis = new Line(PointGenerator.MakePointWithInches(1, 0, 0), PointGenerator.MakePointWithInches(1, 0, 1));
+            Line testAxis = new Line(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
-            Point displacementPoint = PointGenerator.MakePointWithInches(1, 3, -4);
+            Point displacementPoint = Point.MakePointWithInches(1, 3, -4);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
@@ -214,15 +214,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_Slice_Across()
         {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = Point.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
@@ -233,15 +233,15 @@ namespace GeometryClassLibraryTests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
+            Plane slicingPlane = new Plane(new Direction(Point.MakePointWithInches(1, 0, 0)), Point.MakePointWithInches(1, 0, 0));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
             //make our results
-            Point slicedBottom = PointGenerator.MakePointWithInches(1, 0, 0);
-            Point slicedTop = PointGenerator.MakePointWithInches(1, 12, 0);
-            Point slicedBottomBack = PointGenerator.MakePointWithInches(1, 0, 2);
-            Point slicedTopBack = PointGenerator.MakePointWithInches(1, 12, 2);
+            Point slicedBottom = Point.MakePointWithInches(1, 0, 0);
+            Point slicedTop = Point.MakePointWithInches(1, 12, 0);
+            Point slicedBottomBack = Point.MakePointWithInches(1, 0, 2);
+            Point slicedTopBack = Point.MakePointWithInches(1, 12, 2);
 
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
             ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, topRightPoint, bottomRightPoint }));
@@ -270,15 +270,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_Slice_Diagonal()
         {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = Point.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
@@ -289,15 +289,15 @@ namespace GeometryClassLibraryTests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
+            Plane slicingPlane = new Plane(new Direction(Point.MakePointWithInches(1, 1, 0)), Point.MakePointWithInches(1, 0, 0));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
             //make our results
-            Point slicedBottom = PointGenerator.MakePointWithInches(1, 0, 0);
-            Point slicedTop = PointGenerator.MakePointWithInches(0, 1, 0);
-            Point slicedBottomBack = PointGenerator.MakePointWithInches(1, 0, 2);
-            Point slicedTopBack = PointGenerator.MakePointWithInches(0, 1, 2);
+            Point slicedBottom = Point.MakePointWithInches(1, 0, 0);
+            Point slicedTop = Point.MakePointWithInches(0, 1, 0);
+            Point slicedBottomBack = Point.MakePointWithInches(1, 0, 2);
+            Point slicedTopBack = Point.MakePointWithInches(0, 1, 2);
 
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
             ExpectedPlanes1.Add(new Polygon(new List<Point> { slicedBottom, slicedTop, topLeftPoint, topRightPoint, bottomRightPoint }));
@@ -326,15 +326,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_Slice_Multiple()
         {
-            Point bottomLeft = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeft = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRight = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRight = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point bottomLeft = Point.MakePointWithInches(0, 0, 0);
+            Point topLeft = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRight = Point.MakePointWithInches(4, 0, 0);
+            Point topRight = Point.MakePointWithInches(4, 12, 0);
 
-            Point bottomLeftBack = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point topLeftBack = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point bottomRightBack = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point topRightBack = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point bottomLeftBack = Point.MakePointWithInches(0, 0, 2);
+            Point topLeftBack = Point.MakePointWithInches(0, 12, 2);
+            Point bottomRightBack = Point.MakePointWithInches(4, 0, 2);
+            Point topRightBack = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { bottomLeft, topLeft, topRight, bottomRight }));
@@ -346,28 +346,28 @@ namespace GeometryClassLibraryTests
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
             //make our slices
-            Plane slicingPlane1 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)), PointGenerator.MakePointWithInches(1, 0, 0));
-            Plane slicingPlane2 = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 1, 0)), PointGenerator.MakePointWithInches(2, 0, 0));
+            Plane slicingPlane1 = new Plane(new Direction(Point.MakePointWithInches(1, 0, 0)), Point.MakePointWithInches(1, 0, 0));
+            Plane slicingPlane2 = new Plane(new Direction(Point.MakePointWithInches(1, 1, 0)), Point.MakePointWithInches(2, 0, 0));
             List<Plane> multiSlices = new List<Plane> { slicingPlane1, slicingPlane2 };
 
             List<Polyhedron> results = testPolyhedron.Slice(multiSlices);
 
             //make our results
             //from first slice
-            Point sliced1Bottom = PointGenerator.MakePointWithInches(1, 0, 0);
-            Point sliced1Top = PointGenerator.MakePointWithInches(1, 12, 0);
-            Point sliced1BottomBack = PointGenerator.MakePointWithInches(1, 0, 2);
-            Point sliced1TopBack = PointGenerator.MakePointWithInches(1, 12, 2);
+            Point sliced1Bottom = Point.MakePointWithInches(1, 0, 0);
+            Point sliced1Top = Point.MakePointWithInches(1, 12, 0);
+            Point sliced1BottomBack = Point.MakePointWithInches(1, 0, 2);
+            Point sliced1TopBack = Point.MakePointWithInches(1, 12, 2);
 
             //from seceond slice
-            Point sliced2Bottom = PointGenerator.MakePointWithInches(2, 0, 0);
-            Point sliced2Top = PointGenerator.MakePointWithInches(0, 2, 0);
-            Point sliced2BottomBack = PointGenerator.MakePointWithInches(2, 0, 2);
-            Point sliced2TopBack = PointGenerator.MakePointWithInches(0, 2, 2);
+            Point sliced2Bottom = Point.MakePointWithInches(2, 0, 0);
+            Point sliced2Top = Point.MakePointWithInches(0, 2, 0);
+            Point sliced2BottomBack = Point.MakePointWithInches(2, 0, 2);
+            Point sliced2TopBack = Point.MakePointWithInches(0, 2, 2);
 
             //from where the two slice lines intersect
-            Point sliced12 = PointGenerator.MakePointWithInches(1, 1, 0);
-            Point sliced12Back = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point sliced12 = Point.MakePointWithInches(1, 1, 0);
+            Point sliced12Back = Point.MakePointWithInches(1, 1, 2);
 
             //largest piece
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
@@ -420,15 +420,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_SliceAtVertex()
         {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = Point.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
@@ -439,13 +439,13 @@ namespace GeometryClassLibraryTests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Plane slicingPlane = new Plane(PointGenerator.MakePointWithInches(4, 12, 0), PointGenerator.MakePointWithInches(0, 8, 0), PointGenerator.MakePointWithInches(4, 12, 2));
+            Plane slicingPlane = new Plane(Point.MakePointWithInches(4, 12, 0), Point.MakePointWithInches(0, 8, 0), Point.MakePointWithInches(4, 12, 2));
 
             List<Polyhedron> results = testPolyhedron.Slice(slicingPlane);
 
             //make our results
-            Point slicedPoint = PointGenerator.MakePointWithInches(0, 8, 0);
-            Point slicedPointBack = PointGenerator.MakePointWithInches(0, 8, 2);
+            Point slicedPoint = Point.MakePointWithInches(0, 8, 0);
+            Point slicedPointBack = Point.MakePointWithInches(0, 8, 2);
 
             List<Polygon> ExpectedPlanes1 = new List<Polygon>();
             ExpectedPlanes1.Add(new Polygon(new List<Point> { basePoint, slicedPoint, topRightPoint, bottomRightPoint }));
@@ -473,15 +473,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_SliceThroughOppositeEdges()
         {
-            Point bottomPoint1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point bottomPoint2 = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomPoint3 = PointGenerator.MakePointWithInches(4, 12, 0);
-            Point bottomPoint4 = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point bottomPoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottomPoint2 = Point.MakePointWithInches(0, 12, 0);
+            Point bottomPoint3 = Point.MakePointWithInches(4, 12, 0);
+            Point bottomPoint4 = Point.MakePointWithInches(4, 0, 0);
 
-            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point topPoint2 = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point topPoint3 = PointGenerator.MakePointWithInches(4, 12, 2);
-            Point topPoint4 = PointGenerator.MakePointWithInches(4, 0, 2);
+            Point topPoint1 = Point.MakePointWithInches(0, 0, 2);
+            Point topPoint2 = Point.MakePointWithInches(0, 12, 2);
+            Point topPoint3 = Point.MakePointWithInches(4, 12, 2);
+            Point topPoint4 = Point.MakePointWithInches(4, 0, 2);
 
             List<Polygon> faces = new List<Polygon>();
             faces.Add(new Polygon(new List<Point> { bottomPoint1, bottomPoint2, bottomPoint3, bottomPoint4 }));
@@ -522,15 +522,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_DoesContainPointAlongSides()
         {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = Point.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));
@@ -541,9 +541,9 @@ namespace GeometryClassLibraryTests
             planes.Add(new Polygon(new List<Point> { bottomRightPoint, topRightPoint, backtoprightpoint, backbottomrightpoint }));
             Polyhedron testPolyhedron = new Polyhedron(planes);
 
-            Point pointOn = PointGenerator.MakePointWithInches(0, 4, 0);
-            Point anotherPointOn = PointGenerator.MakePointWithInches(2, 0, 0);
-            Point pointNotOn = PointGenerator.MakePointWithInches(1, 4, 0);
+            Point pointOn = Point.MakePointWithInches(0, 4, 0);
+            Point anotherPointOn = Point.MakePointWithInches(2, 0, 0);
+            Point pointNotOn = Point.MakePointWithInches(1, 4, 0);
 
             bool resultOn = testPolyhedron.DoesContainPointAlongSides(pointOn);
             bool resultAnotherOn = testPolyhedron.DoesContainPointAlongSides(anotherPointOn);
@@ -557,15 +557,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polyhedron_Vertices()
         {
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(4, 12, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 12, 2);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(4, 12, 2);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 2);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 12, 2);
+            Point backbottomrightpoint = Point.MakePointWithInches(4, 0, 2);
+            Point backtoprightpoint = Point.MakePointWithInches(4, 12, 2);
 
             List<Polygon> planes = new List<Polygon>();
             planes.Add(new Polygon(new List<Point> { basePoint, topLeftPoint, topRightPoint, bottomRightPoint }));

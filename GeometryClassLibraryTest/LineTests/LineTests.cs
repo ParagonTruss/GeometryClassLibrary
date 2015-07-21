@@ -16,8 +16,8 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_JSON()
         {
-            Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
-            Line line = new Line(testBasePoint, PointGenerator.MakePointWithInches(2, 3, 1));
+            Point testBasePoint = Point.MakePointWithInches(1, 0, 2);
+            Line line = new Line(testBasePoint, Point.MakePointWithInches(2, 3, 1));
 
             var json = JsonConvert.SerializeObject(line);
             Line deserializedLine = JsonConvert.DeserializeObject<Line>(json);
@@ -29,11 +29,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_GetPointOnLine()
         {
-            Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
+            Point testBasePoint = Point.MakePointWithInches(1, 0, 2);
 
-            Line testLine = new Line(testBasePoint, PointGenerator.MakePointWithInches(2, 3, 1));
+            Line testLine = new Line(testBasePoint, Point.MakePointWithInches(2, 3, 1));
 
-            Point pointOnLine = PointGenerator.MakePointWithInches(3, 6, 0);
+            Point pointOnLine = Point.MakePointWithInches(3, 6, 0);
 
             testLine.GetPointAlongLine(new Distance(DistanceType.Inch, 6.62)).Should().Be(pointOnLine);         
         }
@@ -41,13 +41,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Intersection_Inches()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
+            Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
+            Point basePointLine2 = Point.MakePointWithInches(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(0, 2.5, 1.5);
+            Point expectedResult = Point.MakePointWithInches(0, 2.5, 1.5);
             Point actualResult = line1.Intersection(line2);
 
             actualResult.Should().Be(expectedResult);  
@@ -56,13 +56,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Intersection_Millimeters()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithMillimeters(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithMillimeters(2, 4, 0);
+            Point basePointLine1 = Point.MakePointWithMillimeters(2, 1, 0);
+            Point basePointLine2 = Point.MakePointWithMillimeters(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithMillimeters(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithMillimeters(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithMillimeters(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithMillimeters(-2, 1, 3));
 
-            Point expectedResult = PointGenerator.MakePointWithMillimeters(0, 2.5, 1.5);
+            Point expectedResult = Point.MakePointWithMillimeters(0, 2.5, 1.5);
             Point actualResult = line1.Intersection(line2);
 
             actualResult.Should().Be(expectedResult);
@@ -71,13 +71,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IntersectionTest_Perpendicular()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(1, 2, 2);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point basePointLine1 = Point.MakePointWithInches(1, 2, 2);
+            Point basePointLine2 = Point.MakePointWithInches(1, 1, 2);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 1, 2));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(1, 1, 1));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 1, 2));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 1));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point expectedResult = Point.MakePointWithInches(1, 1, 2);
             Point actualResult = line1.Intersection(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
@@ -86,13 +86,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IntersectionTest_Perpendicular2()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(1, 1, 2);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point basePointLine1 = Point.MakePointWithInches(1, 1, 2);
+            Point basePointLine2 = Point.MakePointWithInches(1, 1, 2);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 7, 2));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(1, 1, 6));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 7, 2));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 6));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point expectedResult = Point.MakePointWithInches(1, 1, 2);
             Point actualResult = line1.Intersection(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
@@ -101,13 +101,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IntersectionTest_Perpendicular3()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(1, 2, 2);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(1, 1, 1);
+            Point basePointLine1 = Point.MakePointWithInches(1, 2, 2);
+            Point basePointLine2 = Point.MakePointWithInches(1, 1, 1);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 1, 2));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(1, 1, 2));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 1, 2));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 2));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(1, 1, 2);
+            Point expectedResult = Point.MakePointWithInches(1, 1, 2);
             Point actualResult = line1.Intersection(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
@@ -116,13 +116,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Intersection_Origin()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 0, 0));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(0, 0, 1));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 0, 0));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point expectedResult = Point.MakePointWithInches(0, 0, 0);
             Point actualResult = line1.Intersection(line2);
 
             (expectedResult == actualResult).Should().BeTrue();  
@@ -132,12 +132,12 @@ namespace ClearspanTypeLibrary.Tests
         public void Line_WillTwoLinesOnTopOfOneAnotherIntersectTest()
         {
 
-            Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(10, 0, 0));
-            Line line2 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(6, 0, 0));
-            Line line3 = new Line(PointGenerator.MakePointWithInches(3, 2, 0), PointGenerator.MakePointWithInches(-2, 5, 3));
-            Line line4 = new Line(PointGenerator.MakePointWithInches(3, 5, 0), PointGenerator.MakePointWithInches(-2, 2, 3));
-            Line line5 = new Line(PointGenerator.MakePointWithInches(0, 5), PointGenerator.MakePointWithInches(0, -3));
-            Line line6 = new Line(PointGenerator.MakePointWithInches(0, 2), PointGenerator.MakePointWithInches(0, -1));
+            Line line1 = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(10, 0, 0));
+            Line line2 = new Line(Point.MakePointWithInches(3, 0, 0), Point.MakePointWithInches(6, 0, 0));
+            Line line3 = new Line(Point.MakePointWithInches(3, 2, 0), Point.MakePointWithInches(-2, 5, 3));
+            Line line4 = new Line(Point.MakePointWithInches(3, 5, 0), Point.MakePointWithInches(-2, 2, 3));
+            Line line5 = new Line(Point.MakePointWithInches(0, 5), Point.MakePointWithInches(0, -3));
+            Line line6 = new Line(Point.MakePointWithInches(0, 2), Point.MakePointWithInches(0, -1));
 
             bool resultT1 = line1.DoesIntersect(line2);
             bool resultT2 = line3.DoesIntersect(line4);
@@ -153,11 +153,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_AngleBetweenIntersectingLine_Inches()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
+            Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
+            Point basePointLine2 = Point.MakePointWithInches(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
             Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
@@ -168,11 +168,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_AngleBetweenIntersectingLine_Millimeters()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(2, 4, 0);
+            Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
+            Point basePointLine2 = Point.MakePointWithInches(2, 4, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(-2, 4, 3));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(-2, 1, 3));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(-2, 4, 3));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
             Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
@@ -183,11 +183,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_AngleBetweenIntersectingLine_IntersectAtOrigin()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 1, 1));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(0, 0, 1));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 1, 1));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
             double angleBetweenLinesInRadians = Math.Acos(1 / Math.Sqrt(3));
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
@@ -198,11 +198,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_AngleBetweenIntersectingLinePerpendicular()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
 
-            Line line1 = new Line(basePointLine1, PointGenerator.MakePointWithInches(1, 0, 0));
-            Line line2 = new Line(basePointLine2, PointGenerator.MakePointWithInches(0, 0, 1));
+            Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 0, 0));
+            Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
             double angleBetweenLinesInRadians = Math.Acos(0);
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
@@ -214,10 +214,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IsCoplanarWith()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
-            Line line2 = new Line(PointGenerator.MakePointWithInches(0, 1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 0), PointGenerator.MakePointWithInches(1, 0, 0));
-            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 0, 0), PointGenerator.MakePointWithInches(3, 0, 4));
+            Line line1 = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+            Line line2 = new Line(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(1, 1, 0));
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 0), Point.MakePointWithInches(1, 0, 0));
+            Line line4 = new Line(Point.MakePointWithInches(2, 0, 0), Point.MakePointWithInches(3, 0, 4));
 
             line1.IsCoplanarWith(line2).Should().BeTrue();
             line3.IsCoplanarWith(line4).Should().BeFalse();
@@ -228,13 +228,13 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_IsParallelTo()
         {
-            Line line1 = new LineSegment(PointGenerator.MakePointWithInches(0,0), PointGenerator.MakePointWithInches(5,0));
-            Line line2 = new LineSegment(PointGenerator.MakePointWithInches(-3,-3), PointGenerator.MakePointWithInches(8,-3));
-            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+            Line line1 = new LineSegment(Point.MakePointWithInches(0,0), Point.MakePointWithInches(5,0));
+            Line line2 = new LineSegment(Point.MakePointWithInches(-3,-3), Point.MakePointWithInches(8,-3));
+            Line line3 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Line line4 = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
-            Line line5 = new LineSegment(PointGenerator.MakePointWithInches(-3, -3), PointGenerator.MakePointWithInches(-3, 8));
-            Line line6 = new LineSegment(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(1,4));
+            Line line4 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
+            Line line5 = new LineSegment(Point.MakePointWithInches(-3, -3), Point.MakePointWithInches(-3, 8));
+            Line line6 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(1,4));
              
             line1.IsParallelTo(line2).Should().BeTrue();
             line2.IsParallelTo(line3).Should().BeTrue();
@@ -251,11 +251,11 @@ namespace ClearspanTypeLibrary.Tests
         {
             Line line1 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
             Line line2 = new LineSegment(new Point(), new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
-            Line line3 = new LineSegment(PointGenerator.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Distance(DistanceType.Inch, 1));
+            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Distance(DistanceType.Inch, 1));
 
-            Line line4 = new LineSegment(PointGenerator.MakePointWithInches(3, 5, 7));
-            Line line5 = new LineSegment(PointGenerator.MakePointWithInches(1, -2, 1));
-            Line line6 = new LineSegment(PointGenerator.MakePointWithInches(1, 2, -3), PointGenerator.MakePointWithInches(5, 1, -4)); //4, -1, -1
+            Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
+            Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
+            Line line6 = new LineSegment(Point.MakePointWithInches(1, 2, -3), Point.MakePointWithInches(5, 1, -4)); //4, -1, -1
 
             line1.IsPerpendicularTo(line2).Should().BeTrue();
             line1.IsPerpendicularTo(line3).Should().BeTrue();
@@ -274,18 +274,18 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Rotate_AboutZAxis()
         {
-            Point basePointLine1 = PointGenerator.MakePointWithInches(2, 1, 0);
-            Point otherPointLine1 = PointGenerator.MakePointWithInches(3, 3, 3);
+            Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
+            Point otherPointLine1 = Point.MakePointWithInches(3, 3, 3);
 
             Line line1 = new Line(basePointLine1, otherPointLine1);
-            Line axisLine = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
+            Line axisLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
 
             Angle rotationAngle = new Angle(AngleType.Degree, 199);
 
             Line actualResult = line1.Rotate(new Rotation(axisLine, rotationAngle));
 
-            Point expectedResultBasePoint = PointGenerator.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
-            Direction expectedDirection = new Direction(PointGenerator.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
+            Point expectedResultBasePoint = Point.MakePointWithInches(-1.5654689967414768, -1.5966548845136304, 0.0);
+            Direction expectedDirection = new Direction(Point.MakePointWithInches(-0.29438226668500322,-2.2166053056557904,3.0));
             Line expectedResult = new Line(expectedDirection, expectedResultBasePoint);
 
             (expectedResult == actualResult).Should().BeTrue();
@@ -294,18 +294,18 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Rotate_AboutReferencePoint()
         {
-            Point start = PointGenerator.MakePointWithInches(0, 1, 3);
-            Point end = PointGenerator.MakePointWithInches(0, 1, 5);
+            Point start = Point.MakePointWithInches(0, 1, 3);
+            Point end = Point.MakePointWithInches(0, 1, 5);
 
             Line toRotate = new Line(start, end);
-            Line startPointYAxis = new Line(start, PointGenerator.MakePointWithInches(0, 2, 3)); //relative y axis
+            Line startPointYAxis = new Line(start, Point.MakePointWithInches(0, 2, 3)); //relative y axis
 
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
             Line afterRotate = toRotate.Rotate(new Rotation(startPointYAxis, rotationAngle));
 
             Point expectedStart = new Point(start);
-            Point expectedEnd = PointGenerator.MakePointWithInches(2, 1, 3);
+            Point expectedEnd = Point.MakePointWithInches(2, 1, 3);
             Line expectedResult = new Line(expectedStart, expectedEnd);
 
             (expectedResult == afterRotate).Should().BeTrue();
@@ -314,15 +314,15 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Translate()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(1, 2, 3), PointGenerator.MakePointWithInches(-3, -2, 0));
+            Line line1 = new Line(Point.MakePointWithInches(1, 2, 3), Point.MakePointWithInches(-3, -2, 0));
 
-            //Direction testDirection = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            //Direction testDirection = new Direction(Point.MakePointWithInches(-1, 5, 4));
             //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
-            Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
+            Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
             Line actualLine1 = line1.Translate(new Translation(testDisplacement));
 
-            Line expectedLine1 = new Line(PointGenerator.MakePointWithInches(-1, 12, 11), PointGenerator.MakePointWithInches(-5, 8, 8));
+            Line expectedLine1 = new Line(Point.MakePointWithInches(-1, 12, 11), Point.MakePointWithInches(-5, 8, 8));
 
             (actualLine1 == expectedLine1).Should().BeTrue();
         }
@@ -330,10 +330,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_DoesIntersectLine()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(0, 5));
-            Line line2 = new Line(PointGenerator.MakePointWithInches(5, 0), PointGenerator.MakePointWithInches(-3, 0));
-            Line line3 = new Line(PointGenerator.MakePointWithInches(3, 3, 0), PointGenerator.MakePointWithInches(-3, -3, 2));
-            Line line4 = new Line(PointGenerator.MakePointWithInches(3, -3, 0), PointGenerator.MakePointWithInches(-3, 3, 2));
+            Line line1 = new Line(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
+            Line line2 = new Line(Point.MakePointWithInches(5, 0), Point.MakePointWithInches(-3, 0));
+            Line line3 = new Line(Point.MakePointWithInches(3, 3, 0), Point.MakePointWithInches(-3, -3, 2));
+            Line line4 = new Line(Point.MakePointWithInches(3, -3, 0), Point.MakePointWithInches(-3, 3, 2));
 
             bool resultT1 = line1.DoesIntersect(line2);
             bool resultF1 = line2.DoesIntersect(line3);
@@ -347,8 +347,8 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_DoesIntersectLineSegment()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 0, 0), PointGenerator.MakePointWithInches(-3, 0, 0));
-            LineSegment segment1 = new LineSegment(PointGenerator.MakePointWithInches(3, -3, 0), PointGenerator.MakePointWithInches(2, 0, 0));
+            Line line1 = new Line(Point.MakePointWithInches(3, 0, 0), Point.MakePointWithInches(-3, 0, 0));
+            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(3, -3, 0), Point.MakePointWithInches(2, 0, 0));
 
             bool resultT1 = line1.DoesIntersect(segment1);
         }
@@ -357,13 +357,13 @@ namespace ClearspanTypeLibrary.Tests
         //[Test()]
         //public void Line_PlaneThroughLineInDirectionOf_ZAxis()
         //{
-        //    Line test1 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, 0));
-        //    Line test2 = new Line(PointGenerator.MakePointWithMillimeters(2, 1, -1),  PointGenerator.MakePointWithMillimeters(-1, 5, 2));
+        //    Line test1 = new Line(Point.MakePointWithMillimeters(2, 1, -1), Point.MakePointWithMillimeters(-1, 5, 0));
+        //    Line test2 = new Line(Point.MakePointWithMillimeters(2, 1, -1),  Point.MakePointWithMillimeters(-1, 5, 2));
 
         //    Plane result1 = test1.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
         //    Plane result2 = test2.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
 
-        //    Plane expectedPlane = new Plane(PointGenerator.MakePointWithMillimeters(2, 1, 6), PointGenerator.MakePointWithMillimeters(2, 1, -1), PointGenerator.MakePointWithMillimeters(-1, 5, -23));
+        //    Plane expectedPlane = new Plane(Point.MakePointWithMillimeters(2, 1, 6), Point.MakePointWithMillimeters(2, 1, -1), Point.MakePointWithMillimeters(-1, 5, -23));
 
         //    result1.Should().Be(result2);
         //    result1.Should().Be(expectedPlane);
@@ -372,11 +372,11 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_XZIntercept()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
-            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+            Line line1 = new Line(Point.MakePointWithInches(3, 2, 5), Point.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
+            Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             Point intercept1 = line1.XZIntercept;
             Point intercept2 = line2.XZIntercept;
@@ -384,21 +384,21 @@ namespace ClearspanTypeLibrary.Tests
             Point intercept4 = line4.XZIntercept;
             Point intercept5 = line5.XZIntercept;
 
-            intercept1.Should().Be(PointGenerator.MakePointWithInches(-1, 0, 1));
-            intercept2.Should().Be(PointGenerator.MakePointWithInches(6, 0, 0));
-            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 6));
-            intercept4.Should().Be(PointGenerator.MakePointWithInches(4, 0, 3));
+            intercept1.Should().Be(Point.MakePointWithInches(-1, 0, 1));
+            intercept2.Should().Be(Point.MakePointWithInches(6, 0, 0));
+            intercept3.Should().Be(Point.MakePointWithInches(0, 0, 6));
+            intercept4.Should().Be(Point.MakePointWithInches(4, 0, 3));
             intercept5.Should().Be(null);
         }
 
         [Test()]
         public void Line_YZIntercept()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 0, 1, -3
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 0, 1.5, -0.5
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
-            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at 0, -1, -1
-            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+            Line line1 = new Line(Point.MakePointWithInches(2, 2, 2), Point.MakePointWithInches(4, 3, 7)); //intersects at 0, 1, -3
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(-6, 3, -1)); //intersects at 0, 1.5, -0.5
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(Point.MakePointWithInches(2, 1, 1), Point.MakePointWithInches(3, 2, 2)); //intersects at 0, -1, -1
+            Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             Point intercept1 = line1.YZIntercept;
             Point intercept2 = line2.YZIntercept;
@@ -406,21 +406,21 @@ namespace ClearspanTypeLibrary.Tests
             Point intercept4 = line4.YZIntercept;
             Point intercept5 = line5.YZIntercept;
 
-            intercept1.Should().Be(PointGenerator.MakePointWithInches(0, 1, -3));
-            intercept2.Should().Be(PointGenerator.MakePointWithInches(0, 1.5, -.5));
-            intercept3.Should().Be(PointGenerator.MakePointWithInches(0, 0, 6));
-            intercept4.Should().Be(PointGenerator.MakePointWithInches(0, -1, -1));
+            intercept1.Should().Be(Point.MakePointWithInches(0, 1, -3));
+            intercept2.Should().Be(Point.MakePointWithInches(0, 1.5, -.5));
+            intercept3.Should().Be(Point.MakePointWithInches(0, 0, 6));
+            intercept4.Should().Be(Point.MakePointWithInches(0, -1, -1));
             intercept5.Should().Be(null);
         }
 
         [Test()]
         public void Line_XYIntercept()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 1), PointGenerator.MakePointWithInches(5, 3, 2)); //intersects at 1, 1, 0
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, -2), PointGenerator.MakePointWithInches(2, 3, -1)); //intersects at -2, 6, 0
-            Line line3 = new Line(PointGenerator.MakePointWithInches(3, 3, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at -2,-2,0
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 15, 0
-            Line line5 = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 1, 2)); //doesnt intersect
+            Line line1 = new Line(Point.MakePointWithInches(3, 2, 1), Point.MakePointWithInches(5, 3, 2)); //intersects at 1, 1, 0
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, -2), Point.MakePointWithInches(2, 3, -1)); //intersects at -2, 6, 0
+            Line line3 = new Line(Point.MakePointWithInches(3, 3, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at -2,-2,0
+            Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 15, 0
+            Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 1, 2)); //doesnt intersect
 
             Point intercept1 = line1.XYIntercept;
             Point intercept2 = line2.XYIntercept;
@@ -428,20 +428,20 @@ namespace ClearspanTypeLibrary.Tests
             Point intercept4 = line4.XYIntercept;
             Point intercept5 = line5.XYIntercept;
 
-            intercept1.Should().Be(PointGenerator.MakePointWithInches(1, 1, 0));
-            intercept2.Should().Be(PointGenerator.MakePointWithInches(-2, 6, 0));
-            intercept3.Should().Be(PointGenerator.MakePointWithInches(-2, -2, 0));
-            intercept4.Should().Be(PointGenerator.MakePointWithInches(4, 15, 0));
+            intercept1.Should().Be(Point.MakePointWithInches(1, 1, 0));
+            intercept2.Should().Be(Point.MakePointWithInches(-2, 6, 0));
+            intercept3.Should().Be(Point.MakePointWithInches(-2, -2, 0));
+            intercept4.Should().Be(Point.MakePointWithInches(4, 15, 0));
             intercept5.Should().Be(null);
         }
 
         [Test()]
         public void Line_XInterceptIn2D()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
+            Line line1 = new Line(Point.MakePointWithInches(3, 2, 5), Point.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
 
             Distance intercept1 = line1.XInterceptIn2D;
             Distance intercept2 = line2.XInterceptIn2D;
@@ -458,7 +458,7 @@ namespace ClearspanTypeLibrary.Tests
         [ExpectedException(typeof(Exception))]
         public void Line_XInterceptIn2D_LineDoesNotIntersectXAxis()
         {            
-            Line line = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+            Line line = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
             Distance intercept = line.XInterceptIn2D;
@@ -467,10 +467,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_YInterceptIn2D()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(2, 2, 2), PointGenerator.MakePointWithInches(4, 3, 7)); //intersects at 1
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0
-            Line line4 = new Line(PointGenerator.MakePointWithInches(2, 1, 1), PointGenerator.MakePointWithInches(3, 2, 2)); //intersects at -1
+            Line line1 = new Line(Point.MakePointWithInches(2, 2, 2), Point.MakePointWithInches(4, 3, 7)); //intersects at 1
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(-6, 3, -1)); //intersects at 1.5
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0
+            Line line4 = new Line(Point.MakePointWithInches(2, 1, 1), Point.MakePointWithInches(3, 2, 2)); //intersects at -1
 
             Distance intercept1 = line1.YInterceptIn2D;
             Distance intercept2 = line2.YInterceptIn2D;
@@ -487,7 +487,7 @@ namespace ClearspanTypeLibrary.Tests
         [ExpectedException(typeof(Exception))]
         public void Line_YInterceptIn2D_LineDoesNotIntersectYAxis()
         {
-            Line line = new Line(PointGenerator.MakePointWithInches(4, 2, 2), PointGenerator.MakePointWithInches(4, 2, 1)); //doesnt intersect
+            Line line = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
             Distance intercept5 = line.YInterceptIn2D;
@@ -496,10 +496,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Sort()
         {
-            Line line1 = new Line(PointGenerator.MakePointWithInches(3, 2, 5), PointGenerator.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
-            Line line2 = new Line(PointGenerator.MakePointWithInches(6, 0, 0), PointGenerator.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
-            Line line3 = new Line(PointGenerator.MakePointWithInches(1, 1, 5), PointGenerator.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
-            Line line4 = new Line(PointGenerator.MakePointWithInches(4, 10, 1), PointGenerator.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
+            Line line1 = new Line(Point.MakePointWithInches(3, 2, 5), Point.MakePointWithInches(5, 3, 7)); //intersects at -1, 0, 1
+            Line line2 = new Line(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(-5, 3, -1)); //intersects at 6, 0, 0
+            Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
+            Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
 
             List<Line> lines = new List<Line> { line2, line3, line4, line1 };
 
@@ -515,12 +515,12 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_ProjectOntoPlane()
         {
-            Line toProject = new Line(PointGenerator.MakePointWithInches(2, 2, 1));
+            Line toProject = new Line(Point.MakePointWithInches(2, 2, 1));
             Plane projectOnto = new Plane(Line.XAxis, Line.YAxis);
 
             Line result = toProject.ProjectOntoPlane(projectOnto);
 
-            Line expected = new Line(PointGenerator.MakePointWithInches(2, 2, 0));
+            Line expected = new Line(Point.MakePointWithInches(2, 2, 0));
 
             result.Should().Be(expected);
         }
@@ -529,15 +529,15 @@ namespace ClearspanTypeLibrary.Tests
         public void Line_DoesIntersectPolyhedron()
         {
             //make a polyhedron
-            Point bottom1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point bottom2 = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point bottom3 = PointGenerator.MakePointWithInches(4, 12, 0);
-            Point bottom4 = PointGenerator.MakePointWithInches(0, 12, 0);
+            Point bottom1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottom2 = Point.MakePointWithInches(4, 0, 0);
+            Point bottom3 = Point.MakePointWithInches(4, 12, 0);
+            Point bottom4 = Point.MakePointWithInches(0, 12, 0);
 
-            Point top1 = PointGenerator.MakePointWithInches(0, 0, 2);
-            Point top2 = PointGenerator.MakePointWithInches(4, 0, 2);
-            Point top3 = PointGenerator.MakePointWithInches(4, 12, 2);
-            Point top4 = PointGenerator.MakePointWithInches(0, 12, 2);
+            Point top1 = Point.MakePointWithInches(0, 0, 2);
+            Point top2 = Point.MakePointWithInches(4, 0, 2);
+            Point top3 = Point.MakePointWithInches(4, 12, 2);
+            Point top4 = Point.MakePointWithInches(0, 12, 2);
 
             List<Polygon> faces = new List<Polygon>();
             Polygon bottomFace = new Polygon(new List<Point> {bottom1, bottom2, bottom3, bottom4});
@@ -557,10 +557,10 @@ namespace ClearspanTypeLibrary.Tests
             Polyhedron testPolyhedron = new Polyhedron(faces);
 
             //now make some lines that will intersect it
-            Line intersecting1 = new Line(PointGenerator.MakePointWithInches(2, 0, 1), PointGenerator.MakePointWithInches(2, 1, 1));
-            Line intersecting2 = new Line(PointGenerator.MakePointWithInches(2, 0, .5), PointGenerator.MakePointWithInches(5, 12, 1));
-            Line intersectingAlongSide = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
-            Line noIntersect = new Line(PointGenerator.MakePointWithInches(5, 0, 0), PointGenerator.MakePointWithInches(5, 1, 0));
+            Line intersecting1 = new Line(Point.MakePointWithInches(2, 0, 1), Point.MakePointWithInches(2, 1, 1));
+            Line intersecting2 = new Line(Point.MakePointWithInches(2, 0, .5), Point.MakePointWithInches(5, 12, 1));
+            Line intersectingAlongSide = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+            Line noIntersect = new Line(Point.MakePointWithInches(5, 0, 0), Point.MakePointWithInches(5, 1, 0));
 
             // Temporary
             frontFace.DoesIntersect(intersecting1).Should().BeTrue();
@@ -577,10 +577,10 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Contains()
         {
-            Line line = new Line(Direction.Right, PointGenerator.MakePointWithInches(1, 2, 3));
+            Line line = new Line(Direction.Right, Point.MakePointWithInches(1, 2, 3));
             Point notThere = null;
-            Point offLine = PointGenerator.MakePointWithInches(0, 0, 3);
-            Point onLine = PointGenerator.MakePointWithInches(0, 2, 3);
+            Point offLine = Point.MakePointWithInches(0, 0, 3);
+            Point onLine = Point.MakePointWithInches(0, 2, 3);
 
             
             (line.Contains(notThere)).Should().BeFalse();
@@ -591,8 +591,8 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_Contains_PrecisionCheck()
         {
-            Point point1 = PointGenerator.MakePointWithInches(1, 1, 2);
-            Point point2 = PointGenerator.MakePointWithInches(-2.5, 73, 3.5);
+            Point point1 = Point.MakePointWithInches(1, 1, 2);
+            Point point2 = Point.MakePointWithInches(-2.5, 73, 3.5);
             Line testLine = new Line(point1, point2);
 
             testLine.Contains(point1).Should().BeTrue();
@@ -602,7 +602,7 @@ namespace ClearspanTypeLibrary.Tests
         [Test()]
         public void Line_UnitVector()
         {
-            Line testLine = new Line(PointGenerator.MakePointWithInches(2, 3, 1), PointGenerator.MakePointWithInches(5, -7, 0));
+            Line testLine = new Line(Point.MakePointWithInches(2, 3, 1), Point.MakePointWithInches(5, -7, 0));
             Vector unitVector = testLine.UnitVector(DistanceType.Inch);
 
             unitVector.Magnitude.Should().Be(new Distance(DistanceType.Centimeter, 2.54));

@@ -44,7 +44,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_JSON()
         {
-            Point point = PointGenerator.MakePointWithInches(1, 2, 2);
+            Point point = Point.MakePointWithInches(1, 2, 2);
 
             var json = JsonConvert.SerializeObject(point);
             Point deserializedPoint = JsonConvert.DeserializeObject<Point>(json);
@@ -108,13 +108,13 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_IsOnLineStandardTest()
         {
-            Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
-            Line testLine = new Line(testBasePoint, PointGenerator.MakePointWithInches(2, 3, 1));
-            Point pointOnLine = PointGenerator.MakePointWithInches(3, 6, 0);
+            Point testBasePoint = Point.MakePointWithInches(1, 0, 2);
+            Line testLine = new Line(testBasePoint, Point.MakePointWithInches(2, 3, 1));
+            Point pointOnLine = Point.MakePointWithInches(3, 6, 0);
 
-            Point testBase = PointGenerator.MakePointWithInches(0, 0);
-            Line testLine2 = new Line(testBase, PointGenerator.MakePointWithInches(5, 0));
-            Point pointOnLine2 = PointGenerator.MakePointWithInches(3, 0);
+            Point testBase = Point.MakePointWithInches(0, 0);
+            Line testLine2 = new Line(testBase, Point.MakePointWithInches(5, 0));
+            Point pointOnLine2 = Point.MakePointWithInches(3, 0);
 
             bool result = pointOnLine.IsOnLine(testLine);
             bool result2 = pointOnLine2.IsOnLine(testLine2);
@@ -128,12 +128,12 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_IsOnLineWithComponentOfDirectionEqualToZeroTest()
         {
-            Point testBasePoint = PointGenerator.MakePointWithInches(1, 0, 2);
-            Direction testDirection = new Direction(PointGenerator.MakePointWithInches(0, 3, 1));
+            Point testBasePoint = Point.MakePointWithInches(1, 0, 2);
+            Direction testDirection = new Direction(Point.MakePointWithInches(0, 3, 1));
 
             Line testLine = new Line(testDirection, testBasePoint);
 
-            Point pointOnLine = PointGenerator.MakePointWithInches(1, 6, 4);
+            Point pointOnLine = Point.MakePointWithInches(1, 6, 4);
 
             pointOnLine.IsOnLine(testLine).Should().BeTrue();
         }
@@ -141,50 +141,50 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_Rotate3DTest()
         {
-            Point originPoint = PointGenerator.MakePointWithInches(1, 0, 0);
+            Point originPoint = Point.MakePointWithInches(1, 0, 0);
             Angle rotationAngle = new Angle(AngleType.Degree, 90);
 
             Point newPoint = originPoint.Rotate3D(new Rotation(Line.ZAxis, rotationAngle));
 
-            newPoint.Should().Be(PointGenerator.MakePointWithInches(0, 1, 0));
+            newPoint.Should().Be(Point.MakePointWithInches(0, 1, 0));
         }
 
         [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin()
         {
-            Point pointToRotate = PointGenerator.MakePointWithInches(4, -2, 2);
-            Line axis = new Line(new Direction(PointGenerator.MakePointWithInches(-1, -5, -3)), PointGenerator.MakePointWithInches(2, -2, -3));
+            Point pointToRotate = Point.MakePointWithInches(4, -2, 2);
+            Line axis = new Line(new Direction(Point.MakePointWithInches(-1, -5, -3)), Point.MakePointWithInches(2, -2, -3));
 
             Angle rotationAngle = new Angle(AngleType.Degree, 322);
 
             Point newPoint = pointToRotate.Rotate3D(new Rotation(axis, rotationAngle));
 
-            newPoint.Should().Be(PointGenerator.MakePointWithInches(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
+            newPoint.Should().Be(Point.MakePointWithInches(6.2806322893240427, -1.3811031899761135, 0.20829455351884096));
         }
 
         [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin_PointIsOrigin()
         {
-            Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Line axis = new Line(PointGenerator.MakePointWithInches(1, -1, 0), PointGenerator.MakePointWithInches(1, 1, 0));
+            Point originPoint = Point.MakePointWithInches(0, 0, 0);
+            Line axis = new Line(Point.MakePointWithInches(1, -1, 0), Point.MakePointWithInches(1, 1, 0));
             Angle rotationAngle = new Angle(AngleType.Degree, 212);
 
             Point newPoint = originPoint.Rotate3D(new Rotation(axis, rotationAngle));
 
-            newPoint.Should().Be(PointGenerator.MakePointWithInches(1.8480480961564261, 0, -0.52991926423320479));
+            newPoint.Should().Be(Point.MakePointWithInches(1.8480480961564261, 0, -0.52991926423320479));
         }
 
         [Test()]
         public void Point_IsOnLineSegment()
         {
-            LineSegment testSegment = new LineSegment(PointGenerator.MakePointWithInches(0, 0), PointGenerator.MakePointWithInches(5, 0));
-            LineSegment testSegment2 = new LineSegment(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(-5, -5, 0));
-            Point testPointT1 = PointGenerator.MakePointWithInches(3, 0);
-            Point testPointT2 = PointGenerator.MakePointWithInches(0, 0);
-            Point testPointT3 = PointGenerator.MakePointWithInches(5, 0);
-            Point testPointF1 = PointGenerator.MakePointWithInches(6, 0);
-            Point testPointF2 = PointGenerator.MakePointWithInches(-7, 4);
-            Point testPointF3 = PointGenerator.MakePointWithInches(12.7, 12.7,0);
+            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(5, 0));
+            LineSegment testSegment2 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-5, -5, 0));
+            Point testPointT1 = Point.MakePointWithInches(3, 0);
+            Point testPointT2 = Point.MakePointWithInches(0, 0);
+            Point testPointT3 = Point.MakePointWithInches(5, 0);
+            Point testPointF1 = Point.MakePointWithInches(6, 0);
+            Point testPointF2 = Point.MakePointWithInches(-7, 4);
+            Point testPointF3 = Point.MakePointWithInches(12.7, 12.7,0);
 
             bool resultT1 = testPointT1.IsOnLineSegment(testSegment);
             bool resultT2 = testPointT2.IsOnLineSegment(testSegment);
@@ -204,12 +204,12 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_MirrorAcrossTest_ZAxis()
         {
-            Point pointToRotate = PointGenerator.MakePointWithInches(3, 1, 2);
+            Point pointToRotate = Point.MakePointWithInches(3, 1, 2);
 
-            Line axisLine = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
+            Line axisLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
             Point actualResult = pointToRotate.MirrorAcross(axisLine);
 
-            Point expectedResult = PointGenerator.MakePointWithInches(-3, -1, 2);
+            Point expectedResult = Point.MakePointWithInches(-3, -1, 2);
 
             actualResult.Should().Be(expectedResult);
         }
@@ -217,14 +217,14 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_MakePerpendicularLineSegmentTest()
         {
-            Point destinationLineBasePoint = PointGenerator.MakePointWithInches(1, 0, 0);
-            Line destinationLine = new Line(destinationLineBasePoint, PointGenerator.MakePointWithInches(1, 1, 0));
+            Point destinationLineBasePoint = Point.MakePointWithInches(1, 0, 0);
+            Line destinationLine = new Line(destinationLineBasePoint, Point.MakePointWithInches(1, 1, 0));
 
-            Point testPoint = PointGenerator.MakePointWithInches(1, 0.5, 0.5);
+            Point testPoint = Point.MakePointWithInches(1, 0.5, 0.5);
 
             LineSegment actualResult = testPoint.MakePerpendicularLineSegment(destinationLine);
 
-            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(1, .5, 0));
+            LineSegment expectedResult = new LineSegment(testPoint, Point.MakePointWithInches(1, .5, 0));
 
             (actualResult == expectedResult).Should().BeTrue();
         }
@@ -232,14 +232,14 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_MakePerpendicularLineSegmentTest2()
         {
-            Point destinationLineBasePoint = PointGenerator.MakePointWithInches(2,3,4);
-            Line destinationLine = new Line(new Direction(PointGenerator.MakePointWithInches(6,4,-6)), destinationLineBasePoint);
+            Point destinationLineBasePoint = Point.MakePointWithInches(2,3,4);
+            Line destinationLine = new Line(new Direction(Point.MakePointWithInches(6,4,-6)), destinationLineBasePoint);
 
-            Point testPoint = PointGenerator.MakePointWithInches(0,0,0);
+            Point testPoint = Point.MakePointWithInches(0,0,0);
 
             LineSegment actualResult = testPoint.MakePerpendicularLineSegment(destinationLine);
 
-            LineSegment expectedResult = new LineSegment(testPoint, PointGenerator.MakePointWithInches(2, 3, 4));
+            LineSegment expectedResult = new LineSegment(testPoint, Point.MakePointWithInches(2, 3, 4));
 
             actualResult.Should().Be(expectedResult);
         }
@@ -248,14 +248,14 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_TranslateTest()
         {
-            Point pointToTranslate = PointGenerator.MakePointWithInches(1, 2, 3);
-            //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(-1, 5, 4));
+            Point pointToTranslate = Point.MakePointWithInches(1, 2, 3);
+            //Direction directionToTranslate = new Direction(Point.MakePointWithInches(-1, 5, 4));
             //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 12.9614814);
-            Point testDisplacement = PointGenerator.MakePointWithInches(-2, 10, 8);
+            Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
             Point actualResult = pointToTranslate.Translate(new Translation(testDisplacement));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(-1, 12, 11);
+            Point expectedResult = Point.MakePointWithInches(-1, 12, 11);
 
             actualResult.Should().Be(expectedResult);
         }
@@ -263,15 +263,15 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_TranslateTest_OneComponent()
         {
-            Point pointToTranslate = PointGenerator.MakePointWithInches(1,1,1);
+            Point pointToTranslate = Point.MakePointWithInches(1,1,1);
             
-            //Direction directionToTranslate = new Direction(PointGenerator.MakePointWithInches(1, 0, 0));
+            //Direction directionToTranslate = new Direction(Point.MakePointWithInches(1, 0, 0));
             //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 4);
-            Point testDisplacement = PointGenerator.MakePointWithInches(4, 0, 0);
+            Point testDisplacement = Point.MakePointWithInches(4, 0, 0);
 
             Point actualResult = pointToTranslate.Translate(new Translation(testDisplacement));
 
-            Point expectedResult = PointGenerator.MakePointWithInches(5,1,1);
+            Point expectedResult = Point.MakePointWithInches(5,1,1);
 
             actualResult.Should().Be(expectedResult);
         }
@@ -279,9 +279,9 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_ShiftTest()
         {            
-            Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
+            Point point1 = Point.MakePointWithInches(1, 1, 0);
 
-            Point displacementPoint = PointGenerator.MakePointWithInches(1, -1, 1);
+            Point displacementPoint = Point.MakePointWithInches(1, -1, 1);
 
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
@@ -291,7 +291,7 @@ namespace GeometryClassLibraryTests
 
             Point actual1 = point1.Shift(testShift);
 
-            Point expected1 = PointGenerator.MakePointWithInches(1 + 0, -1 + -0.5298, 1 + 1.3112);
+            Point expected1 = Point.MakePointWithInches(1 + 0, -1 + -0.5298, 1 + 1.3112);
 
             actual1.Should().Be(expected1);
         }
@@ -299,7 +299,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Point_ShiftTest_RotateOnly()
         {
-            Point point1 = PointGenerator.MakePointWithInches(1, 1, 0);
+            Point point1 = Point.MakePointWithInches(1, 1, 0);
 
             Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
@@ -309,7 +309,7 @@ namespace GeometryClassLibraryTests
 
             Point actual1 = point1.Shift(testShift);
 
-            Point expected1 = PointGenerator.MakePointWithInches(0, -0.52977372496316655, 1.3112359819417141);
+            Point expected1 = Point.MakePointWithInches(0, -0.52977372496316655, 1.3112359819417141);
 
             actual1.Should().Be(expected1);
         }

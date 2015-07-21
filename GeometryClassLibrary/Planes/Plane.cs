@@ -379,18 +379,18 @@ namespace GeometryClassLibrary
                 
 
                 //now assign them to the point in the way the need to be (assume z again)
-                Point intersectLinePoint = PointGenerator.MakePointWithInches(results[0], results[1], 0);
+                Point intersectLinePoint = Point.MakePointWithInches(results[0], results[1], 0);
                 if (intersectionLineDirection.ZComponent == new Distance())
                 {
                     //if y was what we made zero then it was third and z was second
                     if (intersectionLineDirection.YComponent != new Distance())
                     {
-                        intersectLinePoint = PointGenerator.MakePointWithInches(results[0], 0, results[1]);
+                        intersectLinePoint = Point.MakePointWithInches(results[0], 0, results[1]);
                     }
                     //if x is what we made 0 than it was third and z was first
                     else
                     {
-                        intersectLinePoint = PointGenerator.MakePointWithInches(0, results[1], results[0]);
+                        intersectLinePoint = Point.MakePointWithInches(0, results[1], results[0]);
                     }
                 }
                 return new Line(intersectionLineDirection.Direction, intersectLinePoint);

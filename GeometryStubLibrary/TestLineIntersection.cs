@@ -6,7 +6,7 @@ namespace TestGeometryStubLibrary
         {
             public TestFirstLine()
             {
-                Point testPoint1 = PointGenerator.MakePointWithInches(1, 1, 0);
+                Point testPoint1 = Point.MakePointWithInches(1, 1, 0);
                 Direction testDirection1 = Direction.Right;
 
                 this.BasePoint = testPoint1;
@@ -19,7 +19,7 @@ namespace TestGeometryStubLibrary
     {
         public TestSecondLine()
         {
-            Point testPoint2 = PointGenerator.MakePointWithInches(4, 1, 0);
+            Point testPoint2 = Point.MakePointWithInches(4, 1, 0);
             Direction testDirection2 = Direction.Right;
 
             this.BasePoint = testPoint2;

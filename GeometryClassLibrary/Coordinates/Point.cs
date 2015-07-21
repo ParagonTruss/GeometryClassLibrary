@@ -15,7 +15,7 @@ namespace GeometryClassLibrary
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Point : IComparable
+    public class Point
     {
         #region Properties and Fields
 
@@ -335,7 +335,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
-            Point originPoint = PointGenerator.MakePointWithInches(0, 0, 0);
+            Point originPoint = Point.MakePointWithInches(0, 0, 0);
 
             bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisToRotateAround);
 
@@ -365,7 +365,7 @@ namespace GeometryClassLibrary
             double yOfRotatedPoint = rotatedPointMatrix.GetElement(1, 0);
             double zOfRotatedPoint = rotatedPointMatrix.GetElement(2, 0);
 
-            Point pointToReturn = PointGenerator.MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
+            Point pointToReturn = Point.MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
 
             if (originIsOnPassedAxis)
             {
@@ -507,9 +507,60 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        public int CompareTo(object obj)
+        #region Static Factory Methods
+        public static Point Origin
         {
-            throw new NotImplementedException();
+            get
+            {
+                return new Point();
+            }
         }
+
+        public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3 = 0)
+        {
+            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
+            Distance dim3 = new Distance(DistanceType.Inch, inputValue3);
+
+            return new Point(dim1, dim2, dim3);
+        }
+
+        public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3 = 0)
+        {
+            Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);
+            Distance dim3 = new Distance(DistanceType.Millimeter, inputValue3);
+
+            return new Point(dim1, dim2, dim3);
+        }
+
+        public static Point MakePointWithInches(string inputString1, string inputString2)
+        {
+            double inputValue1 = double.Parse(inputString1);
+            double inputValue2 = double.Parse(inputString2);
+
+            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
+            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
+            return new Point(dim1, dim2);
+        }
+
+        public static Point[] Make2DPointArrayWithInches(double[] values)
+        {
+            Point[] toReturn = null;
+
+            if (values.Length % 2 == 0)
+            {
+                toReturn = new Point[values.Length / 2];
+
+                for (int i = 0; i < values.Length; i += 2)
+                {
+                    toReturn[i / 2] = MakePointWithInches(values[i], values[i + 1]);
+                }
+            }
+
+            return toReturn;
+        }
+
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace GeometryStubLibrary
     //{
     //    public TestLineSegment() : base() //No Base Constructor
     //    {
-    //        Point point = PointGenerator.MakePointWithInches(0, 5);
+    //        Point point = Point.MakePointWithInches(0, 5);
     //        Distance distance = new Distance(DistanceType.Mile, 50);
 
     //        this.BasePoint = point;

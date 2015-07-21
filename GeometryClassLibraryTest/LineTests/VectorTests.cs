@@ -16,9 +16,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_DoesPointInOppositeDirectionOf()
         {
-            Vector vector1 = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+            Vector vector1 = new Vector(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(1, 1));
+            Vector vector2 = new Vector(Point.MakePointWithInches(4, 1), Point.MakePointWithInches(1, 1));
 
             vector1.HasOppositeDirectionOf(vector2).Should().BeTrue();
         }
@@ -26,9 +26,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_DoesNotPointInOppositeDirectionOf()
         {
-            Vector vector1 = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+            Vector vector1 = new Vector(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(4, 1), PointGenerator.MakePointWithInches(3, 3));
+            Vector vector2 = new Vector(Point.MakePointWithInches(4, 1), Point.MakePointWithInches(3, 3));
 
             vector1.HasOppositeDirectionOf(vector2).Should().BeFalse();
         }
@@ -36,9 +36,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_DoesPointInSameDirectionAs()
         {
-            Vector vector1 = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+            Vector vector1 = new Vector(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(1,2), PointGenerator.MakePointWithInches(4, 2));
+            Vector vector2 = new Vector(Point.MakePointWithInches(1,2), Point.MakePointWithInches(4, 2));
 
             vector1.HasSameDirectionAs(vector2).Should().BeTrue();
         }
@@ -46,9 +46,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_DoesNotPointInSameDirectionAs()
         {
-            Vector vector1 = new Vector(PointGenerator.MakePointWithInches(1, 1), PointGenerator.MakePointWithInches(4, 1));
+            Vector vector1 = new Vector(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(2, 2), PointGenerator.MakePointWithInches(4, 4));
+            Vector vector2 = new Vector(Point.MakePointWithInches(2, 2), Point.MakePointWithInches(4, 4));
 
             vector1.HasSameDirectionAs(vector2).Should().BeFalse();
         }
@@ -57,29 +57,29 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_Reverse()
         {
-            Point point1 = PointGenerator.MakePointWithInches(2, 2);
-            Point point2 = PointGenerator.MakePointWithInches(4, 3);
+            Point point1 = Point.MakePointWithInches(2, 2);
+            Point point2 = Point.MakePointWithInches(4, 3);
             Vector v = new Vector(point1, point2);
 
             v.Reverse().Should().Be(new Vector(point2, point1));
-            v.Reverse().Should().NotBe(new Vector(PointGenerator.MakePointWithInches(5, 3), PointGenerator.MakePointWithInches(3, 2)));
+            v.Reverse().Should().NotBe(new Vector(Point.MakePointWithInches(5, 3), Point.MakePointWithInches(3, 2)));
         }
         [Test()]
         public void Vector_FlipAboutTail()
         {
-            Vector v = new Vector(PointGenerator.MakePointWithInches(2, 2), PointGenerator.MakePointWithInches(4, 3));
+            Vector v = new Vector(Point.MakePointWithInches(2, 2), Point.MakePointWithInches(4, 3));
 
-            v.FlipAboutTail().Should().Be(new Vector(PointGenerator.MakePointWithInches(2, 2), PointGenerator.MakePointWithInches(0, 1)));
-            v.FlipAboutTail().Should().NotBe(new Vector(PointGenerator.MakePointWithInches(3, 3), PointGenerator.MakePointWithInches(1, 2)));
+            v.FlipAboutTail().Should().Be(new Vector(Point.MakePointWithInches(2, 2), Point.MakePointWithInches(0, 1)));
+            v.FlipAboutTail().Should().NotBe(new Vector(Point.MakePointWithInches(3, 3), Point.MakePointWithInches(1, 2)));
         }
 
         [Test()]
         public void Vector_FlipAboutHead()
         {
-            Vector v = new Vector(PointGenerator.MakePointWithInches(2, 2), PointGenerator.MakePointWithInches(4, 3));
+            Vector v = new Vector(Point.MakePointWithInches(2, 2), Point.MakePointWithInches(4, 3));
 
-            v.FlipAboutHead().Should().Be(new Vector(PointGenerator.MakePointWithInches(6,4), PointGenerator.MakePointWithInches(4, 3)));
-            v.FlipAboutHead().Should().NotBe(new Vector(PointGenerator.MakePointWithInches(5, 3), PointGenerator.MakePointWithInches(3, 2)));
+            v.FlipAboutHead().Should().Be(new Vector(Point.MakePointWithInches(6,4), Point.MakePointWithInches(4, 3)));
+            v.FlipAboutHead().Should().NotBe(new Vector(Point.MakePointWithInches(5, 3), Point.MakePointWithInches(3, 2)));
         }
 
         [Test()]
@@ -100,12 +100,12 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_ProjectOntoPlane()
         {
-            Vector testSegment = new Vector(PointGenerator.MakePointWithInches(2, 5, 3));
+            Vector testSegment = new Vector(Point.MakePointWithInches(2, 5, 3));
             Plane projectOnto = new Plane(Line.XAxis, Line.YAxis);
 
             Vector result = testSegment.ProjectOntoPlane(projectOnto);
 
-            Vector expected = new Vector(PointGenerator.MakePointWithInches(2, 5, 0));
+            Vector expected = new Vector(Point.MakePointWithInches(2, 5, 0));
 
             result.Should().Be(expected);
         }
@@ -113,9 +113,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_ContainsPoint()
         {
-            Vector testVector = new Vector(PointGenerator.MakePointWithInches(4, 4, -4));
-            Point testPoint = PointGenerator.MakePointWithInches(2, 2, -2);
-            Point pointNotOnVector = PointGenerator.MakePointWithInches(2, 2, -3);
+            Vector testVector = new Vector(Point.MakePointWithInches(4, 4, -4));
+            Point testPoint = Point.MakePointWithInches(2, 2, -2);
+            Point pointNotOnVector = Point.MakePointWithInches(2, 2, -3);
 
             bool resultOn = testVector.Contains(testPoint);
             bool resultNotOn = testVector.Contains(pointNotOnVector);
@@ -128,9 +128,9 @@ namespace GeometryClassLibraryTest
         public void Vector_ContainsVector()
         {
             Vector vector1 = new Vector();
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(2, 2, 4));
-            Vector vector3 = new Vector(PointGenerator.MakePointWithInches(2, 2, 4), new Point());
-            Vector vector4 = new Vector(PointGenerator.MakePointWithInches(1, 1, 2), new Point());
+            Vector vector2 = new Vector(Point.MakePointWithInches(2, 2, 4));
+            Vector vector3 = new Vector(Point.MakePointWithInches(2, 2, 4), new Point());
+            Vector vector4 = new Vector(Point.MakePointWithInches(1, 1, 2), new Point());
 
             (vector1.Contains(vector2)).Should().BeFalse();
             (vector2.Contains(vector1)).Should().BeTrue();
@@ -142,14 +142,14 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_DoesOverlapInSameDirection()
         {
-            Vector testVector = new Vector(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(4, 4, -4));
-            Vector testPartial = new Vector(PointGenerator.MakePointWithInches(2, 2, -2));
-            Vector testContained = new Vector(PointGenerator.MakePointWithInches(2, 2, -2), PointGenerator.MakePointWithInches(3, 3, -3));
-            Vector testContaining = new Vector(PointGenerator.MakePointWithInches(6, 6, -6));
+            Vector testVector = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(4, 4, -4));
+            Vector testPartial = new Vector(Point.MakePointWithInches(2, 2, -2));
+            Vector testContained = new Vector(Point.MakePointWithInches(2, 2, -2), Point.MakePointWithInches(3, 3, -3));
+            Vector testContaining = new Vector(Point.MakePointWithInches(6, 6, -6));
 
-            Vector testSameLineNotOverlap = new Vector(PointGenerator.MakePointWithInches(5, 5, -5), PointGenerator.MakePointWithInches(6, 6, -6));
-            Vector testSameBaseNoOverlap = new Vector(PointGenerator.MakePointWithInches(1, 1, -1), PointGenerator.MakePointWithInches(2, 3, -3));
-            Vector testIntersecting = new Vector(PointGenerator.MakePointWithInches(0, 0, -1), PointGenerator.MakePointWithInches(4, 4, -3));
+            Vector testSameLineNotOverlap = new Vector(Point.MakePointWithInches(5, 5, -5), Point.MakePointWithInches(6, 6, -6));
+            Vector testSameBaseNoOverlap = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(2, 3, -3));
+            Vector testIntersecting = new Vector(Point.MakePointWithInches(0, 0, -1), Point.MakePointWithInches(4, 4, -3));
 
             bool resultPartial = testVector.DoesOverlapInSameDirection(testPartial);
             bool resultContained = testVector.DoesOverlapInSameDirection(testContained);
@@ -171,11 +171,11 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_AngleBetween()
         {
-            Vector vector1 = new Vector(PointGenerator.MakePointWithInches(1, 2, 3));
-            Vector vector2 = new Vector(PointGenerator.MakePointWithInches(-2, 1, 0));
-            Vector vector3 = new Vector(PointGenerator.MakePointWithInches(-2, 1, 1));
-            Vector vector4 = new Vector(PointGenerator.MakePointWithInches(1, 0));
-            Vector vector5 = new Vector(PointGenerator.MakePointWithInches(1, Math.Sqrt(3)));
+            Vector vector1 = new Vector(Point.MakePointWithInches(1, 2, 3));
+            Vector vector2 = new Vector(Point.MakePointWithInches(-2, 1, 0));
+            Vector vector3 = new Vector(Point.MakePointWithInches(-2, 1, 1));
+            Vector vector4 = new Vector(Point.MakePointWithInches(1, 0));
+            Vector vector5 = new Vector(Point.MakePointWithInches(1, Math.Sqrt(3)));
 
             vector1.AngleBetween(vector2).Should().Be(new Angle(AngleType.Radian, 1.57079632679));
             vector1.AngleBetween(vector3).Should().Be(new Angle(AngleType.Radian, 1.23732315));

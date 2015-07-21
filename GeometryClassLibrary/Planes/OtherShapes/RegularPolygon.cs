@@ -56,7 +56,7 @@ namespace GeometryClassLibrary
 
             for (Angle i = passedRotationAngle; i < passedRotationAngle + new Angle(AngleType.Degree, 360.0); i += step) //go in a full circle
             {
-                points.Add(DegreesToXY(passedRotationAngle, passedSideLength, PointGenerator.Origin)); //code snippet from above
+                points.Add(DegreesToXY(passedRotationAngle, passedSideLength, Point.Origin)); //code snippet from above
                 passedRotationAngle += step;
             }
 

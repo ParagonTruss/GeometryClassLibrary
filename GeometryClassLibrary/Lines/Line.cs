@@ -17,9 +17,9 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         //Predefined lines to use as references
-        public readonly static Line XAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(1, 0, 0));
-        public readonly static Line YAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 1, 0));
-        public readonly static Line ZAxis = new Line(PointGenerator.MakePointWithInches(0, 0, 0), PointGenerator.MakePointWithInches(0, 0, 1));
+        public readonly static Line XAxis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 0, 0));
+        public readonly static Line YAxis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+        public readonly static Line ZAxis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
 
         /// <summary>
         /// A point on the line to use as a reference point
@@ -114,7 +114,7 @@ namespace GeometryClassLibrary
         private Point FindXYIntercept()
         {
             //make the x axis plane
-            Plane xyPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(0, 0, 1)));
+            Plane xyPlane = new Plane(new Direction(Point.MakePointWithInches(0, 0, 1)));
 
             //then find out where the line and the plane intersect
             return xyPlane.Intersection(this);
@@ -127,7 +127,7 @@ namespace GeometryClassLibrary
         private Point FindXZIntercept()
         {
             //normal vector
-            Vector normal = new Vector(PointGenerator.MakePointWithInches(0, 1, 0));
+            Vector normal = new Vector(Point.MakePointWithInches(0, 1, 0));
 
             //make the x axis plane
             Plane xzPlane = new Plane(normal.Direction);
@@ -143,7 +143,7 @@ namespace GeometryClassLibrary
         private Point FindYZIntercept()
         {
             //make the x axis plane
-            Plane yzPlane = new Plane(new Direction(PointGenerator.MakePointWithInches(1, 0, 0)));
+            Plane yzPlane = new Plane(new Direction(Point.MakePointWithInches(1, 0, 0)));
 
             //then find out where the line and the plane intersect
             return yzPlane.Intersection(this);
@@ -168,7 +168,7 @@ namespace GeometryClassLibrary
         /// <param name="passedDirectionReferencePoint"></param>
         public Line(Point passedDirectionReferencePoint)
         {
-            _basePoint = PointGenerator.MakePointWithMillimeters(0, 0, 0);
+            _basePoint = Point.MakePointWithMillimeters(0, 0, 0);
             _direction = new Direction(passedDirectionReferencePoint);
         }
 
@@ -336,21 +336,21 @@ namespace GeometryClassLibrary
             {
                 case Enums.Axis.X:
                     extrustionLine = new Line(this.BasePoint,
-                        PointGenerator.MakePointWithInches(
+                        Point.MakePointWithInches(
                             this.BasePoint.X.Inches - 1,
                             this.BasePoint.Y.Inches,
                             this.BasePoint.Z.Inches));
                     break;
                 case Enums.Axis.Y:
                     extrustionLine = new Line(this.BasePoint,
-                        PointGenerator.MakePointWithInches(
+                        Point.MakePointWithInches(
                             this.BasePoint.X.Inches,
                             this.BasePoint.Y.Inches - 1,
                             this.BasePoint.Z.Inches));
                     break;
                 case Enums.Axis.Z:
                     extrustionLine = new Line(this.BasePoint,
-                        PointGenerator.MakePointWithInches(
+                        Point.MakePointWithInches(
                         this.BasePoint.X.Inches,
                         this.BasePoint.Y.Inches,
                         this.BasePoint.Z.Inches - 1));

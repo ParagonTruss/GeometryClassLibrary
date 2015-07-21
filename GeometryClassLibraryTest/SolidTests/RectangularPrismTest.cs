@@ -24,15 +24,15 @@ namespace GeometryClassLibraryTests
             (prism.Polygons.Count == 6).Should().BeTrue();
             (prism.Vertices.Count == 8).Should().BeTrue();
 
-            Point basePoint = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point topLeftPoint = PointGenerator.MakePointWithInches(0, 5, 0);
-            Point bottomRightPoint = PointGenerator.MakePointWithInches(5, 0, 0);
-            Point topRightPoint = PointGenerator.MakePointWithInches(5, 5, 0);
+            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point topLeftPoint = Point.MakePointWithInches(0, 5, 0);
+            Point bottomRightPoint = Point.MakePointWithInches(5, 0, 0);
+            Point topRightPoint = Point.MakePointWithInches(5, 5, 0);
 
-            Point backbasepoint = PointGenerator.MakePointWithInches(0, 0, 5);
-            Point backtopleftpoint = PointGenerator.MakePointWithInches(0, 5, 5);
-            Point backbottomrightpoint = PointGenerator.MakePointWithInches(5, 0, 5);
-            Point backtoprightpoint = PointGenerator.MakePointWithInches(5, 5, 5);
+            Point backbasepoint = Point.MakePointWithInches(0, 0, 5);
+            Point backtopleftpoint = Point.MakePointWithInches(0, 5, 5);
+            Point backbottomrightpoint = Point.MakePointWithInches(5, 0, 5);
+            Point backtoprightpoint = Point.MakePointWithInches(5, 5, 5);
 
             List<Point> expectedPoints = new List<Point>() { basePoint, topLeftPoint, bottomRightPoint, topRightPoint, backbasepoint, backtopleftpoint, backbottomrightpoint, backtoprightpoint };
 

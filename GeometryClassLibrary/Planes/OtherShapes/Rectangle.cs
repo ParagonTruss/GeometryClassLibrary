@@ -9,14 +9,14 @@ namespace GeometryClassLibrary
 
     public class Rectangle : Polygon
     {
-        public Rectangle(LineSegment baseSegment, Distance height, Vector referencePlaneNormal = null)
+        public Rectangle(Vector baseSegment, Distance height, Vector referencePlaneNormal = null)
             : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }
 
-        private static Polygon _makeRectangle(LineSegment baseSegment, Distance height, Vector referencePlaneNormal)
+        private static Polygon _makeRectangle(Vector baseSegment, Distance height, Vector referencePlaneNormal)
         {
             if (referencePlaneNormal == null)
             {
-                referencePlaneNormal = new Vector(PointGenerator.MakePointWithInches(0, 0, 1));
+                referencePlaneNormal = new Vector(Point.MakePointWithInches(0, 0, 1));
             }
 
             Vector heightVector = referencePlaneNormal.CrossProduct(baseSegment);

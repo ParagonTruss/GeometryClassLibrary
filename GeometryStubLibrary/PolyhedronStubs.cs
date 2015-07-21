@@ -7,21 +7,21 @@ namespace GeometryStubLibrary
     public class TestRectangularBox1 : RectangularPrism
     {
         public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
-        public override Point Centroid { get { return PointGenerator.MakePointWithInches(2, 6, 1); } }
-        public TestRectangularBox1() : base(PointGenerator.MakePointWithInches(4, 12, 2)) { }
+        public override Point Centroid { get { return Point.MakePointWithInches(2, 6, 1); } }
+        public TestRectangularBox1() : base(Point.MakePointWithInches(4, 12, 2)) { }
     }
 
     public class TestRectangularBox2 : RectangularPrism
     {
         public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
-        public override Point Centroid  { get { return PointGenerator.MakePointWithInches(2, 4, 1.5); } }
-        public TestRectangularBox2() : base(PointGenerator.MakePointWithInches(4, 8, 3)) { }
+        public override Point Centroid  { get { return Point.MakePointWithInches(2, 4, 1.5); } }
+        public TestRectangularBox2() : base(Point.MakePointWithInches(4, 8, 3)) { }
     }
 
     public class TestTetrahedron : Polyhedron
     {
         public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 48); } }
-        public override Point Centroid { get { return PointGenerator.MakePointWithInches(1, 3, 1.5); } }
+        public override Point Centroid { get { return Point.MakePointWithInches(1, 3, 1.5); } }
         public TestTetrahedron()
             : base(_makeFaces())
         {
@@ -29,10 +29,10 @@ namespace GeometryStubLibrary
         }
         private static List<Polygon> _makeFaces()
         {
-            Point basePoint1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point basePoint2 = PointGenerator.MakePointWithInches(0, 12, 0);
-            Point basePoint3 = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point peakPoint = PointGenerator.MakePointWithInches(0, 0, 6);
+            Point basePoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint2 = Point.MakePointWithInches(0, 12, 0);
+            Point basePoint3 = Point.MakePointWithInches(4, 0, 0);
+            Point peakPoint = Point.MakePointWithInches(0, 0, 6);
 
             List<Polygon> faces = new List<Polygon>();
             faces.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3 }));
@@ -48,7 +48,7 @@ namespace GeometryStubLibrary
     public class TestConcavePentagonalPrism : Polyhedron
     {
         public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 18); } }
-        public override Point Centroid { get { return PointGenerator.MakePointWithInches(11.0 / 9, 1, 2); } }
+        public override Point Centroid { get { return Point.MakePointWithInches(11.0 / 9, 1, 2); } }
         public TestConcavePentagonalPrism()
             : base(_makeFaces())
         {
@@ -56,16 +56,16 @@ namespace GeometryStubLibrary
         }
         private static List<Polygon> _makeFaces()
         {
-            Point basePoint1 = PointGenerator.MakePointWithInches(0, 0, -1);
-            Point basePoint2 = PointGenerator.MakePointWithInches(2, 0, -1);
-            Point basePoint3 = PointGenerator.MakePointWithInches(2, 2, -1);
-            Point basePoint4 = PointGenerator.MakePointWithInches(0, 2, -1);
-            Point basePoint5 = PointGenerator.MakePointWithInches(1, 1, -1);
-            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 5);
-            Point topPoint2 = PointGenerator.MakePointWithInches(2, 0, 5);
-            Point topPoint3 = PointGenerator.MakePointWithInches(2, 2, 5);
-            Point topPoint4 = PointGenerator.MakePointWithInches(0, 2, 5);
-            Point topPoint5 = PointGenerator.MakePointWithInches(1, 1, 5);
+            Point basePoint1 = Point.MakePointWithInches(0, 0, -1);
+            Point basePoint2 = Point.MakePointWithInches(2, 0, -1);
+            Point basePoint3 = Point.MakePointWithInches(2, 2, -1);
+            Point basePoint4 = Point.MakePointWithInches(0, 2, -1);
+            Point basePoint5 = Point.MakePointWithInches(1, 1, -1);
+            Point topPoint1 = Point.MakePointWithInches(0, 0, 5);
+            Point topPoint2 = Point.MakePointWithInches(2, 0, 5);
+            Point topPoint3 = Point.MakePointWithInches(2, 2, 5);
+            Point topPoint4 = Point.MakePointWithInches(0, 2, 5);
+            Point topPoint5 = Point.MakePointWithInches(1, 1, 5);
 
             Polygon bottomFace = new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 });
             Polygon topFace = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 });
@@ -96,18 +96,18 @@ namespace GeometryStubLibrary
 
         private static List<Polygon> _makeFaces()
         {
-            Point bottomPoint1 = PointGenerator.MakePointWithInches(0, 0, 0);
-            Point bottomPoint2 = PointGenerator.MakePointWithInches(0, 4, 0);
-            Point bottomPoint3 = PointGenerator.MakePointWithInches(4, 4, 0);
-            Point bottomPoint4 = PointGenerator.MakePointWithInches(4, 0, 0);
-            Point middlePoint1 = PointGenerator.MakePointWithInches(1, 1, 5);
-            Point middlePoint2 = PointGenerator.MakePointWithInches(1, 3, 5);
-            Point middlePoint3 = PointGenerator.MakePointWithInches(3, 3, 5);
-            Point middlePoint4 = PointGenerator.MakePointWithInches(3, 1, 5);
-            Point topPoint1 = PointGenerator.MakePointWithInches(0, 0, 10);
-            Point topPoint2 = PointGenerator.MakePointWithInches(0, 4, 10);
-            Point topPoint3 = PointGenerator.MakePointWithInches(4, 4, 10);
-            Point topPoint4 = PointGenerator.MakePointWithInches(4, 0, 10);
+            Point bottomPoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottomPoint2 = Point.MakePointWithInches(0, 4, 0);
+            Point bottomPoint3 = Point.MakePointWithInches(4, 4, 0);
+            Point bottomPoint4 = Point.MakePointWithInches(4, 0, 0);
+            Point middlePoint1 = Point.MakePointWithInches(1, 1, 5);
+            Point middlePoint2 = Point.MakePointWithInches(1, 3, 5);
+            Point middlePoint3 = Point.MakePointWithInches(3, 3, 5);
+            Point middlePoint4 = Point.MakePointWithInches(3, 1, 5);
+            Point topPoint1 = Point.MakePointWithInches(0, 0, 10);
+            Point topPoint2 = Point.MakePointWithInches(0, 4, 10);
+            Point topPoint3 = Point.MakePointWithInches(4, 4, 10);
+            Point topPoint4 = Point.MakePointWithInches(4, 0, 10);
 
             Polygon bottomFace = new Polygon(new List<Point>() { bottomPoint1, bottomPoint2, bottomPoint3, bottomPoint4 });
             Polygon topFace = new Polygon(new List<Point>() { topPoint1, topPoint2, topPoint3, topPoint4 });

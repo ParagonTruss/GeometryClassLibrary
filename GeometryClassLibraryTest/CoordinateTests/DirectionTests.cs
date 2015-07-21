@@ -39,18 +39,18 @@ namespace GeometryClassLibraryTests
             (direction1 != direction5).Should().BeTrue();
             (direction5 != direction1).Should().BeTrue();
 
-            Point testPoint = PointGenerator.MakePointWithInches(0.006, 0.003, -1.4999);
+            Point testPoint = Point.MakePointWithInches(0.006, 0.003, -1.4999);
             Direction testErrorHandling = new Direction(testPoint);
             Direction expectedErrorDirection = Direction.Back;
             (testErrorHandling == expectedErrorDirection).Should().BeTrue();
 
             //now try the 0 Direction too
-            Point testPoint0 = PointGenerator.MakePointWithInches(0.006, 0.003, 1.4999);
+            Point testPoint0 = Point.MakePointWithInches(0.006, 0.003, 1.4999);
             Direction testErrorHandling0 = new Direction(testPoint0);
             Direction expectedErrorDirection0 = Direction.Out;
             (testErrorHandling0 == expectedErrorDirection0).Should().BeTrue();
 
-            Point testPointPassedEqualityTo0 = PointGenerator.MakePointWithInches(1.0 / 32, 0.006, 1.488);
+            Point testPointPassedEqualityTo0 = Point.MakePointWithInches(1.0 / 32, 0.006, 1.488);
             Direction testErrorNotEqualTo0 = new Direction(testPointPassedEqualityTo0);
             (testErrorNotEqualTo0 == expectedErrorDirection0).Should().BeFalse();
         }

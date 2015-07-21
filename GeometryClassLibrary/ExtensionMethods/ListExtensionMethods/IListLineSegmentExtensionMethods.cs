@@ -459,7 +459,7 @@ namespace GeometryClassLibrary
             List<LineSegment> profileSegments = new List<LineSegment>();
 
             Point currentPoint = null;
-            Vector referenceVector = new Vector(PointGenerator.MakePointWithInches(0, -1));
+            Vector referenceVector = new Vector(Point.MakePointWithInches(0, -1));
             while (currentPoint != firstPoint)
             {
                 if (currentPoint == null)
