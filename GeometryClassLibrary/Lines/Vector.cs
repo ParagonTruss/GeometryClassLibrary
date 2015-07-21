@@ -121,30 +121,35 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        /// <param name="passedBasePoint">The point at which the vector starts</param>
-        /// <param name="passedVector">The vector with the direction and magnitude to use for this vector</param>
-        public Vector(Point passedBasePoint, Vector passedVector)
-            : base(passedVector.Direction, passedBasePoint)
+        /// <param name="basePoint">The point at which the vector starts</param>
+        /// <param name="vector">The vector with the direction and magnitude to use for this vector</param>
+        public Vector(Point basePoint, Vector vector)
+            : base(vector.Direction, basePoint)
         {
-            _magnitude = new Distance(passedVector._magnitude);
+            _magnitude = new Distance(vector._magnitude);
+        }
+
+        public Vector(Direction direction, Distance magnitude) : base(direction)
+        {
+            this._magnitude = magnitude;
         }
 
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
         /// </summary>
         /// <param name="passedBasePoint">The point at which the vector starts</param>
-        /// <param name="passedDirection">The direction the vector points</param>
+        /// <param name="direction">The direction the vector points</param>
         /// <param name="passedMagnitude">The length of the Vector</param>
-        public Vector(Point passedBasePoint, Direction passedDirection, Distance passedMagnitude = null)
-            : base(passedDirection, passedBasePoint)
+        public Vector(Point passedBasePoint, Direction direction, Distance magnitude = null)
+            : base(direction, passedBasePoint)
         {
-            if (passedMagnitude == null)
+            if (magnitude == null)
             {
                 _magnitude = Distance.Inch;
             }
             else
             {
-                _magnitude = new Distance(passedMagnitude);
+                _magnitude = new Distance(magnitude);
             }
         }
 

@@ -49,8 +49,8 @@ namespace GeometryClassLibrary
         /// <param name="passedY"></param>
         public Point(Distance passedX, Distance passedY)
         {
-            X = passedX;
-            Y = passedY;
+            X = new Distance(passedX);
+            Y = new Distance(passedY);
             Z = new Distance(DistanceType.Inch, 0);
         }
 
@@ -60,9 +60,9 @@ namespace GeometryClassLibrary
         [JsonConstructor]
         public Point(Distance x, Distance y, Distance z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            X = new Distance(x);
+            Y = new Distance(y);
+            Z = new Distance(z);
         }
 
         /// <summary>
@@ -71,9 +71,21 @@ namespace GeometryClassLibrary
         /// <param name="Distance"></param>
         /// <param name="angle1"></param>
         /// <param name="angle2"></param>
-        public Point(Distance Distance, Angle angle1, Angle angle2)
+        public Point(Distance distance, Angle phi, Angle theta)
         {
-            throw new NotImplementedException();
+            var direction = new Direction(phi, theta);
+        }
+
+        /// <summary>
+        /// Creates the point that is the specified distance from the origin, in the specified direction.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="multiplier"></param>
+        public Point(Direction direction, Distance fromOrigin)
+        {
+            this.X = direction.XComponent * fromOrigin;
+            this.Y = direction.YComponent * fromOrigin;
+            this.Z = direction.ZComponent * fromOrigin;
         }
 
         /// <summary>

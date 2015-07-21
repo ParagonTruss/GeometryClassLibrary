@@ -127,6 +127,14 @@ namespace GeometryClassLibrary
             this.Theta = new Angle(AngleType.Degree, 90);
         }
 
+        public Direction(double x, double y, double z)
+        {
+            var rho = Math.Sqrt(x*x + y*y + z*z);
+            var r = Math.Sqrt(x*x + y*y);
+            this.Theta = Angle.ArcSin(r / rho);
+            this.Phi = Angle.ArcCos(x / r);
+        }
+
         /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)
         /// </summary>
@@ -268,16 +276,16 @@ namespace GeometryClassLibrary
         /// <param name="angleToZAxis">The angle from the positive z-axis</param>
         /// <param name="allowAnglesOutOfBounds">If it is true it will adjust the given angles to within the proper bounds, otherwise
         /// if the are outside it will throw an error</param>
-        public Direction(Angle xyPlaneAngle, Angle angleToZAxis, Boolean allowAnglesOutOfBounds = false)
+        public Direction(Angle phi, Angle theta, Boolean allowAnglesOutOfBounds = false)
         {
-            this.Phi = xyPlaneAngle;
-            this.Theta = angleToZAxis;
+            this.Phi = phi;
+            this.Theta = theta;
 
             //if we can have angles outside the phi bound than adjust ours if necessary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (angleToZAxis < new Angle() || angleToZAxis > new Angle(AngleType.Degree, 180))
+                if (theta < new Angle() || theta > new Angle(AngleType.Degree, 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -301,6 +309,15 @@ namespace GeometryClassLibrary
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public static Vector operator *(Direction d, Distance m)
+        {
+            return new Vector(d, m);
+        }
+        public static Vector operator *(Distance m, Direction d)
+        {
+            return new Vector(d, m);
         }
 
         public static bool operator ==(Direction direction1, Direction direction2)
