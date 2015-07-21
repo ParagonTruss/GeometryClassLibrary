@@ -243,6 +243,12 @@ namespace GeometryClassLibrary
             return planeVector.IsPerpendicularTo(NormalVector);
         }
 
+        public Plane Translate(Translation translation)
+        {
+            Vector newNormalVector = this.NormalVector.Translate(translation);
+            return new Plane(newNormalVector);
+        }
+
         /// <summary>
         /// Rotates the Plane with the given rotation
         /// </summary>

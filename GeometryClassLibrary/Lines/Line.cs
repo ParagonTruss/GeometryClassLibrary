@@ -763,6 +763,10 @@ namespace GeometryClassLibrary
             return equal;
         }
 
+        public LineSegment GetSegmentAlongLine(Distance distance1, Distance distance2)
+        {
+            return new LineSegment(GetPointAlongLine(distance1), GetPointAlongLine(distance2));
+        }
         #endregion
 
         
