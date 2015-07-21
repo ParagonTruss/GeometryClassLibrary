@@ -15,6 +15,14 @@ namespace GeometryClassLibrary
         #region Properties
    
         #endregion
+
+        public RectangularPrism(Rectangle rectangle, Distance height) : base(_makePrismFromRectangle(rectangle, height)) { }
+
+        private static void _makePrismFromRectangle(Rectangle rectangle, Distance height)
+        {
+            var prism = rectangle.Extrude(rectangle.NormalVector * height.Inches);
+        }
+
         /// <summary>
         /// Constructs the rectangular prism between the origin and the given point as opposite corners.
         /// </summary>
