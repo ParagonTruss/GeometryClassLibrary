@@ -94,17 +94,6 @@ namespace GeometryClassLibrary
             _checkSegment();
         }
 
-        /// <summary>
-        /// Creates a new LineSegment with the given BasePoint in the given direction with the given length, or 0 if it is omitted
-        /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedLength"></param>
-        /*public LineSegment(Point passedBasePoint, Direction passedDirection, Distance passedLength = null)
-            : base(passedBasePoint, passedDirection, passedLength)
-        {
-            _checkSegment();
-        }*/
 
         [JsonConstructor]
         public LineSegment(Point basePoint, Direction direction, Distance magnitude = null)
@@ -358,7 +347,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="translation">The Translation to apply to the lineSegment</param>
         /// <returns>returns a new LineSegment as a IEdge that has been translated</returns>
-        public new LineSegment Translate(Translation translation)
+        public new LineSegment Translate(Point translation)
         {
             return new LineSegment(base.Translate(translation));
         }

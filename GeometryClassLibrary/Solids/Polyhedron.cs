@@ -476,10 +476,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the two Polyhedrons created by a slice. In order of size.
+        /// Returns the two Polyhedrons created by a slice. returns the solid on the normal side of the plane first
         /// </summary>
-        /// <param name="slicingPlane">The plane to slice the Polyhedron with</param>
-        /// <returns>Returns two new Polyhedrons created by the slice in order of size</returns>
         public new List<Polyhedron> Slice(Plane slicingPlane)
         {
             if (this.DoesIntersectNotTouching(slicingPlane))

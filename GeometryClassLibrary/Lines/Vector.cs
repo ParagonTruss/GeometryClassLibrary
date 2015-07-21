@@ -600,7 +600,7 @@ namespace GeometryClassLibrary
         /// <param name="passedDirection"></param>
         /// <param name="passedDisplacement"></param>
         /// <returns></returns>
-        public new Vector Translate(Translation translation)
+        public Vector Translate(Point translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
             Point newEndPoint = this.EndPoint.Translate(translation);
