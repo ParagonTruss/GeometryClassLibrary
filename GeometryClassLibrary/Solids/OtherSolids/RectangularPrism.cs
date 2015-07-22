@@ -18,9 +18,10 @@ namespace GeometryClassLibrary
 
         public RectangularPrism(Rectangle rectangle, Distance height) : base(_makePrismFromRectangle(rectangle, height)) { }
 
-        private static void _makePrismFromRectangle(Rectangle rectangle, Distance height)
+        private static Polyhedron _makePrismFromRectangle(Rectangle rectangle, Distance height)
         {
             var prism = rectangle.Extrude(rectangle.NormalVector * height.Inches);
+            return prism;
         }
 
         /// <summary>

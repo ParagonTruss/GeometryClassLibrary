@@ -109,6 +109,8 @@ namespace GeometryClassLibrary
             _rotationsToApply = new List<Rotation>();
         }
 
+        public Shift(Vector vector) : this(new Translation(vector)) { }
+
         /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>

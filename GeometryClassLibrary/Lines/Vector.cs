@@ -121,8 +121,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        /// <param name="basePoint">The point at which the vector starts</param>
-        /// <param name="vector">The vector with the direction and magnitude to use for this vector</param>
         public Vector(Point basePoint, Vector vector)
             : base(vector.Direction, basePoint)
         {
@@ -133,6 +131,8 @@ namespace GeometryClassLibrary
         {
             this._magnitude = magnitude;
         }
+
+        public Vector(Vector vector, Distance magnitude) : this(vector.Direction, magnitude) { }
 
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
