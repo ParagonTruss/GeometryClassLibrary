@@ -358,17 +358,22 @@ namespace GeometryClassLibrary
                 //try casting to a direction
                 Direction comparableDirection = (Direction)obj;
 
-                //now check if the angles are the same
-                bool phiEqual = (comparableDirection.Phi == this.Phi);
-                bool thetaEqual = (comparableDirection.Theta == this.Theta);
+                Angle angleBetween = this.AngleBetween(comparableDirection);
+                bool angleIsCloseToZero = (angleBetween == new Angle());
+                return angleIsCloseToZero;
+                ////now check if the angles are the same
+                //bool phiEqual = (comparableDirection.Phi == this.Phi);
+                //bool thetaEqual = (comparableDirection.Theta == this.Theta);
 
-                //we need to check if the angles are both the equivalent singularities (basically a point where the system breaks down - in this
-                //  case when theta = 0 or 180 because the phi no longer has meaning) and in this case we only care about the theta angle since
-                //  the phi has no meaning
-                bool areBothSameSingularity = thetaEqual && (this.Theta == new Angle() || this.Theta == new Angle(AngleType.Degree, 180));
+                ////we need to check if the angles are both the equivalent singularities (basically a point where the system breaks down - in this
+                ////  case when theta = 0 or 180 because the phi no longer has meaning) and in this case we only care about the theta angle since
+                ////  the phi has no meaning
+                //bool areBothSameSingularity = thetaEqual && (this.Theta == new Angle() || this.Theta == new Angle(AngleType.Degree, 180));
 
-                //returns true if all were true of false if at least one was not
-                return areBothSameSingularity || (phiEqual && thetaEqual);
+                ////returns true if all were true of false if at least one was not
+                //return areBothSameSingularity || (phiEqual && thetaEqual);
+
+                
             }
             //wasnt even a direction so it must not be equal
             catch (InvalidCastException)
@@ -412,7 +417,13 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double DotProduct(Direction otherDirection)
         {
-            throw new NotImplementedException();
+
+            var xTerm = this.XComponent * otherDirection.XComponent;
+            var yTerm = this.YComponent * otherDirection.YComponent;
+            var zTerm = this.ZComponent * otherDirection.ZComponent;
+            
+            var sum = xTerm + yTerm + zTerm;
+            return sum;
         }
 
         public Direction CrossProduct(Direction otherDirection)
@@ -421,6 +432,13 @@ namespace GeometryClassLibrary
             Vector vector2 = otherDirection.UnitVector(DistanceType.Inch);
             Vector product = vector1.CrossProduct(vector2);
             return product.Direction;
+        }
+
+        public Angle AngleBetween(Direction direction)
+        {
+            var dotProduct = this.DotProduct(direction);
+            Angle angle = Angle.ArcCos(dotProduct);
+            return angle;
         }
 
         #endregion
