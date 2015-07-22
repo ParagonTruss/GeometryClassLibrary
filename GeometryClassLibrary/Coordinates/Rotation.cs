@@ -11,10 +11,10 @@ namespace GeometryClassLibrary
     public class Rotation
     {
         #region Properties and Fields
-        private Angle _angleToRotate;
+        private AngularDistance _angleToRotate;
         private Line _axisToRotateAround;
 
-        public Angle AngleToRotate
+        public AngularDistance AngleToRotate
         {
             get
             {
@@ -48,7 +48,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
         /// <param name="howFarToRotate">The Angle that specifies how far to rotate</param>
-        public Rotation(Line axisOfRotation, Angle howFarToRotate = null)
+        public Rotation(Line axisOfRotation, AngularDistance howFarToRotate = null)
         {
             if ((object)howFarToRotate == null)
             {
@@ -67,7 +67,7 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            this._angleToRotate = new Angle(toCopy._angleToRotate);
+            this._angleToRotate = new AngularDistance(toCopy._angleToRotate);
             this._axisToRotateAround = new Line(toCopy._axisToRotateAround);
         }
 

@@ -656,63 +656,12 @@ namespace GeometryClassLibrary
             return (dotResult == new Distance());
         }
 
-        
-        /// <summary>
-        /// Returns the angle between the vectors (as if one were translated so that they had the same base point)
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        public Angle AngleBetween(Vector vector)
-        {
-            return new Angle(AngleType.Radian, _arccos(CosineOfAngleBetween(vector)));
-        }
-
-        private double _arccos(double number)
-        {
-            if (number > 1 && number - 1 < 0.00001)
-            {
-                return 0;
-            }
-
-            if (number < -1 && number + 1 > - 0.00001)
-            {
-                return Math.PI;
-            }
-            return Math.Acos(number);
-
-        }
-
-        public Angle SmallestAngleBetween(Vector vector)
-        {
-            Angle angle = AngleBetween(vector);
-            if (angle > new Angle(AngleType.Degree, 90))
-            {
-                angle = new Angle(AngleType.Degree, 180) - angle;
-            }
-            return angle;
-        }
-
         public bool IsParallelTo(Vector vector)
         {
             return this.CrossProduct(vector) == new Vector();
         }
 
-        public double CosineOfAngleBetween(Vector vector)
-        {
-            Vector vector1 = this;
-            Vector vector2 = vector;
-
-            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
-            {
-                return 0;
-            }
-
-            double dotProduct = vector1.DotProduct(vector2).Inches;
-            double magnitudes = (vector1.Magnitude.Inches * vector2.Magnitude.Inches);
-            double divided = dotProduct / magnitudes;
-            
-            return divided;
-        }
+     
 
         /// <summary>
         /// finds the signed angle between two vectors.
@@ -725,7 +674,7 @@ namespace GeometryClassLibrary
         {
             if (referenceNormal == null)
             {
-                referenceNormal = new Vector(Point.MakePointWithInches(0, 0, 1));
+                referenceNormal = new Vector(Direction.Out, Distance.Inch);
             }
 
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(vector));

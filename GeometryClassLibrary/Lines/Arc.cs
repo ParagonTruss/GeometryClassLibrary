@@ -69,7 +69,7 @@ namespace GeometryClassLibrary
                 Plane containingPlane = new Plane(startPointToCenter, endPointToCenter);
                 Plane dividingPlane = new Plane(startPointToCenter, containingPlane.NormalVector);
 
-                Angle angleBetween = endPointToCenter.AngleBetweenIntersectingLine(startPointToCenter);
+                Angle angleBetween = endPointToCenter.AngleBetween(startPointToCenter);
 
                 //if the end point is on the other side of the middle plane than our endpoint we know it needs to be an angle > 180
                 //we need to wathc out for the 0 and 180 case though becasue it will mess up in those cases

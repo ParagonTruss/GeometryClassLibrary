@@ -151,7 +151,7 @@ namespace ClearspanTypeLibrary.Tests
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLine_Inches()
+        public void Line_SmallestAngleBetween_Inches()
         {
             Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
             Point basePointLine2 = Point.MakePointWithInches(2, 4, 0);
@@ -160,13 +160,13 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
-            Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
+            Angle actualResult = line1.SmallestAngleBetween(line2);
             
             actualResult.Should().Be(expectedResult);
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLine_Millimeters()
+        public void Line_SmallestAngleBetween_Millimeters()
         {
             Point basePointLine1 = Point.MakePointWithInches(2, 1, 0);
             Point basePointLine2 = Point.MakePointWithInches(2, 4, 0);
@@ -175,13 +175,13 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
             Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
-            Angle actualResult = line1.SmallestAngleBetweenIntersectingLine(line2);
+            Angle actualResult = line1.SmallestAngleBetween(line2);
 
             actualResult.Should().Be(expectedResult);
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLine_IntersectAtOrigin()
+        public void Line_SmallestAngleBetween_IntersectAtOrigin()
         {
             Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
@@ -192,11 +192,11 @@ namespace ClearspanTypeLibrary.Tests
             double angleBetweenLinesInRadians = Math.Acos(1 / Math.Sqrt(3));
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
 
-            line1.SmallestAngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
+            line1.SmallestAngleBetween(line2).Should().Be(angleBetweenLines);
         }
 
         [Test()]
-        public void Line_AngleBetweenIntersectingLinePerpendicular()
+        public void Line_SmallestAngleBetween_Perpendicular()
         {
             Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
             Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
@@ -207,7 +207,7 @@ namespace ClearspanTypeLibrary.Tests
             double angleBetweenLinesInRadians = Math.Acos(0);
             Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
 
-            line1.SmallestAngleBetweenIntersectingLine(line2).Should().Be(angleBetweenLines);
+            line1.SmallestAngleBetween(line2).Should().Be(angleBetweenLines);
 
         }
 
