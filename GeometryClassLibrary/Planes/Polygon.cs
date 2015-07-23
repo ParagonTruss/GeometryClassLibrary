@@ -336,7 +336,7 @@ namespace GeometryClassLibrary
                     }
                 }
 
-                //if the segments were are there than its equal
+                //if the segments were all the same, then they're equal
                 return true;
             }
             //if we didnt get a polygon than its not equal

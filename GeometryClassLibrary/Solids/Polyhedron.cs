@@ -756,22 +756,6 @@ namespace GeometryClassLibrary
         private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> passedPolygons)
         {
             List<Polygon> polygonList = passedPolygons.CopyList();
-            List<LineSegment> edges = polygonList.GetAllEdges();
-            List<Point> vertices = edges.GetAllPoints();
-
-            //First check the euler characteristic: V - E + F = 2
-            int eulerCharacteristic = vertices.Count - edges.Count + polygonList.Count;
-            if (eulerCharacteristic != 2)
-            {
-                return null;
-            }
-
-            //Now check that every edge sits on exactly two faces.
-            bool everyEdgeIsOntwoFaces = _everyEdgeIsOntwoFaces(polygonList, edges);
-            if (!everyEdgeIsOntwoFaces)
-            {
-                return null;
-            }
 
             //Now we try to build piecewise the polyhedron from the faces
             //we abort and return null if run out of faces, but have unmet edges, or
