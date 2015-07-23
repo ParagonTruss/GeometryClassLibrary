@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using UnitClassLibrary;
 using Newtonsoft.Json;
+using MoreLinq;
 
 namespace GeometryClassLibrary
 {
@@ -783,7 +784,7 @@ namespace GeometryClassLibrary
             List<LineSegment> edgesWithoutNeighboringFace = new List<LineSegment>();
 
             //we find the first face
-            Polygon lowestFace = _findLowestFace(polygonList, edges, vertices);
+            Polygon lowestFace = _findLowestFace(polygonList);
 
             //place the first face
             _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
@@ -806,35 +807,14 @@ namespace GeometryClassLibrary
 
         }
 
-        private static Polygon _findLowestFace(List<Polygon> polygonList, List<LineSegment> edges, List<Point> vertices)
+        private static Polygon _findLowestFace(List<Polygon> polygonList)
         {
-            Polygon lowestFace = null;
-            vertices.Sort(new CompareInOrderZXY());
-            Point lowestVertex = vertices[0];
-            List<Point> adjacentVertices = edges.VerticesAdjacentTo(lowestVertex);
-            adjacentVertices.Sort(new CompareInOrderZXY());
-            LineSegment lowestEdge = new LineSegment(lowestVertex, adjacentVertices[0]);
-            List<Polygon> lowestFaces = new List<Polygon>();
-            foreach (Polygon face in polygonList)
+            var face = polygonList.MinBy(p => p.CenterPoint.Z);
+            if (face.NormalVector.AngleBetween(Line.ZAxis) < Angle.Degree * 90)
             {
-                if (face.HasSide(lowestEdge))
-                {
-                    lowestFaces.Add(face);
-                }
+                face = face.ReverseOrientation();
             }
-            if ((new CompareByNormalAngleWithZ()).Compare(lowestFaces[0], lowestFaces[1]) == -1)
-            {
-                lowestFace = lowestFaces[0];
-            }
-            else
-            {
-                lowestFace = lowestFaces[1];
-            }
-            if (lowestFace.NormalVector.DotProduct(Direction.Out.UnitVector(DistanceType.Inch)) > new Distance())
-            {
-                lowestFace = lowestFace.ReverseOrientation();
-            }
-            return lowestFace;
+            return face;
         }
 
         /// <summary>
