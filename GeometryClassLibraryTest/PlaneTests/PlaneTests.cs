@@ -122,7 +122,7 @@ namespace GeometryClassLibraryTests
         }
 
         [Test()]
-        public void Plane_IntersectionLineWithPlane()
+        public void Plane_IntersectionWithPlane()
         {
             //try all the zero cases
             Plane testPlane1 = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, 1, 2));
@@ -141,7 +141,7 @@ namespace GeometryClassLibraryTests
             (found == expectedLast).Should().BeTrue();
             }
         [Test()]
-        public void Plane_IntersectionLineWithPlane_ZeroCases()
+        public void Plane_IntersectionWithPlane_ZeroCases()
         {
             //try all the zero cases
             Point testPoint = Point.MakePointWithInches(0, 0, 0);

@@ -345,7 +345,7 @@ namespace GeometryClassLibrary
                             {
                                 whatTheNormalShouldBe = normal;
                             }
-                            if (!normal.HasSameOrOppositeDirectionAs(whatTheNormalShouldBe))
+                            if (!normal.IsParallelTo(whatTheNormalShouldBe))
                             {
                                 return false;
                             }

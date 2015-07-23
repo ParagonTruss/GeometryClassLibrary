@@ -210,6 +210,14 @@ namespace GeometryClassLibrary
         public Line(Line toCopy)
             : this(toCopy.Direction, toCopy.BasePoint) { }
 
+        /// <summary>
+        /// Creates a new line with the same direction but different base point.
+        /// Useful for turning vectors, and segments back into lines.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="newBasePoint"></param>
+        public Line(Point newBasePoint, Line line) : this(line.Direction, newBasePoint) { }
+
         #endregion
 
         #region Overloaded Operators

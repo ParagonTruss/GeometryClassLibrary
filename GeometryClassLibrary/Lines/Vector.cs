@@ -655,7 +655,10 @@ namespace GeometryClassLibrary
 
         public bool IsParallelTo(Vector vector)
         {
-            return this.CrossProduct(vector) == new Vector();
+            return this.HasSameOrOppositeDirectionAs(vector);
+            //return this.CrossProduct(vector) == 0;
+            //checking the crossproduct is too precise for our library's purposes. It 
+            //this might change when we implement error propagation.
         }
 
      
