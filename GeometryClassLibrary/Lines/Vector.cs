@@ -204,14 +204,15 @@ namespace GeometryClassLibrary
         /// <param name="passedVector1"></param>
         /// <param name="passedVector2"></param>
         /// <returns></returns>
-        public static Distance operator *(Vector passedVector1, Vector passedVector2)
+        public static Area operator *(Vector passedVector1, Vector passedVector2)
         {
-            //returns a new Distance with the dot product of the two vectors
-            double xComponent = passedVector1.XComponent.Inches * passedVector2.XComponent.Inches;
-            double yComponent = passedVector1.YComponent.Inches * passedVector2.YComponent.Inches;
-            double zComponent = passedVector1.ZComponent.Inches * passedVector2.ZComponent.Inches;
+            return passedVector1.DotProduct(passedVector2);
+            ////returns a new Distance with the dot product of the two vectors
+            //double xComponent = passedVector1.XComponent.Inches * passedVector2.XComponent.Inches;
+            //double yComponent = passedVector1.YComponent.Inches * passedVector2.YComponent.Inches;
+            //double zComponent = passedVector1.ZComponent.Inches * passedVector2.ZComponent.Inches;
 
-            return new Distance(DistanceType.Inch, xComponent + yComponent + zComponent);
+            //return new Distance(DistanceType.Inch, xComponent + yComponent + zComponent);
         }
 
         /// <summary>
@@ -626,7 +627,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the DotProduct between two Vectors as a distance
         /// </summary>
-        public Distance DotProduct(Vector vector)
+        public Area DotProduct(Vector vector)
         {
             Vector vector1 = this;
             Vector vector2 = vector;
@@ -636,13 +637,9 @@ namespace GeometryClassLibrary
             var zTerm = vector1.ZComponent * vector2.ZComponent;
             
             var sum = xTerm + yTerm + zTerm;
-            return new Distance(DistanceType.Inch, sum.InchesSquared);
+            return sum;
         }
-        public bool DotProductIsPositive(Vector vector)
-        {
-            var product = DotProduct(vector);
-            return (product > new Distance());
-        }
+       
         /// <summary>
         /// Determines if the Dotproduct is zero. This is used to determine when vectors are perpendicular
         /// May be unnecessary as a method
@@ -650,10 +647,10 @@ namespace GeometryClassLibrary
         public bool IsPerpendicularTo(Vector other)
         {
 
-            Distance dotResult = this.DotProduct(other);
+           Area dotResult = this.DotProduct(other);
 
             //and return if its close to zero
-            return (dotResult == new Distance());
+            return (dotResult == new Area());
         }
 
         public bool IsParallelTo(Vector vector)

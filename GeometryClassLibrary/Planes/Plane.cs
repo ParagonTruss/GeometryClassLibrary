@@ -292,13 +292,16 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-
+            if (this.Contains(testPoint) || this.Contains(referencePoint))
+            {
+                return false;
+            }
             //so find the dot products between the points and the normal of the plane
-            Distance testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
-            Distance referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
+            Area testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
+            Area referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
 
             //if they are both either positive or negative than they are both on the same side
-            if ((testDot < new Distance() && referenceDot < new Distance()) || (testDot > new Distance() && referenceDot > new Distance()))
+            if ((testDot < new Area() && referenceDot < new Area()) || (testDot > new Area() && referenceDot > new Area()))
             {
                 return true;
             }
@@ -423,19 +426,19 @@ namespace GeometryClassLibrary
 
             //substitute the x,y and z part of the lines into the plane equation
             //find what the plane is equal to
-            Distance thisPlaneEqualsValue = this.NormalVector.DotProduct(new Vector(this.BasePoint));
+            Area thisPlaneEqualsValue = this.NormalVector.DotProduct(new Vector(this.BasePoint));
 
             //find t's coefficent
-            Distance tCoefficient = this.NormalVector.DotProduct(passedLine.Direction.UnitVector(DistanceType.Inch));
+            Area tCoefficient = this.NormalVector.DotProduct(passedLine.Direction.UnitVector(DistanceType.Inch));
 
             //find the part it equals from the line
-            Distance equationEquals = this.NormalVector.DotProduct(new Vector(passedLine.BasePoint));
+            Area equationEquals = this.NormalVector.DotProduct(new Vector(passedLine.BasePoint));
 
             //subtract the one from the line from the one from the plane
-            Distance equals = thisPlaneEqualsValue - equationEquals;
+            Area equals = thisPlaneEqualsValue - equationEquals;
 
             //now get the value for t
-            double t = equals / tCoefficient;
+            double t = equals.InchesSquared / tCoefficient.InchesSquared;
 
             if (t == double.NaN)
             {

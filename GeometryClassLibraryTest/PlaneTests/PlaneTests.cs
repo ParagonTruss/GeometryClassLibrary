@@ -99,7 +99,7 @@ namespace GeometryClassLibraryTests
             Point referencePoint2 = Point.MakePointWithInches(0, 2, 1);
             Vector testNormalVector = new Vector(Point.MakePointWithInches(1, 0, 0));
 
-            Plane testPlane = new Plane(testNormalVector.Direction, Point.MakePointWithInches(0,0,0));
+            Plane testPlane = new Plane(testNormalVector);
 
             testPlane.PointIsOnSameSideAs(testPoint, referencePoint).Should().BeTrue(); //test one on the same side
             testPlane.PointIsOnSameSideAs(testPoint2, referencePoint).Should().BeFalse(); //test one on the opposite side

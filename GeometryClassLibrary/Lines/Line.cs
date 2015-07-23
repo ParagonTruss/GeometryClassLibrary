@@ -466,7 +466,7 @@ namespace GeometryClassLibrary
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
             double crossProductABMagnitudeSquared = Math.Pow(crossProductAB.Magnitude.Inches, 2);
-            double dotProductOfCrossProducts = (crossProductCB * crossProductAB).Inches;
+            double dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).InchesSquared;
 
             if (crossProductABMagnitudeSquared == 0)
             {
