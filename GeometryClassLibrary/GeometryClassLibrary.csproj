@@ -67,10 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComparisonMethods\LineSegmentComparisons.cs" />
-    <Compile Include="ComparisonMethods\PlaneComparisons.cs" />
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
-    <Compile Include="ComparisonMethods\VectorComparisons.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListVectorExtensionMethods.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />

@@ -344,8 +344,7 @@ namespace GeometryClassLibrary
             Vector intersectionLineDirection = this.NormalVector.CrossProduct(otherPlane.NormalVector);
             
             Line normalInPlane1 = new Line(this.BasePoint, this.NormalVector.CrossProduct(intersectionLineDirection));
-            Line normalInPlane2 = new Line(otherPlane.BasePoint, otherPlane.NormalVector.CrossProduct(intersectionLineDirection));
-            Point basePoint = normalInPlane1.Intersection(normalInPlane2);
+            Point basePoint = normalInPlane1.Intersection(otherPlane);
 
             return new Line(basePoint, intersectionLineDirection);
             ////if it is 0 than thay are parallel and dont intersect
