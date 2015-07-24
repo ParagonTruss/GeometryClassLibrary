@@ -15,7 +15,6 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        // declares a two Distanceal array named _matrix. The "," denotes that it is 2d
         public Matrix<double> _matrix;
 
 
@@ -427,9 +426,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix with the specified row and column removed
         /// </summary>
-        /// <param name="indexOfRowToLeaveOut"></param>
-        /// <param name="indexOfColumnToLeaveOut"></param>
-        /// <returns></returns>
         public Matrix GetSubMatrix(int indexOfRowToLeaveOut, int indexOfColumnToLeaveOut)
         {
             Matrix subMatrix = new Matrix(this.NumberOfRows - 1, this.NumberOfColumns - 1);
@@ -445,9 +441,6 @@ namespace GeometryClassLibrary
         /// Logic developed with help from Andrew Morton on stackoverflow:
         /// http://stackoverflow.com/questions/24416946/next-step-in-calculating-a-matrix-determinant
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <param name="knockOutColumn"></param>
-        /// <returns></returns>
         public Matrix GetSubMatrix(int[] indicesOfRowsToKeep, int[] indicesOfColumnsToKeep)
         {
 
@@ -474,8 +467,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new matrix with all of the specified rows removed
         /// </summary>
-        /// <param name="indicesOfRowsToRemove"></param> 
-        /// <returns></returns>
         public Matrix RemoveRows(int[] passedIndicesOfRowsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
@@ -505,8 +496,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new matrix with all of the specified columns removed
         /// </summary>
-        /// <param name="indicesOfColumnsToRemove"></param>
-        /// <returns></returns>
         public Matrix RemoveColumns(int[] passedIndicesOfColumnsToRemove)
         {
             Matrix returnMatrix = new Matrix(this);
@@ -537,8 +526,6 @@ namespace GeometryClassLibrary
         /// Checks to see if this matrix and the passed matrix can be added together.  
         /// In order to be able to add two matrices, they must have the same Distances.
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <returns></returns>
         public bool CanBeAddedTo(Matrix passedMatrix)
         {
             return this.NumberOfRows == passedMatrix.NumberOfRows && this.NumberOfColumns == passedMatrix.NumberOfColumns;
@@ -547,8 +534,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the sum of this matrix and the passed matrix
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <returns></returns>
         public Matrix AddTo(Matrix passedMatrix)
         {
             return passedMatrix + new Matrix(_matrix);
@@ -559,8 +544,6 @@ namespace GeometryClassLibrary
         /// In order to multiply two matrices, the number of columns in the first matrix
         /// must equal the number of rows in the second matrix.
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <returns></returns>
         public bool CanBeMultipliedBy(Matrix passedMatrix)
         {
             if (this.NumberOfColumns == passedMatrix.NumberOfRows)
@@ -576,8 +559,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the product matrix of this matrix multiplied by the passed matrix, in that order.
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <returns></returns>
         public Matrix MultiplyBy(Matrix passedMatrix)
         {
             return new Matrix(_matrix) * passedMatrix;
@@ -586,7 +567,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks to see if this matrix is square
         /// </summary>
-        /// <returns></returns>
         public bool IsSquare()
         {
             // A square matrix has the same number of rows and columns.
@@ -601,8 +581,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns an Identity Matrix of the specified size. That is, a square matrix with 1's on the diagonal and 0's everywhere else.
         /// </summary>
-        /// <param name="passedNumberOfRowsAndColumns"></param>
-        /// <returns></returns>
         public static Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
         {
             // returns an n x n Identity matrix
@@ -616,7 +594,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Computes the determinant of a matrix
         /// </summary>
-        /// <returns></returns>
         public double Determinant()
         {
             return _matrix.Determinant();
@@ -625,10 +602,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Inserts the passed Matrix into this Matrix starting at the specified index
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        /// <param name="destinationRow"></param>
-        /// <param name="destinationColumn"></param>
-        /// <returns></returns>
         public Matrix InsertMatrixAt(Matrix passedMatrix, int destinationRow, int destinationColumn)
         {
             for (int row = 0; row < passedMatrix.NumberOfRows; row++)
@@ -644,9 +617,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the cofactor for the specified element of a square matrix
         /// </summary>
-        /// <param name="rowIndex"></param>
-        /// <param name="columnIndex"></param>
-        /// <returns></returns>
         public double GetCofactor(int rowIndex, int columnIndex)
         {
             //Remove the row and column that contain this element
@@ -666,7 +636,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if this matrix has an inverse, false otherwise
         /// </summary>
-        /// <returns></returns>
         public bool IsInvertible()
         {
             // To have an inverse, a matrix must be square and have a nonzero determinant.
@@ -681,7 +650,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix that is this matrix with the absolute value function applied to each element
         /// </summary>
-        /// <returns></returns>
         public Matrix AbsoluteValue()
         {
             Matrix resultingMatrix = new Matrix(NumberOfRows, NumberOfColumns);
@@ -729,8 +697,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the Y axis by the specified angle
         /// </summary>
-        /// <param name="rotationAngle"></param>
-        /// <returns></returns>
         public static Matrix RotationMatrixAboutY(Angle rotationAngle)
         {
             Matrix rotationMatrix = new Matrix(3);
@@ -749,8 +715,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the Z axis by the specified angle
         /// </summary>
-        /// <param name="rotationAngle"></param>
-        /// <returns></returns>
         public static Matrix RotationMatrixAboutZ(Angle rotationAngle)
         {
             Matrix rotationMatrix = new Matrix(3);
@@ -768,16 +732,14 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
-        /// </summary>
-        /// <param name="passedRotation">The rotation to make into the rotation matrix</param>
-        /// <returns></returns>
+        /// </summary>>
         public static Matrix RotationMatrixAboutAxis(Rotation passedRotation)
         {
             Matrix rotationMatrix = new Matrix(3);
 
             Direction rotationUnitVector = passedRotation.AxisToRotateAround.Direction;
 
-            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis?
+            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis
             double unitY = rotationUnitVector.YComponent;
             double unitZ = rotationUnitVector.ZComponent;
             double theta = passedRotation.AngleToRotate.Radians;
@@ -808,8 +770,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if every element in this matrix is zero, false otherwise
         /// </summary>
-        /// <param name="passedArray"></param>
-        /// <returns></returns>
         public static bool IsAllZeros(double[] passedArray)
         {
             bool AreAllZeros = true;
@@ -826,8 +786,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix with the specified row removed
         /// </summary>
-        /// <param name="rowIndexToDelete"></param>
-        /// <returns></returns>
         public Matrix RemoveRow(int rowIndexToDelete)
         {
             return new Matrix(_matrix.RemoveRow(rowIndexToDelete));
@@ -836,8 +794,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix with the specified column removed
         /// </summary>
-        /// <param name="rowIndexToDelete"></param>
-        /// <returns></returns>
         public Matrix RemoveColumn(int columnIndexToDelete)
         {
             return new Matrix(_matrix.RemoveColumn(columnIndexToDelete));
