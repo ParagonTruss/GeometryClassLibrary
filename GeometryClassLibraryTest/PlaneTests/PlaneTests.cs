@@ -131,7 +131,7 @@ namespace GeometryClassLibraryTests
             Line test12Intersect = testPlane1.Intersection(testPlane2);
             Line test21Intersect = testPlane2.Intersection(testPlane1);
 
-            Line expectedLine = new Line(new Direction(Point.MakePointWithInches(0, 3, 3)), Point.MakePointWithInches(5/3, 0, 2/3));
+            Line expectedLine = new Line(new Direction(Point.MakePointWithInches(0, 3, 3)), Point.MakePointWithInches(2, -1, 0));
 
             test12Intersect.Should().Be(test21Intersect);
             (test21Intersect.Equals(expectedLine)).Should().BeTrue();

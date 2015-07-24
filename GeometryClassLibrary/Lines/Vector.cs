@@ -343,10 +343,11 @@ namespace GeometryClassLibrary
         {
             Point potentialIntersect = base.Intersection((Line)passedVector);
 
-            if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector))
+            if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector) && potentialIntersect.IsOnVector(this))
+            {
                 return potentialIntersect;
-            else
-                return null;
+            }
+            return null;
         }
 
         /// <summary>
@@ -629,8 +630,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool IsPerpendicularTo(Vector other)
         {
-
-           Area dotResult = this.DotProduct(other);
+            Area dotResult = this.DotProduct(other);
 
             //and return if its close to zero
             return (dotResult == new Area());
@@ -639,42 +639,14 @@ namespace GeometryClassLibrary
         public bool IsParallelTo(Vector vector)
         {
             return this.HasSameOrOppositeDirectionAs(vector);
-            //return this.CrossProduct(vector) == 0;
+            //return this.CrossProduct(vector).Magnitude == new Distance();
             //checking the crossproduct is too precise for our library's purposes. It 
             //this might change when we implement error propagation.
         }
 
      
 
-        /// <summary>
-        /// finds the signed angle between two vectors.
-        /// i.e. the order you input the vectors matters: the angle from vector1 to vector2 is negative the angle from vector2 to vector1
-        /// The reference normal is what counts as "up" for determining sign.
-        /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
-        /// </summary>
-        /// <returns></returns>
-        public AngularDistance SignedAngleBetween(Vector vector, Vector referenceNormal = null)
-        {
-            if (referenceNormal == null)
-            {
-                referenceNormal = new Vector(Direction.Out, Distance.Inch);
-            }
-
-            AngularDistance testAngle = new AngularDistance(this.AngleBetween(vector));
-            Vector testNormal = this.CrossProduct(vector);
-
-            if (testNormal.HasSameDirectionAs(referenceNormal))
-            {
-                return testAngle;
-            }
-            if (testNormal.HasOppositeDirectionOf(referenceNormal))
-            {
-                return testAngle.Negate();
-            }
-
-            throw new Exception("The reference normal is not perpendicular to these vectors");
-
-        }
+       
 
 
         #endregion

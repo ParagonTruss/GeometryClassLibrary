@@ -127,13 +127,13 @@ namespace GeometryClassLibrary
             this.Theta = new Angle(AngleType.Degree, 90);
         }
 
-        public Direction(double x, double y, double z)
-        {
-            var rho = Math.Sqrt(x*x + y*y + z*z);
-            var r = Math.Sqrt(x*x + y*y);
-            this.Theta = Angle.ArcSin(r / rho);
-            this.Phi = Angle.ArcCos(x / r);
-        }
+        //public Direction(double x, double y, double z)
+        //{
+        //    var rho = Math.Sqrt(x*x + y*y + z*z);
+        //    var r = Math.Sqrt(x*x + y*y);
+        //    this.Theta = Angle.ArcSin(r / rho);
+        //    this.Phi = Angle.ArcCos(x / r);
+        //}
 
         /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)
@@ -361,17 +361,6 @@ namespace GeometryClassLibrary
                 Angle angleBetween = this.AngleBetween(comparableDirection);
                 bool angleIsCloseToZero = (angleBetween == new Angle());
                 return angleIsCloseToZero;
-                ////now check if the angles are the same
-                //bool phiEqual = (comparableDirection.Phi == this.Phi);
-                //bool thetaEqual = (comparableDirection.Theta == this.Theta);
-
-                ////we need to check if the angles are both the equivalent singularities (basically a point where the system breaks down - in this
-                ////  case when theta = 0 or 180 because the phi no longer has meaning) and in this case we only care about the theta angle since
-                ////  the phi has no meaning
-                //bool areBothSameSingularity = thetaEqual && (this.Theta == new Angle() || this.Theta == new Angle(AngleType.Degree, 180));
-
-                ////returns true if all were true of false if at least one was not
-                //return areBothSameSingularity || (phiEqual && thetaEqual);
 
                 
             }
@@ -417,21 +406,24 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double DotProduct(Direction otherDirection)
         {
-
             var xTerm = this.XComponent * otherDirection.XComponent;
             var yTerm = this.YComponent * otherDirection.YComponent;
             var zTerm = this.ZComponent * otherDirection.ZComponent;
-            
+
             var sum = xTerm + yTerm + zTerm;
             return sum;
         }
 
-        public Direction CrossProduct(Direction otherDirection)
+        public Direction CrossProduct(Direction otherdirection)
         {
-            Vector vector1 = this.UnitVector(DistanceType.Inch);
-            Vector vector2 = otherDirection.UnitVector(DistanceType.Inch);
-            Vector product = vector1.CrossProduct(vector2);
-            return product.Direction;
+            var d1 = this;
+            var d2 = otherdirection;
+
+            double xTerm = d1.YComponent * d2.ZComponent - d1.ZComponent * d2.YComponent;
+            double yTerm = d1.ZComponent * d2.XComponent - d1.XComponent * d2.ZComponent;
+            double zTerm = d1.XComponent * d2.YComponent - d1.YComponent * d2.XComponent;
+
+            return new Direction(Point.MakePointWithInches(xTerm, yTerm, zTerm));
         }
 
         public Angle AngleBetween(Direction direction)
@@ -439,6 +431,36 @@ namespace GeometryClassLibrary
             var dotProduct = this.DotProduct(direction);
             Angle angle = Angle.ArcCos(dotProduct);
             return angle;
+        }
+
+        /// <summary>
+        /// finds the signed angle between two directions.
+        /// i.e. the order you input the vectors matters: the angle from direction1 to direction2 is negative the angle from direction2 to direction1
+        /// The reference normal is what counts as "up" for determining sign.
+        /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
+        /// </summary>
+        /// <returns></returns>
+        public AngularDistance SignedAngleBetween(Direction direction, Direction referenceNormal = null)
+        {
+            if (referenceNormal == null)
+            {
+                referenceNormal = Direction.Out;
+            }
+
+            AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));
+            Direction testNormal = this.CrossProduct(direction);
+
+            if (testNormal == referenceNormal)
+            {
+                return testAngle;
+            }
+            if (testNormal.Reverse() == referenceNormal)
+            {
+                return testAngle.Negate();
+            }
+
+            throw new Exception("The reference normal is not perpendicular to these vectors");
+
         }
 
         #endregion

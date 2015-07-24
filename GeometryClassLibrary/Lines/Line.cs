@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point XYIntercept
         {
-            get { return this.FindXYIntercept(); }
+            get { return Plane.XY.Intersection(this); }
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point XZIntercept
         {
-            get { return this.FindXZIntercept(); }
+            get { return Plane.XZ.Intersection(this); }
         }
 
         /// <summary>
@@ -104,49 +104,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point YZIntercept
         {
-            get { return this.FindYZIntercept(); }
-        }
-
-        /// <summary>
-        /// Finds the point at which this line intersects the XY-plane
-        /// </summary>
-        /// <returns>Returns where this line intersects the XY-Plane</returns>
-        private Point FindXYIntercept()
-        {
-            //make the x axis plane
-            Plane xyPlane = new Plane(new Direction(Point.MakePointWithInches(0, 0, 1)));
-
-            //then find out where the line and the plane intersect
-            return xyPlane.Intersection(this);
-        }
-
-        /// <summary>
-        /// Finds the point at which this line intersects the XZ-plane
-        /// </summary>
-        /// <returns>Returns where this line intersects the XZ-Plane</returns>
-        private Point FindXZIntercept()
-        {
-            //normal vector
-            Vector normal = new Vector(Point.MakePointWithInches(0, 1, 0));
-
-            //make the x axis plane
-            Plane xzPlane = new Plane(normal.Direction);
-
-            //then find out where the line and the plane intersect
-            return xzPlane.Intersection(this);
-        }
-
-        /// <summary>
-        /// Finds the point at which this line intersects the YZ-plane
-        /// </summary>
-        /// <returns>Returns where this line intersects the YZ-Plane</returns>
-        private Point FindYZIntercept()
-        {
-            //make the x axis plane
-            Plane yzPlane = new Plane(new Direction(Point.MakePointWithInches(1, 0, 0)));
-
-            //then find out where the line and the plane intersect
-            return yzPlane.Intersection(this);
+            get { return Plane.YZ.Intersection(this); }
         }
 
         #endregion
