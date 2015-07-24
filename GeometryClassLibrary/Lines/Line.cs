@@ -356,10 +356,8 @@ namespace GeometryClassLibrary
 	
         public AngularDistance SignedAngleBetween(Line line, Line referenceNormal = null)
         {
-            Vector unitVector1 = this.UnitVector(DistanceType.Inch);
-            Vector unitVector2 = line.UnitVector(DistanceType.Inch);
-            return unitVector1.SignedAngleBetween(unitVector2);
-	}
+            return this.Direction.SignedAngleBetween(line.Direction);
+	    }
 
         ///// <summary>
         ///// Returns a point on the line based on the multiplier entered
@@ -654,7 +652,7 @@ namespace GeometryClassLibrary
             if (planeToMakePerpendicularLineIn.IsParallelTo(this))
             {
                 //rotate it 90 degrees in the nornal of the plane and it will be perpendicular to the original
-                return this.Rotate(new Rotation(planeToMakePerpendicularLineIn.NormalVector, new Angle(AngleType.Degree, 90)));
+                return this.Rotate(new Rotation(new Vector(this.BasePoint, planeToMakePerpendicularLineIn.NormalVector), new Angle(AngleType.Degree, 90)));
             }
             else
             {

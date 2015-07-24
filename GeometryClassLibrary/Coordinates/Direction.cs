@@ -450,7 +450,7 @@ namespace GeometryClassLibrary
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));
             Direction testNormal = this.CrossProduct(direction);
 
-            if (testNormal == referenceNormal)
+            if (testAngle == new Angle() || testNormal == referenceNormal)
             {
                 return testAngle;
             }
