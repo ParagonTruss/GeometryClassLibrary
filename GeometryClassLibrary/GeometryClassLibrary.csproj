@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,21 +53,15 @@
     <OutputPath>bin\AnalysisEngineTests\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\..\packages\MathNet.Numerics.3.7.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="MoreLinq.Portable">
-      <HintPath>..\..\packages\MoreLinq.Portable.1.1.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MoreLinq.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComparisonMethods\LineSegmentComparisons.cs" />
+    <Compile Include="ComparisonMethods\PlaneComparisons.cs" />
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
+    <Compile Include="ComparisonMethods\VectorComparisons.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListVectorExtensionMethods.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />
@@ -89,7 +83,6 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
-    <Compile Include="Generators\PointGenerator.cs" />
     <Compile Include="Lines\IEdge.cs" />
     <Compile Include="Planes\OtherShapes\IrregularPolygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineExtensionMethods.cs" />
@@ -141,9 +134,6 @@
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
