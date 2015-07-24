@@ -382,7 +382,7 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Polygon_OverlappingPolygon()
         {
-            //changed to inches because mm were gave results smaller than what we are considering equivalent
+            
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(0, 3, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(4, 1, 0)));

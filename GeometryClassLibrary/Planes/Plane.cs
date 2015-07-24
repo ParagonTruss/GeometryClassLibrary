@@ -297,8 +297,8 @@ namespace GeometryClassLibrary
                 return false;
             }
             //so find the dot products between the points and the normal of the plane
-            Area testDot = new Vector(this.BasePoint, testPoint) * this.NormalVector;
-            Area referenceDot = new Vector(this.BasePoint, referencePoint) * this.NormalVector;
+            Area testDot = new Vector(this.BasePoint, testPoint).DotProduct(this.NormalVector);
+            Area referenceDot = new Vector(this.BasePoint, referencePoint).DotProduct(this.NormalVector);
 
             //if they are both either positive or negative than they are both on the same side
             if ((testDot < new Area() && referenceDot < new Area()) || (testDot > new Area() && referenceDot > new Area()))

@@ -199,23 +199,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the dot product of the two vectors
-        /// </summary>
-        /// <param name="passedVector1"></param>
-        /// <param name="passedVector2"></param>
-        /// <returns></returns>
-        public static Area operator *(Vector passedVector1, Vector passedVector2)
-        {
-            return passedVector1.DotProduct(passedVector2);
-            ////returns a new Distance with the dot product of the two vectors
-            //double xComponent = passedVector1.XComponent.Inches * passedVector2.XComponent.Inches;
-            //double yComponent = passedVector1.YComponent.Inches * passedVector2.YComponent.Inches;
-            //double zComponent = passedVector1.ZComponent.Inches * passedVector2.ZComponent.Inches;
-
-            //return new Distance(DistanceType.Inch, xComponent + yComponent + zComponent);
-        }
-
-        /// <summary>
         /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
         /// <param name="passedVector"></param>
