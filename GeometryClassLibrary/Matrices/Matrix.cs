@@ -70,6 +70,11 @@ namespace GeometryClassLibrary
         /// <param name="passedMatrix"></param>
         public Matrix(Matrix<double> passedMatrix)
         {
+            double norm =  passedMatrix.InfinityNorm();
+            if (Double.IsNaN(norm))
+            {
+                throw new Exception("Matrix entries should all be numbers!");
+            }
             _matrix = passedMatrix.Clone();
         }
 
@@ -244,6 +249,10 @@ namespace GeometryClassLibrary
         /// <param name="element"></param>
         public void SetElement(int rowIndex, int columnIndex, double element)
         {
+            if (Double.IsNaN(element))
+            {
+                throw new Exception("Matrix entry should be a number!");
+            }
             _matrix.At(rowIndex, columnIndex, element);
         }
 
@@ -343,8 +352,6 @@ namespace GeometryClassLibrary
         public Matrix ConvertRotationMatrixToQuaternion()
         {
 
-            
-
             //Follows this question asked by user1283674 on stack overflow
             //http://stackoverflow.com/questions/21455139/matrix-rotation-to-quaternion
 
@@ -373,7 +380,7 @@ namespace GeometryClassLibrary
                 biggestIndex = 3;
             }
 
-            // Per form square root and division
+            // Perform square root and division
             //(I have also seen it this way: mult = 0.25 * Math.Sqrt (fourBiggestSquaredMinus1 + 1.0 ) * 2
             //  and then you divide by mult below instead of * i.e  x = (this.GetElement(1, 2) - this.GetElement(2, 1)) / mult;
             //  and both ways seem to work the same)
