@@ -75,6 +75,7 @@
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Planes\OtherShapes\Circle.cs" />
+    <Compile Include="Planes\OtherShapes\Parallelogram.cs" />
     <Compile Include="Planes\OtherShapes\RightTriangle.cs" />
     <Compile Include="Planes\OtherShapes\Triangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Lines\IEdge.cs" />
-    <Compile Include="Planes\OtherShapes\IrregularPolygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineExtensionMethods.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineSegmentExtensionMethods.cs" />
     <Compile Include="Lines\Line.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Planes\Polygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListPlaneRegionExtensionMethods.cs" />
     <Compile Include="Coordinates\Point.cs" />
+    <Compile Include="Solids\OtherSolids\Parallelepiped.cs" />
     <Compile Include="Solids\Polyhedron.cs" />
     <Compile Include="Solids\OtherSolids\RectangularPrism.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

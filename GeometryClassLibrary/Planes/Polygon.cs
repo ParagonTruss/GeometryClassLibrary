@@ -131,8 +131,7 @@ namespace GeometryClassLibrary
             {   
                 if (_area == null)
                 {
-                    Area area = new Area(AreaType.InchesSquared, Math.Abs(_findArea().InchesSquared));
-                    _area = area;
+                    _area = new Area(AreaType.InchesSquared, Math.Abs(_findArea()));
                 }
                 return _area;
             }
@@ -700,19 +699,6 @@ namespace GeometryClassLibrary
             return new Polyhedron(faces);
         }
 
-        ///// <summary>
-        ///// Extrudes the plane region into a Polyhedron
-        ///// Note: does the same as extrude, but returns it as a polyhedron instead of a Solid
-        ///// </summary>
-        ///// <param name="Distance"></param>
-        ///// <returns></returns>
-        //public Polyhedron ExtrudeAsPolyhedron(Vector extrusionVector)
-        //{
-        //    return (Polyhedron)Extrude(extrusionVector);
-        //}
-
-    
-
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
         /// the polygons must be convex for this to work
@@ -842,6 +828,7 @@ namespace GeometryClassLibrary
             return this._slice(slicingLine, slicingPlane);
         }
 
+        #region Slice _helper methods
         /// <summary>
         /// An internal method that slices a planeRegion into two parts and returns them
         /// Should be called through other methods that take only a plane or a line
@@ -1203,7 +1190,7 @@ namespace GeometryClassLibrary
                 }
             }
         }
-
+        #endregion
         /// <summary>
         /// Finds the intersection between this polygon and the line
         /// </summary>
@@ -1633,58 +1620,91 @@ namespace GeometryClassLibrary
         //then we divide by cos(angle), where thats the angle between the (rotated) polygon and XY.
         //_findArea returns a possibly negative area to make centroid formula work right
         //the Area property takes absolute value before returning
-        private Area _findArea()
+        private double _findArea()
         {
-            Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
-            Polygon rotated = this.Rotate(rotation);
-
-            List<Point> vertices = rotated.Vertices;
-
-            Area sum = new Area(AreaType.InchesSquared, 0);
-            Point previousVertex = vertices[vertices.Count - 1];
-
-            foreach(Point vertex in vertices)
+            var vertices = this.Vertices;
+            vertices = vertices.Shift(new Shift(vertices[0].Negate()));
+            
+            Point previousVertex = vertices.Last();
+            Vector sum = new Vector();
+            foreach (Point vertex in vertices)
             {
-                sum += previousVertex.X * vertex.Y - vertex.X * previousVertex.Y;
+                sum += (new Vector(previousVertex)).CrossProduct(new Vector(vertex));
                 previousVertex = vertex;
             }
+            double area = sum.Magnitude.Inches / 2;
+            return area;
+            //Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
+            //Polygon rotated = this.Rotate(rotation);
 
-            Angle angle = rotated.SmallestAngleBetween(Plane.XY);
+            //List<Point> vertices = rotated.Vertices;
+
+            //Area sum = new Area(AreaType.InchesSquared, 0);
+            //Point previousVertex = vertices[vertices.Count - 1];
+
+            //foreach(Point vertex in vertices)
+            //{
+            //    sum += previousVertex.X * vertex.Y - vertex.X * previousVertex.Y;
+            //    previousVertex = vertex;
+            //}
+
+            //Angle angle = rotated.SmallestAngleBetween(Plane.XY);
             
-            double area = sum.InchesSquared / (2 * Math.Cos(angle.Radians));
+            //double area = sum.InchesSquared / (2 * Math.Cos(angle.Radians));
             
-            return new Area(AreaType.InchesSquared, area);
+            //return new Area(AreaType.InchesSquared, area);
         }
 
         private Point _findCentroid()
         {
-            Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
-            Polygon rotated = this.Rotate(rotation);
-            Polygon projected = rotated._projectOntoXYPlane();
-
-            List<Point> vertices = projected.Vertices;
-
-            Distance sumX = new Distance(DistanceType.Inch, 0);
-            Distance sumY = new Distance(DistanceType.Inch, 0);
-            Point previousVertex = vertices[vertices.Count - 1];
-
+            var vertices = this.Vertices;
+            vertices = vertices.Shift(new Shift(vertices[0].Negate()));
+            
+            Point previousVertex = vertices.Last();
+            Vector xComp = new Vector();
+            Vector yComp = new Vector();
+            Vector zComp = new Vector();
             foreach (Point vertex in vertices)
             {
-                sumX += (previousVertex.X + vertex.X) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
-                sumY += (previousVertex.Y + vertex.Y) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
+                Vector vector1 = new Vector(previousVertex);
+                Vector vector2 = new Vector(vertex);
+                Point sum = previousVertex + vertex;
+                Vector product = (vector1.CrossProduct(vector2));
+                xComp += (sum.X.Inches) * product;
+                yComp += (sum.Y.Inches) * product;
+                zComp += (sum.Y.Inches) * product;
                 previousVertex = vertex;
             }
-            double areaOfProjected = projected._findArea().InchesSquared;
-            Distance xComp = sumX / (6 * areaOfProjected);
-            Distance yComp = sumY / (6 * areaOfProjected);
+            double area = this.Area.InchesSquared;
+            Vector result = new Vector(new Point(xComp.Magnitude, yComp.Magnitude, zComp.Magnitude));
+            return (result / 6 * area).EndPoint + vertices[0];
+            //Rotation rotation = _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane();
+            //Polygon rotated = this.Rotate(rotation);
+            //Polygon projected = rotated._projectOntoXYPlane();
 
-            Point centroidOfProjected = new Point(xComp, yComp);
+            //List<Point> vertices = projected.Vertices;
 
-            Line lineOfProjection = new Line(Direction.Out, centroidOfProjected);
-            Point centroidRotated = ((Plane)rotated).Intersection(lineOfProjection);
-            Point centroid = centroidRotated.Rotate3D(rotation.Inverse());
+            //Distance sumX = new Distance(DistanceType.Inch, 0);
+            //Distance sumY = new Distance(DistanceType.Inch, 0);
+            //Point previousVertex = vertices[vertices.Count - 1];
+
+            //foreach (Point vertex in vertices)
+            //{
+            //    sumX += (previousVertex.X + vertex.X) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
+            //    sumY += (previousVertex.Y + vertex.Y) * (previousVertex.X * vertex.Y - vertex.X * previousVertex.Y).InchesSquared;
+            //    previousVertex = vertex;
+            //}
+            //double areaOfProjected = projected._findArea();
+            //Distance xComp = sumX / (6 * areaOfProjected);
+            //Distance yComp = sumY / (6 * areaOfProjected);
+
+            //Point centroidOfProjected = new Point(xComp, yComp);
+
+            //Line lineOfProjection = new Line(Direction.Out, centroidOfProjected);
+            //Point centroidRotated = ((Plane)rotated).Intersection(lineOfProjection);
+            //Point centroid = centroidRotated.Rotate3D(rotation.Inverse());
             
-            return centroid;
+            //return centroid;
 
         }
 
