@@ -355,7 +355,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public bool DoesShareABaseOrEndPointWith(Vector passedVector)
+        public bool SharesABaseOrEndPointWith(Vector passedVector)
         {
             return (this.BasePoint == passedVector.EndPoint
                 || this.BasePoint == passedVector.BasePoint

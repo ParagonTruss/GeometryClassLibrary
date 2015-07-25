@@ -19,7 +19,7 @@ namespace GeometryClassLibrary
                     if (segment1 != segment2 && segment1.IsCoplanarWith(segment2))
                     {
                         Plane possiblePlane = new Plane(segment1, segment2);
-                        if (segment1.DoesShareABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
+                        if (segment1.SharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
                         {
                             planesList.Add(possiblePlane);
                         }
