@@ -7,12 +7,12 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
 
-    public class Rectangle : Parallelogram
+    public class Rectangle : Polygon
     {
         public Rectangle(Vector baseSegment, Distance height, Vector referencePlaneNormal = null)
-            : base(baseSegment, _getHeightVector(baseSegment, height, referencePlaneNormal)) { }
+            : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }
 
-        private static Vector _getHeightVector(Vector baseSegment, Distance height, Vector referencePlaneNormal)
+        private static Polygon _makeRectangle(Vector baseSegment, Distance height, Vector referencePlaneNormal)
         {
             if (referencePlaneNormal == null)
             {
@@ -20,8 +20,10 @@ namespace GeometryClassLibrary
             }
 
             Vector heightVector = referencePlaneNormal.CrossProduct(baseSegment);
-           
-            return heightVector;
+            heightVector.Magnitude = height;
+            Polygon polygon = Polygon.MakeParallelogram(baseSegment, heightVector);
+
+            return polygon;
         }
     }
 }

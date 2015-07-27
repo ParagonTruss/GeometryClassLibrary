@@ -10,10 +10,10 @@ namespace GeometryClassLibrary
     /// A prism is "a solid geometric figure whose two end faces are similar, equal, and parallel rectilinear figures, and whose sides are parallelograms."
     /// </summary>
 
-    public class RectangularPrism : Parallelepiped
+    public class RectangularPrism : Polyhedron
     {
         #region Properties
-   
+
         #endregion
 
         public RectangularPrism(Rectangle rectangle, Distance height) : base(_makePrismFromRectangle(rectangle, height)) { }
@@ -34,7 +34,7 @@ namespace GeometryClassLibrary
         /// Creates a rectangular prism with the given Distances in the x,y,z directions
         /// </summary>
         public RectangularPrism(Distance length, Distance width, Distance height, Point basePoint = null) : base(_makeSolid(length, width, height, basePoint)) { }
-        
+
         private static Polyhedron _makeSolid(Distance length, Distance width, Distance height, Point basePoint = null)
         {
             if (basePoint == null)
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
                 basePoint = new Point();
             }
             Distance zero = new Distance();
-           
+
             Vector vector1 = new Vector(new Point(zero, width, zero));
             Vector vector2 = new Vector(new Point(length, zero, zero));
             Vector vector3 = new Vector(new Point(zero, zero, height));
