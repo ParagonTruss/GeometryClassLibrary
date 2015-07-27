@@ -170,7 +170,6 @@ namespace GeometryClassLibrary
                 return true;
             }
             return false;
-            // if the two points' x and y and z are equal, returns true
         }
 
         /// <summary>
@@ -178,16 +177,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public static bool operator !=(Point point1, Point point2)
         {
-            // if the two points' x and y are equal, returns false
-            if ((object)point1 == null)
-            {
-                if ((object)point2 == null)
-                {
-                    return false;
-                }
-                return true;
-            }
-            return !point1.Equals(point2);
+            return !(point1 == point2);
         }
 
         /// <summary>
@@ -219,13 +209,14 @@ namespace GeometryClassLibrary
         public bool Equals(Point comparablePoint)
         {
             //check for null (wont throw a castexception)
-            if (comparablePoint == null)
+            if ((object)comparablePoint == null)
             {
                 return false;
             }
 
-            // if the two points' x, y, and z are equal, returns true
-            return (this.X.Equals(comparablePoint.X) && this.Y.Equals(comparablePoint.Y) && this.Z.Equals(comparablePoint.Z));
+            // if the two points are close enough, then they're equal
+            return this.DistanceTo(comparablePoint) == new Distance();
+            //return (X == comparablePoint.X) && (Y == comparablePoint.Y) && (Z == comparablePoint.Z);
         }
 
         public override string ToString()
@@ -292,11 +283,6 @@ namespace GeometryClassLibrary
         /// <returns>new Distance representing the distance</returns>
         public Distance DistanceTo(Point endPoint)
         {
-            if (this == endPoint)
-            {
-                return new Distance();
-            }
-
             //distance formula
             double term1 = Math.Pow((X - endPoint.X).Inches, 2);
             double term2 = Math.Pow((Y - endPoint.Y).Inches, 2);
