@@ -335,15 +335,7 @@ namespace GeometryClassLibrary
 
         public static bool operator !=(Direction direction1, Direction direction2)
         {
-            if ((object)direction1 == null)
-            {
-                if ((object)direction2 == null)
-                {
-                    return false;
-                }
-                return true;
-            }
-            return !direction1.Equals(direction2);
+            return !(direction1 == direction2);
         }
 
         public override bool Equals(object obj)
@@ -355,14 +347,7 @@ namespace GeometryClassLibrary
 
             try
             {
-                //try casting to a direction
-                Direction comparableDirection = (Direction)obj;
-
-                Angle angleBetween = this.AngleBetween(comparableDirection);
-                bool angleIsCloseToZero = (angleBetween == new Angle());
-                return angleIsCloseToZero;
-
-                
+                return this.Equals(obj as Direction);   
             }
             //wasnt even a direction so it must not be equal
             catch (InvalidCastException)
@@ -370,7 +355,16 @@ namespace GeometryClassLibrary
                 return false;
             }
         }
-
+        public bool Equals(Direction dir)
+        {
+            if (ReferenceEquals(dir, null))
+            {
+                return false;
+            }
+            Angle angleBetween = this.AngleBetween(dir);
+            bool angleIsCloseToZero = (angleBetween == new Angle());
+            return angleIsCloseToZero;
+        }
         #endregion
 
         #region Methods
