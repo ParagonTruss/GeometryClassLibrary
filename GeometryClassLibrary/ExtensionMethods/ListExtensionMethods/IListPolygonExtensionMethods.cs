@@ -59,29 +59,29 @@ namespace GeometryClassLibrary
             return false;
         }
 
-        /// <summary>
-        /// Finds a vertex of one of the polygons in this list that is not contained by the given plane in order to use it as a reference point 
-        /// to determine what side of the plane this list of polygons lies. Presumably, the plane is a side of the "unconstructed polyhedron" that
-        /// this list of polygons represents.
-        /// </summary>
-        /// <param name="polygonsList">The list of polygons to find the vertex from</param>
-        /// <param name="planeNotToFindTheVertexOn">The plane that presumably is a side of the "unconstructed" polyhedron to determine what side of the plane this list of polygons lies</param>
-        /// <returns>A vertex from this list of polygons that is not on the given plane</returns>
-        public static Point FindVertexNotOnThePlane(this List<Polygon> polygonsList, Plane planeNotToFindTheVertexOn)
-        {
-            Point pointFound;
+        ///// <summary>
+        ///// Finds a vertex of one of the polygons in this list that is not contained by the given plane in order to use it as a reference point 
+        ///// to determine what side of the plane this list of polygons lies. Presumably, the plane is a side of the "unconstructed polyhedron" that
+        ///// this list of polygons represents.
+        ///// </summary>
+        ///// <param name="polygonsList">The list of polygons to find the vertex from</param>
+        ///// <param name="planeNotToFindTheVertexOn">The plane that presumably is a side of the "unconstructed" polyhedron to determine what side of the plane this list of polygons lies</param>
+        ///// <returns>A vertex from this list of polygons that is not on the given plane</returns>
+        //public static Point FindVertexNotOnThePlane(this List<Polygon> polygonsList, Plane planeNotToFindTheVertexOn)
+        //{
+        //    Point pointFound;
 
-            foreach (Polygon polygon in polygonsList)
-            {
-                pointFound = polygon.FindVertexNotOnTheGivenPlane(planeNotToFindTheVertexOn);
-                if (pointFound != null)
-                {
-                    return pointFound;
-                }
-            }
+        //    foreach (Polygon polygon in polygonsList)
+        //    {
+        //        pointFound = polygon.FindVertexNotOnTheGivenPlane(planeNotToFindTheVertexOn);
+        //        if (pointFound != null)
+        //        {
+        //            return pointFound;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         /// <summary>
         /// Finds all the polygons in this list that intersect the given line and returns a list of those Polygons

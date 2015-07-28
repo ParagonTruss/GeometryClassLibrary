@@ -767,24 +767,24 @@ namespace GeometryClassLibraryTests
             resultNotOn.Should().BeFalse();
         }
 
-        [Test()]
-        public void Polygon_FindVertexNotOnTheGivenPlane()
-        {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
-            Polygon testPolygon = new Polygon(lineSegments);
+        //[Test()]
+        //public void Polygon_FindVertexNotOnTheGivenPlane()
+        //{
+        //    List<LineSegment> lineSegments = new List<LineSegment>();
+        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
+        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
+        //    Polygon testPolygon = new Polygon(lineSegments);
 
-            Plane borderPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(0, 0, 1));
-            Plane containingPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 0, 0));
+        //    Plane borderPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(0, 0, 1));
+        //    Plane containingPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 0, 0));
 
-            Point results1 = testPolygon.FindVertexNotOnTheGivenPlane(borderPlane);
-            Point results2 = testPolygon.FindVertexNotOnTheGivenPlane(containingPlane);
+        //    Point results1 = testPolygon.FindVertexNotOnTheGivenPlane(borderPlane);
+        //    Point results2 = testPolygon.FindVertexNotOnTheGivenPlane(containingPlane);
 
-            (results1 == Point.MakePointWithInches(-3, 2, 0)).Should().BeTrue();
-            (results2 == null).Should().BeTrue();
-        }
+        //    (results1 == Point.MakePointWithInches(-3, 2, 0)).Should().BeTrue();
+        //    (results2 == null).Should().BeTrue();
+        //}
 
         [Test()]
         public void Polygon_DoesShareOrContainSide()

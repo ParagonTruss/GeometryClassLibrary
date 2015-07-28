@@ -137,9 +137,9 @@ namespace GeometryClassLibraryTests
             (test21Intersect.Equals(expectedLine)).Should().BeTrue();
             var expectedLast = new Line(new Direction(Point.MakePointWithInches(0, -1 , -1)), Point.MakePointWithInches(2, 1, 2));
         
-            var found =(testPlane1.Intersection(testPlane1));
-            (found == expectedLast).Should().BeTrue();
-            }
+            var found = (testPlane1.Intersection(testPlane1));
+            Assert.IsTrue(found.Equals(expectedLast));
+        }
         [Test()]
         public void Plane_IntersectionWithPlane_ZeroCases()
         {

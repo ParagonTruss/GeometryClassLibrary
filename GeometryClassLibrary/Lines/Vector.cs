@@ -111,11 +111,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint)
         {
-            Distance xLength = passedBasePoint.X - passedEndPoint.X;
-            Distance yLength = passedBasePoint.Y - passedEndPoint.Y;
-            Distance zLength = passedBasePoint.Z - passedEndPoint.Z;
-
-            _magnitude = new Point(xLength, yLength, zLength).DistanceTo(new Point());
+            _magnitude = passedBasePoint.DistanceTo(passedEndPoint);
         }
 
         /// <summary>
@@ -383,12 +379,19 @@ namespace GeometryClassLibrary
         /// <returns>Returns a bool of whether or not the point is contained</returns>
         public new bool Contains(Point point)
         {
+            if (point == null)
+            {
+                return false;
+            }
+            if (point.IsBaseOrEndPointOf(this))
+            {
+                return true;
+            }
             Vector pointVector = new Vector(this.BasePoint, point);
-            bool onLine = base.Contains(point);
             bool sameDirection = this.HasSameDirectionAs(pointVector);
             bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
 
-            return onLine && sameDirection && greaterMagnitude;
+            return sameDirection && greaterMagnitude;
         }
 
         /// <summary>

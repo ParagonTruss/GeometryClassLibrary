@@ -483,11 +483,8 @@ namespace GeometryClassLibrary
         {
             if (this.DoesIntersectNotTouching(slicingPlane))
             {
-                //make a list to keep track of all the points we sliced at
+                //make a list to keep track of all the new segments
                 List<LineSegment> slicingPlaneLineSegments = new List<LineSegment>();
-
-                List<Polygon> unknownPolygons = new List<Polygon>();
-                List<Polygon> unknownPolygonsOther = new List<Polygon>();
 
                 //the slice method will return 1 or more polyhedrons
                 List<Polygon> unconstructedInsidePolyhedron = new List<Polygon>();
@@ -514,7 +511,7 @@ namespace GeometryClassLibrary
                         unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
                         unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
                     }
-                    catch (ArgumentException) { }
+                    catch (Exception) { }
                     Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
                     Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
 
@@ -540,39 +537,54 @@ namespace GeometryClassLibrary
         private void _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
             Plane slicingPlane)
         {
-            if (unconstructedInsidePolyhedron.Count == 0)
+            var referencePoint = slicingPlane.NormalVector.EndPoint;
+            
+            int? side = null;
+            for (int i = 0; i < slicedPolygons[0].Vertices.Count; i++)
             {
-                //make the larger one the basis for our "inside" polygon
-                unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
-
-                //and if it was split then add the other part to the "outside"
-                if (slicedPolygons.Count > 1)
+                if (slicingPlane.Contains(slicedPolygons[0].Vertices[i]))
                 {
-                    unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
+                   continue;
                 }
-            }
-            else
-            {
-                Point insidePolyhedronReferencePoint = unconstructedInsidePolyhedron.FindVertexNotOnThePlane(slicingPlane);
-                Point slicedPolygonZeroReferencePoint = slicedPolygons[0].FindVertexNotOnTheGivenPlane(slicingPlane);
-
-                if (slicingPlane.PointIsOnSameSideAs(insidePolyhedronReferencePoint, slicedPolygonZeroReferencePoint))
+                else if (slicingPlane.PointIsOnSameSideAs(referencePoint, slicedPolygons[0].Vertices[i]))
                 {
-                    unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
-
-                    if (slicedPolygons.Count > 1)
+                    if (side == null)
                     {
-                        unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
+                        side = 0;
                     }
+                    else if (side == 1)
+                    {
+                        throw new Exception("New polygons shouldn't straddle the slice.");
+                    }
+
                 }
                 else
                 {
-                    unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
-
-                    if (slicedPolygons.Count > 1)
+                    if (side == null)
                     {
-                        unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
+                        side = 1;
                     }
+                    else if (side == 0)
+                    {
+                        throw new Exception("New polygons shouldn't straddle the slice.");
+                    }
+                }
+            }
+            if (side == 0)
+            {
+                unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
+                if (slicedPolygons.Count > 1)
+                {
+                    unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
+                }
+            }
+            else if (side == 1)
+            {
+                unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
+                
+                if (slicedPolygons.Count > 1)
+                {
+                    unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
                 }
             }
         }
@@ -884,7 +896,7 @@ namespace GeometryClassLibrary
                     }
                 }
             }
-            return null;
+            throw new Exception("The passed list of faces do not form a closed region.");
         }
 
         /// <summary>

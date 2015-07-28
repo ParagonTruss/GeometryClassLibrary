@@ -414,7 +414,7 @@ namespace GeometryClassLibrary
             {
                 return this.BasePoint;
             }
-            if (!this.IsCoplanarWith(passedLine))
+            if (!this.IsCoplanarWith(passedLine) || this.IsParallelTo(passedLine))
             {
                 //The lines do not intersect
                 return null;

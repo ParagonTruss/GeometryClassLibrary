@@ -98,13 +98,13 @@ namespace GeometryClassLibrary
                 Vector referenceNormal = tangentLine.CrossProduct(straightLineSegment);
 
                 //now we can find the direction to the center point by finding the perpindicular of the tangent line
-                Vector toCenterPointFromTangent = new Vector(_basePoint, referenceNormal.CrossProduct(tangentLine));
+               Line toCenterPointFromTangent = new Line(_basePoint, referenceNormal.CrossProduct(tangentLine));
 
                 //now we can find the center point of the arc and the direction to the center of the arc from there based on the lineSegment to the endpoint
-                Vector toCenterFromMidPoint = new Vector(straightLineSegment.MidPoint, referenceNormal.CrossProduct(straightLineSegment));
+                Line toCenterFromMidPoint = new Line(straightLineSegment.MidPoint, referenceNormal.CrossProduct(straightLineSegment));
                 
                 //now find where centerLine and the toCenterFromTagnent line intersect to get the center point
-                return ((Line)toCenterPointFromTangent).Intersection((Line)toCenterFromMidPoint);
+                return toCenterPointFromTangent.Intersection(toCenterFromMidPoint);
             }
         }
 

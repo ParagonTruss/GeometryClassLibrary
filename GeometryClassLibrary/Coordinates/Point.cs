@@ -449,13 +449,13 @@ namespace GeometryClassLibrary
             return passedLineSegment.Contains(this);
         }
 
-        public bool IsBaseOrEndPointOf(LineSegment lineSegment)
+        public bool IsBaseOrEndPointOf(Vector vector)
         {
-           if (this == lineSegment.BasePoint || this == lineSegment.EndPoint)
-           {
-               return true;
-           }
-           return false;
+            if (this == vector.BasePoint || this == vector.EndPoint)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

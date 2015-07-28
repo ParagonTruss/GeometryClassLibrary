@@ -112,6 +112,10 @@ namespace GeometryClassLibrary
 
         private void _checkSegment()
         {
+            if (this.BasePoint == null || this.EndPoint == null)
+            {
+                throw new Exception("BasePoint or EndPoint is null!");
+            }
             if (this.BasePoint == this.EndPoint)
             {
                 throw new Exception("LineSegment has no breadth!");
@@ -431,23 +435,15 @@ namespace GeometryClassLibrary
 
         public bool DoesIntersectNotTouching(LineSegment segment)
         {
-            Point point = ((Line)this).Intersection((Line)segment);
+            Point point = this.Intersection(segment);
             if (point != null)
             {
-                //LineSegment overlap = this.OverlappingSegment(segment);
-                //if (overlap != null && overlap.Magnitude > new Distance())
-                //{
-                //    return true;
-                //}
-                if (point.IsOnLineSegment(this) && point.IsOnLineSegment(segment))
+                if (point.IsBaseOrEndPointOf(this) ||
+                    point.IsBaseOrEndPointOf(segment))
                 {
-                    if (point.IsBaseOrEndPointOf(this) ||
-                        point.IsBaseOrEndPointOf(segment))
-                    {
-                        return false;
-                    }
-                    return true;
+                    return false;
                 }
+                return true;
             }
             return false;
         }
