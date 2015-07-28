@@ -234,7 +234,7 @@ namespace GeometryClassLibrary
         /// <param name="centerPoint">The centre point of rotation.</param>
         /// <param name="rotateAngle">The rotation angle</param>
         /// <returns>Rotated point</returns>
-        public Point Rotate2D(Point centerPoint, Angle rotateAngle)
+        public Point Rotate2D(Point centerPoint, AngularDistance rotateAngle)
         {
             double cosTheta = Math.Cos(rotateAngle.Radians);
             double sinTheta = Math.Sin(rotateAngle.Radians);

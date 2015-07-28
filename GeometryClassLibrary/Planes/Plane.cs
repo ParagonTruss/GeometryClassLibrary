@@ -312,15 +312,9 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Finds the line where the two planes intersect 
-        /// Note: converts the types to inches Internally so some percision might be lost
         /// </summary>
-        /// <param name="otherPlane">the other plane to see where it intersects with this plane</param>
-        /// <returns>returns the Line of intersection between the planes or null if they do not intersect</returns>
         public virtual Line Intersection(Plane otherPlane)
         {
-            //We make them all doubles because we need to ignore the dimesnions for this calculation to work correctly and then restore them
-            //at the end, so we choose inches to use as the base to convert to
-
             if (this == otherPlane)
             {
                 if (BasePoint != otherPlane.BasePoint)
@@ -339,14 +333,14 @@ namespace GeometryClassLibrary
             {
                 return null;
             }
-            //Explains how to find where planes intersect: http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
-            //if we have the normals we can cross them to find direction vector of the intersection
+            
             Vector intersectionLineDirection = this.NormalVector.CrossProduct(otherPlane.NormalVector);
             
             Line normalInPlane1 = new Line(this.BasePoint, this.NormalVector.CrossProduct(intersectionLineDirection));
             Point basePoint = normalInPlane1.Intersection(otherPlane);
 
             return new Line(basePoint, intersectionLineDirection);
+            // http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
             ////if it is 0 than thay are parallel and dont intersect
             //if (intersectionLineDirection != new Vector())
             //{

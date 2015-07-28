@@ -498,31 +498,31 @@ namespace GeometryClassLibrary
                     _addSlicingLine(slicingPlane, polygon, slicingPlaneLineSegments);
                 }
 
-                //if we actually slice and did not just not overlap with a side then return two polygons
+                //if we actually slice and did not just not overlap with a side then return two polyhedrons
                 if (unconstructedInsidePolyhedron.Count != 0 && unconstructedOutsidePolyhedron.Count != 0)
                 {
                     //now make the joining sides based on where the intersection plane was
                     //create a new plane based on the intersections
-                    try
-                    {
+                    //try
+                    //{
                         Polygon slicingPlanePolygon = new Polygon(slicingPlaneLineSegments);
                         Polygon slicingPlanePolygon2 = new Polygon(slicingPlaneLineSegments);
 
                         unconstructedInsidePolyhedron.Add(slicingPlanePolygon);
                         unconstructedOutsidePolyhedron.Add(slicingPlanePolygon2);
-                    }
-                    catch (Exception) { }
+                    //}
+                    //catch (Exception) { }
                     Polyhedron insidePolyhedron = new Polyhedron(unconstructedInsidePolyhedron);
                     Polyhedron outsidePolyhedron = new Polyhedron(unconstructedOutsidePolyhedron);
 
                     List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
                     return toReturn;
                 }
-                //if we were slicing along a plane of the polyhedron so we didnt cut it any just return a copy of the original polyhedron
-                else
-                {
-                    return new List<Polyhedron>() { new Polyhedron(this) };
-                }
+                ////if we were slicing along a plane of the polyhedron so we didnt cut it any just return a copy of the original polyhedron
+                //else
+                //{
+                //    return new List<Polyhedron>() { new Polyhedron(this) };
+                //}
             }
             return new List<Polyhedron>() { new Polyhedron(this) };
         }

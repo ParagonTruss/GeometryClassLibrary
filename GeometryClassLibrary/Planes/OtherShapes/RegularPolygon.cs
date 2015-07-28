@@ -11,78 +11,43 @@ namespace GeometryClassLibrary
     {
 
         #region Constructors
-
         /// <summary>
-        /// Creates a regular polygon from the given line segments if they are are equal and have the same angles between
-        /// neighboring segments
+        /// Creates a regular polygon centered at the origin in the XY-plane.
         /// </summary>
-        /// <param name="lineSegments"></param>
-        public RegularPolygon(List<LineSegment> lineSegments)
-        {
-            //make sure the linesegments are equidistant and all angles equal
-            if (AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(lineSegments))
-            {
-                this.LineSegments = lineSegments;
-            }
-        }
+        public RegularPolygon(int numberOfSides, Distance sideLength)
+            : base(_createRegularPolygonPoints(numberOfSides, sideLength)) { }
 
-        /// <summary>
-        /// Creates a regular polygon in the XY-plane with the given number of sides where each side is the given length and the 
-        /// polygon is rotated by the given angle
-        /// </summary>
-        /// <param name="passedNumberOfSides"></param>
-        /// <param name="passedSideLength"></param>
-        /// <param name="passedRotationAngle"></param>
-        public RegularPolygon(int passedNumberOfSides, Distance passedSideLength, Angle passedRotationAngle = null)
-            : base(_createRegularPolygonPoints(passedNumberOfSides, passedSideLength, passedRotationAngle))
+        private static List<Point> _createRegularPolygonPoints(int numberOfSides, Distance sideLength)
         {
-            
-        }
-
-        private static List<Point> _createRegularPolygonPoints(int passedNumberOfSides, Distance passedSideLength, Angle passedRotationAngle)
-        {
-            if (passedNumberOfSides < 3)
+            if (numberOfSides < 3)
             {
                 throw new ArgumentException("A polygon must have more than 2 sides.");
             }
+            
+            AngularDistance step = Angle.Degree * 360.0 / numberOfSides;
+            AngularDistance otherAngle = (Angle.Degree*180 - step) / 2;
 
-            if (passedRotationAngle == null)
+            //Law of Sines
+            Distance length = sideLength * Math.Sin(otherAngle.Radians)/Math.Sin((step.Radians));
+
+            Point firstPoint = new Point(length, new Distance());
+            List<Point> points = new List<Point>(){ firstPoint };
+
+            for (int i = 1; i < numberOfSides; i++)
             {
-                passedRotationAngle = new Angle();
-            }
-
-            List<Point> points = new List<Point>();
-            Angle step = new Angle(AngleType.Degree, 360.0 / passedNumberOfSides);
-
-            for (Angle i = passedRotationAngle; i < passedRotationAngle + new Angle(AngleType.Degree, 360.0); i += step) //go in a full circle
-            {
-                points.Add(DegreesToXY(passedRotationAngle, passedSideLength, Point.Origin)); //code snippet from above
-                passedRotationAngle += step;
+                points.Add(firstPoint.Rotate2D(new Point(), step*i)); //code snippet from above
             }
 
             return points;
         }
 
+      
+
         #endregion
 
         #region Methods
 
-        /// <summary>
-        /// Calculates a point that is at an angle from the passedPoint, in XY (0 is to the right)
-        /// </summary>
-        private static Point DegreesToXY(Angle passedAngle, Distance distance, Point passedPoint)
-        {
-            Point newPoint = new Point(
-                new Distance(DistanceType.Inch, Math.Cos(passedAngle.Radians) * distance.Inches + passedPoint.X.Inches),
-            new Distance(DistanceType.Inch, Math.Sin(passedAngle.Negate().Radians) * distance.Inches + passedPoint.Y.Inches));
-
-            return newPoint;
-        }
-
-        public bool AllSidesAreEqualandAllAnglesBetweenLinesAreTheSame(List<LineSegment> passedLineSegments)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         #endregion
     }

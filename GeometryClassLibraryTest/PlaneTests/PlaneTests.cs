@@ -124,7 +124,6 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Plane_IntersectionWithPlane()
         {
-            //try all the zero cases
             Plane testPlane1 = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, 1, 2));
             Plane testPlane2 = new Plane(new Direction(Point.MakePointWithInches(1, 1, -1)), Point.MakePointWithInches(1, 3, 3));
 
@@ -133,13 +132,21 @@ namespace GeometryClassLibraryTests
 
             Line expectedLine = new Line(new Direction(Point.MakePointWithInches(0, 3, 3)), Point.MakePointWithInches(2, -1, 0));
 
-            test12Intersect.Should().Be(test21Intersect);
-            (test21Intersect.Equals(expectedLine)).Should().BeTrue();
-            var expectedLast = new Line(new Direction(Point.MakePointWithInches(0, -1 , -1)), Point.MakePointWithInches(2, 1, 2));
-        
-            var found = (testPlane1.Intersection(testPlane1));
-            Assert.IsTrue(found.Equals(expectedLast));
+            Assert.IsTrue(test12Intersect.Equals(test21Intersect));
+            Assert.IsTrue(test21Intersect.Equals(expectedLine));
         }
+
+        [Test()]
+        public void Plane_IntersectionWithPlane_IdenticalPlane()
+        {
+            Plane testPlane = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, 1, 2));
+
+            Line found = (testPlane.Intersection(testPlane));
+            Line expected = new Line(new Direction(Point.MakePointWithInches(0, -1, -1)), Point.MakePointWithInches(2, 1, 2));
+
+            Assert.IsTrue(found.Equals(expected));
+        }
+
         [Test()]
         public void Plane_IntersectionWithPlane_ZeroCases()
         {
