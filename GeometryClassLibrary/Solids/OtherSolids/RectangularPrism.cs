@@ -9,12 +9,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A prism is "a solid geometric figure whose two end faces are similar, equal, and parallel rectilinear figures, and whose sides are parallelograms."
     /// </summary>
-
-<<<<<<< HEAD
     public class RectangularPrism : Polyhedron
-=======
-    public class RectangularPrism :Polyhedron
->>>>>>> 4bd13c91fae9e187e2f3b9d3c6881a8e5e40e247
     {
         #region Properties
 
