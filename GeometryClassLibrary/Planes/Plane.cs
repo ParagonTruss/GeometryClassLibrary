@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -26,7 +27,7 @@ namespace GeometryClassLibrary
         /// The vector that is normal to the plane, with the base point of the vector always
         /// being the same as the basepoint of the plane
         /// </summary>
-        private Vector _normalVector;
+        [JsonProperty]
         public virtual Vector NormalVector
         {
             get { return _normalVector; }
@@ -36,6 +37,7 @@ namespace GeometryClassLibrary
                 _normalVector = new Vector(this.BasePoint, value);
             }
         }
+        private Vector _normalVector;
 
         #endregion
 
@@ -62,7 +64,8 @@ namespace GeometryClassLibrary
             this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
         }
 
-        public Plane(Vector normal) : this(normal.Direction, normal.BasePoint) { }
+        [JsonConstructor]
+        public Plane(Vector normalVector) : this(normalVector.Direction, normalVector.BasePoint) { }
 
         /// <summary>
         /// Creates a plane that contains the two lines (they must not be equivalent Lines!)
