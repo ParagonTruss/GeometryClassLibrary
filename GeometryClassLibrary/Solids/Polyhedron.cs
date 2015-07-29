@@ -730,34 +730,100 @@ namespace GeometryClassLibrary
         /// <returns>The overlapping region of the two Polyhedrons as a Polygon or null if they do not overlap</returns>
         public Polygon OverlappingPolygon(Polyhedron polyhedron)
         {
-            //if (this.IsConvex && polyhedron.IsConvex)
-            //{
-                List<Polygon> faces1 = this.Polygons;
-                List<Polygon> faces2 = polyhedron.Polygons;
+            List<Polygon> faces1 = this.Polygons;
+            List<Polygon> faces2 = polyhedron.Polygons;
 
-                //Loop through the faces until we find overlapping faces
-                for (int i = 0; i < faces1.Count; i++)
+            //Loop through the faces until we find overlapping faces
+            for (int i = 0; i < faces1.Count; i++)
+            {
+                for (int j = 0; j < faces2.Count; j++)
                 {
-                    for (int j = 0; j < faces2.Count; j++)
+                    if (faces1[i].NormalVector.HasOppositeDirectionOf(faces2[j].NormalVector))
                     {
-                        if (faces1[i].NormalVector.HasOppositeDirectionOf(faces2[j].NormalVector))
+                        Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
+                        if (intersectionPlane != null)
                         {
-                            Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
-                            if (intersectionPlane != null)
-                            {
-                                return intersectionPlane;
-                            }
+                            return intersectionPlane;
                         }
                     }
                 }
-                return null;
-            //}
-            //throw new NotImplementedException();
+            }
+            return null;
         }
 
-       
-       
+        public Polygon OverlappingPolygon(Polygon polygon)
+        {
+            Polygon intersectionPlane;
+            for (int j = 0; j < this.Polygons.Count; j++)
+            {
+                intersectionPlane = polygon.OverlappingPolygon(this.Polygons[j]);
+                if (intersectionPlane != null)
+                {
+                    return intersectionPlane;
+                }
 
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Creates a parralelepiped.
+        /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
+        /// </summary>
+        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
+        {
+            if (basePoint == null)
+            {
+                basePoint = vector1.BasePoint;
+            }
+            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
+            Polyhedron solid = bottom.Extrude(vector3);
+            return solid;
+        }
+
+        public bool IsRectangularPrism()
+        {
+            if (this.Polygons.Count != 6)
+            {
+                return false;
+            }
+            foreach(Polygon face in this.Polygons)
+            {
+                if (!face.IsRectangle())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool HasOverlappingFace(Polygon polygon)
+        {
+            foreach(Polygon face in this.Polygons)
+            {
+                if (face.OverlappingPolygon(polygon) != null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Projects a polyhedron onto a plane, and returns a polygon.
+        /// Doesn't handle nonConvex polyhedra properly in some cases.
+        /// </summary>
+        public Polygon ProjectOntoPlane(Plane plane)
+        {
+            var segments2D = this.LineSegments.ProjectAllOntoPlane(plane);
+
+            return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
+        }
+
+      
+        #endregion
+
+        #region Constructor helpers
         /// <summary>
         ///Checks if the polygons form a closed bounded region.
         ///If they don't returns null. Otherwise it reorients every face, so that all their normalVectors point outward
@@ -898,64 +964,7 @@ namespace GeometryClassLibrary
             }
             throw new Exception("The passed list of faces do not form a closed region.");
         }
-
-        /// <summary>
-        /// Creates a parralelepiped.
-        /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
-        /// </summary>
-        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
-        {
-            if (basePoint == null)
-            {
-                basePoint = vector1.BasePoint;
-            }
-            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
-            Polyhedron solid = bottom.Extrude(vector3);
-            return solid;
-        }
-
-        public bool IsRectangularPrism()
-        {
-            if (this.Polygons.Count != 6)
-            {
-                return false;
-            }
-            foreach(Polygon face in this.Polygons)
-            {
-                if (!face.IsRectangle())
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public bool HasOverlappingFace(Polygon polygon)
-        {
-            foreach(Polygon face in this.Polygons)
-            {
-                if (face.OverlappingPolygon(polygon) != null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Projects a polyhedron onto a plane, and returns a polygon.
-        /// Doesn't handle nonConvex polyhedra properly in some cases.
-        /// </summary>
-        public Polygon ProjectOntoPlane(Plane plane)
-        {
-            var segments2D = this.LineSegments.ProjectAllOntoPlane(plane);
-
-            return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
-        }
-
-      
         #endregion
 
-        
     }
 }

@@ -13,6 +13,17 @@ namespace GeometryClassLibraryTests
     public class PolygonTests
     {
         [Test()]
+        public void A_Dummy_Test()
+        {
+            Point point1 = new Point();
+            var list = new List<Point>();
+            list.Add(point1);
+
+            point1 = Point.MakePointWithInches(3, 3, 3);
+            bool test = list[0] == point1;
+            Assert.Pass();
+        }
+        [Test()]
         [ExpectedException(typeof(Exception))]
         public void Polygon_Constructor_NoSelfIntersections()
         {
