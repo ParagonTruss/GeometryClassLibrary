@@ -448,8 +448,8 @@ namespace GeometryClassLibrary
 
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));
             Direction testNormal = this.CrossProduct(direction);
-
-            if (testAngle == new Angle() || testNormal == referenceNormal)
+           
+            if (testAngle % new Angle(AngleType.Degree, 180) == new Angle() || testNormal == referenceNormal)
             {
                 return testAngle;
             }
@@ -457,6 +457,7 @@ namespace GeometryClassLibrary
             {
                 return testAngle.Negate();
             }
+            
 
             throw new Exception("The reference normal is not perpendicular to these vectors");
 
