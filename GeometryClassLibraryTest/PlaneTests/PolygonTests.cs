@@ -13,7 +13,7 @@ namespace GeometryClassLibraryTests
     public class PolygonTests
     {
         [Test()]
-        public void A_Dummy_Test()
+        public void Mutability_Test()
         {
             Point point1 = new Point();
             var list = new List<Point>();

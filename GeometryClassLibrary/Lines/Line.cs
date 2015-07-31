@@ -359,18 +359,6 @@ namespace GeometryClassLibrary
             return this.Direction.SignedAngleBetween(line.Direction);
 	    }
 
-        ///// <summary>
-        ///// Returns a point on the line based on the multiplier entered
-        ///// </summary>
-        //public Point GetPointOnLine(double multiplier)
-        //{
-        //    Distance newX = new Distance(DistanceType.Inch, _basePoint.X.Inches + Direction.XComponent * multiplier);
-        //    Distance newY = new Distance(DistanceType.Inch, _basePoint.Y.Inches + Direction.YComponent * multiplier);
-        //    Distance newZ = new Distance(DistanceType.Inch, _basePoint.Z.Inches + Direction.ZComponent * multiplier);
-
-        //    return new Point(newX, newY, newZ);
-        //}
-
         /// <summary>
         /// returns the point a given distance along the line.
         /// </summary>
