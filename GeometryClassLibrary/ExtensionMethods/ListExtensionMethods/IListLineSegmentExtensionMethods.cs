@@ -337,18 +337,13 @@ namespace GeometryClassLibrary
                     for (int k = j + 1; k < vertices.Count(); k++)
                     {
                         Vector vector2 = new Vector(vertices[i], vertices[k]);
-                        Vector normal = vector1.CrossProduct(vector2);
-                        if (normal.Magnitude != new Distance())
+                        if (whatTheNormalShouldBe == null || whatTheNormalShouldBe.Magnitude == new Distance())
                         {
-                            //All the normal vectors have the origin as their base, because of how cross products are coded
-                            if (whatTheNormalShouldBe == null)
-                            {
-                                whatTheNormalShouldBe = normal;
-                            }
-                            if (!normal.IsParallelTo(whatTheNormalShouldBe))
-                            {
-                                return false;
-                            }
+                            whatTheNormalShouldBe = vector1.CrossProduct(vector2);
+                        }
+                        if (!whatTheNormalShouldBe.IsPerpendicularTo(vector2))
+                        {
+                            return false;
                         }
                     }
                 }

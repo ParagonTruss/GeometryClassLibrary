@@ -346,7 +346,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds the angle between the two Lines. This operation is order dependent!
+        /// Finds the angle between the two Lines.
         /// </summary>
         public Angle AngleBetween(Line otherLine)
         {

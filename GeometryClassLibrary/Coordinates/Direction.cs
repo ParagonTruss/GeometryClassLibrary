@@ -361,8 +361,8 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            Angle angleBetween = this.AngleBetween(dir);
-            bool angleIsCloseToZero = (angleBetween == new Angle());
+            AngularDistance angleBetween = this.AngleBetween(dir);
+            bool angleIsCloseToZero = (angleBetween == new AngularDistance());
             return angleIsCloseToZero;
         }
         #endregion
@@ -417,7 +417,12 @@ namespace GeometryClassLibrary
             double yTerm = d1.ZComponent * d2.XComponent - d1.XComponent * d2.ZComponent;
             double zTerm = d1.XComponent * d2.YComponent - d1.YComponent * d2.XComponent;
 
-            return new Direction(Point.MakePointWithInches(xTerm, yTerm, zTerm));
+            var point = Point.MakePointWithInches(xTerm, yTerm, zTerm);
+            if (point != new Point())
+            {
+                return new Direction(point);
+            }
+            return null; //The directions are parallel
         }
 
         public Angle AngleBetween(Direction direction)
