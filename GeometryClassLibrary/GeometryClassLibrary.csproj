@@ -75,16 +75,16 @@
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Planes\OtherShapes\Circle.cs" />
-    <Compile Include="Planes\OtherShapes\Parallelogram.cs" />
-    <Compile Include="Planes\OtherShapes\RightTriangle.cs" />
-    <Compile Include="Planes\OtherShapes\Triangle.cs" />
+    <Compile Include="Planes\Polygons\Parallelogram.cs" />
+    <Compile Include="Planes\Polygons\RightTriangle.cs" />
+    <Compile Include="Planes\Polygons\Triangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solids\OtherSolids\Cone.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Coordinates\CoordinateSystem.cs" />
     <Compile Include="Coordinates\Direction.cs" />
-    <Compile Include="Planes\OtherShapes\EquilateralTriangle.cs" />
-    <Compile Include="Solids\OtherSolids\Cube.cs" />
+    <Compile Include="Planes\Polygons\EquilateralTriangle.cs" />
+    <Compile Include="Solids\Polyhedra\Cube.cs" />
     <Compile Include="Solids\OtherSolids\Cylinder.cs" />
     <Compile Include="Planes\OtherShapes\Ellipse.cs" />
     <Compile Include="Enums.cs" />
@@ -102,31 +102,31 @@
     <Compile Include="Matrices\Matrix.cs" />
     <Compile Include="Planes\OtherShapes\NonPolygon.cs" />
     <Compile Include="Solids\OtherSolids\NonPolyhedron.cs" />
-    <Compile Include="Planes\OtherShapes\Pentagon.cs" />
+    <Compile Include="Planes\Polygons\Pentagon.cs" />
     <Compile Include="Planes\Plane.cs" />
     <Compile Include="Planes\PlaneRegion.cs" />
-    <Compile Include="Planes\Polygon.cs" />
+    <Compile Include="Planes\Polygons\Polygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IListPlaneRegionExtensionMethods.cs" />
     <Compile Include="Coordinates\Point.cs" />
-    <Compile Include="Solids\OtherSolids\Parallelepiped.cs" />
-    <Compile Include="Solids\Polyhedron.cs" />
-    <Compile Include="Solids\OtherSolids\RectangularPrism.cs" />
+    <Compile Include="Solids\Polyhedra\Parallelepiped.cs" />
+    <Compile Include="Solids\Polyhedra\Polyhedron.cs" />
+    <Compile Include="Solids\Polyhedra\RectangularPrism.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Solids\OtherSolids\TriangularPrism.cs" />
+    <Compile Include="Solids\Polyhedra\TriangularPrism.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Planes\OtherShapes\Rectangle.cs" />
-    <Compile Include="Planes\OtherShapes\RegularPolygon.cs" />
-    <Compile Include="Planes\OtherShapes\Rhombus.cs" />
+    <Compile Include="Planes\Polygons\Rectangle.cs" />
+    <Compile Include="Planes\Polygons\RegularPolygon.cs" />
+    <Compile Include="Planes\Polygons\Rhombus.cs" />
     <Compile Include="Coordinates\Rotation.cs" />
     <Compile Include="Coordinates\Shift.cs" />
     <Compile Include="Solids\Solid.cs" />
     <Compile Include="Solids\OtherSolids\Sphere.cs" />
-    <Compile Include="Planes\OtherShapes\Square.cs" />
+    <Compile Include="Planes\Polygons\Square.cs" />
     <Compile Include="Coordinates\Translation.cs" />
     <Compile Include="Lines\Vector.cs" />
   </ItemGroup>

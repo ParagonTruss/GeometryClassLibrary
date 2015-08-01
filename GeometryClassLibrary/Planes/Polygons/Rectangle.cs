@@ -9,9 +9,7 @@ namespace GeometryClassLibrary
 
     public class Rectangle : Polygon
     {
-
-
-
+        
         /// <summary>
         /// Creates a Rectangle in the XY Plane, with one corner at the origin, and the specified length, width.
         /// </summary>

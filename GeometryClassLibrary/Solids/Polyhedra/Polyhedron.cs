@@ -766,21 +766,6 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        /// <summary>
-        /// Creates a parralelepiped.
-        /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
-        /// </summary>
-        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
-        {
-            if (basePoint == null)
-            {
-                basePoint = vector1.BasePoint;
-            }
-            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
-            Polyhedron solid = bottom.Extrude(vector3);
-            return solid;
-        }
-
         public bool IsRectangularPrism()
         {
             if (this.Polygons.Count != 6)
@@ -819,8 +804,48 @@ namespace GeometryClassLibrary
 
             return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
         }
+        #endregion
 
-      
+        #region Static Factory Methods
+        /// <summary>
+        /// Creates a parralelepiped.
+        /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
+        /// </summary>
+        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
+        {
+            if (basePoint == null)
+            {
+                basePoint = vector1.BasePoint;
+            }
+            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
+            Polyhedron solid = bottom.Extrude(vector3);
+            return solid;
+        }
+
+        public static Polyhedron MakeCube(Distance sidelength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polyhedron MakeRegularTetrahedron(Distance sidelength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polyhedron MakeRegularOctahedron(Distance sidelength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polyhedron MakeRegularDodecahedron(Distance sidelength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polyhedron MakeRegularIcosahedron(Distance sidelength)
+        {
+            throw new NotImplementedException();
+        } 
         #endregion
 
         #region Constructor helpers
@@ -871,8 +896,8 @@ namespace GeometryClassLibrary
 
         private static Polygon _findLowestFace(List<Polygon> polygonList)
         {
-            var face = polygonList.MinBy(p => p.CenterPoint.Z);
-            if (face.NormalVector.AngleBetween(Line.ZAxis) < Angle.Degree * 90)
+            var face = polygonList.OrderBy(p => p.Vertices.Min(v => v.Y)).ThenBy(f => f.CenterPoint.Y).First();
+            if (face.NormalVector.Direction.DotProduct(Direction.Down) < 0)
             {
                 face = face.ReverseOrientation();
             }

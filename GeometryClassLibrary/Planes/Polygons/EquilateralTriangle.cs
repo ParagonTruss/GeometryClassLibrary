@@ -14,6 +14,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedSideLength"></param>
         public EquilateralTriangle(Distance passedSideLength)
-            :base(3,passedSideLength) {  }
+            : base(3, passedSideLength) {  }
     }
 }
+ 

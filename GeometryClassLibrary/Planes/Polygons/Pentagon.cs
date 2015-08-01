@@ -13,6 +13,6 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedSideLength"></param>
         public Pentagon(Distance passedSideLength)
-            :base(5,passedSideLength) {  }
+            : base(5, passedSideLength) {  }
     }
 }
