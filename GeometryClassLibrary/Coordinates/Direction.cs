@@ -127,13 +127,7 @@ namespace GeometryClassLibrary
             this.Theta = new Angle(AngleType.Degree, 90);
         }
 
-        //public Direction(double x, double y, double z)
-        //{
-        //    var rho = Math.Sqrt(x*x + y*y + z*z);
-        //    var r = Math.Sqrt(x*x + y*y);
-        //    this.Theta = Angle.ArcSin(r / rho);
-        //    this.Phi = Angle.ArcCos(x / r);
-        //}
+        public Direction(double x, double y, double z) : this(Point.MakePointWithInches(x, y, z)) { }
 
         /// <summary>
         /// makes the direction based on the vector ( jsut copies its direction)

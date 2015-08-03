@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using MoreLinq;
 
 namespace GeometryClassLibrary
 {
@@ -321,12 +322,8 @@ namespace GeometryClassLibrary
                 {
                     return new Line(BasePoint, otherPlane.BasePoint);
                 }
-                Vector lineDirection = Direction.Right.UnitVector(DistanceType.Inch).CrossProduct(this.NormalVector);
-                if (lineDirection.Magnitude == new Distance())
-                {
-                    lineDirection = Direction.Out.UnitVector(DistanceType.Inch).CrossProduct(this.NormalVector);
-                }
-                return new Line(lineDirection.Direction, this.BasePoint);
+
+                return this.GetLineOnThisPlane();
 
             }
             if (this.NormalVector.HasSameDirectionAs(otherPlane.NormalVector))
@@ -407,6 +404,17 @@ namespace GeometryClassLibrary
             //}
 
             //return null;
+        }
+
+        public Line GetLineOnThisPlane()
+        {
+            Vector vector1 = this.NormalVector.CrossProduct(Line.XAxis.UnitVector(DistanceType.Inch));
+            Vector vector2 = this.NormalVector.CrossProduct(Line.YAxis.UnitVector(DistanceType.Inch));
+            Vector vector3 = this.NormalVector.CrossProduct(Line.ZAxis.UnitVector(DistanceType.Inch));
+            Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
+            
+            //vectors 1,2,&3 all will be parallel to the plane, but the most precise will be the one wit hthe largest magnitude.
+            return new Line(this.BasePoint, chosen);
         }
 
         /// <summary>
