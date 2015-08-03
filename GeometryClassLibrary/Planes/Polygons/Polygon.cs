@@ -873,8 +873,9 @@ namespace GeometryClassLibrary
                 list1.Add(new LineSegment(basePoint, endPoint));
                 list2.Add(new LineSegment(basePoint, endPoint));
             }
-            var polygon1 = new Polygon(list1);
-            var polygon2 = new Polygon(list2);
+            var polygon1 = (list1).CreatePolygonIfValid();
+            var polygon2 = list2.CreatePolygonIfValid();
+            bool breakpoint = (polygon1 == null || polygon2 == null);
             return new List<Polygon>() { polygon1, polygon2 };
         }
 

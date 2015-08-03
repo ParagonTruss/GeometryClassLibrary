@@ -139,12 +139,13 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Plane_IntersectionWithPlane_IdenticalPlane()
         {
-            Plane testPlane = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, 1, 2));
+            Plane testPlane = new Plane(new Direction(2, -1, 1), Point.MakePointWithInches(2, 1, 2));
 
             Line found = (testPlane.Intersection(testPlane));
-            Line expected = new Line(new Direction(Point.MakePointWithInches(0, -1, -1)), Point.MakePointWithInches(2, 1, 2));
+            Line expected = new Line(new Direction(-1, 0, 2), Point.MakePointWithInches(2, 1, 2));
 
-            Assert.IsTrue(found.Equals(expected));
+            testPlane.Contains(found).Should().BeTrue();
+            (found == expected).Should().BeTrue();
         }
 
         [Test()]
@@ -219,8 +220,8 @@ namespace GeometryClassLibraryTests
         [Test()]
         public void Plane_IntersectLine()
         {
-            Plane testPlane1 = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, -1, 1));
-            Plane testPlane2 = new Plane(new Direction(Point.MakePointWithInches(1, 2, -1)), Point.MakePointWithInches(2, -1, 1));
+            Plane testPlane1 = new Plane(new Direction(2, -1, 1), Point.MakePointWithInches(2, -1, 1));
+            Plane testPlane2 = new Plane(new Direction(1, 2, -1), Point.MakePointWithInches(2, -1, 1));
 
             Line perpendicular1 = new Line(Point.MakePointWithInches(2, -1, 1));
             Line perpendicular2 = new Line(Point.MakePointWithInches(3, 1, -3), Point.MakePointWithInches(4, 3, -4)); //1, 2, -1
