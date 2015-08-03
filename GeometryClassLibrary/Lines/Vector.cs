@@ -375,14 +375,15 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the point is along/contained by this vector
         /// </summary>
-        /// <param name="pointToSeeIfIsContained">The point to see if is on the vector</param>
-        /// <returns>Returns a bool of whether or not the point is contained</returns>
         public new bool Contains(Point point)
         {
-            if (point == null)
+            //This method can make or break the Slice method. Handle very carefully.
+            //This checks for a null point, and checks the distance from the point to the line.
+            if (!new Line(this).Contains(point))
             {
                 return false;
             }
+            //We need this check before we check directions, because there is no direction if the point is the vector's basepoint
             if (point.IsBaseOrEndPointOf(this))
             {
                 return true;

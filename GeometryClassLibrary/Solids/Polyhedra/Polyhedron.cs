@@ -896,12 +896,23 @@ namespace GeometryClassLibrary
 
         private static Polygon _findLowestFace(List<Polygon> polygonList)
         {
-            var face = polygonList.OrderBy(p => p.Vertices.Min(v => v.Y)).ThenBy(f => f.CenterPoint.Y).First();
-            if (face.NormalVector.Direction.DotProduct(Direction.Down) < 0)
+            var candidates = polygonList.OrderBy(p => p.Vertices.Min(v => v.Y)).ThenBy(f => f.CenterPoint.Y);
+            foreach (Polygon face in candidates)
             {
-                face = face.ReverseOrientation();
+                if (face.NormalVector.IsPerpendicularTo(Line.YAxis))
+                {
+                    continue;
+                }
+                if (face.NormalVector.Direction.DotProduct(Direction.Down) < 0)
+                {
+                    return face.ReverseOrientation();
+                }
+                else
+                {
+                    return face;
+                }
             }
-            return face;
+            throw new Exception();
         }
 
         /// <summary>

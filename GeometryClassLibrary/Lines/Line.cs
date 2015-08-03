@@ -674,10 +674,6 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            if (point == BasePoint)
-            {
-                return true;
-            }
             Distance distance = point.DistanceTo(this);
             bool equal = distance.Equals(new Distance());
             return equal;
