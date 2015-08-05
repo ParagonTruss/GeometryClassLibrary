@@ -476,6 +476,11 @@ namespace GeometryClassLibrary
             return intersections;
         }
 
+        public Polygon CrossSection(Plane plane)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Returns the two Polyhedrons created by a slice. returns the solid on the normal side of the plane first
         /// </summary>

@@ -121,7 +121,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
 
 
