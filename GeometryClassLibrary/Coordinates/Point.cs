@@ -416,7 +416,7 @@ namespace GeometryClassLibrary
         public Point ProjectOntoPlane(Plane plane)
         {
             Vector toPlane = new Vector(this, plane.NormalVector);
-            return ((Line)toPlane).Intersection(plane);
+            return ((Line)toPlane).IntersectWithPlane(plane);
         }
 
         /// <summary>

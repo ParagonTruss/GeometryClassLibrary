@@ -221,7 +221,7 @@ namespace GeometryClassLibrary
 
                 for (int j = i + 1; j < passedLines.Count; j++)
                 {
-                    Point intersection = passedLines[i].Intersection(passedLines[j]);
+                    Point intersection = passedLines[i].IntersectWithLine(passedLines[j]);
                     if (intersection != null && !intersections.Contains(intersection))
                     {
                         intersections.Add(intersection);
@@ -386,7 +386,7 @@ namespace GeometryClassLibrary
                 newBoundaryList.Add(segment.Rotate(rotationToApply));
             }
 
-            return new Polygon(newBoundaryList);
+            return new Polygon(newBoundaryList, false);
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace GeometryClassLibrary
             {
                 newBoundaryList.Add(segment.Translate(new Translation(translation)));
             }
-            return new Polygon(newBoundaryList);
+            return new Polygon(newBoundaryList, false);
         }
 
         public override Polygon SmallestEnclosingRectangle()
@@ -414,7 +414,7 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1258,9 +1258,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine">The line to see if it intersects</param>
         /// <returns>Returns the point of intersection or null if it does not intersect</returns>
-        public new Point Intersection(Line passedLine)
+        public new Point IntersectWithLine(Line passedLine)
         {
-            Point intersection = ((Plane)this).Intersection(passedLine);
+            Point intersection = ((Plane)this).IntersectWithLine(passedLine);
 
             if(intersection != null && this.Contains(intersection))
             {
@@ -1275,12 +1275,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="plane"></param>
         /// <returns></returns>
-        public new LineSegment Intersection(Plane plane)
+        public LineSegment Intersection(Plane plane)
         {
             List<Point> pointsOfIntersection = new List<Point>();
             foreach(LineSegment segment in this.LineSegments)
             {
-                Point point = plane.Intersection(segment);
+                Point point = plane.IntersectWithSegment(segment);
                 if (point != null && !pointsOfIntersection.Contains(point))
                 {
                     pointsOfIntersection.Add(point);
@@ -1301,7 +1301,7 @@ namespace GeometryClassLibrary
 
             foreach (LineSegment edge in this.LineSegments)
             {
-                var point = edge.Intersection(passedLine);
+                var point = edge.IntersectWithLine(passedLine);
                 if (point != null && !intersections.Contains(point))
                 {
                     intersections.Add(point);
@@ -1356,13 +1356,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public new bool DoesIntersectNotCoplanar(Line passedLine)
         {
-            Point intersection = this.Intersection(passedLine);
-            if (intersection != null)
-            {
-                return true;
-            }
-
-            return false;
+            var point = this.IntersectWithLine(passedLine);
+            return (point != null);
+            //doesn't check coplanar at all..
         }
 
         /// <summary>
@@ -1733,7 +1729,7 @@ namespace GeometryClassLibrary
             Point centroidOfProjected = new Point(xComp, yComp);
 
             Line lineOfProjection = new Line(Direction.Out, centroidOfProjected);
-            Point centroidRotated = ((Plane)rotated).Intersection(lineOfProjection);
+            Point centroidRotated = ((Plane)rotated).IntersectWithLine(lineOfProjection);
             Point centroid = centroidRotated.Rotate3D(rotation.Inverse());
 
             return centroid;

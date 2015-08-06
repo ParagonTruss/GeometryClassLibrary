@@ -127,8 +127,8 @@ namespace GeometryClassLibraryTests
             Plane testPlane1 = new Plane(new Direction(Point.MakePointWithInches(2, -1, 1)), Point.MakePointWithInches(2, 1, 2));
             Plane testPlane2 = new Plane(new Direction(Point.MakePointWithInches(1, 1, -1)), Point.MakePointWithInches(1, 3, 3));
 
-            Line test12Intersect = testPlane1.Intersection(testPlane2);
-            Line test21Intersect = testPlane2.Intersection(testPlane1);
+            Line test12Intersect = testPlane1.IntersectWithPlane(testPlane2);
+            Line test21Intersect = testPlane2.IntersectWithPlane(testPlane1);
 
             Line expectedLine = new Line(new Direction(Point.MakePointWithInches(0, 3, 3)), Point.MakePointWithInches(2, -1, 0));
 
@@ -141,7 +141,7 @@ namespace GeometryClassLibraryTests
         {
             Plane testPlane = new Plane(new Direction(2, -1, 1), Point.MakePointWithInches(2, 1, 2));
 
-            Line found = (testPlane.Intersection(testPlane));
+            Line found = (testPlane.IntersectWithPlane(testPlane));
             Line expected = new Line(new Direction(-1, 0, 2), Point.MakePointWithInches(2, 1, 2));
 
             testPlane.Contains(found).Should().BeTrue();
@@ -161,22 +161,22 @@ namespace GeometryClassLibraryTests
             Plane testPlaneXZ = new Plane(testPoint, testPointX, testPointZ);
             Plane testPlaneYZ = new Plane(testPoint, testPointY, testPointZ);
 
-            Line testXYXZIntersect = testPlaneXZ.Intersection(testPlaneXY);
-            Line testXZXYIntersect = testPlaneXY.Intersection(testPlaneXZ);
+            Line testXYXZIntersect = testPlaneXZ.IntersectWithPlane(testPlaneXY);
+            Line testXZXYIntersect = testPlaneXY.IntersectWithPlane(testPlaneXZ);
             testXYXZIntersect.Should().Be(Line.XAxis);
             testXZXYIntersect.Should().Be(Line.XAxis);
 
-            Line testXYYZIntersect = testPlaneXY.Intersection(testPlaneYZ);
-            Line testYZXYIntersect = testPlaneYZ.Intersection(testPlaneXY);
+            Line testXYYZIntersect = testPlaneXY.IntersectWithPlane(testPlaneYZ);
+            Line testYZXYIntersect = testPlaneYZ.IntersectWithPlane(testPlaneXY);
             testXYYZIntersect.Should().Be(Line.YAxis);
             testYZXYIntersect.Should().Be(Line.YAxis);
 
-            Line testXZYZIntersect = testPlaneXZ.Intersection(testPlaneYZ);
-            Line testYZXZIntersect = testPlaneYZ.Intersection(testPlaneXZ);
+            Line testXZYZIntersect = testPlaneXZ.IntersectWithPlane(testPlaneYZ);
+            Line testYZXZIntersect = testPlaneYZ.IntersectWithPlane(testPlaneXZ);
             testXZYZIntersect.Should().Be(Line.ZAxis);
             testYZXZIntersect.Should().Be(Line.ZAxis);
 
-            Line testXYXY = testPlaneXY.Intersection(testPlaneXY);
+            Line testXYXY = testPlaneXY.IntersectWithPlane(testPlaneXY);
             testXYXY.Should().Be(Line.YAxis);
         }
 
@@ -226,10 +226,10 @@ namespace GeometryClassLibraryTests
             Line perpendicular1 = new Line(Point.MakePointWithInches(2, -1, 1));
             Line perpendicular2 = new Line(Point.MakePointWithInches(3, 1, -3), Point.MakePointWithInches(4, 3, -4)); //1, 2, -1
 
-            Point intersection11 = testPlane1.Intersection(perpendicular1);
-            Point intersection12 = testPlane1.Intersection(perpendicular2);
-            Point intersection21 = testPlane2.Intersection(perpendicular1);
-            Point intersection22 = testPlane2.Intersection(perpendicular2);
+            Point intersection11 = testPlane1.IntersectWithLine(perpendicular1);
+            Point intersection12 = testPlane1.IntersectWithLine(perpendicular2);
+            Point intersection21 = testPlane2.IntersectWithLine(perpendicular1);
+            Point intersection22 = testPlane2.IntersectWithLine(perpendicular2);
 
             intersection11.Should().Be(Point.MakePointWithInches(2, -1, 1));
             intersection21.Should().Be(Point.MakePointWithInches(2, -1, 1));
@@ -243,7 +243,7 @@ namespace GeometryClassLibraryTests
             Plane testPlane = new Plane(Direction.Out);
             Line lineOnPlane = new Line(Point.MakePointWithInches(2, 1, 0));
 
-            testPlane.Intersection(lineOnPlane).Should().Be(new Point());
+            testPlane.IntersectWithLine(lineOnPlane).Should().Be(new Point());
         }
 
         [Test()]
@@ -256,7 +256,7 @@ namespace GeometryClassLibraryTests
             Plane testPlane = new Plane(Direction.Out, point3);
             Line line = new Line(point1, point2);
 
-            testPlane.Intersection(line).Should().Be(point2);
+            testPlane.IntersectWithLine(line).Should().Be(point2);
         }
     }
 }

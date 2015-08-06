@@ -73,8 +73,8 @@ namespace ClearspanTypeLibrary.Tests
             LineSegment line3 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-5, -5, 0));
             Line line4 = new Line(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
 
-            Point intersectT1 = line1.Intersection(line2);
-            Point intersectF1 = line3.Intersection(line4);
+            Point intersectT1 = line1.IntersectWithLine(line2);
+            Point intersectF1 = line3.IntersectWithLine(line4);
 
             intersectT1.Should().Be(Point.MakePointWithInches(.5, .5, .5));
             intersectF1.Should().BeNull();

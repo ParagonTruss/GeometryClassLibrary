@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point XYIntercept
         {
-            get { return Plane.XY.Intersection(this); }
+            get { return Plane.XY.IntersectWithLine(this); }
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point XZIntercept
         {
-            get { return Plane.XZ.Intersection(this); }
+            get { return Plane.XZ.IntersectWithLine(this); }
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point YZIntercept
         {
-            get { return Plane.YZ.Intersection(this); }
+            get { return Plane.YZ.IntersectWithLine(this); }
         }
 
         #endregion
@@ -117,7 +117,7 @@ namespace GeometryClassLibrary
         public Line()
         {
             _basePoint = new Point();
-            _direction = Direction.Right;
+            _direction = Direction.Out;
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public virtual Point Intersection(Line passedLine)
+        public virtual Point IntersectWithLine(Line passedLine)
         {
             if (this.Equals(passedLine))
             {
@@ -433,9 +433,9 @@ namespace GeometryClassLibrary
             return intersectionPoint;
         }
 
-        public virtual Point Intersection(Plane plane)
+        public virtual Point IntersectWithPlane(Plane plane)
         {
-            return plane.Intersection(this);
+            return plane.IntersectWithLine(this);
         }
 
         /// <summary>
@@ -443,9 +443,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        public virtual Point Intersection(Polygon polygon)
+        public virtual Point IntersectWithPolygon(Polygon polygon)
         {
-            return polygon.Intersection(this);
+            return polygon.IntersectWithLine(this);
         }
 
         public virtual List<Point> IntersectionCoplanarPoints(Polygon polygon)
@@ -460,7 +460,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            Point intersect = this.Intersection(passedLine);
+            Point intersect = this.IntersectWithLine(passedLine);
 
             if (intersect != null)
             {
@@ -477,7 +477,7 @@ namespace GeometryClassLibrary
         public virtual bool DoesIntersect(Vector passedVector)
         {
             Line newLine = new Line(passedVector);
-            Point intersect = this.Intersection(newLine);
+            Point intersect = this.IntersectWithLine(newLine);
 
             if (intersect == null)
             {

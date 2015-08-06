@@ -420,8 +420,8 @@ namespace GeometryClassLibraryTests
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
             bool overlapAsExpected1 = (intersect1 == expected);
             bool overlapAsExpected2 = (intersect2 == expected);
-            overlapAsExpected1.Should().BeTrue();
-            overlapAsExpected2.Should().BeTrue();
+            Assert.IsTrue(overlapAsExpected1);
+            Assert.IsTrue(overlapAsExpected2);
         }
 
         [Test()]
@@ -846,9 +846,9 @@ namespace GeometryClassLibraryTests
             Line testIntersectSide = new Line(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(2, -1, 1));
             Line noIntersect = new Line(Point.MakePointWithInches(-4, 1, 0), Point.MakePointWithInches(-5, -2, 1));
 
-            Point intersect = testPolygon.Intersection(testIntersect);
-            Point intersectSide = testPolygon.Intersection(testIntersectSide);
-            Point none = testPolygon.Intersection(noIntersect);
+            Point intersect = testPolygon.IntersectWithLine(testIntersect);
+            Point intersectSide = testPolygon.IntersectWithLine(testIntersectSide);
+            Point none = testPolygon.IntersectWithLine(noIntersect);
 
             (intersect == Point.MakePointWithInches(-1.5, 1, 0)).Should().BeTrue();
             (intersectSide == Point.MakePointWithInches(0, 1, 0)).Should().BeTrue();

@@ -312,22 +312,23 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point HypotheticalIntersection(Line passedLine)
         {
-            return new Line(this).Intersection(passedLine);
+            return new Line(this).IntersectWithLine(passedLine);
         }
-
+        
         /// <summary>
         /// Checks if this Vector intersects the given line and returns the point if it does or null otherwise
         /// </summary>
         /// <param name="passedLine">The line to check if this intersects with</param>
         /// <returns>returns the intersection point of the two lines or null if they do not</returns>
-        public override Point Intersection(Line passedLine)
+        public override Point IntersectWithLine(Line passedLine)
         {
-            Point intersect = this.HypotheticalIntersection(passedLine);
+            Point intersect = new Line(this).IntersectWithLine(passedLine);
 
             if (!ReferenceEquals(intersect, null) && intersect.IsOnVector(this))
+            {
                 return intersect;
-            else
-                return null;
+            }
+            return null;
         }
 
         /// <summary>
@@ -337,7 +338,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
         public Point Intersection(Vector passedVector)
         {
-            Point potentialIntersect = base.Intersection((Line)passedVector);
+            Point potentialIntersect = base.IntersectWithLine((Line)passedVector);
 
             if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector) && potentialIntersect.IsOnVector(this))
             {

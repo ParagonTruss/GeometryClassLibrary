@@ -467,7 +467,7 @@ namespace GeometryClassLibrary
             foreach (Polygon polygon in this.Polygons)
             {
                 //if it exists add it to the list
-                Point intersectionPoint = polygon.Intersection(intersectingLine);
+                Point intersectionPoint = polygon.IntersectWithLine(intersectingLine);
                 if (intersectionPoint != null && !intersections.Contains(intersectionPoint))
                 {
                     intersections.Add(intersectionPoint);
@@ -478,7 +478,24 @@ namespace GeometryClassLibrary
 
         public Polygon CrossSection(Plane plane)
         {
-            throw new NotImplementedException();
+            var newSegments = new List<LineSegment>();
+            foreach(Polygon polygon in this.Polygons)
+            {
+               Line line = plane.IntersectWithPlane(polygon);
+                if (line != null)
+                {
+                    var segments = polygon.IntersectionCoplanarLineSegments(line);
+                    if (segments.Count == 1)
+                    {
+                        newSegments.Add(segments[0]);
+                    }
+                    else if (segments.Count > 1)
+                    {
+                        throw new NotImplementedException("We don't support this yet.");
+                    }
+                }
+            }
+            return newSegments.CreatePolygonIfValid();
         }
 
         /// <summary>

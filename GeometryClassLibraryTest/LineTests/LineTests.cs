@@ -48,7 +48,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
             Point expectedResult = Point.MakePointWithInches(0, 2.5, 1.5);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             actualResult.Should().Be(expectedResult);  
         }
@@ -63,7 +63,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithMillimeters(-2, 1, 3));
 
             Point expectedResult = Point.MakePointWithMillimeters(0, 2.5, 1.5);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             actualResult.Should().Be(expectedResult);
         }
@@ -78,7 +78,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 1));
 
             Point expectedResult = Point.MakePointWithInches(1, 1, 2);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
         }
@@ -93,7 +93,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 6));
 
             Point expectedResult = Point.MakePointWithInches(1, 1, 2);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
         }
@@ -108,7 +108,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(1, 1, 2));
 
             Point expectedResult = Point.MakePointWithInches(1, 1, 2);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             (expectedResult == actualResult).Should().BeTrue();
         }
@@ -123,7 +123,7 @@ namespace ClearspanTypeLibrary.Tests
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
             Point expectedResult = Point.MakePointWithInches(0, 0, 0);
-            Point actualResult = line1.Intersection(line2);
+            Point actualResult = line1.IntersectWithLine(line2);
 
             (expectedResult == actualResult).Should().BeTrue();  
         }

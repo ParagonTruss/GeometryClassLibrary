@@ -104,7 +104,7 @@ namespace GeometryClassLibrary
                 Line toCenterFromMidPoint = new Line(straightLineSegment.MidPoint, referenceNormal.CrossProduct(straightLineSegment));
                 
                 //now find where centerLine and the toCenterFromTagnent line intersect to get the center point
-                return toCenterPointFromTangent.Intersection(toCenterFromMidPoint);
+                return toCenterPointFromTangent.IntersectWithLine(toCenterFromMidPoint);
             }
         }
 

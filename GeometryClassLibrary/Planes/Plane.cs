@@ -318,7 +318,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds the line where the two planes intersect 
         /// </summary>
-        public virtual Line Intersection(Plane otherPlane)
+        public virtual Line IntersectWithPlane(Plane otherPlane)
         {
             if (this == otherPlane)
             {
@@ -338,7 +338,7 @@ namespace GeometryClassLibrary
             Vector intersectionLineDirection = this.NormalVector.CrossProduct(otherPlane.NormalVector);
             
             Line normalInPlane1 = new Line(this.BasePoint, this.NormalVector.CrossProduct(intersectionLineDirection));
-            Point basePoint = normalInPlane1.Intersection(otherPlane);
+            Point basePoint = normalInPlane1.IntersectWithPlane(otherPlane);
 
             return new Line(basePoint, intersectionLineDirection);
             // http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
@@ -426,7 +426,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public virtual Point Intersection(Line passedLine)
+        public virtual Point IntersectWithLine(Line passedLine)
         {
             //Test if the plane contains the line's basePoint
             //This handles the case where the line is inside the plane
@@ -473,9 +473,9 @@ namespace GeometryClassLibrary
             return intersectionPoint;
         }
 
-        public Point Intersection(LineSegment segment)
+        public Point IntersectWithSegment(LineSegment segment)
         {
-            Point possibleIntersection = this.Intersection((Line)segment);
+            Point possibleIntersection = this.IntersectWithLine((Line)segment);
             if (possibleIntersection != null && possibleIntersection.IsOnLineSegment(segment))
             {
                 return possibleIntersection;
@@ -490,7 +490,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersectNotCoplanar(Line passedLine)
         {
-            return Intersection(passedLine) != null;
+            return IntersectWithLine(passedLine) != null;
         }
         
         /// <summary>
@@ -505,7 +505,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            Point intersect = this.Intersection(passedVector);
+            Point intersect = this.IntersectWithLine(passedVector);
 
             return intersect != null && intersect.IsOnVector(passedVector);
         }
