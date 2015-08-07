@@ -90,17 +90,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns a list of all the polygons the line intersects in the list or an empty list if the line did not intersect any of them</returns>
         public static List<Polygon> FindPolygonsThatAreIntersectedByLine(this List<Polygon> polygonList, Line intersectingLine)
         {
-            List<Polygon> sidesIntersected = new List<Polygon>();
-
-            foreach (Polygon side in polygonList)
-            {
-                if (side.DoesIntersect(intersectingLine))
-                {
-                    sidesIntersected.Add(side);
-                }
-            }
-
-            return sidesIntersected;
+            return polygonList.Where(p => p.DoesIntersect(intersectingLine)).ToList();
         }
 
         /// <summary>

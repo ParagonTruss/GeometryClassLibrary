@@ -87,9 +87,7 @@ namespace GeometryClassLibraryTests
             Angle xAngle = new Angle(AngleType.Degree, 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
 
-            Shift ninetyShift = new Shift(xRotation);
-
-            Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
+            Polyhedron s = polyhedron.Shift(xRotation);
 
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 8))).Should().BeTrue();
@@ -114,19 +112,14 @@ namespace GeometryClassLibraryTests
         {
             Polyhedron polyhedron = new TestRectangularBox2();
 
-
             //Move 5 in. in z direction
             Point displacementPoint = Point.MakePointWithInches(0, 0, 5);
-            //Angle rotationAngle = new Angle(); //No rotation, just displacement
-            Shift shift = new Shift(displacementPoint);
 
-            //Move 3 in. in y direction
             Point displacementPoint2 = Point.MakePointWithInches(0, 3, 0);
-            //Angle rotationAngle2 = new Angle(); //No rotation, just displacement
-            Shift shift2 = new Shift(displacementPoint2);
 
-            Polyhedron s1 = polyhedron.Shift(shift);
-            Polyhedron s2 = s1.Shift(shift2);
+            Polyhedron s1 = polyhedron.Shift(displacementPoint);
+            Polyhedron s2 = s1.Shift(displacementPoint2);
+
 
             s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 3, 5), Point.MakePointWithInches(0, 7, 5)));
             s2.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 3, 5), Point.MakePointWithInches(8, 3, 5)));

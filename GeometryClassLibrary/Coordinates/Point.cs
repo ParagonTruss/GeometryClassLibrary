@@ -335,25 +335,25 @@ namespace GeometryClassLibrary
         {
             Point originPoint = Point.MakePointWithInches(0, 0, 0);
 
-            bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisToRotateAround);
+            bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisOfRotation);
 
             Point pointForRotating = this;
 
-            Line axisForRotating = rotationToApply.AxisToRotateAround;
+            Line axisForRotating = rotationToApply.AxisOfRotation;
 
             if (!originIsOnPassedAxis)
             {
                 //Must translate everything so that the axis line goes through the origin before rotating
 
                 //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Translation(new Point() - rotationToApply.AxisToRotateAround.BasePoint));
+                pointForRotating = this.Translate(new Translation(new Point() - rotationToApply.AxisOfRotation.BasePoint));
 
                 //Make the axis go through the origin
-                axisForRotating = new Line(rotationToApply.AxisToRotateAround.Direction, originPoint);
+                axisForRotating = new Line(rotationToApply.AxisOfRotation.Direction, originPoint);
 
             }
 
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(new Rotation(axisForRotating, rotationToApply.AngleToRotate));
+            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(new Rotation(axisForRotating, rotationToApply.RotationAngle));
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
 
@@ -372,7 +372,7 @@ namespace GeometryClassLibrary
             else
             {
                 //Must shift the point back by the same distance we shifted it before rotating it
-                return pointToReturn + rotationToApply.AxisToRotateAround.BasePoint;
+                return pointToReturn + rotationToApply.AxisOfRotation.BasePoint;
             }
         }
 

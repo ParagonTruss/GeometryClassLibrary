@@ -11,22 +11,22 @@ namespace GeometryClassLibrary
     public class Rotation
     {
         #region Properties and Fields
-        private AngularDistance _angleToRotate;
-        private Line _axisToRotateAround;
+        private readonly AngularDistance _rotationAngle;
+        private readonly Line _axisOfRotation;
 
-        public AngularDistance AngleToRotate
+        public AngularDistance RotationAngle
         {
             get
             {
-                return _angleToRotate;
+                return _rotationAngle;
             }
         }
 
-        public Line AxisToRotateAround
+        public Line AxisOfRotation
         {
             get
             {
-                return _axisToRotateAround;
+                return _axisOfRotation;
             }
         }
 
@@ -39,26 +39,36 @@ namespace GeometryClassLibrary
         /// </summary>
         public Rotation()
         {
-            this._angleToRotate = new Angle();
-            this._axisToRotateAround = new Line();
+            this._rotationAngle = new Angle();
+            this._axisOfRotation = new Line();
         }
        
         /// <summary>
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
-        /// <param name="howFarToRotate">The Angle that specifies how far to rotate</param>
-        public Rotation(Line axisOfRotation, AngularDistance howFarToRotate = null)
+        /// <param name="rotationAngle">The Angle that specifies how far to rotate</param>
+        public Rotation(Line axisOfRotation, AngularDistance rotationAngle = null)
         {
-            if ((object)howFarToRotate == null)
+            if ((object)rotationAngle == null)
             {
-                this._angleToRotate = new Angle();
+                this._rotationAngle = new Angle();
             }
             else
             {
-                this._angleToRotate = howFarToRotate;
+                this._rotationAngle = rotationAngle;
             }
-            this._axisToRotateAround = axisOfRotation;
+            this._axisOfRotation = axisOfRotation;
+        }
+
+        public Rotation(AngularDistance rotationAngle, Line axisOfRotation = null)
+        {
+            if (axisOfRotation == null)
+            {
+                axisOfRotation = Line.ZAxis;
+            }
+            this._axisOfRotation = axisOfRotation;
+            this._rotationAngle = rotationAngle;
         }
 
         /// <summary>
@@ -67,8 +77,8 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            this._angleToRotate = new AngularDistance(toCopy._angleToRotate);
-            this._axisToRotateAround = new Line(toCopy._axisToRotateAround);
+            this._rotationAngle = new AngularDistance(toCopy._rotationAngle);
+            this._axisOfRotation = new Line(toCopy._axisOfRotation);
         }
 
         #endregion 
@@ -160,8 +170,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Rotation Inverse()
         {
-            Angle inverseAngle = new Angle(AngleType.Radian, this.AngleToRotate.Radians * -1);
-            return new Rotation(this.AxisToRotateAround, inverseAngle);
+            Angle inverseAngle = new Angle(AngleType.Radian, this.RotationAngle.Radians * -1);
+            return new Rotation(this.AxisOfRotation, inverseAngle);
         }
 
         #endregion

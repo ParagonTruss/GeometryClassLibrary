@@ -744,12 +744,12 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            Direction rotationUnitVector = passedRotation.AxisToRotateAround.Direction;
+            Direction rotationUnitVector = passedRotation.AxisOfRotation.Direction;
 
             double unitX = rotationUnitVector.XComponent; //Projection onto x-axis
             double unitY = rotationUnitVector.YComponent;
             double unitZ = rotationUnitVector.ZComponent;
-            double theta = passedRotation.AngleToRotate.Radians;
+            double theta = passedRotation.RotationAngle.Radians;
 
             double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));
             double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);

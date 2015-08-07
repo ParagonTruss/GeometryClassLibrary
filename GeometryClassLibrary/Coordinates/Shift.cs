@@ -10,6 +10,20 @@ namespace GeometryClassLibrary
 {
     public class Shift
     {
+        #region Implicit Conversions
+
+        public static implicit operator Shift(Rotation r)
+        {
+            return new Shift(r);
+        }
+
+        public static implicit operator Shift(Point t)
+        {
+            return new Shift(t);
+        }
+
+        #endregion
+
         #region Properties and Fields
 
         /// <summary>
@@ -314,7 +328,7 @@ namespace GeometryClassLibrary
             {
                 //switch the angle of each rotation to its opposite
 
-                returnRotations.Add(new Rotation(rotation.AxisToRotateAround, rotation.AngleToRotate.Negate()));
+                returnRotations.Add(new Rotation(rotation.AxisOfRotation, rotation.RotationAngle.Negate()));
             }
             //now flip the order of them so it reverse the shift properly
             returnRotations.Reverse();
