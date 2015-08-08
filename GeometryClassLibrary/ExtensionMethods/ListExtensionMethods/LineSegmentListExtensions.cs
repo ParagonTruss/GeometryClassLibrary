@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class ListLineSegmentExtensionMethods
+    public static class LineSegmentListExtensions
     {
         public static List<Polygon> MakeCoplanarLineSegmentsIntoPolygons(this List<LineSegment> passedLineSegments)
         {

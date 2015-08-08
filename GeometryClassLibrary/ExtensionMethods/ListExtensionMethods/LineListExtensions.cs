@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class IListLineExtensionMethods
+    public static class LineListExtensions
     {
         /// <summary>
         /// Returns the line with the smallest x intercept on the 2D xy-plane. If two share the same intercept it returns the

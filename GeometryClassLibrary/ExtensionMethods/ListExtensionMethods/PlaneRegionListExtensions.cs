@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class IListPlaneRegionExtensionMethods
+    public static class PlaneRegionListExtensions
     {
         /// <summary>
         /// Rotates the list of plane regions with the given rotation

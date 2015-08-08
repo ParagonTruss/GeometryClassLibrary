@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    public static class IListPolygonExtensionMethods
+    public static class PolygonListExtensions
     {
         /// <summary>
         /// Rotates the list of polygons with the given rotation

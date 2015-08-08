@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public static class IListPointExtensionMethods
+    public static class PointListExtensions
     {
 
         public static List<Point> Shift(this List<Point> pointList, Shift passedShift)

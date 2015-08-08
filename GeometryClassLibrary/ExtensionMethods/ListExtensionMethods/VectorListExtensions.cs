@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary.ExtensionMethods.ListExtensionMethods
 {
-    public static class IListVectorExtensionMethods
+    public static class VectorListExtensions
     {
         public static List<Vector> Shift(this List<Vector> vectorList, Shift toApply)
         {
