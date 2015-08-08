@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListVectorExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />
     <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
@@ -91,13 +91,13 @@
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Lines\IEdge.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListLineSegmentExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\LineListExtensions.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\LineSegmentListExtensions.cs" />
     <Compile Include="Lines\Line.cs" />
     <Compile Include="Lines\LineSegment.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListIEdgeExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPointExtensionMethods.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPolygonExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\IEdgeListExtensions.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\PolygonListExtensions.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
     <Compile Include="Matrices\Matrix.cs" />
     <Compile Include="Planes\OtherShapes\NonPolygon.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="Planes\Plane.cs" />
     <Compile Include="Planes\PlaneRegion.cs" />
     <Compile Include="Planes\Polygons\Polygon.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IListPlaneRegionExtensionMethods.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\PlaneRegionListExtensions.cs" />
     <Compile Include="Coordinates\Point.cs" />
     <Compile Include="Solids\Polyhedra\Parallelepiped.cs" />
     <Compile Include="Solids\Polyhedra\Polyhedron.cs" />
