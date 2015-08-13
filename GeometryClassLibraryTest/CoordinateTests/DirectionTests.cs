@@ -58,7 +58,7 @@ namespace GeometryClassLibraryTests
         [Test]
         public void Direction_JSON()
         {
-            Direction direction = Direction.Up;
+            Direction direction = new Direction(new Angle(AngleType.Degree, 14), new Angle(AngleType.Degree, 37));
 
             var json = JsonConvert.SerializeObject(direction);
             Direction deserializedDirection = JsonConvert.DeserializeObject<Direction>(json);
