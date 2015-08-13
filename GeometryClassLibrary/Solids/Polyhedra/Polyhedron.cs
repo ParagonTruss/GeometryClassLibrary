@@ -548,14 +548,11 @@ namespace GeometryClassLibrary
             }
             return new List<Polyhedron>() { new Polyhedron(this) };
         }
+
         #region Slice _helper Methods
         /// <summary>
         /// Adds the Polygons to the correct new Polyhedron
         /// </summary>
-        /// <param name="slicedPolygons">The sliced Polygons</param>
-        /// <param name="unconstructedInsidePolyhedron">the "inside" polyhedron's list of polygons</param>
-        /// <param name="unconstructedOutsidePolyhedron">the "outside" polyhedron's list of polygons</param>
-        /// <returns></returns>
         private void _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
             Plane slicingPlane)
         {
@@ -659,6 +656,14 @@ namespace GeometryClassLibrary
             }
 
             return returnPolyhedrons;
+        }
+
+        //Do not rename this to be an overload of slice!
+        //Right now some places we slice but pass a polygon.
+        //We do not want to change their functionality.
+        public List<Polyhedron> SliceAlongPolygon(Polygon polygon)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

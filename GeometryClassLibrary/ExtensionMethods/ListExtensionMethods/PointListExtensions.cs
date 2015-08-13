@@ -18,6 +18,30 @@ namespace GeometryClassLibrary
             }
             return shiftedPoints;
         }
+
+        public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
+        {
+            var results = new List<Point>();
+            foreach (var point in pointList)
+            {
+                var pointInPlane = point.ProjectOntoPlane(plane);
+                if (pointInPlane != null && !results.Contains(pointInPlane))
+                {
+                    results.Add(pointInPlane);
+                }
+            }
+            return results;
+        }
+
+        public static List<Point> Rotate(this IEnumerable<Point> pointList, Rotation rotation)
+        {
+            var results = new List<Point>();
+            foreach (var point in pointList)
+            {
+                results.Add(point.Rotate3D(rotation));
+            }
+            return results;
+        }
         /// <summary>
         /// determines if the points in the list, all lie on the same side of the dividing plane.
         /// Points on the plane are disregarded
@@ -200,18 +224,6 @@ namespace GeometryClassLibrary
             }
         }
 
-        public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
-        {
-            var results = new List<Point>();
-            foreach (var point in pointList)
-            {
-                var pointInPlane = point.ProjectOntoPlane(plane);
-                if (pointInPlane != null && !results.Contains(pointInPlane))
-                {
-                    results.Add(pointInPlane);
-                }
-            }
-            return results;
-        }
+       
     }
 }

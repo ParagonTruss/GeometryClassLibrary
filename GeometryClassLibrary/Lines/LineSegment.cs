@@ -28,18 +28,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the midpoint of this lineSegment
         /// </summary>
-        public virtual Point MidPoint
+        public Point MidPoint
         {
-            get
-            {
-                //Find midpoint for each component
-                Distance xMid = (base.Magnitude / 2) * base.Direction.XComponent;
-                Distance yMid = (base.Magnitude / 2) * base.Direction.YComponent;
-                Distance zMid = (base.Magnitude / 2) * base.Direction.ZComponent;
+            get { return EndPoints.CenterPoint(); }
+        }
 
-                //then add our base point so it is in the right location
-                return new Point(xMid, yMid, zMid) + this.BasePoint;
-            }
+        public List<Point> EndPoints
+        {
+            get { return new List<Point>() { BasePoint, EndPoint }; }
         }
 
         #endregion
