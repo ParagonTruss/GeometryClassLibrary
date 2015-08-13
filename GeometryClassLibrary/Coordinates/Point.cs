@@ -18,15 +18,18 @@ namespace GeometryClassLibrary
     public class Point
     {
         #region Properties and Fields
+        private readonly Distance _x;
+        private readonly Distance _y;
+        private readonly Distance _z;
 
         [JsonProperty]
-        public Distance X { get; set; }
+        public Distance X { get { return _x; } }
 
         [JsonProperty]
-        public Distance Y { get; set; }
+        public Distance Y { get { return _y; } }
 
         [JsonProperty]
-        public Distance Z { get; set; }
+        public Distance Z { get { return _z; } }
 
         #endregion
 
@@ -37,9 +40,10 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point()
         {
-            X = new Distance();
-            Y = new Distance();
-            Z = new Distance();
+            var zero = new Distance();
+            _x = zero;
+            _y = zero;
+            _z = zero;
         }
 
         /// <summary>
@@ -49,9 +53,9 @@ namespace GeometryClassLibrary
         /// <param name="passedY"></param>
         public Point(Distance passedX, Distance passedY)
         {
-            X = new Distance(passedX);
-            Y = new Distance(passedY);
-            Z = new Distance(DistanceType.Inch, 0);
+            _x = passedX;
+            _y = passedY;
+            _z = new Distance();
         }
 
         /// <summary>
@@ -60,21 +64,18 @@ namespace GeometryClassLibrary
         [JsonConstructor]
         public Point(Distance x, Distance y, Distance z)
         {
-            X = new Distance(x);
-            Y = new Distance(y);
-            Z = new Distance(z);
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
-        /// <summary>
-        /// Spherical
-        /// </summary>
-        /// <param name="Distance"></param>
-        /// <param name="angle1"></param>
-        /// <param name="angle2"></param>
-        public Point(Distance distance, Angle phi, Angle theta)
-        {
-            var direction = new Direction(phi, theta);
-        }
+        ///// <summary>
+        ///// Spherical
+        ///// </summary>
+        //public Point(Distance distance, Angle phi, Angle theta)
+        //{
+        //    var direction = new Direction(phi, theta);
+        //}
 
         /// <summary>
         /// Creates the point that is the specified distance from the origin, in the specified direction.
@@ -83,23 +84,19 @@ namespace GeometryClassLibrary
         /// <param name="multiplier"></param>
         public Point(Direction direction, Distance fromOrigin)
         {
-            this.X = direction.XComponent * fromOrigin;
-            this.Y = direction.YComponent * fromOrigin;
-            this.Z = direction.ZComponent * fromOrigin;
+            this._x = direction.XComponent * fromOrigin;
+            this._y = direction.YComponent * fromOrigin;
+            this._z = direction.ZComponent * fromOrigin;
         }
 
         /// <summary>
         /// Creates a new point with the given values with the given Distance type
         /// </summary>
-        /// <param name="passedType"></param>
-        /// <param name="passedX"></param>
-        /// <param name="passedY"></param>
-        /// <param name="passedZ"></param>
         public Point(DistanceType passedType, double passedX, double passedY, double passedZ)
         {
-            X = new Distance(passedType, passedX);
-            Y = new Distance(passedType, passedY);
-            Z = new Distance(passedType, passedZ);
+            _x = new Distance(passedType, passedX);
+            _y = new Distance(passedType, passedY);
+            _z = new Distance(passedType, passedZ);
         }
 
         /// <summary>
@@ -107,12 +104,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Point toCopy)
         {
-            if (toCopy != null)
-            {
-                X = toCopy.X;
-                Y = toCopy.Y;
-                Z = toCopy.Z;
-            }
+            _x = toCopy.X;
+            _y = toCopy.Y;
+            _z = toCopy.Z;
         }
 
         #endregion
@@ -231,9 +225,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates one point around another
         /// </summary>
-        /// <param name="centerPoint">The centre point of rotation.</param>
-        /// <param name="rotateAngle">The rotation angle</param>
-        /// <returns>Rotated point</returns>
         public Point Rotate2D(Point centerPoint, AngularDistance rotateAngle)
         {
             double cosTheta = Math.Cos(rotateAngle.Radians);
