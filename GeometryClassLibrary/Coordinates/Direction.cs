@@ -270,6 +270,7 @@ namespace GeometryClassLibrary
         /// <param name="angleToZAxis">The angle from the positive z-axis</param>
         /// <param name="allowAnglesOutOfBounds">If it is true it will adjust the given angles to within the proper bounds, otherwise
         /// if the are outside it will throw an error</param>
+        [JsonConstructor]
         public Direction(Angle phi, Angle theta, Boolean allowAnglesOutOfBounds = false)
         {
             this.Phi = phi;

@@ -136,17 +136,18 @@ namespace GeometryClassLibrary
         /// <param name="direction">The direction the line goes in one direction from its reference point
         /// Note: it also goes out in the opposite direction as this</param>
         /// <param name="basePoint">A point on the line to use as a reference point</param>
-        public Line(Direction passedDirection, Point passedBasePoint = null)
+        [JsonConstructor]
+        public Line(Direction direction, Point basePoint = null)
         {
-            if (passedBasePoint == null)
+            if (basePoint == null)
             {
                 this.BasePoint = new Point();
             }
             else
             {
-                this.BasePoint = new Point(passedBasePoint);
+                this.BasePoint = new Point(basePoint);
             }
-            this.Direction = new Direction(passedDirection);
+            this.Direction = new Direction(direction);
         }
 
 
