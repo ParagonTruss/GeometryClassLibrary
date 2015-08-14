@@ -315,6 +315,11 @@ namespace GeometryClassLibrary
             return false;
         }
 
+        public bool PointIsOnNormalSide(Point point)
+        {
+            return PointIsOnSameSideAs(point, this.NormalVector.EndPoint);
+        }
+
         /// <summary>
         /// Finds the line where the two planes intersect 
         /// </summary>
@@ -677,6 +682,11 @@ namespace GeometryClassLibrary
         {
             var basePoint = point.ProjectOntoPlane(this);
             return new Vector(basePoint, point);
+        }
+
+        public bool CutsAcross(Polyhedron solid)
+        {
+            return solid.Slice(this).Count == 2;
         }
         #endregion
     }
