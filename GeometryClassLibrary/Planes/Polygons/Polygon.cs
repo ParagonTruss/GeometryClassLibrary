@@ -1364,24 +1364,30 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the given line and polygon intersect or are coplanar and intersect on the plane
         /// </summary>
-        /// <param name="passedLine"></param>
+        /// <param name="line"></param>
         /// <returns></returns>
-        public new bool DoesIntersect(Line passedLine)
+        public new bool DoesIntersect(Line line)
         {
             //if the line is on the plane
-            if (((Plane)this).Contains(passedLine))
+            if (new Plane(this).Contains(line))
             {
                 //check if it intersects our boundaries
                 foreach (LineSegment segment in this.LineSegments)
                 {
-                    if (passedLine.DoesIntersect(segment))
+                    if (line.DoesIntersect(segment))
                     {
                         return true;
                     }
                 }
             }
 
-            return DoesIntersectNotCoplanar(passedLine);
+            return DoesIntersectNotCoplanar(line);
+        }
+
+        public bool DoesIntersect(LineSegment segment)
+        {
+            var point = this.IntersectWithLine(segment);
+            return segment.Contains(point);
         }
 
         /// <summary>

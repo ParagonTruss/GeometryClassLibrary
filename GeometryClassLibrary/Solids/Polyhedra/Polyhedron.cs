@@ -831,6 +831,39 @@ namespace GeometryClassLibrary
 
             return segments2D.ExteriorProfileFromSegments(plane.NormalVector);
         }
+
+        /// <summary>
+        /// Determines if the boundaries of the solids intersect.
+        ///  If they just touch, this method should return false.
+        ///  If one entirely encloses the other, this will return false.
+        ///
+        /// </summary>
+        /// <param name="polyhedron"></param>
+        /// <returns></returns>
+        public bool DoesIntersect(Polyhedron polyhedron)
+        {
+            foreach(var face in this.Polygons)
+            {
+                foreach(var segment in polyhedron.LineSegments)
+                {
+                    if (face.DoesIntersect(segment))
+                    {
+                        return true;
+                    }
+                }
+            }
+            foreach (var face in polyhedron.Polygons)
+            {
+                foreach (var segment in this.LineSegments)
+                {
+                    if (face.DoesIntersect(segment))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region Static Factory Methods
