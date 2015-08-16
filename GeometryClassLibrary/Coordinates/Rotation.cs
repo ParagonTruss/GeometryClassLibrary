@@ -48,16 +48,13 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="axisOfRotation">The Axis to rotate around</param>
         /// <param name="rotationAngle">The Angle that specifies how far to rotate</param>
-        public Rotation(Line axisOfRotation, AngularDistance rotationAngle = null)
+        public Rotation(Line axisOfRotation, AngularDistance rotationAngle)
         {
-            if ((object)rotationAngle == null)
+            if (rotationAngle == null)
             {
-                this._rotationAngle = new Angle();
+                rotationAngle = new Angle();
             }
-            else
-            {
-                this._rotationAngle = rotationAngle;
-            }
+            this._rotationAngle = rotationAngle;
             this._axisOfRotation = axisOfRotation;
         }
 

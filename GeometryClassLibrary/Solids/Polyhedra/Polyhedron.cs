@@ -666,6 +666,8 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
+        
+
         /// <summary>
         /// Shifts the Polyhedron to another location and orientation
         /// </summary>

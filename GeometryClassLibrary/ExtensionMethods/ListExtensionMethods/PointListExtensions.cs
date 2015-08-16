@@ -33,6 +33,27 @@ namespace GeometryClassLibrary
             return results;
         }
 
+        /// <summary>
+        /// Returns the two points that are furthest from each other in the list.
+        /// </summary>
+        public static List<Point> FurthestPoints(this IEnumerable<Point> pointList)
+        {
+            var points = pointList.ToList();
+            if (points.Count < 2)
+            {
+                throw new Exception("Not enough points in the list");
+            }
+            Dictionary<List<Point>, Distance> distances = new Dictionary<List<Point>, Distance>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                for (int j = i + 1; j < points.Count; j++)
+                {
+                    distances.Add(new List<Point>() { points[i], points[j] }, points[i].DistanceTo(points[j]));
+                }
+            }
+            return distances.OrderBy(p => p.Value).Last().Key;
+        }
+
         public static List<Point> Rotate(this IEnumerable<Point> pointList, Rotation rotation)
         {
             var results = new List<Point>();

@@ -161,86 +161,107 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="segments"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static List<LineSegment> SortIntoClockWiseSegments(this IList<LineSegment> segments)
+        public static List<LineSegment> SortSegments(this IList<LineSegment> segments)
         {
             segments.ValidateForPolygon();
             
-            List<LineSegment> sortedSegments = new List<LineSegment>();
-            Point minXPoint = null;
-
-            // find the Point with the smallest X
-            foreach (Point vertex in segments.GetAllPoints())
+            List<LineSegment> sorted = new List<LineSegment>() { segments.Last() };
+            List<LineSegment> unSorted = segments.ToList();
+            unSorted.RemoveAt(unSorted.Count - 1);
+            Point currentVertex = sorted[0].EndPoint;
+            while (unSorted.Count != 0)
             {
-                if (minXPoint == null || vertex.X < minXPoint.X)
+                LineSegment nextSegment = null;
+                for(int i = 0; i < unSorted.Count; i++)
                 {
-                    minXPoint = vertex;
-                }
-            }
-
-            //find the line with the highest Y that contains the smallestXPoint
-            LineSegment maxYLine = null;
-            Point maxYPoint = null;
-
-            foreach (LineSegment segment in segments)
-            {
-                if (segment.BasePoint == minXPoint)
-                {
-                    if (maxYPoint == null || maxYPoint.Y < segment.EndPoint.Y)
+                    if (unSorted[i].BasePoint == currentVertex)
                     {
-                        maxYPoint = segment.EndPoint;
-                        maxYLine = segment;
+                        nextSegment = unSorted[i];
                     }
-                }
-                else if (segment.EndPoint == minXPoint)
-                {
-                    if (maxYPoint == null || maxYPoint.Y < segment.BasePoint.Y)
+                    else if (unSorted[i].EndPoint == currentVertex)
                     {
-                        maxYPoint = segment.BasePoint;
-                        maxYLine = segment;
+                        nextSegment = unSorted[i].Reverse();
                     }
+                    sorted.Add(nextSegment);
+                    unSorted.RemoveAt(i);
                 }
             }
 
-            //now start at the first line and make sure it starts at the min and goes to the max y point
-            if (maxYLine.BasePoint == minXPoint)
-            {
-                sortedSegments.Add(new LineSegment(maxYLine));
-            }
-            else
-            {
-                sortedSegments.Add(maxYLine.Reverse());
-            }
+            //Point minXPoint = null;
 
-            //create a shallow copy of the borders to find out which we have checked
-            List<LineSegment> hasNotAdded = new List<LineSegment>(segments);
-            hasNotAdded.Remove(maxYLine);
+            //// find the Point with the smallest X
+            //foreach (Point vertex in segments.GetAllPoints())
+            //{
+            //    if (minXPoint == null || vertex.X < minXPoint.X)
+            //    {
+            //        minXPoint = vertex;
+            //    }
+            //}
 
-            //get our endpoint to find out which segment to process next
-            Point previousEndPoint = sortedSegments[0].EndPoint;
+            ////find the line with the highest Y that contains the smallestXPoint
+            //LineSegment maxYLine = null;
+            //Point maxYPoint = null;
 
-            //now go through the rest and find the next Segment to use
-            for (int i = 0; i < hasNotAdded.Count; i++)
-            {
-                LineSegment currentLine = hasNotAdded[i];
+            //foreach (LineSegment segment in segments)
+            //{
+            //    if (segment.BasePoint == minXPoint)
+            //    {
+            //        if (maxYPoint == null || maxYPoint.Y < segment.EndPoint.Y)
+            //        {
+            //            maxYPoint = segment.EndPoint;
+            //            maxYLine = segment;
+            //        }
+            //    }
+            //    else if (segment.EndPoint == minXPoint)
+            //    {
+            //        if (maxYPoint == null || maxYPoint.Y < segment.BasePoint.Y)
+            //        {
+            //            maxYPoint = segment.BasePoint;
+            //            maxYLine = segment;
+            //        }
+            //    }
+            //}
 
-                //if our line contains the previous endpoint than it comes next and add it in the right direction
-                if (currentLine.BasePoint == previousEndPoint)
-                {
-                    sortedSegments.Add(new LineSegment(currentLine));
-                    previousEndPoint = currentLine.EndPoint;
-                    hasNotAdded.Remove(currentLine);
-                    //restart the looping (note it will increment before starting again hence the -1)
-                    i = -1;
-                }
-                else if (currentLine.EndPoint == previousEndPoint)
-                {
-                    sortedSegments.Add(currentLine.Reverse());
-                    previousEndPoint = currentLine.BasePoint;
-                    hasNotAdded.Remove(currentLine);
-                    //restart the looping 
-                    i = -1;
-                }
-            }
+            ////now start at the first line and make sure it starts at the min and goes to the max y point
+            //if (maxYLine.BasePoint == minXPoint)
+            //{
+            //    sortedSegments.Add(new LineSegment(maxYLine));
+            //}
+            //else
+            //{
+            //    sortedSegments.Add(maxYLine.Reverse());
+            //}
+
+            ////create a shallow copy of the borders to find out which we have checked
+            //List<LineSegment> hasNotAdded = new List<LineSegment>(segments);
+            //hasNotAdded.Remove(maxYLine);
+
+            ////get our endpoint to find out which segment to process next
+            //Point previousEndPoint = sortedSegments[0].EndPoint;
+
+            ////now go through the rest and find the next Segment to use
+            //for (int i = 0; i < hasNotAdded.Count; i++)
+            //{
+            //    LineSegment currentLine = hasNotAdded[i];
+
+            //    //if our line contains the previous endpoint than it comes next and add it in the right direction
+            //    if (currentLine.BasePoint == previousEndPoint)
+            //    {
+            //        sortedSegments.Add(new LineSegment(currentLine));
+            //        previousEndPoint = currentLine.EndPoint;
+            //        hasNotAdded.Remove(currentLine);
+            //        //restart the looping (note it will increment before starting again hence the -1)
+            //        i = -1;
+            //    }
+            //    else if (currentLine.EndPoint == previousEndPoint)
+            //    {
+            //        sortedSegments.Add(currentLine.Reverse());
+            //        previousEndPoint = currentLine.BasePoint;
+            //        hasNotAdded.Remove(currentLine);
+            //        //restart the looping 
+            //        i = -1;
+            //    }
+            //}
 
             //now were all done and return the sorted segments
             return sortedSegments;
@@ -481,5 +502,7 @@ namespace GeometryClassLibrary
             }
             return new Polygon(profileSegments, false);
         }
+
+        
     }
 }

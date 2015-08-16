@@ -190,7 +190,7 @@ namespace GeometryClassLibrary
         {
             if (shouldValidate)
             {
-                this.LineSegments = lineSegments.SortIntoClockWiseSegments();
+                this.LineSegments = lineSegments.SortSegments();
             }
             else
             {

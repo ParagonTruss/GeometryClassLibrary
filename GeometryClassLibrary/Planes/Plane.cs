@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
         /// being the same as the basepoint of the plane
         /// </summary>
         [JsonProperty]
-        public virtual Vector NormalVector
+        public Vector NormalVector
         {
             get { return _normalVector; }
             protected set
@@ -41,6 +41,10 @@ namespace GeometryClassLibrary
         }
         private Vector _normalVector;
 
+        public Direction NormalDirection
+        {
+           get { return this.NormalVector.Direction; }
+        }
         #endregion
 
         #region Constructors

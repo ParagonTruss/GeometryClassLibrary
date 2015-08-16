@@ -169,7 +169,7 @@ namespace GeometryClassLibrary
             return listOfTriangles;
         }
 
-        public static List<Polygon> ProjectAllOntoPlane(this List<Polygon> polygonList, Plane plane)
+        public static List<Polygon> ProjectAllOntoPlane(this IEnumerable<Polygon> polygonList, Plane plane)
         {
             var listOfProjected = new List<Polygon>();
             foreach(var polygon in polygonList)

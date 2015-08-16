@@ -60,7 +60,7 @@ namespace GeometryClassLibraryTests
 
             List<LineSegment> lineSegments = new List<LineSegment>() { segment1, segment2, segment3, segment4 };
 
-            List<LineSegment> sorted = (List<LineSegment>)lineSegments.SortIntoClockWiseSegments();
+            List<LineSegment> sorted = (List<LineSegment>)lineSegments.SortSegments();
 
             (sorted[0] == segment1).Should().BeTrue();
             (sorted[1] == segment3).Should().BeTrue();
