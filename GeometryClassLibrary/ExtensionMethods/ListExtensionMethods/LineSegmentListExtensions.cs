@@ -164,7 +164,7 @@ namespace GeometryClassLibrary
         public static List<LineSegment> SortSegments(this IList<LineSegment> segments)
         {
             segments.ValidateForPolygon();
-            
+
             List<LineSegment> sorted = new List<LineSegment>() { segments.Last() };
             List<LineSegment> unSorted = segments.ToList();
             unSorted.RemoveAt(unSorted.Count - 1);
@@ -172,7 +172,7 @@ namespace GeometryClassLibrary
             while (unSorted.Count != 0)
             {
                 LineSegment nextSegment = null;
-                for(int i = 0; i < unSorted.Count; i++)
+                for (int i = 0; i < unSorted.Count; i++)
                 {
                     if (unSorted[i].BasePoint == currentVertex)
                     {
@@ -182,11 +182,16 @@ namespace GeometryClassLibrary
                     {
                         nextSegment = unSorted[i].Reverse();
                     }
-                    sorted.Add(nextSegment);
-                    unSorted.RemoveAt(i);
+                    if (nextSegment != null)
+                    {
+                        sorted.Add(nextSegment);
+                        unSorted.RemoveAt(i);
+                        currentVertex = nextSegment.EndPoint;
+                        nextSegment = null;
+                    }
                 }
             }
-
+            return sorted;
             //Point minXPoint = null;
 
             //// find the Point with the smallest X
@@ -221,6 +226,8 @@ namespace GeometryClassLibrary
             //        }
             //    }
             //}
+
+            //List<LineSegment> sortedSegments = new List<LineSegment>();
 
             ////now start at the first line and make sure it starts at the min and goes to the max y point
             //if (maxYLine.BasePoint == minXPoint)
@@ -263,8 +270,8 @@ namespace GeometryClassLibrary
             //    }
             //}
 
-            //now were all done and return the sorted segments
-            return sortedSegments;
+            ////now we're all done and return the sorted segments
+            //return sortedSegments;
         }
 
         /// <summary>
