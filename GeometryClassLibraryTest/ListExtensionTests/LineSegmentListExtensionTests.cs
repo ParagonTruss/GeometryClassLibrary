@@ -8,7 +8,7 @@ using GeometryClassLibrary;
 namespace GeometryClassLibraryTests
 {
     [TestFixture]
-    public class LineSegmentListExtensionTests
+    public class IEdgeListExtensionMethodTests
     {
 
         [Test()]

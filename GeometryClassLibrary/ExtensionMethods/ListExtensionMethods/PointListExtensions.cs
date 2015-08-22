@@ -8,7 +8,24 @@ namespace GeometryClassLibrary
 {
     public static class PointListExtensions
     {
-
+        public static Distance GreatestXDistance(this List<Point> points)
+        {
+            var min = points.Min(p => p.X);
+            var max = points.Max(p => p.X);
+            return max - min;
+        }
+        public static Distance GreatestYDistance(this List<Point> points)
+        {
+            var min = points.Min(p => p.Y);
+            var max = points.Max(p => p.Y);
+            return max - min;
+        }
+        public static Distance GreatestZDistance(this List<Point> points)
+        {
+            var min = points.Min(p => p.Z);
+            var max = points.Max(p => p.Z);
+            return max - min;
+        }
         public static List<Point> Shift(this List<Point> pointList, Shift passedShift)
         {
             List<Point> shiftedPoints = new List<Point>();
