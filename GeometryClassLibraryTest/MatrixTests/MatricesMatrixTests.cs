@@ -1,8 +1,6 @@
-﻿using System;
-using NUnit.Framework;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GeometryClassLibrary;
-using MathNet.Numerics;
+using NUnit.Framework;
 
 namespace ClearspanLibraryUnitTest
 {

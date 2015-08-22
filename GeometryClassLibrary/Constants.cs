@@ -1,8 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using GeometryClassLibrary.Properties;
 
 namespace GeometryClassLibrary
 {
@@ -15,7 +13,7 @@ namespace GeometryClassLibrary
             {
                 try
                 {
-                    return double.Parse(GeometryClassLibrary.Properties.Resources.ResourceManager.GetString("AcceptedEqualityDeviationDouble"));
+                    return double.Parse(Resources.ResourceManager.GetString("AcceptedEqualityDeviationDouble"));
                 }
                 catch (Exception)
                 {

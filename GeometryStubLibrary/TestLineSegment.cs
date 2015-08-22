@@ -1,7 +1,4 @@
-﻿using GeometryClassLibrary;
-using UnitClassLibrary;
-
-namespace GeometryStubLibrary
+﻿namespace GeometryStubLibrary
 {
     //public class TestLineSegment : LineSegment
     //{

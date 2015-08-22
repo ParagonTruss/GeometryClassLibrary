@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnitClassLibrary;
-
-namespace GeometryClassLibrary
+﻿namespace GeometryClassLibrary
 {
     /// <summary>
     /// This class allows us to make irregular polygons and shapes with curves as well as line segments and access

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using System.Collections.Generic;
 using FluentAssertions;
-using UnitClassLibrary;
 using GeometryClassLibrary;
 using Newtonsoft.Json;
+using NUnit.Framework;
+using UnitClassLibrary;
 
 namespace GeometryClassLibraryTests
 {

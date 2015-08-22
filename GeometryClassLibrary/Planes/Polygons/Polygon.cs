@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnitClassLibrary;
 using Newtonsoft.Json;
-using MoreLinq;
-
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -1635,31 +1632,31 @@ namespace GeometryClassLibrary
         //Determines the plane which we will rotate and project onto.
         private Plane _planeWithSmallestAngleBetween()
         {
-            double angleXY = this.SmallestAngleBetween(Plane.XY).Degrees;
-            double angleXZ = this.SmallestAngleBetween(Plane.XZ).Degrees;
-            double angleYZ = this.SmallestAngleBetween(Plane.YZ).Degrees;
+            double angleXY = this.SmallestAngleBetween(XY).Degrees;
+            double angleXZ = this.SmallestAngleBetween(XZ).Degrees;
+            double angleYZ = this.SmallestAngleBetween(YZ).Degrees;
 
             double smallest = Math.Min(Math.Min(angleXY, angleXZ), angleYZ);
             if (angleXY == smallest)
             {
-                return Plane.XY;
+                return XY;
             }
             else if (angleYZ == smallest)
             {
-                return Plane.YZ;
+                return YZ;
             }
-            return Plane.XZ;
+            return XZ;
         }
       
         //Returns the necessary rotation, before we project
         private Rotation _rotationOfPlaneWithSmallestAngleBetweenOntoXYPlane()
         {
             Plane plane = _planeWithSmallestAngleBetween();
-            if (plane == Plane.YZ)
+            if (plane == YZ)
             {
                 return new Rotation(new Line(Direction.Up), new Angle(AngleType.Degree, 90));
             }
-            else if (plane == Plane.XZ)
+            else if (plane == XZ)
             {
                 return new Rotation(new Line(Direction.Right), new Angle(AngleType.Degree, 90));
             }
@@ -1703,7 +1700,7 @@ namespace GeometryClassLibrary
                 previousVertex = vertex;
             }
 
-            Angle angle = rotated.SmallestAngleBetween(Plane.XY);
+            Angle angle = rotated.SmallestAngleBetween(XY);
 
             double area = sum.InchesSquared / (2 * Math.Cos(angle.Radians));
 

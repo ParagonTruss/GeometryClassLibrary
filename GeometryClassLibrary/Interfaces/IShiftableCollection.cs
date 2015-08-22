@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GeometryClassLibrary
+﻿namespace GeometryClassLibrary
 {
     public interface IShiftableCollection: IShiftable
     {

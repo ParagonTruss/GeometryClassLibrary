@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using Newtonsoft.Json;
 using UnitClassLibrary;
 //using VisualGeometryDebugger;
-using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
@@ -324,7 +319,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
-            Point originPoint = Point.MakePointWithInches(0, 0, 0);
+            Point originPoint = MakePointWithInches(0, 0, 0);
 
             bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisOfRotation);
 
@@ -354,7 +349,7 @@ namespace GeometryClassLibrary
             double yOfRotatedPoint = rotatedPointMatrix.GetElement(1, 0);
             double zOfRotatedPoint = rotatedPointMatrix.GetElement(2, 0);
 
-            Point pointToReturn = Point.MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
+            Point pointToReturn = MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
 
             if (originIsOnPassedAxis)
             {

@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using UnitClassLibrary;
+﻿using FluentAssertions;
 using GeometryClassLibrary;
-using FluentAssertions;
 using Newtonsoft.Json;
+using NUnit.Framework;
+using UnitClassLibrary;
 
 namespace GeometryClassLibraryTests
 {

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using UnitClassLibrary;
 using Newtonsoft.Json;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -438,7 +434,7 @@ namespace GeometryClassLibrary
         {
             if (referenceNormal == null)
             {
-                referenceNormal = Direction.Out;
+                referenceNormal = Out;
             }
 
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));

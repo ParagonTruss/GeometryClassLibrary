@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
 using FluentAssertions;
-using UnitClassLibrary;
 using GeometryClassLibrary;
 using Newtonsoft.Json;
+using NUnit.Framework;
+using UnitClassLibrary;
 
 namespace ClearspanTypeLibrary.Tests
 {

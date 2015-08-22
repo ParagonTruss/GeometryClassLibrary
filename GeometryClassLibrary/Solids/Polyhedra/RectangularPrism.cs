@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnitClassLibrary;
+﻿using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -46,7 +42,7 @@ namespace GeometryClassLibrary
             Vector vector2 = new Vector(new Point(length, zero, zero));
             Vector vector3 = new Vector(new Point(zero, zero, height));
 
-            var solid = Polyhedron.MakeParallelepiped(vector1, vector2, vector3, basePoint);
+            var solid = MakeParallelepiped(vector1, vector2, vector3, basePoint);
             return solid;
         }
     }

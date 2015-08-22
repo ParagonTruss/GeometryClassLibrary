@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using UnitClassLibrary;
 using Newtonsoft.Json;
-using MoreLinq;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {

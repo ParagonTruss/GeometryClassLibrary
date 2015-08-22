@@ -1,10 +1,9 @@
 ﻿using System;
-using NUnit.Framework;
-using FluentAssertions;
-using UnitClassLibrary;
-using GeometryClassLibrary;
 using System.Collections.Generic;
-using MathNet.Numerics;
+using FluentAssertions;
+using GeometryClassLibrary;
+using NUnit.Framework;
+using UnitClassLibrary;
 
 namespace ClearspanLibraryUnitTest
 {

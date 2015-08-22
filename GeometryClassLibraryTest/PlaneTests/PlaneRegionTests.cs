@@ -1,9 +1,7 @@
-﻿using NUnit.Framework;
-using GeometryClassLibrary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
-using Moq;
-using UnitClassLibrary;
+using GeometryClassLibrary;
+using NUnit.Framework;
 
 namespace GeometryClassLibraryTests
 {

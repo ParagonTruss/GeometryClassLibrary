@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnitClassLibrary;
+﻿using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -22,7 +18,7 @@ namespace GeometryClassLibrary
             var vector1 = new Vector(Direction.Right, length);
             var vector2 = new Vector(Direction.Up, width);
             
-            var rectangle = Polygon.MakeParallelogram(vector1, vector2, basePoint);
+            var rectangle = MakeParallelogram(vector1, vector2, basePoint);
             return rectangle;
         }
 
@@ -39,7 +35,7 @@ namespace GeometryClassLibrary
             Direction heightDirection = referencePlaneNormal.CrossProduct(baseSegment.Direction);
             var heightVector = new Vector(heightDirection, height);
             
-            Polygon polygon = Polygon.MakeParallelogram(baseSegment, heightVector);
+            Polygon polygon = MakeParallelogram(baseSegment, heightVector);
 
             return polygon;
         }

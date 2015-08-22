@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnitClassLibrary;
 using Newtonsoft.Json;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
@@ -453,7 +450,7 @@ namespace GeometryClassLibrary
         public Shift ShiftFromThisTo(CoordinateSystem systemToShiftTo = null)
         {
             //if its the world coordinates then just make the shift directly from the coordinate system since it is stored in terms of the world coordinates
-            if (systemToShiftTo == null || systemToShiftTo == CoordinateSystem.WorldCoordinateSystem)
+            if (systemToShiftTo == null || systemToShiftTo == WorldCoordinateSystem)
             {
                 //put the rotations on in the right order (XYZ)
                 List<Rotation> rotations = new List<Rotation>();
@@ -579,10 +576,10 @@ namespace GeometryClassLibrary
         {
             //change the coordinate system so that it is in terms of the current system so we can shift it relative to that system and 
             //then we need to shift it so its back on the worldCoordinates
-            CoordinateSystem inCurrent = this.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftFromThisTo(systemShiftIsRelativeTo));
+            CoordinateSystem inCurrent = this.Shift(WorldCoordinateSystem.ShiftFromThisTo(systemShiftIsRelativeTo));
             CoordinateSystem shiftedInCurrent = inCurrent.Shift(passedShift);
             //now put it back in terms of the world and return it
-            return shiftedInCurrent.Shift(CoordinateSystem.WorldCoordinateSystem.ShiftToThisFrom(systemShiftIsRelativeTo));
+            return shiftedInCurrent.Shift(WorldCoordinateSystem.ShiftToThisFrom(systemShiftIsRelativeTo));
         }
 
         #endregion
