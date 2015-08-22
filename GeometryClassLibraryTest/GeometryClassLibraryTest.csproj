@@ -76,7 +76,7 @@
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
-    <Compile Include="ListExtensionTests\IListIEdgeExtensionMethodTests.cs" />
+    <Compile Include="ListExtensionTests\IEdgeListExtensionMethodTests.cs" />
     <Compile Include="MatrixTests\MatricesMatrixTests.cs" />
     <Compile Include="MatrixTests\MatrixTests.cs" />
     <Compile Include="CoordinateTests\DirectionTests.cs" />
