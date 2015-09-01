@@ -196,14 +196,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
         /// </summary>
-        /// <param name="passedSegments">The List of LineSegments to get the points of</param>
+        /// <param name="segments">The List of LineSegments to get the points of</param>
         /// <returns>Returns a list of Points containing all the unique Points in the LineSegments List</returns>
-        public static List<Point> GetAllPoints(this IList<LineSegment> passedSegments)
+        public static List<Point> GetAllPoints(this IEnumerable<LineSegment> segments)
         {
             List<Point> points = new List<Point>();
 
             //just cycle through each line and add the points to our list if they are not already there
-            foreach (LineSegment line in passedSegments)
+            foreach (LineSegment line in segments)
             {
                 if (!points.Contains(line.BasePoint))
                 {
@@ -222,19 +222,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Shifts the List of LineSegments with the given shift
         /// </summary>
-        /// <param name="passedLineSegments">The List of Line Segments to Shift</param>
+        /// <param name="lineSegments">The List of Line Segments to Shift</param>
         /// <param name="passedShift">the Shift to apply to the List of LineSegmnets</param>
         /// <returns>a new List of LineSegmnets that have been shifted with the given shift</returns>
-        public static List<LineSegment> Shift(this IList<LineSegment> passedLineSegments, Shift passedShift)
+        public static List<LineSegment> Shift(this IEnumerable<LineSegment> lineSegments, Shift shift)
         {
-            List<LineSegment> shiftedSegments = new List<LineSegment>();
-
-            foreach (var segment in passedLineSegments)
-            {
-                shiftedSegments.Add(segment.Shift(passedShift));
-            }
-
-            return shiftedSegments;
+            return lineSegments.Select(s => s.Shift(shift)).ToList();
         }
 
         /// <summary>
@@ -242,7 +235,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine">passed LineSegments</param>
         /// <returns></returns>
-        public static bool AreAllCoplanar(this IList<LineSegment> passedLineList)
+        public static bool AreAllCoplanar(this IEnumerable<LineSegment> passedLineList)
         {
             List<Point> vertices = passedLineList.GetAllPoints();
             Vector whatTheNormalShouldBe = null;
@@ -345,8 +338,7 @@ namespace GeometryClassLibrary
             segments.AddRange(segmentList.SegmentsAdjacentTo(lineSegment.BasePoint));
             segments.AddRange(segmentList.SegmentsAdjacentTo(lineSegment.EndPoint));
             
-            Predicate<LineSegment> matching = (LineSegment s) => { return s == lineSegment; };
-            segments.RemoveAll(matching);
+            segments.RemoveAll(s => s == lineSegment);
             return segments;
         }
 

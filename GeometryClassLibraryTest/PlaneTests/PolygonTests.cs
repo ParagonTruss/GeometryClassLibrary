@@ -138,7 +138,6 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_RotateTest()
         {
-            //think messes up due to percision error
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 2, 3), Point.MakePointWithInches(-3, -2, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, -2, 0), Point.MakePointWithInches(1, 1, -1)));
