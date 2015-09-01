@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnitClassLibrary;
+using System.Linq;
 
 namespace GeometryClassLibrary
 {
@@ -350,18 +351,19 @@ namespace GeometryClassLibrary
         /// <returns>returns a List of Lines of only the Lines that are parallel to the passed line</returns>
         public static List<Line> OnlyLinesParallelTo(this IList<Line> passedLines, Line lineToCheckIfParallelTo)
         {
-            //List<Line> passedLineListCasted = new List<Line>(passedLines);
-            List<Line> parallelLines = new List<Line>();
+            ////List<Line> passedLineListCasted = new List<Line>(passedLines);
+            //List<Line> parallelLines = new List<Line>();
 
-            foreach(Line currentLine in passedLines)
-            {
-                if (currentLine.IsParallelTo(lineToCheckIfParallelTo))
-                {
-                    parallelLines.Add(currentLine);
-                }
-            }
+            //foreach(Line currentLine in passedLines)
+            //{
+            //    if (currentLine.IsParallelTo(lineToCheckIfParallelTo))
+            //    {
+            //        parallelLines.Add(currentLine);
+            //    }
+            //}
 
-            return parallelLines;
+            //return parallelLines;
+            return passedLines.Where(l => l.IsParallelTo(lineToCheckIfParallelTo)).ToList();
         }
     }
 }

@@ -17,6 +17,11 @@ namespace GeometryClassLibrary
             return new Shift(t);
         }
 
+        public static implicit operator Shift(Vector v)
+        {
+            return new Shift(v);
+        }
+
         #endregion
 
         #region Properties and Fields

@@ -45,7 +45,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public NonPolygon()
         {
-            this.Edges = new List<IEdge>();
+            this._Edges = new List<IEdge>();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace GeometryClassLibrary
         /// <returns>A new nonPolygon that has been shifted</returns>
         public new NonPolygon Shift(Shift passedShift)
         {
-            return new NonPolygon(this.Edges.Shift(passedShift));
+            return new NonPolygon(this._Edges.Shift(passedShift));
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace GeometryClassLibrary
         public new NonPolygon Rotate(Rotation passedRotation)
         {
             List<IEdge> newEdges = new List<IEdge>();
-            foreach (var edge in this.Edges)
+            foreach (var edge in this._Edges)
             {
                 newEdges.Add(edge.Rotate(passedRotation));
             }

@@ -20,7 +20,7 @@ namespace GeometryClassLibrary
             get
             {
                 List<LineSegment> convertedList = new List<LineSegment>();
-                foreach (var linesegment in Edges)
+                foreach (var linesegment in _Edges)
                 {
                     convertedList.Add((LineSegment)linesegment);
                 }
@@ -39,7 +39,7 @@ namespace GeometryClassLibrary
                     }
                 }
                
-                this.Edges = convertedList;
+                this._Edges = convertedList;
             }
         }
 
@@ -242,7 +242,7 @@ namespace GeometryClassLibrary
         /// Creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon polygonToCopy) : base(polygonToCopy.Edges)
+        public Polygon(Polygon polygonToCopy) : base(polygonToCopy._Edges)
         {
             this.LineSegments = (polygonToCopy.LineSegments).ToList();
             this.NormalVector = new Vector(polygonToCopy.NormalVector);

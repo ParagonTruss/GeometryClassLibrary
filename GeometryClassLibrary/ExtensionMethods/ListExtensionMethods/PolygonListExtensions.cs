@@ -157,14 +157,8 @@ namespace GeometryClassLibrary
 
         public static List<Polygon> SplitIntoTriangles(this List<Polygon> polygonList)
         {
-            List<Polygon> listOfTriangles = new List<Polygon>();
-            
-            foreach(Polygon polygon in polygonList)
-            {
-                listOfTriangles.AddRange(polygon.SplitIntoTriangles());
-            }
 
-            return listOfTriangles;
+            return polygonList.SelectMany(p => p.SplitIntoTriangles()).ToList();
         }
 
         public static List<Polygon> ProjectAllOntoPlane(this IEnumerable<Polygon> polygonList, Plane plane)

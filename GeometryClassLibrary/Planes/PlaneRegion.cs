@@ -9,7 +9,7 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        protected List<IEdge> Edges = new List<IEdge>();
+        protected List<IEdge> _Edges = new List<IEdge>();
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
         /// <summary>
@@ -33,9 +33,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public PlaneRegion(Direction passedNormalDirection = null, Point passedBasePoint = null)
             : base(passedNormalDirection, passedBasePoint)
-        {
-            this.Edges = new List<IEdge>();
-        }
+        { }
 
         ///// <summary>
         ///// Creates a new planeregion with the passed in LineSegments
@@ -55,7 +53,7 @@ namespace GeometryClassLibrary
         {
             foreach (var edge in passedEdges)
             {
-                this.Edges.Add(edge);
+                this._Edges.Add(edge);
             }
 
             if (passedEdges.Count() > 0)
@@ -79,16 +77,16 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(PlaneRegion planeToCopy)
-            : this(planeToCopy.Edges) 
+            : this(planeToCopy._Edges) 
         {
             List<IEdge> copiedEdges = new List<IEdge>();
 
-            foreach (IEdge edge in planeToCopy.Edges)
+            foreach (IEdge edge in planeToCopy._Edges)
             {
                 copiedEdges.Add(edge.Copy());
             }
 
-            this.Edges = copiedEdges;
+            this._Edges = copiedEdges;
         }
 
         #endregion
@@ -144,17 +142,17 @@ namespace GeometryClassLibrary
                 PlaneRegion comparableRegion = (PlaneRegion)obj;
 
                 //make sure there are the smae number of edges
-                if (this.Edges.Count() != comparableRegion.Edges.Count())
+                if (this._Edges.Count() != comparableRegion._Edges.Count())
                 {
                     return false;
                 }
 
                 //now check each edge in our list
-                foreach (IEdge edge in this.Edges)
+                foreach (IEdge edge in this._Edges)
                 {
                     //make sure each edge is represented exactly once
                     int timesUsed = 0;
-                    foreach (IEdge edgeOther in comparableRegion.Edges)
+                    foreach (IEdge edgeOther in comparableRegion._Edges)
                     {
                         if (edge.Equals(edgeOther))
                         {
