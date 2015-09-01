@@ -319,7 +319,9 @@ namespace GeometryClassLibrary
 
         public bool PointIsOnNormalSide(Point point)
         {
-            return PointIsOnSameSideAs(point, this.NormalVector.EndPoint);
+           var dotProduct = this.NormalVector.DotProduct(new Vector(NormalVector.BasePoint, point));
+            return dotProduct != new Area() && dotProduct > new Area();
+
         }
 
         /// <summary>
