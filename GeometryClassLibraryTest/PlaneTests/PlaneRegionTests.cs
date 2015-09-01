@@ -3,7 +3,7 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 
-namespace GeometryClassLibraryTests
+namespace GeometryClassLibraryTest
 {
     [TestFixture]
     public class PlaneRegionTests

@@ -2,7 +2,7 @@
 using GeometryClassLibrary;
 using NUnit.Framework;
 
-namespace ClearspanLibraryUnitTest
+namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class MatricesMatrixTests

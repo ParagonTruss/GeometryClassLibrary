@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
 
-namespace ClearspanTypeLibrary.Tests
+namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class LineSegmentTests

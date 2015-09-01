@@ -5,7 +5,7 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
 
-namespace ClearspanLibraryUnitTest
+namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class MatrixTests

@@ -5,7 +5,7 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
 
-namespace GeometryClassLibraryTests
+namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class TriangleTests
