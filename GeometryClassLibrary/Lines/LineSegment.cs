@@ -304,6 +304,11 @@ namespace GeometryClassLibrary
             return new LineSegment(this.EndPoint, this.Direction.Reverse(), this.Length);
         }
 
+        IEdge IEdge.Reverse()
+        {
+            return new LineSegment(this).Reverse();
+        }
+
         /// <summary>
         /// Rotates the LineSegment about the given axis the given angle (calls the method in its base class)
         /// </summary>
@@ -454,6 +459,8 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+
+
 
         #endregion
     }
