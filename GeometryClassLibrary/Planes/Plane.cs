@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MoreLinq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -34,7 +35,7 @@ namespace GeometryClassLibrary
             protected set
             {
                 //make sure that the Normal's base point is always the same as the planes base point for convenience
-                _normalVector = new Vector(this.BasePoint, value);
+                _normalVector = new Vector(this.BasePoint, value.Direction, Inch);
             }
         }
         private Vector _normalVector;

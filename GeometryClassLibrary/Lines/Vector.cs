@@ -302,6 +302,14 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
+        /// Creates a new vector with the same base point and direction but a different magnitude.
+        /// </summary>
+        public Vector Resize(Distance newMagnitude)
+        {
+            return new Vector(BasePoint, Direction, newMagnitude);
+        }
+
+        /// <summary>
         /// Sometimes we want to check if the vector would intersect with line if it were extended towards the line
         /// </summary>
         /// <param name="passedLine"></param>

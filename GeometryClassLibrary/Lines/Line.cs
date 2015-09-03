@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -300,24 +301,15 @@ namespace GeometryClassLibrary
             {
                 case Enums.Axis.X:
                     extrustionLine = new Line(this.BasePoint,
-                        Point.MakePointWithInches(
-                            this.BasePoint.X.Inches - 1,
-                            this.BasePoint.Y.Inches,
-                            this.BasePoint.Z.Inches));
+                        this.BasePoint - new Point(Inch, new Distance()));
                     break;
                 case Enums.Axis.Y:
                     extrustionLine = new Line(this.BasePoint,
-                        Point.MakePointWithInches(
-                            this.BasePoint.X.Inches,
-                            this.BasePoint.Y.Inches - 1,
-                            this.BasePoint.Z.Inches));
+                        this.BasePoint - new Point(new Distance(), Inch));
                     break;
                 case Enums.Axis.Z:
                     extrustionLine = new Line(this.BasePoint,
-                        Point.MakePointWithInches(
-                        this.BasePoint.X.Inches,
-                        this.BasePoint.Y.Inches,
-                        this.BasePoint.Z.Inches - 1));
+                       this.BasePoint - new Point(new Distance(), new Distance(), Inch));
                     break;
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
@@ -618,11 +610,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
-        /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
+        /// Creates a vector on this line, of unit length for the passed distance type.
         /// </summary>
-        /// <param name="passedType">Dimension Type that will be used. The vector will have a length of 1 in this unit type</param>
-        /// <returns></returns>
         public virtual Vector UnitVector(DistanceType passedType)
         {
             return new Vector(this.BasePoint, this.Direction.UnitVector(passedType));

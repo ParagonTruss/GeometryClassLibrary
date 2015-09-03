@@ -361,23 +361,16 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
-        /// Should Use a wrapper class when accessing from a Line or any of its children!!!
-        /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
-        /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
+        /// Creates a vector with this direction and unit length in the passed distance type.
         /// </summary>
-        /// <param name="passedType">Dimension Type that will be used. The vector will have a length of 1 in this unit type</param>
-        /// <returns></returns>
         public Vector UnitVector(DistanceType passedType)
         {
-            Distance magnitude = new Distance(passedType, 1);
-            Direction direction = new Direction(new Point(passedType, XComponent, YComponent, ZComponent), new Distance(DistanceType.Inch, 0.0001));
-            return new Vector(new Point(), direction, magnitude);
+            return this * new Distance(passedType, 1);
         }
 
         /// <summary>
-        /// Creates a new direction that points in the reverse direction of this direction
+        /// Creates a new direction in the reverse direction of this one.
         /// </summary>
-        /// <returns>A new direction that points in the oppposite direction as this one</returns>
         public Direction Reverse()
         {
             //reverse phi(xy) and then complement theta (from z) around 90 since its only 180 range
@@ -387,8 +380,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="otherDirection"></param>
-        /// <returns></returns>
         public double DotProduct(Direction otherDirection)
         {
             var xTerm = this.XComponent * otherDirection.XComponent;
