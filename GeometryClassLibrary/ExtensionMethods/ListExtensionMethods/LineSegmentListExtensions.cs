@@ -160,13 +160,13 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="segments"></param>
         /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
-        public static List<LineSegment> SortSegments(this IList<LineSegment> segments)
+        public static List<LineSegment> FixSegmentOrientation(this IList<LineSegment> segments)
         {
             segments.ValidateForPolygon();
 
-            List<LineSegment> sorted = new List<LineSegment>() { segments.Last() };
+            List<LineSegment> sorted = new List<LineSegment>() { segments.First() };
             List<LineSegment> unSorted = segments.ToList();
-            unSorted.RemoveAt(unSorted.Count - 1);
+            unSorted.RemoveAt(0);
             Point currentVertex = sorted[0].EndPoint;
             while (unSorted.Count != 0)
             {
@@ -196,8 +196,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
         /// </summary>
-        /// <param name="segments">The List of LineSegments to get the points of</param>
-        /// <returns>Returns a list of Points containing all the unique Points in the LineSegments List</returns>
         public static List<Point> GetAllPoints(this IEnumerable<LineSegment> segments)
         {
             List<Point> points = new List<Point>();

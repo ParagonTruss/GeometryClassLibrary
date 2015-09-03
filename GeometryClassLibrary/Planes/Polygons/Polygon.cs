@@ -19,27 +19,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                List<LineSegment> convertedList = new List<LineSegment>();
-                foreach (var linesegment in _Edges)
-                {
-                    convertedList.Add((LineSegment)linesegment);
-                }
-
-                return convertedList;
-
-            }
-            protected set
-            {
-                List<IEdge> convertedList = new List<IEdge>();
-                if (value != null)
-                {
-                    foreach (var item in value)
-                    {
-                        convertedList.Add(item);
-                    }
-                }
-               
-                this._Edges = convertedList;
+                return this._Edges.Select(e => (LineSegment)e).ToList();
             }
         }
 
@@ -52,16 +32,7 @@ namespace GeometryClassLibrary
             {
                 if (_vertices == null)
                 {
-                    List<Point> verticesFound = new List<Point>();
-
-                    foreach (Point point in this.LineSegments.GetAllPoints())
-                    {
-                        if (!verticesFound.Contains(point))
-                        {
-                            verticesFound.Add(point);
-                        }
-                    }
-                    _vertices = verticesFound;
+                    _vertices = _Edges.GetAllPoints();
                 }
                 return _vertices;
             }
@@ -87,14 +58,14 @@ namespace GeometryClassLibrary
 
         private bool _getIsConvex()
         {
-                for (int i = 0; i + 1 < LineSegments.Count; i++)
+            for (int i = 0; i + 1 < LineSegments.Count; i++)
+            {
+                Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
+                if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
                 {
-                    Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
-                    if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
+            }
 
             return true;
         }
@@ -159,13 +130,11 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Zero constructor
+        /// Null constructor
         /// </summary>
         protected Polygon()
             : base(new List<IEdge>())
-        {
-            this.LineSegments = new List<LineSegment>();
-        }
+        { }
 
         /// <summary>
         /// Makes a polygon by connecting the points with line segments in the order they are in the list. If they are not in the correct order you can tell it
@@ -173,28 +142,25 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
         public Polygon(List<Point> passedPoints, bool shouldValidate = true)
-            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldValidate) 
-        {
-            
-        }
+            : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldValidate)
+        { }
 
         /// <summary>
-        /// Defines a plane region using the given boundaries as long as the line segments form a closed region
+        /// Creates a polygon from the passed linesegments, after validating that they in fact form a closed nondegenerate planar region.
         /// </summary>
         [JsonConstructor]
-        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
-            : base(lineSegments)
+        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true) :base()
         {
             if (shouldValidate)
             {
-                this.LineSegments = lineSegments.SortSegments();
+                this._Edges.AddRange(lineSegments.FixSegmentOrientation());
             }
             else
             {
-                this.LineSegments = lineSegments;
+                this._Edges.AddRange(lineSegments);
             }
 
-            this.BasePoint = LineSegments[0].BasePoint;
+            this.BasePoint = _Edges[0].BasePoint;
 
             this.NormalVector = this._getUnitNormalVector();
         }
@@ -242,12 +208,7 @@ namespace GeometryClassLibrary
         /// Creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon polygonToCopy) : base(polygonToCopy._Edges)
-        {
-            this.LineSegments = (polygonToCopy.LineSegments).ToList();
-            this.NormalVector = new Vector(polygonToCopy.NormalVector);
-            this.BasePoint = new Point(polygonToCopy.BasePoint);
-        }
+        public Polygon(Polygon polygonToCopy) : base(polygonToCopy) { }
 
         #endregion
 
@@ -1599,33 +1560,30 @@ namespace GeometryClassLibrary
 
         }
 
-        ///// <summary>
-        ///// Finds a vertex of this polygon that is not contained by the given plane
-        ///// </summary>
-        ///// <param name="planeNotToFindTheVertexOn">The plane to find a vertex that is not contained by</param>
-        ///// <returns>Returns one of the vertices that was not contained by the given plane or null if none were found</returns>
-        //public Point FindVertexNotOnTheGivenPlane(Plane planeNotToFindTheVertexOn)
-        //{
-        //    foreach (Point vertex in this.Vertices)
-        //    {
-        //        if (!planeNotToFindTheVertexOn.Contains(vertex))
-        //        {
-        //            return vertex;
-        //        }
-        //    }
-
-        //    return null;
-        //}
+    
         // Returns a normalVector of the polygon.
         // or the zero vector, if the polygon has no sides.
         private Vector _getUnitNormalVector()
-        {   
-            Point last = this.Vertices[Vertices.Count - 1];
-            Point first = BasePoint;
-            Point second = this.Vertices[1];
+        {
+            var vertices = this.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z).ToList();
+            Point last = vertices.Last();
+            Point first = vertices.First();
+            Point other;
+
             Vector vector1 = new Vector(last, first);
-            Vector vector2 = new Vector(first, second);
-            Vector normal = vector1.CrossProduct(vector2);
+            Vector vector2;
+            Vector normal = null;
+            for (int i = 1; i < Vertices.Count - 1; i++)
+            {
+                other = vertices[i];
+                vector2 = new Vector(first, other);
+                normal = vector1.CrossProduct(vector2);
+                if (normal.Magnitude != new Distance())
+                {
+                    break;
+                }
+            }
+            
             return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
         }
 

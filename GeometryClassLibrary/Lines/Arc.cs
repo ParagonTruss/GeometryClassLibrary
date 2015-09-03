@@ -512,6 +512,11 @@ namespace GeometryClassLibrary
             return this.Translate(translation);
         }
 
+        public IEdge Reverse()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

@@ -43,10 +43,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates an empty nonPolygon
         /// </summary>
-        public NonPolygon()
-        {
-            this._Edges = new List<IEdge>();
-        }
+        public NonPolygon() { }
 
         /// <summary>
         /// Defines a nonPolygon usuing the boundaries

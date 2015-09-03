@@ -124,7 +124,9 @@ namespace GeometryClassLibrary
             this._magnitude = magnitude;
         }
 
-        public Vector(Vector vector, Distance magnitude) : this(vector.Direction, magnitude) { }
+        public Vector(Line line, Distance magnitude) : this(line.BasePoint, line.Direction, magnitude) { }
+
+        public Vector(Vector vector, Distance magnitude) : this(vector.BasePoint, vector.Direction, magnitude) { }
 
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude

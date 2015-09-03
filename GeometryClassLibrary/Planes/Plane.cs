@@ -49,57 +49,53 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates a Plane that contains the given point and has a normalVector of length 1 in inches in the passed in direction
+        /// Empty constuctor. For Initializing derived objects.
         /// </summary>
-        /// <param name="passedBasePoint">A point on the plane to be used as the reference point</param>
-        /// <param name="passedNormalDirection">A direction that is normal to the plane</param>
-        public Plane(Direction passedNormalDirection = null, Point passedBasePoint = null)
+        protected Plane() { }
+
+        /// <summary>
+        /// Creates a Plane that contains the given point and whose normal is in a given direction.
+        /// </summary>
+        public Plane(Direction normalDirection , Point basePoint = null)
         {
-            if (passedBasePoint == null)
+            if (basePoint == null)
             {
-                passedBasePoint = new Point();
+                basePoint = new Point();
             }
 
-            if (passedNormalDirection == null)
-            {
-                passedNormalDirection = Direction.Right;
-            }
-
-            this.BasePoint = passedBasePoint;
-            this.NormalVector = new Vector(this.BasePoint, passedNormalDirection, new Distance(DistanceType.Inch, 1));
+            this.BasePoint = basePoint;
+            this.NormalVector = new Vector(this.BasePoint, normalDirection, Inch);
         }
 
         [JsonConstructor]
         public Plane(Vector normalVector) : this(normalVector.Direction, normalVector.BasePoint) { }
 
         /// <summary>
-        /// Creates a plane that contains the two lines (they must not be equivalent Lines!)
+        /// Creates a plane that contains the two lines, provided the lines are not the same.
         /// </summary>
-        /// <param name="passedLine1">The first line to define the plane with</param>
-        /// <param name="passedLine2">The second line to define the plane with that is not the same as the first</param>
-        public Plane(Line passedLine1, Line passedLine2)
+        public Plane(Line line1, Line line2)
         {
             //if they arent equivalent lines
-            if (passedLine1 != passedLine2)
+            if (line1 != line2)
             {
                 //if they are parallel we must find the line between to use to find the normal or else the cross product is 0
-                if (passedLine1.IsParallelTo(passedLine2))
+                Vector normal;
+                if (line1.IsParallelTo(line2))
                 {
-                    this.BasePoint = passedLine1.BasePoint;
-
-                    Vector lineBetween = new Vector(passedLine1.BasePoint, passedLine2.BasePoint);
-                    this.NormalVector = passedLine1.UnitVector(DistanceType.Inch).CrossProduct(lineBetween.UnitVector(DistanceType.Inch));
+                    Vector lineBetween = new Vector(line1.BasePoint, line2.BasePoint);
+                    normal = new Vector(line1, Inch).CrossProduct(lineBetween);
                 }
                 //if they are coplanar and not parallel we can just cross them
-                else if (passedLine1.IsCoplanarWith(passedLine2))
+                else if (line1.IsCoplanarWith(line2))
                 {
-                    this.BasePoint = passedLine1.BasePoint;
-                    this.NormalVector = passedLine1.UnitVector(DistanceType.Inch).CrossProduct(passedLine2.UnitVector(DistanceType.Inch));
+                    normal = new Vector(line1, Inch).CrossProduct(new Vector(line2, Inch));
                 }
                 else
                 {
                     throw new NotSupportedException("Those 3 points are not on the same plane");
                 }
+                this.BasePoint = line1.BasePoint;
+                this.NormalVector = new Vector(BasePoint, normal.Direction, Inch);
             }
             else
             {
@@ -110,32 +106,25 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Creates a Plane that contains the passed points, using the first one as the base point
-        /// Note: points should not be all along the same line
+        /// Note: Points should not be all along the same line
         /// </summary>
-        /// <param name="passedPoint1">The first point contained on the plane and to be used as the reference point</param>
-        /// <param name="passedPoint2">The second point contained on the plane</param>
-        /// <param name="passedPoint3">The third point contained on the plane</param>
-        public Plane(Point passedPoint1, Point passedPoint2, Point passedPoint3 )
+        public Plane(Point point1, Point point2, Point point3 )
         {
             //If all 3 points are noncollinear, they define a plane
             
-            Line line1To2 = new Line(passedPoint1,passedPoint2);
-            Line line2To3 = new Line(passedPoint2,passedPoint3);
-            Line line1To3 = new Line(passedPoint1,passedPoint3);
+            Vector vector1 = new Vector(point1,point2);
+            Vector vector2 = new Vector(point1,point3);
 
-            if(!passedPoint1.IsOnLine(line2To3) && !passedPoint2.IsOnLine(line1To3) && !passedPoint3.IsOnLine(line1To2))
+            if (point1 == point2 || point1 == point3 || point2 == point3)
             {
-                this.BasePoint = passedPoint1;
-                this.NormalVector = line1To2.UnitVector(DistanceType.Inch).CrossProduct(line1To3.UnitVector(DistanceType.Inch));
-
-                //make sure it is of size one and not smaller
-                this.NormalVector = this.NormalVector.UnitVector(DistanceType.Inch);
+                throw new Exception("The passed points are too close to accurately determine a plane.");
             }
-            else
+            if (point2.IsOnLine(vector2))
             {
-                throw new Exception();
+                throw new Exception("The passed points all fall on a common line.");
             }
-
+            this.BasePoint = point1;
+            this.NormalVector = new Vector(BasePoint, vector1.CrossProduct(vector2).Direction, Inch);
         }
 
         /// <summary>
@@ -144,8 +133,8 @@ namespace GeometryClassLibrary
         /// <param name="passedPlane">The Plane to copy</param>
         public Plane(Plane toCopy)
         {
-            this.BasePoint = new Point(toCopy.BasePoint);
-            this.NormalVector = new Vector(toCopy.NormalVector);
+            this.BasePoint = toCopy.BasePoint;
+            this.NormalVector = toCopy.NormalVector;
         }
 
         #endregion

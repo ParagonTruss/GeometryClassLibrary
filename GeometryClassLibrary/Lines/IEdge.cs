@@ -10,11 +10,12 @@
 
         Direction Direction { get; }
         Point BasePoint { get; }
+        Point EndPoint { get; }
 
         #endregion
 
         #region Methods
-
+        IEdge Reverse();
         IEdge Rotate(Rotation passedRotation);
         IEdge Translate(Translation passedTanslation);
         IEdge Shift(Shift passedShift);

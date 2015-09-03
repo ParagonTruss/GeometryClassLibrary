@@ -10,6 +10,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         protected List<IEdge> _Edges = new List<IEdge>();
+        public List<IEdge> Edges { get { return _Edges; } }
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
         /// <summary>
@@ -31,8 +32,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Default empty constructor
         /// </summary>
-        public PlaneRegion(Direction passedNormalDirection = null, Point passedBasePoint = null)
-            : base(passedNormalDirection, passedBasePoint)
+        protected PlaneRegion()
+            : base()
         { }
 
         ///// <summary>
@@ -51,10 +52,7 @@ namespace GeometryClassLibrary
         public PlaneRegion(IEnumerable<IEdge> passedEdges)
             : base()
         {
-            foreach (var edge in passedEdges)
-            {
-                this._Edges.Add(edge);
-            }
+            _Edges.AddRange(passedEdges);
 
             if (passedEdges.Count() > 0)
             {
@@ -77,16 +75,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedBoundaries"></param>
         public PlaneRegion(PlaneRegion planeToCopy)
-            : this(planeToCopy._Edges) 
+            : base(planeToCopy) 
         {
-            List<IEdge> copiedEdges = new List<IEdge>();
-
-            foreach (IEdge edge in planeToCopy._Edges)
-            {
-                copiedEdges.Add(edge.Copy());
-            }
-
-            this._Edges = copiedEdges;
+            this._Edges.AddRange(planeToCopy._Edges);
         }
 
         #endregion

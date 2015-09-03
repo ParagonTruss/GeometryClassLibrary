@@ -23,24 +23,22 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
+        /// Gets a list of all the points in this collection of edges.
         /// </summary>
-        /// <param name="passedEdges">The List of LineSegments to get the points of</param>
-        /// <returns>Returns a list of Points containing all the unique Points in the LineSegments List</returns>
         public static List<Point> GetAllPoints(this IList<IEdge> passedEdges)
         {
             List<Point> points = new List<Point>();
 
             //just cycle through each line and add the points to our list if they are not already there
-            foreach (LineSegment line in passedEdges)
+            foreach (IEdge edge in passedEdges)
             {
-                if (!points.Contains(line.BasePoint))
+                if (!points.Contains(edge.BasePoint))
                 {
-                    points.Add(line.BasePoint);
+                    points.Add(edge.BasePoint);
                 }
-                if (!points.Contains(line.EndPoint))
+                if (!points.Contains(edge.EndPoint))
                 {
-                    points.Add(line.EndPoint);
+                    points.Add(edge.EndPoint);
                 }
             }
 

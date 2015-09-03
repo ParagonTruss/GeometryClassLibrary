@@ -116,23 +116,17 @@ namespace GeometryClassLibrary
         /// <returns>A new List of LineSegment that connect the points</returns>
         public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this List<Point> points)
         {
-            List<LineSegment> toReturn = new List<LineSegment>();
+            List<LineSegment> segments = new List<LineSegment>() { new LineSegment(points.Last(), points[0]) };
 
-            for (int k = 0; k < points.Count(); k++)
+            LineSegment newSegment;
+            for (int k = 0; k < points.Count() - 1; k++)
             {
-                if (k != points.Count() - 1)
-                {
-                    LineSegment newLine = new LineSegment(points[k], points[k + 1]);
+                newSegment = new LineSegment(points[k], points[k + 1]);
 
-                    toReturn.Add(newLine);
-                }
-                else
-                {
-                    toReturn.Add(new LineSegment(points[k], points[0]));
-                }
+                segments.Add(newSegment);
             }
 
-            return toReturn;
+            return segments;
         }
 
         public static Point CenterPoint(this List<Point> points)
