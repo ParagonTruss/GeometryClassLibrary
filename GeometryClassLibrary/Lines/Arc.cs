@@ -169,7 +169,15 @@ namespace GeometryClassLibrary
         {
             get { return _initialDirection; }
         }
-        
+
+        public bool IsClosed
+        {
+            get
+            {
+                return BasePoint == EndPoint;
+            }
+        }
+
         #endregion
 
         #region Constructors

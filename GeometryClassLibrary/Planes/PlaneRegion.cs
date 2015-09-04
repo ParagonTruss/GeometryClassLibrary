@@ -2,21 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
-    public abstract class PlaneRegion : Plane, IComparable<PlaneRegion>
+    public class PlaneRegion : Plane, IComparable<PlaneRegion>
     {
         #region Properties and Fields
 
         protected List<IEdge> _Edges = new List<IEdge>();
         public List<IEdge> Edges { get { return _Edges; } }
+
+        /// <summary>
+        /// The vertices of this plane region
+        /// </summary>
+        public List<Point> Vertices
+        {
+            get
+            {
+                if (_vertices == null)
+                {
+                    _vertices = _Edges.GetAllPoints();
+                }
+                return _vertices;
+            }
+        }
+        private List<Point> _vertices;
+
         public virtual Area Area { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// Returns the centroid (geometric center point) of the Region
         /// </summary>
-        /// <returns>the region's center as a point</returns>
         public virtual Point Centroid
         {
             get
@@ -32,42 +49,47 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Default empty constructor
         /// </summary>
-        protected PlaneRegion()
-            : base()
-        { }
-
-        ///// <summary>
-        ///// Creates a new planeregion with the passed in LineSegments
-        ///// Note: they must all be coplanar
-        ///// </summary>
-        ///// <param name="passedLines"></param>
-        //public PlaneRegion(IList<Line> passedLines)
-        //    :base(passedLines) { }
+        protected PlaneRegion() { }
 
         /// <summary>
-        /// Makes a PlaneRegion Using the given boundaries to define it
-        /// Note: Not fully Implemented - does not check if they are all coplanar
+        /// 
         /// </summary>
-        /// <param name="passedBoundaries"></param>
         public PlaneRegion(IEnumerable<IEdge> passedEdges)
-            : base()
         {
             _Edges.AddRange(passedEdges);
 
-            if (passedEdges.Count() > 0)
+            if (passedEdges.Count() > 2)
             {
-                //we have to check against vectors until we find one that is not parralel with the first line we passed in
-                //or else the normal vector will be zero (cross product of parralel lines is 0)
-                Vector vector1 = passedEdges.ElementAt(0).Direction.UnitVector(DistanceType.Inch);
-                for (int i = 1; i < passedEdges.Count(); i++)
-                {
-                    this.NormalVector = vector1.CrossProduct(passedEdges.ElementAt(i).Direction.UnitVector(DistanceType.Inch));
-                    if (!base.NormalVector.Equals(new Vector()))
-                        i = passedEdges.Count();
-                }
-
-                base.BasePoint = passedEdges.ElementAt(0).BasePoint;
+                this.NormalVector = _getUnitNormalVector();
             }
+            else
+            {
+                //We need to determine the normal vector in these cases.
+                throw new NotImplementedException();
+            }
+
+            base.BasePoint = passedEdges.ElementAt(0).BasePoint;
+        }
+
+        // Returns a normalVector of the polygon.
+        // or the zero vector, if the polygon has no sides.
+        protected Vector _getUnitNormalVector()
+        {
+            Vector vector1 = new Vector(_Edges.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
+            
+            Vector vector2;
+            Vector normal = null;
+            for (int i = 0; i < _Edges.Count; i++)
+            {
+                vector2 = new Vector(vector1.BasePoint, Vertices[i]);
+                normal = vector1.CrossProduct(vector2);
+                if (normal.Magnitude != new Distance())
+                {
+                    break;
+                }
+            }
+
+            return new Vector(this.BasePoint, normal.Direction, Inch);
         }
 
         /// <summary>
@@ -196,35 +218,27 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Shifts this PlaneRegion by generically shifting each edge in the PlaneRegion
         /// </summary>
-        /// <param name="passedShift">The shift to preform on this PlaneRegion</param>
-        /// <returns>Returns a new PlaneRegion that has been shifted</returns>
-        public abstract PlaneRegion ShiftAsPlaneRegion(Shift passedShift);
-
-        /// <summary>
-        /// Rotates the given Plane Region
-        /// </summary>
-        /// <param name="passedRotation">The rotation to apply to the planeRegion</param>
-        /// <returns>Returns a new PlaneRegion that has been rotated</returns>
-        public virtual PlaneRegion Rotate(Line passedAxisLine, Angle passedRotationAngle)
+        public PlaneRegion Shift(Shift shift)
         {
-            return this.RotateAsPlaneRegion(new Rotation(passedAxisLine, passedRotationAngle));
+            return new PlaneRegion(this._Edges.Select(e => e.Shift(shift)));
         }
+
+     
 
         /// <summary>
         /// Rotates the plane with the given rotation
         /// </summary>
-        /// <param name="passedRotation">The rotation object that is to be applied to the plane</param>
-        /// <returns>A new plane that has been rotated</returns>
-        public abstract PlaneRegion RotateAsPlaneRegion(Rotation passedRotation);
+        public PlaneRegion Rotate(Rotation rotation)
+        {
+            return new PlaneRegion(this._Edges.Select(e => e.Rotate(rotation)));
+        }
 
         /// <summary>
         /// translates the given Plane Region
         /// </summary>
-        /// <param name="passedTranslation">The translates to apply to the planeRegion</param>
-        /// <returns>Returns a new PlaneRegion that has been translated</returns>
-        public virtual PlaneRegion Translate(Point passedTranslation)
+        public PlaneRegion Translate(Point translation)
         {
-            throw new NotImplementedException();
+            return new PlaneRegion(this._Edges.Select(e => e.Translate((Translation)translation)));
         }
 
         #endregion 

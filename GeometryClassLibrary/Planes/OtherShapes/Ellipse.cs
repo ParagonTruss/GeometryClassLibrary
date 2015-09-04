@@ -7,7 +7,7 @@ namespace GeometryClassLibrary
     /// <summary>
     ///  "An ellipse is a curve on a plane surrounding two focal points such that a straight line drawn from one of the focal points to any point on the curve and then back to the other focal point has the same length for every point on the curve." - Wikipedia
     /// </summary>
-    public class Ellipse : NonPolygon
+    public class Ellipse : PlaneRegion
     {
         #region Properties and Fields
 

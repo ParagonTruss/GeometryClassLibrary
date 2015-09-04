@@ -8,9 +8,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the list of polygons with the given rotation
         /// </summary>
-        /// <param name="passedPolygons">The polygons to rotate</param>
-        /// <param name="passedRotation">The Rotation to apply</param>
-        /// <returns>A new list of new Polygons that have been rotated</returns>
         public static List<Polygon> Rotate(this IList<Polygon> passedPolygons, Rotation passedRotation)
         {
             List<Polygon> rotatedRegion = new List<Polygon>();

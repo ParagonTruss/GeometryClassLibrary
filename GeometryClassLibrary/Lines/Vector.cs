@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -131,15 +132,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
         /// </summary>
-        /// <param name="passedBasePoint">The point at which the vector starts</param>
-        /// <param name="direction">The direction the vector points</param>
-        /// <param name="passedMagnitude">The length of the Vector</param>
         public Vector(Point passedBasePoint, Direction direction, Distance magnitude = null)
             : base(direction, passedBasePoint)
         {
             if (magnitude == null)
             {
-                _magnitude = Distance.Inch;
+                _magnitude = Inch;
             }
             else
             {
@@ -148,9 +146,13 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
+        /// Creates a Vector with the same basepoint and end point as this edge
+        /// </summary>
+        public Vector(IEdge edge) : this(edge.BasePoint, edge.EndPoint) { }
+
+        /// <summary>
         /// Default copy constructor
         /// </summary>
-        /// <param name="toCopy">The vector to copy</param>
         public Vector(Vector toCopy)
             : this(toCopy.BasePoint, toCopy.Direction, toCopy.Magnitude) { }
 

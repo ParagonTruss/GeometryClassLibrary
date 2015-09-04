@@ -24,22 +24,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Finds and returns a list of all the vertices of this polygon
-        /// </summary>
-        public List<Point> Vertices
-        {
-            get
-            {
-                if (_vertices == null)
-                {
-                    _vertices = _Edges.GetAllPoints();
-                }
-                return _vertices;
-            }
-        }
-        private List<Point> _vertices;
-
-        /// <summary>
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
@@ -58,9 +42,18 @@ namespace GeometryClassLibrary
 
         private bool _getIsConvex()
         {
-            for (int i = 0; i + 1 < LineSegments.Count; i++)
+            int n = LineSegments.Count;
+            Vector crossProduct;
+            for (int i = 0; i < n; i++)
             {
-                Vector crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
+                if (i < n - 1)
+                {
+                    crossProduct = this.LineSegments[i].CrossProduct(LineSegments[i + 1]);
+                }
+                else
+                {
+                    crossProduct = this.LineSegments.Last().CrossProduct(LineSegments.First());
+                }
                 if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
                 {
                     return false;
@@ -132,9 +125,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Null constructor
         /// </summary>
-        protected Polygon()
-            : base(new List<IEdge>())
-        { }
+        protected Polygon() { }
 
         /// <summary>
         /// Makes a polygon by connecting the points with line segments in the order they are in the list. If they are not in the correct order you can tell it
@@ -149,7 +140,7 @@ namespace GeometryClassLibrary
         /// Creates a polygon from the passed linesegments, after validating that they in fact form a closed nondegenerate planar region.
         /// </summary>
         [JsonConstructor]
-        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true) :base()
+        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
         {
             if (shouldValidate)
             {
@@ -160,7 +151,7 @@ namespace GeometryClassLibrary
                 this._Edges.AddRange(lineSegments);
             }
 
-            this.BasePoint = _Edges[0].BasePoint;
+            this.BasePoint = _Edges[0].EndPoint;
 
             this.NormalVector = this._getUnitNormalVector();
         }
@@ -326,16 +317,9 @@ namespace GeometryClassLibrary
             return new Polygon(this.LineSegments.Shift(passedShift), false);
         }
 
-        public override PlaneRegion ShiftAsPlaneRegion(Shift passedShift)
-        {
-            return this.Shift(passedShift);
-        }
-
         /// <summary>
         /// Rotates the polygon about the given axis by the specified angle
         /// </summary>
-        /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the point</param>
-        /// <returns>Returns a new Polygon that has been rotated</returns>
         public new Polygon Rotate(Rotation rotationToApply)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
@@ -347,15 +331,6 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList, false);
         }
 
-        /// <summary>
-        /// Rotates the polygon as a generic planeRegion with the given rotation
-        /// </summary>
-        /// <param name="passedRotation">The rotation object that is to be applied to the Polygon</param>
-        /// <returns>A new Polygon as a PlaneRegion that has been rotated</returns>
-        public override PlaneRegion RotateAsPlaneRegion(Rotation passedRotation)
-        {
-            return this.Rotate(passedRotation);
-        }
 
         public new Polygon Translate(Point translation)
         {
@@ -1561,31 +1536,7 @@ namespace GeometryClassLibrary
         }
 
     
-        // Returns a normalVector of the polygon.
-        // or the zero vector, if the polygon has no sides.
-        private Vector _getUnitNormalVector()
-        {
-            var vertices = this.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z).ToList();
-            Point last = vertices.Last();
-            Point first = vertices.First();
-            Point other;
-
-            Vector vector1 = new Vector(last, first);
-            Vector vector2;
-            Vector normal = null;
-            for (int i = 1; i < Vertices.Count - 1; i++)
-            {
-                other = vertices[i];
-                vector2 = new Vector(first, other);
-                normal = vector1.CrossProduct(vector2);
-                if (normal.Magnitude != new Distance())
-                {
-                    break;
-                }
-            }
-            
-            return new Vector(this.BasePoint, normal/normal.Magnitude.Inches);
-        }
+       
 
         //Determines the plane which we will rotate and project onto.
         private Plane _planeWithSmallestAngleBetween()

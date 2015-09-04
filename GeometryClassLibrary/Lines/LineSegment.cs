@@ -35,20 +35,15 @@ namespace GeometryClassLibrary
             get { return new List<Point>() { BasePoint, EndPoint }; }
         }
 
+        public bool IsClosed { get { return false; } }
+
         #endregion
 
         #region Constructors
 
-        ///// <summary>
-        ///// Default zero constructor
-        ///// </summary>
-        //public LineSegment()
-        //    : base() { }
-
         /// <summary>
         /// Creates a Line Segment that extends from the origin to the given end point
         /// </summary>
-        /// <param name="passedEndPoint"></param>
         public LineSegment(Point passedEndPoint)
             : base(passedEndPoint)
         {
@@ -68,8 +63,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Constructs a line segment from a given start point to a given end point
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedEndPoint"></param>
         public LineSegment(Point passedBasePoint, Point passedEndPoint)
             : base(passedBasePoint, passedEndPoint)
         {
@@ -79,8 +72,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new line segment with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        /// <param name="passedBasePoint"></param>
-        /// <param name="passedDirection"></param>
         public LineSegment(Point passedBasePoint, Vector passedVector)
             : base(passedBasePoint, passedVector)
         {
@@ -96,11 +87,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Copies a Linesegment creating new objects so the original is not changed with the copy
+        /// Copies a Linesegment
         /// </summary>
-        /// <param name="toCopy">LineSegment to copy</param>
         public LineSegment(LineSegment toCopy)
-            : base(toCopy) { }
+            : base(toCopy.BasePoint, toCopy.Direction,toCopy.Magnitude) { }
 
 
         private void _checkSegment()

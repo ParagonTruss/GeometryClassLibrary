@@ -29,16 +29,7 @@ namespace GeometryClassLibrary
         /// being the same as the basepoint of the plane
         /// </summary>
         [JsonProperty]
-        public Vector NormalVector
-        {
-            get { return _normalVector; }
-            protected set
-            {
-                //make sure that the Normal's base point is always the same as the planes base point for convenience
-                _normalVector = new Vector(this.BasePoint, value.Direction, Inch);
-            }
-        }
-        private Vector _normalVector;
+        public Vector NormalVector { get; protected set; }
 
         public Direction NormalDirection
         {
@@ -92,14 +83,13 @@ namespace GeometryClassLibrary
                 }
                 else
                 {
-                    throw new NotSupportedException("Those 3 points are not on the same plane");
+                    throw new Exception("The passed lines are not on the same plane.");
                 }
                 this.BasePoint = line1.BasePoint;
                 this.NormalVector = new Vector(BasePoint, normal.Direction, Inch);
             }
             else
             {
-                //they are the same line and we cant make a plane
                 throw new ArgumentException("The passed Lines are the same!");
             }
         }
@@ -111,18 +101,20 @@ namespace GeometryClassLibrary
         public Plane(Point point1, Point point2, Point point3 )
         {
             //If all 3 points are noncollinear, they define a plane
-            
-            Vector vector1 = new Vector(point1,point2);
-            Vector vector2 = new Vector(point1,point3);
 
             if (point1 == point2 || point1 == point3 || point2 == point3)
             {
                 throw new Exception("The passed points are too close to accurately determine a plane.");
             }
+
+            Vector vector1 = new Vector(point1, point2);
+            Vector vector2 = new Vector(point1, point3);
+
             if (point2.IsOnLine(vector2))
             {
                 throw new Exception("The passed points all fall on a common line.");
             }
+
             this.BasePoint = point1;
             this.NormalVector = new Vector(BasePoint, vector1.CrossProduct(vector2).Direction, Inch);
         }
@@ -309,7 +301,7 @@ namespace GeometryClassLibrary
 
         public bool PointIsOnNormalSide(Point point)
         {
-           var dotProduct = this.NormalVector.DotProduct(new Vector(NormalVector.BasePoint, point));
+           var dotProduct = this.NormalVector.DotProduct(new Vector(this.BasePoint, point));
             return dotProduct != new Area() && dotProduct > new Area();
 
         }

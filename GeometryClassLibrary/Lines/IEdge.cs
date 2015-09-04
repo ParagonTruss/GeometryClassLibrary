@@ -12,6 +12,7 @@
         Point BasePoint { get; }
         Point EndPoint { get; }
 
+        bool IsClosed { get; }
         #endregion
 
         #region Methods

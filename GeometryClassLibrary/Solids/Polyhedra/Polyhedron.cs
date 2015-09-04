@@ -45,48 +45,24 @@ namespace GeometryClassLibrary
         {
             get
             {
-                List<Polygon> polygons = new List<Polygon>();
-                foreach (var item in this.Faces)
-                {
-                    polygons.Add((Polygon)item);
-                }
-                return polygons;
+                return this.Faces.Select(f => (Polygon)f).ToList();
             }
-            internal set
+            protected set
             {
-                List<PlaneRegion> planeRegions = new List<PlaneRegion>();
-                foreach (var item in value)
-                {
-                    planeRegions.Add(item);
-                }
-                this.Faces = planeRegions;
-
+                this.Faces = value.Select(p => (PlaneRegion)p).ToList();
             }
         }
 
         /// <summary>
         /// Accesses a point on the solid 
         /// </summary>
-        private Point _pointOnSolid;
         public override Point PointOnSolid
         {
-            get
-            {
-                if (_pointOnSolid == null)
-                {
-                    Point returnPoint = null;
-                    if (this.Polygons.Count > 0)
-                    {
-                        returnPoint = this.Polygons[0].LineSegments[0].BasePoint;
-                    }
-                    _pointOnSolid = returnPoint;
-                }
-                return _pointOnSolid;
-            }
+            get { return this.Polygons[0].LineSegments[0].BasePoint; }
         }
 
         /// <summary>
-        /// returns all the linesegments contained in this polyhedron's polygons
+        /// All the polyhedron's linesegments.
         /// </summary>
         public List<LineSegment> LineSegments
         {
@@ -96,23 +72,15 @@ namespace GeometryClassLibrary
 
                 foreach (Polygon region in this.Polygons)
                 {
-                    if (region.LineSegments != null)
+                    foreach (LineSegment segment in region.LineSegments)
                     {
-                        foreach (LineSegment segment in region.LineSegments)
+                        if (!returnList.Contains(segment))
                         {
-                            if (!returnList.Contains(segment))
-                            {
-                                returnList.Add(segment);
-                            }
+                            returnList.Add(segment);
                         }
                     }
                 }
-
                 return returnList;
-            }
-            internal set
-            {
-                this.Polygons = value.MakeCoplanarLineSegmentsIntoPolygons();
             }
         }
 
@@ -157,13 +125,10 @@ namespace GeometryClassLibrary
                 foreach (Polygon face in Polygons)
                 {
                     List<Point> verticesToCheck = this.Vertices;
-                    foreach (Point vertex in face.Vertices)
+                    verticesToCheck = verticesToCheck.Except(face.Vertices).ToList();
+                    for (int i = 0; i < verticesToCheck.Count; i++)
                     {
-                        verticesToCheck.Remove(vertex);
-                    }
-                    for (int i = 1; i < verticesToCheck.Count; i++)
-                    {
-                        if (!face.PointIsOnSameSideAs(verticesToCheck[0], verticesToCheck[i]))
+                        if (face.PointIsOnNormalSide(verticesToCheck[i]))
                         {
                             return false;
                         }
@@ -283,13 +248,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates a new empty Polyhedron
+        /// Null constructor for initializing derived class objects.
         /// </summary>
-        public Polyhedron()
-            : base()
-        {
-            this.Polygons = new List<Polygon>();
-        }
+        protected Polyhedron() { }
 
         /// <summary>
         /// Makes a Polyhedron using the giving line segments made into polygons based on if they are coplanar and share a point
@@ -537,11 +498,6 @@ namespace GeometryClassLibrary
                     List<Polyhedron> toReturn = new List<Polyhedron>() { insidePolyhedron, outsidePolyhedron };
                     return toReturn;
                 }
-                ////if we were slicing along a plane of the polyhedron so we didnt cut it any just return a copy of the original polyhedron
-                //else
-                //{
-                //    return new List<Polyhedron>() { new Polyhedron(this) };
-                //}
             }
             return new List<Polyhedron>() { new Polyhedron(this) };
         }
@@ -553,8 +509,6 @@ namespace GeometryClassLibrary
         private void _addPolygonToCorrectPolyhedron(List<Polygon> slicedPolygons, List<Polygon> unconstructedInsidePolyhedron, List<Polygon> unconstructedOutsidePolyhedron,
             Plane slicingPlane)
         {
-            var referencePoint = slicingPlane.NormalVector.EndPoint;
-            
             int? side = null;
             for (int i = 0; i < slicedPolygons[0].Vertices.Count; i++)
             {
@@ -562,7 +516,7 @@ namespace GeometryClassLibrary
                 {
                    continue;
                 }
-                else if (slicingPlane.PointIsOnSameSideAs(referencePoint, slicedPolygons[0].Vertices[i]))
+                else if (slicingPlane.PointIsOnNormalSide(slicedPolygons[0].Vertices[i]))
                 {
                     if (side == null)
                     {
@@ -685,7 +639,7 @@ namespace GeometryClassLibrary
                 {
                     foreach(Plane face in this.Polygons)
                     {
-                        if (face.PointIsOnSameSideAs(vertex, face.NormalVector.EndPoint))
+                        if (face.PointIsOnNormalSide(vertex))
                         {
                             return false;
                         }
