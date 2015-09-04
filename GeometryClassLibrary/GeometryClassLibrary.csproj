@@ -53,14 +53,17 @@
     <OutputPath>bin\AnalysisEngineTests\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\..\packages\MathNet.Numerics.3.7.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\DatabaseConnection\packages\MathNet.Numerics.3.7.0\lib\portable-net45+sl5+netcore45+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MoreLinq.Portable">
-      <HintPath>..\..\packages\MoreLinq.Portable.1.1.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MoreLinq.Portable.dll</HintPath>
+    <Reference Include="MoreLinq.Portable, Version=1.1.17511.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\..\DatabaseConnection\packages\MoreLinq.Portable.1.1.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MoreLinq.Portable.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\DatabaseConnection\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
+    <Compile Include="Coordinates\CoordinateSystem\CoordinateSystemEntityFramework.cs" />
+    <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />
@@ -81,7 +86,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solids\OtherSolids\Cone.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Coordinates\CoordinateSystem.cs" />
+    <Compile Include="Coordinates\CoordinateSystem\CoordinateSystem.cs" />
     <Compile Include="Coordinates\Direction.cs" />
     <Compile Include="Planes\Polygons\EquilateralTriangle.cs" />
     <Compile Include="Solids\Polyhedra\Cube.cs" />
@@ -106,7 +111,7 @@
     <Compile Include="Planes\PlaneRegion.cs" />
     <Compile Include="Planes\Polygons\Polygon.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PlaneRegionListExtensions.cs" />
-    <Compile Include="Coordinates\Point.cs" />
+    <Compile Include="Coordinates\Point\Point.cs" />
     <Compile Include="Solids\Polyhedra\Parallelepiped.cs" />
     <Compile Include="Solids\Polyhedra\Polyhedron.cs" />
     <Compile Include="Solids\Polyhedra\RectangularPrism.cs" />
@@ -136,13 +141,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

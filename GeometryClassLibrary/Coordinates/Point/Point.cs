@@ -10,21 +10,33 @@ namespace GeometryClassLibrary
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Point
+    public partial class Point
     {
         #region Properties and Fields
-        private readonly Distance _x;
-        private readonly Distance _y;
-        private readonly Distance _z;
+        private Distance _x;
+        private Distance _y;
+        private Distance _z;
 
         [JsonProperty]
-        public Distance X { get { return _x; } }
+        public Distance X
+        {
+            get { return _x; }
+            private set { _x = value; }
+        }
 
         [JsonProperty]
-        public Distance Y { get { return _y; } }
+        public Distance Y
+        {
+            get { return _y; }
+            private set { _y = value; }
+        }
 
         [JsonProperty]
-        public Distance Z { get { return _z; } }
+        public Distance Z
+        {
+            get { return _z; }
+            private set { _z = value; }
+        }
 
         #endregion
 
@@ -35,10 +47,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point()
         {
-            var zero = new Distance();
-            _x = zero;
-            _y = zero;
-            _z = zero;
+            
         }
 
         /// <summary>
