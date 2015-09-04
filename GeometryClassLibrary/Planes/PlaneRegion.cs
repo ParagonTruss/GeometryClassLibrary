@@ -218,7 +218,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Shifts this PlaneRegion by generically shifting each edge in the PlaneRegion
         /// </summary>
-        public PlaneRegion Shift(Shift shift)
+        public new PlaneRegion Shift(Shift shift)
         {
             return new PlaneRegion(this._Edges.Select(e => e.Shift(shift)));
         }
@@ -228,7 +228,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the plane with the given rotation
         /// </summary>
-        public PlaneRegion Rotate(Rotation rotation)
+        public new PlaneRegion Rotate(Rotation rotation)
         {
             return new PlaneRegion(this._Edges.Select(e => e.Rotate(rotation)));
         }
