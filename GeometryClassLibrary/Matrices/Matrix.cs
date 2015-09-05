@@ -52,10 +52,8 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        ///the constructor that is called when you say "new Matrix(numberOfRows, numberOfColumns);"
+        /// Creates a matrix of the desired number of rows and columns, with all entries initialized to zero.
         /// </summary>
-        /// <param name="numRows">The desired number of rows in the new matrix</param>
-        /// <param name="numCols">The desired number of columns in the new matrix</param>
         public Matrix(int numRows, int numCols)
         {
             _matrix = DenseMatrix.OfArray(new double[numRows, numCols]);
@@ -176,21 +174,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the sum of 2 matrices of equal size
         /// </summary>
-        /// <param name="m1"></param>
-        /// <param name="m2"></param>
-        /// <returns></returns>
         public static Matrix operator +(Matrix m1, Matrix m2)
         {
-
             return new Matrix(m1._matrix.Add(m2._matrix));
         }
 
         /// <summary>
         /// Returns the difference of 2 matrices of equal size
         /// </summary>
-        /// <param name="m1"></param>
-        /// <param name="m2"></param>
-        /// <returns></returns>
         public static Matrix operator -(Matrix m1, Matrix m2)
         {
             return new Matrix(m1._matrix.Subtract(m2._matrix));
@@ -585,7 +576,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns an Identity Matrix of the specified size. That is, a square matrix with 1's on the diagonal and 0's everywhere else.
         /// </summary>
-        public static Matrix CreateIdentityMatrix(int passedNumberOfRowsAndColumns)
+        public static Matrix IdentityMatrix(int passedNumberOfRowsAndColumns)
         {
             // returns an n x n Identity matrix
             Matrix result = new Matrix(passedNumberOfRowsAndColumns);
@@ -737,7 +728,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
         /// </summary>>
-        public static Matrix RotationMatrixAboutAxis(Rotation passedRotation)
+        public static Matrix RotationMatrixAboutOrigin(Rotation passedRotation)
         {
             Matrix rotationMatrix = new Matrix(3);
 
@@ -774,17 +765,16 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if every element in this matrix is zero, false otherwise
         /// </summary>
-        public static bool IsAllZeros(double[] passedArray)
+        public bool IsAllZeros()
         {
-            bool AreAllZeros = true;
-            for (int i = 0; i < passedArray.Length; i++)
+            foreach (double d in this._matrix.Enumerate())
             {
-                if (passedArray[i] != 0)
+                if (d != 0)
                 {
-                    AreAllZeros = false;
+                    return false;
                 }
             }
-            return AreAllZeros;
+            return true;
         }
 
         /// <summary>

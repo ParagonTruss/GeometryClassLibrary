@@ -47,10 +47,6 @@ namespace GeometryClassLibrary
         /// <param name="rotationAngle">The Angle that specifies how far to rotate</param>
         public Rotation(Line axisOfRotation, AngularDistance rotationAngle)
         {
-            if (rotationAngle == null)
-            {
-                rotationAngle = new Angle();
-            }
             this._rotationAngle = rotationAngle;
             this._axisOfRotation = axisOfRotation;
         }
@@ -71,8 +67,8 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
-            this._rotationAngle = new AngularDistance(toCopy._rotationAngle);
-            this._axisOfRotation = new Line(toCopy._axisOfRotation);
+            this._rotationAngle = toCopy._rotationAngle;
+            this._axisOfRotation = toCopy._axisOfRotation;
         }
 
         #endregion 
@@ -84,18 +80,6 @@ namespace GeometryClassLibrary
             return base.GetHashCode();
         }
 
-        /* these dont make sense right now because they assume that the rotations are the same axis
-        public static Rotation operator +(Rotation r1, Angle angleToAdd)
-        {
-            //add the angle to how far we are already rotating
-            return new Rotation(r1._axisToRotateAround, r1._angleToRotate + angleToAdd);
-        }
-
-        public static Rotation operator -(Rotation r1, Angle angleToSubtract)
-        {
-            //subtract the angle to how far we are already rotating
-            return new Rotation(r1._axisToRotateAround, r1._angleToRotate - angleToSubtract);
-        }*/
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to Constants.AcceptedEqualityDeviationConstant 
@@ -132,10 +116,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// does the same thing as == if the passed in object is a Rotation
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
             //make sure the obj is not null
-            if (obj == null)
+            if (other == null)
             {
                 return false;
             }
@@ -143,9 +127,16 @@ namespace GeometryClassLibrary
             //try casting it and then comparing it
             try
             {
-                Rotation rotate = (Rotation)obj;
+                Rotation rotation = (Rotation)other;
+                if (this.AxisOfRotation != rotation.AxisOfRotation)
+                {
+                    return false;
+                }
+                return (this.AxisOfRotation.Direction == rotation.AxisOfRotation.Direction &&
+                    this.RotationAngle == rotation.RotationAngle) ||
+                    (this.AxisOfRotation.Direction == rotation.AxisOfRotation.Direction.Reverse() &&
+                    this.RotationAngle == rotation.RotationAngle.Negate());
 
-                return Matrix.RotationMatrixAboutAxis(this) == Matrix.RotationMatrixAboutAxis(rotate);
             }
             //if it wasn't a rotation than it's not equal
             catch (InvalidCastException)
@@ -161,7 +152,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the inverse rotation.
         /// </summary>
-        /// <returns></returns>
         public Rotation Inverse()
         {
             Angle inverseAngle = new Angle(AngleType.Radian, this.RotationAngle.Radians * -1);

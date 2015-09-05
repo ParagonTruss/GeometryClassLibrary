@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -211,9 +212,9 @@ namespace GeometryClassLibrary
             //and then we can z rotate to make the x and y coincide with the origins
 
             //first make them into unitvectors to simplify the calculations
-            xAxis = xAxis.Direction.UnitVector(DistanceType.Inch);
-            yAxis = yAxis.Direction.UnitVector(DistanceType.Inch);
-            zAxis = zAxis.Direction.UnitVector(DistanceType.Inch);
+            xAxis = xAxis.Direction*Inch;
+            yAxis = yAxis.Direction*Inch;
+            zAxis = zAxis.Direction*Inch;
 
             //now first find out the amount we need to rotate around the y axis to line up z in the yz plane
 
@@ -373,7 +374,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix RotationMatrixFromThisToWorld()
         {
-            //note: we have to multiply "backwards" of the order we rotate in to make this work correctly because how matrix multiplication works
+            //Matrix multplication operates from right to left
             return Matrix.RotationMatrixAboutZ(ZAxisRotationAngle) * Matrix.RotationMatrixAboutY(YAxisRotationAngle) * Matrix.RotationMatrixAboutX(XAxisRotationAngle);
         }
 
@@ -550,7 +551,7 @@ namespace GeometryClassLibrary
             foreach (Rotation rotation in passedShift.RotationsToApply)
             {
                 //make the rotations into a matrix
-                Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(rotation);
+                Matrix rotationMatrix = Matrix.RotationMatrixAboutOrigin(rotation);
 
                 //Multiply the new matrix by the cumulative one we have already
                 //Order is Important! (the first in multiplication order is the shift performed second and vice versa!)

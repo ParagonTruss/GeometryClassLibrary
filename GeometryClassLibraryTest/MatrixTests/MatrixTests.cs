@@ -328,15 +328,15 @@ namespace GeometryClassLibraryTest
         public void Matrix_DecomposeSimpleTest()
         {
             //Set up IDENTITY matrix A            
-            Matrix matrixA = Matrix.CreateIdentityMatrix(4);
+            Matrix matrixA = Matrix.IdentityMatrix(4);
                         
             //The LUP Decomposition
 
             //Correct L Part
-            Matrix correctLPartOfLUPDecomposition = Matrix.CreateIdentityMatrix(4);
+            Matrix correctLPartOfLUPDecomposition = Matrix.IdentityMatrix(4);
 
             //Correct U Part
-            Matrix correctUPartOfLUPDecomposition = Matrix.CreateIdentityMatrix(4);
+            Matrix correctUPartOfLUPDecomposition = Matrix.IdentityMatrix(4);
 
             //The other 2 output variables are a permutation array and the toggle value
             //int[] correctPermutationArray = { 3, 1, 2, 0 };
@@ -1016,7 +1016,7 @@ namespace GeometryClassLibraryTest
             originalMatrix.SetRow(1, matrix1Row2);
             originalMatrix.SetRow(2, matrix1Row3);
 
-            Matrix matrixToInsert = Matrix.CreateIdentityMatrix(2);
+            Matrix matrixToInsert = Matrix.IdentityMatrix(2);
 
             Matrix expectedResult = new Matrix(3);
 
@@ -1203,7 +1203,7 @@ namespace GeometryClassLibraryTest
             matrix1.SetColumn(2, matrix1Column3);
             matrix1.SetColumn(3, matrix1Column4);
 
-            Matrix expectedResult = Matrix.CreateIdentityMatrix(4);
+            Matrix expectedResult = Matrix.IdentityMatrix(4);
 
             Matrix actualResult = matrix1 * matrix1.Invert();
 
@@ -1255,7 +1255,7 @@ namespace GeometryClassLibraryTest
             expectedResult.SetColumn(1, expectedResultColumn2);
             expectedResult.SetColumn(2, expectedResultColumn3);
 
-            Matrix actualResult = Matrix.CreateIdentityMatrix(3);
+            Matrix actualResult = Matrix.IdentityMatrix(3);
 
             bool equalityResult = (actualResult == expectedResult);
 
@@ -1350,7 +1350,7 @@ namespace GeometryClassLibraryTest
         public void Matrix_RemoveRowsAndColumnsTest()
         {
             Matrix testMatrix = new Matrix(3);
-            testMatrix.InsertMatrixAt(Matrix.CreateIdentityMatrix(2), 1, 1);
+            testMatrix.InsertMatrixAt(Matrix.IdentityMatrix(2), 1, 1);
 
             int[] rowsToRemove = { 0 };
             int[] columnsToRemove = { 0, 1 };

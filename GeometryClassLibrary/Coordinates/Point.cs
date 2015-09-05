@@ -339,7 +339,7 @@ namespace GeometryClassLibrary
 
             }
 
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutAxis(new Rotation(axisForRotating, rotationToApply.RotationAngle));
+            Matrix rotationMatrix = Matrix.RotationMatrixAboutOrigin(new Rotation(axisForRotating, rotationToApply.RotationAngle));
 
             Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
 

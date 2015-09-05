@@ -48,23 +48,21 @@ namespace GeometryClassLibrary
         public bool isNegatedShift
         {
             get { return _isNegatedShift; }
-            set { _isNegatedShift = value; }
         }
 
         /// <summary>
         /// The distance of translation/displacement that this shift represents
         /// </summary>
-        private Point _displacement;
+        private readonly Point _displacement;
         public Point Displacement
         {
             get { return _displacement; }
-            set { _displacement = value; }
         }
 
         /// <summary>
         /// The list of rotations that this shift represents
         /// </summary>
-        private List<Rotation> _rotationsToApply;
+        private readonly List<Rotation> _rotationsToApply;
         public List<Rotation> RotationsToApply
         {
             get { return _rotationsToApply; }
@@ -73,7 +71,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Converts from a rotation described by 2 angles to a rotation described by 1 angle and an axis
         /// </summary>
-        public Line RotationAxis
+        public Rotation CompositeRotation
         {
             //http://math.stackexchange.com/questions/513397/how-can-i-convert-an-axis-angle-representation-to-a-euler-angle-representation
             get
@@ -81,24 +79,9 @@ namespace GeometryClassLibrary
                 throw new NotImplementedException();
 
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
         }
 
-        /*
-        private Angle _angleAboutZAxis; //polar angle (angle from z-axis)
-        public Angle AngleAboutZAxis
-        {
-            get { return _angleAboutZAxis; }
-        }
-
-        private Angle _angleAboutXAxis; //azimuthal angle (angle from x-axis in xy-plane)
-        public Angle AngleAboutXAxis
-        {
-            get { return _angleAboutXAxis; }
-        }*/
+  
 
         #endregion
 
