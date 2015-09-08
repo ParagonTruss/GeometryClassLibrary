@@ -42,12 +42,16 @@ namespace GeometryClassLibrary
             }
         }
 
+        public virtual bool IsConvex
+        {
+            get { throw new NotImplementedException(); }
+        }
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Default empty constructor
+        /// Null constructor
         /// </summary>
         protected PlaneRegion() { }
 

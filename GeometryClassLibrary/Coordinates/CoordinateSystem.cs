@@ -273,9 +273,10 @@ namespace GeometryClassLibrary
         /// <param name="passedZAxisRotation">The rotation around the world coordinate system's Z axis to rotate around to get to this
         /// coordinate system</param>
         [JsonConstructor]
-        public CoordinateSystem(Point translationToOrigin, Angle xAxisRotationAngle, Angle yAxisRotationAngle, Angle zAxisRotationAngle)
+        public CoordinateSystem(Point translationToOrigin, AngularDistance xAxisRotationAngle,
+            AngularDistance yAxisRotationAngle, AngularDistance zAxisRotationAngle)
         {
-            _translationToOrigin = new Point(translationToOrigin);
+            _translationToOrigin = translationToOrigin;
             _xAxisRotationAngle = new Angle(xAxisRotationAngle);
             _yAxisRotationAngle = new Angle(yAxisRotationAngle);
             _zAxisRotationAngle = new Angle(zAxisRotationAngle);
