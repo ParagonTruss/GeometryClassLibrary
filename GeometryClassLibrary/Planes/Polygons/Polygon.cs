@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
-        public bool IsConvex
+        public override bool IsConvex
         {
             get
             {
