@@ -29,7 +29,7 @@ namespace GeometryClassLibraryTest
             List<IEdge> nonPolygonEdges = new List<IEdge>();
             nonPolygonEdges.Add(new LineSegment(MakePointWithInches(1, 5, 3)));
             nonPolygonEdges.Add(new LineSegment(MakePointWithInches(1, 5, 3), MakePointWithInches(2, 3, 3)));
-            Arc arcToadd = new Arc(Origin, MakePointWithInches(2, 3, 3), Direction.Right);
+            Arc arcToadd = new Arc(Point.Origin, MakePointWithInches(2, 3, 3), Direction.Right);
             nonPolygonEdges.Add(arcToadd);
             PlaneRegion nonPolygon = new PlaneRegion(nonPolygonEdges);
 

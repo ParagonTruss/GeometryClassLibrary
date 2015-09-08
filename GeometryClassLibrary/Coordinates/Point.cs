@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 //using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
@@ -13,6 +14,9 @@ namespace GeometryClassLibrary
     public class Point
     {
         #region Properties and Fields
+
+        public static readonly Point Origin = new Point(0 * Inch, 0 * Inch, 0 * Inch);
+
         private readonly Distance _x;
         private readonly Distance _y;
         private readonly Distance _z;
@@ -31,15 +35,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Zero Constructor
+        /// Empty Constructor
         /// </summary>
-        public Point()
-        {
-            var zero = new Distance();
-            _x = zero;
-            _y = zero;
-            _z = zero;
-        }
+        private Point() { }
 
         /// <summary>
         /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation
@@ -332,7 +330,7 @@ namespace GeometryClassLibrary
                 //Must translate everything so that the axis line goes through the origin before rotating
 
                 //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Translation(new Point() - rotationToApply.AxisOfRotation.BasePoint));
+                pointForRotating = this.Translate(new Translation(Point.Origin - rotationToApply.AxisOfRotation.BasePoint));
 
                 //Make the axis go through the origin
                 axisForRotating = new Line(rotationToApply.AxisOfRotation.Direction, originPoint);
@@ -492,13 +490,6 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Static Factory Methods
-        public static Point Origin
-        {
-            get
-            {
-                return new Point();
-            }
-        }
 
         public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3 = 0)
         {
