@@ -51,7 +51,7 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                basePoint = new Point();
+                basePoint = Point.Origin;
             }
 
             this.BasePoint = basePoint;

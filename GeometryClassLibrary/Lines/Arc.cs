@@ -187,8 +187,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Arc()
         {
-            _basePoint = new Point();
-            _endPoint = new Point();
+            _basePoint = Point.Origin;
+            _endPoint = Point.Origin;
             _initialDirection = Direction.Right;
         }
 

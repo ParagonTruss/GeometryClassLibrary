@@ -158,7 +158,7 @@ namespace GeometryClassLibrary
                 acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
             }
 
-            Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
+            Distance distanceToOrigin = directionPoint.DistanceTo(Point.Origin);
 
             //if it is the origin we just leave it as the base constructor
             if (!_lessThanButNotEqualToAcceptanceConstantFrom0(distanceToOrigin, acceptedDeviationConstant))
@@ -400,7 +400,7 @@ namespace GeometryClassLibrary
             double zTerm = d1.XComponent * d2.YComponent - d1.YComponent * d2.XComponent;
 
             var point = Point.MakePointWithInches(xTerm, yTerm, zTerm);
-            if (point != new Point())
+            if (point != Point.Origin)
             {
                 return new Direction(point);
             }

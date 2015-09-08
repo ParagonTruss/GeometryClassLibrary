@@ -9,8 +9,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new zero translation
         /// </summary>
-        public Translation()
-            : base() { }
+        public Translation() { }
 
         /// <summary>
         /// Creates a Translation with offsets in each direction represented by the point

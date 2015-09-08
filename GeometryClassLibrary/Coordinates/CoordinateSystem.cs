@@ -95,7 +95,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public CoordinateSystem()
         {
-            _translationToOrigin = new Point();
+            _translationToOrigin = Point.Origin;
             _xAxisRotationAngle = new Angle();
             _yAxisRotationAngle = new Angle();
             _zAxisRotationAngle = new Angle();

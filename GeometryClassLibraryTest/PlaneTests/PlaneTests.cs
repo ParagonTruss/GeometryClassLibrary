@@ -242,7 +242,7 @@ namespace GeometryClassLibraryTest
             Plane testPlane = new Plane(Direction.Out);
             Line lineOnPlane = new Line(Point.MakePointWithInches(2, 1, 0));
 
-            testPlane.IntersectWithLine(lineOnPlane).Should().Be(new Point());
+            testPlane.IntersectWithLine(lineOnPlane).Should().Be(Point.Origin);
         }
 
         [Test()]

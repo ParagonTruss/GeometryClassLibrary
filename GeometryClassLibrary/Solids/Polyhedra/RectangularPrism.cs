@@ -34,7 +34,7 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                basePoint = new Point();
+                basePoint = Point.Origin;
             }
             Distance zero = new Distance();
 

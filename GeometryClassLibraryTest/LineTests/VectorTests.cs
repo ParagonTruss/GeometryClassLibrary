@@ -81,11 +81,11 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_CrossProduct()
         {
-            Vector xAxis = new Vector(new Point(), Direction.Right);
-            Vector yAxis = new Vector(new Point(), new Direction(new Angle(AngleType.Degree, 90)));
+            Vector xAxis = new Vector(Point.Origin, Direction.Right);
+            Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(AngleType.Degree, 90)));
 
             Vector result = xAxis.CrossProduct(yAxis);
-            Vector expected = new Vector(new Point(), new Direction(new Angle(), new Angle()));
+            Vector expected = new Vector(Point.Origin, new Direction(new Angle(), new Angle()));
 
             result.Should().Be(expected);
 
@@ -125,8 +125,8 @@ namespace GeometryClassLibraryTest
         {
             Vector vector1 = new Vector();
             Vector vector2 = new Vector(Point.MakePointWithInches(2, 2, 4));
-            Vector vector3 = new Vector(Point.MakePointWithInches(2, 2, 4), new Point());
-            Vector vector4 = new Vector(Point.MakePointWithInches(1, 1, 2), new Point());
+            Vector vector3 = new Vector(Point.MakePointWithInches(2, 2, 4), Point.Origin);
+            Vector vector4 = new Vector(Point.MakePointWithInches(1, 1, 2), Point.Origin);
 
             (vector1.Contains(vector2)).Should().BeFalse();
             (vector2.Contains(vector1)).Should().BeTrue();

@@ -13,7 +13,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_JSON()
         {
-            CoordinateSystem coordinateSystem = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
+            CoordinateSystem coordinateSystem = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
 
             var json = JsonConvert.SerializeObject(coordinateSystem);
             CoordinateSystem deserializedCoordinateSystem = JsonConvert.DeserializeObject<CoordinateSystem>(json);
@@ -25,7 +25,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_PlaneAndVectorConstuctor()
         {
-            CoordinateSystem expected = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
+            CoordinateSystem expected = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 90));
 
             Vector xVector = new Vector(Point.MakePointWithInches(-.5, -.707106781, -.5));
             Vector yVector = new Vector(Point.MakePointWithInches(.707106781, 0, -.707106781));
@@ -88,16 +88,16 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_AreDirectionsEquivalent()
         {
-            CoordinateSystem same = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
-            CoordinateSystem same2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem same = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem same2 = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
 
-            CoordinateSystem equivalent = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
+            CoordinateSystem equivalent = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
             same.AreDirectionsEquivalent(same2).Should().BeTrue();
             same.AreDirectionsEquivalent(equivalent).Should().BeTrue();
 
-            CoordinateSystem other = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), new Angle());
-            CoordinateSystem equavalentToOther = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45));
+            CoordinateSystem other = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem equavalentToOther = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45));
 
             //the two 'others' should be equavlanet
             other.AreDirectionsEquivalent(equavalentToOther).Should().BeTrue();
@@ -595,7 +595,7 @@ namespace GeometryClassLibraryTest
             LegoBlock toReturn = new LegoBlock();
 
             //make our geometry
-            Point basePoint = new Point();
+            Point basePoint = Point.Origin;
             Point topLeftPoint = new Point(new Distance(), yDimension, new Distance());
             Point bottomRightPoint = new Point(xDimension, new Distance(), new Distance());
             Point topRightPoint = new Point(xDimension, yDimension, new Distance());

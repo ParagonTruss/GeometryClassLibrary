@@ -131,7 +131,7 @@ namespace GeometryClassLibrary
 
         public static Point CenterPoint(this List<Point> points)
         {
-            Point sum = new Point();
+            Point sum = Point.Origin;
             foreach(Point point in points)
             {
                 sum += point;

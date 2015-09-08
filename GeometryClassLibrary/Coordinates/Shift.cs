@@ -92,7 +92,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Shift()
         {
-            _displacement = new Point();
+            _displacement = Point.Origin;
             _rotationsToApply = new List<Rotation>();
         }
 
@@ -117,7 +117,7 @@ namespace GeometryClassLibrary
         {
             if (passedDisplacement == null)
             {
-                _displacement = new Point();
+                _displacement = Point.Origin;
             }
             else
             {
@@ -135,7 +135,7 @@ namespace GeometryClassLibrary
         {
             if (passedDisplacement == null)
             {
-                _displacement = new Point();
+                _displacement = Point.Origin;
             }
             else
             {
@@ -317,7 +317,7 @@ namespace GeometryClassLibrary
             returnRotations.Reverse();
 
             //now we have to do some magic to turn this back into the right spot since it will happen after the rotations again
-            Point returnDisplacement = new Point() - _displacement;
+            Point returnDisplacement = Point.Origin - _displacement;
 
             //create and return new shift
             Shift toReturn = new Shift(returnRotations, returnDisplacement);

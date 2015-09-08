@@ -38,7 +38,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_RotateToCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem system = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 45), new Angle(), new Angle(AngleType.Degree, 45));
 
             Point testPoint = Point.MakePointWithInches(0, 3, 0);
 
@@ -49,7 +49,7 @@ namespace GeometryClassLibraryTest
             shifted.Should().Be(expected);
 
             //try to get the point we had before we switched order of shifting
-            CoordinateSystem system2 = new CoordinateSystem(new Point(), new Angle(AngleType.Degree, 30), new Angle(AngleType.Degree, 54.7356104), new Angle());
+            CoordinateSystem system2 = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 30), new Angle(AngleType.Degree, 54.7356104), new Angle());
 
             Point shifted2 = testPoint.Shift(system2.ShiftToThisFrom());
 

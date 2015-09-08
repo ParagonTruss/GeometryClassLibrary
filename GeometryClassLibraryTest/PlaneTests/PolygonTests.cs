@@ -15,7 +15,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Mutability_Test()
         {
-            Point point1 = new Point();
+            Point point1 = Point.Origin;
             var list = new List<Point>();
             list.Add(point1);
 
@@ -611,7 +611,7 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(Point.MakePointWithInches(4, 1, 4), Point.MakePointWithInches(4, 3, 4)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Line slicingLine = new Line(new Point(), Point.MakePointWithInches(1, 1, 1));
+            Line slicingLine = new Line(Point.Origin, Point.MakePointWithInches(1, 1, 1));
 
             List<Polygon> results = testPolygon.Slice(slicingLine);
 
@@ -635,7 +635,7 @@ namespace GeometryClassLibraryTest
             results.Contains(expected1).Should().BeTrue();
 
             //now make sure it handles no intersection well
-            Line notIntersecting = new Line(new Point(), Point.MakePointWithInches(1, 1, 0.9));
+            Line notIntersecting = new Line(Point.Origin, Point.MakePointWithInches(1, 1, 0.9));
             List<Polygon> results2 = testPolygon.Slice(notIntersecting);
 
             //should only return the original plane
@@ -677,7 +677,7 @@ namespace GeometryClassLibraryTest
             results.Contains(expected1).Should().BeTrue();
 
             //now make sure it handles no intersection well
-            Line notIntersecting = new Line(new Point(), Point.MakePointWithInches(1, 1, 0.9));
+            Line notIntersecting = new Line(Point.Origin, Point.MakePointWithInches(1, 1, 0.9));
             List<Polygon> results2 = testPolygon.Slice(notIntersecting);
 
             //should only return the original plane
@@ -719,7 +719,7 @@ namespace GeometryClassLibraryTest
             results.Contains(expected2).Should().BeTrue();
 
             //now make sure it handles no intersection well
-            Line notIntersecting = new Line(new Point(), Point.MakePointWithInches(1, 1, 0.9));
+            Line notIntersecting = new Line(Point.Origin, Point.MakePointWithInches(1, 1, 0.9));
             List<Polygon> results2 = testPolygon.Slice(notIntersecting);
 
             //should only return the original plane
@@ -927,7 +927,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Rectangle_Constructor()
         {
-            LineSegment testSegment = new LineSegment(new Vector(new Point(), Direction.Left));
+            LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left));
             testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(Angle.Degree * 33)));
             Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
             

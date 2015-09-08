@@ -114,7 +114,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line()
         {
-            _basePoint = new Point();
+            _basePoint = Point.Origin;
             _direction = Direction.Out;
         }
 
@@ -139,7 +139,7 @@ namespace GeometryClassLibrary
         {
             if (basePoint == null)
             {
-                this.BasePoint = new Point();
+                this.BasePoint = Point.Origin;
             }
             else
             {

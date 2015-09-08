@@ -97,7 +97,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedEndPoint)
             : base(passedEndPoint)
         {
-            _magnitude = passedEndPoint.DistanceTo(new Point());
+            _magnitude = passedEndPoint.DistanceTo(Point.Origin);
         }
 
         /// <summary>

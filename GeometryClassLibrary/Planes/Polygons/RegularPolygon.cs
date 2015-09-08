@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
 
             for (int i = 1; i < numberOfSides; i++)
             {
-                points.Add(firstPoint.Rotate2D(new Point(), step*i)); //code snippet from above
+                points.Add(firstPoint.Rotate2D(Point.Origin, step*i)); //code snippet from above
             }
 
             return points;
