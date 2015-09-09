@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 //using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
@@ -505,7 +506,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return new Point();
+                return new Point(0*Inch, 0*Inch, 0*Inch);
             }
         }
 

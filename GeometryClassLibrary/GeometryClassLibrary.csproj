@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystemEntityFramework.cs" />
+    <Compile Include="Coordinates\Direction\DirectionEntityFramework.cs" />
     <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
+    <Compile Include="Lines\Line\LineEntityFramework.cs" />
+    <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
     <Compile Include="Planes\OtherShapes\Circle.cs" />
     <Compile Include="Planes\Polygons\Parallelogram.cs" />
     <Compile Include="Planes\Polygons\RightTriangle.cs" />
@@ -87,7 +90,7 @@
     <Compile Include="Solids\OtherSolids\Cone.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystem.cs" />
-    <Compile Include="Coordinates\Direction.cs" />
+    <Compile Include="Coordinates\Direction\Direction.cs" />
     <Compile Include="Planes\Polygons\EquilateralTriangle.cs" />
     <Compile Include="Solids\Polyhedra\Cube.cs" />
     <Compile Include="Solids\OtherSolids\Cylinder.cs" />
@@ -98,7 +101,7 @@
     <Compile Include="Lines\IEdge.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\LineListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\LineSegmentListExtensions.cs" />
-    <Compile Include="Lines\Line.cs" />
+    <Compile Include="Lines\Line\Line.cs" />
     <Compile Include="Lines\LineSegment.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IEdgeListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
@@ -132,7 +135,7 @@
     <Compile Include="Solids\OtherSolids\Sphere.cs" />
     <Compile Include="Planes\Polygons\Square.cs" />
     <Compile Include="Coordinates\Translation.cs" />
-    <Compile Include="Lines\Vector.cs" />
+    <Compile Include="Lines\Vector\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Direction
+    public partial class Direction
     {
         #region Properties and Fields
         /// <summary>
@@ -114,13 +114,12 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        ///// <summary>
-        ///// Empty Constructor that makes a angle equivalent to 0 direction in the xy-plane (This means theta is 90)
-        ///// </summary>
+        /// <summary>
+        /// Empty Constructor
+        /// </summary>
         public Direction()
         {
-            this.Phi = new Angle();
-            this.Theta = new Angle(AngleType.Degree, 90);
+            
         }
 
         public Direction(double x, double y, double z) : this(Point.MakePointWithInches(x, y, z)) { }
@@ -158,7 +157,7 @@ namespace GeometryClassLibrary
                 acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
             }
 
-            Distance distanceToOrigin = directionPoint.DistanceTo(new Point());
+            Distance distanceToOrigin = directionPoint.DistanceTo(Point.Origin);
 
             //if it is the origin we just leave it as the base constructor
             if (!_lessThanButNotEqualToAcceptanceConstantFrom0(distanceToOrigin, acceptedDeviationConstant))

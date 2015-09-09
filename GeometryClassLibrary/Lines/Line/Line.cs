@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// Represents an infinite Line
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Line : IComparable<Line>
+    public partial class Line : IComparable<Line>
     {
         #region Properties and Fields
 
@@ -114,8 +114,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line()
         {
-            _basePoint = new Point();
-            _direction = Direction.Out;
+            /*_basePoint = Point.Origin;
+            _direction = Direction.Out;*/
         }
 
         /// <summary>

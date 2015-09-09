@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Vector : Line
+    public partial class Vector : Line
     {
         #region Properties and Fields
 
@@ -87,7 +87,7 @@ namespace GeometryClassLibrary
         public Vector()
             : base()
         {
-            _magnitude = new Distance();
+            /*_magnitude = new Distance();*/
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedEndPoint)
             : base(passedEndPoint)
         {
-            _magnitude = passedEndPoint.DistanceTo(new Point());
+            _magnitude = passedEndPoint.DistanceTo(Point.Origin);
         }
 
         /// <summary>
