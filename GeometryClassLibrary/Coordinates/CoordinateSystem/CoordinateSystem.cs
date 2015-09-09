@@ -37,14 +37,14 @@ namespace GeometryClassLibrary
     /// a different form (we use Quaternions: http://en.wikipedia.org/wiki/Quaternion) to determine if they are the same orientation.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class CoordinateSystem
+    public partial class CoordinateSystem
     {
         #region Properties and Fields
 
         /// <summary>
         /// The world coordinate system
         /// </summary>
-        public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem();
+        public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem(Point.Origin, new Angle(), new Angle(), new Angle());
 
         /// <summary>
         /// The Angle to rotate around the global/external x axis, which is performed first.
@@ -53,6 +53,7 @@ namespace GeometryClassLibrary
         public Angle XAxisRotationAngle
         {
             get { return _xAxisRotationAngle; }
+            private set { _xAxisRotationAngle = value; }
         }
         private Angle _xAxisRotationAngle;
 
@@ -63,6 +64,7 @@ namespace GeometryClassLibrary
         public Angle YAxisRotationAngle
         {
             get { return _yAxisRotationAngle; }
+            private set { _yAxisRotationAngle = value; }
         }
         private Angle _yAxisRotationAngle;
 
@@ -73,6 +75,7 @@ namespace GeometryClassLibrary
         public Angle ZAxisRotationAngle
         {
             get { return _zAxisRotationAngle; }
+            private set { _zAxisRotationAngle = value; }
         }
         private Angle _zAxisRotationAngle;
 
@@ -83,6 +86,7 @@ namespace GeometryClassLibrary
         public Point TranslationToOrigin
         {
             get { return _translationToOrigin; }
+            private set { _translationToOrigin = value; }
         }
         private Point _translationToOrigin;
 
@@ -93,12 +97,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new instance of the world coordinate system
         /// </summary>
-        public CoordinateSystem()
+        private CoordinateSystem()
         {
-            _translationToOrigin = Point.Origin;
-            _xAxisRotationAngle = new Angle();
-            _yAxisRotationAngle = new Angle();
-            _zAxisRotationAngle = new Angle();
+
         }
 
         /// <summary>

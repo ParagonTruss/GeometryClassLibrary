@@ -587,7 +587,7 @@ namespace GeometryClassLibraryTest
         private class LegoSet
         {
             public List<LegoBlock> Blocks = new List<LegoBlock>();
-            public CoordinateSystem SetSystem = new CoordinateSystem();
+            public CoordinateSystem SetSystem = CoordinateSystem.WorldCoordinateSystem;
         }
 
         private LegoBlock createBlockInGivenCoordinateSystem(Distance xDimension, Distance yDimension, Distance zDimension, CoordinateSystem blocksCoordinateSystem)
