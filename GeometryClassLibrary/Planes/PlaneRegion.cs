@@ -61,39 +61,49 @@ namespace GeometryClassLibrary
         public PlaneRegion(IEnumerable<IEdge> passedEdges)
         {
             _Edges.AddRange(passedEdges);
+            this.BasePoint = this._Edges[0].EndPoint;
+            this.NormalVector = _getUnitNormalVector();
 
-            if (passedEdges.Count() > 2)
+        }
+
+        // Returns a normalVector of the planeregion.
+        // or the zero vector, if the planereg has no sides.
+        protected Vector _getUnitNormalVector()
+        {
+            if (this.Edges.Count() > 2)
             {
-                this.NormalVector = _getUnitNormalVector();
+                Vector vector1 = new Vector(_Edges.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
+
+                Vector vector2;
+                Vector normal = null;
+                for (int i = 0; i < _Edges.Count; i++)
+                {
+                    vector2 = new Vector(vector1.BasePoint, Vertices[i]);
+                    normal = vector1.CrossProduct(vector2);
+                    if (normal.Magnitude != new Distance())
+                    {
+                        break;
+                    }
+                }
+
+                return new Vector(this.BasePoint, normal.Direction, Inch);
             }
             else
             {
-                //We need to determine the normal vector in these cases.
-                throw new NotImplementedException();
-            }
-
-            base.BasePoint = passedEdges.ElementAt(0).BasePoint;
-        }
-
-        // Returns a normalVector of the polygon.
-        // or the zero vector, if the polygon has no sides.
-        protected Vector _getUnitNormalVector()
-        {
-            Vector vector1 = new Vector(_Edges.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
-            
-            Vector vector2;
-            Vector normal = null;
-            for (int i = 0; i < _Edges.Count; i++)
-            {
-                vector2 = new Vector(vector1.BasePoint, Vertices[i]);
-                normal = vector1.CrossProduct(vector2);
-                if (normal.Magnitude != new Distance())
+                IEdge nonSegment;
+                if (!(Edges[0] is LineSegment))
                 {
-                    break;
+                    nonSegment = Edges[0];
                 }
+                else if (!(Edges[1] is LineSegment))
+                {
+                    nonSegment = Edges[0];
+                }
+                else throw new Exception("Not Allowed.");
+                var otherVertex = this.Vertices.First(v => v != nonSegment.BasePoint);
+                var normalDirection = nonSegment.InitialDirection.CrossProduct(new LineSegment(nonSegment.BasePoint, otherVertex).Direction);
+               return new Vector(nonSegment.BasePoint, normalDirection, Inch);
             }
-
-            return new Vector(this.BasePoint, normal.Direction, Inch);
         }
 
         /// <summary>

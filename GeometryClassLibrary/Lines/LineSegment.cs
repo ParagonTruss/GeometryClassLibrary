@@ -37,6 +37,8 @@ namespace GeometryClassLibrary
 
         public bool IsClosed { get { return false; } }
 
+        public Direction InitialDirection { get { return Direction; } }
+
         #endregion
 
         #region Constructors

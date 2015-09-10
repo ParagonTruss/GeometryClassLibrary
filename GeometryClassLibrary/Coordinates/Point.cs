@@ -37,7 +37,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        private Point() { }
+        protected Point() { }
 
         /// <summary>
         /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation

@@ -8,7 +8,7 @@
     {
         #region Properties and Fields
 
-        Direction Direction { get; }
+        Direction InitialDirection { get; }
         Point BasePoint { get; }
         Point EndPoint { get; }
 
