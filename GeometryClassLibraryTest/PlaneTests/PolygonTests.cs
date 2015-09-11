@@ -456,7 +456,7 @@ namespace GeometryClassLibraryTest
             Polygon testPolygon3 = new Polygon(bounds3);
             
             Vector normal3 = testPolygon3.NormalVector;
-            (normal3.Magnitude != new Distance()).Should().BeTrue();
+            (normal3.Magnitude != Distance.Zero).Should().BeTrue();
 
             foreach (var edge in testPolygon3.LineSegments)
             {

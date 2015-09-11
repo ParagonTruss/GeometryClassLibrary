@@ -9,7 +9,7 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class LineSegment : Vector, IComparable<LineSegment>, IEdge
+    public partial class LineSegment : Vector, IComparable<LineSegment>, IEdge
     {
         #region Properties and Fields
 
@@ -42,6 +42,12 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+
+        public LineSegment()
+            : base()
+        {
+
+        }
 
         /// <summary>
         /// Creates a Line Segment that extends from the origin to the given end point
@@ -271,7 +277,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoLine(Line projectOnto)
         {
             Vector projection = base.ProjectOntoLine(projectOnto);
-            if (projection.Magnitude != new Distance())
+            if (projection.Magnitude != Distance.Zero)
             {
                 return new LineSegment(projection);
             }
@@ -281,7 +287,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoPlane(Plane plane)
         {
             Vector projection = base.ProjectOntoPlane(plane);
-            if (projection.Magnitude != new Distance())
+            if (projection.Magnitude != Distance.Zero)
             {
                 return new LineSegment(projection);
             }
@@ -403,7 +409,7 @@ namespace GeometryClassLibrary
                     vector = new Vector(this.BasePoint, segment.BasePoint);
                 }
             }
-            if (vector != null && vector.Magnitude != new Distance())
+            if (vector != null && vector.Magnitude != Distance.Zero)
             {
                 return new LineSegment(vector);
             }

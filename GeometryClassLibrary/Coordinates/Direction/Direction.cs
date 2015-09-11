@@ -11,14 +11,14 @@ namespace GeometryClassLibrary
     /// when theta = 0 or 180 because the phi angle no longer has meaning
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Direction
+    public partial class Direction
     {
         #region Properties and Fields
         /// <summary>
         /// A staticly defined Direction that is positive in the X direction, which can be thought of as going "right" in the XY plane.
         /// This is also the "zero" equivalent and is the same as Direction.Right
         /// </summary>
-        public static readonly Direction Right = new Direction(new Angle(), new Angle(AngleType.Degree, 90));
+        public static readonly Direction Right = new Direction(Angle.Zero, new Angle(AngleType.Degree, 90));
         /// <summary>
         /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
         /// </summary>
@@ -34,11 +34,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A staticly defined Direction that is positive in the Z direction, which can be thought of comming out of the screen towards you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Out = new Direction(new Angle(), new Angle(AngleType.Degree, 0));
+        public static readonly Direction Out = new Direction(Angle.Zero, new Angle(AngleType.Degree, 0));
         /// <summary>
         /// A staticly defined Direction that is negative in the Z direction, which can be thought of going back out of the screen away you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Back = new Direction(new Angle(), new Angle(AngleType.Degree, 180));
+        public static readonly Direction Back = new Direction(Angle.Zero, new Angle(AngleType.Degree, 180));
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azumuth)
@@ -114,13 +114,12 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        ///// <summary>
-        ///// Empty Constructor that makes a angle equivalent to 0 direction in the xy-plane (This means theta is 90)
-        ///// </summary>
-        public Direction()
+        /// <summary>
+        /// Null Constructor
+        /// </summary>
+        private Direction()
         {
-            this.Phi = new Angle();
-            this.Theta = new Angle(AngleType.Degree, 90);
+            
         }
 
         public Direction(double x, double y, double z) : this(Point.MakePointWithInches(x, y, z)) { }
@@ -150,7 +149,7 @@ namespace GeometryClassLibrary
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
         public Direction(Point directionPoint, Distance acceptedDeviationConstant = null)
         {
-            this.Phi = new Angle();
+            this.Phi = Angle.Zero;
             this.Theta = new Angle(AngleType.Degree, 90);
             //if they didnt pass in a value, use the default
             if (acceptedDeviationConstant == null)
@@ -228,7 +227,7 @@ namespace GeometryClassLibrary
                         //up then make it up
                         if(this.Theta < new Angle(AngleType.Degree, 90))
                         {
-                            this.Theta = new Angle();
+                            this.Theta = Angle.Zero;
                         }
                         else
                         {
@@ -247,7 +246,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns whether or not the distance is closer to 0 than the deviation constant</returns>
         private static bool _lessThanButNotEqualToAcceptanceConstantFrom0(Distance distance, Distance acceptedDeviationConstant)
         {
-            return (!(distance.Inches == acceptedDeviationConstant.Inches)) && distance.EqualsWithinDeviationConstant(new Distance(), acceptedDeviationConstant);
+            return (!(distance.Inches == acceptedDeviationConstant.Inches)) && distance.EqualsWithinDeviationConstant(Distance.Zero, acceptedDeviationConstant);
         }
 
         /// <summary>
@@ -276,7 +275,7 @@ namespace GeometryClassLibrary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (theta < new Angle() || theta > new Angle(AngleType.Degree, 180))
+                if (theta < Angle.Zero || theta > new Angle(AngleType.Degree, 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -353,7 +352,7 @@ namespace GeometryClassLibrary
                 return false;
             }
             AngularDistance angleBetween = this.AngleBetween(dir);
-            bool angleIsCloseToZero = (angleBetween == new AngularDistance());
+            bool angleIsCloseToZero = (angleBetween == Angle.Zero);
             return angleIsCloseToZero;
         }
         #endregion
@@ -414,6 +413,7 @@ namespace GeometryClassLibrary
             return angle;
         }
 
+
         /// <summary>
         /// finds the signed angle between two directions.
         /// i.e. the order you input the vectors matters: the angle from direction1 to direction2 is negative the angle from direction2 to direction1
@@ -431,7 +431,7 @@ namespace GeometryClassLibrary
             AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));
             Direction testNormal = this.CrossProduct(direction);
            
-            if (testNormal == null || testAngle % new Angle(AngleType.Degree, 180) == new Angle() || testNormal == referenceNormal)
+            if (testNormal == null || testAngle % new Angle(AngleType.Degree, 180) == Angle.Zero || testNormal == referenceNormal)
             {
                 return testAngle;
             }

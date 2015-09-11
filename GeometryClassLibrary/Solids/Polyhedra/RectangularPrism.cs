@@ -36,7 +36,7 @@ namespace GeometryClassLibrary
             {
                 basePoint = Point.Origin;
             }
-            Distance zero = new Distance();
+            Distance zero = Distance.Zero;
 
             Vector vector1 = new Vector(new Point(zero, width, zero));
             Vector vector2 = new Vector(new Point(length, zero, zero));

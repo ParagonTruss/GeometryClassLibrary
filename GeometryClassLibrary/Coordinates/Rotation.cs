@@ -36,8 +36,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Rotation()
         {
-            this._rotationAngle = new Angle();
-            this._axisOfRotation = new Line();
+            this._rotationAngle = Angle.Zero;
+            this._axisOfRotation = Line.XAxis;
         }
        
         /// <summary>

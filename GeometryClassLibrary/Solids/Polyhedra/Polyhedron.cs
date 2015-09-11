@@ -147,9 +147,9 @@ namespace GeometryClassLibrary
             {
                 if (_centerPoint == null)
                 {
-                    Distance xValues = new Distance();
-                    Distance yValues = new Distance();
-                    Distance zValues = new Distance();
+                    Distance xValues = Distance.Zero;
+                    Distance yValues = Distance.Zero;
+                    Distance zValues = Distance.Zero;
 
                     foreach (Point vertex in this.Vertices)
                     {
@@ -226,7 +226,7 @@ namespace GeometryClassLibrary
             get
             {
                 List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
-                Vector weightedSum = new Vector();
+                Vector weightedSum = new Vector(Point.Origin);
                 double totalVolume = 0;
 
                 foreach (Polygon triangle in triangles)

@@ -80,7 +80,7 @@ namespace GeometryClassLibrary
                 {
                     vector2 = new Vector(vector1.BasePoint, Vertices[i]);
                     normal = vector1.CrossProduct(vector2);
-                    if (normal.Magnitude != new Distance())
+                    if (normal.Magnitude != Distance.Zero)
                     {
                         break;
                     }

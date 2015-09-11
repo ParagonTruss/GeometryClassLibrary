@@ -126,7 +126,7 @@ namespace GeometryClassLibraryTest
 
             //test the straight line direction (same as direction)
             Direction straightDirection = halfArc.StraightLineDirection;
-            (straightDirection == new Direction(new Angle(), new Angle())).Should().BeTrue();
+            (straightDirection == new Direction(Angle.Zero, Angle.Zero)).Should().BeTrue();
         }
 
         [Test()]

@@ -69,7 +69,7 @@ namespace GeometryClassLibrary
 
                 //if the end point is on the other side of the middle plane than our endpoint we know it needs to be an angle > 180
                 //we need to wathc out for the 0 and 180 case though becasue it will mess up in those cases
-                if(angleBetween != new Angle() && angleBetween != new Angle(AngleType.Degree, 180) && !dividingPlane.PointIsOnSameSideAs(_endPoint, _initialDirection.UnitVector(DistanceType.Inch).EndPoint))
+                if(angleBetween != Angle.Zero && angleBetween != new Angle(AngleType.Degree, 180) && !dividingPlane.PointIsOnSameSideAs(_endPoint, _initialDirection.UnitVector(DistanceType.Inch).EndPoint))
                 {
                     angleBetween = new Angle(AngleType.Degree, 360) - angleBetween;
                 }
@@ -324,7 +324,7 @@ namespace GeometryClassLibrary
             //if the center angle is greater than 180 we can leave it like this. Otherwise we need to make it negative to get the right segment
             if(!straightLineAsPlane.PointIsOnSameSideAs(toCenter.EndPoint, pointOnSameSideOfStraightLineAsArc))
             {
-                angleToCenterFromStraightLine = new Angle() - angleToCenterFromStraightLine;
+                angleToCenterFromStraightLine = Angle.Zero - angleToCenterFromStraightLine;
                 toCenter = straightSegment.Rotate(new Rotation(new Line(planeToBeContainedIn.NormalVector.Direction, passedBasePoint), angleToCenterFromStraightLine));
             }
             

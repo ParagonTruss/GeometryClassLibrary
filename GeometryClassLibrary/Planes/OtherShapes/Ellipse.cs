@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
         public Ellipse()
         {
             _foci = new List<Point>();
-            _curveDefinition = new Distance();
+            _curveDefinition = Distance.Zero;
         }
 
         public Ellipse(IList<Point> foci, Distance curveDefinition)

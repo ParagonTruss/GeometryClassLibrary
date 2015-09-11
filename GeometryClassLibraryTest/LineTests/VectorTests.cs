@@ -85,12 +85,12 @@ namespace GeometryClassLibraryTest
             Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(AngleType.Degree, 90)));
 
             Vector result = xAxis.CrossProduct(yAxis);
-            Vector expected = new Vector(Point.Origin, new Direction(new Angle(), new Angle()));
+            Vector expected = new Vector(Point.Origin, new Direction(Angle.Zero, Angle.Zero));
 
             result.Should().Be(expected);
 
             Vector resultParallel = xAxis.CrossProduct(xAxis);
-            (resultParallel.Magnitude == new Distance()).Should().BeTrue();
+            (resultParallel.Magnitude == Distance.Zero).Should().BeTrue();
         }
 
         [Test()]
@@ -123,7 +123,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_ContainsVector()
         {
-            Vector vector1 = new Vector();
+            Vector vector1 = new Vector(Point.Origin);
             Vector vector2 = new Vector(Point.MakePointWithInches(2, 2, 4));
             Vector vector3 = new Vector(Point.MakePointWithInches(2, 2, 4), Point.Origin);
             Vector vector4 = new Vector(Point.MakePointWithInches(1, 1, 2), Point.Origin);

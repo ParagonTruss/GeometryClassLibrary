@@ -10,7 +10,7 @@ namespace GeometryClassLibrary
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Vector : Line
+    public partial class Vector : Line
     {
         #region Properties and Fields
 
@@ -82,13 +82,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Empty Constructor (A "Zero Vector")
+        /// Null Constructor
         /// </summary>   
-        public Vector()
-            : base()
-        {
-            _magnitude = new Distance();
-        }
+        protected Vector() { }
 
         /// <summary>
         /// Creates a vector that extends from the Origin to the passed reference point  
@@ -103,12 +99,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a vector that starts at the given base point and goes to the given end point
         /// </summary>
-        /// <param name="passedBasePoint">The point at which the vector starts</param>
-        /// <param name="passedEndPoint">The point at which the vector goes to / ends at</param>
-        public Vector(Point passedBasePoint, Point passedEndPoint)
-            : base(passedBasePoint, passedEndPoint)
+        public Vector(Point basePoint, Point endPoint)
+            : base(basePoint, endPoint)
         {
-            _magnitude = passedBasePoint.DistanceTo(passedEndPoint);
+            _magnitude = basePoint.DistanceTo(endPoint);
         }
 
         /// <summary>
@@ -495,7 +489,7 @@ namespace GeometryClassLibrary
             {
                 return false; //Doesn't have a direction. Should be false
             }
-            if (vector1.Magnitude == new Distance() || vector2.Magnitude == new Distance())
+            if (vector1.Magnitude == Distance.Zero || vector2.Magnitude == Distance.Zero)
             {
                 return true;
             }
@@ -615,9 +609,9 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public new Vector UnitVector(DistanceType passedType)
         {
-            if (Magnitude == new Distance())
+            if (Magnitude == Distance.Zero)
             {
-                return new Vector();
+                return new Vector(Point.Origin);
             }
             else return Direction.UnitVector(passedType);
         }
@@ -652,7 +646,7 @@ namespace GeometryClassLibrary
         public bool IsParallelTo(Vector vector)
         {
             return this.HasSameOrOppositeDirectionAs(vector);
-            //return this.CrossProduct(vector).Magnitude == new Distance();
+            //return this.CrossProduct(vector).Magnitude == Distance.Zero;
             //checking the crossproduct is too precise for our library's purposes. It 
             //this might change when we implement error propagation.
         }

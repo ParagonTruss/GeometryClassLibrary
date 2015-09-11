@@ -37,14 +37,14 @@ namespace GeometryClassLibrary
     /// a different form (we use Quaternions: http://en.wikipedia.org/wiki/Quaternion) to determine if they are the same orientation.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class CoordinateSystem
+    public partial class CoordinateSystem
     {
         #region Properties and Fields
 
         /// <summary>
         /// The world coordinate system
         /// </summary>
-        public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem();
+        public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem(Point.Origin, Angle.Zero,Angle.Zero,Angle.Zero);
 
         /// <summary>
         /// The Angle to rotate around the global/external x axis, which is performed first.
@@ -53,6 +53,7 @@ namespace GeometryClassLibrary
         public Angle XAxisRotationAngle
         {
             get { return _xAxisRotationAngle; }
+            private set { _xAxisRotationAngle = value; }
         }
         private Angle _xAxisRotationAngle;
 
@@ -63,6 +64,7 @@ namespace GeometryClassLibrary
         public Angle YAxisRotationAngle
         {
             get { return _yAxisRotationAngle; }
+            private set { _yAxisRotationAngle = value; }
         }
         private Angle _yAxisRotationAngle;
 
@@ -73,6 +75,7 @@ namespace GeometryClassLibrary
         public Angle ZAxisRotationAngle
         {
             get { return _zAxisRotationAngle; }
+            private set { _zAxisRotationAngle = value; }
         }
         private Angle _zAxisRotationAngle;
 
@@ -83,6 +86,7 @@ namespace GeometryClassLibrary
         public Point TranslationToOrigin
         {
             get { return _translationToOrigin; }
+            private set { _translationToOrigin = value; }
         }
         private Point _translationToOrigin;
 
@@ -91,15 +95,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of the world coordinate system
+        /// Null Constuctor
         /// </summary>
-        public CoordinateSystem()
-        {
-            _translationToOrigin = Point.Origin;
-            _xAxisRotationAngle = new Angle();
-            _yAxisRotationAngle = new Angle();
-            _zAxisRotationAngle = new Angle();
-        }
+        private CoordinateSystem() { }
 
         /// <summary>
         /// Creates a local coordinate system that has the same axes as the world coordinate system and has only been shifted to the given point
@@ -108,9 +106,9 @@ namespace GeometryClassLibrary
         public CoordinateSystem(Point passedTranslationToOrigin)
         {
             _translationToOrigin = new Point(passedTranslationToOrigin);
-            _xAxisRotationAngle = new Angle();
-            _yAxisRotationAngle = new Angle();
-            _zAxisRotationAngle = new Angle();
+            _xAxisRotationAngle = Angle.Zero;
+            _yAxisRotationAngle = Angle.Zero;
+            _zAxisRotationAngle = Angle.Zero;
         }
 
         /// <summary>
@@ -129,9 +127,9 @@ namespace GeometryClassLibrary
                 throw new ArgumentOutOfRangeException("the passed axis was not in the plane");
             }
 
-            Vector xAxis = new Vector();
-            Vector yAxis = new Vector();
-            Vector zAxis = new Vector();
+            Vector xAxis = new Vector(Point.Origin);
+            Vector yAxis = new Vector(Point.Origin);
+            Vector zAxis = new Vector(Point.Origin);
 
             //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
 

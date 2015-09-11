@@ -249,7 +249,7 @@ namespace GeometryClassLibraryTest
         {
             Line line1 = new LineSegment(Point.Origin, new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
             Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
-            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), new Angle()), new Distance(DistanceType.Inch, 1));
+            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), Angle.Zero), new Distance(DistanceType.Inch, 1));
 
             Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
             Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));

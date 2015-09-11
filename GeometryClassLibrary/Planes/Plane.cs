@@ -227,7 +227,7 @@ namespace GeometryClassLibrary
             }
             Vector planeVector = new Vector(passedPoint, BasePoint);
             //Distance dotProduct = planeVector * NormalVector;
-            //return dotProduct == new Distance();
+            //return dotProduct == Distance.Zero;
 
             return planeVector.IsPerpendicularTo(NormalVector);
         }
@@ -334,7 +334,7 @@ namespace GeometryClassLibrary
             return new Line(basePoint, intersectionLineDirection);
             // http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
             ////if it is 0 than thay are parallel and dont intersect
-            //if (intersectionLineDirection != new Vector())
+            //if (intersectionLineDirection != new Vector(Point.Origin))
             //{
             //    //put them in plane notation  adn find what they equal (normal.X * X + normal.Y * Y + normal.Z * Z = planeEqualsValue)
             //    double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
@@ -350,10 +350,10 @@ namespace GeometryClassLibrary
             //    double otherSecondVariable = otherPlane.NormalVector.YComponent.Inches;
 
             //    //first we play a game to find an axis it will always cross (default is to use z first then y, then x)
-            //    if (intersectionLineDirection.ZComponent == new Distance())
+            //    if (intersectionLineDirection.ZComponent == Distance.Zero)
             //    {
             //        //try y
-            //        if (intersectionLineDirection.YComponent != new Distance())
+            //        if (intersectionLineDirection.YComponent != Distance.Zero)
             //        {
             //            //make the y the thirdVariable(the one we make 0) and z the second 
             //            thisSecondVariable = this.NormalVector.ZComponent.Inches;
@@ -382,10 +382,10 @@ namespace GeometryClassLibrary
 
             //    //now assign them to the point in the way the need to be (assume z again)
             //    Point intersectLinePoint = Point.MakePointWithInches(results[0], results[1], 0);
-            //    if (intersectionLineDirection.ZComponent == new Distance())
+            //    if (intersectionLineDirection.ZComponent == Distance.Zero)
             //    {
             //        //if y was what we made zero then it was third and z was second
-            //        if (intersectionLineDirection.YComponent != new Distance())
+            //        if (intersectionLineDirection.YComponent != Distance.Zero)
             //        {
             //            intersectLinePoint = Point.MakePointWithInches(results[0], 0, results[1]);
             //        }
@@ -592,7 +592,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsParallelTo(Plane passedPlane)
         {
-            return (this.NormalVector.CrossProduct((passedPlane.NormalVector)).Magnitude == new Distance());
+            return (this.NormalVector.CrossProduct((passedPlane.NormalVector)).Magnitude == Distance.Zero);
         }
 
         /// <summary>

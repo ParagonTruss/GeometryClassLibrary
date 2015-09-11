@@ -88,15 +88,15 @@ namespace GeometryClassLibraryTest
         [Test]
         public void CoordinateSystem_AreDirectionsEquivalent()
         {
-            CoordinateSystem same = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
-            CoordinateSystem same2 = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, -45));
+            CoordinateSystem same = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), Angle.Zero, new Angle(AngleType.Degree, -45));
+            CoordinateSystem same2 = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, 90), Angle.Zero, new Angle(AngleType.Degree, -45));
 
             CoordinateSystem equivalent = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
             same.AreDirectionsEquivalent(same2).Should().BeTrue();
             same.AreDirectionsEquivalent(equivalent).Should().BeTrue();
 
-            CoordinateSystem other = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem other = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), Angle.Zero);
             CoordinateSystem equavalentToOther = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45));
 
             //the two 'others' should be equavlanet
@@ -148,8 +148,8 @@ namespace GeometryClassLibraryTest
         public void CoordinateSystem_FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem()
         {
             //test one that really is more just an origin test
-            CoordinateSystem testCurrent = new CoordinateSystem(Point.MakePointWithInches(1, 2, 3), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(Point.MakePointWithInches(1, -2, 1), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem testCurrent = new CoordinateSystem(Point.MakePointWithInches(1, 2, 3), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 90));
+            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(Point.MakePointWithInches(1, -2, 1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 45));
 
             CoordinateSystem basedOnWorld1 = testRelativeToCurrent.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent);
 
@@ -168,12 +168,12 @@ namespace GeometryClassLibraryTest
 
 
             //test that negates the coordinate system (this works in both intrinsic and extrensic scenarios
-            CoordinateSystem testCurrent2 = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testRelativeToCurrent2 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem testCurrent2 = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), Angle.Zero, new Angle(AngleType.Degree, 90));
+            CoordinateSystem testRelativeToCurrent2 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), Angle.Zero);
 
             CoordinateSystem basedOnWorld2 = testRelativeToCurrent2.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent2);
 
-            CoordinateSystem expectedCombined2 = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
+            CoordinateSystem expectedCombined2 = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), Angle.Zero, Angle.Zero, Angle.Zero);
 
             //this just helps with debugging and is redundent
             Point testPointWorld2 = Point.MakePointWithInches(3, -2, 3);
@@ -183,8 +183,8 @@ namespace GeometryClassLibraryTest
             basedOnWorld2.Should().Be(expectedCombined2);
 
             //test one that onlt works when using the current coords axes for the second one and not the worlds
-            CoordinateSystem testCurrent3 = new CoordinateSystem(Point.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), new Angle());
-            CoordinateSystem testRelativeToCurrent3 = new CoordinateSystem(Point.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 45), new Angle(), new Angle());
+            CoordinateSystem testCurrent3 = new CoordinateSystem(Point.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), Angle.Zero);
+            CoordinateSystem testRelativeToCurrent3 = new CoordinateSystem(Point.MakePointWithInches(0, 0, 0), new Angle(AngleType.Degree, 45), Angle.Zero, Angle.Zero);
 
             CoordinateSystem basedOnWorld3 = testRelativeToCurrent3.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent3);
 
@@ -202,8 +202,8 @@ namespace GeometryClassLibraryTest
             (basedOnWorld3 == expectedCombined3).Should().BeTrue();
 
             //now try another test just for a more robust case
-            CoordinateSystem testCurrent4 = new CoordinateSystem(Point.MakePointWithInches(1, 1, -1), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
-            CoordinateSystem testRelativeToCurrent4 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem testCurrent4 = new CoordinateSystem(Point.MakePointWithInches(1, 1, -1), new Angle(AngleType.Degree, 180), Angle.Zero, new Angle(AngleType.Degree, -90));
+            CoordinateSystem testRelativeToCurrent4 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, -90), Angle.Zero);
 
             CoordinateSystem basedOnWorld4 = testRelativeToCurrent4.FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(testCurrent4);
 
@@ -227,8 +227,8 @@ namespace GeometryClassLibraryTest
             Point expectedPoint = Point.MakePointWithInches(1, 2, 3);
 
             //try our first one
-            CoordinateSystem testCurrent = new CoordinateSystem(Point.MakePointWithInches(1, 2, 3), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(Point.MakePointWithInches(1, -2, 1), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem testCurrent = new CoordinateSystem(Point.MakePointWithInches(1, 2, 3), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 90));
+            CoordinateSystem testRelativeToCurrent = new CoordinateSystem(Point.MakePointWithInches(1, -2, 1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 45));
 
             Point expectedOrigin1 = Point.MakePointWithInches(3, 3, 4);
             Angle xExpected1 = new Angle(AngleType.Degree, 0);
@@ -245,8 +245,8 @@ namespace GeometryClassLibraryTest
             (expectedPoint == point1Combined).Should().BeTrue();
 
             //now another one
-            CoordinateSystem testCurrent2 = new CoordinateSystem(Point.MakePointWithInches(1, 1, -1), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
-            CoordinateSystem testRelativeToCurrent2 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem testCurrent2 = new CoordinateSystem(Point.MakePointWithInches(1, 1, -1), new Angle(AngleType.Degree, 180), Angle.Zero, new Angle(AngleType.Degree, -90));
+            CoordinateSystem testRelativeToCurrent2 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 1), new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, -90), Angle.Zero);
 
             Point expectedOrigin2 = Point.MakePointWithInches(1, 3, -2); //1, 3, -2
             Angle xExpected2 = new Angle(AngleType.Degree, 0);
@@ -264,10 +264,10 @@ namespace GeometryClassLibraryTest
             (expectedPoint == point2Combined).Should().BeTrue();
 
             //and one last one that negates out the anles
-            CoordinateSystem testCurrent3 = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
-            CoordinateSystem testRelativeToCurrent3 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
+            CoordinateSystem testCurrent3 = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), Angle.Zero, new Angle(AngleType.Degree, 90));
+            CoordinateSystem testRelativeToCurrent3 = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), Angle.Zero);
 
-            CoordinateSystem expectedCombined3 = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
+            CoordinateSystem expectedCombined3 = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), Angle.Zero, Angle.Zero, Angle.Zero);
 
             Point testPointWorld3 = Point.MakePointWithInches(3, -2, 3);
             Point point3InCurrent = testPointWorld3.Shift(testCurrent3.ShiftToThisFrom());
@@ -362,20 +362,20 @@ namespace GeometryClassLibraryTest
         {
             //a nice simple test
             CoordinateSystem testOriginalCoords = new CoordinateSystem(CoordinateSystem.WorldCoordinateSystem);
-            CoordinateSystem testCurrentSystem = new CoordinateSystem(Point.MakePointWithInches(1, 0, -1), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem testCurrentSystem = new CoordinateSystem(Point.MakePointWithInches(1, 0, -1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 45));
 
             //now shift it a bit
             CoordinateSystem shifted = testOriginalCoords.RelativeShift(new Shift(Point.MakePointWithInches(2, 0, 1)), testCurrentSystem);
             (shifted == new CoordinateSystem(Point.MakePointWithInches(1.4, 1.4, 1))).Should().BeTrue();
 
             //now do one with more complicated shifts
-            CoordinateSystem secondTest = new CoordinateSystem(Point.MakePointWithInches(2, -3, 3), new Angle(AngleType.Degree, 90), new Angle(), new Angle());
-            CoordinateSystem testCurrentSystem2 = new CoordinateSystem(Point.MakePointWithInches(1, 0, -1), new Angle(), new Angle(), new Angle(AngleType.Degree, 90));
+            CoordinateSystem secondTest = new CoordinateSystem(Point.MakePointWithInches(2, -3, 3), new Angle(AngleType.Degree, 90), Angle.Zero, Angle.Zero);
+            CoordinateSystem testCurrentSystem2 = new CoordinateSystem(Point.MakePointWithInches(1, 0, -1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 90));
 
             Shift secondShift = new Shift(new List<Rotation>() { new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)) }, Point.MakePointWithInches(2, -2, -2));
             CoordinateSystem shifted2 = secondTest.RelativeShift(secondShift, testCurrentSystem2);
 
-            CoordinateSystem expected2 = new CoordinateSystem(Point.MakePointWithInches(7, -1, -4), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem expected2 = new CoordinateSystem(Point.MakePointWithInches(7, -1, -4), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 90), Angle.Zero);
             (shifted2 == expected2).Should().BeTrue();
         }
 
@@ -396,11 +396,11 @@ namespace GeometryClassLibraryTest
         {
             //This test demonstrated how you could shift between one coordinate system view and another for an object that stores its "home" coordinateSystem based on the world system
             //and how the geometry of the Systems would need to be shifted
-            CoordinateSystem LegoSetSystem = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), new Angle(), new Angle(AngleType.Degree, 90));
+            CoordinateSystem LegoSetSystem = new CoordinateSystem(Point.MakePointWithInches(2, -2, 0), new Angle(AngleType.Degree, 90), Angle.Zero, new Angle(AngleType.Degree, 90));
             CURRENT_COORDINATE_SYSTEM = LegoSetSystem;
 
-            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), new Angle());
-            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), new Angle(), new Angle(AngleType.Degree, -90));
+            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 0, 0), new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, -90), Angle.Zero);
+            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-1, 3, -5), new Angle(AngleType.Degree, 180), Angle.Zero, new Angle(AngleType.Degree, -90));
 
             LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
             LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
@@ -410,8 +410,8 @@ namespace GeometryClassLibraryTest
             (block2.Geometry == _makeExpectedBlock2InCurrent()).Should().BeTrue();
 
             //check their locations relative to the origin
-            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), new Angle(), new Angle(), new Angle());
-            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), new Angle());
+            CoordinateSystem block1ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), Angle.Zero, Angle.Zero, Angle.Zero);
+            CoordinateSystem block2ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), Angle.Zero);
 
             block1.BlockSystem.Should().Be(block1ExpectedCoords);
             block2.BlockSystem.Should().Be(block2ExpectedCoords);
@@ -488,14 +488,14 @@ namespace GeometryClassLibraryTest
 
             //set up pur lego set and our lego blocks
             LegoSet testSet = new LegoSet();
-            CoordinateSystem LegoSetSystem = new CoordinateSystem(Point.MakePointWithInches(3, -2, -2), new Angle(), new Angle(), new Angle(AngleType.Degree, 45));
+            CoordinateSystem LegoSetSystem = new CoordinateSystem(Point.MakePointWithInches(3, -2, -2), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 45));
             testSet.SetSystem = LegoSetSystem;
 
             CURRENT_COORDINATE_SYSTEM = new CoordinateSystem(LegoSetSystem);
 
             //make block1 on top of block 2
-            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 1, 2), new Angle(), new Angle(), new Angle(AngleType.Degree, -90));
-            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 1, 1), new Angle(), new Angle(), new Angle(AngleType.Degree, -90));
+            CoordinateSystem block1SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 1, 2), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, -90));
+            CoordinateSystem block2SystemRelativeToLegoSet = new CoordinateSystem(Point.MakePointWithInches(-2, 1, 1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, -90));
             LegoBlock block1 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block1SystemRelativeToLegoSet);
             LegoBlock block2 = createBlockInGivenCoordinateSystem(new Distance(DistanceType.Inch, 4), new Distance(DistanceType.Inch, 2), new Distance(DistanceType.Inch, 1), block2SystemRelativeToLegoSet);
 
@@ -551,7 +551,7 @@ namespace GeometryClassLibraryTest
             testSet.SetSystem = testSet.SetSystem.Shift(shiftWholeSet);
 
             //check the coords because we dont hav a geomtry for this - its a collection
-            (testSet.SetSystem == new CoordinateSystem(Point.MakePointWithInches(5, -2, -2), new Angle(), new Angle(), new Angle(AngleType.Degree, 90))).Should().BeTrue();
+            (testSet.SetSystem == new CoordinateSystem(Point.MakePointWithInches(5, -2, -2), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 90))).Should().BeTrue();
 
             //shift the pieces in the collection (also presumably in the LegoSet.Shift() method)
             block1.Geometry = block1.Geometry.Shift(shiftWholeSet);
@@ -587,7 +587,7 @@ namespace GeometryClassLibraryTest
         private class LegoSet
         {
             public List<LegoBlock> Blocks = new List<LegoBlock>();
-            public CoordinateSystem SetSystem = new CoordinateSystem();
+            public CoordinateSystem SetSystem = CoordinateSystem.WorldCoordinateSystem;
         }
 
         private LegoBlock createBlockInGivenCoordinateSystem(Distance xDimension, Distance yDimension, Distance zDimension, CoordinateSystem blocksCoordinateSystem)
@@ -596,13 +596,13 @@ namespace GeometryClassLibraryTest
 
             //make our geometry
             Point basePoint = Point.Origin;
-            Point topLeftPoint = new Point(new Distance(), yDimension, new Distance());
-            Point bottomRightPoint = new Point(xDimension, new Distance(), new Distance());
-            Point topRightPoint = new Point(xDimension, yDimension, new Distance());
+            Point topLeftPoint = new Point(Distance.Zero, yDimension, Distance.Zero);
+            Point bottomRightPoint = new Point(xDimension, Distance.Zero, Distance.Zero);
+            Point topRightPoint = new Point(xDimension, yDimension, Distance.Zero);
 
-            Point backBasePoint = new Point(new Distance(), new Distance(), zDimension);
-            Point backTopLeftPoint = new Point(new Distance(), yDimension, zDimension);
-            Point backBottomRightPoint = new Point(xDimension, new Distance(), zDimension);
+            Point backBasePoint = new Point(Distance.Zero, Distance.Zero, zDimension);
+            Point backTopLeftPoint = new Point(Distance.Zero, yDimension, zDimension);
+            Point backBottomRightPoint = new Point(xDimension, Distance.Zero, zDimension);
             Point backTopRightPoint = new Point(xDimension, yDimension, zDimension);
 
             List<Polygon> planes = new List<Polygon>();

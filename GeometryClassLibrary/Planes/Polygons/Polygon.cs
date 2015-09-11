@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
-        public bool IsConvex
+        public override bool IsConvex
         {
             get
             {
@@ -54,7 +54,7 @@ namespace GeometryClassLibrary
                 {
                     crossProduct = this.LineSegments.Last().CrossProduct(LineSegments.First());
                 }
-                if (crossProduct.Magnitude != new Distance() && crossProduct.Direction != NormalVector.Direction)
+                if (crossProduct.Magnitude != Distance.Zero && crossProduct.Direction != NormalVector.Direction)
                 {
                     return false;
                 }
@@ -1350,7 +1350,7 @@ namespace GeometryClassLibrary
                     }
                 }
 
-                AngularDistance angularDistance = new AngularDistance();
+                AngularDistance angularDistance = Angle.Zero;
                 for (int i = 0; i < this.Vertices.Count; i++)
                 {
                     Point previous;
@@ -1375,7 +1375,7 @@ namespace GeometryClassLibrary
 
                 }
                
-                if (angularDistance % new AngularDistance(AngleType.Degree, 720) == new AngularDistance())
+                if (angularDistance % new AngularDistance(AngleType.Degree, 720) == Angle.Zero)
                 {
                     return false;
                 }
@@ -1580,7 +1580,7 @@ namespace GeometryClassLibrary
             List<Point> projectedVertices = new List<Point>();
             foreach(Point vertex in Vertices)
             {
-                projectedVertices.Add(new Point(vertex.X, vertex.Y, new Distance()));
+                projectedVertices.Add(new Point(vertex.X, vertex.Y, Distance.Zero));
             }
             return new Polygon(projectedVertices);
         }

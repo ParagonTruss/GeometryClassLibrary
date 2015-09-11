@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
             //Law of Sines
             Distance length = sideLength * Math.Sin(otherAngle.Radians)/Math.Sin((step.Radians));
 
-            Point firstPoint = new Point(length, new Distance());
+            Point firstPoint = new Point(length, Distance.Zero);
             List<Point> points = new List<Point>(){ firstPoint };
 
             for (int i = 1; i < numberOfSides; i++)

@@ -11,24 +11,36 @@ namespace GeometryClassLibrary
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Point
+    public partial class Point
     {
         #region Properties and Fields
 
         public static readonly Point Origin = new Point(0 * Inch, 0 * Inch, 0 * Inch);
 
-        private readonly Distance _x;
-        private readonly Distance _y;
-        private readonly Distance _z;
+        private Distance _x;
+        private Distance _y;
+        private Distance _z;
 
         [JsonProperty]
-        public Distance X { get { return _x; } }
+        public Distance X
+        {
+            get { return _x; }
+            private set { _x = value; }
+        }
 
         [JsonProperty]
-        public Distance Y { get { return _y; } }
+        public Distance Y
+        {
+            get { return _y; }
+            private set { _y = value; }
+        }
 
         [JsonProperty]
-        public Distance Z { get { return _z; } }
+        public Distance Z
+        {
+            get { return _z; }
+            private set { _z = value; }
+        }
 
         #endregion
 
@@ -48,7 +60,7 @@ namespace GeometryClassLibrary
         {
             _x = passedX;
             _y = passedY;
-            _z = new Distance();
+            _z = Distance.Zero;
         }
 
         /// <summary>
@@ -202,7 +214,7 @@ namespace GeometryClassLibrary
             }
 
             // if the two points are close enough, then they're equal
-            return this.DistanceTo(comparablePoint) == new Distance();
+            return this.DistanceTo(comparablePoint) == Distance.Zero;
             //return (X == comparablePoint.X) && (Y == comparablePoint.Y) && (Z == comparablePoint.Z);
         }
 
@@ -284,9 +296,6 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Distance DistanceTo(Line passedLine)
         {
-            //Line perpLine = this.MakePerpendicularLineSegment(passedLine);
-            //double distance = this.DistanceTo(perpLine.Intersection(passedLine)).Inches;
-            //return new Distance(DistanceType.Inch, distance);
             Point projected = this.ProjectOntoLine(passedLine);
             Distance distance = this.DistanceTo(projected);
             return distance;

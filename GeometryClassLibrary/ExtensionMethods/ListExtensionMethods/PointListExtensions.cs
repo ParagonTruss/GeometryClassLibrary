@@ -237,7 +237,7 @@ namespace GeometryClassLibrary
                     Vector vector2 = new Vector(point2, point3);
                     Vector shouldBeNormal = vector1.CrossProduct(vector2);
 
-                    if (shouldBeNormal.Magnitude == new Distance() || !shouldBeNormal.HasSameDirectionAs(normal))
+                    if (shouldBeNormal.Magnitude == Distance.Zero || !shouldBeNormal.HasSameDirectionAs(normal))
                     {
                         flag = true;
                         startingIndex = i;
