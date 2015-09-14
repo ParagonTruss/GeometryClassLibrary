@@ -11,7 +11,17 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         protected List<IEdge> _Edges = new List<IEdge>();
-        public List<IEdge> Edges { get { return _Edges; } }
+        public virtual List<IEdge> Edges
+        {
+            get
+            {
+                return _Edges;
+            }
+            set
+            {
+                _Edges = value;
+            }
+        }
 
         /// <summary>
         /// The vertices of this plane region

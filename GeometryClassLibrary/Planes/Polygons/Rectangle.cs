@@ -22,6 +22,12 @@ namespace GeometryClassLibrary
             return rectangle;
         }
 
+        /// <summary>
+        /// Null constructor for the benefit of Entity Framework
+        /// </summary>
+        private Rectangle()
+            : base() { }
+
         public Rectangle(Vector baseSegment, Distance height, Direction referencePlaneNormal = null)
             : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }
 

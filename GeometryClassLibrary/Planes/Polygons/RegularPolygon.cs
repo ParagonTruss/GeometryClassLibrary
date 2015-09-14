@@ -9,6 +9,13 @@ namespace GeometryClassLibrary
     {
 
         #region Constructors
+
+        /// <summary>
+        /// Null constructor for the benefit of Entity Framework
+        /// </summary>
+        protected RegularPolygon()
+            : base() { }
+
         /// <summary>
         /// Creates a regular polygon centered at the origin in the XY-plane.
         /// </summary>

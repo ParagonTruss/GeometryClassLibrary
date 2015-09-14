@@ -7,6 +7,12 @@ namespace GeometryClassLibrary
     {
         #region Constructors
 
+        /// <summary>
+        /// Null constructor for the benefit of Entity Framework
+        /// </summary>
+        protected Triangle()
+            : base() { }
+
         public Triangle(List<LineSegment> sides)
             : base(sides)
         {
