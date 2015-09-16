@@ -7,6 +7,12 @@ namespace GeometryClassLibrary
     {
         #region Constructors
 
+        /// <summary>
+        /// Null constructor for the benefit of Entity Framework
+        /// </summary>
+        private RightTriangle()
+            : base() { }
+
         public RightTriangle(List<LineSegment> sides) : base(sides)
         {
             checkHasRightAngle(sides);

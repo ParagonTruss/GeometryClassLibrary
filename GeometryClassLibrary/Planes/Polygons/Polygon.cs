@@ -15,11 +15,15 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         [JsonProperty]
-        public List<LineSegment> LineSegments
+        public virtual List<LineSegment> LineSegments
         {
             get
             {
                 return this._Edges.Select(e => (LineSegment)e).ToList();
+            }
+            set
+            {
+                _Edges = value.ToList<IEdge>();
             }
         }
 

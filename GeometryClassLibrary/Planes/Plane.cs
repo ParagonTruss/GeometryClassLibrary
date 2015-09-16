@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     /// A plane is an unbounded flat surface
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Plane
+    public partial class Plane
     {
         #region Properties and Fields
 

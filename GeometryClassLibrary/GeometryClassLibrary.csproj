@@ -80,10 +80,12 @@
     <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
+    <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
     <Compile Include="Lines\Line\LineEntityFramework.cs" />
     <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
     <Compile Include="Planes\OtherShapes\Circle.cs" />
     <Compile Include="Planes\Polygons\Parallelogram.cs" />
+    <Compile Include="Planes\PlaneEntityFramework.cs" />
     <Compile Include="Planes\Polygons\RightTriangle.cs" />
     <Compile Include="Planes\Polygons\Triangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystem.cs" />
     <Compile Include="Coordinates\Direction\Direction.cs" />
     <Compile Include="Planes\Polygons\EquilateralTriangle.cs" />
+    <Compile Include="Solids\SolidEntityFramework.cs" />
     <Compile Include="Solids\Polyhedra\Cube.cs" />
     <Compile Include="Solids\OtherSolids\Cylinder.cs" />
     <Compile Include="Planes\OtherShapes\Ellipse.cs" />
@@ -102,7 +105,7 @@
     <Compile Include="ExtensionMethods\ListExtensionMethods\LineListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\LineSegmentListExtensions.cs" />
     <Compile Include="Lines\Line\Line.cs" />
-    <Compile Include="Lines\LineSegment.cs" />
+    <Compile Include="Lines\LineSegment\LineSegment.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\IEdgeListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PolygonListExtensions.cs" />
@@ -144,13 +147,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
+    <ProjectReference Include="..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -4,7 +4,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public abstract class Solid : IComparable<Solid>
+    public abstract partial class Solid : IComparable<Solid>
     {
         #region Fields and Properties
 
