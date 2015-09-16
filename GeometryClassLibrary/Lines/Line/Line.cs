@@ -464,16 +464,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Determines whether or not the line and linesegment intersect
-        /// </summary>
-        /// <param name="passedSegment"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersect(LineSegment passedSegment)
-        {
-            return DoesIntersect((Vector)passedSegment);
-        }
-
-        /// <summary>
         /// Returns whether or not the Polygon and Line intersect
         /// </summary>
         /// <param name="passedPolygon"></param>

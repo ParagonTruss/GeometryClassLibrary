@@ -37,6 +37,7 @@ namespace GeometryClassLibrary
 
         public bool IsClosed { get { return false; } }
 
+        public Direction InitialDirection { get { return Direction; } }
         #endregion
 
         #region Constructors
@@ -189,27 +190,18 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null || !(obj is LineSegment))
             {
                 return false;
             }
+           
+            LineSegment comparableSegment = (LineSegment)obj;
 
-            //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                LineSegment comparableSegment = (LineSegment)obj;
+            // if the two points' x and y are equal, returns true
+            bool pointsAreEqual = comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint);
+            bool pointsAreReverse = comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint);
 
-                // if the two points' x and y are equal, returns true
-                bool pointsAreEqual = comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint);
-                bool pointsAreReverse = comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint);
-
-                return pointsAreEqual || pointsAreReverse;
-            }
-            //if it wasnt a linesegment its not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return pointsAreEqual || pointsAreReverse;  
         }
 
         /// <summary>
@@ -275,7 +267,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoLine(Line projectOnto)
         {
             Vector projection = base.ProjectOntoLine(projectOnto);
-            if (projection.Magnitude != new Distance())
+            if (projection.Magnitude != Distance.Zero)
             {
                 return new LineSegment(projection);
             }
@@ -285,7 +277,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoPlane(Plane plane)
         {
             Vector projection = base.ProjectOntoPlane(plane);
-            if (projection.Magnitude != new Distance())
+            if (projection.Magnitude != Distance.Zero)
             {
                 return new LineSegment(projection);
             }
@@ -407,7 +399,7 @@ namespace GeometryClassLibrary
                     vector = new Vector(this.BasePoint, segment.BasePoint);
                 }
             }
-            if (vector != null && vector.Magnitude != new Distance())
+            if (vector != null && vector.Magnitude != Distance.Zero)
             {
                 return new LineSegment(vector);
             }
