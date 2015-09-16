@@ -250,26 +250,17 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //check for null
-            if (obj == null)
+            if (obj == null || !(obj is Vector))
             {
                 return false;
             }
+            
+            Vector vec = (Vector)obj;
 
-            //try casting and comparing them
-            try
-            {
-                Vector vec = (Vector)obj;
+            bool basePointsEqual = (this.BasePoint == vec.BasePoint);
+            bool endPointsEqual = (this.EndPoint == vec.EndPoint);
 
-                bool basePointsEqual = (this.BasePoint == vec.BasePoint);
-                bool endPointsEqual = (this.EndPoint == vec.EndPoint);
-
-                return basePointsEqual && endPointsEqual;
-            }
-            //if it was not a vector than it cant be equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return basePointsEqual && endPointsEqual;        
         }
 
         /// <summary>

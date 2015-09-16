@@ -869,9 +869,8 @@ namespace GeometryClassLibrary
         ///i.e. right hand rule
         ///returns the oriented faces
         /// </summary>
-        private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> passedPolygons)
-        {
-            List<Polygon> polygonList = passedPolygons.CopyList();
+        private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> polygonList)
+        { 
 
             //Now we try to build piecewise the polyhedron from the faces
             //we abort and return null if run out of faces, but have unmet edges, or
@@ -903,7 +902,7 @@ namespace GeometryClassLibrary
             {
                 return placedFaces;
             }
-            return null;
+            throw new Exception();
 
         }
 
@@ -922,43 +921,13 @@ namespace GeometryClassLibrary
                 }
                 else
                 {
-                    return face;
+                    return new Polygon(face);
                 }
             }
             throw new Exception();
         }
 
-        /// <summary>
-        /// Checks that every edge exists on two distinct faces
-        /// </summary>
-        private static bool _everyEdgeIsOntwoFaces(List<Polygon> polygonList, List<LineSegment> edges)
-        {
-            if (edges == null)
-            {
-                return false;
-            }
-            bool allTwos = true;
-            List<int> counts = new List<int>();
-            foreach (LineSegment edge in edges)
-            {
-                int count = 0;
-                foreach (Polygon polygon in polygonList)
-                {
-                    if (polygon.HasSide(edge))
-                    {
-                        count++;
-                    }
-                }
-                if (count != 2)
-                {
-                    //return false;
-                    allTwos = false;
-                }
-                counts.Add(count);
-            }
-            return allTwos;
-        }
-
+     
         /// <summary>
         /// Places the face by updating all relevant lists 
         /// </summary>
@@ -971,19 +940,19 @@ namespace GeometryClassLibrary
             _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments);
         }
 
-        private static void _disjointUnion(List<LineSegment> passedList, List<LineSegment> otherList)
+        private static void _disjointUnion(List<LineSegment> list1, List<LineSegment> list2)
         {
-            LineSegment[] array = new LineSegment[otherList.Count];
-            otherList.CopyTo(array);
-            List<LineSegment> list2 = array.ToList<LineSegment>();
-            List<LineSegment> list1 = passedList;
-            for (int i = 0; i < list2.Count; i++)
+            for (int i = 0; i < list1.Count; i++)
             {
-                if (list1.Contains(list2[i]))
+                for (int j = 0; j < list2.Count; j++)
                 {
-                    list1.Remove(list2[i]);
-                    list2.Remove(list2[i]);
-                    i = -1;
+                    if (list1[i] == list2[j])
+                    {
+                        list1.RemoveAt(i);
+                        list2.RemoveAt(j);
+                        i--;
+                        break;
+                    }
                 }
             }
             list1.AddRange(list2);
@@ -1006,7 +975,7 @@ namespace GeometryClassLibrary
                         }
                         else
                         {
-                            return polygon;
+                            return new Polygon(polygon);
                         }
                     }
                 }

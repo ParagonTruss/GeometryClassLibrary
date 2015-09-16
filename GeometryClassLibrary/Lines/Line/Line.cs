@@ -141,7 +141,11 @@ namespace GeometryClassLibrary
             this.Direction = direction;
         }
 
-
+        public Line(Point basePoint, Direction direction)
+        {
+            this.BasePoint = basePoint;
+            this.Direction = direction;
+        }
         /// <summary>
         /// Constructs a line through any 2 points
         /// </summary>
@@ -206,26 +210,18 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the passed object is not null
-            if (obj == null)
+            if (obj == null || !(obj is Line))
             {
                 return false;
             }
 
-            //try casting and comparing it
-            try
-            {
-                Line comparableLine = (Line)obj;
+            Line comparableLine = (Line)obj;
 
-                bool linesAreParallel = IsParallelTo(comparableLine);
-                bool basePointIsOnLine = BasePoint.IsOnLine(comparableLine);
+            bool linesAreParallel = IsParallelTo(comparableLine);
+            bool basePointIsOnLine = BasePoint.IsOnLine(comparableLine);
 
-                return (linesAreParallel && basePointIsOnLine);
-            }
-            //if it wasnt a Line than it wasnt equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return (linesAreParallel && basePointIsOnLine);
+           
         }
 
         /// <summary>
@@ -286,26 +282,26 @@ namespace GeometryClassLibrary
 
         public Plane PlaneThroughLineInDirectionOf(Enums.Axis passedAxis)
         {
-            Line extrustionLine;
+            Line extrusionLine;
 
             switch (passedAxis)
             {
                 case Enums.Axis.X:
-                    extrustionLine = new Line(this.BasePoint,
+                    extrusionLine = new Line(this.BasePoint,
                         this.BasePoint - new Point(Inch, Distance.Zero));
                     break;
                 case Enums.Axis.Y:
-                    extrustionLine = new Line(this.BasePoint,
+                    extrusionLine = new Line(this.BasePoint,
                         this.BasePoint - new Point(Distance.Zero, Inch));
                     break;
                 case Enums.Axis.Z:
-                    extrustionLine = new Line(this.BasePoint,
+                    extrusionLine = new Line(this.BasePoint,
                        this.BasePoint - new Point(Distance.Zero, Distance.Zero, Inch));
                     break;
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
             }
-            return new Plane(this, extrustionLine);
+            return new Plane(extrusionLine, this);
         }
 
         /// Make this in linesegment and make it direction dependent

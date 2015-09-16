@@ -114,7 +114,7 @@
       <Project>{0547226e-2a1a-4aaa-b91d-2ae879504706}</Project>
       <Name>GeometryStubLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
+    <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>

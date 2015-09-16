@@ -191,27 +191,20 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null ||!(obj is LineSegment))
             {
                 return false;
             }
 
             //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                LineSegment comparableSegment = (LineSegment)obj;
+            
+            LineSegment comparableSegment = (LineSegment)obj;
 
-                // if the two points' x and y are equal, returns true
-                bool pointsAreEqual = comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint);
-                bool pointsAreReverse = comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint);
+            // if the two points' x and y are equal, returns true
+            bool pointsAreEqual = comparableSegment.BasePoint.Equals(this.BasePoint) && comparableSegment.EndPoint.Equals(this.EndPoint);
+            bool pointsAreReverse = comparableSegment.BasePoint.Equals(this.EndPoint) && comparableSegment.EndPoint.Equals(this.BasePoint);
 
-                return pointsAreEqual || pointsAreReverse;
-            }
-            //if it wasnt a linesegment its not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return pointsAreEqual || pointsAreReverse;
         }
 
         /// <summary>
@@ -294,7 +287,7 @@ namespace GeometryClassLibrary
             return null;
         }
         /// <summary>
-        /// returns a copy of the line segment pointing in the opposite direction as the original
+        /// returns a linesegment occupying the same location but pointed the opposite direction.
         /// </summary>
         /// <returns></returns>
         public new LineSegment Reverse()
