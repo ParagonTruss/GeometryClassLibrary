@@ -735,7 +735,7 @@ namespace GeometryClassLibrary
 
         public bool IsRectangularPrism()
         {
-            if (this.Polygons.Count != 6)
+            if (this.Polygons.Count != 6 || this.LineSegments.Count != 12 || this.Vertices.Count != 8)
             {
                 return false;
             }
