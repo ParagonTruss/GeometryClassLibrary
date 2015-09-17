@@ -75,10 +75,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates an empty solid object
         /// </summary>
-        public Solid()
-        {
-
-        }
+        protected Solid() { }
 
         #endregion
 

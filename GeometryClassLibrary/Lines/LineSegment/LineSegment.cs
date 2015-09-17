@@ -42,11 +42,10 @@ namespace GeometryClassLibrary
 
         #region Constructors
 
-        public LineSegment()
-            : base()
-        {
-
-        }
+        /// <summary>
+        /// Null Constructor
+        /// </summary>
+        protected LineSegment() { }
 
         /// <summary>
         /// Creates a Line Segment that extends from the origin to the given end point

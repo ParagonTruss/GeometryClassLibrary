@@ -14,6 +14,8 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
+        public static readonly Vector Zero = new Vector(Point.Origin);
+
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>

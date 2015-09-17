@@ -147,19 +147,7 @@ namespace GeometryClassLibrary
             {
                 if (_centerPoint == null)
                 {
-                    Distance xValues = Distance.Zero;
-                    Distance yValues = Distance.Zero;
-                    Distance zValues = Distance.Zero;
-
-                    foreach (Point vertex in this.Vertices)
-                    {
-                        xValues += vertex.X;
-                        yValues += vertex.Y;
-                        zValues += vertex.Z;
-                    }
-
-                    int vertexCount = this.Vertices.Count();
-                    _centerPoint = new Point(xValues / vertexCount, yValues / vertexCount, zValues / vertexCount);
+                    _centerPoint = this.Vertices.CenterPoint();
                 }
                 return _centerPoint;
             }
@@ -258,7 +246,6 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLineSegments">The line segments that define this Polyhedron</param>
         public Polyhedron(List<LineSegment> passedLineSegments)
-            : base()
         {
             this.Polygons = passedLineSegments.MakeCoplanarLineSegmentsIntoPolygons();
         }
