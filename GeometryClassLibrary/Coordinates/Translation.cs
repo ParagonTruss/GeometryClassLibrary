@@ -7,9 +7,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates a new zero translation
+        ///Null Constructor
         /// </summary>
-        public Translation() { }
+        protected Translation() { }
 
         /// <summary>
         /// Creates a Translation with offsets in each direction represented by the point
@@ -32,16 +32,6 @@ namespace GeometryClassLibrary
         /// <param name="zTranslation">The distance to translate in the Z direction</param>
         public Translation(Distance xTranslation, Distance yTranslation, Distance zTranslation)
             : base(xTranslation, yTranslation, zTranslation) { }
-
-        /// <summary>
-        /// Creates a Translation in the given units with the translation distance with each of the given direction
-        /// </summary>
-        /// <param name="passedType">The dimesnions to use for this translation object</param>
-        /// <param name="xTranslation">The unitless distance to translate in the X direction</param>
-        /// <param name="yTranslation">The unitless distance to translate in the Y direction</param>
-        /// <param name="zTranslation">The unitless distance to translate in the Z direction</param>
-        public Translation(DistanceType passedType, double xTranslation, double yTranslation, double zTranslation)
-            : base(passedType, xTranslation, yTranslation, zTranslation) { }
 
         /// <summary>
         /// Creates a copy of the given translation

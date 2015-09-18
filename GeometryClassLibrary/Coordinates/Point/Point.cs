@@ -326,47 +326,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
-            Point originPoint = MakePointWithInches(0, 0, 0);
-
-            bool originIsOnPassedAxis = originPoint.IsOnLine(rotationToApply.AxisOfRotation);
-
-            Point pointForRotating = this;
-
-            Line axisForRotating = rotationToApply.AxisOfRotation;
-
-            if (!originIsOnPassedAxis)
-            {
-                //Must translate everything so that the axis line goes through the origin before rotating
-
-                //Move the point negative the basepoint from the origin
-                pointForRotating = this.Translate(new Translation(Point.Origin - rotationToApply.AxisOfRotation.BasePoint));
-
-                //Make the axis go through the origin
-                axisForRotating = new Line(rotationToApply.AxisOfRotation.Direction, originPoint);
-
-            }
-
-            Matrix rotationMatrix = Matrix.RotationMatrixAboutOrigin(new Rotation(axisForRotating, rotationToApply.RotationAngle));
-
-            Matrix pointMatrix = pointForRotating.ConvertToMatrixColumn();
-
-            Matrix rotatedPointMatrix = rotationMatrix * pointMatrix;
-
-            double xOfRotatedPoint = rotatedPointMatrix.GetElement(0, 0);
-            double yOfRotatedPoint = rotatedPointMatrix.GetElement(1, 0);
-            double zOfRotatedPoint = rotatedPointMatrix.GetElement(2, 0);
-
-            Point pointToReturn = MakePointWithInches(xOfRotatedPoint, yOfRotatedPoint, zOfRotatedPoint);
-
-            if (originIsOnPassedAxis)
-            {
-                return pointToReturn;
-            }
-            else
-            {
-                //Must shift the point back by the same distance we shifted it before rotating it
-                return pointToReturn + rotationToApply.AxisOfRotation.BasePoint;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -469,31 +429,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Shifts the Point with the given Shift
         /// </summary>
-        /// <param name="passedShift">The Shift to apply to this Point</param>
-        /// <returns>returns a new Point that has been shifted</returns>
-        public Point Shift(Shift passedShift)
+        public Point Shift(Shift shift)
         {
-            Point pointToReturn = this;
-
-            //we need to untranslate the point first if we are negating a previous shift so that it returns 
-            //correcly - for a full explanation look in Shift.cs where isNegatedShift is declared
-            if (passedShift.isNegatedShift)
-            {
-                pointToReturn = pointToReturn.Translate(new Translation(passedShift.Displacement));
-            }
-
-            //we need to apply each rotation in order to the point
-            foreach (Rotation rotation in passedShift.RotationsToApply)
-            {
-                pointToReturn = pointToReturn.Rotate3D(rotation);
-            }
-
-            //and then we translate it (unless is a negating shift) so the shift is more intuitive
-            if (!passedShift.isNegatedShift)
-            {
-                pointToReturn = pointToReturn.Translate(new Translation(passedShift.Displacement));
-            }
-            return pointToReturn;
+           return  Matrix.ShiftPoint(this, shift);
         }
 
         #endregion

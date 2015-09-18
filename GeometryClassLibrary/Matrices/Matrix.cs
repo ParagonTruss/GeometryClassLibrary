@@ -73,6 +73,19 @@ namespace GeometryClassLibrary
             _matrix = passedMatrix.Clone();
         }
 
+        public Matrix(double[] array)
+        {
+            this._matrix = DenseMatrix.OfArray(new double[array.Length, 1]);
+
+            this.SetColumn(0, array);
+        }
+
+        /// <summary> Constructs Matrix object from a 2dArray </summary>
+        public Matrix(double[,] passed2DArray)
+        {
+            this._matrix = DenseMatrix.OfArray(passed2DArray);
+        }
+
         /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
@@ -81,14 +94,6 @@ namespace GeometryClassLibrary
         {
             _matrix = passedMatrix._matrix.Clone();
         }
-
-
-        /// <summary> Constructs Matrix object from a 2dArray </summary>
-        public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
-        {
-            this._matrix = DenseMatrix.OfArray(passed2DArray);
-        }
-
         #endregion
 
         #region Overloaded Operators
@@ -416,6 +421,34 @@ namespace GeometryClassLibrary
             return returnMatrix;
         }
 
+        public static Point ShiftPoint(Point point, Shift shift)
+        {
+            var col =  PointAsProjectiveColumnVector(point);
+            var result = shift.Matrix * col;
+            return _pointFromProjectiveColumnVector(result);
+        }
+
+        public static Matrix PointAsProjectiveColumnVector(Point point)
+        {
+            return new Matrix(new double[]
+            { point.X.Inches, point.Y.Inches, point.Z.Inches, 1 });
+        }
+        private static Point _pointFromProjectiveColumnVector(Matrix projectiveVector)
+        {
+            var col = projectiveVector.GetColumn(0);
+            //smallest we're allowing is 1 millionth
+            if (Math.Abs(col[3]) < 0.000001)
+            {
+                return Point.Origin;
+            }
+            else
+            {
+                var x = col[0] / col[3];
+                var y = col[1] / col[3];
+                var z = col[2] / col[3];
+                return Point.MakePointWithInches(x, y, z);
+            }
+        }
         #endregion
 
         /// <summary>

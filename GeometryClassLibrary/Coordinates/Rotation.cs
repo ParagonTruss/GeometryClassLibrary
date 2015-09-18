@@ -10,6 +10,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
         private readonly AngularDistance _rotationAngle;
         private readonly Line _axisOfRotation;
+        private Matrix _matrix;
 
         public AngularDistance RotationAngle
         {
@@ -71,6 +72,10 @@ namespace GeometryClassLibrary
             this._axisOfRotation = toCopy._axisOfRotation;
         }
 
+        private void _setMatrix()
+        {
+            var translate = new Translation(_axisOfRotation.BasePoint.Negate());
+        }
         #endregion 
 
         #region Overloaded Operators

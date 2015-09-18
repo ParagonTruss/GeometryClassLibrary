@@ -417,12 +417,12 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="systemToRotateTo">The CoordinateSystem to Rotate to from this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
         /// <returns>Returns the Shift to apply to objects oriented in this CoordinateSystem in order to orient them in the same way as the passed CoordinateSystem</returns>
-        public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
-        {
-            //find the whole shift but then make a new one with only the rotations
-            Shift shiftTo = ShiftFromThisTo(systemToRotateTo);
-            return new Shift(shiftTo.RotationsToApply);
-        }
+        //public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
+        //{
+        //    //find the whole shift but then make a new one with only the rotations
+        //    Shift shiftTo = ShiftFromThisTo(systemToRotateTo);
+        //    return new Shift(shiftTo.RotationsToApply);
+        //}
 
         /// <summary>
         /// Returns only the rotational Shift to apply to objects in order to only orient them in this CoordinateSystem when they are currently oriented in the passed CoordinateSystem, but does not move them.
