@@ -184,7 +184,7 @@ namespace GeometryClassLibraryTest
 
             Arc testArc = new Arc(basePoint, endPoint, directionAtStart);
 
-            Arc results = testArc.Translate( new Translation(new Translation(Point.MakePointWithInches(-1, 2, .5))));
+            Arc results = testArc.Translate(Point.MakePointWithInches(-1, 2, .5));
 
             Arc expected = new Arc(Point.MakePointWithInches(-1, 2, 0.5), Point.MakePointWithInches(-3 - 1, 2 + 2, 1 + .5), directionAtStart);
 

@@ -500,24 +500,21 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the arc with the given translation
         /// </summary>
-        /// <param name="translation">The translation to apply to the Arc</param>
+        /// <param name="point">The translation to apply to the Arc</param>
         /// <returns>A new Arc object that has been translated</returns>
-        public Arc Translate(Translation translation)
+        public Arc Translate(Point point)
         {
-            Point newBasePoint = BasePoint.Translate(translation);
-            Point newEndPoint = EndPoint.Translate(translation);
-
+            Point newBasePoint = BasePoint.Translate(point);
+            Point newEndPoint = EndPoint.Translate(point);
             return new Arc(newBasePoint, newEndPoint, this.InitialDirection);
         }
 
         /// <summary>
         /// Translates the arc as an IEdge with the given translation
         /// </summary>
-        /// <param name="translation">The translation to apply to the Arc</param>
-        /// <returns>A new Arc object as an IEdge that has been translated</returns>
-        IEdge IEdge.Translate(Translation translation)
+        IEdge IEdge.Translate(Point point)
         {
-            return this.Translate(translation);
+            return this.Translate(point);
         }
 
         public IEdge Reverse()

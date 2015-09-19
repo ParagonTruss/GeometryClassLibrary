@@ -451,6 +451,11 @@ namespace GeometryClassLibrary
         }
         #endregion
 
+        public static Matrix Identity(int dimension)
+        {
+            return new Matrix(DenseMatrix.CreateIdentity(dimension));
+        }
+
         /// <summary>
         /// Returns a matrix with the specified row and column removed
         /// </summary>
@@ -772,15 +777,18 @@ namespace GeometryClassLibrary
             double unitZ = rotationUnitVector.ZComponent;
             double theta = passedRotation.RotationAngle.Radians;
 
-            double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));
+            double sinTheta = Math.Sin(theta);
+            double cosTheta = Math.Cos(theta);
+
+            double row0column0 = Math.Cos(theta) + unitX*unitX * (1 - Math.Cos(theta));
             double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);
             double row0column2 = unitX * unitZ * (1 - Math.Cos(theta)) + unitY * Math.Sin(theta);
             double row1column0 = unitY * unitX * (1 - Math.Cos(theta)) + unitZ * Math.Sin(theta);
-            double row1column1 = Math.Cos(theta) + Math.Pow(unitY, 2) * (1 - Math.Cos(theta));
+            double row1column1 = Math.Cos(theta) + unitY*unitY * (1 - Math.Cos(theta));
             double row1column2 = unitY * unitZ * (1 - Math.Cos(theta)) - unitX * Math.Sin(theta);
             double row2column0 = unitZ * unitX * (1 - Math.Cos(theta)) - unitY * Math.Sin(theta);
             double row2column1 = unitZ * unitY * (1 - Math.Cos(theta)) + unitX * Math.Sin(theta);
-            double row2column2 = Math.Cos(theta) + Math.Pow(unitZ, 2) * (1 - Math.Cos(theta));
+            double row2column2 = Math.Cos(theta) + unitZ*unitZ * (1 - Math.Cos(theta));
 
             rotationMatrix.SetElement(0, 0, row0column0);
             rotationMatrix.SetElement(0, 1, row0column1);

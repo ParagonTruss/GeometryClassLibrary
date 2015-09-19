@@ -16,10 +16,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translate the List of Plane Regions with the given translation
         /// </summary>
-        public static List<PlaneRegion> Translate(this IList<PlaneRegion> planeRegions, Point translation)
-        {
-            return planeRegions.Select(p => p.Translate(translation)).ToList();
-        }
+        //public static List<PlaneRegion> Translate(this IList<PlaneRegion> planeRegions, Point translation)
+        //{
+        //    return planeRegions.Select(p => p.Translate(translation)).ToList();
+        //}
 
         /// <summary>
         /// Shifts the list of plane regions with the given Shift

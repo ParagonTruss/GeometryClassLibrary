@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
         private readonly AngularDistance _rotationAngle;
         private readonly Line _axisOfRotation;
         private Matrix _matrix;
-
+        public Matrix Matrix { get { return _matrix; } }
         public AngularDistance RotationAngle
         {
             get
@@ -33,13 +33,9 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Creates the identity rotation
+        /// Null Constructor
         /// </summary>
-        public Rotation()
-        {
-            this._rotationAngle = Angle.Zero;
-            this._axisOfRotation = Line.XAxis;
-        }
+        public Rotation() { }
        
         /// <summary>
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
@@ -50,6 +46,7 @@ namespace GeometryClassLibrary
         {
             this._rotationAngle = rotationAngle;
             this._axisOfRotation = axisOfRotation;
+            _setMatrix();
         }
 
         public Rotation(AngularDistance rotationAngle, Line axisOfRotation = null)
@@ -60,6 +57,7 @@ namespace GeometryClassLibrary
             }
             this._axisOfRotation = axisOfRotation;
             this._rotationAngle = rotationAngle;
+            _setMatrix();
         }
 
         /// <summary>
@@ -70,11 +68,55 @@ namespace GeometryClassLibrary
         {
             this._rotationAngle = toCopy._rotationAngle;
             this._axisOfRotation = toCopy._axisOfRotation;
+            this._matrix = new Matrix(toCopy._matrix);
         }
 
         private void _setMatrix()
         {
-            var translate = new Translation(_axisOfRotation.BasePoint.Negate());
+            var translateInverse = new Translation(_axisOfRotation.BasePoint.Negate()).Matrix;
+            var rotate = _matrixOfRotationAboutOrigin();
+            var translate = new Translation(_axisOfRotation.BasePoint).Matrix;
+            this._matrix = translate * rotate * translateInverse;
+        }
+        /// <summary>
+        /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
+        /// </summary>>
+        private Matrix _matrixOfRotationAboutOrigin()
+        {
+            Matrix rotationMatrix = new Matrix(4,4);
+
+            Direction rotationUnitVector = this.AxisOfRotation.Direction;
+
+            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis
+            double unitY = rotationUnitVector.YComponent;
+            double unitZ = rotationUnitVector.ZComponent;
+            double theta = this.RotationAngle.Radians;
+
+            double sinTheta = Math.Sin(theta);
+            double cosTheta = Math.Cos(theta);
+
+            double row0column0 = cosTheta + unitX * unitX * (1 - cosTheta);
+            double row0column1 = unitX * unitY * (1 - cosTheta) - unitZ * sinTheta;
+            double row0column2 = unitX * unitZ * (1 - cosTheta) + unitY * sinTheta;
+            double row1column0 = unitY * unitX * (1 - cosTheta) + unitZ * sinTheta;
+            double row1column1 = cosTheta + unitY * unitY * (1 - cosTheta);
+            double row1column2 = unitY * unitZ * (1 - cosTheta) - unitX * sinTheta;
+            double row2column0 = unitZ * unitX * (1 - cosTheta) - unitY * sinTheta;
+            double row2column1 = unitZ * unitY * (1 - cosTheta) + unitX * sinTheta;
+            double row2column2 = cosTheta + unitZ * unitZ * (1 - cosTheta);
+
+            rotationMatrix.SetElement(0, 0, row0column0);
+            rotationMatrix.SetElement(0, 1, row0column1);
+            rotationMatrix.SetElement(0, 2, row0column2);
+            rotationMatrix.SetElement(1, 0, row1column0);
+            rotationMatrix.SetElement(1, 1, row1column1);
+            rotationMatrix.SetElement(1, 2, row1column2);
+            rotationMatrix.SetElement(2, 0, row2column0);
+            rotationMatrix.SetElement(2, 1, row2column1);
+            rotationMatrix.SetElement(2, 2, row2column2);
+
+            rotationMatrix.SetElement(3, 3, 1.0);
+            return rotationMatrix;
         }
         #endregion 
 

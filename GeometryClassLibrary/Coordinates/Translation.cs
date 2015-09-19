@@ -1,9 +1,15 @@
 ﻿using UnitClassLibrary;
+using System;
 
 namespace GeometryClassLibrary
 {
-    public class Translation : Point
+    public class Translation
     {
+        #region _fields & Properties
+
+      private Matrix _matrix = Matrix.IdentityMatrix(4);
+        public Matrix Matrix { get { return _matrix; } }
+        #endregion
         #region Constructors
 
         /// <summary>
@@ -16,29 +22,32 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="translation">The distance in each direction that this translation represents</param>
         public Translation(Point translation)
-            : base(translation) { }
+        {
+            var array = new double[]
+            { translation.X.Inches, translation.Y.Inches, translation.Z.Inches, 1 };
+            _matrix.SetColumn(3, array);
+        }
 
         /// <summary>
         /// Creates a Translation in the direction of the given vector.
         /// </summary>
         /// <param name="vector"></param>
-        public Translation(Vector vector) : base(vector.XComponent, vector.YComponent, vector.ZComponent) { }
+        public Translation(Vector vector) : this(vector.XComponent, vector.YComponent, vector.ZComponent) { }
 
         /// <summary>
         /// Creates a translation with the given translation Dimesnions in each direction
         /// </summary>
-        /// <param name="xTranslation">The distance to translate in the X direction</param>
-        /// <param name="yTranslation">The distance to translate in the Y direction</param>
-        /// <param name="zTranslation">The distance to translate in the Z direction</param>
-        public Translation(Distance xTranslation, Distance yTranslation, Distance zTranslation)
-            : base(xTranslation, yTranslation, zTranslation) { }
+       public Translation(Distance xTranslation, Distance yTranslation, Distance zTranslation)
+            : this(new Point(xTranslation, yTranslation, zTranslation)) { }
 
         /// <summary>
         /// Creates a copy of the given translation
         /// </summary>
         /// <param name="toCopy">The translation to copy</param>
         public Translation(Translation toCopy)
-            : base(toCopy) { }
+        {
+            this._matrix = new Matrix(toCopy._matrix);
+        }
 
         #endregion
 
@@ -46,7 +55,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return _matrix.GetHashCode();
         }
 
         /// <summary>
@@ -87,24 +96,16 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure we didnt get a null
-            if (obj == null)
+            if (obj == null || !(obj is Translation))
             {
                 return false;
             }
 
-            //try to cast the object to a translation, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                Translation comparableTranslation = (Translation)obj;
+          
+            Translation comparableTranslation = (Translation)obj;
 
-                //now just check if they are equavalent as points
-                return ((Point)this).Equals((Point)comparableTranslation);
-            }
-            //if we didnt get a translation than its not equal
-            catch
-            {
-                return false;
-            }
+            throw new NotImplementedException();
+        
         }
 
         #endregion

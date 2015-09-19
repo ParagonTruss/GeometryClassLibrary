@@ -341,7 +341,7 @@ namespace GeometryClassLibrary
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.LineSegments)
             {
-                newBoundaryList.Add(segment.Translate(new Translation(translation)));
+                newBoundaryList.Add(segment.Translate((translation)));
             }
             return new Polygon(newBoundaryList, false);
         }
@@ -623,7 +623,7 @@ namespace GeometryClassLibrary
 
             foreach (LineSegment segment in LineSegments)
             {
-                LineSegment opposite = segment.Translate(new Translation(directionVector));
+                LineSegment opposite = segment.Shift(directionVector);
                 oppositeSegments.Add(opposite);
 
                 Polygon sideFace = new Polygon(new List<Point>() { segment.BasePoint, segment.EndPoint, opposite.EndPoint, opposite.BasePoint });
@@ -1567,15 +1567,15 @@ namespace GeometryClassLibrary
             Plane plane = _planeWithSmallestAngleBetween();
             if (plane == YZ)
             {
-                return new Rotation(new Line(Direction.Up), new Angle(AngleType.Degree, 90));
+                return new Rotation(Line.YAxis, new Angle(AngleType.Degree, 90));
             }
             else if (plane == XZ)
             {
-                return new Rotation(new Line(Direction.Right), new Angle(AngleType.Degree, 90));
+                return new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 90));
             }
             else
             {
-                return new Rotation();
+                return new Rotation(Line.XAxis, Angle.Zero);
             }
         }
 

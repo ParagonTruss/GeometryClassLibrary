@@ -166,7 +166,7 @@ namespace GeometryClassLibraryTest
             //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
-            LineSegment actualSegment1 = segment1.Translate(new Translation(new Translation(testDisplacement)));
+            LineSegment actualSegment1 = segment1.Translate(testDisplacement);
 
             LineSegment expectedSegment1 = new LineSegment(Point.MakePointWithInches(-1, 12, 11), Point.MakePointWithInches(-5, 8, 8));
 

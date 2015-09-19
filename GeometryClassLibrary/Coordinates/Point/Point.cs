@@ -326,7 +326,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
-            throw new NotImplementedException();
+            return Matrix.ShiftPoint(this, new Shift(rotationToApply));
         }
 
         /// <summary>

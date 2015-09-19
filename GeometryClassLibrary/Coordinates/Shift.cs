@@ -9,12 +9,15 @@ namespace GeometryClassLibrary
 
         public static implicit operator Shift(Rotation r)
         {
-            return new Shift(r);
+            return new Shift(r.Matrix);
         }
-
-        public static implicit operator Shift(Point t)
+        public static implicit operator Shift(Translation t)
         {
-            return new Shift(t);
+            return new Shift(t.Matrix);
+        }
+        public static implicit operator Shift(Point p)
+        {
+            return new Shift(p);
         }
 
         public static implicit operator Shift(Vector v)
@@ -45,9 +48,10 @@ namespace GeometryClassLibrary
         /// negating shifts
         /// </summary>
 
-        private Matrix _matrix = new Matsrix(4,4);
+        private Matrix _matrix = Matrix.IdentityMatrix(4);
         internal Matrix Matrix { get { return _matrix; } }
 
+       public List<Rotation> RotationsToApply = new List<Rotation>();
         #endregion
 
         #region Constructors
@@ -62,40 +66,52 @@ namespace GeometryClassLibrary
         /// </summary>
         public Shift(Point displacement)
         {
-            var col = new double[] { displacement.X.Inches, displacement.Y.Inches, displacement.Z.Inches, 1 };
-            _matrix.SetColumn(3, col);
+            _matrix = new Translation(displacement).Matrix;
         }
 
-        public Shift(Vector vector) : this(new Translation(vector)) { }
+        public Shift(Vector vector)
+            : this(vector.EndPoint-vector.BasePoint) { }
 
         /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>
         public Shift(Rotation rotation, Point displacement = null)
         {
+            this.RotationsToApply.Add(rotation);
             if (displacement == null)
             {
-                displacement = Point.Origin;
+                this._matrix = rotation.Matrix;
             }
-            this._matrix = Matrix.PointAsProjectiveColumnVector(displacement)
-                * rotation.Matrix;
+            else
+            {
+                this._matrix = new Translation(displacement).Matrix
+                    * rotation.Matrix;
+            }
         }
 
         /// <summary>
         /// Creates a Shift with multiple Rotations and a displacment, or zero translation if it is omitted
         /// </summary>
-        /// <param name="passedRotations">The rotations that make up and are represented by this shift</param>
+        /// <param name="rotations">The rotations that make up and are represented by this shift</param>
         /// <param name="displacement">The distance of displacement this shift represents in each direction</param>
-        public Shift(List<Rotation> passedRotations, Point displacement = null)
+        public Shift(List<Rotation> rotations, Point displacement = null)
         {
+            this.RotationsToApply.AddRange(rotations);
             if (displacement == null)
             {
                 displacement = Point.Origin;
-            }  
+            }
+           
+            foreach(var rotation in rotations)
+            {
+                _matrix = rotation.Matrix * _matrix;
+            }
+            var translationMatrix = new Translation(displacement).Matrix;
+            _matrix = translationMatrix * _matrix;
         }
-        public Shift(Matrix matrix)
+        private Shift(Matrix matrix)
         {
-            this._matrix = new Matrix(matrix);
+            this._matrix = matrix;
         }
         /// <summary>
         /// Creates a copy of the given Shift
@@ -109,7 +125,17 @@ namespace GeometryClassLibrary
 
         #region Overloaded Operators
 
-        
+
+        /// <summary>
+        /// Compose two shift operations.
+        ///  Note this is not generally commutative.
+        ///The shift on the left is applied first.
+        /// </summary>
+        public static Shift operator *(Shift s1, Shift s2)
+        {
+            //Matrix multiplication goes right to left.
+            return new Shift(s2.Matrix * s1.Matrix);
+        }
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to Constants.AcceptedEqualityDeviationConstant 
@@ -179,6 +205,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        public Shift Compose(Shift shift)
+        {
+            return new Shift(this.Matrix * shift.Matrix);
+        }
 
         /// <summary>
         /// creates a negative instance of the shift object

@@ -16,11 +16,12 @@
         #endregion
 
         #region Methods
-        IEdge Reverse();
-        IEdge Rotate(Rotation passedRotation);
-        IEdge Translate(Translation passedTanslation);
-        IEdge Shift(Shift passedShift);
         IEdge Copy();
+        IEdge Reverse();
+        IEdge Translate(Point point);
+        IEdge Rotate(Rotation rotation);
+        IEdge Shift(Shift shift);
+       
 
         #endregion
 
