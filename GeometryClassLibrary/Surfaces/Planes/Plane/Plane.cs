@@ -11,13 +11,15 @@ namespace GeometryClassLibrary
     /// A plane is an unbounded flat surface
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Plane
+    public partial class Plane : ISurface
     {
         #region Properties and Fields
 
         public readonly static Plane XY = new Plane(Line.XAxis, Line.YAxis);
         public readonly static Plane XZ = new Plane(Line.XAxis, Line.ZAxis);
         public readonly static Plane YZ = new Plane(Line.YAxis, Line.ZAxis);
+
+        public virtual bool IsBounded { get { return true; } }
 
         /// <summary>
         /// A point on the plane that is used as a reference point to define it
@@ -673,6 +675,11 @@ namespace GeometryClassLibrary
         public bool CutsAcross(Polyhedron solid)
         {
             return solid.Slice(this).Count == 2;
+        }
+
+        ISurface ISurface.Shift(Shift shift)
+        {
+            return this.Shift(shift);
         }
         #endregion
     }
