@@ -57,8 +57,8 @@
       <HintPath>..\..\packages\MathNet.Numerics.3.7.0\lib\portable-net45+sl5+netcore45+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MoreLinq.Portable, Version=1.1.17511.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MoreLinq.Portable.1.1.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MoreLinq.Portable.dll</HintPath>
+    <Reference Include="MoreLinq.Portable, Version=1.2.18812.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MoreLinq.Portable.1.2.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MoreLinq.Portable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -84,6 +84,7 @@
     <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
     <Compile Include="Lines\Line\LineEntityFramework.cs" />
     <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
+    <Compile Include="Solids\Polyhedra\Polyhedron\PolyhedronEntityFramework.cs" />
     <Compile Include="Surfaces\Planes\OtherShapes\Circle.cs" />
     <Compile Include="Surfaces\Planes\PlaneRegion\PlaneRegionInterfaceImplementations.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Parallelogram.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="ExtensionMethods\ListExtensionMethods\PlaneRegionListExtensions.cs" />
     <Compile Include="Coordinates\Point\Point.cs" />
     <Compile Include="Solids\Polyhedra\Parallelepiped.cs" />
-    <Compile Include="Solids\Polyhedra\Polyhedron.cs" />
+    <Compile Include="Solids\Polyhedra\Polyhedron\Polyhedron.cs" />
     <Compile Include="Solids\Polyhedra\RectangularPrism.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -151,7 +152,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
