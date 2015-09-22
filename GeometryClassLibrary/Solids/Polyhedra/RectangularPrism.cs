@@ -11,6 +11,11 @@ namespace GeometryClassLibrary
 
         #endregion
 
+        /// <summary>
+        /// Protected null constructor for the use of data frameworks like Entity Framework and Json.NET
+        /// </summary>
+        protected RectangularPrism() { }
+
         public RectangularPrism(Rectangle rectangle, Distance height) : base(_makePrismFromRectangle(rectangle, height)) { }
 
         private static Polyhedron _makePrismFromRectangle(Rectangle rectangle, Distance height)
