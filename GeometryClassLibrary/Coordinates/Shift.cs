@@ -9,12 +9,15 @@ namespace GeometryClassLibrary
 
         public static implicit operator Shift(Rotation r)
         {
-            return new Shift(r);
+            return new Shift(r.Matrix);
         }
-
-        public static implicit operator Shift(Point t)
+        public static implicit operator Shift(Translation t)
         {
-            return new Shift(t);
+            return new Shift(t.Matrix);
+        }
+        public static implicit operator Shift(Point p)
+        {
+            return new Shift(p);
         }
 
         public static implicit operator Shift(Vector v)
@@ -44,153 +47,97 @@ namespace GeometryClassLibrary
         /// translated at the very end or the very begining of the shifting processto ensure proper shifts and 
         /// negating shifts
         /// </summary>
-        private bool _isNegatedShift = false;
-        public bool isNegatedShift
-        {
-            get { return _isNegatedShift; }
-        }
 
-        /// <summary>
-        /// The distance of translation/displacement that this shift represents
-        /// </summary>
-        private readonly Point _displacement;
-        public Point Displacement
-        {
-            get { return _displacement; }
-        }
+        private Matrix _matrix = Matrix.IdentityMatrix(4);
+        internal Matrix Matrix { get { return _matrix; } }
 
-        /// <summary>
-        /// The list of rotations that this shift represents
-        /// </summary>
-        private readonly List<Rotation> _rotationsToApply;
-        public List<Rotation> RotationsToApply
-        {
-            get { return _rotationsToApply; }
-        }
-
-        /// <summary>
-        /// Converts from a rotation described by 2 angles to a rotation described by 1 angle and an axis
-        /// </summary>
-        public Rotation CompositeRotation
-        {
-            //http://math.stackexchange.com/questions/513397/how-can-i-convert-an-axis-angle-representation-to-a-euler-angle-representation
-            get
-            {
-                throw new NotImplementedException();
-
-            }
-        }
-
-  
-
+        public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
+        
+        public Matrix RotationOnly { get { return Compose(this.Translation.Inverse(),this).Matrix; } }
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Creates a zero shift object
+        /// Null Constructor
         /// </summary>
-        public Shift()
-        {
-            _displacement = Point.Origin;
-            _rotationsToApply = new List<Rotation>();
-        }
+        protected Shift() { }
 
         /// <summary>
         /// Creates a Shift with the given displacement and no rotations
         /// </summary>
-        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
-        public Shift(Point passedDisplacement)
+        public Shift(Point displacement)
         {
-            _displacement = new Point(passedDisplacement);
-            _rotationsToApply = new List<Rotation>();
+            _matrix = new Translation(displacement).Matrix;
         }
 
-        public Shift(Vector vector) : this(new Translation(vector)) { }
+        public Shift(Vector vector)
+            : this(vector.EndPoint-vector.BasePoint) { }
 
         /// <summary>
         /// Creates a Shift with the given rotation and translation, or zero translation if it is omitted
         /// </summary>
-        /// <param name="passedRotation">The rotations that make up and are represented by this shift</param>
-        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
-        public Shift(Rotation passedRotation, Point passedDisplacement = null)
+        public Shift(Rotation rotation, Point displacement = null)
         {
-            if (passedDisplacement == null)
+            if (displacement == null)
             {
-                _displacement = Point.Origin;
+                this._matrix = rotation.Matrix;
             }
             else
             {
-                _displacement = new Point(passedDisplacement);
+                this._matrix = new Translation(displacement).Matrix
+                    * rotation.Matrix;
             }
-            _rotationsToApply = new List<Rotation>() { new Rotation(passedRotation) };
         }
 
         /// <summary>
         /// Creates a Shift with multiple Rotations and a displacment, or zero translation if it is omitted
         /// </summary>
-        /// <param name="passedRotations">The rotations that make up and are represented by this shift</param>
-        /// <param name="passedDisplacement">The distance of displacement this shift represents in each direction</param>
-        public Shift(List<Rotation> passedRotations, Point passedDisplacement = null)
+        /// <param name="rotations">The rotations that make up and are represented by this shift</param>
+        /// <param name="displacement">The distance of displacement this shift represents in each direction</param>
+        public Shift(List<Rotation> rotations, Point displacement = null)
         {
-            if (passedDisplacement == null)
+            if (displacement == null)
             {
-                _displacement = Point.Origin;
+                displacement = Point.Origin;
             }
-            else
+           
+            foreach(var rotation in rotations)
             {
-                _displacement = new Point(passedDisplacement);
+                _matrix = rotation.Matrix * _matrix;
             }
+            var translationMatrix = new Translation(displacement).Matrix;
+            _matrix = translationMatrix * _matrix;
+        }
 
-            _rotationsToApply = new List<Rotation>();
-            foreach (Rotation rotation in passedRotations)
-            {
-                _rotationsToApply.Add(new Rotation(rotation));
-            }
+        public Shift(Matrix matrix)
+        {
+            this._matrix = matrix;
         }
 
         /// <summary>
         /// Creates a copy of the given Shift
         /// </summary>
-        /// <param name="toCopy">The shift to copy</param>
         public Shift(Shift toCopy)
         {
-            _displacement = new Point(toCopy.Displacement);
-            _rotationsToApply = new List<Rotation>();
-            foreach (Rotation rotation in toCopy.RotationsToApply)
-            {
-                _rotationsToApply.Add(new Rotation(rotation));
-            }
+            _matrix = new Matrix(toCopy._matrix);
         }
 
         #endregion
 
         #region Overloaded Operators
 
-        /** For now these dont really make sense
-         * public static Shift operator +(Shift d1, Shift d2)
+
+        /// <summary>
+        /// Compose two shift operations.
+        ///  Note this is not generally commutative.
+        ///The shift on the left is applied first.
+        /// </summary>
+        public static Shift operator *(Shift s1, Shift s2)
         {
-            //add the two Shifts together
-            //return a new Shift with the new value
-
-            Vector displacement = d1._displacement + d2.Displacement;
-            Angle rotationAngle = d1._angleAboutZAxis + d2._angleAboutZAxis;
-            Angle elevationAngle = d1._angleAboutXAxis + d2._angleAboutXAxis;
-
-            return new Shift(displacement, rotationAngle, elevationAngle);
+            //Matrix multiplication goes right to left.
+            return new Shift(s2.Matrix * s1.Matrix);
         }
-
-        public static Shift operator -(Shift d1, Shift d2)
-        {
-            //subtract the two Shifts
-            //return a new Shift with the new value
-            Vector displacement = d1._displacement - d2.Displacement;
-            Angle rotationAngle = d1._angleAboutZAxis - d2._angleAboutZAxis;
-            Angle elevationAngle = d1._angleAboutXAxis - d2._angleAboutXAxis;
-
-            return new Shift(displacement, rotationAngle, elevationAngle);
-        }*/
-
 
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to Constants.AcceptedEqualityDeviationConstant 
@@ -230,46 +177,24 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the obj is not null
-            if (obj == null)
+            if (obj == null || !(obj is Shift))
+            {
+                return false;
+            }
+            var other = (Shift)obj;
+            //We have to convert the Matricies we are checking into Quarternions first because their orientations are easier to determine than matrices because only
+            //two Quaternion can represent the same orientation, q and -q, which is easy to check for.
+            //See: http://gamedev.stackexchange.com/a/75077
+            Translation t1 = this.Translation;
+            Translation t2 = other.Translation;
+            if (t1 != t2)
             {
                 return false;
             }
 
-            //try casting and then comparing it
-            try
-            {
-                Shift comparableShift = (Shift)obj;
+            return Shift.RotationsAreEquivalent(this, other);
 
-                //see if one is negated and the other isnt then negate the passed one and then continue
-                //if()
-                //{
-                //    comparableShift = comparableShift.Negate();
-                //}
-
-                //check that the rotations are all the same
-                //make sure the are equal in number
-                if (this.RotationsToApply.Count != comparableShift.RotationsToApply.Count)
-                {
-                    return false;
-                }
-
-                //check each rotation to make sure they are all equal
-                for (int i = 0; i < this.RotationsToApply.Count; i++)
-                {
-                    if (this.RotationsToApply[i] != comparableShift.RotationsToApply[i])
-                    {
-                        return false;
-                    }
-                }
-
-                //now we check if the displacements are the same because at this point the rotations 
-                return this.Displacement == comparableShift.Displacement && this._isNegatedShift == comparableShift._isNegatedShift;
-            }
-            //if it was not a shift than it was not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            
         }
 
         /// <summary>
@@ -278,9 +203,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public override int GetHashCode()
         {
-            List<object> parameters = new List<object> { this.Displacement, this._rotationsToApply };
-
-            return HashGenerator.GetHashCode(parameters);
+            return this._matrix.GetHashCode();
         }
 
         /// <summary>
@@ -297,35 +220,33 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        public static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
+        {
+            //Matrix thisQuaternion = shift1.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+            //Matrix otherQuaternion = shift2.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+
+
+            //return (thisQuaternion == otherQuaternion || thisQuaternion == otherQuaternion * -1); //since q == q && q == -q for Quaternion
+            return shift1.RotationOnly == shift2.RotationOnly;
+        }
+
+        public static Shift Compose(Shift shift1, Shift shift2)
+        {
+            return new Shift(shift1.Matrix * shift2.Matrix);
+        }
+
+        public Shift Compose(Shift shift)
+        {
+            return new Shift(this.Matrix * shift.Matrix);
+        }
+
         /// <summary>
         /// creates a negative instance of the shift object
         /// </summary>
         /// <returns>A new shift object that is negative of this one</returns>
         public Shift Negate()
         {
-            //get negative instances of all of the shift's fields
-            
-            //make a new list of rotations where the angles are all the opposite of what they were
-            List<Rotation> returnRotations = new List<Rotation>();
-            foreach (Rotation rotation in _rotationsToApply)
-            {
-                //switch the angle of each rotation to its opposite
-
-                returnRotations.Add(new Rotation(rotation.AxisOfRotation, rotation.RotationAngle.Negate()));
-            }
-            //now flip the order of them so it reverse the shift properly
-            returnRotations.Reverse();
-
-            //now we have to do some magic to turn this back into the right spot since it will happen after the rotations again
-            Point returnDisplacement = Point.Origin - _displacement;
-
-            //create and return new shift
-            Shift toReturn = new Shift(returnRotations, returnDisplacement);
-
-            //make our negated flag the opposite of what it was (becuase if we negate a negated shift we want to get a normal one)
-            toReturn._isNegatedShift = !this._isNegatedShift;
-
-            return toReturn;
+            return new Shift(_matrix.Invert());
         }
         #endregion
     }

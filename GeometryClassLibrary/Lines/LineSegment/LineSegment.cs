@@ -344,9 +344,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedTranslation"The Translation to apply></param>
         /// <returns>A new LineSegment as a IEdge that has been translated</returns>
-        IEdge IEdge.Translate(Translation passedTranslation)
+        IEdge IEdge.Translate(Point point)
         {
-            return this.Translate(passedTranslation);
+            return this.Translate(point);
         }
 
         /// <summary>

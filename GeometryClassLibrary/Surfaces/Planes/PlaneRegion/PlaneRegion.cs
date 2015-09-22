@@ -257,10 +257,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// translates the given Plane Region
         /// </summary>
-        public PlaneRegion Translate(Point translation)
-        {
-            return new PlaneRegion(this._Edges.Select(e => e.Translate((Translation)translation)));
-        }
+        //public PlaneRegion Translate(Point translation)
+        //{
+        //    return new PlaneRegion(this._Edges.Select(e => e.Translate((Translation)translation)));
+        //}
 
         #endregion 
     }

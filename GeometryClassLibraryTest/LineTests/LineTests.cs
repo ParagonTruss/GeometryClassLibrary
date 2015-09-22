@@ -318,7 +318,7 @@ namespace GeometryClassLibraryTest
             //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
-            Line actualLine1 = line1.Translate(new Translation(testDisplacement));
+            Line actualLine1 = line1.Translate((testDisplacement));
 
             Line expectedLine1 = new Line(Point.MakePointWithInches(-1, 12, 11), Point.MakePointWithInches(-5, 8, 8));
 

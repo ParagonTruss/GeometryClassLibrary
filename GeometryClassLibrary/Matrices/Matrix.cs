@@ -73,6 +73,19 @@ namespace GeometryClassLibrary
             _matrix = passedMatrix.Clone();
         }
 
+        public Matrix(double[] array)
+        {
+            this._matrix = DenseMatrix.OfArray(new double[array.Length, 1]);
+
+            this.SetColumn(0, array);
+        }
+
+        /// <summary> Constructs Matrix object from a 2dArray </summary>
+        public Matrix(double[,] passed2DArray)
+        {
+            this._matrix = DenseMatrix.OfArray(passed2DArray);
+        }
+
         /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
@@ -81,14 +94,6 @@ namespace GeometryClassLibrary
         {
             _matrix = passedMatrix._matrix.Clone();
         }
-
-
-        /// <summary> Constructs Matrix object from a 2dArray </summary>
-        public Matrix(double[,] passed2DArray):this(passed2DArray.GetLength(0), passed2DArray.GetLength(1))
-        {
-            this._matrix = DenseMatrix.OfArray(passed2DArray);
-        }
-
         #endregion
 
         #region Overloaded Operators
@@ -407,16 +412,49 @@ namespace GeometryClassLibrary
             }
 
             var returnMatrix = new Matrix(4, 1);
-            returnMatrix.SetElement(0,0, w);
-            returnMatrix.SetElement(1,0, x);
-            returnMatrix.SetElement(2,0, y);
-            returnMatrix.SetElement(3,0, z);
-
-
+            returnMatrix.SetElement(0, 0, w);
+            returnMatrix.SetElement(1, 0, x);
+            returnMatrix.SetElement(2, 0, y);
+            returnMatrix.SetElement(3, 0, z);
             return returnMatrix;
+
+            //return new double[] { w, x, y, z };
         }
 
+        public static Point ShiftPoint(Point point, Shift shift)
+        {
+            var col =  PointAsProjectiveColumnVector(point);
+            var result = shift.Matrix * col;
+            return _pointFromProjectiveColumnVector(result);
+        }
+
+        public static Matrix PointAsProjectiveColumnVector(Point point)
+        {
+            return new Matrix(new double[]
+            { point.X.Inches, point.Y.Inches, point.Z.Inches, 1 });
+        }
+        private static Point _pointFromProjectiveColumnVector(Matrix projectiveVector)
+        {
+            var col = projectiveVector.GetColumn(0);
+            //smallest we're allowing is 1 millionth
+            if (Math.Abs(col[3]) < 0.000001)
+            {
+                return Point.Origin;
+            }
+            else
+            {
+                var x = col[0] / col[3];
+                var y = col[1] / col[3];
+                var z = col[2] / col[3];
+                return Point.MakePointWithInches(x, y, z);
+            }
+        }
         #endregion
+
+        public static Matrix Identity(int dimension)
+        {
+            return new Matrix(DenseMatrix.CreateIdentity(dimension));
+        }
 
         /// <summary>
         /// Returns a matrix with the specified row and column removed
@@ -739,15 +777,18 @@ namespace GeometryClassLibrary
             double unitZ = rotationUnitVector.ZComponent;
             double theta = passedRotation.RotationAngle.Radians;
 
-            double row0column0 = Math.Cos(theta) + Math.Pow(unitX, 2) * (1 - Math.Cos(theta));
+            double sinTheta = Math.Sin(theta);
+            double cosTheta = Math.Cos(theta);
+
+            double row0column0 = Math.Cos(theta) + unitX*unitX * (1 - Math.Cos(theta));
             double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);
             double row0column2 = unitX * unitZ * (1 - Math.Cos(theta)) + unitY * Math.Sin(theta);
             double row1column0 = unitY * unitX * (1 - Math.Cos(theta)) + unitZ * Math.Sin(theta);
-            double row1column1 = Math.Cos(theta) + Math.Pow(unitY, 2) * (1 - Math.Cos(theta));
+            double row1column1 = Math.Cos(theta) + unitY*unitY * (1 - Math.Cos(theta));
             double row1column2 = unitY * unitZ * (1 - Math.Cos(theta)) - unitX * Math.Sin(theta);
             double row2column0 = unitZ * unitX * (1 - Math.Cos(theta)) - unitY * Math.Sin(theta);
             double row2column1 = unitZ * unitY * (1 - Math.Cos(theta)) + unitX * Math.Sin(theta);
-            double row2column2 = Math.Cos(theta) + Math.Pow(unitZ, 2) * (1 - Math.Cos(theta));
+            double row2column2 = Math.Cos(theta) + unitZ*unitZ * (1 - Math.Cos(theta));
 
             rotationMatrix.SetElement(0, 0, row0column0);
             rotationMatrix.SetElement(0, 1, row0column1);

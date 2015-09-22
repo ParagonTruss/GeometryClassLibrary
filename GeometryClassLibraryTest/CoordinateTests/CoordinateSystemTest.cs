@@ -39,7 +39,7 @@ namespace GeometryClassLibraryTest
             Plane xyPlane = new Plane(xVector, yVector);
             CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
 
-            results.AreDirectionsEquivalent(expected).Should().BeTrue();
+            results.DirectionsAreEquivalent(expected).Should().BeTrue();
 
         }
 
@@ -93,17 +93,17 @@ namespace GeometryClassLibraryTest
 
             CoordinateSystem equivalent = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 135));
 
-            same.AreDirectionsEquivalent(same2).Should().BeTrue();
-            same.AreDirectionsEquivalent(equivalent).Should().BeTrue();
+            same.DirectionsAreEquivalent(same2).Should().BeTrue();
+            same.DirectionsAreEquivalent(equivalent).Should().BeTrue();
 
             CoordinateSystem other = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -90), new Angle(AngleType.Degree, 90), Angle.Zero);
             CoordinateSystem equavalentToOther = new CoordinateSystem(Point.Origin, new Angle(AngleType.Degree, -45), new Angle(AngleType.Degree, 90), new Angle(AngleType.Degree, 45));
 
             //the two 'others' should be equavlanet
-            other.AreDirectionsEquivalent(equavalentToOther).Should().BeTrue();
+            other.DirectionsAreEquivalent(equavalentToOther).Should().BeTrue();
 
             //these two sets of systems should not be equavalent
-            same.AreDirectionsEquivalent(other).Should().BeFalse();
+            same.DirectionsAreEquivalent(other).Should().BeFalse();
         }
 
         [Test]
@@ -361,7 +361,7 @@ namespace GeometryClassLibraryTest
         public void CoordinateSystem_RelativeShift()
         {
             //a nice simple test
-            CoordinateSystem testOriginalCoords = new CoordinateSystem(CoordinateSystem.WorldCoordinateSystem);
+            CoordinateSystem testOriginalCoords = CoordinateSystem.WorldCoordinateSystem;
             CoordinateSystem testCurrentSystem = new CoordinateSystem(Point.MakePointWithInches(1, 0, -1), Angle.Zero, Angle.Zero, new Angle(AngleType.Degree, 45));
 
             //now shift it a bit
@@ -413,8 +413,8 @@ namespace GeometryClassLibraryTest
             CoordinateSystem block1ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(2, -4, 0), Angle.Zero, Angle.Zero, Angle.Zero);
             CoordinateSystem block2ExpectedCoords = new CoordinateSystem(Point.MakePointWithInches(-3, -3, 3), new Angle(AngleType.Degree, 180), new Angle(AngleType.Degree, 90), Angle.Zero);
 
-            block1.BlockSystem.Should().Be(block1ExpectedCoords);
-            block2.BlockSystem.Should().Be(block2ExpectedCoords);
+            (block1.BlockSystem == block1ExpectedCoords).Should().BeTrue();
+            (block2.BlockSystem == block2ExpectedCoords).Should().BeTrue();
 
             //now that we know the blocks are made correctly, lets test shifting them to see if that works correctly too
             //Note: many of these shifts "cheat" and do not use the block in the current coordinate system.

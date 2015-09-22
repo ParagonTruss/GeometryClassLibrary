@@ -271,50 +271,40 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure we didnt get a null
-            if (obj == null)
+            if (obj == null || !(obj is Polygon))
+            {
+                return false;
+            }
+            Polygon comparablePolygon = (Polygon)obj;
+
+            //if they have differnt number of boundaries they cant be equal
+            if (this.LineSegments.Count != comparablePolygon.LineSegments.Count)
             {
                 return false;
             }
 
-            //try to cast the object to a Polygon, if it fails then we know the user passed in the wrong type of object
-            try
+            //now check each line segment
+            foreach (LineSegment segment in this.LineSegments)
             {
-                Polygon comparablePolygon = (Polygon)obj;
+                //make sure each segment is represented exactly once
+                int timesUsed = 0;
+                foreach (LineSegment segmentOther in comparablePolygon.LineSegments)
+                {
+                    if (segment == segmentOther)
+                    {
+                        timesUsed++;
+                    }
+                }
 
-                //if they have differnt number of boundaries they cant be equal
-                if (this.LineSegments.Count != comparablePolygon.LineSegments.Count)
+                //make sure each is used exactly once
+                if (timesUsed != 1)
                 {
                     return false;
                 }
-
-                //now check each line segment
-                foreach (LineSegment segment in this.LineSegments)
-                {
-                    //make sure each segment is represented exactly once
-                    int timesUsed = 0;
-                    foreach (LineSegment segmentOther in comparablePolygon.LineSegments)
-                    {
-                        if (segment == segmentOther)
-                        {
-                            timesUsed++;
-                        }
-                    }
-
-                    //make sure each is used exactly once
-                    if (timesUsed != 1)
-                    {
-                        return false;
-                    }
-                }
-
-                //if the segments were all the same, then they're equal
-                return true;
             }
-            //if we didnt get a polygon than its not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+
+            //if the segments were all the same, then they're equal
+            return true;
         }
 
         
@@ -343,12 +333,12 @@ namespace GeometryClassLibrary
         }
 
 
-        public Polygon Translate(Point translation)
+        public new Polygon Translate(Point translation)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.LineSegments)
             {
-                newBoundaryList.Add(segment.Translate(new Translation(translation)));
+                newBoundaryList.Add(segment.Translate((translation)));
             }
             return new Polygon(newBoundaryList, false);
         }
@@ -630,7 +620,7 @@ namespace GeometryClassLibrary
 
             foreach (LineSegment segment in LineSegments)
             {
-                LineSegment opposite = segment.Translate(new Translation(directionVector));
+                LineSegment opposite = segment.Shift(directionVector);
                 oppositeSegments.Add(opposite);
 
                 Polygon sideFace = new Polygon(new List<Point>() { segment.BasePoint, segment.EndPoint, opposite.EndPoint, opposite.BasePoint });
@@ -1575,15 +1565,15 @@ namespace GeometryClassLibrary
             Plane plane = _planeWithSmallestAngleBetween();
             if (plane == YZ)
             {
-                return new Rotation(new Line(Direction.Up), new Angle(AngleType.Degree, 90));
+                return new Rotation(Line.YAxis, new Angle(AngleType.Degree, 90));
             }
             else if (plane == XZ)
             {
-                return new Rotation(new Line(Direction.Right), new Angle(AngleType.Degree, 90));
+                return new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 90));
             }
             else
             {
-                return new Rotation();
+                return new Rotation(Line.XAxis, Angle.Zero);
             }
         }
 

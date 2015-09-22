@@ -252,7 +252,7 @@ namespace GeometryClassLibraryTest
             //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
-            Point actualResult = pointToTranslate.Translate(new Translation(testDisplacement));
+            Point actualResult = pointToTranslate.Translate(testDisplacement);
 
             Point expectedResult = Point.MakePointWithInches(-1, 12, 11);
 
@@ -268,7 +268,7 @@ namespace GeometryClassLibraryTest
             //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 4);
             Point testDisplacement = Point.MakePointWithInches(4, 0, 0);
 
-            Point actualResult = pointToTranslate.Translate(new Translation(testDisplacement));
+            Point actualResult = pointToTranslate.Translate(testDisplacement);
 
             Point expectedResult = Point.MakePointWithInches(5,1,1);
 
