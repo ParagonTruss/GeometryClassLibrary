@@ -1,25 +1,34 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnitClassLibrary;
+using System.Linq;
+using MoreLinq;
 
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Angle to Rotate = {AngleToRotate.Degrees}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.Inches}, {AxisToRotateAround.BasePoint.Y.Inches}, {AxisToRotateAround.BasePoint.Z.Inches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.Inches}")]
+    [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {
         #region Properties and Fields
         private readonly AngularDistance _rotationAngle;
         private readonly Line _axisOfRotation;
+
         private Matrix _matrix;
         public Matrix Matrix { get { return _matrix; } }
-        public AngularDistance RotationAngle
+
+        [JsonProperty]
+        public Angle RotationAngle
         {
             get
             {
-                return _rotationAngle;
+                return new Angle( _rotationAngle);
             }
         }
 
+        [JsonProperty]
         public Line AxisOfRotation
         {
             get
@@ -40,8 +49,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
-        /// <param name="axisOfRotation">The Axis to rotate around</param>
-        /// <param name="rotationAngle">The Angle that specifies how far to rotate</param>
+        [JsonConstructor]
         public Rotation(Line axisOfRotation, AngularDistance rotationAngle)
         {
             this._rotationAngle = rotationAngle;
@@ -76,14 +84,12 @@ namespace GeometryClassLibrary
             var translateInverse = new Translation(_axisOfRotation.BasePoint.Negate()).Matrix;
             var rotate = _matrixOfRotationAboutOrigin();
             var translate = new Translation(_axisOfRotation.BasePoint).Matrix;
-            this._matrix = translate * rotate * translateInverse;
+            this._matrix = translate * (rotate * translateInverse);
         }
-        /// <summary>
-        /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
-        /// </summary>>
+
         private Matrix _matrixOfRotationAboutOrigin()
         {
-            Matrix rotationMatrix = new Matrix(4,4);
+            Matrix rotationMatrix = new Matrix(4, 4);
 
             Direction rotationUnitVector = this.AxisOfRotation.Direction;
 
@@ -118,7 +124,54 @@ namespace GeometryClassLibrary
             rotationMatrix.SetElement(3, 3, 1.0);
             return rotationMatrix;
         }
+
+        public Rotation(Matrix matrix)
+        {
+            this._matrix = matrix;
+            var pair = _pullOutAxisAndAngle();
+            this._axisOfRotation = pair.Key;
+            this._rotationAngle = pair.Value;
+        }
+
+        private KeyValuePair<Line,AngularDistance> _pullOutAxisAndAngle()
+        {
+            var point1 = new Point(DistanceType.Inch, 1, 0, 0);
+            var point2 = new Point(DistanceType.Inch, 0, 1, 0);
+            var point3 = new Point(DistanceType.Inch, 0, 0, 1);
+            var points = new Point[] { point1, point2, point3 };
+
+            var candidates = points.
+                Select(p => new Vector(p).CrossProduct(
+                    new Vector(p.Rotate3D(this)))).ToList();
+            var axis = candidates.MaxBy(v => v.Magnitude);
+            var index = candidates.IndexOf(axis);
+            var angle = new Vector(points[index]).AngleBetween(axis);
+
+            return new KeyValuePair<Line, AngularDistance>(new Line(axis), angle);
+        }
+
+      
+
+        private Rotation(Line axis, AngularDistance angle, Matrix matrix)
+        {
+            this._axisOfRotation = axis;
+            this._rotationAngle = angle;
+            this._matrix = matrix;
+        }
         #endregion 
+             
+        #region Methods
+
+        /// <summary>
+        /// Returns the inverse rotation.
+        /// </summary>
+        public Rotation Inverse()
+        {
+            var inverseAngle = RotationAngle * -1;
+            return new Rotation(this.AxisOfRotation, inverseAngle, Matrix.Transpose());
+        }
+
+        #endregion
 
         #region Overloaded Operators
 
@@ -166,45 +219,16 @@ namespace GeometryClassLibrary
         public override bool Equals(object other)
         {
             //make sure the obj is not null
-            if (other == null)
+            if (other == null || !(other is Rotation))
             {
                 return false;
             }
+            Rotation rotation = (Rotation)other;
 
-            //try casting it and then comparing it
-            try
-            {
-                Rotation rotation = (Rotation)other;
-                if (this.AxisOfRotation != rotation.AxisOfRotation)
-                {
-                    return false;
-                }
-                return (this.AxisOfRotation.Direction == rotation.AxisOfRotation.Direction &&
-                    this.RotationAngle == rotation.RotationAngle) ||
-                    (this.AxisOfRotation.Direction == rotation.AxisOfRotation.Direction.Reverse() &&
-                    this.RotationAngle == rotation.RotationAngle.Negate());
-
-            }
-            //if it wasn't a rotation than it's not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return this.Matrix == rotation.Matrix;
         }
 
         #endregion 
 
-        #region Methods
-
-        /// <summary>
-        /// Returns the inverse rotation.
-        /// </summary>
-        public Rotation Inverse()
-        {
-            Angle inverseAngle = new Angle(AngleType.Radian, this.RotationAngle.Radians * -1);
-            return new Rotation(this.AxisOfRotation, inverseAngle);
-        }
-
-        #endregion
     }
 }

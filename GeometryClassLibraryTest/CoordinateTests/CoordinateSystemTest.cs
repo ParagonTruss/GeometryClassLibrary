@@ -76,7 +76,7 @@ namespace GeometryClassLibraryTest
             Point expectedPoint = testPoint.Shift(testSystem.ShiftToThisFrom());
             Point expectedPoint2 = testPoint.Shift(testSystem.ShiftFromThisTo());
             Point resultPoint = testPoint.Shift(resultShift);
-            Point resultPoint2 = testPoint.Shift(resultShift.Negate());
+            Point resultPoint2 = testPoint.Shift(resultShift.Inverse());
             Point resultPoint3 = testPoint.Shift(resultShift2);
 
 
@@ -123,7 +123,7 @@ namespace GeometryClassLibraryTest
 
             //it ends up being what we inputted because it shift reflects the movement of the objects so it is by definition the negative of the 
             //coordinate system. Therfore, whenever we want to revert it we are taking a "double negative" in implementation, giving us the origina
-            resultTo.Should().Be(expected.Negate());
+            resultTo.Should().Be(expected.Inverse());
         }
 
         [Test]

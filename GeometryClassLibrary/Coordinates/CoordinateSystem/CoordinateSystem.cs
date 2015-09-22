@@ -73,9 +73,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a local coordinate system that has the same axes as the world coordinate system and has only been shifted to the given point
+        /// Creates a local coordinate system that is only translated from the World Coordinates.
         /// </summary>
-        /// <param name="passedTranslationToOrigin">The origin point of this coordinate system in reference to the world coordinate system</param>
         public CoordinateSystem(Point passedTranslationToOrigin)
         {
             this.ShiftFromThisToWorld = new Shift(passedTranslationToOrigin);
@@ -310,7 +309,7 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //check for null (wont throw a castexception)
-            if (obj == null)
+            if (obj == null || !(obj is CoordinateSystem))
             {
                 return false;
             }
@@ -329,8 +328,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix RotationMatrixFromThisToWorld()
         {
-            var translation = new Translation(this.TranslationToOrigin.Negate());
-            return translation.Matrix * ShiftFromThisToWorld.Matrix;
+            return ShiftFromThisToWorld.Rotation.Matrix;
          }
 
         /// <summary>
@@ -366,12 +364,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="systemToRotateTo">The CoordinateSystem to Rotate to from this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
         /// <returns>Returns the Shift to apply to objects oriented in this CoordinateSystem in order to orient them in the same way as the passed CoordinateSystem</returns>
-        //public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
-        //{
-        //    //find the whole shift but then make a new one with only the rotations
-        //    Shift shiftTo = ShiftFromThisTo(systemToRotateTo);
-        //    return new Shift(shiftTo.RotationsToApply);
-        //}
+        public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
+        {
+
+            return RotateToThisFrom(systemToRotateTo).Inverse();
+        }
 
         /// <summary>
         /// Returns only the rotational Shift to apply to objects in order to only orient them in this CoordinateSystem when they are currently oriented in the passed CoordinateSystem, but does not move them.
@@ -385,7 +382,7 @@ namespace GeometryClassLibrary
         {
             //find the whole shift but then make a new one with only the rotations
             Shift shiftFrom = ShiftToThisFrom(systemToRotateFrom);
-            return new Shift(shiftFrom.RotationOnly);
+            return new Shift(shiftFrom.Rotation);
         }
 
         /// <summary>
@@ -406,7 +403,7 @@ namespace GeometryClassLibrary
             //If not then we need to figure out how to shift between the two coordinates
             else
             {
-                return this.ShiftFromThisToWorld * systemToShiftTo.ShiftFromThisToWorld.Negate();
+                return this.ShiftFromThisToWorld * systemToShiftTo.ShiftFromThisToWorld.Inverse();
             }
         }
 
@@ -421,7 +418,7 @@ namespace GeometryClassLibrary
         public Shift ShiftToThisFrom(CoordinateSystem systemToShiftFrom = null)
         {
             //the simple way is just to create a shift with this coordinate system and then negate it
-            Shift shift = ShiftFromThisTo(systemToShiftFrom).Negate();
+            Shift shift = ShiftFromThisTo(systemToShiftFrom).Inverse();
             return shift;
         }
 

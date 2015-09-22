@@ -69,7 +69,7 @@ namespace GeometryClassLibraryTest
             Polyhedron shifted = polyhedron.Shift(ninetyShift);
 
             //undo the previous shift
-            Polyhedron s = new Polyhedron(shifted.Shift(ninetyShift.Negate()));
+            Polyhedron s = new Polyhedron(shifted.Shift(ninetyShift.Inverse()));
 
             s.Should().Be(polyhedron);
         }
@@ -155,7 +155,7 @@ namespace GeometryClassLibraryTest
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
 
-            Polyhedron s2 = s.Shift(ninetyShift.Negate());
+            Polyhedron s2 = s.Shift(ninetyShift.Inverse());
 
             s2.Should().Be(polyhedron);
         }
@@ -195,7 +195,7 @@ namespace GeometryClassLibraryTest
 
             Polyhedron s = new Polyhedron(polyhedron.Shift(ninetyShift));
 
-            Polyhedron s2 = s.Shift(ninetyShift.Negate());
+            Polyhedron s2 = s.Shift(ninetyShift.Inverse());
 
             s2.Should().Be(polyhedron);
         }

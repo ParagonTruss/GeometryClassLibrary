@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace GeometryClassLibrary
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Shift
     {
         #region Implicit Conversions
@@ -28,32 +30,13 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Properties and Fields
-
-        /// <summary>
-        /// The _isNegatedShift flag should only be true when .negate() is called on an existing shift 
-        /// The reson for this flag is so that we can properly reverse previous shifts in a non-math intensive way.
-        /// Basically, when shift is called on an object, it goes down all the way to the point level and then
-        /// rotates each point individually one at a time (implemented in Point.Shift function). However, when
-        /// we want to undue a shift we need to not only reverse the directions of rotations and translations,
-        /// but we must also do them in reverse order so that the translations reverse properly since transformations
-        /// (both rotations and translations) are non-communitive, meaning that the order matters. Since the rotations
-        /// are already kept in a list, they are easy enough to reverse. The translation is different though because it
-        /// stored individually and serperate from the rotation list. Because of this, when we are performing an
-        /// original shift we want to perform the translation last, but when we are unduing a shift we must perform the
-        /// translation first so the object returns to its original location. If this is not done then the rotation
-        /// will return to its original but it will be in the wrong location. 
-        /// 
-        /// So in the Point.Shift function, it uses this flag in order to determine whether the point needs to be
-        /// translated at the very end or the very begining of the shifting processto ensure proper shifts and 
-        /// negating shifts
-        /// </summary>
-
+        [JsonProperty]
         private Matrix _matrix = Matrix.IdentityMatrix(4);
         internal Matrix Matrix { get { return _matrix; } }
 
         public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         
-        public Matrix RotationOnly { get { return Compose(this.Translation.Inverse(),this).Matrix; } }
+        public Rotation Rotation { get { return new Rotation(Compose(this.Translation.Inverse(),this).Matrix); } }
         #endregion
 
         #region Constructors
@@ -110,6 +93,7 @@ namespace GeometryClassLibrary
             _matrix = translationMatrix * _matrix;
         }
 
+        [JsonConstructor]
         public Shift(Matrix matrix)
         {
             this._matrix = matrix;
@@ -227,7 +211,7 @@ namespace GeometryClassLibrary
 
 
             //return (thisQuaternion == otherQuaternion || thisQuaternion == otherQuaternion * -1); //since q == q && q == -q for Quaternion
-            return shift1.RotationOnly == shift2.RotationOnly;
+            return shift1.Rotation == shift2.Rotation;
         }
 
         public static Shift Compose(Shift shift1, Shift shift2)
@@ -244,9 +228,9 @@ namespace GeometryClassLibrary
         /// creates a negative instance of the shift object
         /// </summary>
         /// <returns>A new shift object that is negative of this one</returns>
-        public Shift Negate()
+        public Shift Inverse()
         {
-            return new Shift(_matrix.Invert());
+            return new Shift(Rotation.Matrix.Transpose() * Translation.Inverse().Matrix);
         }
         #endregion
     }

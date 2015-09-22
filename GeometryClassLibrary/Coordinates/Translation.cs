@@ -1,11 +1,15 @@
 ﻿using UnitClassLibrary;
 using System;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Translation
     {
         #region _fields & Properties
+
+        [JsonProperty]
         public Point Point { get; set; }
 
         private Matrix _matrix = Matrix.IdentityMatrix(4);
@@ -20,8 +24,8 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Creates a Translation with offsets in each direction represented by the point
-        /// </summary>
-        /// <param name="point">The distance in each direction that this translation represents</param>
+        /// </summary>param>
+        [JsonConstructor]
         public Translation(Point point)
         {
             this.Point = point;

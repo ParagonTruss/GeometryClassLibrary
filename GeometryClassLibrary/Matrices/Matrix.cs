@@ -4,14 +4,16 @@ using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using UnitClassLibrary;
+using Newtonsoft.Json;
 
 namespace GeometryClassLibrary
 {
-
+    [JsonObject(MemberSerialization.OptIn)]
     public class Matrix
     {
         #region Properties and Fields
 
+        [JsonProperty]
         public Matrix<double> _matrix;
 
 
@@ -63,6 +65,7 @@ namespace GeometryClassLibrary
         /// Makes a copy of the passed matrix
         /// </summary>
         /// <param name="passedMatrix"></param>
+        [JsonConstructor]
         public Matrix(Matrix<double> passedMatrix)
         {
             double norm =  passedMatrix.InfinityNorm();
@@ -200,7 +203,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
-            return new Matrix(m1._matrix.Multiply(m2._matrix));
+            var matrix = new Matrix(m1._matrix.Multiply(m2._matrix));
+            return matrix;
         }
 
         /// <summary>
