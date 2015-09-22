@@ -412,13 +412,13 @@ namespace GeometryClassLibrary
             }
 
             var returnMatrix = new Matrix(4, 1);
-            returnMatrix.SetElement(0,0, w);
-            returnMatrix.SetElement(1,0, x);
-            returnMatrix.SetElement(2,0, y);
-            returnMatrix.SetElement(3,0, z);
-
-
+            returnMatrix.SetElement(0, 0, w);
+            returnMatrix.SetElement(1, 0, x);
+            returnMatrix.SetElement(2, 0, y);
+            returnMatrix.SetElement(3, 0, z);
             return returnMatrix;
+
+            //return new double[] { w, x, y, z };
         }
 
         public static Point ShiftPoint(Point point, Shift shift)

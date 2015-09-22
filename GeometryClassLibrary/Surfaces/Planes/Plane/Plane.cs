@@ -170,27 +170,17 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the passed obj isnt null
-            if (obj == null)
+            if (obj == null || !(obj is Plane))
             {
                 return false;
             }
+            Plane comparablePlane = (Plane)obj;
 
-            //try to cast the object to a Plane, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                Plane comparablePlane = (Plane)obj;
+            bool checkPoint = this.Contains(comparablePlane.BasePoint);
+            bool checkVector = this.NormalVector.IsParallelTo(comparablePlane.NormalVector);
 
-                bool checkPoint = this.Contains(comparablePlane.BasePoint);
-                bool checkVector = this.NormalVector.IsParallelTo(comparablePlane.NormalVector);
-
-                return checkPoint && checkVector;
-            }
-            //if its not a plane than its not equal
-            catch
-            {
-                return false;
-            }
-        }
+            return checkPoint && checkVector;
+         }
 
         #endregion
 

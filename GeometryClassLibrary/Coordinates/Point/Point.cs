@@ -185,39 +185,15 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //check for null (wont throw a castexception)
-            if (obj == null)
+            if (obj == null || !(obj is Point))
             {
                 return false;
             }
+            Point comparablePoint = (Point)obj;
 
-            //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                Point comparablePoint = (Point)obj;
-
-                return this.Equals(comparablePoint);
-            }
-            //if they are not the same type than they are not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
-        }
-
-
-        public bool Equals(Point comparablePoint)
-        {
-            //check for null (wont throw a castexception)
-            if ((object)comparablePoint == null)
-            {
-                return false;
-            }
-
-            // if the two points are close enough, then they're equal
             return this.DistanceTo(comparablePoint) == Distance.Zero;
-            //return (X == comparablePoint.X) && (Y == comparablePoint.Y) && (Z == comparablePoint.Z);
         }
-
+       
         public override string ToString()
         {
             return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();

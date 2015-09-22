@@ -282,50 +282,39 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the obj passed is not null
-            if (obj == null)
+            if (obj == null || !(obj is Polyhedron))
+            {
+                return false;
+            }
+            Polyhedron comparablePolyhedron = (Polyhedron)obj;
+
+            //compare each of its polygons to see if they are all included
+            if (this.Polygons.Count != comparablePolyhedron.Polygons.Count)
             {
                 return false;
             }
 
-            //try to cast the object to a polyhedron, if it fails then we know the user passed in the wrong type of object
-            try
+            foreach (Polygon polygon in this.Polygons)
             {
-                Polyhedron comparablePolyhedron = (Polyhedron)obj;
+                //make sure each polygon is represented exactly once
+                int timesUsed = 0;
+                foreach (Polygon polygonOther in comparablePolyhedron.Polygons)
+                {
+                    if (polygon == polygonOther)
+                    {
+                        timesUsed++;
+                    }
+                }
 
-                //compare each of its polygons to see if they are all included
-                if (this.Polygons.Count != comparablePolyhedron.Polygons.Count)
+                if (timesUsed != 1)
                 {
                     return false;
                 }
-
-                foreach (Polygon polygon in this.Polygons)
-                {
-                    //make sure each polygon is represented exactly once
-                    int timesUsed = 0;
-                    foreach (Polygon polygonOther in comparablePolyhedron.Polygons)
-                    {
-                        if (polygon == polygonOther)
-                        {
-                            timesUsed++;
-                        }
-                    }
-
-                    if (timesUsed != 1)
-                    {
-                        return false;
-                    }
-                }
-
-                //if they were all used exactly once than its equal
-                return true;
             }
-            //if it wasnt a polygon than it must not be eqaul
-            catch
-            {
-                return false;
-            }
+
+            //if they were all used exactly once than its equal
+            return true;
         }
-
         #endregion
 
         #region Methods

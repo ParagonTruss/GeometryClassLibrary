@@ -6,8 +6,9 @@ namespace GeometryClassLibrary
     public class Translation
     {
         #region _fields & Properties
+        public Point Point { get; set; }
 
-      private Matrix _matrix = Matrix.IdentityMatrix(4);
+        private Matrix _matrix = Matrix.IdentityMatrix(4);
         public Matrix Matrix { get { return _matrix; } }
         #endregion
         #region Constructors
@@ -20,11 +21,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Translation with offsets in each direction represented by the point
         /// </summary>
-        /// <param name="translation">The distance in each direction that this translation represents</param>
-        public Translation(Point translation)
+        /// <param name="point">The distance in each direction that this translation represents</param>
+        public Translation(Point point)
         {
+            this.Point = point;
             var array = new double[]
-            { translation.X.Inches, translation.Y.Inches, translation.Z.Inches, 1 };
+            { point.X.Inches, point.Y.Inches, point.Z.Inches, 1 };
             _matrix.SetColumn(3, array);
         }
 
@@ -47,6 +49,7 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">The translation to copy</param>
         public Translation(Translation toCopy)
         {
+            this.Point = toCopy.Point;
             this._matrix = new Matrix(toCopy._matrix);
         }
 
@@ -105,10 +108,15 @@ namespace GeometryClassLibrary
           
             Translation comparableTranslation = (Translation)obj;
 
-            throw new NotImplementedException();
+            return this.Point.Equals(comparableTranslation.Point);
         
         }
 
         #endregion
+
+        public Translation Inverse()
+        {
+            return new Translation(this.Point.Negate());
+        }
     }
 }

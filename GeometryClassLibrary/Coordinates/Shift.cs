@@ -51,7 +51,9 @@ namespace GeometryClassLibrary
         private Matrix _matrix = Matrix.IdentityMatrix(4);
         internal Matrix Matrix { get { return _matrix; } }
 
-       public List<Rotation> RotationsToApply = new List<Rotation>();
+        public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
+        
+        public Matrix RotationOnly { get { return Compose(this.Translation.Inverse(),this).Matrix; } }
         #endregion
 
         #region Constructors
@@ -77,7 +79,6 @@ namespace GeometryClassLibrary
         /// </summary>
         public Shift(Rotation rotation, Point displacement = null)
         {
-            this.RotationsToApply.Add(rotation);
             if (displacement == null)
             {
                 this._matrix = rotation.Matrix;
@@ -96,7 +97,6 @@ namespace GeometryClassLibrary
         /// <param name="displacement">The distance of displacement this shift represents in each direction</param>
         public Shift(List<Rotation> rotations, Point displacement = null)
         {
-            this.RotationsToApply.AddRange(rotations);
             if (displacement == null)
             {
                 displacement = Point.Origin;
@@ -109,10 +109,12 @@ namespace GeometryClassLibrary
             var translationMatrix = new Translation(displacement).Matrix;
             _matrix = translationMatrix * _matrix;
         }
-        private Shift(Matrix matrix)
+
+        public Shift(Matrix matrix)
         {
             this._matrix = matrix;
         }
+
         /// <summary>
         /// Creates a copy of the given Shift
         /// </summary>
@@ -179,8 +181,20 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
+            var other = (Shift)obj;
+            //We have to convert the Matricies we are checking into Quarternions first because their orientations are easier to determine than matrices because only
+            //two Quaternion can represent the same orientation, q and -q, which is easy to check for.
+            //See: http://gamedev.stackexchange.com/a/75077
+            Translation t1 = this.Translation;
+            Translation t2 = other.Translation;
+            if (t1 != t2)
+            {
+                return false;
+            }
 
-            return this._matrix.Equals(((Shift)obj)._matrix);
+            return Shift.RotationsAreEquivalent(this, other);
+
+            
         }
 
         /// <summary>
@@ -205,6 +219,21 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        public static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
+        {
+            //Matrix thisQuaternion = shift1.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+            //Matrix otherQuaternion = shift2.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+
+
+            //return (thisQuaternion == otherQuaternion || thisQuaternion == otherQuaternion * -1); //since q == q && q == -q for Quaternion
+            return shift1.RotationOnly == shift2.RotationOnly;
+        }
+
+        public static Shift Compose(Shift shift1, Shift shift2)
+        {
+            return new Shift(shift1.Matrix * shift2.Matrix);
+        }
 
         public Shift Compose(Shift shift)
         {
