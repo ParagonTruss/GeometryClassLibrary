@@ -10,28 +10,25 @@ namespace GeometryClassLibrary
     /// A plane region is a section of a plane.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public class Polygon : PlaneRegion, IComparable<Polygon>
+    public partial class Polygon : Plane
     {
+        public static explicit operator Polygon(PlaneRegion p)
+        {
+            return new Polygon(p.Edges.Select(e => (LineSegment)e).ToList(), false);
+        }
+
         #region Properties and Fields
 
         [JsonProperty]
-        public virtual List<LineSegment> LineSegments
-        {
-            get
-            {
-                return this._Edges.Select(e => (LineSegment)e).ToList();
-            }
-            set
-            {
-                _Edges = value.ToList<IEdge>();
-            }
-        }
+        public virtual List<LineSegment> LineSegments { get; set; }
 
+        public virtual List<Point> Vertices { get { return LineSegments.GetAllPoints(); } }
+        
         /// <summary>
         /// determines if the polygon is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
         /// </summary>
-        public override bool IsConvex
+        public bool IsConvex
         {
             get
             {
@@ -90,7 +87,7 @@ namespace GeometryClassLibrary
         /// _findArea returns a possibly negative area to make the centroid formula work right
         /// the Area property takes absolute value before returning
         /// </summary>
-        public override Area Area
+        public virtual Area Area
         {
             get
             {   
@@ -109,7 +106,7 @@ namespace GeometryClassLibrary
         /// slower than CenterPoint algorithm
         /// </summary>
         /// <returns>the region's center as a point</returns>
-        public override Point Centroid
+        public virtual Point Centroid
         {
             get
             {
@@ -148,18 +145,36 @@ namespace GeometryClassLibrary
         {
             if (shouldValidate)
             {
-                this._Edges.AddRange(lineSegments.FixSegmentOrientation());
+                this.LineSegments = (lineSegments.FixSegmentOrientation());
             }
             else
             {
-                this._Edges.AddRange(lineSegments);
+                this.LineSegments = (lineSegments).ToList();
             }
 
-            this.BasePoint = _Edges[0].EndPoint;
+            this.BasePoint = lineSegments[0].EndPoint;
 
             this.NormalVector = this._getUnitNormalVector();
         }
 
+        private Vector _getUnitNormalVector()
+        {
+            Vector vector1 = (LineSegments.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
+
+            Vector vector2;
+            Vector normal = null;
+            for (int i = 0; i < LineSegments.Count; i++)
+            {
+                vector2 = new Vector(vector1.BasePoint, Vertices[i]);
+                normal = vector1.CrossProduct(vector2);
+                if (normal.Magnitude != Distance.Zero)
+                {
+                    break;
+                }
+            }
+
+            return new Vector(this.BasePoint, normal.Direction, Distance.Inch);
+        }
         /// <summary>
         /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
         /// ToDo: Needs a unit test
@@ -203,7 +218,11 @@ namespace GeometryClassLibrary
         /// Creates a new Polygon that is a copy of the passed polygon
         /// </summary>
         /// <param name="passedBoundaries"></param>
-        public Polygon(Polygon polygonToCopy) : base(polygonToCopy) { }
+        public Polygon(Polygon polygonToCopy)
+            : base(polygonToCopy)
+        {
+            this.LineSegments = polygonToCopy.LineSegments.ToList();
+        }
 
         #endregion
 
@@ -298,19 +317,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other PlaneRegion
-        /// NOTE: BASED SOLELY ON AREA.  MAY WANT TO CHANGE LATER
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Polygon other)
-        {
-            if (this.Area.Equals(other.Area))
-                return 0;
-            else
-                return this.Area.CompareTo(other.Area);
-        }
+        
 
         #endregion
 
@@ -336,7 +343,7 @@ namespace GeometryClassLibrary
         }
 
 
-        public new Polygon Translate(Point translation)
+        public Polygon Translate(Point translation)
         {
             List<LineSegment> newBoundaryList = new List<LineSegment>();
             foreach (LineSegment segment in this.LineSegments)
@@ -346,7 +353,7 @@ namespace GeometryClassLibrary
             return new Polygon(newBoundaryList, false);
         }
 
-        public override Polygon SmallestEnclosingRectangle()
+        public virtual Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
         }
@@ -616,7 +623,7 @@ namespace GeometryClassLibrary
         ///   ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN?,                                                            
         ///  ,MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM$,                                                                 
         ///  </example>
-        public new Polyhedron Extrude(Vector directionVector)
+        public Polyhedron Extrude(Vector directionVector)
         {
             List<Polygon> faces = new List<Polygon>();
             List<LineSegment> oppositeSegments = new List<LineSegment>();
@@ -633,7 +640,8 @@ namespace GeometryClassLibrary
             faces.Add(this);
             faces.Add(new Polygon(oppositeSegments));
 
-            return new Polyhedron(faces);
+            var solid = new Polyhedron(faces);
+            return solid;
         }
 
         /// <summary>

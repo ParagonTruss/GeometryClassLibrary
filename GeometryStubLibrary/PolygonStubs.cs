@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GeometryClassLibrary;
 
 namespace GeometryStubLibrary
@@ -163,17 +164,15 @@ namespace GeometryStubLibrary
     }
     public class Polygon7 : Polygon
     {
-        public Polygon7()
+        public Polygon7() : base(_segments()) { }
+
+        private static List<LineSegment> _segments()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 2, 3), Point.MakePointWithInches(-3, -2, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, -2, 0), Point.MakePointWithInches(1, 1, -1)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(0, 2, 3)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-            // appears in centorid
-            // appears in contains exclusive inclusive and touching point
-            // Polygon_DoesContainPointAlongSides()
-            //appears in polygon rotate test
+            return lineSegments;
         }
     }
     public class Polygon8 : Polygon
