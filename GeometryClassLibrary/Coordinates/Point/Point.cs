@@ -47,15 +47,13 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Empty Constructor
+        /// Null Constructor
         /// </summary>
         protected Point() { }
 
         /// <summary>
-        /// Creates a point with only two Distances. Coordinates are entered assumed XY orientation
+        ///Create a point that lies in the XY plane.
         /// </summary>
-        /// <param name="passedX"></param>
-        /// <param name="passedY"></param>
         public Point(Distance passedX, Distance passedY)
         {
             _x = passedX;
@@ -64,7 +62,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Three Dimensional Constructor for a Point
+        /// Create any point by its coordinates.
         /// </summary>
         [JsonConstructor]
         public Point(Distance x, Distance y, Distance z)
@@ -74,19 +72,9 @@ namespace GeometryClassLibrary
             _z = z;
         }
 
-        ///// <summary>
-        ///// Spherical
-        ///// </summary>
-        //public Point(Distance distance, Angle phi, Angle theta)
-        //{
-        //    var direction = new Direction(phi, theta);
-        //}
-
         /// <summary>
         /// Creates the point that is the specified distance from the origin, in the specified direction.
         /// </summary>
-        /// <param name="direction"></param>
-        /// <param name="multiplier"></param>
         public Point(Direction direction, Distance fromOrigin)
         {
             this._x = direction.XComponent * fromOrigin;
@@ -105,7 +93,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// copy Constructor
+        /// Copy Constructor
         /// </summary>
         public Point(Point toCopy)
         {
@@ -154,6 +142,16 @@ namespace GeometryClassLibrary
             return new Point(newX, newY, newZ);
         }
 
+        public static Point operator *(double scalar, Point point)
+        {
+            return new Point(scalar * point.X, scalar * point.Y, scalar * point.Z);
+        }
+
+        public static Point operator /(Point point, double divisor)
+        {
+            return new Point(point.X/ divisor, point.Y/divisor, point.Z/divisor);
+
+        }
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>

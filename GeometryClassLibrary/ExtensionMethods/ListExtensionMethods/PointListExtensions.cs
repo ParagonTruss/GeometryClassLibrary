@@ -129,14 +129,10 @@ namespace GeometryClassLibrary
             return segments;
         }
 
-        public static Point CenterPoint(this List<Point> points)
+        public static Point CenterPoint(this IEnumerable<Point> points)
         {
-            Point sum = Point.Origin;
-            foreach(Point point in points)
-            {
-                sum += point;
-            }
-            return ((new Vector(sum)) / points.Count).EndPoint;
+            var n = points.Count();
+            return points.Aggregate((p, q) => p + q) / n;
         }
 
         /// <summary>
