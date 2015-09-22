@@ -40,6 +40,7 @@ namespace GeometryClassLibrary
        public Translation(Distance xTranslation, Distance yTranslation, Distance zTranslation)
             : this(new Point(xTranslation, yTranslation, zTranslation)) { }
 
+
         /// <summary>
         /// Creates a copy of the given translation
         /// </summary>

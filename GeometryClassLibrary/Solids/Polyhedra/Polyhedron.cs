@@ -7,59 +7,15 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Polyhedron : Solid
+    public class Polyhedron
     {
         #region Properties and Fields
-
-        /// <summary>
-        /// Returns a List of all the linesegments that make up this polyhedron
-        /// </summary>
-        public override IList<IEdge> Edges
-        {
-            get
-            {
-                List<IEdge> toReturn = new List<IEdge>();
-
-                //go through each face and get the line segments
-                foreach (var face in this.Polygons)
-                {
-                    //then check to see if each line segment is already in the list or else we will get duplicates
-                    foreach (var lineSegment in face.LineSegments)
-                    {
-                        if (!toReturn.Contains(lineSegment))
-                        {
-                            toReturn.Add(lineSegment);
-                        }
-                    }
-                }
-
-                return toReturn;
-            }
-        }
 
         /// <summary>
         /// A list containing the polygons that make up this polyhedron
         /// </summary>
         [JsonProperty]
-        public virtual List<Polygon> Polygons
-        {
-            get
-            {
-                return this.Faces.Select(f => (Polygon)f).ToList();
-            }
-            protected set
-            {
-                this.Faces = value.Select(p => (PlaneRegion)p).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Accesses a point on the solid 
-        /// </summary>
-        public override Point PointOnSolid
-        {
-            get { return this.Polygons[0].LineSegments[0].BasePoint; }
-        }
+        public virtual List<Polygon> Polygons { get; set; }
 
         /// <summary>
         /// All the polyhedron's linesegments.
@@ -87,7 +43,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a list of all the vertices in the Polyhedron
         /// </summary>
-        public override List<Point> Vertices
+        public List<Point> Vertices
         {
             get
             {
@@ -105,7 +61,7 @@ namespace GeometryClassLibrary
             {
                 //First we check the Euler Characteristic: http://en.wikipedia.org/wiki/Euler_characteristic#Polyhedra
                 //Concave polyhedra sometimes have a characteristic other than 2.
-                int eulerCharacteristic = Vertices.Count - LineSegments.Count + Faces.Count;
+                int eulerCharacteristic = Vertices.Count - LineSegments.Count + Polygons.Count;
                 if (eulerCharacteristic != 2)
                 {
                     return false;
@@ -140,25 +96,24 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Finds the CenterPoint of the Polyhedron by averaging the vertices
         /// </summary>
-        private Point _centerPoint;
-        public override Point CenterPoint
+        public Point CenterPoint
         {
             get
             {
                 if (_centerPoint == null)
                 {
-                    _centerPoint = this.Vertices.CenterPoint();
+                    _centerPoint=  this.Vertices.CenterPoint();
                 }
                 return _centerPoint;
             }
         }
+        private Point _centerPoint;
 
         /// <summary>
         /// The volume of the Polyhedron. Uses the 1st method described on this webpage: http://www.ecse.rpi.edu/~wrf/Research/Short_Notes/volume.html
         /// Now using this formula instead: http://stackoverflow.com/a/1849746/4875161
         /// </summary>
-        private Volume _volume;
-        public override Volume Volume
+        public virtual Volume Volume
         {
             get
             {
@@ -183,6 +138,8 @@ namespace GeometryClassLibrary
                 return _volume;
             }
         }
+        private Volume _volume;
+
         /// <summary>
         /// returns as a double the volume of the tetrahedron with that triangle as a base
         /// </summary>
@@ -209,7 +166,7 @@ namespace GeometryClassLibrary
             return volumeMatrix.Determinant() / 6;
         }
 
-        public override Point Centroid
+        public virtual Point Centroid
         {
             get
             {
@@ -446,7 +403,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the two Polyhedrons created by a slice. returns the solid on the normal side of the plane first
         /// </summary>
-        public new List<Polyhedron> Slice(Plane slicingPlane)
+        public List<Polyhedron> Slice(Plane slicingPlane)
         {
             if (this.DoesIntersectNotTouching(slicingPlane))
             {
@@ -611,7 +568,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift">The shift to preform on the Polyhedron</param>
         /// <returns>A new Polyhedron that has been shifted</returns>
-        public new Polyhedron Shift(Shift passedShift)
+        public Polyhedron Shift(Shift passedShift)
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
@@ -735,7 +692,7 @@ namespace GeometryClassLibrary
 
         public bool IsRectangularPrism()
         {
-            if (this.Polygons.Count != 6)
+            if (this.Polygons.Count != 6 || this.LineSegments.Count != 12 || this.Vertices.Count != 8)
             {
                 return false;
             }
@@ -924,7 +881,7 @@ namespace GeometryClassLibrary
             unplacedFaces.Remove(face);
 
             //adds the new edges and removes the edges that now have two neighbor faces
-            _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments);
+            _disjointUnion(edgesWithoutNeighboringFace, face.LineSegments.ToList());
         }
 
         private static void _disjointUnion(List<LineSegment> list1, List<LineSegment> list2)

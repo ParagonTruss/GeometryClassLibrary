@@ -6,8 +6,13 @@ using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
-    public class PlaneRegion : Plane, IComparable<PlaneRegion>
+    public partial class PlaneRegion : Plane, ISurface, IComparable<PlaneRegion>
     {
+        public static implicit operator PlaneRegion(Polygon p)
+        {
+            return new PlaneRegion(p.LineSegments.Select(s => (IEdge)s));
+        }
+
         #region Properties and Fields
 
         protected List<IEdge> _Edges = new List<IEdge>();
@@ -214,15 +219,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        /// <summary>
-        /// Should return the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other PlaneRegion
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(PlaneRegion other)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         #endregion
 

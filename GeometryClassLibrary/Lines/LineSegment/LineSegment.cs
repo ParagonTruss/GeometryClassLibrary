@@ -332,10 +332,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Translates the vector the given distance in the given direction
+        /// Translates linesegment the given distance in the given direction
         /// </summary>
-        /// <param name="translation">The Translation to apply to the lineSegment</param>
-        /// <returns>returns a new LineSegment as a IEdge that has been translated</returns>
         public new LineSegment Translate(Point translation)
         {
             return new LineSegment(base.Translate(translation));

@@ -12,7 +12,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void PlaneRegion_Shift()
         {
-            List<PlaneRegion> planes = new List<PlaneRegion>();
+            List<ISurface> planes = new List<ISurface>();
 
             List<LineSegment> polygonLines = new List<LineSegment>();
             polygonLines.Add(new LineSegment(MakePointWithInches(2, 3, 1)));
@@ -39,7 +39,7 @@ namespace GeometryClassLibraryTest
             polygonExpectedLines.Add(new LineSegment(MakePointWithInches(4, 3, 1), MakePointWithInches(2, 2, 5)));
             Polygon polygonExpected = new Polygon(polygonExpectedLines);
 
-            PlaneRegion polygonResult = planes[0].Shift(shift);
+            Polygon polygonResult = (Polygon)planes[0].Shift(shift);
             (polygonResult == polygonExpected).Should().BeTrue();
 
             List<IEdge> nonPolygonExpectedEdges = new List<IEdge>();
@@ -49,7 +49,7 @@ namespace GeometryClassLibraryTest
             nonPolygonExpectedEdges.Add(arcExpected);
             PlaneRegion nonPolygonExpected = new PlaneRegion(nonPolygonExpectedEdges);
 
-            PlaneRegion nonPolygonResult = planes[1].Shift(shift);
+            PlaneRegion nonPolygonResult = (PlaneRegion)planes[1].Shift(shift);
             (nonPolygonResult == nonPolygonExpected).Should().BeTrue();
         }    
     }
