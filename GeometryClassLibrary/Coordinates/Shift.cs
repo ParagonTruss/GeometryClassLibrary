@@ -34,9 +34,15 @@ namespace GeometryClassLibrary
         private Matrix _matrix = Matrix.IdentityMatrix(4);
         internal Matrix Matrix { get { return _matrix; } }
 
-        public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
+       public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         
-        public Rotation Rotation { get { return new Rotation(Compose(this.Translation.Inverse(),this).Matrix); } }
+        public Rotation Rotation
+        {
+            get
+            {
+                return new Rotation(this.Translation.Inverse().Matrix * this.Matrix);
+            }
+        }
         #endregion
 
         #region Constructors
@@ -109,9 +115,39 @@ namespace GeometryClassLibrary
 
         #endregion
 
+        #region Methods
+
+        public static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
+        {
+            //Matrix thisQuaternion = shift1.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+            //Matrix otherQuaternion = shift2.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
+
+
+            //return (thisQuaternion == otherQuaternion || thisQuaternion == otherQuaternion * -1); //since q == q && q == -q for Quaternion
+            return shift1.Rotation == shift2.Rotation;
+        }
+
+        public static Shift Compose(Shift shift1, Shift shift2)
+        {
+            return new Shift(shift1.Matrix * shift2.Matrix);
+        }
+
+        public Shift Compose(Shift shift)
+        {
+            return new Shift(this.Matrix * shift.Matrix);
+        }
+
+        /// <summary>
+        /// Returns the inverse shift. 
+        /// That is, it performs the opposite motion of this shift.
+        /// </summary>
+        public Shift Inverse()
+        {
+            return new Shift(Matrix.Invert());
+        }
+        #endregion
+
         #region Overloaded Operators
-
-
         /// <summary>
         /// Compose two shift operations.
         ///  Note this is not generally commutative.
@@ -178,7 +214,7 @@ namespace GeometryClassLibrary
 
             return Shift.RotationsAreEquivalent(this, other);
 
-            
+
         }
 
         /// <summary>
@@ -202,36 +238,5 @@ namespace GeometryClassLibrary
 
         #endregion
 
-        #region Methods
-
-        public static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
-        {
-            //Matrix thisQuaternion = shift1.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
-            //Matrix otherQuaternion = shift2.RotationOnly.Matrix.ConvertRotationMatrixToQuaternion();
-
-
-            //return (thisQuaternion == otherQuaternion || thisQuaternion == otherQuaternion * -1); //since q == q && q == -q for Quaternion
-            return shift1.Rotation == shift2.Rotation;
-        }
-
-        public static Shift Compose(Shift shift1, Shift shift2)
-        {
-            return new Shift(shift1.Matrix * shift2.Matrix);
-        }
-
-        public Shift Compose(Shift shift)
-        {
-            return new Shift(this.Matrix * shift.Matrix);
-        }
-
-        /// <summary>
-        /// creates a negative instance of the shift object
-        /// </summary>
-        /// <returns>A new shift object that is negative of this one</returns>
-        public Shift Inverse()
-        {
-            return new Shift(Rotation.Matrix.Transpose() * Translation.Inverse().Matrix);
-        }
-        #endregion
     }
 }

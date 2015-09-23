@@ -125,15 +125,18 @@ namespace GeometryClassLibrary
             return rotationMatrix;
         }
 
-        public Rotation(Matrix matrix)
+        /// <summary>
+        /// This Constructor only works for rotations about the origin.
+        /// </summary>
+        public Rotation(Matrix orthogonalMatrix)
         {
-            this._matrix = matrix;
-            var pair = _pullOutAxisAndAngle();
+            this._matrix = orthogonalMatrix;
+            var pair = _determineAxisAndAngle();
             this._axisOfRotation = pair.Key;
             this._rotationAngle = pair.Value;
         }
 
-        private KeyValuePair<Line,AngularDistance> _pullOutAxisAndAngle()
+        private KeyValuePair<Line,AngularDistance> _determineAxisAndAngle()
         {
             var point1 = new Point(DistanceType.Inch, 1, 0, 0);
             var point2 = new Point(DistanceType.Inch, 0, 1, 0);
@@ -148,6 +151,7 @@ namespace GeometryClassLibrary
             var angle = new Vector(points[index]).AngleBetween(axis);
 
             return new KeyValuePair<Line, AngularDistance>(new Line(axis), angle);
+            
         }
 
       
@@ -168,7 +172,7 @@ namespace GeometryClassLibrary
         public Rotation Inverse()
         {
             var inverseAngle = RotationAngle * -1;
-            return new Rotation(this.AxisOfRotation, inverseAngle, Matrix.Transpose());
+            return new Rotation(this.AxisOfRotation, inverseAngle);
         }
 
         #endregion
