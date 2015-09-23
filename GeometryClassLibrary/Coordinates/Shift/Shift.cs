@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GeometryClassLibrary
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Shift
+    public partial class Shift
     {
         #region Implicit Conversions
 

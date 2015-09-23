@@ -74,6 +74,7 @@
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystemEntityFramework.cs" />
     <Compile Include="Coordinates\Direction\DirectionEntityFramework.cs" />
     <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
+    <Compile Include="Coordinates\Shift\ShiftEntityFramework.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\SurfaceListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
     <Compile Include="Lines\Line\LineEntityFramework.cs" />
     <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
+    <Compile Include="Matrices\Matrix\MatrixEntityFramework.cs" />
     <Compile Include="Solids\Polyhedra\Polyhedron\PolyhedronEntityFramework.cs" />
     <Compile Include="Surfaces\Planes\OtherShapes\Circle.cs" />
     <Compile Include="Surfaces\Planes\PlaneRegion\PlaneRegionInterfaceImplementations.cs" />
@@ -114,7 +116,7 @@
     <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PolygonListExtensions.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
-    <Compile Include="Matrices\Matrix.cs" />
+    <Compile Include="Matrices\Matrix\Matrix.cs" />
     <Compile Include="Solids\OtherSolids\NonPolyhedron.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Pentagon.cs" />
     <Compile Include="Surfaces\Planes\Plane\Plane.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="Surfaces\Planes\Polygons\RegularPolygon.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Rhombus.cs" />
     <Compile Include="Coordinates\Rotation.cs" />
-    <Compile Include="Coordinates\Shift.cs" />
+    <Compile Include="Coordinates\Shift\Shift.cs" />
     <Compile Include="Solids\Solid.cs" />
     <Compile Include="Solids\OtherSolids\Sphere.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Square.cs" />

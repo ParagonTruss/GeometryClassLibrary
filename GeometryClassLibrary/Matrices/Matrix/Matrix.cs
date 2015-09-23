@@ -9,13 +9,12 @@ using Newtonsoft.Json;
 namespace GeometryClassLibrary
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Matrix
+    public partial class Matrix
     {
         #region Properties and Fields
 
         [JsonProperty]
-        public Matrix<double> _matrix;
-
+        public Matrix<double> _matrix { get; set; }
 
         /// <summary>
         /// Returns the number of rows in the matrix
@@ -42,6 +41,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Private constructor for the benefit of data frameworks like Entity Framework and Json.NET
+        /// </summary>
+        private Matrix() { }
 
         /// <summary>
         /// Creates a square matrix with the passed number of rows and columns
@@ -623,7 +627,9 @@ namespace GeometryClassLibrary
             // returns an n x n Identity matrix
             Matrix result = new Matrix(passedNumberOfRowsAndColumns);
             for (int i = 0; i < passedNumberOfRowsAndColumns; i++)
+            {
                 result.SetElement(i, i, 1.0);
+            }
 
             return result;
         }
