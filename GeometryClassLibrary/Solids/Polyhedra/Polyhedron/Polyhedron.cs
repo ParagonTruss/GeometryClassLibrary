@@ -763,7 +763,7 @@ namespace GeometryClassLibrary
             {
                 basePoint = vector1.BasePoint;
             }
-            Polygon bottom = Polygon.MakeParallelogram(vector1, vector2, basePoint);
+            Polygon bottom = Polygon.Parallelogram(vector1, vector2, basePoint);
             Polyhedron solid = bottom.Extrude(vector3);
             return solid;
         }
