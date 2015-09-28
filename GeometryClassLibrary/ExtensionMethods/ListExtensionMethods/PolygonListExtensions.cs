@@ -10,12 +10,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public static List<Polygon> Rotate(this IList<Polygon> passedPolygons, Rotation passedRotation)
         {
-            List<Polygon> rotatedRegion = new List<Polygon>();
-            foreach (var planeRegion in passedPolygons)
-            {
-                rotatedRegion.Add(planeRegion.Rotate(passedRotation));
-            }
-            return rotatedRegion;
+            return passedPolygons.Select(p => p.Rotate(passedRotation)).ToList();
         }
 
         /// <summary>
@@ -26,14 +21,7 @@ namespace GeometryClassLibrary
         /// <returns>A nes list of ne Polygons that have been shifted</returns>
         public static List<Polygon> Shift(this List<Polygon> passedPolygon, Shift passedShift)
         {
-            List<Polygon> shiftedPolygons = new List<Polygon>();
-
-            foreach (var region in passedPolygon)
-            {
-                shiftedPolygons.Add(region.Shift(passedShift));
-            }
-
-            return shiftedPolygons;
+            return passedPolygon.Select(p => p.Shift(passedShift)).ToList();
         }
 
         /// <summary>
@@ -54,35 +42,9 @@ namespace GeometryClassLibrary
             return false;
         }
 
-        ///// <summary>
-        ///// Finds a vertex of one of the polygons in this list that is not contained by the given plane in order to use it as a reference point 
-        ///// to determine what side of the plane this list of polygons lies. Presumably, the plane is a side of the "unconstructed polyhedron" that
-        ///// this list of polygons represents.
-        ///// </summary>
-        ///// <param name="polygonsList">The list of polygons to find the vertex from</param>
-        ///// <param name="planeNotToFindTheVertexOn">The plane that presumably is a side of the "unconstructed" polyhedron to determine what side of the plane this list of polygons lies</param>
-        ///// <returns>A vertex from this list of polygons that is not on the given plane</returns>
-        //public static Point FindVertexNotOnThePlane(this List<Polygon> polygonsList, Plane planeNotToFindTheVertexOn)
-        //{
-        //    Point pointFound;
-
-        //    foreach (Polygon polygon in polygonsList)
-        //    {
-        //        pointFound = polygon.FindVertexNotOnTheGivenPlane(planeNotToFindTheVertexOn);
-        //        if (pointFound != null)
-        //        {
-        //            return pointFound;
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
         /// <summary>
         /// Finds all the polygons in this list that intersect the given line and returns a list of those Polygons
         /// </summary>
-        /// <param name="intersectingLine">The line that potentially intersects with this list of Polygons</param>
-        /// <returns>Returns a list of all the polygons the line intersects in the list or an empty list if the line did not intersect any of them</returns>
         public static List<Polygon> FindPolygonsThatAreIntersectedByLine(this List<Polygon> polygonList, Line intersectingLine)
         {
             return polygonList.Where(p => p.DoesIntersect(intersectingLine)).ToList();
@@ -143,18 +105,11 @@ namespace GeometryClassLibrary
         /// </summary>
         public static List<Polygon> CopyList(this List<Polygon> polygonList)
         {
-            List<Polygon> copiedList = new List<Polygon>();
-            foreach(Polygon polygon in polygonList)
-            {
-                copiedList.Add(new Polygon(polygon));
-            }
-
-            return copiedList;
+            return polygonList.Select(p => new Polygon(p)).ToList();
         }
 
         public static List<Polygon> SplitIntoTriangles(this List<Polygon> polygonList)
         {
-
             return polygonList.SelectMany(p => p.SplitIntoTriangles()).ToList();
         }
 

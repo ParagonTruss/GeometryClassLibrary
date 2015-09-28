@@ -204,20 +204,20 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates one point around another
         /// </summary>
-        public Point Rotate2D(Point centerPoint, AngularDistance rotateAngle)
+        public Point Rotate2D(AngularDistance rotateAngle, Point centerPoint = null)
         {
+            if (centerPoint == null)
+            {
+                centerPoint = Origin;
+            }
             double cosTheta = Math.Cos(rotateAngle.Radians);
             double sinTheta = Math.Sin(rotateAngle.Radians);
 
-            return new Point
-            (
-                Distance.MakeDistanceWithInches(
-                    (cosTheta * (this.X - centerPoint.X).Inches -
-                    sinTheta * (this.Y - centerPoint.Y).Inches + centerPoint.X.Inches)),
-                Distance.MakeDistanceWithInches(
-                    (sinTheta * (this.X - centerPoint.X).Inches +
-                    cosTheta * (this.Y - centerPoint.Y).Inches + centerPoint.Y.Inches))
-            );
+            var point = this - centerPoint;
+            return new Point(
+                cosTheta * point.X - sinTheta * point.Y,
+                sinTheta * point.X + cosTheta * point.Y)
+                + centerPoint;
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
-            return Matrix.ShiftPoint(this, new Shift(rotationToApply));
+            return Matrix.ShiftPoint(this, rotationToApply.Matrix);
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point Shift(Shift shift)
         {
-           return  Matrix.ShiftPoint(this, shift);
+           return  Matrix.ShiftPoint(this, shift.Matrix);
         }
 
         #endregion

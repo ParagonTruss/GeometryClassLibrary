@@ -18,7 +18,7 @@ namespace GeometryClassLibrary
             var vector1 = new Vector(Direction.Right, length);
             var vector2 = new Vector(Direction.Up, width);
             
-            var rectangle = MakeParallelogram(vector1, vector2, basePoint);
+            var rectangle = Parallelogram(vector1, vector2, basePoint);
             return rectangle;
         }
 
@@ -41,7 +41,7 @@ namespace GeometryClassLibrary
             Direction heightDirection = referencePlaneNormal.CrossProduct(baseSegment.Direction);
             var heightVector = new Vector(heightDirection, height);
             
-            Polygon polygon = MakeParallelogram(baseSegment, heightVector);
+            Polygon polygon = Parallelogram(baseSegment, heightVector);
 
             return polygon;
         }

@@ -177,6 +177,8 @@ namespace GeometryClassLibraryTest
         public void LineSegment_Contains()
         {
             LineSegment testSegment = new LineSegment(Point.MakePointWithInches(5, 0));
+
+            //ToDo: fill out this test.
         }
 
         [Test()]

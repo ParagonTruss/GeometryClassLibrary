@@ -1686,24 +1686,7 @@ namespace GeometryClassLibrary
             return triangles;
         }
 
-        /// <summary>
-        /// Creates a parrelologram. 
-        /// shifts both vectors so their basepoints are the passed basepoint, and creates the parrelogram spanned by those sides.
-        /// </summary>
-        public static Polygon MakeParallelogram(Vector vector1, Vector vector2, Point basePoint = null)
-        {
-            if (basePoint == null)
-            {
-                basePoint = vector1.BasePoint;
-            }
-            LineSegment segment1 = new LineSegment(basePoint, vector1);
-            LineSegment segment2 = new LineSegment(basePoint, vector2);
-            LineSegment segment3 = new LineSegment(segment2.EndPoint, vector1);
-            LineSegment segment4 = new LineSegment(segment1.EndPoint, vector2);
-
-            return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
-        }
-
+      
         public bool IsRectangle()
         {
             if (LineSegments.Count != 4)
@@ -1764,6 +1747,95 @@ namespace GeometryClassLibrary
         //{
         //    if
         //}
+        #endregion
+
+        #region Static Factory Methods
+
+        public static Polygon EquilateralTriangle(Distance sideLength)
+        {
+            return RegularPolygon(3, sideLength);
+        }
+
+        /// <summary>
+        /// Creates a parrelologram. 
+        /// shifts both vectors so their basepoints are the passed basepoint, and creates the parrelogram spanned by those sides.
+        /// </summary>
+        public static Polygon Parallelogram(Vector vector1, Vector vector2, Point basePoint = null)
+        {
+            if (basePoint == null)
+            {
+                basePoint = vector1.BasePoint;
+            }
+            LineSegment segment1 = new LineSegment(basePoint, vector1);
+            LineSegment segment2 = new LineSegment(basePoint, vector2);
+            LineSegment segment3 = new LineSegment(segment2.EndPoint, vector1);
+            LineSegment segment4 = new LineSegment(segment1.EndPoint, vector2);
+
+            return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
+        }
+
+        public static Polygon Pentagon(Distance sideLength)
+        {
+            return RegularPolygon(5, sideLength);
+        }
+
+        /// <summary>
+        /// Creates a regular polygon centered at the origin in the XY-plane.
+        /// </summary>
+        public static Polygon RegularPolygon(int numberOfSides, Distance sideLength)
+        { 
+            if (numberOfSides < 3)
+            {
+                throw new ArgumentException("A polygon must have more than 2 sides.");
+            }
+
+            AngularDistance step = Angle.Degree * 360.0 / numberOfSides;
+            AngularDistance otherAngle = (Angle.Degree * 180 - step) / 2;
+
+            //Law of Sines
+            Distance length = sideLength * Math.Sin(otherAngle.Radians) / Math.Sin((step.Radians));
+
+            Point firstPoint;
+            // We want the polygon to be centered at the origin,
+            // and lie "flat" from the viewers perspective
+            if (numberOfSides % 4 == 0)
+            {
+                firstPoint = new Point(length, Distance.Zero);
+                firstPoint = firstPoint.Rotate2D(step / 2);
+            }
+            else if (numberOfSides % 2 == 0)
+            {
+                firstPoint = new Point(length, Distance.Zero);
+            }
+            else
+            {
+                firstPoint = new Point(Distance.Zero, length);
+            }
+
+            List<Point> points = new List<Point>() { firstPoint };
+            for (int i = 1; i < numberOfSides; i++)
+            {
+                points.Add(firstPoint.Rotate2D(step*i));
+            }
+
+            return new Polygon(points, false);
+        }
+
+        /// <summary>
+        /// Creates a polygon with the sidelength and this angle at the origin
+        /// </summary>
+        public static Polygon Rhombus(Angle angle, Distance sideLength)
+        {
+            var vector1 = Direction.Right * sideLength;
+            var vector2 = vector1.Rotate(new Rotation(angle));
+            return Parallelogram(vector1, vector2);
+        }
+
+        public static Polygon Square(Distance sideLength)
+        {
+            return RegularPolygon(4, sideLength);
+        }
+     
         #endregion
     }
 }

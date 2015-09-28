@@ -12,7 +12,7 @@ namespace GeometryClassLibrary
     public partial class Matrix
     {
         #region Properties and Fields
-
+        
         [JsonProperty]
         public Matrix<double> _matrix { get; set; }
 
@@ -429,10 +429,10 @@ namespace GeometryClassLibrary
             //return new double[] { w, x, y, z };
         }
 
-        public static Point ShiftPoint(Point point, Shift shift)
+        public static Point ShiftPoint(Point point, Matrix matrix)
         {
             var col =  PointAsProjectiveColumnVector(point);
-            var result = shift.Matrix * col;
+            var result = matrix * col;
             return _pointFromProjectiveColumnVector(result);
         }
 

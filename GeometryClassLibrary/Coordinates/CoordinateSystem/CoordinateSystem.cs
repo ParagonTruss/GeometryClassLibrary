@@ -53,7 +53,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return Matrix.ShiftPoint(Point.Origin, ShiftFromThisToWorld);
+                return Matrix.ShiftPoint(Point.Origin, ShiftFromThisToWorld.Matrix);
             }
         }
 
@@ -328,7 +328,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix RotationMatrixFromThisToWorld()
         {
-            return ShiftFromThisToWorld.Rotation.Matrix;
+            return ShiftFromThisToWorld.RotationAboutOrigin.Matrix;
          }
 
         /// <summary>
@@ -338,9 +338,11 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix RotationMatrixToThisFromWorld()
         {
-            //note: we reverse the matrix by inverting it see:http://en.wikipedia.org/wiki/Rotation_matrix#Ambiguities (the part on alias or alibi)
-            //non inverted is like rotating the point and inverted is like rotating the axes
-            return this.RotationMatrixFromThisToWorld().Transpose();
+            // Inverse of the last method.
+            // Since we're dealing with a rotation about the origin,
+            // our matrix is necessarily orthogonal.
+            // So its inverse is always just the transpose.
+           return this.RotationMatrixFromThisToWorld().Transpose();
         }
 
         /// <summary>
@@ -362,11 +364,8 @@ namespace GeometryClassLibrary
         /// Note: Only works if this CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
         /// perform this rotation it will cause incorrect results!
         /// </summary>
-        /// <param name="systemToRotateTo">The CoordinateSystem to Rotate to from this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
-        /// <returns>Returns the Shift to apply to objects oriented in this CoordinateSystem in order to orient them in the same way as the passed CoordinateSystem</returns>
-        public Shift RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
+        public Rotation RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
         {
-
             return RotateToThisFrom(systemToRotateTo).Inverse();
         }
 
@@ -376,13 +375,11 @@ namespace GeometryClassLibrary
         /// Note: Only works if the passed CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
         /// perform this rotation it will casue incorrect results!
         /// </summary>
-        /// <param name="systemToRotateFrom">The CoordinateSystem to Rotate from to this CoordinateSystem. defaults to the WorldCoordinateSystem if left out</param>
-        /// <returns>Returns the Shift to apply to objects in order to orient them in this CoordinateSystem assuming they are oriented currently on the passed CoordinateSystem</returns>
-        public Shift RotateToThisFrom(CoordinateSystem systemToRotateFrom = null)
+        public Rotation RotateToThisFrom(CoordinateSystem systemToRotateFrom = null)
         {
             //find the whole shift but then make a new one with only the rotations
             Shift shiftFrom = ShiftToThisFrom(systemToRotateFrom);
-            return new Shift(shiftFrom.Rotation);
+            return shiftFrom.RotationAboutOrigin;
         }
 
         /// <summary>
@@ -431,32 +428,12 @@ namespace GeometryClassLibrary
         /// instead of the passed one</returns>
         public CoordinateSystem FindThisSystemRelativeToWorldSystemCurrentlyRelativeToPassedSystem(CoordinateSystem thisRelativeTo)
         {
-            //coordinate system equations
-            //1 = passed (relative to world)
-            //2 = this (relative to s1)
-            //3 = this relative to world
-
-            //sys3 = rot1(rot2) + rot1(origin2) + origin1
-
-            //first find the translation, which is the passedCordinates origin + this origin rotated from the passedSystem to the world system so it is in terms of the world system
-            //rot1(origin2) + origin1 [does both parts - shifts the point and then adds the origin point]
-            Point newOrigin = this.TranslationToOrigin.Shift(thisRelativeTo.ShiftFromThisTo());
-
-            //now find the resulting rotaions and then pull out the angle data from the rotation matrix
-            //Note order of matrix multiplication is important! (the first in multiplication order is the shift performed second and vice versa!)
-            //rot1(rot2)
-            Matrix resultingMatrix = thisRelativeTo.RotationMatrixFromThisToWorld() * this.RotationMatrixFromThisToWorld();
-            List<Angle> resultingAngles = resultingMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
-
-            //make and return our new system
-            return new CoordinateSystem(newOrigin, resultingAngles[0], resultingAngles[1], resultingAngles[2]);
+            return new CoordinateSystem(thisRelativeTo.ShiftFromThisToWorld.Compose(this.ShiftFromThisToWorld));
         }
 
         /// <summary>
         /// This shifts the coordinate system relative to the world system with the given shift
         /// </summary>
-        /// <param name="passedShift">The shift to apply to the coordinate system</param>
-        /// <returns>Returns a new coordinate system that is shifted by the given shift</returns>
         public CoordinateSystem Shift(Shift passedShift)
         {
            return new CoordinateSystem(passedShift.Compose(this.ShiftFromThisToWorld));
@@ -474,7 +451,7 @@ namespace GeometryClassLibrary
         {
             //change the coordinate system so that it is in terms of the current system so we can shift it relative to that system and 
             //then we need to shift it so its back on the worldCoordinates
-            CoordinateSystem inCurrent = this.Shift(WorldCoordinateSystem.ShiftFromThisTo(systemShiftIsRelativeTo));
+            CoordinateSystem inCurrent = this.Shift(systemShiftIsRelativeTo.ShiftFromThisToWorld.Inverse());
             CoordinateSystem shiftedInCurrent = inCurrent.Shift(passedShift);
             //now put it back in terms of the world and return it
             return shiftedInCurrent.Shift(WorldCoordinateSystem.ShiftToThisFrom(systemShiftIsRelativeTo));
