@@ -327,7 +327,6 @@ namespace GeometryClassLibrary
         /// </summary>
         public Angle AngleBetween(Line otherLine)
         {
-           
             return this.Direction.AngleBetween(otherLine.Direction);
         }        
 	

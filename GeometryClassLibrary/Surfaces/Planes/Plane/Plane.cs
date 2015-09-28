@@ -656,6 +656,12 @@ namespace GeometryClassLibrary
             }
         }
 
+        public Angle SmallestAngleBetween(Line line)
+        {
+            var angle =  this.NormalVector.SmallestAngleBetween(line);
+            return new Angle(90 * Angle.Degree - angle);
+        }
+
         public Vector NormalVectorThrough(Point point)
         {
             var basePoint = point.ProjectOntoPlane(this);
