@@ -1,6 +1,6 @@
 ﻿namespace GeometryClassLibrary
 {
-    public interface IShiftableCollection: IShiftable
+    public interface IShiftableCollection : IShiftable
     {
         //Note: Coordinate systems are implemented in IShiftable an this inherits them from it.
         //      However, current coordinate system can get confusing for collections since you can shift each block's current system separately, 
