@@ -561,7 +561,7 @@ namespace GeometryClassLibrary
         /// Translates the line the given distance in the given direction
         /// </summary>
         /// <returns></returns>
-        public Line Translate(Point translation)
+        public Line Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
             Point newOtherPoint = this.GetPointAlongLine(Distance.Inch * 2).Translate(translation);

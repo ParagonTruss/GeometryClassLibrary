@@ -333,14 +333,9 @@ namespace GeometryClassLibrary
         }
 
 
-        public new Polygon Translate(Point translation)
+        public new Polygon Translate(Translation translation)
         {
-            List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in this.LineSegments)
-            {
-                newBoundaryList.Add(segment.Translate((translation)));
-            }
-            return new Polygon(newBoundaryList, false);
+            return new Polygon(this.Vertices.Select(v => v.Translate(translation)).ToList(), false);
         }
 
         public virtual Polygon SmallestEnclosingRectangle()

@@ -224,9 +224,9 @@ namespace GeometryClassLibrary
         /// Moves the point by the specified amount based on the passed point
         /// </summary>
         /// <param name="passedTranslation"></param>
-        public Point Translate(Point passedTranslation)
+        public Point Translate(Translation passedTranslation)
         {
-            return (this + passedTranslation);
+            return (this + passedTranslation.Point);
         }
 
         /// <summary>

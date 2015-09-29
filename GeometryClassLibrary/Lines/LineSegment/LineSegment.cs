@@ -334,7 +334,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates linesegment the given distance in the given direction
         /// </summary>
-        public new LineSegment Translate(Point translation)
+        public new LineSegment Translate(Translation translation)
         {
             return new LineSegment(base.Translate(translation));
         }

@@ -224,7 +224,7 @@ namespace GeometryClassLibrary
             return planeVector.IsPerpendicularTo(NormalVector);
         }
 
-        public Plane Translate(Point translation)
+        public Plane Translate(Translation translation)
         {
             Vector newNormalVector = this.NormalVector.Translate(translation);
             return new Plane(newNormalVector);

@@ -482,7 +482,7 @@ namespace GeometryClassLibrary
             Point newEndPoint = EndPoint.Rotate3D(passedRotation);
 
             //cheat a bit and make the direction into a line and then shift it
-            Line directionLine = new Line(InitialDirection, BasePoint).Rotate(passedRotation);
+            Line directionLine = new Line(InitialDirection).Rotate(passedRotation);
 
             return new Arc(newBasePoint, newEndPoint, directionLine.Direction);
         }
@@ -500,12 +500,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the arc with the given translation
         /// </summary>
-        /// <param name="point">The translation to apply to the Arc</param>
+        /// <param name="translation">The translation to apply to the Arc</param>
         /// <returns>A new Arc object that has been translated</returns>
-        public Arc Translate(Point point)
+        public Arc Translate(Translation translation)
         {
-            Point newBasePoint = BasePoint.Translate(point);
-            Point newEndPoint = EndPoint.Translate(point);
+            Point newBasePoint = BasePoint.Translate(translation);
+            Point newEndPoint = EndPoint.Translate(translation);
             return new Arc(newBasePoint, newEndPoint, this.InitialDirection);
         }
 
