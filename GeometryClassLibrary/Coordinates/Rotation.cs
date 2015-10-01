@@ -26,14 +26,37 @@ namespace GeometryClassLibrary
         [JsonProperty]
         public AngularDistance RotationAngle
         {
-            get { return _rotationAngle; }
+            get
+            {
+                //When we use the matrix constructor, we will not know the rotation angle, nor will we neccesarily need it.
+                //If hasn't been determined we go ahead and determine both the axis and rotation angle.
+                if (_rotationAngle == null)
+                {
+                    var pair = _determineAxisAndAngle();
+                    AxisOfRotation = pair.Key;
+                    RotationAngle = pair.Value;
+                }
+                return _rotationAngle;
+            }
             private set { _rotationAngle = new Angle(value); }
         }
 
         [JsonProperty]
         public Line AxisOfRotation
         {
-            get { return _axisOfRotation; }
+            get
+            {
+                //When we use the matrix constructor, we will not know the rotation axis, nor will we neccesarily need it.
+                //If hasn't been determined we go ahead and determine both the axis and rotation angle.
+
+                if (_axisOfRotation == null)
+                {
+                    var pair = _determineAxisAndAngle();
+                    AxisOfRotation = pair.Key;
+                    RotationAngle = pair.Value;
+                }
+                return _axisOfRotation;
+            }
             private set { _axisOfRotation = new Line(value); }
         }
 
@@ -137,9 +160,6 @@ namespace GeometryClassLibrary
         public Rotation(Matrix matrix)
         {
             this._matrix = matrix;
-            var pair = _determineAxisAndAngle();
-            this._axisOfRotation = pair.Key;
-            this._rotationAngle = pair.Value;
         }
 
         private KeyValuePair<Line,AngularDistance> _determineAxisAndAngle()

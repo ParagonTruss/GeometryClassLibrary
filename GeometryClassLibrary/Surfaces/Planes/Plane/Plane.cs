@@ -335,7 +335,10 @@ namespace GeometryClassLibrary
             {
                 return line.BasePoint;
             }
-
+            if (this.IsParallelTo(line))
+            {
+                return null;
+            }
             //Following formula from http://www.netcomuk.co.uk/~jenolive/vect18c.html
 
             //substitute the x,y and z part of the lines into the plane equation
@@ -360,11 +363,6 @@ namespace GeometryClassLibrary
             }
             
             Point intersectionPoint = line.GetPointAlongLine(t* Inch);
-
-            if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
-            {
-                return null;
-            }
 
             return intersectionPoint;
         }

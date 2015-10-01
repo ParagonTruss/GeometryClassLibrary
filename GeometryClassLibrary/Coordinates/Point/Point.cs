@@ -355,8 +355,13 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Point ProjectOntoPlane(Plane plane)
         {
-            Vector toPlane = new Vector(this, plane.NormalVector);
-            return ((Line)toPlane).IntersectWithPlane(plane);
+            Vector toPlane = new Vector(this, plane.BasePoint);
+            var cosineOfAngle = toPlane.Direction.DotProduct(plane.NormalDirection);
+            var distance =  toPlane.Magnitude * cosineOfAngle;
+
+            Line line = new Line(this, plane.NormalDirection);
+                
+            return line.GetPointAlongLine(distance);
         }
 
         /// <summary>

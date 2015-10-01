@@ -1190,7 +1190,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns the point of intersection or null if it does not intersect</returns>
         public new Point IntersectWithLine(Line passedLine)
         {
-            Point intersection = ((Plane)this).IntersectWithLine(passedLine);
+            Point intersection = new Plane(this).IntersectWithLine(passedLine);
 
             if(intersection != null && this.Contains(intersection))
             {

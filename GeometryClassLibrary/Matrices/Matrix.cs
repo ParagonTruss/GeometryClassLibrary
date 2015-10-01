@@ -144,39 +144,28 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the passed obj is not null
-            if (obj == null)
+            if (obj == null || !(obj is Matrix))
+            {
+                return false;
+            }
+            Matrix comparableMatrix = (Matrix)obj;
+
+            if (this.NumberOfColumns != comparableMatrix.NumberOfColumns || this.NumberOfRows != comparableMatrix.NumberOfRows)
             {
                 return false;
             }
 
-            //try casting and then comparing
-            try
+            for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
             {
-                Matrix comparableMatrix = (Matrix)obj;
-
-                if (this.NumberOfColumns != comparableMatrix.NumberOfColumns || this.NumberOfRows != comparableMatrix.NumberOfRows)
+                for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
-                    return false;
-                }
-
-                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
-                {
-                    for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
+                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - comparableMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
                     {
-                        if (Math.Abs(this.GetElement(rowIndex, columnIndex) - comparableMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
-
-                return true;
             }
-            //if it was not a matrix than it was not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return true;
         }
 
         /// <summary>

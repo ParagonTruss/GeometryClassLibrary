@@ -621,18 +621,12 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool IsPerpendicularTo(Vector other)
         {
-            Area dotResult = this.DotProduct(other);
-
-            //and return if its close to zero
-            return (dotResult == new Area());
+            return this.SmallestAngleBetween(other) == 90 * Angle.Degree;
         }
 
         public bool IsParallelTo(Vector vector)
         {
-            return this.HasSameOrOppositeDirectionAs(vector);
-            //return this.CrossProduct(vector).Magnitude == Distance.Zero;
-            //checking the crossproduct is too precise for our library's purposes. It 
-            //this might change when we implement error propagation.
+            return this.SmallestAngleBetween(vector) == Angle.Zero;
         }
 
      

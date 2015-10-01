@@ -9,6 +9,7 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class RotationTests
     {
+        [Ignore]
         [Test]
         public void Rotation_Matrix_Constructor()
         {
