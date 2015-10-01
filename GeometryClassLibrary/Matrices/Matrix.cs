@@ -238,6 +238,29 @@ namespace GeometryClassLibrary
 
         #region Methods
 
+        public static Matrix ProjectiveMatrixToRotationMatrix(Matrix matrix)
+        {
+            var newMatrix = new Matrix(3, 3);
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    newMatrix.SetElement(i, j, matrix.GetElement(i, j));
+                }
+            }
+            return newMatrix;
+        }
+
+        public List<Vector> NullSpace()
+        {
+            return this._matrix.Kernel().Select(v => _vectorOfDoublesToVectorOfInches(v)).ToList();
+        }
+
+        private static Vector _vectorOfDoublesToVectorOfInches(Vector<double> vector)
+        {
+            return new Vector(Point.MakePointWithInches(vector[0], vector[1], vector[2]));
+        }
+
         #region Get/Set Methods
         /// <summary>
         /// </summary>

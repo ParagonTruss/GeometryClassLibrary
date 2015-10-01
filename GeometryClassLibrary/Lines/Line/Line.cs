@@ -304,7 +304,6 @@ namespace GeometryClassLibrary
             return new Plane(extrusionLine, this);
         }
 
-        /// Make this in linesegment and make it direction dependent
         /// <summary>
         /// Returns the smaller of the two angles fromed where the two lines itnersect
         /// </summary>

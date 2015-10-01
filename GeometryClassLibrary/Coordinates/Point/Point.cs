@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using static UnitClassLibrary.Distance;
+using System.Collections.Generic;
 //using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
@@ -90,6 +91,13 @@ namespace GeometryClassLibrary
             _x = new Distance(passedType, passedX);
             _y = new Distance(passedType, passedY);
             _z = new Distance(passedType, passedZ);
+        }
+
+        public Point(IList<Distance> coordinates)
+        {
+            _x = coordinates[0];
+            _y = coordinates[1];
+            _z = coordinates[2];
         }
 
         /// <summary>
@@ -200,6 +208,11 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        public List<Distance> ToListOfCoordinates()
+        {
+            return new List<Distance>() { this.X, this.Y, this.Z };
+        }
 
         /// <summary>
         /// Rotates one point around another

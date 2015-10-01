@@ -443,8 +443,6 @@ namespace GeometryClassLibrary
         /// and whose magnitude is the area of the parellelogram spanned by those two vectors
         /// Consequently if they point in the same (or opposite) direction, than the cross product is zero
         /// </summary>
-        /// <param name="?"></param>
-        /// <returns></returns>
         public Vector CrossProduct(Vector passedVector)
         {
             Vector v1 = new Vector(this);
@@ -471,8 +469,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in the same direction
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
         public bool HasSameDirectionAs(Vector passedVector)
         {
             Vector vector1 = this;
@@ -517,9 +513,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Switches the a vectors head with its tail.
+        /// returns a vector with its base and end points swapped.
         /// </summary>
-        /// <returns></returns>
         public Vector Reverse()
         {
             return new Vector(this.EndPoint, this.BasePoint);
@@ -560,8 +555,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the vector about the given axis by the passed angle
         /// </summary>
-        /// <param name="rotationToApply">The Rotation to apply to the Vector that stores the axis to rotate around and the angle to rotate</param>
-        /// <returns></returns>
         public new Vector Rotate(Rotation rotationToApply)
         {
             Point rotatedBasePoint = this.BasePoint.Rotate3D(rotationToApply);
@@ -596,10 +589,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
-        /// Note: if it is a zero vecotor and you call the unitVector it will return a zero vector
+        /// Note: if it is a zero vector and you call the unitVector it will return a zero vector
         /// </summary>
-        /// <param name="passedType">Dimesnion Type that will be used. The vector will have a length of 1 in this unit type</param>
-        /// <returns></returns>
         public new Vector UnitVector(DistanceType passedType)
         {
             if (Magnitude == Distance.Zero)

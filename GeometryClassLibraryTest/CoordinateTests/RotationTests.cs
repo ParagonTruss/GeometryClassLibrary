@@ -2,32 +2,26 @@
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using static UnitClassLibrary.AngularDistance;
 
 namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class RotationTests
     {
-        /* Does not make sense with how we were adding and subtracting rotations because we didnt take into account the axis
-        [Test()]
-        public void Rotation_AdditionAndSubtractionTest()
+        [Test]
+        public void Rotation_Matrix_Constructor()
         {
-            Line axis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 1));
+            Line line = new Line(Point.MakePointWithInches(2, 3, -6), Direction.Out);
+            AngularDistance angle = -173 * Degree;
+            Rotation rotation = new Rotation(line, angle);
 
-            Rotation baseRotation = new Rotation(axis, new Angle(AngleType.Degree, 42));
-            Angle toAdd = new Angle(AngleType.Degree, 21);
-            Angle toSubtract = new Angle(AngleType.Radian, Math.PI / 4); //45 degrees
+            Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            Rotation addedRotation = baseRotation + toAdd;
-            Rotation subtractedRotation = baseRotation - toSubtract;
-
-            Rotation expectedAddition = new Rotation(axis, new Angle(AngleType.Degree, 63));
-            Rotation expectedSubtraction = new Rotation(axis, new Angle(AngleType.Degree, -3));
-
-            (addedRotation == expectedAddition).Should().BeTrue();
-            (subtractedRotation == expectedSubtraction).Should().BeTrue();
+            (new Angle(fromMatrixConstructor.RotationAngle) == new Angle(angle)).Should().BeTrue();
+            (fromMatrixConstructor.AxisOfRotation == line).Should().BeTrue();
+        }
         
-        }*/
 
         [Test()]
         public void Rotation_EqualityTests()

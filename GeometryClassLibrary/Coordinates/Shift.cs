@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
             {
                 var copy = new Matrix(this.Matrix);
                 copy.SetColumn(3, new double[] { 0, 0, 0, 1 });
-                return new Rotation(this.Matrix);
+                return new Rotation(copy);
             }
         }
         #endregion

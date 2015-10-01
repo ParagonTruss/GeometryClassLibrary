@@ -5,6 +5,7 @@ using System.Diagnostics;
 using UnitClassLibrary;
 using System.Linq;
 using MoreLinq;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -143,34 +144,24 @@ namespace GeometryClassLibrary
 
         private KeyValuePair<Line,AngularDistance> _determineAxisAndAngle()
         {
-            return new KeyValuePair<Line, AngularDistance>(null, null);
-            //var point = Matrix.ShiftPoint(Point.Origin, this._matrix);
-            //if (point == Point.Origin)
-            //{
-            //    return new KeyValuePair<Line, AngularDistance>();
-            //}
+            var shift = new Shift(this.Matrix);
+            var singularMatrix = Matrix.ProjectiveMatrixToRotationMatrix(Matrix) - Matrix.IdentityMatrix(3);
 
-            //var matrix = new Matrix( this._matrix);
-            //matrix.SetColumn(3, new double[] { 0, 0, 0, 1 });
-            //var otherMatrix = Matrix.IdentityMatrix(4) - matrix;
+            var translation = singularMatrix.SystemSolve(shift.Translation.Point.ToListOfCoordinates()
+                .Select(d => d.Inches).ToArray()).Select(d => d*Inch).ToList();
+            var nullSpace = (singularMatrix).NullSpace();
+            var axis = nullSpace[0];
 
-            //var translate = Matrix.ShiftPoint(point, otherMatrix.Invert());
+            Vector vector1 = axis.CrossProduct(Line.XAxis.UnitVector(DistanceType.Inch));
+            Vector vector2 = axis.CrossProduct(Line.YAxis.UnitVector(DistanceType.Inch));
+            Vector vector3 = axis.CrossProduct(Line.ZAxis.UnitVector(DistanceType.Inch));
+            Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
 
+            Vector rotated = new Vector(chosen.EndPoint.Rotate3D(shift.RotationAboutOrigin));
 
-        //    var point1 = new Point(DistanceType.Inch, 1, 0, 0);
-        //    var point2 = new Point(DistanceType.Inch, 0, 1, 0);
-        //    var point3 = new Point(DistanceType.Inch, 0, 0, 1);
-        //    var points = new Point[] { point1, point2, point3 };
-
-        //    var candidates = points.
-        //        Select(p => new Vector(p).CrossProduct(
-        //            new Vector(p.Rotate3D(this)))).ToList();
-        //    var axis = candidates.MaxBy(v => v.Magnitude);
-        //    var index = candidates.IndexOf(axis);
-        //    var angle = new Vector(points[index]).AngleBetween(axis);
-
-        //    return new KeyValuePair<Line, AngularDistance>(new Line(axis), angle);
-            
+            var angle = chosen.SignedAngleBetween(rotated);
+            axis = axis.Translate(new Point(translation));
+            return new KeyValuePair<Line, AngularDistance>(axis, angle);
         }
 
         private Rotation(Line axis, AngularDistance angle, Matrix matrix)
@@ -179,6 +170,7 @@ namespace GeometryClassLibrary
             this._rotationAngle = angle;
             this._matrix = matrix;
         }
+
         #endregion 
              
         #region Methods

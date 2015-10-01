@@ -13,26 +13,24 @@ namespace GeometryClassLibrary
             var max = points.Max(p => p.X);
             return max - min;
         }
+
         public static Distance GreatestYDistance(this List<Point> points)
         {
             var min = points.Min(p => p.Y);
             var max = points.Max(p => p.Y);
             return max - min;
         }
+
         public static Distance GreatestZDistance(this List<Point> points)
         {
             var min = points.Min(p => p.Z);
             var max = points.Max(p => p.Z);
             return max - min;
         }
-        public static List<Point> Shift(this List<Point> pointList, Shift passedShift)
+
+        public static List<Point> Shift(this List<Point> pointList, Shift shift)
         {
-            List<Point> shiftedPoints = new List<Point>();
-            foreach(Point point in pointList)
-            {
-                shiftedPoints.Add(point.Shift(passedShift));
-            }
-            return shiftedPoints;
+            return pointList.Select(p => p.Shift(shift)).ToList();
         }
 
         public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
@@ -72,12 +70,7 @@ namespace GeometryClassLibrary
 
         public static List<Point> Rotate(this IEnumerable<Point> pointList, Rotation rotation)
         {
-            var results = new List<Point>();
-            foreach (var point in pointList)
-            {
-                results.Add(point.Rotate3D(rotation));
-            }
-            return results;
+            return pointList.Select(p => p.Rotate3D(rotation)).ToList();
         }
         /// <summary>
         /// determines if the points in the list, all lie on the same side of the dividing plane.

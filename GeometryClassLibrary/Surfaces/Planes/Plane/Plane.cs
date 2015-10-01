@@ -188,22 +188,17 @@ namespace GeometryClassLibrary
 
         public bool Contains(Polygon polygon)
         {
-            //// checks to make sure that every linesegment is on the plane
-            //foreach (LineSegment segment in polygon.LineSegments)
-            //{
-            //    if (!this.Contains(segment))
-            //    {
-            //        return false;
-            //    }
-            //}
-
-            //return true;
-            return this == (Plane)polygon;
+            return this == new Plane(polygon);
         }
 
-        public bool Contains(Line passedLine)
+        public bool Contains(Line line)
         {
-            return (this.Contains(passedLine.BasePoint) && NormalVector.IsPerpendicularTo(passedLine));
+            return (this.Contains(line.BasePoint) && NormalVector.IsPerpendicularTo(line));
+        }
+
+        public bool Contains(Vector vector)
+        {
+            return this.Contains(vector.BasePoint) && this.Contains(vector.EndPoint);
         }
 
         /// <summary>
@@ -213,15 +208,7 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
         public bool Contains(Point passedPoint)
         {
-            if (BasePoint == passedPoint)
-            {
-                return true;
-            }
-            Vector planeVector = new Vector(passedPoint, BasePoint);
-            //Distance dotProduct = planeVector * NormalVector;
-            //return dotProduct == Distance.Zero;
-
-            return planeVector.IsPerpendicularTo(NormalVector);
+            return passedPoint.DistanceTo(this) == Distance.Zero;
         }
 
         public Plane Translate(Translation translation)
@@ -324,73 +311,6 @@ namespace GeometryClassLibrary
             Point basePoint = normalInPlane1.IntersectWithPlane(otherPlane);
 
             return new Line(basePoint, intersectionLineDirection);
-            // http://jacobi.math.wvu.edu/~hjlai/Teaching/Tip-Pdf/Tip3-10.pdf
-            ////if it is 0 than thay are parallel and dont intersect
-            //if (intersectionLineDirection != new Vector(Point.Origin))
-            //{
-            //    //put them in plane notation  adn find what they equal (normal.X * X + normal.Y * Y + normal.Z * Z = planeEqualsValue)
-            //    double thisPlaneEqualsValue = this.NormalVector.XComponent.Inches * this.BasePoint.X.Inches + this.NormalVector.YComponent.Inches * this.BasePoint.Y.Inches +
-            //        this.NormalVector.ZComponent.Inches * this.BasePoint.Z.Inches;
-
-            //    double otherPlaneEqualsValue = otherPlane.NormalVector.XComponent.Inches * otherPlane.BasePoint.X.Inches +
-            //        otherPlane.NormalVector.YComponent.Inches * otherPlane.BasePoint.Y.Inches + otherPlane.NormalVector.ZComponent.Inches * otherPlane.BasePoint.Z.Inches;
-
-            //    //pull them all out as the same thing because we need to know what Distance we are dealing with
-            //    double thisFirstVariable = this.NormalVector.XComponent.Inches;
-            //    double thisSecondVariable = this.NormalVector.YComponent.Inches;
-            //    double otherFirstVariable = otherPlane.NormalVector.XComponent.Inches;
-            //    double otherSecondVariable = otherPlane.NormalVector.YComponent.Inches;
-
-            //    //first we play a game to find an axis it will always cross (default is to use z first then y, then x)
-            //    if (intersectionLineDirection.ZComponent == Distance.Zero)
-            //    {
-            //        //try y
-            //        if (intersectionLineDirection.YComponent != Distance.Zero)
-            //        {
-            //            //make the y the thirdVariable(the one we make 0) and z the second 
-            //            thisSecondVariable = this.NormalVector.ZComponent.Inches;
-            //            otherSecondVariable = otherPlane.NormalVector.ZComponent.Inches;
-            //        }
-            //        //if not y or z than it must be x because we know it is non zero at this point
-            //        else
-            //        {
-            //            //make x the third variable(the one make 0) and z the first
-            //            thisFirstVariable = this.NormalVector.ZComponent.Inches;
-            //            otherFirstVariable = otherPlane.NormalVector.ZComponent.Inches;
-            //        }
-            //    }
-
-            //    //make them into a matrix and then solve it
-            //    Matrix equations = new Matrix(2, 2);
-            //    equations.SetElement(0, 0, thisFirstVariable);
-            //    equations.SetElement(0, 1, thisSecondVariable);
-            //    equations.SetElement(1, 0, otherFirstVariable);
-            //    equations.SetElement(1, 1, otherSecondVariable);
-
-            //    double[] equationEquals = new double[] {thisPlaneEqualsValue, otherPlaneEqualsValue};
-
-            //    double[] results = equations.SystemSolve(equationEquals);
-                
-
-            //    //now assign them to the point in the way the need to be (assume z again)
-            //    Point intersectLinePoint = Point.MakePointWithInches(results[0], results[1], 0);
-            //    if (intersectionLineDirection.ZComponent == Distance.Zero)
-            //    {
-            //        //if y was what we made zero then it was third and z was second
-            //        if (intersectionLineDirection.YComponent != Distance.Zero)
-            //        {
-            //            intersectLinePoint = Point.MakePointWithInches(results[0], 0, results[1]);
-            //        }
-            //        //if x is what we made 0 than it was third and z was first
-            //        else
-            //        {
-            //            intersectLinePoint = Point.MakePointWithInches(0, results[1], results[0]);
-            //        }
-            //    }
-            //    return new Line(intersectionLineDirection.Direction, intersectLinePoint);
-            //}
-
-            //return null;
         }
 
         public Line GetLineOnThisPlane()
@@ -400,22 +320,20 @@ namespace GeometryClassLibrary
             Vector vector3 = this.NormalVector.CrossProduct(Line.ZAxis.UnitVector(DistanceType.Inch));
             Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
             
-            //vectors 1,2,&3 all will be parallel to the plane, but the most precise will be the one wit hthe largest magnitude.
+            //vectors 1,2,&3 all will be parallel to the plane, but the most precise will be the one with the largest magnitude.
             return new Line(this.BasePoint, chosen);
         }
 
         /// <summary>
         /// Returns the intersection point between a line and the plane
         /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual Point IntersectWithLine(Line passedLine)
+        public virtual Point IntersectWithLine(Line line)
         {
             //Test if the plane contains the line's basePoint
             //This handles the case where the line is inside the plane
-            if (this.Contains(passedLine.BasePoint))
+            if (this.Contains(line.BasePoint))
             {
-                return passedLine.BasePoint;
+                return line.BasePoint;
             }
 
             //Following formula from http://www.netcomuk.co.uk/~jenolive/vect18c.html
@@ -425,10 +343,10 @@ namespace GeometryClassLibrary
             Area thisPlaneEqualsValue = this.NormalVector.DotProduct(new Vector(this.BasePoint));
 
             //find t's coefficent
-            Area tCoefficient = this.NormalVector.DotProduct(passedLine.Direction.UnitVector(DistanceType.Inch));
+            Area tCoefficient = this.NormalVector.DotProduct(line.Direction.UnitVector(DistanceType.Inch));
 
             //find the part it equals from the line
-            Area equationEquals = this.NormalVector.DotProduct(new Vector(passedLine.BasePoint));
+            Area equationEquals = this.NormalVector.DotProduct(new Vector(line.BasePoint));
 
             //subtract the one from the line from the one from the plane
             Area equals = thisPlaneEqualsValue - equationEquals;
@@ -440,13 +358,8 @@ namespace GeometryClassLibrary
             {
                 return null;
             }
-            //now just plug it back into the line equations to find the x,y amd z
-            //Distance xComponent = this.BasePoint.X + new Distance(DistanceType.Inch, this.Direction.XComponentOfDirection * t);
-            //Distance yComponent = this.BasePoint.Y + new Distance(DistanceType.Inch, this.Direction.YComponentOfDirection * t);
-            //Distance zComponent = this.BasePoint.Z + new Distance(DistanceType.Inch, this.Direction.ZComponentOfDirection * t);
-
-            //Point intersectionPoint = new Point(xComponent, yComponent, zComponent);
-            Point intersectionPoint = passedLine.GetPointAlongLine(new Distance(DistanceType.Inch, t));
+            
+            Point intersectionPoint = line.GetPointAlongLine(t* Inch);
 
             if ((intersectionPoint.DistanceTo(this.BasePoint)).DistanceInIntrinsicUnitsIsGreaterThan(1000))
             {
@@ -580,8 +493,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the giving plane is parallel to this plane
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
         public bool IsParallelTo(Plane passedPlane)
         {
             return (this.NormalVector.CrossProduct((passedPlane.NormalVector)).Magnitude == Distance.Zero);
