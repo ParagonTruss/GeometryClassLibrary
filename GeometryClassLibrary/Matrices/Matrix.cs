@@ -923,22 +923,23 @@ namespace GeometryClassLibrary
                         }
                     }
 
-                    if (goodRow == -1)
+                    if (goodRow != -1)
                     {
-                        throw new Exception("Cannot use Doolittle's method on this matrix");
+                        // swap rows so 0.0 no longer on diagonal
+                        double[] rowPtr = decomposedMatrix.GetRow(goodRow);
+                        decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
+                        decomposedMatrix.SetRow(columnIndex, rowPtr);
+
+                        int tmp = permutationArray[goodRow]; // and swap perm info
+                        permutationArray[goodRow] = permutationArray[columnIndex];
+                        permutationArray[columnIndex] = tmp;
+
+                        toggle = -toggle; // adjust the row-swap toggle
                     }
-
-                    // swap rows so 0.0 no longer on diagonal
-                    double[] rowPtr = decomposedMatrix.GetRow(goodRow);
-                    decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
-                    decomposedMatrix.SetRow(columnIndex, rowPtr);
-
-                    int tmp = permutationArray[goodRow]; // and swap perm info
-                    permutationArray[goodRow] = permutationArray[columnIndex];
-                    permutationArray[columnIndex] = tmp;
-
-                    toggle = -toggle; // adjust the row-swap toggle
-
+                    else
+                    {
+                      //  throw new Exception("Cannot use Doolittle's method on this matrix");
+                    }
                 }
 
                 //Find the next value to insert into the decomposed matrix    

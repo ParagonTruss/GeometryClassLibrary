@@ -279,22 +279,25 @@ namespace GeometryClassLibrary
         /// <summary>
         /// returns the shortest distance from the line to the point
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
-        public Distance DistanceTo(Line passedLine)
+        public Distance DistanceTo(Line line)
         {
-            Point projected = this.ProjectOntoLine(passedLine);
+            Point projected = this.ProjectOntoLine(line);
             Distance distance = this.DistanceTo(projected);
             return distance;
         }
 
-        public Distance DistanceTo(Plane passedPlane)
+        public Distance DistanceTo(Plane plane)
         {
-            Vector planeToPointVector = new Vector(passedPlane.BasePoint, this);
-            Vector normalVector = planeToPointVector.ProjectOntoLine(passedPlane.NormalVector);
-            
-            Distance distance = normalVector.Magnitude;
-            return distance;
+            //Vector planeToPointVector = new Vector(passedPlane.BasePoint, this);
+            //Vector normalVector = planeToPointVector.ProjectOntoLine(passedPlane.NormalVector);
+            //Distance distance = normalVector.Magnitude;
+            //return distance;
+
+            Vector toPlane = new Vector(this, plane.BasePoint);
+            var cosineOfAngle = toPlane.Direction.DotProduct(plane.NormalDirection);
+            var distance = toPlane.Magnitude * cosineOfAngle;
+
+            return distance.AbsoluteValue();
         }
 
         /// <summary>
@@ -337,8 +340,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects the point onto the line, by extending the normal direction from the line to the point.
         /// </summary>
-        /// <param name="projectOnto"></param>
-        /// <returns></returns>
         public Point ProjectOntoLine(Line projectOnto)
         {
             Vector hypotenuse = new Vector(projectOnto.BasePoint, this);
@@ -351,8 +352,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// projects a point onto a plane from the normal direction.
         /// </summary>
-        /// <param name="plane"></param>
-        /// <returns></returns>
         public Point ProjectOntoPlane(Plane plane)
         {
             Vector toPlane = new Vector(this, plane.BasePoint);
@@ -367,18 +366,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed line, false otherwise
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
-        public bool IsOnLine(Line passedLine)
+        public bool IsOnLine(Line line)
         {
-            return passedLine.Contains(this);
+            return line.Contains(this);
         }
 
         /// <summary>
         /// Returns true if the point is on the passed vector, false otherwise
         /// </summary>
-        /// <param name="passedVector"></param>
-        /// <returns></returns>
         public bool IsOnVector(Vector passedVector)
         {
             return passedVector.Contains(this);
@@ -387,11 +382,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is on the passed line segment, false otherwise
         /// </summary>
-        /// <param name="passedLineSegment"></param>
-        /// <returns></returns>
-        public bool IsOnLineSegment(LineSegment passedLineSegment)
+        public bool IsOnLineSegment(LineSegment lineSegment)
         {
-            return passedLineSegment.Contains(this);
+            return lineSegment.Contains(this);
         }
 
         public bool IsBaseOrEndPointOf(Vector vector)

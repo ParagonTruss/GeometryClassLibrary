@@ -9,18 +9,22 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class RotationTests
     {
-        [Ignore]
         [Test]
         public void Rotation_Matrix_Constructor()
         {
-            Line line = new Line(Point.MakePointWithInches(2, 3, -6), Direction.Out);
-            AngularDistance angle = -173 * Degree;
-            Rotation rotation = new Rotation(line, angle);
+            Vector vector1 = new Vector(Point.MakePointWithInches(2, 3, -6), Direction.Out);
+            Vector vector2 = new Vector(Point.MakePointWithInches(-5, 3, 7));
+
+            //A very randomish axis
+            Line testAxis = vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10));
+
+            AngularDistance angle = -173*Radian;
+            Rotation rotation = new Rotation(testAxis, angle);
 
             Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            (new Angle(fromMatrixConstructor.RotationAngle) == new Angle(angle)).Should().BeTrue();
-            (fromMatrixConstructor.AxisOfRotation == line).Should().BeTrue();
+            (fromMatrixConstructor.RotationAngle == new Angle(angle)).Should().BeTrue();
+            (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();
         }
         
 

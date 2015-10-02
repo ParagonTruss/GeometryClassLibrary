@@ -280,7 +280,7 @@ namespace GeometryClassLibrary
 
         public bool PointIsOnNormalSide(Point point)
         {
-           var dotProduct = this.NormalVector.DotProduct(new Vector(this.BasePoint, point));
+            var dotProduct = this.NormalVector.DotProduct(new Vector(this.BasePoint, point));
             return dotProduct != new Area() && dotProduct > new Area();
 
         }
@@ -339,32 +339,14 @@ namespace GeometryClassLibrary
             {
                 return null;
             }
-            //Following formula from http://www.netcomuk.co.uk/~jenolive/vect18c.html
 
-            //substitute the x,y and z part of the lines into the plane equation
-            //find what the plane is equal to
-            Area thisPlaneEqualsValue = this.NormalVector.DotProduct(new Vector(this.BasePoint));
+            var projected = line.BasePoint.ProjectOntoPlane(this);
 
-            //find t's coefficent
-            Area tCoefficient = this.NormalVector.DotProduct(line.Direction.UnitVector(DistanceType.Inch));
+            Vector toPlane = new Vector(line.BasePoint, projected);
+            var cosineOfAngle = toPlane.Direction.DotProduct(line.Direction);
+            var distance = toPlane.Magnitude / cosineOfAngle;
 
-            //find the part it equals from the line
-            Area equationEquals = this.NormalVector.DotProduct(new Vector(line.BasePoint));
-
-            //subtract the one from the line from the one from the plane
-            Area equals = thisPlaneEqualsValue - equationEquals;
-
-            //now get the value for t
-            double t = equals.InchesSquared / tCoefficient.InchesSquared;
-
-            if (t == double.NaN)
-            {
-                return null;
-            }
-            
-            Point intersectionPoint = line.GetPointAlongLine(t* Inch);
-
-            return intersectionPoint;
+            return line.GetPointAlongLine(distance);
         }
 
         public Point IntersectWithSegment(LineSegment segment)

@@ -137,7 +137,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                _magnitude = new Distance(magnitude);
+                _magnitude = magnitude;
             }
         }
 

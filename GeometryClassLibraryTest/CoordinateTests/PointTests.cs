@@ -312,5 +312,27 @@ namespace GeometryClassLibraryTest
 
             actual1.Should().Be(expected1);
         }
+
+        [Test]
+        public void Point_ProjectOntoPlane()
+        {
+            Point testPoint = Point.MakePointWithInches(3, -2, 5);
+
+            var projection1 = testPoint.ProjectOntoPlane(Plane.XY);
+            (projection1 == Point.MakePointWithInches(3, -2, 0)).Should().BeTrue();
+
+            var projection2 = testPoint.ProjectOntoPlane(Plane.YZ);
+            (projection2 == Point.MakePointWithInches(0, -2, 5)).Should().BeTrue();
+
+            var projection3 = testPoint.ProjectOntoPlane(Plane.XZ);
+            (projection3 == Point.MakePointWithInches(3, 0, 5)).Should().BeTrue();
+
+            //Now for a harder case:
+            var testPlane = new Plane(new Vector(Point.MakePointWithInches(7, -4, 1), Point.MakePointWithInches(-6, 5, 2)));
+            var projection = testPoint.ProjectOntoPlane(testPlane);
+            var expected = Point.MakePointWithInches(6.83, -4.65, 4.7);
+          
+            (projection == expected).Should().BeTrue();
+        }
     }
 }

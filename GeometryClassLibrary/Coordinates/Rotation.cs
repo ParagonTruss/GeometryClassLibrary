@@ -167,8 +167,6 @@ namespace GeometryClassLibrary
             var shift = new Shift(this.Matrix);
             var singularMatrix = Matrix.ProjectiveMatrixToRotationMatrix(Matrix) - Matrix.IdentityMatrix(3);
 
-            var translation = singularMatrix.SystemSolve(shift.Translation.Point.ToListOfCoordinates()
-                .Select(d => d.Inches).ToArray()).Select(d => d*Inch).ToList();
             var nullSpace = (singularMatrix).NullSpace();
             var axis = nullSpace[0];
 
@@ -179,8 +177,12 @@ namespace GeometryClassLibrary
 
             Vector rotated = new Vector(chosen.EndPoint.Rotate3D(shift.RotationAboutOrigin));
 
-            var angle = chosen.SignedAngleBetween(rotated);
+            var angle = chosen.SignedAngleBetween(rotated, axis);
+
+            var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
+                .Select(d => d.Inches).ToArray()).Select(d => d * Inch).ToList();
             axis = axis.Translate(new Point(translation));
+
             return new KeyValuePair<Line, AngularDistance>(axis, angle);
         }
 
