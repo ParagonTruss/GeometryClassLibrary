@@ -908,39 +908,39 @@ namespace GeometryClassLibrary
                 }
 
                 //Check to see if there is a zero on the diagonal. If so, try to get rid of it by swapping with a row that is beneath the row with a zero on the diagonal
-                double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
+              //  double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
 
-                if (Math.Round(elementOnDiagonal, 6) == 0.0)
-                {
-                    // find a good row to swap
-                    int goodRow = -1;
-                    for (int row = columnIndex + 1; row < decomposedMatrix.NumberOfRows; row++)
-                    {
-                        double element = decomposedMatrix.GetElement(row, columnIndex);
-                        if (Math.Round(element, 6) != 0.0)
-                        {
-                            goodRow = row;
-                        }
-                    }
+                //if (Math.Round(elementOnDiagonal, 6) == 0.0)
+                //{
+                //    // find a good row to swap
+                //    int goodRow = -1;
+                //    for (int row = columnIndex + 1; row < decomposedMatrix.NumberOfRows; row++)
+                //    {
+                //        double element = decomposedMatrix.GetElement(row, columnIndex);
+                //        if (Math.Round(element, 6) != 0.0)
+                //        {
+                //            goodRow = row;
+                //        }
+                //    }
 
-                    if (goodRow != -1)
-                    {
-                        // swap rows so 0.0 no longer on diagonal
-                        double[] rowPtr = decomposedMatrix.GetRow(goodRow);
-                        decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
-                        decomposedMatrix.SetRow(columnIndex, rowPtr);
+                //    if (goodRow != -1)
+                //    {
+                //        // swap rows so 0.0 no longer on diagonal
+                //        double[] rowPtr = decomposedMatrix.GetRow(goodRow);
+                //        decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
+                //        decomposedMatrix.SetRow(columnIndex, rowPtr);
 
-                        int tmp = permutationArray[goodRow]; // and swap perm info
-                        permutationArray[goodRow] = permutationArray[columnIndex];
-                        permutationArray[columnIndex] = tmp;
+                //        int tmp = permutationArray[goodRow]; // and swap perm info
+                //        permutationArray[goodRow] = permutationArray[columnIndex];
+                //        permutationArray[columnIndex] = tmp;
 
-                        toggle = -toggle; // adjust the row-swap toggle
-                    }
-                    else
-                    {
-                      //  throw new Exception("Cannot use Doolittle's method on this matrix");
-                    }
-                }
+                //        toggle = -toggle; // adjust the row-swap toggle
+                //    }
+                //    else
+                //    {
+                //      //  throw new Exception("Cannot use Doolittle's method on this matrix");
+                //    }
+                //}
 
                 //Find the next value to insert into the decomposed matrix    
                 for (int rowIndex = columnIndex + 1; rowIndex < this.NumberOfRows; ++rowIndex)
