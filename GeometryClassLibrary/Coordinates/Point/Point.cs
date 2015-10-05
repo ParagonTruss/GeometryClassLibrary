@@ -389,11 +389,8 @@ namespace GeometryClassLibrary
 
         public bool IsBaseOrEndPointOf(Vector vector)
         {
-            if (this == vector.BasePoint || this == vector.EndPoint)
-            {
-                return true;
-            }
-            return false;
+            return this == vector.BasePoint ||
+                   this == vector.EndPoint;
         }
 
         /// <summary>

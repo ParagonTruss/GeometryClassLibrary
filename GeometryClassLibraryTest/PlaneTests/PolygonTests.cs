@@ -6,6 +6,7 @@ using GeometryStubLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using static UnitClassLibrary.Distance;
 
 namespace GeometryClassLibraryTest
 {
@@ -920,21 +921,86 @@ namespace GeometryClassLibraryTest
             cShape.Contains(segmentCutsThroughVertices).Should().BeFalse();
             cShape.Contains(segmentCutsThroughVertexAndEdge).Should().BeFalse();
             cShape.Contains(segmentIsChord).Should().BeTrue();
-
-
         }
 
         [Test()]
-        public void Rectangle_Constructor()
+        public void Polygon_Rectangle_Constructor()
         {
             LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left));
             testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(Angle.Degree * 33)));
             Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
             
             Area myArea = myRectangle.Area;
+            (myArea == new Area(AreaType.InchesSquared, 1)).Should().BeTrue();
             myRectangle.IsRectangle().Should().BeTrue();
            
         }
        
+        [Test]
+        public void Polygon_RemoveRegion()
+        {
+            var rectangle1 = Polygon.Rectangle(3 * Inch, 1 * Inch);
+            var rectangle2 = Polygon.Rectangle(1 * Inch, 3 * Inch, Point.MakePointWithInches(1, -1));
+
+            var results = rectangle1.RemoveRegion(rectangle2);
+
+            var expected1 = Polygon.Square(Inch);
+            var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            (results[0] == expected1).Should().BeTrue();
+            (results[1] == expected2).Should().BeTrue();
+        }
+
+        [Test]
+        public void Polygon_RemoveRegion_SharedEdges()
+        {
+            var rectangle = Polygon.Rectangle(3 * Inch, 1 * Inch);
+            var square = Polygon.Square(1 * Inch, Point.MakePointWithInches(1, 0));
+
+            var results = rectangle.RemoveRegion(square);
+
+            var expected1 = Polygon.Square(Inch);
+            var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            (results[0] == expected1).Should().BeTrue();
+            (results[1] == expected2).Should().BeTrue();
+        }
+
+        [Test]
+        public void Polygon_RemoveRegion_CutThroughCorners()
+        {
+            var square = Polygon.Square(4 * Inch);
+            var rectangle = Polygon.Rectangle(4*Math.Sqrt(2) * Inch, 1 * Inch);
+            rectangle.Rotate(new Rotation(45 * Angle.Degree));
+            rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
+
+            var results = square.RemoveRegion(rectangle);
+            results.Count.Should().Be(2);
+            //var expected1 = Polygon.Square(Inch);
+            //var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            //(results[0] == expected1).Should().BeTrue();
+            //(results[1] == expected2).Should().BeTrue();
+            Assert.Pass();
+        }
+        [Test]
+        public void Polygon_RemoveRegion_SquareRemoveDiamond()
+        {
+            var square1 = Polygon.Square(4 * Inch);
+            var square2 = Polygon.Square(4/Math.Sqrt(2) * Inch);
+            var diamond = square2.Rotate(new Rotation(Angle.Degree*45));
+            diamond = diamond.Translate(square1.CenterPoint - diamond.CenterPoint);
+
+            var results = square1.RemoveRegion(diamond);
+
+            results.Count.Should().Be(4);
+
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 2 * Inch), new Vector(Direction.Up, 2 * Inch));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Right, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(0, 4));
+            var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(4, 4));
+            var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Up, 2 * Inch), Point.MakePointWithInches(4, 0));
+
+            (results[0] == expected1).Should().BeTrue();
+            (results[1] == expected2).Should().BeTrue();
+            (results[2] == expected3).Should().BeTrue();
+            (results[3] == expected4).Should().BeTrue();
+        }
     }
 }

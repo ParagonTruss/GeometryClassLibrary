@@ -218,6 +218,16 @@ namespace GeometryClassLibrary
             return new Matrix(m1._matrix.Multiply(scalarMultiplier));
         }
 
+        public List<double[]> Rows()
+        {
+            return this._matrix.EnumerateRows().Select(v => v.ToArray()).ToList();      
+        }
+
+        public List<double[]> Columns()
+        {
+           return this._matrix.EnumerateColumns().Select(v => v.ToArray()).ToList();
+        }
+
         public override string ToString()
         {
             return _matrix.ToString();
@@ -466,11 +476,6 @@ namespace GeometryClassLibrary
             }
         }
         #endregion
-
-        public static Matrix Identity(int dimension)
-        {
-            return new Matrix(DenseMatrix.CreateIdentity(dimension));
-        }
 
         /// <summary>
         /// Returns a matrix with the specified row and column removed
@@ -974,7 +979,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates the cofactor matrix corresponding to this matrix
         /// </summary>
-        /// <returns></returns>
         public Matrix GenerateCofactorMatrix()
         {
             Matrix cofactorMatrix = new Matrix(NumberOfRows, NumberOfColumns);
@@ -996,9 +1000,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Helper method for System Solve
         /// </summary>
-        /// <param name="decomposedMatrix"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         internal double[] SolveHelper(Matrix decomposedMatrix, double[] b)
         {
             // before calling this helper, permute b using the perm array from MatrixDecompose that generated luMatrix

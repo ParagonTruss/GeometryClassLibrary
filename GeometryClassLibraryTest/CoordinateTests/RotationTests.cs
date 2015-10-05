@@ -2,15 +2,16 @@
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using System.Diagnostics;
 using static UnitClassLibrary.AngularDistance;
 
 namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class RotationTests
-    {
+    { 
         [Test]
-        public void Rotation_Matrix_Constructor()
+        public void Rotation_Constructor_Matrix()
         {
             Vector vector1 = new Vector(Point.MakePointWithInches(2, 3, -6), Direction.Out);
             Vector vector2 = new Vector(Point.MakePointWithInches(-5, 3, 7));
@@ -19,8 +20,8 @@ namespace GeometryClassLibraryTest
             Line testAxis = vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10));
 
             AngularDistance angle = -173*Radian;
-            Rotation rotation = new Rotation(testAxis, angle);
 
+            Rotation rotation = new Rotation(testAxis, angle);
             Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
             (fromMatrixConstructor.RotationAngle == new Angle(angle)).Should().BeTrue();

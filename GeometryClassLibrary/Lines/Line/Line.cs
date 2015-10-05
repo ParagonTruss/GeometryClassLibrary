@@ -331,6 +331,11 @@ namespace GeometryClassLibrary
 	
         public AngularDistance SignedAngleBetween(Line line, Line referenceNormal = null)
         {
+            if (referenceNormal == null)
+            {
+                referenceNormal = Line.ZAxis;
+            }
+
             return this.Direction.SignedAngleBetween(line.Direction, referenceNormal.Direction);
 	    }
 

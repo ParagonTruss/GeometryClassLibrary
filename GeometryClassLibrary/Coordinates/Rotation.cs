@@ -20,7 +20,14 @@ namespace GeometryClassLibrary
         private Matrix _matrix;
         public Matrix Matrix
         {
-            get { return _matrix; }
+            get
+            {
+                if (_matrix == null)
+                {
+                    _setMatrix();
+                }
+                return _matrix;
+            }
         }
 
         [JsonProperty]
@@ -32,9 +39,7 @@ namespace GeometryClassLibrary
                 //If hasn't been determined we go ahead and determine both the axis and rotation angle.
                 if (_rotationAngle == null)
                 {
-                    var pair = _determineAxisAndAngle();
-                    AxisOfRotation = pair.Key;
-                    RotationAngle = pair.Value;
+                    _setAxisAndAngle();
                 }
                 return _rotationAngle;
             }
@@ -51,21 +56,11 @@ namespace GeometryClassLibrary
 
                 if (_axisOfRotation == null)
                 {
-                    var pair = _determineAxisAndAngle();
-                    AxisOfRotation = pair.Key;
-                    RotationAngle = pair.Value;
+                    _setAxisAndAngle();   
                 }
                 return _axisOfRotation;
             }
             private set { _axisOfRotation = new Line(value); }
-        }
-
-        public bool RotatesAboutTheOrigin
-        {
-            get
-            {
-                return AxisOfRotation.Contains(Point.Origin);
-            }
         }
 
         #endregion
@@ -75,7 +70,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Null Constructor
         /// </summary>
-        public Rotation() { }
+        private Rotation() { }
        
         /// <summary>
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
@@ -85,7 +80,6 @@ namespace GeometryClassLibrary
         {
             this.RotationAngle = rotationAngle;
             this.AxisOfRotation = axisOfRotation;
-            _setMatrix();
         }
 
         public Rotation(AngularDistance rotationAngle, Line axisOfRotation = null)
@@ -96,13 +90,11 @@ namespace GeometryClassLibrary
             }
             this.AxisOfRotation = axisOfRotation;
             this.RotationAngle = rotationAngle;
-            _setMatrix();
         }
 
         /// <summary>
         /// Creates a copy of the given rotation
         /// </summary>
-        /// <param name="toCopy">the Rotation to copy</param>
         public Rotation(Rotation toCopy)
         {
             this._rotationAngle = toCopy._rotationAngle;
@@ -115,6 +107,7 @@ namespace GeometryClassLibrary
             var translateInverse = new Translation(_axisOfRotation.BasePoint.Negate()).Matrix;
             var rotate = _matrixOfRotationAboutOrigin();
             var translate = new Translation(_axisOfRotation.BasePoint).Matrix;
+
             this._matrix = translate * (rotate * translateInverse);
         }
 
@@ -162,28 +155,26 @@ namespace GeometryClassLibrary
             this._matrix = matrix;
         }
 
-        private KeyValuePair<Line,AngularDistance> _determineAxisAndAngle()
+        private void _setAxisAndAngle()
         {
             var shift = new Shift(this.Matrix);
-            var singularMatrix = Matrix.ProjectiveMatrixToRotationMatrix(Matrix) - Matrix.IdentityMatrix(3);
+            var rotationMatrix = Matrix.ProjectiveMatrixToRotationMatrix(Matrix);
+            var singularMatrix = rotationMatrix  - Matrix.IdentityMatrix(3);
 
             var nullSpace = (singularMatrix).NullSpace();
             var axis = nullSpace[0];
 
-            Vector vector1 = axis.CrossProduct(Line.XAxis.UnitVector(DistanceType.Inch));
-            Vector vector2 = axis.CrossProduct(Line.YAxis.UnitVector(DistanceType.Inch));
-            Vector vector3 = axis.CrossProduct(Line.ZAxis.UnitVector(DistanceType.Inch));
-            Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
+            var rowVector = new Vector(new Point(singularMatrix.Rows().First(d => d.Any(v => Math.Abs(v) > 0.5)).Select(d => d*Inch).ToList()));
+            Vector rotated = new Vector(rowVector.EndPoint.Rotate3D(shift.RotationAboutOrigin));
 
-            Vector rotated = new Vector(chosen.EndPoint.Rotate3D(shift.RotationAboutOrigin));
-
-            var angle = chosen.SignedAngleBetween(rotated, axis);
+            var angle = rowVector.SignedAngleBetween(rotated, axis);
 
             var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
                 .Select(d => d.Inches).ToArray()).Select(d => d * Inch).ToList();
             axis = axis.Translate(new Point(translation));
 
-            return new KeyValuePair<Line, AngularDistance>(axis, angle);
+            this.AxisOfRotation = axis;
+            this.RotationAngle = angle;
         }
 
         private Rotation(Line axis, AngularDistance angle, Matrix matrix)
@@ -203,14 +194,8 @@ namespace GeometryClassLibrary
         public Rotation Inverse()
         {
             var inverseAngle = RotationAngle * -1;
-            if (this.RotatesAboutTheOrigin)
-            {
-                return new Rotation(this.AxisOfRotation, inverseAngle, this.Matrix.Transpose());
-            }
-            else
-            {
-                return new Rotation(this.AxisOfRotation, inverseAngle);
-            }
+            
+            return new Rotation(this.AxisOfRotation, inverseAngle);
         }
 
         #endregion
