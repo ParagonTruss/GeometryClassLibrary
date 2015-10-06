@@ -304,7 +304,6 @@ namespace GeometryClassLibrary
             return new Plane(extrusionLine, this);
         }
 
-        /// Make this in linesegment and make it direction dependent
         /// <summary>
         /// Returns the smaller of the two angles fromed where the two lines itnersect
         /// </summary>
@@ -327,13 +326,17 @@ namespace GeometryClassLibrary
         /// </summary>
         public Angle AngleBetween(Line otherLine)
         {
-           
             return this.Direction.AngleBetween(otherLine.Direction);
         }        
 	
         public AngularDistance SignedAngleBetween(Line line, Line referenceNormal = null)
         {
-            return this.Direction.SignedAngleBetween(line.Direction);
+            if (referenceNormal == null)
+            {
+                referenceNormal = Line.ZAxis;
+            }
+
+            return this.Direction.SignedAngleBetween(line.Direction, referenceNormal.Direction);
 	    }
 
         /// <summary>
@@ -562,7 +565,7 @@ namespace GeometryClassLibrary
         /// Translates the line the given distance in the given direction
         /// </summary>
         /// <returns></returns>
-        public Line Translate(Point translation)
+        public Line Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
             Point newOtherPoint = this.GetPointAlongLine(Distance.Inch * 2).Translate(translation);

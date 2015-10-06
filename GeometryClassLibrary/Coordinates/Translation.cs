@@ -7,13 +7,32 @@ namespace GeometryClassLibrary
     [JsonObject(MemberSerialization.OptIn)]
     public class Translation
     {
+        public static implicit operator Translation(Point p)
+        {
+            return new Translation(p);
+        }
+
+        public static implicit operator Translation(Vector v)
+        {
+            return new Translation(v);
+        }
+
         #region _fields & Properties
 
         [JsonProperty]
         public Point Point { get; set; }
 
-        private Matrix _matrix = Matrix.IdentityMatrix(4);
-        public Matrix Matrix { get { return _matrix; } }
+        
+        public Matrix Matrix
+        {
+            get
+            {
+                var matrix = GeometryClassLibrary.Matrix.IdentityMatrix(4);
+                var array = new double[] { Point.X.Inches, Point.Y.Inches, Point.Z.Inches, 1 };
+                matrix.SetColumn(3, array);
+                return matrix;
+            }
+        }
         #endregion
         #region Constructors
 
@@ -29,9 +48,6 @@ namespace GeometryClassLibrary
         public Translation(Point point)
         {
             this.Point = point;
-            var array = new double[]
-            { point.X.Inches, point.Y.Inches, point.Z.Inches, 1 };
-            _matrix.SetColumn(3, array);
         }
 
         /// <summary>
@@ -55,7 +71,6 @@ namespace GeometryClassLibrary
         public Translation(Translation toCopy)
         {
             this.Point = toCopy.Point;
-            this._matrix = new Matrix(toCopy._matrix);
         }
 
         #endregion
@@ -64,7 +79,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return _matrix.GetHashCode();
+            return Matrix.GetHashCode();
         }
 
         /// <summary>

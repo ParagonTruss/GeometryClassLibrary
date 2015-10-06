@@ -768,6 +768,11 @@ namespace GeometryClassLibrary
             return solid;
         }
 
+        public static Polyhedron MakeRectangularPrism(Point point1, Point point2)
+        {
+            return new RectangularPrism(point2, point1);
+        }
+
         public static Polyhedron MakeCube(Distance sidelength)
         {
             throw new NotImplementedException();

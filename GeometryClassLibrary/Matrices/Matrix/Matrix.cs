@@ -148,39 +148,28 @@ namespace GeometryClassLibrary
         public override bool Equals(object obj)
         {
             //make sure the passed obj is not null
-            if (obj == null)
+            if (obj == null || !(obj is Matrix))
+            {
+                return false;
+            }
+            Matrix comparableMatrix = (Matrix)obj;
+
+            if (this.NumberOfColumns != comparableMatrix.NumberOfColumns || this.NumberOfRows != comparableMatrix.NumberOfRows)
             {
                 return false;
             }
 
-            //try casting and then comparing
-            try
+            for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
             {
-                Matrix comparableMatrix = (Matrix)obj;
-
-                if (this.NumberOfColumns != comparableMatrix.NumberOfColumns || this.NumberOfRows != comparableMatrix.NumberOfRows)
+                for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
                 {
-                    return false;
-                }
-
-                for (int rowIndex = 0; rowIndex < this.NumberOfRows; rowIndex++)
-                {
-                    for (int columnIndex = 0; columnIndex < this.NumberOfColumns; columnIndex++)
+                    if (Math.Abs(this.GetElement(rowIndex, columnIndex) - comparableMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
                     {
-                        if (Math.Abs(this.GetElement(rowIndex, columnIndex) - comparableMatrix.GetElement(rowIndex, columnIndex)) > 0.001)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
-
-                return true;
             }
-            //if it was not a matrix than it was not equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return true;
         }
 
         /// <summary>
@@ -233,6 +222,16 @@ namespace GeometryClassLibrary
             return new Matrix(m1._matrix.Multiply(scalarMultiplier));
         }
 
+        public List<double[]> Rows()
+        {
+            return this._matrix.EnumerateRows().Select(v => v.ToArray()).ToList();      
+        }
+
+        public List<double[]> Columns()
+        {
+           return this._matrix.EnumerateColumns().Select(v => v.ToArray()).ToList();
+        }
+
         public override string ToString()
         {
             return _matrix.ToString();
@@ -241,6 +240,29 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        public static Matrix ProjectiveMatrixToRotationMatrix(Matrix matrix)
+        {
+            var newMatrix = new Matrix(3, 3);
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    newMatrix.SetElement(i, j, matrix.GetElement(i, j));
+                }
+            }
+            return newMatrix;
+        }
+
+        public List<Vector> NullSpace()
+        {
+            return this._matrix.Kernel().Select(v => _vectorOfDoublesToVectorOfInches(v)).ToList();
+        }
+
+        private static Vector _vectorOfDoublesToVectorOfInches(Vector<double> vector)
+        {
+            return new Vector(Point.MakePointWithInches(vector[0], vector[1], vector[2]));
+        }
 
         #region Get/Set Methods
         /// <summary>
@@ -458,11 +480,6 @@ namespace GeometryClassLibrary
             }
         }
         #endregion
-
-        public static Matrix Identity(int dimension)
-        {
-            return new Matrix(DenseMatrix.CreateIdentity(dimension));
-        }
 
         /// <summary>
         /// Returns a matrix with the specified row and column removed
@@ -902,38 +919,39 @@ namespace GeometryClassLibrary
                 }
 
                 //Check to see if there is a zero on the diagonal. If so, try to get rid of it by swapping with a row that is beneath the row with a zero on the diagonal
-                double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
+              //  double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
 
-                if (Math.Round(elementOnDiagonal, 6) == 0.0)
-                {
-                    // find a good row to swap
-                    int goodRow = -1;
-                    for (int row = columnIndex + 1; row < decomposedMatrix.NumberOfRows; row++)
-                    {
-                        double element = decomposedMatrix.GetElement(row, columnIndex);
-                        if (Math.Round(element, 6) != 0.0)
-                        {
-                            goodRow = row;
-                        }
-                    }
+                //if (Math.Round(elementOnDiagonal, 6) == 0.0)
+                //{
+                //    // find a good row to swap
+                //    int goodRow = -1;
+                //    for (int row = columnIndex + 1; row < decomposedMatrix.NumberOfRows; row++)
+                //    {
+                //        double element = decomposedMatrix.GetElement(row, columnIndex);
+                //        if (Math.Round(element, 6) != 0.0)
+                //        {
+                //            goodRow = row;
+                //        }
+                //    }
 
-                    if (goodRow == -1)
-                    {
-                        throw new Exception("Cannot use Doolittle's method on this matrix");
-                    }
+                //    if (goodRow != -1)
+                //    {
+                //        // swap rows so 0.0 no longer on diagonal
+                //        double[] rowPtr = decomposedMatrix.GetRow(goodRow);
+                //        decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
+                //        decomposedMatrix.SetRow(columnIndex, rowPtr);
 
-                    // swap rows so 0.0 no longer on diagonal
-                    double[] rowPtr = decomposedMatrix.GetRow(goodRow);
-                    decomposedMatrix.SetRow(goodRow, decomposedMatrix.GetRow(columnIndex));
-                    decomposedMatrix.SetRow(columnIndex, rowPtr);
+                //        int tmp = permutationArray[goodRow]; // and swap perm info
+                //        permutationArray[goodRow] = permutationArray[columnIndex];
+                //        permutationArray[columnIndex] = tmp;
 
-                    int tmp = permutationArray[goodRow]; // and swap perm info
-                    permutationArray[goodRow] = permutationArray[columnIndex];
-                    permutationArray[columnIndex] = tmp;
-
-                    toggle = -toggle; // adjust the row-swap toggle
-
-                }
+                //        toggle = -toggle; // adjust the row-swap toggle
+                //    }
+                //    else
+                //    {
+                //      //  throw new Exception("Cannot use Doolittle's method on this matrix");
+                //    }
+                //}
 
                 //Find the next value to insert into the decomposed matrix    
                 for (int rowIndex = columnIndex + 1; rowIndex < this.NumberOfRows; ++rowIndex)
@@ -967,7 +985,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates the cofactor matrix corresponding to this matrix
         /// </summary>
-        /// <returns></returns>
         public Matrix GenerateCofactorMatrix()
         {
             Matrix cofactorMatrix = new Matrix(NumberOfRows, NumberOfColumns);
@@ -989,9 +1006,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Helper method for System Solve
         /// </summary>
-        /// <param name="decomposedMatrix"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         internal double[] SolveHelper(Matrix decomposedMatrix, double[] b)
         {
             // before calling this helper, permute b using the perm array from MatrixDecompose that generated luMatrix

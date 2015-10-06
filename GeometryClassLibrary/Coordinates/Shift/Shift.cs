@@ -34,7 +34,7 @@ namespace GeometryClassLibrary
         private Matrix _matrix = Matrix.IdentityMatrix(4);
         internal Matrix Matrix { get { return _matrix; } }
 
-       public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
+        public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         
         public Rotation RotationAboutOrigin
         {
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
             {
                 var copy = new Matrix(this.Matrix);
                 copy.SetColumn(3, new double[] { 0, 0, 0, 1 });
-                return new Rotation(this.Matrix);
+                return new Rotation(copy);
             }
         }
         #endregion

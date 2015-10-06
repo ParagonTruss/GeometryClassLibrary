@@ -2,32 +2,32 @@
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using System.Diagnostics;
+using static UnitClassLibrary.AngularDistance;
 
 namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class RotationTests
-    {
-        /* Does not make sense with how we were adding and subtracting rotations because we didnt take into account the axis
-        [Test()]
-        public void Rotation_AdditionAndSubtractionTest()
+    { 
+        [Test]
+        public void Rotation_Constructor_Matrix()
         {
-            Line axis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 1));
+            Vector vector1 = new Vector(Point.MakePointWithInches(2, 3, -6), Direction.Out);
+            Vector vector2 = new Vector(Point.MakePointWithInches(-5, 3, 7));
 
-            Rotation baseRotation = new Rotation(axis, new Angle(AngleType.Degree, 42));
-            Angle toAdd = new Angle(AngleType.Degree, 21);
-            Angle toSubtract = new Angle(AngleType.Radian, Math.PI / 4); //45 degrees
+            //A very randomish axis
+            Line testAxis = vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10));
 
-            Rotation addedRotation = baseRotation + toAdd;
-            Rotation subtractedRotation = baseRotation - toSubtract;
+            AngularDistance angle = -173*Radian;
 
-            Rotation expectedAddition = new Rotation(axis, new Angle(AngleType.Degree, 63));
-            Rotation expectedSubtraction = new Rotation(axis, new Angle(AngleType.Degree, -3));
+            Rotation rotation = new Rotation(testAxis, angle);
+            Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            (addedRotation == expectedAddition).Should().BeTrue();
-            (subtractedRotation == expectedSubtraction).Should().BeTrue();
+            (fromMatrixConstructor.RotationAngle == new Angle(angle)).Should().BeTrue();
+            (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();
+        }
         
-        }*/
 
         [Test()]
         public void Rotation_EqualityTests()
