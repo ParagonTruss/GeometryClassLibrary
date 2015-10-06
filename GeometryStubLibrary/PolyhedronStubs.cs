@@ -8,7 +8,7 @@ namespace GeometryStubLibrary
     {
         public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
         public override Point Centroid { get { return Point.MakePointWithInches(2, 6, 1); } }
-        public TestRectangularBox1() : base(Point.MakePointWithInches(4, 12, 2)) { }
+        public TestRectangularBox1() : base(Point.MakePointWithInches(3.5, 144, 2)) { }
     }
 
     public class TestRectangularBox2 : RectangularPrism
