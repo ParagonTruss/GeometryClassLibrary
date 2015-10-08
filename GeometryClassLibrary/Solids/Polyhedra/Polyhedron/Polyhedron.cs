@@ -653,10 +653,10 @@ namespace GeometryClassLibrary
                 {
                     if (faces1[i].NormalVector.HasOppositeDirectionOf(faces2[j].NormalVector))
                     {
-                        Polygon intersectionPlane = faces1[i].OverlappingPolygon(faces2[j]);
-                        if (intersectionPlane != null)
+                        Polygon overlappingFace = faces1[i].OverlappingPolygon(faces2[j]);
+                        if (overlappingFace != null)
                         {
-                            return intersectionPlane;
+                            return overlappingFace;
                         }
                     }
                 }

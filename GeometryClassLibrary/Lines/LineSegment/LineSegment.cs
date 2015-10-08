@@ -453,45 +453,7 @@ namespace GeometryClassLibrary
             return false;
         }
 
-        public List<LineSegment> Subtract(LineSegment toSubtract)
-        {
-            var results = new List<LineSegment>();
-            if (this.Direction == toSubtract.Direction.Reverse())
-            {
-                toSubtract = toSubtract.Reverse();
-            }
-            if (this.Direction != toSubtract.Direction)
-            {
-                var intersection = this.Intersection(toSubtract);
-                if (intersection == null || intersection.IsBaseOrEndPointOf(toSubtract))
-                {
-                    results.Add(this);
-                    return results;
-                }
-                else
-                {
-                    results.Add(new LineSegment(this.BasePoint, intersection));
-                    results.Add(new LineSegment(intersection, this.EndPoint));
-                    return results;
-                }
-            }
-            if (this.ContainsOnInside(toSubtract.BasePoint))
-            {
-                results.Add(new LineSegment(this.BasePoint, toSubtract.BasePoint));
-            }
-            if (this.ContainsOnInside(toSubtract.EndPoint))
-            {
-                results.Add(new LineSegment(toSubtract.EndPoint, this.EndPoint));
-            }
-            if (results.Count == 0)
-            {
-                if (!toSubtract.ContainsOnInside(this.BasePoint))
-                {
-                    results.Add(this);
-                }
-            }
-            return results;
-        }
+       
 
         #endregion
     }

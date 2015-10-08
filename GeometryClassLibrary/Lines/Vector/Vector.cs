@@ -615,10 +615,6 @@ namespace GeometryClassLibrary
             return sum;
         }
        
-        /// <summary>
-        /// Determines if the Dotproduct is zero. This is used to determine when vectors are perpendicular
-        /// May be unnecessary as a method
-        /// </summary>
         public bool IsPerpendicularTo(Vector other)
         {
             return this.SmallestAngleBetween(other) == 90 * Angle.Degree;
