@@ -1969,11 +1969,11 @@ namespace GeometryClassLibrary
             {
                 throw new Exception("Overlapping Polygon should not be called on non convex polygons.");
             }
-            if (this.Contains(otherPolygon))
+            if (this.ContainsAll(otherPolygon.Vertices))
             {
                 return otherPolygon;
             }
-            else if (otherPolygon.Contains(this))
+            else if (otherPolygon.ContainsAll(this.Vertices))
             {
                 return this;
             }
