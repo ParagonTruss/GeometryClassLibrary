@@ -12,9 +12,17 @@ namespace GeometryClassLibrary
     public partial class Matrix
     {
         #region Properties and Fields
-        
-        [JsonProperty]
+
         public Matrix<double> _matrix { get; set; }
+
+        /// <summary>
+        /// Returns the matrix as a double[,]
+        /// </summary>
+        [JsonProperty]
+        public double[,] As2DArray
+        {
+            get { return this._matrix.ToArray(); }
+        }
 
         /// <summary>
         /// Returns the number of rows in the matrix
@@ -68,8 +76,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
-        /// <param name="passedMatrix"></param>
-        [JsonConstructor]
         public Matrix(Matrix<double> passedMatrix)
         {
             double norm =  passedMatrix.InfinityNorm();
@@ -88,9 +94,10 @@ namespace GeometryClassLibrary
         }
 
         /// <summary> Constructs Matrix object from a 2dArray </summary>
-        public Matrix(double[,] passed2DArray)
+        [JsonConstructor]
+        public Matrix(double[,] As2DArray)
         {
-            this._matrix = DenseMatrix.OfArray(passed2DArray);
+            this._matrix = DenseMatrix.OfArray(As2DArray);
         }
 
         /// <summary>
@@ -340,13 +347,7 @@ namespace GeometryClassLibrary
         }
 
 
-        /// <summary>
-        /// Returns the matrix as a double[,]
-        /// </summary>
-        public double[,] As2DArray()
-        {
-            return _matrix.ToArray();
-        }
+
 
         /// <summary>
         /// Returns the euler angles (for rotations in x, y,z order) assuming this matrix is a pure rotation matrix
@@ -1089,9 +1090,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// This method makes it possible to use SystemSolve on a matrix. It calls the other SystemSolve method and returns the result as a new Matrix.
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
         public Matrix SystemSolve(Matrix passedSolutionMatrix)
         {
             Matrix solution = new Matrix(NumberOfRows, 1);
