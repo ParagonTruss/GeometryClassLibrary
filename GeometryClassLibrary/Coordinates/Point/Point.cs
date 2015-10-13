@@ -236,7 +236,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Moves the point by the specified amount based on the passed point
         /// </summary>
-        /// <param name="passedTranslation"></param>
         public Point Translate(Translation passedTranslation)
         {
             return (this + passedTranslation.Point);
@@ -245,15 +244,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Mirror this point across a line
         /// </summary>
-        /// <returns>a new point in the new location</returns>
         public Point MirrorAcross(Line passedAxisLine)
         {
             return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));
         }
+
         /// <summary>
         /// Flips the sign of each coordinate
         /// </summary>
-        /// <returns>a new point in the new location</returns>
         public Point Negate()
         {
             return new Point(X * -1, Y * -1, Z * -1);
@@ -262,8 +260,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// uses the distance formula to find a the distance between this point and another
         /// </summary>
-        /// <param name="endPoint"></param>
-        /// <returns>new Distance representing the distance</returns>
         public Distance DistanceTo(Point endPoint)
         {
             //distance formula
@@ -288,11 +284,6 @@ namespace GeometryClassLibrary
 
         public Distance DistanceTo(Plane plane)
         {
-            //Vector planeToPointVector = new Vector(passedPlane.BasePoint, this);
-            //Vector normalVector = planeToPointVector.ProjectOntoLine(passedPlane.NormalVector);
-            //Distance distance = normalVector.Magnitude;
-            //return distance;
-
             Vector toPlane = new Vector(this, plane.BasePoint);
             var cosineOfAngle = toPlane.Direction.DotProduct(plane.NormalDirection);
             var distance = toPlane.Magnitude * cosineOfAngle;
@@ -303,7 +294,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a vector that extends from the origin to this point
         /// </summary>
-        /// <returns></returns>
         public Vector ConvertToVector()
         {
             return new Vector(this);
@@ -312,8 +302,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates a point about an axis with the given angle (returns a new point in that location)
         /// </summary>
-        /// <param name="rotationToApply">The Rotation to apply to the point that stores the axis to rotate around and the angle to rotate</param>
-        /// <returns></returns>
         public Point Rotate3D(Rotation rotationToApply)
         {
             return Matrix.ShiftPoint(this, rotationToApply.Matrix);
@@ -322,8 +310,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a line segment that goes through this point, is perpendicular to the destination line, and ends on that line
         /// </summary>
-        /// <param name="passedDestinationLine"></param>
-        /// <returns></returns>
         public LineSegment MakePerpendicularLineSegment(Line passedDestinationLine)
         {
             if (!this.IsOnLine(passedDestinationLine))
@@ -396,8 +382,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines if the point is on the plane.
         /// </summary>
-        /// <param name="plane"></param>
-        /// <returns></returns>
         public bool IsOnPlane(Plane plane)
         {
             return plane.Contains(this);

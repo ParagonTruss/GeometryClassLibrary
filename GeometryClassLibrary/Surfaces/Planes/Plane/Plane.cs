@@ -475,7 +475,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool IsParallelTo(Plane passedPlane)
         {
-            return (this.NormalVector.CrossProduct((passedPlane.NormalVector)).Magnitude == Distance.Zero);
+            return this.NormalVector.IsParallelTo(passedPlane.NormalVector);
         }
 
         /// <summary>

@@ -161,19 +161,11 @@ namespace GeometryClassLibrary
 
         private Vector _getUnitNormalVector()
         {
-            Vector vector1 = (LineSegments.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
+            Vector vector1 = (LineSegments.OrderBy(s => s.EndPoint.X).ThenBy(s => s.EndPoint.Y).ThenBy(s => s.EndPoint.Z).First());
 
-            Vector vector2;
-            Vector normal = null;
-            for (int i = 0; i < LineSegments.Count; i++)
-            {
-                vector2 = new Vector(vector1.BasePoint, Vertices[i]);
-                normal = vector1.CrossProduct(vector2);
-                if (normal.Magnitude != Distance.Zero)
-                {
-                    break;
-                }
-            }
+            Vector vector2 = LineSegments.First(s => s.BasePoint == vector1.EndPoint);
+
+            var normal = vector1.CrossProduct(vector2);
 
             return new Vector(this.BasePoint, normal.Direction, Distance.Inch);
         }
@@ -632,65 +624,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
-        /// the polygons must be convex for this to work
-        /// </summary>
-        /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
-        /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
-        /// or only touch</returns>
-        public Polygon OverlappingPolygon(Polygon otherPolygon, bool checkIfTheyAreCoplanar = true)
-        {
-            //if (!this.IsConvex || !otherPolygon.IsConvex)
-            //{
-            //    throw new Exception("OverlappingPolygon() should not be called on NonConvex polygons");
-            //}
-
-            if (checkIfTheyAreCoplanar)
-            {
-                if ( new Plane(this) != new Plane(otherPolygon))
-                {
-                    return null;
-                }
-            }
-            //bool sameNormal = (this.NormalVector.IsParallelTo(otherPolygon.NormalVector));
-            //var vector = this.NormalVectorThrough(otherPolygon.BasePoint);
-            //bool sharedPoint = (vector.Magnitude.Inches < 0.05);
-            //if (sameNormal && sharedPoint)
-            //{
-                List<Point> newVertices = this.IntersectionPoints(otherPolygon);
-                
-                this._addInteriorVerticesFrom(otherPolygon, newVertices);
-                otherPolygon._addInteriorVerticesFrom(this, newVertices);
-                
-                return newVertices.ConvexHull(true);
-            //}
-
-            //if we fail to find a valid Polygon of intersection return null
-            //return null;
-        }
-
-        #region Overlapping Polygon Helpers
-        private void _addInteriorVerticesFrom(Polygon polygon, List<Point> newVertices)
-        {
-            foreach (Point vertex in polygon.Vertices)
-            {
-                if (this.Contains(vertex))
-                {
-                    _addToList(newVertices, vertex);
-                }
-            }
-        }
-
-        private static void _addToList(List<Point> list, Point point)
-        {
-            if (point != null && !list.Contains(point))
-            {
-                list.Add(point);
-            }
-        }
-        #endregion
-
-        /// <summary>
         /// returns a list of the points of intersection between these polygons
         /// if there are any overlapping sides, the endpoints of the shared segment are included in the list
         /// </summary>
@@ -723,6 +656,14 @@ namespace GeometryClassLibrary
                 }
             }
             return newVertices;
+        }
+
+        private static void _addToList(List<Point> list, Point point)
+        {
+            if (point != null && !list.Contains(point))
+            {
+                list.Add(point);
+            }
         }
 
         /// <summary>
@@ -1318,7 +1259,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if the point is contained within this PlaneRegion, Does not include the boundaries!
         /// </summary>
-        public bool ContainsNotOnBoundary(Point passedPoint)
+        public bool ContainsOnInside(Point passedPoint)
         {
             return (Contains(passedPoint) && !Touches(passedPoint));
         }
@@ -1397,7 +1338,7 @@ namespace GeometryClassLibrary
             //if not, we have to check that none of the outside vertices are inside the interior polygon
             foreach(Point vertex in this.Vertices)
             {
-                if (polygon.ContainsNotOnBoundary(vertex))
+                if (polygon.ContainsOnInside(vertex))
                 {
                     return false;
                 }
@@ -1590,54 +1531,63 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// For Convex regions atm
+        /// Removes a polygonal region from a polygon. Returns the resulting list of polygons.
         /// </summary>
         public List<Polygon> RemoveRegion(Polygon toRemove)
         {
             #region Preliminaries
-            if (!this.IsCoplanarTo(toRemove))
+
+            var polygon1 = this;
+            var polygon2 = toRemove;
+            #region Segment Lists
+            if (!polygon1.IsCoplanarTo(polygon2))
             {
                 throw new Exception("Polygons are not coplanar.");
             }
 
-            List<LineSegment> segments1 = this.LineSegments.ToList();
-            List<LineSegment> segments2 = null;
-            if (this.NormalDirection == toRemove.NormalDirection)
+            List<LineSegment> segments1 = polygon1.LineSegments.ToList();   
+            if (polygon1.NormalDirection == polygon2.NormalDirection)
             {
-                segments2 = toRemove.ReverseOrientation().LineSegments;
+                polygon2 = polygon2.ReverseOrientation();
             }
-            else
-            {
-                segments2 = toRemove.LineSegments.ToList();
-            }
+            List<LineSegment> segments2 = polygon2.LineSegments.ToList();
+            #endregion
 
             #region Remove Overlapping Opposite segments
             List<LineSegment> itemsToRemoveFromSegments2 = new List<LineSegment>();
+            // List<LineSegment> itemsToAddToSegments2 = new List<LineSegment>(); 
             for (int i = 0; i < segments2.Count; i++)
             {
                 var toSubtract = segments2[i];
                 for (int j = 0; j < segments1.Count; j++)
                 {
                     var segment = segments1[j];
-                    if (segment.AngleBetween(toSubtract) == 180*Degree &&
-                        segment.Overlaps(toSubtract))
+                    if (segment.Overlaps(toSubtract))
                     {
-                        List<LineSegment> segments = segment.Subtract(toSubtract);
-                        segments1.RemoveAt(j);
-                        segments1.AddRange(segments);
-                        j += segments.Count - 1;
-                        itemsToRemoveFromSegments2.Add(toSubtract);
+                        if (segment.AngleBetween(toSubtract) == Angle.Zero)
+                        {
+                        }
+                        else
+                        {
+                            List<LineSegment> segments = _subtract(segment, toSubtract);
+                            segments1.RemoveAt(j);
+                            segments1.AddRange(segments);
+                            j += segments.Count - 1;
+                            itemsToRemoveFromSegments2.Add(toSubtract);
+                        }
                     }
                 }
             }
-            foreach(var item in itemsToRemoveFromSegments2)
+            foreach (var item in itemsToRemoveFromSegments2)
             {
                 segments2.Remove(item);
             }
             #endregion
 
+            #region Variable Initialization
             var lists = new List<List<LineSegment>>() { segments1, segments2 };
-            var polygons = new List<Polygon>();
+            var polygons = new List<Polygon>() { polygon1, polygon2 };
+            var results = new List<Polygon>();
             var polygonUnderConstruction = new List<LineSegment>();
 
             var index = 0;
@@ -1645,21 +1595,23 @@ namespace GeometryClassLibrary
             LineSegment currentSegment = null;
             #endregion
 
-            while (true)
+            #endregion
+            var done = false;
+            while (!done)
             {
                 if (polygonUnderConstruction.Count > 2 &&
                     polygonUnderConstruction.First().BasePoint ==
                     polygonUnderConstruction.Last().EndPoint)
                 {
-                    polygons.Add(new Polygon(polygonUnderConstruction));
+                    results.Add(new Polygon(polygonUnderConstruction));
                     polygonUnderConstruction = new List<LineSegment>();
-                } 
+                }
 
                 currentList = lists[index % 2];
                 otherList = lists[(index + 1) % 2];
 
                 #region current Segment
-        
+
                 if (currentList.Count == 0)
                 {
                     if (otherList.Count == 0)
@@ -1667,7 +1619,7 @@ namespace GeometryClassLibrary
                         break;
                     }
                     index++;
-                    continue;        
+                    continue;
                 }
                 if (polygonUnderConstruction.Count == 0)
                 {
@@ -1679,42 +1631,390 @@ namespace GeometryClassLibrary
                     currentSegment = currentList.FirstOrDefault(s => s.BasePoint == lastPoint);
                     if (currentSegment == null)
                     {
-                        break;
+                        currentSegment = otherList.FirstOrDefault(s => s.BasePoint == lastPoint);
+                        if (currentSegment == null)
+                        {
+                            polygonUnderConstruction = new List<LineSegment>();
+                            continue;
+                        }
+                        index++;
+                        currentList = lists[index % 2];
+                        otherList = lists[(index + 1) % 2];      
                     }
                 }
                 currentList.Remove(currentSegment);
 
                 #endregion
- 
+
                 #region Check For Intersection
-
-                var pointAndSegment = otherList.Select(s => new KeyValuePair<Point,LineSegment>(s.Intersection(currentSegment), s))
-                    .Where(pair => pair.Key != null && pair.Key != pair.Value.EndPoint && pair.Key != currentSegment.BasePoint)
-                    .OrderBy(pair => pair.Key.DistanceTo(currentSegment.BasePoint)).FirstOrDefault();
-
-                if (pointAndSegment.Equals(default(KeyValuePair<Point,LineSegment>)))
+                var candidates = new Dictionary<Point, LineSegment>();
+                foreach (var segment in otherList)
+                {
+                    var intersection = segment.Intersection(currentSegment);
+                    if (intersection != null &&
+                        intersection != segment.EndPoint &&
+                        intersection != currentSegment.BasePoint)
+                    {
+                        candidates.Add(intersection, segment);
+                    }
+                }
+               
+                if (candidates.Count == 0)
                 {
                     polygonUnderConstruction.Add(currentSegment);
+                    continue;
+                }
+                Point point = null;
+                LineSegment lineSegment = null;
+          
+                var found = false;
+                var enumerator = candidates.OrderBy(p => p.Key.DistanceTo(currentSegment.BasePoint));
+                foreach (var pair in enumerator)
+                {
+                    point = pair.Key;
+                    lineSegment = pair.Value;
+                    if (point == lineSegment.BasePoint)
+                    {
+                        #region Vertices Touching
+                        if (point == currentSegment.EndPoint)
+                        {
+                            #region Next Segment
+                            var nextSegment = polygons[index % 2].LineSegments.FirstOrDefault(s => s.BasePoint == currentSegment.EndPoint);
+                            if (nextSegment == null)
+                            {
+                                var crossProduct = currentSegment.CrossProduct(lineSegment);
+                                if (crossProduct.Direction == polygons[index % 2].NormalDirection)
+                                {
+                                    found = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            #endregion
+
+                            var normal = Math.Pow(-1, index) * polygon1.NormalVector;
+                            var angle1 = new Angle(nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal));
+                            var angle2 = new Angle(nextSegment.SignedAngleBetween(lineSegment, normal));
+                            if (angle2 < angle1)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        #endregion
+                        #region Vertex touching an Edge
+                        else
+                        {
+                            var crossProduct = currentSegment.CrossProduct(lineSegment);
+                            if (crossProduct.Direction == polygons[index%2].NormalDirection)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        #endregion
+                    }
+                    else
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    polygonUnderConstruction.Add(currentSegment);
+                    continue;
+                }
+
+                _addNewSegmentIfPossible(currentList, point, currentSegment.EndPoint);
+                _addNewSegmentIfPossible(otherList, point, lineSegment.EndPoint);
+                _addNewSegmentIfPossible(otherList, lineSegment.BasePoint, point);
+
+                otherList.Remove(lineSegment);
+
+                polygonUnderConstruction.Add(new LineSegment(currentSegment.BasePoint, point));
+
+                index++;
+                
+                #endregion  
+            }
+            return results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
+        }
+
+        public List<Polygon> OverlappingPolygons(Polygon otherPolygon)
+        {
+            #region Preliminaries
+
+            var polygon1 = this;
+            var polygon2 = otherPolygon;
+
+            #region Segment Lists
+            if (!polygon1.IsCoplanarTo(polygon2))
+            {
+                return new List<Polygon>();
+            }
+
+            List<LineSegment> segments1 = polygon1.LineSegments.ToList();
+            if (polygon1.NormalDirection != polygon2.NormalDirection)
+            {
+                polygon2 = polygon2.ReverseOrientation();
+            }
+            List<LineSegment> segments2 = polygon2.LineSegments.ToList();
+            #endregion
+
+            #region Remove Overlapping Opposite segments
+            List<LineSegment> itemsToRemoveFromSegments2 = new List<LineSegment>();
+            // List<LineSegment> itemsToAddToSegments2 = new List<LineSegment>(); 
+            for (int i = 0; i < segments2.Count; i++)
+            {
+                var toSubtract = segments2[i];
+                for (int j = 0; j < segments1.Count; j++)
+                {
+                    var segment = segments1[j];
+                    if (segment.Overlaps(toSubtract))
+                    {
+                        if (segment.AngleBetween(toSubtract) == Angle.Zero)
+                        {
+                        }
+                        else
+                        {
+                            List<LineSegment> segments = _subtract(segment, toSubtract);
+                            segments1.RemoveAt(j);
+                            segments1.AddRange(segments);
+                            j += segments.Count - 1;
+                            itemsToRemoveFromSegments2.Add(toSubtract);
+                        }
+                    }
+                }
+            }
+            foreach (var item in itemsToRemoveFromSegments2)
+            {
+                segments2.Remove(item);
+            }
+            #endregion
+
+            #region Variable Initialization
+            var lists = new List<List<LineSegment>>() { segments1, segments2 };
+            var polygons = new List<Polygon>() { polygon1, polygon2 };
+            var results = new List<Polygon>();
+            var polygonUnderConstruction = new List<LineSegment>();
+
+            var index = 0;
+            List<LineSegment> currentList, otherList = null;
+            LineSegment currentSegment = null;
+            #endregion
+
+            #endregion
+            var done = false;
+            while (!done)
+            {
+                if (polygonUnderConstruction.Count > 2 &&
+                    polygonUnderConstruction.First().BasePoint ==
+                    polygonUnderConstruction.Last().EndPoint)
+                {
+                    results.Add(new Polygon(polygonUnderConstruction));
+                    polygonUnderConstruction = new List<LineSegment>();
+                }
+
+                currentList = lists[index % 2];
+                otherList = lists[(index + 1) % 2];
+
+                #region current Segment
+
+                if (currentList.Count == 0)
+                {
+                    if (otherList.Count == 0)
+                    {
+                        break;
+                    }
+                    index++;
+                    continue;
+                }
+                if (polygonUnderConstruction.Count == 0)
+                {
+                    currentSegment = currentList.First();
                 }
                 else
                 {
-                    var intersection = pointAndSegment.Key;
-                    var segment = pointAndSegment.Value;
-
-                    _addNewSegmentIfPossible(currentList,intersection, currentSegment.EndPoint);
-                    _addNewSegmentIfPossible(otherList, intersection, segment.EndPoint); 
-                    _addNewSegmentIfPossible(otherList,segment.BasePoint, intersection);
-             
-                    otherList.Remove(segment);
-                   
-                    polygonUnderConstruction.Add(new LineSegment(currentSegment.BasePoint, intersection));
-                    
-                    index++;
+                    var lastPoint = polygonUnderConstruction.Last().EndPoint;
+                    currentSegment = currentList.FirstOrDefault(s => s.BasePoint == lastPoint);
+                    if (currentSegment == null)
+                    {
+                        currentSegment = otherList.FirstOrDefault(s => s.BasePoint == lastPoint);
+                        if (currentSegment == null)
+                        {
+                            polygonUnderConstruction = new List<LineSegment>();
+                            continue;
+                        }
+                        index++;
+                        currentList = lists[index % 2];
+                        otherList = lists[(index + 1) % 2];
+                    }
                 }
-                #endregion  
+                currentList.Remove(currentSegment);
+
+                #endregion
+
+                #region Check For Intersection
+                var candidates = new Dictionary<Point, LineSegment>();
+                foreach (var segment in otherList)
+                {
+                    var intersection = segment.Intersection(currentSegment);
+                    if (intersection != null &&
+                        intersection != segment.EndPoint &&
+                        intersection != currentSegment.BasePoint)
+                    {
+                        candidates.Add(intersection, segment);
+                    }
+                }
+
+                if (candidates.Count == 0)
+                {
+                    polygonUnderConstruction.Add(currentSegment);
+                    continue;
+                }
+                Point point = null;
+                LineSegment lineSegment = null;
+
+                var found = false;
+                var enumerator = candidates.OrderBy(p => p.Key.DistanceTo(currentSegment.BasePoint));
+                foreach (var pair in enumerator)
+                {
+                    point = pair.Key;
+                    lineSegment = pair.Value;
+                    if (point == lineSegment.BasePoint)
+                    {
+                        #region Vertices Touching
+                        if (point == currentSegment.EndPoint)
+                        {
+                            #region Next Segment
+                            var nextSegment = polygons[index % 2].LineSegments.FirstOrDefault(s => s.BasePoint == currentSegment.EndPoint);
+                            if (nextSegment == null)
+                            {
+                                var crossProduct = currentSegment.CrossProduct(lineSegment);
+                                if (crossProduct.Direction == polygons[index % 2].NormalDirection)
+                                {
+                                    found = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            #endregion
+
+                            var normal = Math.Pow(-1, index) * polygon1.NormalVector;
+                            var angle1 = new Angle(nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal));
+                            var angle2 = new Angle(nextSegment.SignedAngleBetween(lineSegment, normal));
+                            if (angle2 < angle1)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        #endregion
+                        #region Vertex touching an Edge
+                        else
+                        {
+                            var crossProduct = currentSegment.CrossProduct(lineSegment);
+                            if (crossProduct.Direction == polygons[index % 2].NormalDirection)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        #endregion
+                    }
+                    else
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    polygonUnderConstruction.Add(currentSegment);
+                    continue;
+                }
+
+                _addNewSegmentIfPossible(currentList, point, currentSegment.EndPoint);
+                _addNewSegmentIfPossible(otherList, point, lineSegment.EndPoint);
+                _addNewSegmentIfPossible(otherList, lineSegment.BasePoint, point);
+
+                otherList.Remove(lineSegment);
+
+                polygonUnderConstruction.Add(new LineSegment(currentSegment.BasePoint, point));
+
+                index++;
+
+                #endregion
             }
-            return polygons.Where(p => p.NormalDirection == this.NormalDirection).ToList();
+            return results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
         }
+
+        /// <summary>
+        /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
+        /// the polygons must be convex for this to work
+        /// </summary>
+        /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
+        /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
+        /// or only touch</returns>
+        public Polygon OverlappingPolygon(Polygon otherPolygon)
+        {
+            if (!this.IsConvex || !otherPolygon.IsConvex)
+            {
+                throw new Exception("Overlapping Polygon should not be called on non convex polygons.");
+            }
+            if (this.Contains(otherPolygon))
+            {
+                return otherPolygon;
+            }
+            else if (otherPolygon.Contains(this))
+            {
+                return this;
+            }
+            var polygons = OverlappingPolygons(otherPolygon);
+            if (polygons.Count == 0)
+            {
+                return null;
+            }
+
+            var polygon = polygons.MinBy(p => p.Area);
+            if (this.ContainsAll(polygon.Vertices) && otherPolygon.ContainsAll(polygon.Vertices))
+            {
+                return polygon;
+            }
+            return null;
+        }
+        #endregion
+
+        #region private helper methods
+        private static List<LineSegment> _subtract(LineSegment segment, LineSegment toSubtract)
+        {
+            var results = new List<LineSegment>();
+            if (segment.ContainsOnInside(toSubtract.EndPoint))
+            {
+                results.Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+            }
+            if (segment.ContainsOnInside(toSubtract.BasePoint))
+            {
+                results.Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+            }
+            if (results.Count == 0)
+            {
+                if (toSubtract != segment && !toSubtract.ContainsOnInside(segment.BasePoint))
+                {
+                    results.Add(segment);
+                }
+            }
+            return results;
+        }
+    
+
         private static void _addNewSegmentIfPossible(List<LineSegment> list, Point basePoint, Point endPoint)
         {
             if (basePoint != endPoint)
@@ -1722,7 +2022,6 @@ namespace GeometryClassLibrary
                 list.Add(new LineSegment(basePoint, endPoint));
             }
         }
-
         #endregion
 
         #region Static Factory Methods
@@ -1761,8 +2060,8 @@ namespace GeometryClassLibrary
             {
                 basePoint = Point.Origin;
             }
-            var vector1 = new Vector(basePoint, Direction.Up, yLength);
-            var vector2 = new Vector(basePoint, Direction.Right, xLength);
+            var vector1 = new Vector(basePoint, Direction.Right, xLength);
+            var vector2 = new Vector(basePoint, Direction.Up, yLength);
             return Parallelogram(vector1, vector2);
         }
 

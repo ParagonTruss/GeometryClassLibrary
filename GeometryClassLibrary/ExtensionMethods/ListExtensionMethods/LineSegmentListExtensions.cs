@@ -46,20 +46,12 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Puts the boundaries in order and then checks if the end point of the last one is on the base point of the first one
+        /// Checks that all the boundaries meet end to end.
         /// </summary>
         /// <param name="passedBoundaries"></param>
         /// <returns></returns>
         public static bool DoFormClosedRegion(this IList<LineSegment> passedBoundaries)
         {
-            //changed from this:
-            //the problem with this is that it uses hashcode, which is based on intrinsic value and thus does not get the rounding
-            /*return newList
-                .SelectMany(segment => new[] { segment.BasePoint, segment.EndPoint })
-                .GroupBy(point => new { point.X, point.Y, point.Z })
-                .All(group => group.Count() == 2);*/
-
-            //find all the points we have used
             List<Point> points = passedBoundaries.GetAllPoints();
 
             //we should have the same number of points as line segments for it to even potentially form a closed region

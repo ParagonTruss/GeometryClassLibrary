@@ -243,30 +243,30 @@ namespace GeometryClassLibraryTest
             Point notOnPlane = center2.Shift(new Shift(Point.MakePointWithInches(.5, 0, 0)));
 
             //Points on the plane not boundaries (true for exclusive and inclusive, false for touching)
-            testPolygon.ContainsNotOnBoundary(insidePlane1).Should().BeTrue();
+            testPolygon.ContainsOnInside(insidePlane1).Should().BeTrue();
             testPolygon.Contains(insidePlane1).Should().BeTrue();
             testPolygon.Touches(insidePlane1).Should().BeFalse();
 
-            testPolygon.ContainsNotOnBoundary(insidePlane2).Should().BeFalse();
+            testPolygon.ContainsOnInside(insidePlane2).Should().BeFalse();
             testPolygon.Contains(insidePlane2).Should().BeFalse();
             testPolygon.Touches(insidePlane2).Should().BeFalse();
 
             //make sure the PlaneRegion contains the CenterPoint (true for exclusive and inclusive, false for touching)
-            testPolygon.ContainsNotOnBoundary(center1).Should().BeTrue();
+            testPolygon.ContainsOnInside(center1).Should().BeTrue();
             testPolygon.Contains(center1).Should().BeTrue();
             testPolygon.Touches(center1).Should().BeFalse();
 
-            testPolygon2.ContainsNotOnBoundary(center2).Should().BeTrue();
+            testPolygon2.ContainsOnInside(center2).Should().BeTrue();
             testPolygon2.Contains(center2).Should().BeTrue();
             testPolygon2.Touches(center2).Should().BeFalse();
 
             //check the side point (true for inclusive and touches, false for exclusive)
-            testPolygon.ContainsNotOnBoundary(sideTest).Should().BeFalse();
+            testPolygon.ContainsOnInside(sideTest).Should().BeFalse();
             testPolygon.Contains(sideTest).Should().BeTrue();
             testPolygon.Touches(sideTest).Should().BeTrue();
 
             //not on plane (false for all)
-            testPolygon2.ContainsNotOnBoundary(notOnPlane).Should().BeFalse();
+            testPolygon2.ContainsOnInside(notOnPlane).Should().BeFalse();
             testPolygon2.Contains(notOnPlane).Should().BeFalse();
             testPolygon2.Touches(notOnPlane).Should().BeFalse();
         }
@@ -946,6 +946,7 @@ namespace GeometryClassLibraryTest
 
             var expected1 = Polygon.Square(Inch);
             var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            (results.Count).Should().Be(2);
             (results[0] == expected1).Should().BeTrue();
             (results[1] == expected2).Should().BeTrue();
         }
@@ -960,8 +961,8 @@ namespace GeometryClassLibraryTest
 
             var expected1 = Polygon.Square(Inch);
             var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
         }
 
         [Test]
@@ -969,15 +970,18 @@ namespace GeometryClassLibraryTest
         {
             var square = Polygon.Square(4 * Inch);
             var rectangle = Polygon.Rectangle(4*Math.Sqrt(2) * Inch, 1 * Inch);
-            rectangle.Rotate(new Rotation(45 * Angle.Degree));
-            rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
+            rectangle = rectangle.Rotate(new Rotation(45 * Angle.Degree));
+            rectangle = rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
 
             var results = square.RemoveRegion(rectangle);
+
             results.Count.Should().Be(2);
-            //var expected1 = Polygon.Square(Inch);
-            //var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
-            //(results[0] == expected1).Should().BeTrue();
-            //(results[1] == expected2).Should().BeTrue();
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 3.29289 * Inch), new Vector(Direction.Down, 3.29289 * Inch), Point.MakePointWithInches(0, 4));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Left, 3.29289 * Inch), new Vector(Direction.Up, 3.29289 * Inch), Point.MakePointWithInches(4, 0));
+
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
+
             Assert.Pass();
         }
         [Test]
@@ -997,10 +1001,35 @@ namespace GeometryClassLibraryTest
             var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(4, 4));
             var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Up, 2 * Inch), Point.MakePointWithInches(4, 0));
 
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
-            (results[2] == expected3).Should().BeTrue();
-            (results[3] == expected4).Should().BeTrue();
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
+            (results.Contains(expected3)).Should().BeTrue();
+            (results.Contains(expected4)).Should().BeTrue();
+        }
+
+        [Test]
+        public void Polygon_RemoveRegion_TouchingVertices()
+        {
+            // The shapes touch at the upper right vertex.
+            // There's no overlapping region, 
+            // so the results should be just one square or the other
+
+            var square1 = Polygon.Square(3 * Inch);
+            var square2 = Polygon.Square(3 * Inch);
+            square2 = square2.Rotate(new Rotation(65 * Angle.Degree));
+            square2 = square2.Translate(Point.MakePointWithInches(3, 3));
+
+            var results1 = square1.RemoveRegion(square2);
+            var results2 = square2.RemoveRegion(square1);
+            var results3 = square1.RemoveRegion(square1);
+
+            (results1.Count == 1).Should().BeTrue();
+            (results2.Count == 1).Should().BeTrue();
+
+            (results1[0] == square1).Should().BeTrue();
+            (results2[0] == square2).Should().BeTrue();
+
+            (results3.Count == 0).Should().BeTrue();
         }
     }
 }
