@@ -406,9 +406,10 @@ namespace GeometryClassLibrary
 
         public bool Overlaps(LineSegment segment)
         {
-            return this.IsParallelTo(segment) &&
+            return (this == segment) ||
+                (this.IsParallelTo(segment) &&
                 (this.EndPoints.Any(p => segment.ContainsOnInside(p)) ||
-                segment.EndPoints.Any(p => this.ContainsOnInside(p)));
+                segment.EndPoints.Any(p => this.ContainsOnInside(p))));
         }
 
         public bool DoesIntersectNotTouching(Plane passedPlane)

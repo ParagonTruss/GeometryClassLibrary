@@ -961,8 +961,8 @@ namespace GeometryClassLibraryTest
 
             var expected1 = Polygon.Square(Inch);
             var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
         }
 
         [Test]
@@ -974,11 +974,14 @@ namespace GeometryClassLibraryTest
             rectangle = rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
 
             var results = square.RemoveRegion(rectangle);
+
             results.Count.Should().Be(2);
             var expected1 = Polygon.Triangle(new Vector(Direction.Right, 3.29289 * Inch), new Vector(Direction.Down, 3.29289 * Inch), Point.MakePointWithInches(0, 4));
             var expected2 = Polygon.Triangle(new Vector(Direction.Left, 3.29289 * Inch), new Vector(Direction.Up, 3.29289 * Inch), Point.MakePointWithInches(4, 0));
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
+
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
+
             Assert.Pass();
         }
         [Test]
@@ -998,10 +1001,10 @@ namespace GeometryClassLibraryTest
             var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(4, 4));
             var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Up, 2 * Inch), Point.MakePointWithInches(4, 0));
 
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
-            (results[2] == expected3).Should().BeTrue();
-            (results[3] == expected4).Should().BeTrue();
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
+            (results.Contains(expected3)).Should().BeTrue();
+            (results.Contains(expected4)).Should().BeTrue();
         }
 
         [Test]

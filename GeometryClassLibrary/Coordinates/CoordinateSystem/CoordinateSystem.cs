@@ -449,6 +449,10 @@ namespace GeometryClassLibrary
         /// <returns>Returns a new CoordinateSystem that is based on the world system and has been shifted with the equivalent of the passed shift put in terms of world system</returns>
         public CoordinateSystem RelativeShift(Shift passedShift, CoordinateSystem systemShiftIsRelativeTo)
         {
+            if (systemShiftIsRelativeTo == null)
+            {
+                systemShiftIsRelativeTo = WorldCoordinateSystem;
+            }
             //change the coordinate system so that it is in terms of the current system so we can shift it relative to that system and 
             //then we need to shift it so its back on the worldCoordinates
             CoordinateSystem inCurrent = this.Shift(systemShiftIsRelativeTo.ShiftFromThisToWorld.Inverse());
