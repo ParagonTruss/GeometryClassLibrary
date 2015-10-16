@@ -10,12 +10,12 @@ namespace GeometryClassLibrary
     {
         public static implicit operator PlaneRegion(Polygon p)
         {
-            return new PlaneRegion(p.LineSegments.Select(s => (IEdge)s));
+            return new PlaneRegion(p.LineSegments.Select(s => (IEdge)s).ToList());
         }
 
         #region Properties and Fields
 
-        protected List<IEdge> _Edges = new List<IEdge>();
+        protected List<IEdge> _Edges;
         public virtual List<IEdge> Edges
         {
             get
@@ -73,35 +73,25 @@ namespace GeometryClassLibrary
         /// <summary>
         /// 
         /// </summary>
-        public PlaneRegion(IEnumerable<IEdge> passedEdges)
+        public PlaneRegion(List<IEdge> passedEdges)
         {
-            _Edges.AddRange(passedEdges);
-            this.BasePoint = this._Edges[0].EndPoint;
-            this.NormalVector = _getUnitNormalVector();
+            this._Edges = passedEdges.FixEdgeOrientation();
+            this.NormalLine = _getNormalLine();
 
         }
 
         // Returns a normalVector of the planeregion.
         // or the zero vector, if the planereg has no sides.
-        protected Vector _getUnitNormalVector()
+        protected Line _getNormalLine()
         {
             if (this.Edges.Count() > 2)
             {
                 Vector vector1 = new Vector(_Edges.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
+                Vector vector2 = new Vector(_Edges.First(s => s.BasePoint == vector1.EndPoint));
 
-                Vector vector2;
-                Vector normal = null;
-                for (int i = 0; i < _Edges.Count; i++)
-                {
-                    vector2 = new Vector(vector1.BasePoint, Vertices[i]);
-                    normal = vector1.CrossProduct(vector2);
-                    if (normal.Magnitude != Distance.Zero)
-                    {
-                        break;
-                    }
-                }
-
-                return new Vector(this.BasePoint, normal.Direction, Inch);
+                var normal = vector1.CrossProduct(vector2);
+                
+                return new Line(_Edges[0].BasePoint, normal.Direction);
             }
             else
             {
@@ -117,7 +107,7 @@ namespace GeometryClassLibrary
                 else throw new Exception("Not Allowed.");
                 var otherVertex = this.Vertices.First(v => v != nonSegment.BasePoint);
                 var normalDirection = nonSegment.InitialDirection.CrossProduct(new LineSegment(nonSegment.BasePoint, otherVertex).Direction);
-               return new Vector(nonSegment.BasePoint, normalDirection, Inch);
+               return new Line(nonSegment.BasePoint, normalDirection);
             }
         }
 
@@ -128,7 +118,7 @@ namespace GeometryClassLibrary
         public PlaneRegion(PlaneRegion planeToCopy)
             : base(planeToCopy) 
         {
-            this._Edges.AddRange(planeToCopy._Edges);
+            this._Edges = planeToCopy._Edges;
         }
 
         #endregion
@@ -241,7 +231,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public new PlaneRegion Shift(Shift shift)
         {
-            return new PlaneRegion(this._Edges.Select(e => e.Shift(shift)));
+            return new PlaneRegion(this._Edges.Select(e => e.Shift(shift)).ToList());
         }
 
      
@@ -251,7 +241,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public new PlaneRegion Rotate(Rotation rotation)
         {
-            return new PlaneRegion(this._Edges.Select(e => e.Rotate(rotation)));
+            return new PlaneRegion(this._Edges.Select(e => e.Rotate(rotation)).ToList());
         }
 
         /// <summary>

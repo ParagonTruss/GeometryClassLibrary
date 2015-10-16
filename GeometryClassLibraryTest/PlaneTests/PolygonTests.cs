@@ -425,7 +425,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polygon_NormalVector()
+        public void Polygon_NormalLine()
         {
             Point point1 = Point.MakePointWithInches(0, 1, 0);
             Point point2 = Point.MakePointWithInches(0, 3, 0);
@@ -434,8 +434,9 @@ namespace GeometryClassLibraryTest
             List<Point> vertices1 = new List<Point>(){ point1, point2, point3, point4 };
             Polygon upsideDownSquare = new Polygon(vertices1);
            
-            Vector normal1 = upsideDownSquare.NormalVector;
-            (normal1 == new Vector(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(0, 1, -1))).Should().BeTrue();
+            Line normal1 = upsideDownSquare.NormalLine;
+            (normal1.Direction == new Direction(0, 0, -1)).Should().BeTrue();
+            (new Plane(upsideDownSquare).Contains(normal1.BasePoint)).Should().BeTrue();
 
 
             Point topPoint1 = Point.MakePointWithInches(0, 0, 5);
@@ -446,8 +447,8 @@ namespace GeometryClassLibraryTest
             
             Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }, false);
 
-            Vector normal2 = concavePentagon.NormalVector;
-            (normal2 == new Vector(Point.MakePointWithInches(0, 0, 5), Point.MakePointWithInches(0, 0, 6))).Should().BeTrue();
+            Line normal2 = concavePentagon.NormalLine;
+            (normal2.Direction == new Direction(0,0,1)).Should().BeTrue();
 
 
             List<LineSegment> bounds3 = new List<LineSegment>();
@@ -456,13 +457,9 @@ namespace GeometryClassLibraryTest
             bounds3.Add(new LineSegment(Point.MakePointWithInches(3, 2, 1), Point.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon3 = new Polygon(bounds3);
             
-            Vector normal3 = testPolygon3.NormalVector;
-            (normal3.Magnitude != Distance.Zero).Should().BeTrue();
-
-            foreach (var edge in testPolygon3.LineSegments)
-            {
-                (normal3.IsPerpendicularTo(edge)).Should().BeTrue();
-            }
+            Line normal3 = testPolygon3.NormalLine;
+            (normal3.Direction == new Direction(-1, 2, 1)).Should().BeTrue();
+            (new Plane(testPolygon3).Contains(normal3.BasePoint)).Should().BeTrue();   
         }
 
         [Test()]
