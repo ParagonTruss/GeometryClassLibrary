@@ -69,7 +69,7 @@ namespace GeometryClassLibrary
 
                 //if the end point is on the other side of the middle plane than our endpoint we know it needs to be an angle > 180
                 //we need to wathc out for the 0 and 180 case though becasue it will mess up in those cases
-                if(angleBetween != Angle.Zero && angleBetween != new Angle(AngleType.Degree, 180) && !dividingPlane.PointIsOnSameSideAs(_endPoint, _initialDirection.UnitVector(DistanceType.Inch).EndPoint))
+                if(angleBetween != Angle.Zero && angleBetween != new Angle(AngleType.Degree, 180) && !dividingPlane.PointIsOnSameSideAs(EndPoint, InitialDirection.UnitVector(DistanceType.Inch).EndPoint))
                 {
                     angleBetween = new Angle(AngleType.Degree, 360) - angleBetween;
                 }
@@ -79,41 +79,14 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// The center point of the sphere that would be formed by the arc
+        /// The center point of the circle that the arc fits along.
         /// </summary>
-        public Point CenterPoint
-        {
-            get
-            {
-                //we find two lines to define the plane: the initial direction and the straight line direction (we use
-                //LineSegment because we need it as a line segment later on and it saves us from creating another object)
-                LineSegment tangentLine = new LineSegment(_basePoint, _initialDirection, Distance.Inch);
-                LineSegment straightLineSegment = new LineSegment(_basePoint, _endPoint);
-                
-                //we need to find the plane it is in first
-                Vector referenceNormal = tangentLine.CrossProduct(straightLineSegment);
-
-                //now we can find the direction to the center point by finding the perpindicular of the tangent line
-               Line toCenterPointFromTangent = new Line(_basePoint, referenceNormal.CrossProduct(tangentLine));
-
-                //now we can find the center point of the arc and the direction to the center of the arc from there based on the lineSegment to the endpoint
-                Line toCenterFromMidPoint = new Line(straightLineSegment.MidPoint, referenceNormal.CrossProduct(straightLineSegment));
-                
-                //now find where centerLine and the toCenterFromTagnent line intersect to get the center point
-                return toCenterPointFromTangent.IntersectWithLine(toCenterFromMidPoint);
-            }
-        }
+        public Point CenterPoint { get { return NormalLine.BasePoint; } }
 
         /// <summary>
         /// The radius of the would be circle formed by the arc
         /// </summary>
-        public Distance Radius
-        {
-            get
-            {
-                return CenterPoint.DistanceTo(_basePoint);
-            }
-        }
+        public Distance Radius { get { return CenterPoint.DistanceTo(BasePoint); } }
 
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between then
@@ -126,217 +99,64 @@ namespace GeometryClassLibrary
             }
         }
 
-        public virtual Direction NormalDirection
-        {
-            get
-            {
-                return _initialDirection.UnitVector(DistanceType.Inch).CrossProduct(StraightLineDirection.UnitVector(DistanceType.Inch)).Direction;
-            }
-        }
+        public Direction NormalDirection { get { return NormalLine.Direction; } }
+        
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between them.
         /// This is defined and used by IEdge
         /// </summary>
-        public Direction Direction
-        {
-            get { return _initialDirection; }
-        }
+        public Direction Direction { get { return InitialDirection; } }
 
 
         /// <summary>
-        /// One of the points where the arc arises from
+        /// Where the arc begins.
         /// </summary>
-        private Point _basePoint;
-        public virtual Point BasePoint
+        public Point BasePoint
         {
             get { return _basePoint; }
         }
+        private Point _basePoint;
 
-        private Point _endPoint;
         /// <summary>
-        /// One of the points where the arc ends
+        /// Where the arc ends.
         /// </summary>
-        public virtual Point EndPoint
+        public Point EndPoint
         {
             get { return _endPoint; }
         }
+        private Point _endPoint;
 
-        private Direction _initialDirection;
+        public Line NormalLine { get { return _normalLine; } }
+        private Line _normalLine;
+ 
         /// <summary>
-        /// The initial direction the line of the arc goes from the start point (or the tangent of arc at the start point)
+        /// The direction tangent to the basepoint.
         /// </summary>
-        public virtual Direction InitialDirection
+        public Direction InitialDirection
         {
-            get { return _initialDirection; }
+            get { return new Direction(CenterPoint, BasePoint).CrossProduct(NormalDirection); }
         }
 
-        public bool IsClosed
-        {
-            get
-            {
-                return BasePoint == EndPoint;
-            }
-        }
+        public bool IsClosed { get { return BasePoint == EndPoint; } }
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Creates a empty arc
-        /// </summary>
-        public Arc()
+        private Arc() { }
+
+        public Arc(Point basePoint, Point endPoint, Line normalLine)
         {
-            _basePoint = Point.Origin;
-            _endPoint = Point.Origin;
-            _initialDirection = Direction.Right;
+            this._basePoint = basePoint;
+            this._endPoint = endPoint;
+            if (this.IsClosed)
+            {
+                if (normalLine.BasePoint == basePoint)
+                {
+                    throw new Exception();
+                }
+            }
         }
-
-        /// <summary>
-        /// Creates an arc defined by the given arguements
-        /// </summary>
-        /// <param name="passedBasePoint">The base/start point of the arc</param>
-        /// <param name="passedEndPoint">The end point of the arc</param>
-        /// <param name="passedIntialDirection">The direction the arc initially travels from the start point (aka the tangent of the arc at the start point)</param>
-        public Arc(Point passedBasePoint, Point passedEndPoint, Direction passedIntialDirection)
-        {
-            _basePoint = passedBasePoint;
-            _endPoint = passedEndPoint;
-            _initialDirection = passedIntialDirection;
-        }
-
-        /// <summary>
-        /// Creates an arc with the given specifications
-        /// </summary>
-        /// <param name="passedBasePoint">The base or start point of the arc</param>
-        /// <param name="passedCentralAngle">The central angle of the arc (or angular distance)</param>
-        /// <param name="passedCenterPoint">The center point of the circle that would be formed by the arc if it continued</param>
-        public Arc(Point passedBasePoint, Angle passedCentralAngle, Point passedCenterPoint, Direction passedInitialDirection)
-        {
-            _basePoint = passedBasePoint;
-            _initialDirection = passedInitialDirection;
-
-            //find the end point by creating the plane we are in first
-            Line tangentLine = new Line(_initialDirection, _basePoint);
-            LineSegment toCenterFromBasePoint = new LineSegment(passedBasePoint, passedCenterPoint);
-
-            Plane containingPlane = new Plane(tangentLine, toCenterFromBasePoint);
-
-            //now we can use our central angle to find a line that will point to our endpoint
-            //by rotating the segment to the basePoint around an axis in the normal direction of our normal plane
-            Line axisToRotateAround = new Line(containingPlane.NormalVector.Direction, passedCenterPoint);
-            LineSegment toCenterFromEndPoint = toCenterFromBasePoint.Rotate(new Rotation(axisToRotateAround, passedCentralAngle));
-
-            _endPoint = toCenterFromEndPoint.BasePoint;
-        }
-
-        /// <summary>
-        /// Creates an arc given the following definitions and defaults to the XY-plane if none is given
-        /// Note: The normal vector of the plane is Important!
-        /// Note: the sign of the Angle is Important! positive means the end point is to the "left" (counter clockwise) of the start point in the circle formed
-        /// by the arc, negative means it is to the "right"(clockwise) of the start point in the circle formed.
-        /// </summary>
-        /// <param name="passedBasePoint">The base point of the arc</param>
-        /// <param name="passedCenterPoint">The center point of the circle that would be formed by the arc if it continued</param>
-        /// <param name="passedCentralAngle">The angle between the start point and end point of the arc at the center point</param>
-        /// <param name="planeToBeContainedIn">The plane the arc is contained in</param>
-        public Arc(Point passedBasePoint, Angle passedCentralAngle, Point passedCenterPoint, Plane planeToBeContainedIn = null)
-        {
-            if (planeToBeContainedIn == null)
-            {
-                planeToBeContainedIn = new Plane(Plane.XY);
-            }
-
-            //make sure the points on on the plane
-            if (!planeToBeContainedIn.Contains(passedBasePoint))
-            {
-                throw new ArgumentException("The base point is not on the passed plane");
-            }
-            if (!planeToBeContainedIn.Contains(passedCenterPoint))
-            {
-                throw new ArgumentException("The center point is not on the passed plane");
-            }
-
-            _basePoint = passedBasePoint;
-
-            //create our line segment from the center to the start point
-            LineSegment toStartPointFromCenter = new LineSegment(passedCenterPoint, passedBasePoint);
-
-            //now find the tangent line in the plane were in to find the initial direction
-            Line tangentLine = toStartPointFromCenter.MakePerpendicularLineInGivenPlane(planeToBeContainedIn);
-            _initialDirection = tangentLine.Direction;
-
-            //now we can use our central angle to find a line that will point to our endpoint
-            //by rotating the segment to the basePoint around an axis in the normal direction of our normal plane
-            Line axisToRotateAround = new Line(planeToBeContainedIn.NormalVector.Direction, passedCenterPoint);
-            LineSegment toEndPointFromCenter = toStartPointFromCenter.Rotate(new Rotation(axisToRotateAround, passedCentralAngle));
-
-            _endPoint = toEndPointFromCenter.EndPoint;
-        }
-
-        /*doesnt seem very usefull and still incomplete. With all the stuff you need it would be simpler just to use another contructor
-        /// <summary>
-        /// Creates an arc with the specifications. If planeToBeContainedIn is left out it defaults to the XY-Plane
-        /// Note: The normal vector of the plane is Important!
-        /// </summary>
-        /// <param name="passedBasePoint">The arc's base point</param>
-        /// <param name="passedEndPoint">The arc's end point</param>
-        /// <param name="passedRadius">The radius of the circle formed by the arc if the arc continued</param>
-        /// <param name="isCentralAngleSmallerThan180Degrees">If the central angle is greater than or less than 180 degrees. This allows us to specify which of the two arc segments that we want to use of the two otherwise ambigious arcs</param>
-        /// <param name="planeToBeContainedIn">The plane the arc is contained in or the XY-plane if it is left out</param>
-        public Arc(Point passedBasePoint, Point passedEndPoint, Distance passedRadius, Point pointOnSameSideOfStraightLineAsArc, bool isCentralAngleSmallerThan180Degrees, Plane planeToBeContainedIn = null)
-        {
-            if (planeToBeContainedIn == null)
-            {
-                planeToBeContainedIn = new Plane(Plane.XY);
-            }
-
-            //make sure the points on on the plane
-            if (!planeToBeContainedIn.Contains(passedBasePoint))
-            {
-                throw new ArgumentException("The base point is not on the passed plane");
-            }
-            if (!planeToBeContainedIn.Contains(passedEndPoint))
-            {
-                throw new ArgumentException("The end point is not on the passed plane");
-            }
-
-            _basePoint = passedBasePoint;
-            _endPoint = passedEndPoint;
-
-            //we can find teh center point using the law of Cosines: c^2 = a^2 + b^2 - 2abCos(C)
-            //which in the case of isoceles triangles can be simplified to cos(C) = b/2r when finding the double angles
-            //which is what we want in theis case
-
-            //first find the straight line between the two points to find the b side
-            LineSegment straightSegment = new LineSegment(passedBasePoint, passedEndPoint);
-
-            //find the angle to the center
-            Angle angleToCenterFromStraightLine = new Angle(AngleType.Radian, Math.Acos(straightSegment.Length / (passedRadius * 2)));
-            
-            //now we can rotate the straightSegment to find the direction to the center
-            LineSegment toCenter = straightSegment.Rotate(new Rotation(new Line(planeToBeContainedIn.NormalVector.Direction, passedBasePoint), angleToCenterFromStraightLine));
-
-
-            //but now we neded see if we are on the correct side or if we need to negate the angle to move the radius to the other side
-            Plane straightLineAsPlane = new Plane(straightSegment, planeToBeContainedIn.NormalVector);
-
-            //if the center angle is greater than 180 we can leave it like this. Otherwise we need to make it negative to get the right segment
-            if(!straightLineAsPlane.PointIsOnSameSideAs(toCenter.EndPoint, pointOnSameSideOfStraightLineAsArc))
-            {
-                angleToCenterFromStraightLine = Angle.Zero - angleToCenterFromStraightLine;
-                toCenter = straightSegment.Rotate(new Rotation(new Line(planeToBeContainedIn.NormalVector.Direction, passedBasePoint), angleToCenterFromStraightLine));
-            }
-            
-            //now find the perpindicular to that line segment in the plane to find the initial direction
-            _initialDirection = toCenter.MakePerpindicularLineInGivenPlane(planeToBeContainedIn).Direction;
-
-            //now we need to figure out if we had the right direction based on whether or not it should be greater than or less than 180
-            if(straightLineAsPlane.PointIsOnSameSideAs(_initialDirection.UnitVector(DistanceType.Inch).EndPoint, _endPoint))
-            {
-
-            }
-        }*/
 
         /// <summary>
         /// Creates a copy of this Arc
@@ -344,9 +164,9 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">The Arc to copy</param>
         public Arc(Arc toCopy)
         {
-            _basePoint = new Point(toCopy.BasePoint);
-            _endPoint = new Point(toCopy.EndPoint);
-            _initialDirection = new Direction(toCopy.InitialDirection);
+            _basePoint = toCopy.BasePoint;
+            _endPoint = toCopy.EndPoint;
+            _normalLine = toCopy.NormalLine;
         }
 
         #endregion
@@ -357,7 +177,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return BasePoint.GetHashCode()^EndPoint.GetHashCode()^NormalLine.GetHashCode();
         }
 
         /// <summary>
@@ -408,12 +228,12 @@ namespace GeometryClassLibrary
                 Arc comparableArc = (Arc)obj;
 
                 // if the two points' x and y are equal
-                bool arcAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc.EndPoint.Equals(this.EndPoint);
-                bool arcAreRevese = comparableArc._basePoint.Equals(this.EndPoint) && comparableArc.EndPoint.Equals(this._basePoint);
+                bool arcsAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc.EndPoint.Equals(this.EndPoint);
+                bool arcsAreRevese = comparableArc._basePoint.Equals(this.EndPoint) && comparableArc.EndPoint.Equals(this._basePoint);
 
-                bool areDirectionsEqual = comparableArc._initialDirection.Equals(this._initialDirection);
+                bool centersAreEqual = comparableArc.NormalLine.Equals(this.NormalLine);
 
-                return (arcAreEqual || arcAreRevese) && areDirectionsEqual;
+                return (arcsAreEqual || arcsAreRevese) && centersAreEqual;
             }
             //if it wasnt an arc than its obviously not equal
             catch (InvalidCastException)
@@ -519,7 +339,7 @@ namespace GeometryClassLibrary
 
         public IEdge Reverse()
         {
-            throw new NotImplementedException();
+            return new Arc(EndPoint, BasePoint, NormalLine);
         }
 
         #endregion

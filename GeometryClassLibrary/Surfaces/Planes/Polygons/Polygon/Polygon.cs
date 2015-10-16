@@ -154,12 +154,10 @@ namespace GeometryClassLibrary
                 this.LineSegments = (lineSegments).ToList();
             }
 
-            this.BasePoint = lineSegments[0].EndPoint;
-
-            this.NormalVector = this._getUnitNormalVector();
+            this.NormalLine = this._getNormalLine();
         }
 
-        private Vector _getUnitNormalVector()
+        private Line _getNormalLine()
         {
             Vector vector1 = (LineSegments.OrderBy(s => s.EndPoint.X).ThenBy(s => s.EndPoint.Y).ThenBy(s => s.EndPoint.Z).First());
 
@@ -167,7 +165,7 @@ namespace GeometryClassLibrary
 
             var normal = vector1.CrossProduct(vector2);
 
-            return new Vector(this.BasePoint, normal.Direction, Distance.Inch);
+            return new Line(vector1.BasePoint, normal.Direction);
         }
         /// <summary>
         /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar

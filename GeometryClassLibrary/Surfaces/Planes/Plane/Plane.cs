@@ -21,22 +21,15 @@ namespace GeometryClassLibrary
 
         public virtual bool IsBounded { get { return true; } }
 
-        /// <summary>
-        /// A point on the plane that is used as a reference point to define it
-        /// </summary>
-        public Point BasePoint { get; protected set; }
+        public Line NormalLine { get; protected set; }
 
-        /// <summary>
-        /// The vector that is normal to the plane, with the base point of the vector always
-        /// being the same as the basepoint of the plane
-        /// </summary>
         [JsonProperty]
-        public Vector NormalVector { get; protected set; }
+        public Point BasePoint { get { return NormalLine.BasePoint; } }
 
-        public Direction NormalDirection
-        {
-           get { return this.NormalVector.Direction; }
-        }
+        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, Inch); } }
+
+        [JsonProperty]
+        public Direction NormalDirection { get { return NormalLine.Direction; } }
         #endregion
 
         #region Constructors
@@ -49,18 +42,16 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Plane that contains the given point and whose normal is in a given direction.
         /// </summary>
+        [JsonConstructor]
         public Plane(Direction normalDirection , Point basePoint = null)
         {
             if (basePoint == null)
             {
                 basePoint = Point.Origin;
             }
-
-            this.BasePoint = basePoint;
-            this.NormalVector = new Vector(this.BasePoint, normalDirection, Inch);
+            this.NormalLine = new Line(basePoint, normalDirection);
         }
 
-        [JsonConstructor]
         public Plane(Vector normalVector) : this(normalVector.Direction, normalVector.BasePoint) { }
 
         /// <summary>
@@ -87,8 +78,7 @@ namespace GeometryClassLibrary
                 {
                     throw new Exception("The passed lines are not on the same plane.");
                 }
-                this.BasePoint = line1.BasePoint;
-                this.NormalVector = new Vector(BasePoint, normal.Direction, Inch);
+                this.NormalLine = new Line(line1.BasePoint, normal.Direction);
             }
             else
             {
@@ -115,10 +105,8 @@ namespace GeometryClassLibrary
             if (point2.IsOnLine(vector2))
             {
                 throw new Exception("The passed points all fall on a common line.");
-            }
-
-            this.BasePoint = point1;
-            this.NormalVector = new Vector(BasePoint, vector1.CrossProduct(vector2).Direction, Inch);
+            } 
+            this.NormalLine = new Line(point1, vector1.CrossProduct(vector2).Direction);
         }
 
         /// <summary>
@@ -127,8 +115,7 @@ namespace GeometryClassLibrary
         /// <param name="passedPlane">The Plane to copy</param>
         public Plane(Plane toCopy)
         {
-            this.BasePoint = toCopy.BasePoint;
-            this.NormalVector = toCopy.NormalVector;
+            this.NormalLine = toCopy.NormalLine;
         }
 
         #endregion

@@ -113,7 +113,7 @@
     <Compile Include="ExtensionMethods\ListExtensionMethods\LineSegmentListExtensions.cs" />
     <Compile Include="Lines\Line\Line.cs" />
     <Compile Include="Lines\LineSegment\LineSegment.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\IEdgeListExtensions.cs" />
+    <Compile Include="ExtensionMethods\ListExtensionMethods\EdgeListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
     <Compile Include="ExtensionMethods\ListExtensionMethods\PolygonListExtensions.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
