@@ -1031,5 +1031,33 @@ namespace GeometryClassLibraryTest
 
             (results3.Count == 0).Should().BeTrue();
         }
+
+        [Test]
+        public void Polygon_OverlappingPolygons()
+        {
+            var initialRectangle = Polygon.Rectangle(2 * Inch, 3 * Inch);
+            var square = Polygon.Square(Inch, Point.MakePointWithInches(1, 1));
+
+            var cShape = initialRectangle.RemoveRegion(square)[0];
+            var rectangle = Polygon.Rectangle(Inch, 3 * Inch, Point.MakePointWithInches(1, 0));
+
+            var results = cShape.OverlappingPolygons(rectangle);
+
+            results.Count.Should().Be(2);
+            results.Contains(Polygon.Square(Inch, Point.MakePointWithInches(1, 2))).Should().BeTrue();
+            results.Contains(Polygon.Square(Inch, Point.MakePointWithInches(1, 0))).Should().BeTrue();
+
+        }
+
+        [Test]
+        public void Polygon_OverlappingPolygons_NoOverlap()
+        {
+            var rectangle1 = Polygon.Rectangle(3 * Inch, 2 * Inch);
+            var rectangle2 = rectangle1.Translate(Point.MakePointWithInches(3, 0));
+
+            var results = rectangle1.OverlappingPolygons(rectangle2);
+
+            results.Count.Should().Be(0);
+        }
     }
 }

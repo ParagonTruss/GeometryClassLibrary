@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using UnitClassLibrary;
 using MoreLinq;
 using static UnitClassLibrary.AngularDistance;
+using System.Collections;
 
 namespace GeometryClassLibrary
 {
@@ -1744,6 +1745,16 @@ namespace GeometryClassLibrary
             return results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
         }
 
+        public List<Polygon> RemoveRegions(List<Polygon> toRemove)
+        {
+            IEnumerable<Polygon> results = new List<Polygon>() { this };
+            foreach(var polygon in toRemove)
+            {
+                results = results.SelectMany(p => p.RemoveRegion(polygon));
+            }
+            return results.ToList();
+        }
+
         public List<Polygon> OverlappingPolygons(Polygon otherPolygon)
         {
             #region Preliminaries
@@ -1767,7 +1778,6 @@ namespace GeometryClassLibrary
 
             #region Remove Overlapping Opposite segments
             List<LineSegment> itemsToRemoveFromSegments2 = new List<LineSegment>();
-            // List<LineSegment> itemsToAddToSegments2 = new List<LineSegment>(); 
             for (int i = 0; i < segments2.Count; i++)
             {
                 var toSubtract = segments2[i];
@@ -1878,6 +1888,7 @@ namespace GeometryClassLibrary
                 }
                 Point point = null;
                 LineSegment lineSegment = null;
+                var nextSegment = polygons[index % 2].LineSegments.FirstOrDefault(s => s.BasePoint == currentSegment.EndPoint);
 
                 var found = false;
                 var enumerator = candidates.OrderBy(p => p.Key.DistanceTo(currentSegment.BasePoint));
@@ -1885,13 +1896,19 @@ namespace GeometryClassLibrary
                 {
                     point = pair.Key;
                     lineSegment = pair.Value;
+                    if (point == currentSegment.EndPoint)
+                    {
+                        if (nextSegment != null && nextSegment.IsParallelTo(lineSegment))
+                        {
+                            continue;
+                        }
+                    }
                     if (point == lineSegment.BasePoint)
                     {
                         #region Vertices Touching
                         if (point == currentSegment.EndPoint)
                         {
                             #region Next Segment
-                            var nextSegment = polygons[index % 2].LineSegments.FirstOrDefault(s => s.BasePoint == currentSegment.EndPoint);
                             if (nextSegment == null)
                             {
                                 var crossProduct = currentSegment.CrossProduct(lineSegment);
@@ -1960,9 +1977,6 @@ namespace GeometryClassLibrary
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
         /// the polygons must be convex for this to work
         /// </summary>
-        /// <param name="planeToBeClipped">The Polygon that will be clipped (can be either a convex or concave polygon)</param>
-        /// <returns>Returns the Polygon that represents where the two Polygons overlap or null if they do not overlap
-        /// or only touch</returns>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
             if (!this.IsConvex || !otherPolygon.IsConvex)
