@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using System.Diagnostics;
 
 namespace GeometryClassLibrary
 {
@@ -355,6 +356,11 @@ namespace GeometryClassLibrary
             bool angleIsCloseToZero = (angleBetween == Angle.Zero);
             return angleIsCloseToZero;
         }
+
+        public override string ToString()
+        {
+            return String.Format("X = {0}, Y = {1}, Z = {2}", Math.Round(XComponent, 2), Math.Round(YComponent, 2), Math.Round(ZComponent, 2));
+        }
         #endregion
 
         #region Methods
@@ -443,6 +449,11 @@ namespace GeometryClassLibrary
 
             throw new Exception("The reference normal is not perpendicular to these vectors");
 
+        }
+
+        public bool IsPerpendicularTo(Direction direction)
+        {
+            return this.AngleBetween(direction) == 90 * Angle.Degree;
         }
 
         #endregion

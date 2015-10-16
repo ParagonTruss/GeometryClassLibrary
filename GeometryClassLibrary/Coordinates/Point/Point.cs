@@ -202,7 +202,7 @@ namespace GeometryClassLibrary
        
         public override string ToString()
         {
-            return "X= " + this.X.ToString() + ", Y= " + this.Y.ToString() + ", Z=" + this.Z.ToString();
+            return String.Format("X = {0}, Y = {1}, Z = {2}", this.X.ToString(), this.Y.ToString(), this.Z.ToString());
         }
 
         #endregion

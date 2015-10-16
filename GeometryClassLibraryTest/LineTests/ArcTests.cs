@@ -9,35 +9,35 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class ArcTests
     {
-        [Test()]
-        public void Arc_Constructors()
-        {
-            //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 1, 3);
-            Point endPoint = Point.MakePointWithInches(-2, 0, 5);
-            Direction directionAtStart = new Direction(Point.MakePointWithInches(-1, 2, -2));
+       // [Test()]
+        //public void Arc_Constructors()
+        //{
+        //    //make our default arc
+        //    Point basePoint = Point.MakePointWithInches(0, 1, 3);
+        //    Point endPoint = Point.MakePointWithInches(-2, 0, 5);
+        //    Direction directionAtStart = new Direction(Point.MakePointWithInches(-1, 2, -2));
 
-            Arc noCalculationConstructed = new Arc(basePoint, endPoint, directionAtStart);
+        //    Arc noCalculationConstructed = new Arc(basePoint, endPoint, directionAtStart);
 
-            //now make it some other ways and make sure we end up with the same thing
+        //    //now make it some other ways and make sure we end up with the same thing
 
-            //using the center point and the containing plane     
-            Vector directionVector = new Vector(basePoint, directionAtStart, new Distance(DistanceType.Inch, 5));
-            Point thirdPlanePoint = directionVector.EndPoint;
-            Plane containingPlane = new Plane(basePoint, thirdPlanePoint, endPoint);
+        //    //using the center point and the containing plane     
+        //    Vector directionVector = new Vector(basePoint, directionAtStart, new Distance(DistanceType.Inch, 5));
+        //    Point thirdPlanePoint = directionVector.EndPoint;
+        //    Plane containingPlane = new Plane(basePoint, thirdPlanePoint, endPoint);
 
-            Arc testArc1 = new Arc(basePoint, noCalculationConstructed.CentralAngle, noCalculationConstructed.CenterPoint, containingPlane);
-            (testArc1 == noCalculationConstructed).Should().BeTrue();
+        //    Arc testArc1 = new Arc(basePoint, noCalculationConstructed.CentralAngle, noCalculationConstructed.CenterPoint, containingPlane);
+        //    (testArc1 == noCalculationConstructed).Should().BeTrue();
 
-            //with the center point and the central angle
-            Arc testArc2 = new Arc(basePoint, noCalculationConstructed.CentralAngle, noCalculationConstructed.CenterPoint, directionAtStart);
-            (testArc2 == noCalculationConstructed).Should().BeTrue();
+        //    //with the center point and the central angle
+        //    Arc testArc2 = new Arc(basePoint, noCalculationConstructed.CentralAngle, noCalculationConstructed.CenterPoint, directionAtStart);
+        //    (testArc2 == noCalculationConstructed).Should().BeTrue();
 
-            //last contructor using radius and containing plane
-            //Arc testArc3 = new Arc(basePoint, endPoint, noCalculationConstructed.ArcRadius, false, containingPlane);
-            //Arc testArc4 = new Arc(basePoint, endPoint, noCalculationConstructed.ArcRadius, true, containingPlane);
-            //(testArc3 == noCalculationConstructed).Should().BeTrue();
-        }
+        //    //last contructor using radius and containing plane
+        //    //Arc testArc3 = new Arc(basePoint, endPoint, noCalculationConstructed.ArcRadius, false, containingPlane);
+        //    //Arc testArc4 = new Arc(basePoint, endPoint, noCalculationConstructed.ArcRadius, true, containingPlane);
+        //    //(testArc3 == noCalculationConstructed).Should().BeTrue();
+        //}
 
         [Test()]
         public void Arc_Properties_Quarter_Circle()
@@ -76,7 +76,7 @@ namespace GeometryClassLibraryTest
             (centerPoint == Point.MakePointWithInches(0, 0, 4.24264)).Should().BeTrue();//sqr(3^2 + 3^2)
 
             //test the radius
-            Distance radius = quarterArc.Radius;
+            Distance radius = quarterArc.RadiusOfCurvature;
             (radius == new Distance(DistanceType.Inch, 4.24264)).Should().BeTrue();//sqr(3^2 + 3^2)
 
             //test the straight line direction (same as direction)
@@ -121,7 +121,7 @@ namespace GeometryClassLibraryTest
             (centerPoint == Point.MakePointWithInches(0, 0, 3)).Should().BeTrue();
 
             //test the radius
-            Distance radius = halfArc.Radius;
+            Distance radius = halfArc.RadiusOfCurvature;
             (radius == new Distance(DistanceType.Inch, 3)).Should().BeTrue();
 
             //test the straight line direction (same as direction)
@@ -166,7 +166,7 @@ namespace GeometryClassLibraryTest
             (centerPoint == Point.MakePointWithInches(0, 0, 4.24264)).Should().BeTrue();
 
             //test the radius
-            Distance radius = threeQuartersArc.Radius;
+            Distance radius = threeQuartersArc.RadiusOfCurvature;
             (radius == new Distance(DistanceType.Inch, 4.24264)).Should().BeTrue();
 
             //test the straight line direction (same as direction)
@@ -228,7 +228,7 @@ namespace GeometryClassLibraryTest
             Shift testShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 45)), Point.MakePointWithInches(-3, 0.25, -2));
             Arc results = testArc.Shift(testShift);
 
-            Arc expected = new Arc(Point.MakePointWithInches(-3, 0.25, -2), Point.MakePointWithInches(0 - 3, 4.24264 + 0.25, 4.24264 - 2), new Direction(Point.MakePointWithInches(0, 1, 0)));
+            Arc expected = new Arc(Point.MakePointWithInches(-3, 0.25, -2), Point.MakePointWithInches(0 - 3, 4.24264 + 0.25, 4.24264 - 2), Direction.Up);
 
             (results == expected).Should().BeTrue();
         }

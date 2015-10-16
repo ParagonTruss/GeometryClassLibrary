@@ -18,7 +18,7 @@ namespace GeometryClassLibrary
             get
             {
                 //length = r * theta), when theta is in radians
-                return Radius * CentralAngle.Radians;
+                return RadiusOfCurvature * CentralAngle.Radians;
             }
         }
 
@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcArea = r^2/2 * (theta), where theta is in radians
-                return new Area(AreaType.InchesSquared, .5 * Math.Pow(Radius.Inches, 2) * CentralAngle.Radians);
+                return new Area(AreaType.InchesSquared, .5 * Math.Pow(RadiusOfCurvature.Inches, 2) * CentralAngle.Radians);
             }
         }
 
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcSegmentArea = r^2 / 2 * (theta - sin(theta))
-                return new Area(AreaType.InchesSquared, .5 * Math.Pow(Radius.Inches, 2) * (CentralAngle.Radians - Math.Sin(CentralAngle.Radians)));
+                return new Area(AreaType.InchesSquared, .5 * Math.Pow(RadiusOfCurvature.Inches, 2) * (CentralAngle.Radians - Math.Sin(CentralAngle.Radians)));
             }
         }
 
@@ -57,36 +57,14 @@ namespace GeometryClassLibrary
         {
             get
             {
-                //find the angle between the lines formed form the endpoints and the center
-                Vector startPointToCenter = new Vector(_basePoint, CenterPoint);
-                Vector endPointToCenter = new Vector(_endPoint, CenterPoint);
-                
-                //now we need to find how the angle needs to be changed
-                Plane containingPlane = new Plane(startPointToCenter, endPointToCenter);
-                Plane dividingPlane = new Plane(startPointToCenter, containingPlane.NormalVector);
-
-                Angle angleBetween = endPointToCenter.AngleBetween(startPointToCenter);
-
-                //if the end point is on the other side of the middle plane than our endpoint we know it needs to be an angle > 180
-                //we need to wathc out for the 0 and 180 case though becasue it will mess up in those cases
-                if(angleBetween != Angle.Zero && angleBetween != new Angle(AngleType.Degree, 180) && !dividingPlane.PointIsOnSameSideAs(EndPoint, InitialDirection.UnitVector(DistanceType.Inch).EndPoint))
-                {
-                    angleBetween = new Angle(AngleType.Degree, 360) - angleBetween;
-                }
-
-                return angleBetween;
+                return new Angle(new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection));
             }
         }
 
         /// <summary>
-        /// The center point of the circle that the arc fits along.
-        /// </summary>
-        public Point CenterPoint { get { return NormalLine.BasePoint; } }
-
-        /// <summary>
         /// The radius of the would be circle formed by the arc
         /// </summary>
-        public Distance Radius { get { return CenterPoint.DistanceTo(BasePoint); } }
+        public Distance RadiusOfCurvature { get { return CenterPoint.DistanceTo(BasePoint); } }
 
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between then
@@ -99,51 +77,66 @@ namespace GeometryClassLibrary
             }
         }
 
-        public Direction NormalDirection { get { return NormalLine.Direction; } }
-        
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between them.
         /// This is defined and used by IEdge
         /// </summary>
         public Direction Direction { get { return InitialDirection; } }
 
-
-        /// <summary>
-        /// Where the arc begins.
-        /// </summary>
-        public Point BasePoint
-        {
-            get { return _basePoint; }
-        }
-        private Point _basePoint;
-
-        /// <summary>
-        /// Where the arc ends.
-        /// </summary>
-        public Point EndPoint
-        {
-            get { return _endPoint; }
-        }
-        private Point _endPoint;
-
-        public Line NormalLine { get { return _normalLine; } }
-        private Line _normalLine;
- 
         /// <summary>
         /// The direction tangent to the basepoint.
         /// </summary>
         public Direction InitialDirection
         {
-            get { return new Direction(CenterPoint, BasePoint).CrossProduct(NormalDirection); }
+            get { return new Direction(BasePoint, CenterPoint).CrossProduct(NormalDirection); }
         }
+        
+        /// <summary>
+        /// Where the arc begins.
+        /// </summary>
+        public Point BasePoint { get { return _basePoint; } }
+        private Point _basePoint;
+
+        /// <summary>
+        /// Where the arc ends.
+        /// </summary>
+        public Point EndPoint { get { return _endPoint; } }
+        private Point _endPoint;
+
+        /// <summary>
+        /// The center point of the circle that the arc fits along.
+        /// </summary>
+        public Point CenterPoint { get { return _centerPoint; } }
+        // The centerPoint could be calculated from other data, in some cases.
+        // However in the case of a full closed arc, one needs to specify the size, since the basepoint is the endpoint.
+        private Point _centerPoint;
+
+        public Direction NormalDirection { get { return _normalDirection; } }
+        private Direction _normalDirection;
 
         public bool IsClosed { get { return BasePoint == EndPoint; } }
-
+        public bool IsAcute { get { return this.CentralAngle < 180 * Angle.Degree; } }
         #endregion
 
         #region Constructors
 
         private Arc() { }
+
+        public Arc(Point basePoint, Point endPoint, Direction initialDirection)
+        {
+            this._basePoint = basePoint;
+            this._endPoint = endPoint;
+            if (this.IsClosed)
+            {
+                throw new Exception("Not enough information given to determine curvature.");
+            }
+            var segmentBetweenPoints = new LineSegment(basePoint,endPoint);
+            this._normalDirection = initialDirection.CrossProduct(segmentBetweenPoints.Direction);
+
+            var line1 = new Line(BasePoint, NormalDirection.CrossProduct(initialDirection));
+            var line2 = new Line(segmentBetweenPoints.MidPoint, NormalDirection.CrossProduct(segmentBetweenPoints.Direction));
+            this._centerPoint = line1.IntersectWithLine(line2);
+        }
 
         public Arc(Point basePoint, Point endPoint, Line normalLine)
         {
@@ -151,11 +144,36 @@ namespace GeometryClassLibrary
             this._endPoint = endPoint;
             if (this.IsClosed)
             {
-                if (normalLine.BasePoint == basePoint)
+                var projected = basePoint.ProjectOntoLine(normalLine);
+                if (projected == basePoint)
                 {
                     throw new Exception();
                 }
+                this._normalDirection = normalLine.Direction;
+                this._centerPoint = basePoint;
             }
+            else
+            {
+                if (!new Direction(basePoint,endPoint).IsPerpendicularTo(normalLine.Direction))
+                {
+                    throw new Exception();
+                }
+                var projected = basePoint.ProjectOntoLine(normalLine);
+                if (projected == basePoint)
+                {
+                    throw new Exception();
+                }
+                this._normalDirection = normalLine.Direction;
+                this._centerPoint = basePoint;
+            }
+        }
+
+        private Arc(Point basePoint, Point endPoint, Point centerPoint, Direction normalDirection)
+        {
+            this._basePoint = basePoint;
+            this._endPoint = endPoint;
+            this._centerPoint = centerPoint;
+            this._normalDirection = normalDirection;
         }
 
         /// <summary>
@@ -166,7 +184,8 @@ namespace GeometryClassLibrary
         {
             _basePoint = toCopy.BasePoint;
             _endPoint = toCopy.EndPoint;
-            _normalLine = toCopy.NormalLine;
+            _centerPoint = toCopy.CenterPoint;
+            _normalDirection = toCopy.NormalDirection;
         }
 
         #endregion
@@ -177,7 +196,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return BasePoint.GetHashCode()^EndPoint.GetHashCode()^NormalLine.GetHashCode();
+            return BasePoint.GetHashCode() ^ EndPoint.GetHashCode() ^ CenterPoint.GetHashCode() ^ NormalDirection.GetHashCode();
         }
 
         /// <summary>
@@ -217,29 +236,26 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (obj == null || !(obj is Arc))
             {
                 return false;
             }
-
-            //try to cast the object to a Point, if it fails then we know the user passed in the wrong type of object
-            try
-            {
-                Arc comparableArc = (Arc)obj;
-
-                // if the two points' x and y are equal
-                bool arcsAreEqual = comparableArc._basePoint.Equals(this._basePoint) && comparableArc.EndPoint.Equals(this.EndPoint);
-                bool arcsAreRevese = comparableArc._basePoint.Equals(this.EndPoint) && comparableArc.EndPoint.Equals(this._basePoint);
-
-                bool centersAreEqual = comparableArc.NormalLine.Equals(this.NormalLine);
-
-                return (arcsAreEqual || arcsAreRevese) && centersAreEqual;
-            }
-            //if it wasnt an arc than its obviously not equal
-            catch (InvalidCastException)
+            Arc arc = (Arc)obj;
+            if (this.CenterPoint != arc.CenterPoint)
             {
                 return false;
             }
+            if (this.IsClosed && arc.IsClosed)
+            {
+                return this.NormalDirection == arc.NormalDirection ||
+                       this.NormalDirection == arc.NormalDirection.Reverse();
+            }
+            return (this.BasePoint == arc.BasePoint &&
+                    this.EndPoint == arc.EndPoint &&
+                    this.NormalDirection == arc.NormalDirection) ||
+                   (this.BasePoint == arc.EndPoint &&
+                    this.EndPoint == arc.BasePoint &&
+                    this.NormalDirection == arc.NormalDirection.Reverse());
         }
 
         /// <summary>
@@ -266,7 +282,7 @@ namespace GeometryClassLibrary
             Point newBasePoint = BasePoint.Shift(passedShift);
             Point newEndPoint = EndPoint.Shift(passedShift);
 
-            //cheat a bit and make the direction into a line and then shift it
+            // make the direction into a line and then shift it
             Line directionLine = new Line(InitialDirection, BasePoint).Shift(passedShift);
 
             return new Arc(newBasePoint, newEndPoint, directionLine.Direction);
@@ -337,11 +353,15 @@ namespace GeometryClassLibrary
             return this.Translate(point);
         }
 
-        public IEdge Reverse()
+        public Arc Reverse()
         {
-            return new Arc(EndPoint, BasePoint, NormalLine);
+            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
         }
 
+        IEdge IEdge.Reverse()
+        {
+            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
+        }
         #endregion
 
     }

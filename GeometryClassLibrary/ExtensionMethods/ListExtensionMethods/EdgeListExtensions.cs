@@ -45,6 +45,7 @@ namespace GeometryClassLibrary
             var copy = edges.ToList();
            
             var current = copy.First();
+            copy.RemoveAt(0);
             var sorted = new List<IEdge>();
             sorted.Add(current);
             for (int i = 1; i < edges.Count; i++)
@@ -59,7 +60,7 @@ namespace GeometryClassLibrary
                     }
                     else
                     {
-                        next.Reverse();
+                       next = next.Reverse();
                     }
                 }
                 sorted.Add(next);
