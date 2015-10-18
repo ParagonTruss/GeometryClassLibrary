@@ -285,7 +285,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("BasePoint= {0}, EndPoint= {1}, Magnitude= {2}", this.BasePoint.ToString(), this.EndPoint.ToString(), this.Magnitude.ToString());
+            return string.Format("BasePoint= {0}, Direction= {1}, Magnitude= {2}", this.BasePoint.ToString(), this.Direction.ToString(), this.Magnitude.ToString());
         }
 
         #endregion

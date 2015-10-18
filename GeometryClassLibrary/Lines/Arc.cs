@@ -275,17 +275,15 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Performs the given shift on the Arc and returns a new Arc that has been shifted
         /// </summary>
-        /// <param name="passedShift">The shift to perform on the Arc</param>
-        /// <returns>A new Arc that has been shifted with the passed shift</returns>
         public Arc Shift(Shift passedShift)
         {
             Point newBasePoint = BasePoint.Shift(passedShift);
             Point newEndPoint = EndPoint.Shift(passedShift);
 
             // make the direction into a line and then shift it
-            Line directionLine = new Line(InitialDirection, BasePoint).Shift(passedShift);
+            Line directionLine = new Line(CenterPoint, NormalDirection).Shift(passedShift);
 
-            return new Arc(newBasePoint, newEndPoint, directionLine.Direction);
+            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
         }
 
         /// <summary>
@@ -318,9 +316,9 @@ namespace GeometryClassLibrary
             Point newEndPoint = EndPoint.Rotate3D(passedRotation);
 
             //cheat a bit and make the direction into a line and then shift it
-            Line directionLine = new Line(InitialDirection).Rotate(passedRotation);
+            Line directionLine = new Line(CenterPoint,NormalDirection).Rotate(passedRotation);
 
-            return new Arc(newBasePoint, newEndPoint, directionLine.Direction);
+            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
         }
 
         /// <summary>

@@ -21,8 +21,6 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void NonPolygon_Circle()
         {
-            Circle c1 = new Circle();
-
             Point center = Point.Origin;
             Distance radius = Distance.Inch * 3;
             Circle c2 = new Circle(center, radius);
