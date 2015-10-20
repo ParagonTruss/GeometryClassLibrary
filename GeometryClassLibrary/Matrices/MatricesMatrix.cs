@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GeometryClassLibrary
 {
@@ -8,6 +9,24 @@ namespace GeometryClassLibrary
 
         // declares a two Distanceal array named Matrices but does not initialize it yet.  The "," denotes that it is 2d
         Matrix[,] _matrices;
+
+        public List<Matrix> Matrices
+        {
+            get
+            {
+                List<Matrix> returnMatrices = new List<Matrix>();
+
+                for (int i = 0; i < _matrices.GetLength(0); i++)
+                {
+                    for (int j = 0; j < _matrices.GetLength(1); j++)
+                    {
+                        returnMatrices.Add(_matrices[i,j]);
+                    }
+                }
+
+                return returnMatrices;
+            }
+        }
 
         /// <summary>
         /// Returns the element at row "rowIndex" and column "columnIndex"
