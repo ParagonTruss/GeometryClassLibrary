@@ -330,9 +330,9 @@ namespace GeometryClassLibrary
         {
             Vector hypotenuse = new Vector(projectOnto.BasePoint, this);
             Direction lineDirection = projectOnto.Direction;
-            Vector unitVectorAlongLine = new Vector(projectOnto.BasePoint, lineDirection, Distance.Inch);
-            double dotProduct = hypotenuse.DotProduct(unitVectorAlongLine).InchesSquared;
-            return (unitVectorAlongLine * dotProduct).EndPoint;
+           // Vector unitVectorAlongLine = new Vector(projectOnto.BasePoint, lineDirection, Distance.Inch);
+            double dotProduct = hypotenuse.Direction.DotProduct(projectOnto.Direction);
+            return projectOnto.GetPointAlongLine(dotProduct * hypotenuse.Magnitude);
         }
 
         /// <summary>
