@@ -67,10 +67,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// finds the average of the vertices.
-        ///Not the same as centroid, but close enough for smallish convex polygons
-        ///is the same for every triangle
-        ///faster algorithm running time than centroid
+        /// The average of the vertices.
+        /// Not the same as centroid, but close enough for relatively small convex polygons.
         /// </summary>
         public Point CenterPoint
         {
@@ -86,8 +84,7 @@ namespace GeometryClassLibrary
         private Point _centerPoint;
 
         /// <summary>
-        /// _findArea returns a possibly negative area to make the centroid formula work right
-        /// the Area property takes absolute value before returning
+        /// The area of the polygon.
         /// </summary>
         public virtual Area Area
         {
@@ -103,11 +100,8 @@ namespace GeometryClassLibrary
         private Area _area;
 
         /// <summary>
-        /// Returns the centroid (geometric center point) of the Polygon
-        /// i.e. the center of mass for a plate of uniform density
-        /// slower than CenterPoint algorithm
+        /// The centroid represents the balancing point, if the polygon were a sheet of paper.
         /// </summary>
-        /// <returns>the region's center as a point</returns>
         public virtual Point Centroid
         {
             get
@@ -1742,6 +1736,16 @@ namespace GeometryClassLibrary
                 #endregion  
             }
             return results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
+        }
+
+        public List<Polygon> RemoveRegions(List<Polygon> toRemove)
+        {
+            IEnumerable<Polygon> results = new List<Polygon>() { this };
+            foreach (var polygon in toRemove)
+            {
+                results = results.SelectMany(p => p.RemoveRegion(polygon));
+            }
+            return results.ToList();
         }
 
         public List<Polygon> OverlappingPolygons(Polygon otherPolygon)

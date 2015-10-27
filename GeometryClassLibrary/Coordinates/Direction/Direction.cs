@@ -445,6 +445,17 @@ namespace GeometryClassLibrary
 
         }
 
+        public bool IsPerpendicularTo(Direction d)
+        {
+            return AngleBetween(d) == 90 * Angle.Degree;
+        }
+
+        public bool IsParallelTo(Direction d)
+        {
+            var angle = AngleBetween(d);
+            return angle == Angle.Zero ||
+                angle == 180 * Angle.Degree;
+        }
         #endregion
     }
 }
