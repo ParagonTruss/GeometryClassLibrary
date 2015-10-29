@@ -588,14 +588,14 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
-        /// Note: if you want a generic unitvector, you must call each of the components individually and keep track of them
-        /// Note: if it is a zero vector and you call the unitVector it will return a zero vector
+        /// Note: if it is a zero vector and you call the unitVector it will throw an exception.
         /// </summary>
         public new Vector UnitVector(DistanceType passedType)
         {
             if (Magnitude == Distance.Zero)
             {
-                return new Vector(Point.Origin);
+                // return new Vector(Point.Origin);
+                throw new Exception();
             }
             else return Direction.UnitVector(passedType);
         }

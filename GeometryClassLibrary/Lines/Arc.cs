@@ -140,32 +140,19 @@ namespace GeometryClassLibrary
 
         public Arc(Point basePoint, Point endPoint, Line normalLine)
         {
+            if (basePoint != endPoint && !new Direction(basePoint, endPoint).IsPerpendicularTo(normalLine.Direction))
+            {
+                throw new Exception();
+            }
+            var projected = basePoint.ProjectOntoLine(normalLine);
+            if (projected == basePoint)
+            {
+                throw new Exception();
+            }
             this._basePoint = basePoint;
             this._endPoint = endPoint;
-            if (this.IsClosed)
-            {
-                var projected = basePoint.ProjectOntoLine(normalLine);
-                if (projected == basePoint)
-                {
-                    throw new Exception();
-                }
-                this._normalDirection = normalLine.Direction;
-                this._centerPoint = basePoint;
-            }
-            else
-            {
-                if (!new Direction(basePoint,endPoint).IsPerpendicularTo(normalLine.Direction))
-                {
-                    throw new Exception();
-                }
-                var projected = basePoint.ProjectOntoLine(normalLine);
-                if (projected == basePoint)
-                {
-                    throw new Exception();
-                }
-                this._normalDirection = normalLine.Direction;
-                this._centerPoint = basePoint;
-            }
+            this._centerPoint = projected;
+            this._normalDirection = normalLine.Direction;            
         }
 
         private Arc(Point basePoint, Point endPoint, Point centerPoint, Direction normalDirection)

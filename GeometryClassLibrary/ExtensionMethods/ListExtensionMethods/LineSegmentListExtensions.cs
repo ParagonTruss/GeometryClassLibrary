@@ -15,15 +15,15 @@ namespace GeometryClassLibrary
             {
                 foreach (var segment2 in passedLineSegments)
                 {
-                    if (segment1 != segment2 && segment1.IsCoplanarWith(segment2))
+                    if ((segment1.BasePoint == segment2.BasePoint && segment1.EndPoint != segment2.EndPoint) ||
+                        (segment1.BasePoint != segment2.BasePoint && segment1.EndPoint == segment2.EndPoint))     
                     {
                         Plane possiblePlane = new Plane(segment1, segment2);
-                        if (segment1.SharesABaseOrEndPointWith(segment2) && !planesList.Contains(possiblePlane))
+                        if (!planesList.Contains(possiblePlane))
                         {
                             planesList.Add(possiblePlane);
                         }
                     }
-
                 }
             }
 
@@ -89,7 +89,12 @@ namespace GeometryClassLibrary
             {
                 for (int j = i + 1; j < listOfSegments.Count; j++)
                 {
-                    if (listOfSegments[i].DoesIntersectNotTouching(listOfSegments[j]))
+                    var segment1 = listOfSegments[i];
+                    var segment2 = listOfSegments[j];
+                    var intersection = segment1.Intersection(segment2);
+                    if (intersection != null &&
+                        (!intersection.IsBaseOrEndPointOf(segment1) ||
+                        !intersection.IsBaseOrEndPointOf(segment2)))
                     {
                         return true;
                     }
