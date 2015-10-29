@@ -53,11 +53,18 @@ namespace GeometryClassLibrary
         ///  It is also known as the arc segment's angular distance.
         /// http://en.wikipedia.org/wiki/Central_angle
         /// </summary>
-        public Angle CentralAngle
+        public AngularDistance CentralAngle
         {
             get
             {
-                return new Angle(new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection));
+                if (this.IsClosed)
+                {
+                    return 2 * Math.PI * AngularDistance.Radian;
+                }
+                else
+                {
+                    return new Angle(new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection));
+                }
             }
         }
 

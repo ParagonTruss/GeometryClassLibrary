@@ -68,7 +68,7 @@ namespace GeometryClassLibraryTest
             (arcSegmentArea == expectedSegmentLength).Should().BeTrue();
 
             //test the central angle
-            Angle centralAngle = quarterArc.CentralAngle;
+            AngularDistance centralAngle = quarterArc.CentralAngle;
             (centralAngle == new Angle(AngleType.Degree, 90)).Should().BeTrue();
 
             //test the center point
@@ -113,7 +113,7 @@ namespace GeometryClassLibraryTest
             (arcSegmentArea == expectedSegmentArea).Should().BeTrue();
 
             //test the central angle
-            Angle centralAngle = halfArc.CentralAngle;
+            AngularDistance centralAngle = halfArc.CentralAngle;
             (centralAngle == new Angle(AngleType.Degree, 180)).Should().BeTrue();
 
             //test the center point
@@ -158,7 +158,7 @@ namespace GeometryClassLibraryTest
             (arcSegmentArea == expectedSegmentArea).Should().BeTrue();
 
             //test the central angle
-            Angle centralAngle = threeQuartersArc.CentralAngle;
+            AngularDistance centralAngle = threeQuartersArc.CentralAngle;
             (centralAngle == new Angle(AngleType.Degree, 270)).Should().BeTrue();
 
             //test the center point
