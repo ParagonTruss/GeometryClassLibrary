@@ -1624,8 +1624,6 @@ namespace GeometryClassLibrary
                             segments2.RemoveAt(j);
                             segments1.AddRange(segments[0]);
                             segments2.AddRange(segments[1]);
-                            i += segments[0].Count - 1;
-                            j += segments[1].Count - 1;
                         }
                     }
                 }
