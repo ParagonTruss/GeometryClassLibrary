@@ -1811,7 +1811,7 @@ namespace GeometryClassLibrary
                     var intersection = segment1.Intersection(segment2);
                     if (intersection != null)
                     {
-                        if (!intersection.IsBaseOrEndPointOf(segment1))
+                        if (intersection == segment2.EndPoint && !intersection.IsBaseOrEndPointOf(segment1))
                         {
                             var s1 = new LineSegment(intersection, segment1.EndPoint);
                             var s2 = new LineSegment(segment1.BasePoint, intersection);
@@ -1830,7 +1830,7 @@ namespace GeometryClassLibrary
                             polygonUnderConstruction.Add(s2);
                             j = i + 1;
                         }
-                        else if (!intersection.IsBaseOrEndPointOf(segment2))
+                        else if (intersection == segment1.BasePoint && !intersection.IsBaseOrEndPointOf(segment2))
                         {
                             var s1 = new LineSegment(segment2.BasePoint, intersection);
                             var s2 = new LineSegment(intersection, segment2.EndPoint);
@@ -1852,30 +1852,47 @@ namespace GeometryClassLibrary
                     }
                 }
             }
-            results.Add(new Polygon(polygonUnderConstruction));
+            var leftoverPolygon = polygonUnderConstruction.CreatePolygonIfValid();
+            if (leftoverPolygon != null)
+            {
+                results.Add(leftoverPolygon);
+            }
             return results;
         }
 
         private static List<List<LineSegment>> _subtract(LineSegment segment, LineSegment toSubtract)
         {
-            var results = new List<LineSegment>();
-            if (segment.ContainsOnInside(toSubtract.EndPoint))
+            var results = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
+            if (segment.EndPoint == toSubtract.BasePoint && segment.BasePoint == toSubtract.EndPoint)
             {
-                results.Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+                // return nothing;
             }
-            if (segment.ContainsOnInside(toSubtract.BasePoint))
+            else if (new Vector(segment.BasePoint, toSubtract.BasePoint).HasSameDirectionAs(new Vector(segment.EndPoint, toSubtract.EndPoint)))
             {
-                results.Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+                results[0].Add(segment);
+                results[1].Add(toSubtract);
             }
-            if (results.Count == 0)
+            else if (segment.ContainsOnInside(toSubtract))
             {
-                if (toSubtract != segment && !toSubtract.ContainsOnInside(segment.BasePoint))
-                {
-                    results.Add(segment);
-                }
+                results[0].Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+                results[0].Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
             }
-            //return results;
-            throw new NotImplementedException();
+            else if (toSubtract.ContainsOnInside(segment))
+            {
+                results[1].Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+                results[1].Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+            }
+            else if (segment.ContainsOnInside(toSubtract.BasePoint) && toSubtract.ContainsOnInside(segment.BasePoint))
+            {
+                results[0].Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+                results[1].Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+            }
+            else if (segment.ContainsOnInside(toSubtract.EndPoint) && toSubtract.ContainsOnInside(segment.EndPoint))
+            {
+                results[1].Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
+                results[0].Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+            }
+            return results;
         }
     
         private static void _addNewSegmentIfPossible(List<LineSegment> list, Point basePoint, Point endPoint)

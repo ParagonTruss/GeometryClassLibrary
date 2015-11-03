@@ -454,7 +454,12 @@ namespace GeometryClassLibrary
             return false;
         }
 
-       
+        public bool ContainsOnInside(LineSegment other)
+        {
+            return this.ContainsOnInside(other.BasePoint) &&
+                   this.ContainsOnInside(other.EndPoint);
+        }
+
 
         #endregion
     }
