@@ -1556,7 +1556,8 @@ namespace GeometryClassLibrary
         {
             var polygon1 = this;
             var polygon2 = otherPolygon;
-
+            var breakPoint = polygon1.Area == new Area(AreaType.InchesSquared, 45) &&
+                             polygon2.Area == new Area(AreaType.InchesSquared, 12.25);
             if (!polygon1.IsCoplanarTo(polygon2))
             {
                 return new List<Polygon>();
@@ -1611,9 +1612,9 @@ namespace GeometryClassLibrary
             #region Remove Overlapping Opposite segments
             for (int i = 0; i < segments1.Count; i++)
             {
+                var segment1 = segments1[i];
                 for (int j = 0; j < segments2.Count; j++)
-                {
-                    var segment1 = segments1[i];
+                {           
                     var segment2 = segments2[j];
                     if (segment1.Overlaps(segment2))
                     {
@@ -1624,6 +1625,8 @@ namespace GeometryClassLibrary
                             segments2.RemoveAt(j);
                             segments1.AddRange(segments[0]);
                             segments2.AddRange(segments[1]);
+                            i -= 1;
+                            break;
                         }
                     }
                 }
