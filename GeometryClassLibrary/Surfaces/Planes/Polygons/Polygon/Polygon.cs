@@ -1597,7 +1597,8 @@ namespace GeometryClassLibrary
                     polygonUnderConstruction.First().BasePoint ==
                     polygonUnderConstruction.Last().EndPoint)
                 {
-                    results.Add(new Polygon(polygonUnderConstruction));
+                    var newPolygons = _splitPolygon(polygonUnderConstruction);
+                    results.AddRange(newPolygons);
                     polygonUnderConstruction = new List<LineSegment>();
                 }
 
@@ -1736,6 +1737,63 @@ namespace GeometryClassLibrary
                 #endregion  
             }
             return results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
+        }
+
+        private static List<Polygon> _splitPolygon(List<LineSegment> polygonUnderConstruction)
+        {
+            var results = new List<Polygon>();
+            for (int i = 0; i < polygonUnderConstruction.Count; i++)
+            {
+                for (int j = i+2; j+1 < polygonUnderConstruction.Count; j++)
+                {
+                    var segment1 = polygonUnderConstruction[i];
+                    var segment2 = polygonUnderConstruction[j];
+                    var intersection = segment1.Intersection(segment2);
+                    if (intersection != null)
+                    {
+                        if (!intersection.IsBaseOrEndPointOf(segment1))
+                        {
+                            var s1 = new LineSegment(intersection, segment1.EndPoint);
+                            var s2 = new LineSegment(segment1.BasePoint, intersection);
+
+                            var newTempPolygon = new List<LineSegment>() { s1 };
+                            for (int k = i+1; k < j+1; k++)
+                            {
+                                newTempPolygon.Add(polygonUnderConstruction[k]);
+                            }
+                            results.Add(new Polygon(newTempPolygon));
+                            polygonUnderConstruction.RemoveAt(i);
+                            foreach(var segment in newTempPolygon)
+                            {
+                                polygonUnderConstruction.Remove(segment);
+                            }
+                            polygonUnderConstruction.Add(s2);
+                            j = i + 1;
+                        }
+                        else if (!intersection.IsBaseOrEndPointOf(segment2))
+                        {
+                            var s1 = new LineSegment(segment2.BasePoint, intersection);
+                            var s2 = new LineSegment(intersection, segment2.EndPoint);
+
+                            var newTempPolygon = new List<LineSegment>() { s1 };
+                            for (int k = i; k < j; k++)
+                            {
+                                newTempPolygon.Add(polygonUnderConstruction[k]);
+                            }
+                            results.Add(new Polygon(newTempPolygon));
+                            polygonUnderConstruction.RemoveAt(j);
+                            foreach (var segment in newTempPolygon)
+                            {
+                                polygonUnderConstruction.Remove(segment);
+                            }
+                            polygonUnderConstruction.Add(s2);
+                            j = i + 1;
+                        }
+                    }
+                }
+            }
+            results.Add(new Polygon(polygonUnderConstruction));
+            return results;
         }
 
         public List<Polygon> RemoveRegions(List<Polygon> toRemove)
