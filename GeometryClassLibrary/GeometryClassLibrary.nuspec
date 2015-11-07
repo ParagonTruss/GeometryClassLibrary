@@ -2,20 +2,19 @@
 <package >
   <metadata>
     <id>GeometryClassLibrary</id>
-    <version>$version$</version>
+    <version>1.5</version>
     <title>Geometry Class Library</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <authors>Clearspan Components Inc</authors>
+    <owners>Clearspan Components Inc</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>A Library for intelligent Geometry</description>
+    <projectUrl>https://github.com/ParagonTruss/GeometryClassLibrary</projectUrl>
 	<iconUrl>http://chattanooga.clearspaninc.com/images/geometry-class-library.png</iconUrl>
     <releaseNotes>Automatically updated</releaseNotes>
-    <copyright>Copyright Clearspan Components Inc 2014</copyright>
+    <copyright>Copyright Clearspan Components Inc 2015</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
-    <dependency id="UnitClassLibrary" version="1.2.5598.23349" />
-    <dependency id="StyleCopSettings" version="1.0.2" />
-    <dependency id="StyleCop.MSBuild" version="4.7.49.1" />
-  </dependencies>
+    	<dependency id="UnitClassLibrary"/>
+  	</dependencies>
   </metadata>
 </package>
