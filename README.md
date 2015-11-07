@@ -1,5 +1,7 @@
 # Welcome
 
+[![Build Status](https://travis-ci.org/ParagonTruss/GeometryClassLibrary.svg?branch=master)](https://travis-ci.org/ParagonTruss/GeometryClassLibrary)
+
 ## Overview
 
 Welcome to the Geometry Class Library. Built on the foundation of the [Unit Class Library](https://bitbucket.org/Clearspan/unit-class-library), the Geometry Class Library uses Distances to define geometric shapes.
