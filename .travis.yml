@@ -1,0 +1,6 @@
+language: csharp
+solution: GeometryClassLibrary.sln
+install:
+  - nuget restore GeometryClassLibrary.sln
+script:
+  - xbuild GeometryClassLibrary.sln
