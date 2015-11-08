@@ -59,7 +59,6 @@ namespace GeometryClassLibraryTest
 
             Polygon polygon = new Polygon(new List<LineSegment> { left, top, bottom, right });
             var json = JsonConvert.SerializeObject(polygon, Formatting.Indented);
-            Console.WriteLine(json);
             Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
 
             bool areEqual = (polygon == deserializedPolygon);
