@@ -14,7 +14,7 @@
     <copyright>Copyright Clearspan Components Inc 2015</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
-    	<dependency id="UnitClassLibrary"/>
+    	<dependency id="UnitClassLibrary"  version="1.3.0" />
   	</dependencies>
   </metadata>
 </package>
