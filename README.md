@@ -1,6 +1,10 @@
 # Welcome
 
+Travis CI Status:
 [![Build Status](https://travis-ci.org/ParagonTruss/GeometryClassLibrary.svg?branch=master)](https://travis-ci.org/ParagonTruss/GeometryClassLibrary)
+
+MyGet Package Build Status:
+[![geometryclasslibrary MyGet Build Status](https://www.myget.org/BuildSource/Badge/geometryclasslibrary?identifier=97400b6b-e5a6-4335-977a-5e543c866040)](https://www.myget.org/)
 
 ## Overview
 
