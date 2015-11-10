@@ -380,7 +380,7 @@ namespace GeometryClassLibrary
                 return false;
             }
             //We need this check before we check directions, because there is no direction if the point is the vector's basepoint
-            if (point.IsBaseOrEndPointOf(this))
+            if (point == this.BasePoint || point == this.EndPoint)
             {
                 return true;
             }
@@ -390,7 +390,7 @@ namespace GeometryClassLibrary
 
             return sameDirection && greaterMagnitude;
         }
-
+        // Do we need this method?
         /// <summary>
         /// Determines whether or not the two Vectors in the same direction overlap at all partially or completely 
         /// </summary>

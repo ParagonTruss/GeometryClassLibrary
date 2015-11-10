@@ -518,45 +518,28 @@ namespace GeometryClassLibrary
         /// <returns>Returns a list of Polyhedrons that were created by the slice, with the largest first</returns>
         public List<Polyhedron> Slice(List<Plane> slicingPlanes)
         {
-            //This list will be modified every time a slice happens. 
-            List<Polyhedron> toSlicePolyhedrons = new List<Polyhedron> { this };
-            List<Polyhedron> returnPolyhedrons = new List<Polyhedron>();
-
-            //Do this for every passed slice
-            foreach (Plane slicingPlane in slicingPlanes)
+            var results = new List<Polyhedron>() { this };
+            while (slicingPlanes.Count != 0)
             {
-                //reset our return list
-                returnPolyhedrons = new List<Polyhedron>();
-
-                foreach (Polyhedron polyhedron in toSlicePolyhedrons)
-                {
-                    List<Polyhedron> slicedPolyhedrons = polyhedron.Slice(slicingPlane);
-
-                    returnPolyhedrons.AddRange(slicedPolyhedrons);
-                }
-
-                //make our to slice list the smae as the return in case we still need to cut over them
-                toSlicePolyhedrons = returnPolyhedrons;
+                results = results.SelectMany(solid => solid.Slice(slicingPlanes[0])).ToList();
+                slicingPlanes.RemoveAt(0);
             }
-
-            return returnPolyhedrons;
+            return results;
         }
 
-        //Do not rename this to be an overload of slice!
-        //Right now some places we slice but pass a polygon.
-        //We do not want to change their functionality.
-        public List<Polyhedron> SliceAlongPolygon(Polygon polygon)
-        {
-            throw new NotImplementedException();
-        }
+        ////Do not rename this to be an overload of slice!
+        ////Right now some places we slice but pass a polygon.
+        ////We do not want to change their functionality.
+        //public List<Polyhedron> SliceAlongPolygon(Polygon polygon)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         
 
         /// <summary>
         /// Shifts the Polyhedron to another location and orientation
         /// </summary>
-        /// <param name="passedShift">The shift to preform on the Polyhedron</param>
-        /// <returns>A new Polyhedron that has been shifted</returns>
         public Polyhedron Shift(Shift passedShift)
         {
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
@@ -583,55 +566,31 @@ namespace GeometryClassLibrary
             throw new NotImplementedException();
         }
 
+        // Do we need this?
         /// <summary>
-        /// Returns whether or not the polygan has a common side that is exactly the same as that of the polyhedron / any of the polyhedrons sides
+        /// Determines if the polygon has any common edges to this polyhedron
         /// </summary>
-        /// <param name="polygon">The polygon to see if any of the the Polyhedrons side share a side with</param>
-        /// <returns>Returns a bool of whether or not the Polyhedron has a common side that is exactly the same as one of the polygons</returns>
         public bool DoesShareExactSide(Polygon polygon)
         {
-            foreach (Polygon polygonReference in this.Polygons)
-            {
-                if (polygon.DoesShareExactSide(polygonReference))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.Polygons.Any(p => p.DoesShareExactSide(polygon));
         }
-
+        
+        // Do we need this? 
         /// <summary>
-        /// Returns whether or not the Polyhedron shares or contains a common side with the passed Polygon
+        /// Determines if this polyhedron has any edges that contain edges of this polygon.
         /// </summary>
-        /// <param name="polygon">The Polygon to see if there are any shared or contained side in</param>
-        /// <returns>Returns true if the Polyhedron has a common shared or contained side of the Polygon</returns>
         public bool DoesShareOrContainSide(Polygon polygon)
         {
-            foreach (Polygon polygonReference in this.Polygons)
-            {
-                if (polygon.DoesShareOrContainSide(polygonReference))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.Polygons.Any(p => p.DoesShareOrContainSide(polygon));
         }
 
+        // Do we need this?
         /// <summary>
-        /// Determines whether or not the point is on the sides of this Polyhedron
+        /// Determines whether or not the point is on an edge of this Polyhedron.
         /// </summary>
-        /// <param name="pointToCheckIfItContains">The point to see if it is on the sides of this Polyhedron</param>
-        /// <returns>Returns a bool of whether or not the point is on a side of this Polyhedron</returns>
         public bool DoesContainPointAlongSides(Point pointToCheckIfItContains)
         {
-            foreach (var segment in LineSegments)
-            {
-                if (segment.Contains(pointToCheckIfItContains))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.LineSegments.Any(s => s.Contains(pointToCheckIfItContains));
         }
 
         /// <summary>

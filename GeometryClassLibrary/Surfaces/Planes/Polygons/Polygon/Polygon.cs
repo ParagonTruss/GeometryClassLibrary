@@ -1556,8 +1556,6 @@ namespace GeometryClassLibrary
         {
             var polygon1 = this;
             var polygon2 = otherPolygon;
-            var breakPoint = polygon1.Area == new Area(AreaType.InchesSquared, 45) &&
-                             polygon2.Area == new Area(AreaType.InchesSquared, 12.25);
             if (!polygon1.IsCoplanarTo(polygon2))
             {
                 return new List<Polygon>();

@@ -372,7 +372,7 @@ namespace GeometryClassLibrary
             return lineSegment.Contains(this);
         }
 
-        public bool IsBaseOrEndPointOf(Vector vector)
+        public bool IsBaseOrEndPointOf(LineSegment vector)
         {
             return this == vector.BasePoint ||
                    this == vector.EndPoint;

@@ -425,6 +425,34 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Polygon_OverlappingPolygon_ErrorCase1()
+        {
+            var vertices1 = new List<Point>() {
+                Point.MakePointWithInches(30,1.5),
+                Point.MakePointWithInches(0,1.5),
+                Point.MakePointWithInches(0,0),
+                Point.MakePointWithInches(30,0) };
+            var vertices2 = new List<Point>() {
+                Point.MakePointWithInches(3.5,0),
+                Point.MakePointWithInches(7,0),
+                Point.MakePointWithInches(7,3.5),
+                Point.MakePointWithInches(3.5,3.5) };
+            var polygon1 = new Polygon(vertices1);
+            var polygon2 = new Polygon(vertices2);
+
+            var result = polygon1.OverlappingPolygon(polygon2);
+            
+            var expectedVertices = new List<Point>() {
+                Point.MakePointWithInches(3.5,0),
+                Point.MakePointWithInches(7,0),
+                Point.MakePointWithInches(7,1.5),
+                Point.MakePointWithInches(3.5,1.5) };
+            var expected = new Polygon(expectedVertices);
+
+            (result == expected).Should().BeTrue();
+        }
+
+        [Test()]
         public void Polygon_NormalLine()
         {
             Point point1 = Point.MakePointWithInches(0, 1, 0);
