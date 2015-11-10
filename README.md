@@ -8,7 +8,7 @@ MyGet Package Build Status:
 
 ## Overview
 
-Welcome to the Geometry Class Library. Built on the foundation of the [Unit Class Library](https://bitbucket.org/Clearspan/unit-class-library), the Geometry Class Library uses Distances to define geometric shapes.
+Welcome to the Geometry Class Library. Built on the foundation of the [Unit Class Library](https://github.com/ParagonTruss/UnitClassLibrary), the Geometry Class Library uses Distances to define geometric shapes.
 
 Currently, the Geometry Class Library only supports shapes that have edges that intersect; circles and spheres and the like are not yet implemented.
 
