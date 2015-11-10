@@ -32,7 +32,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
         [JsonProperty]
         private Matrix _matrix = Matrix.IdentityMatrix(4);
-        internal Matrix Matrix { get { return _matrix; } }
+        public Matrix Matrix { get { return _matrix; } }
 
         public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         

@@ -247,7 +247,10 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-
+        public double[] As1DArray()
+        {
+            return this._matrix.Enumerate().ToArray();
+        }
         public static Matrix ProjectiveMatrixToRotationMatrix(Matrix matrix)
         {
             var newMatrix = new Matrix(3, 3);
