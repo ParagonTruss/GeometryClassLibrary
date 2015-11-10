@@ -5,10 +5,10 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    public class EllipticArc : IEdge
+    public class EllipticArc : Arc, IEdge
     {
-       public Point Focus1 { get { return _focus1; } }
-       public Point Focus2 { get { return _focus2; } }
+        public Point Focus1 { get { return _focus1; } }
+        public Point Focus2 { get { return _focus2; } }
         private Point _focus1;
         private Point _focus2;
 
@@ -27,7 +27,7 @@ namespace GeometryClassLibrary
                 throw new NotImplementedException();
             }
         }
-        P public IEdge Copy()
+        public IEdge Copy()
         {
             throw new NotImplementedException();
         }
