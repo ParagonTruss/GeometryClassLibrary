@@ -8,7 +8,7 @@ using static GeometryClassLibrary.Point;
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// Represents an infinite Line
+    /// A line in 3d space.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public partial class Line : IComparable<Line>
@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
         public readonly static Line ZAxis = new Line(MakePointWithInches(0, 0, 1));
 
         /// <summary>
-        /// A point on the line to use as a reference point
+        /// A point on the line to use as a reference.
         /// </summary>
         [JsonProperty]
         public virtual Point BasePoint
@@ -32,8 +32,8 @@ namespace GeometryClassLibrary
         private Point _basePoint; //this is any point that is on the line
 
         /// <summary>
-        /// The direction the line is going out of the base point in one direction
-        /// Note: it also extends out in the direction opposite of this one
+        /// The direction the line is extends from the base point in one direction
+        /// Note: it also extends in the direction opposite
         /// </summary>
         [JsonProperty]
         public virtual Direction Direction
@@ -305,7 +305,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the smaller of the two angles fromed where the two lines itnersect
+        /// Returns the smaller of the two angles fromed where the two lines intersect
         /// </summary>
         public Angle SmallestAngleBetween(Line passedIntersectingLine)
         {
@@ -340,7 +340,7 @@ namespace GeometryClassLibrary
 	    }
 
         /// <summary>
-        /// returns the point a given distance along the line.
+        /// Returns the point a given distance along the line.
         /// </summary>
         public Point GetPointAlongLine(Distance distance)
         {
@@ -351,7 +351,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns true if the passed line is parallel to (same direction as) this line
+        /// Determines if this line and the passed line are parallel.
         /// </summary>
         public virtual bool IsParallelTo(Line passedLine)
         {
@@ -365,10 +365,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool IsPerpendicularTo(Line passedLine)
         {
-            //if they are perpendicular then the dot product should be 0
-            //Distance dotted = passedLine.Direction.UnitVector(DistanceType.Inch) * this.Direction.UnitVector(DistanceType.Inch);
-            //return (dotted == Distance.Zero);
-            return passedLine.UnitVector(DistanceType.Inch).IsPerpendicularTo(this.UnitVector(DistanceType.Inch));
+            return this.SmallestAngleBetween(passedLine) == 90 * Angle.Degree;
         }
 
         /// <summary>
