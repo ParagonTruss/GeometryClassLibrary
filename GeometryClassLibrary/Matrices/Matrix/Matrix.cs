@@ -249,7 +249,16 @@ namespace GeometryClassLibrary
         #region Methods
         public double[] As1DArray()
         {
-            return this._matrix.Enumerate().ToArray();
+            var N = this.NumberOfColumns * this.NumberOfRows;
+            var result = new List<double>();
+            for (int i = 0; i < NumberOfRows; i++)
+            {
+                for (int j = 0; j < NumberOfColumns; j++)
+                {
+                    result.Add(this.GetElement(i, j));
+                }
+            }
+            return result.ToArray();
         }
         public static Matrix ProjectiveMatrixToRotationMatrix(Matrix matrix)
         {
