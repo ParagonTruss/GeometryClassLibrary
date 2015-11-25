@@ -83,6 +83,7 @@
     <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
+    <Compile Include="Lines\EllipticArc.cs" />
     <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
     <Compile Include="Lines\Line\LineEntityFramework.cs" />
     <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
