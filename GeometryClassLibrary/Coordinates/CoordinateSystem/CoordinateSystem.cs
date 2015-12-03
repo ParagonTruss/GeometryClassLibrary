@@ -364,9 +364,9 @@ namespace GeometryClassLibrary
         /// Note: Only works if this CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
         /// perform this rotation it will cause incorrect results!
         /// </summary>
-        public Rotation RotateFromThisTo(CoordinateSystem systemToRotateTo = null)
+        public Rotation RotationFromThisTo(CoordinateSystem systemToRotateTo = null)
         {
-            return RotateToThisFrom(systemToRotateTo).Inverse();
+            return RotationToThisFrom(systemToRotateTo).Inverse();
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace GeometryClassLibrary
         /// Note: Only works if the passed CoordinateSystem is the current shift on the object! if it is in another CoordinateSystem and you 
         /// perform this rotation it will casue incorrect results!
         /// </summary>
-        public Rotation RotateToThisFrom(CoordinateSystem systemToRotateFrom = null)
+        public Rotation RotationToThisFrom(CoordinateSystem systemToRotateFrom = null)
         {
             //find the whole shift but then make a new one with only the rotations
             Shift shiftFrom = ShiftToThisFrom(systemToRotateFrom);
@@ -392,12 +392,11 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Shift to apply to Objects in order to shift them from this CoordinateSystem to the passed CoordinateSystem</returns>
         public Shift ShiftFromThisTo(CoordinateSystem systemToShiftTo = null)
         {
-            //if its the world coordinates then just make the shift directly from the coordinate system since it is stored in terms of the world coordinates
             if (systemToShiftTo == null)
             {
                 return this.ShiftFromThisToWorld;
             }
-            //If not then we need to figure out how to shift between the two coordinates
+            //If not then we need to figure out how to shift between the two coordinate systems
             else
             {
                 return this.ShiftFromThisToWorld * systemToShiftTo.ShiftFromThisToWorld.Inverse();
@@ -414,9 +413,16 @@ namespace GeometryClassLibrary
         /// <returns>Returns a Shft to be applied to an object to shift them from the passsed CoordinateSystem to this CoordinateSystem</returns>
         public Shift ShiftToThisFrom(CoordinateSystem systemToShiftFrom = null)
         {
-            //the simple way is just to create a shift with this coordinate system and then negate it
-            Shift shift = ShiftFromThisTo(systemToShiftFrom).Inverse();
-            return shift;
+
+            if (systemToShiftFrom == null)
+            {
+                return this.ShiftFromThisToWorld.Inverse();
+            }
+            //If not then we need to figure out how to shift between the two coordinate systems
+            else
+            {
+                return systemToShiftFrom.ShiftFromThisToWorld * this.ShiftFromThisToWorld.Inverse();
+            }
         }
 
         /// <summary>

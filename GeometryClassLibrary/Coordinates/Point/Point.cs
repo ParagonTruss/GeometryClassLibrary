@@ -15,8 +15,8 @@ namespace GeometryClassLibrary
     public partial class Point
     {
         #region Properties and Fields
-
-        public static readonly Point Origin = new Point(0 * Inch, 0 * Inch, 0 * Inch);
+        private static Point _origin = new Point(Distance.Zero,Distance.Zero,Distance.Zero);
+        public static Point Origin { get { return _origin; } }
 
         private Distance _x;
         private Distance _y;

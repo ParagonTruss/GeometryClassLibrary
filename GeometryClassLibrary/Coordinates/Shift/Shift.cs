@@ -30,9 +30,10 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Properties and Fields
+
         [JsonProperty]
-        private Matrix _matrix = Matrix.IdentityMatrix(4);
         public Matrix Matrix { get { return _matrix; } }
+        private Matrix _matrix = Matrix.IdentityMatrix(4);
 
         public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         
@@ -76,8 +77,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                this._matrix = new Translation(displacement).Matrix
-                    * rotation.Matrix;
+                this._matrix = new Translation(displacement).Matrix * rotation.Matrix;
             }
         }
 
