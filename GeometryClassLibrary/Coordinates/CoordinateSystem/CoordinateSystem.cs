@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibrary
 {
@@ -98,27 +99,27 @@ namespace GeometryClassLibrary
             Vector yAxis = new Vector(Point.Origin);
             Vector zAxis = new Vector(Point.Origin);
 
-            //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+            //Vector normalAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(new Inch(), 1));
 
             //Vector otherAxis;
 
             switch (whichAxisPlaneIsPassed)
             {
                 case Enums.AxisPlanes.XYPlane:
-                    zAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    zAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(new Inch(), 1));
                     switch (whichAxisIsPassed)
                     {
                         //if its the x we were given the one we calculate is the y, so we want it 90 degrees (to the left)
                         case Enums.Axis.X:
                             xAxis = axisInPassedPlaneToUseAsBase;
                             yAxis = zAxis.CrossProduct(xAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
                             break;
                         //if its the y we were the the y axis and we need to calculate the x which will be -90 degrees (to the right)
                         case Enums.Axis.Y:
                             yAxis = axisInPassedPlaneToUseAsBase;
                             xAxis = yAxis.CrossProduct(zAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
                             break;
                         //the axis must be in the plane we were passed
                         case Enums.Axis.Z:
@@ -126,14 +127,14 @@ namespace GeometryClassLibrary
                     }
                     break;
                 case Enums.AxisPlanes.XZPlane:
-                    yAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    yAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(new Inch(), 1));
                     switch (whichAxisIsPassed)
                     {
                         //if its the x we were passed then we need to calculate z, which will be -90 degrees (to the right)
                         case Enums.Axis.X:
                             xAxis = axisInPassedPlaneToUseAsBase;
                             zAxis = xAxis.CrossProduct(yAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
                             break;
                         //the axis must be in the plane we were passed
                         case Enums.Axis.Y:
@@ -142,12 +143,12 @@ namespace GeometryClassLibrary
                         case Enums.Axis.Z:
                             zAxis = axisInPassedPlaneToUseAsBase;
                             xAxis = yAxis.CrossProduct(zAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
                             break;
                     }
                     break;
                 case Enums.AxisPlanes.YZPlane:
-                    xAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(DistanceType.Inch, 1));
+                    xAxis = new Vector(axisInPassedPlaneToUseAsBase.BasePoint, planeContainingTwoOfTheAxes.NormalVector.Direction, new Distance(new Inch(), 1));
                     switch (whichAxisIsPassed)
                     {
                         //the axis must be in the plane we were passed
@@ -157,13 +158,13 @@ namespace GeometryClassLibrary
                         case Enums.Axis.Y:
                             yAxis = axisInPassedPlaneToUseAsBase;
                             zAxis = xAxis.CrossProduct(yAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, 90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
                             break;
                         //if it is the Z axis then we need to find the y, which is -90 degrees (to the right)
                         case Enums.Axis.Z:
                             zAxis = axisInPassedPlaneToUseAsBase;
                             yAxis = zAxis.CrossProduct(xAxis);
-                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(AngleType.Degree, -90)));
+                            //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
                             break;
                     }
                     break;
@@ -198,7 +199,7 @@ namespace GeometryClassLibrary
             //http://www.vitutor.com/geometry/distance/line_plane.html
             //we can simplify the equation as this since it is unit vectors
             //sin(angle to plane) = z * planeNormal (which is the x axis by definition)
-            //Distance dotProductOfZAndNormal = zAxis * Line.XAxis.UnitVector(DistanceType.Inch);
+            //Distance dotProductOfZAndNormal = zAxis * Line.XAxis.UnitVector(new Inch());
             //Angle angleBetweenCurrentZAndYZPlane = new Angle(AngleType.Radian, Math.Asin(dotProductOfZAndNormal.Inches));
 
             //now rotate the axis (we only need to do z and x since we are done with y now)
@@ -242,8 +243,8 @@ namespace GeometryClassLibrary
         /// coordinate system</param>
         /// <param name="passedZAxisRotation">The rotation around the world coordinate system's Z axis to rotate around to get to this
         /// coordinate system</param>
-        public CoordinateSystem(Point translationToOrigin, AngularDistance xAxisRotationAngle,
-            AngularDistance yAxisRotationAngle, AngularDistance zAxisRotationAngle)
+        public CoordinateSystem(Point translationToOrigin, Angle xAxisRotationAngle,
+            Angle yAxisRotationAngle, Angle zAxisRotationAngle)
         {
             var rotationX = new Rotation(Line.XAxis, xAxisRotationAngle);
             var rotationY = new Rotation(Line.YAxis, yAxisRotationAngle);

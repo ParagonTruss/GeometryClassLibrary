@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 
 namespace GeometryClassLibrary
 {
@@ -171,11 +174,11 @@ namespace GeometryClassLibrary
             Vector referenceVector;
             if (pointList._xCompIsConstant())
             {
-                referenceVector = Direction.Out.UnitVector(DistanceType.Inch);
+                referenceVector = Direction.Out.UnitVector(new Inch());
             }
             else
             {
-                referenceVector = Direction.Right.UnitVector(DistanceType.Inch);
+                referenceVector = Direction.Right.UnitVector(new Inch());
             }
             var orderedList = pointList.OrderBy(v => referenceVector.AngleBetween(new Vector(initial, v))).ToList();
             return orderedList;

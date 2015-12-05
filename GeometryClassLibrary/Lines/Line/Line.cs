@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
 using static GeometryClassLibrary.Point;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
+using UnitClassLibrary.GenericUnit;
 
 namespace GeometryClassLibrary
 {
@@ -288,15 +294,15 @@ namespace GeometryClassLibrary
             {
                 case Enums.Axis.X:
                     extrusionLine = new Line(this.BasePoint,
-                        this.BasePoint - new Point(Inch, Distance.Zero));
+                        this.BasePoint - Point.MakePointWithInches(1,0));
                     break;
                 case Enums.Axis.Y:
                     extrusionLine = new Line(this.BasePoint,
-                        this.BasePoint - new Point(Distance.Zero, Inch));
+                        this.BasePoint - Point.MakePointWithInches(0, 1));
                     break;
                 case Enums.Axis.Z:
                     extrusionLine = new Line(this.BasePoint,
-                       this.BasePoint - new Point(Distance.Zero, Distance.Zero, Inch));
+                       this.BasePoint - Point.MakePointWithInches(1, 0));
                     break;
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
@@ -313,7 +319,7 @@ namespace GeometryClassLibrary
 
             if (returnAngle.Degrees > 90)
             {
-                return new Angle(AngleType.Degree, 180) - returnAngle;
+                return (Angle)(new Angle(new Degree(), 180) - returnAngle);
             }
             else
             {
@@ -329,7 +335,7 @@ namespace GeometryClassLibrary
             return this.Direction.AngleBetween(otherLine.Direction);
         }        
 	
-        public AngularDistance SignedAngleBetween(Line line, Line referenceNormal = null)
+        public Angle SignedAngleBetween(Line line, Line referenceNormal = null)
         {
             if (referenceNormal == null)
             {
@@ -387,14 +393,14 @@ namespace GeometryClassLibrary
 
             //Following a formula from (http://mathworld.wolfram.com/Line-LineIntersection.html)
 
-            Vector directionVectorA = new Vector(this.BasePoint, this.UnitVector(DistanceType.Inch));
-            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.UnitVector(DistanceType.Inch));
+            Vector directionVectorA = new Vector(this.BasePoint, this.UnitVector(new Inch()));
+            Vector directionVectorB = new Vector(passedLine.BasePoint, passedLine.UnitVector(new Inch()));
             Vector basePointDiffVectorC = new Vector(this.BasePoint, passedLine.BasePoint);
 
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
-            double crossProductABMagnitudeSquared = Math.Pow(crossProductAB.Magnitude.Inches, 2);
+            Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.Inches ^ 2;
             double dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).InchesSquared;
 
             if (crossProductABMagnitudeSquared == 0)
@@ -402,8 +408,8 @@ namespace GeometryClassLibrary
                 //The first if statements should prevent you from ever getting here
                 return null;
             }
-            double solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
-            Distance solutionVariableDistance = new Distance(DistanceType.Inch, solutionVariable);
+            Measurement solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
+            Distance solutionVariableDistance = new Distance(new Inch(), solutionVariable);
 
             Point intersectionPoint = this.GetPointAlongLine(solutionVariableDistance);
 
@@ -499,7 +505,7 @@ namespace GeometryClassLibrary
         public Line Rotate(Rotation rotationToApply)
         {
             Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
-            Vector newDirectionVector = this.UnitVector(DistanceType.Inch).Rotate(rotationToApply);
+            Vector newDirectionVector = this.UnitVector(new Inch()).Rotate(rotationToApply);
             return new Line(newDirectionVector.Direction, newBasePoint);
         }
 
@@ -512,12 +518,12 @@ namespace GeometryClassLibrary
         {
             Line rotated = new Line(this);
 
-            Vector newDirectionVector = this.Direction.UnitVector(DistanceType.Inch);
+            Vector newDirectionVector = this.Direction.UnitVector(new Inch());
 
             foreach (Rotation rotation in rotationsToApply)
             {
                 rotated.BasePoint = this.BasePoint.Rotate3D(rotation);
-                newDirectionVector = newDirectionVector.UnitVector(DistanceType.Inch).Rotate(rotation);
+                newDirectionVector = newDirectionVector.UnitVector(new Inch()).Rotate(rotation);
             }
 
             rotated.Direction = newDirectionVector.Direction;
@@ -532,15 +538,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsCoplanarWith(Line passedLine)
         {
-            double[] point1Line1 = { this.BasePoint.X.Inches, this.BasePoint.Y.Inches, this.BasePoint.Z.Inches };
+            double[] point1Line1 = { this.BasePoint.X.Inches.Value, this.BasePoint.Y.Inches.Value, this.BasePoint.Z.Inches.Value };
 
             Point anotherPointOnLine1 = this.GetPointAlongLine(Distance.Inch);
-            double[] point2Line1 = { anotherPointOnLine1.X.Inches, anotherPointOnLine1.Y.Inches, anotherPointOnLine1.Z.Inches };
+            double[] point2Line1 = { anotherPointOnLine1.X.Inches.Value, anotherPointOnLine1.Y.Inches.Value, anotherPointOnLine1.Z.Inches.Value };
 
-            double[] point1Line2 = { passedLine.BasePoint.X.Inches, passedLine.BasePoint.Y.Inches, passedLine.BasePoint.Z.Inches };
+            double[] point1Line2 = { passedLine.BasePoint.X.Inches.Value, passedLine.BasePoint.Y.Inches.Value, passedLine.BasePoint.Z.Inches.Value };
 
             Point anotherPointOnLine2 = passedLine.GetPointAlongLine(Distance.Inch * 2);
-            double[] point2Line2 = { anotherPointOnLine2.X.Inches, anotherPointOnLine2.Y.Inches, anotherPointOnLine2.Z.Inches };
+            double[] point2Line2 = { anotherPointOnLine2.X.Inches.Value, anotherPointOnLine2.Y.Inches.Value, anotherPointOnLine2.Z.Inches.Value };
 
             Matrix pointsMatrix = new Matrix(4, 4);
 
@@ -554,7 +560,7 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinant = Math.Abs(pointsMatrix.Determinant());
-            Distance determinateDistance = determinant*Inch;
+            Distance determinateDistance = determinant*Distance.Inch;
             return determinateDistance == Distance.Zero;
         }
 
@@ -578,7 +584,7 @@ namespace GeometryClassLibrary
         public Line Shift(Shift passedShift)
         {
             //shift it as a vector since we currently don't shift directions
-            Vector linesVector = this.UnitVector(DistanceType.Inch);
+            Vector linesVector = this.UnitVector(new Inch());
 
             Vector shifted = linesVector.Shift(passedShift);
 
@@ -604,7 +610,7 @@ namespace GeometryClassLibrary
             if (planeToMakePerpendicularLineIn.IsParallelTo(this))
             {
                 //rotate it 90 degrees in the nornal of the plane and it will be perpendicular to the original
-                return this.Rotate(new Rotation(new Vector(this.BasePoint, planeToMakePerpendicularLineIn.NormalVector), new Angle(AngleType.Degree, 90)));
+                return this.Rotate(new Rotation(new Vector(this.BasePoint, planeToMakePerpendicularLineIn.NormalVector), new Angle(new Degree(), 90)));
             }
             else
             {
@@ -621,8 +627,8 @@ namespace GeometryClassLibrary
         {
             //http://www.euclideanspace.com/maths/geometry/elements/plane/lineOnPlane/index.htm
             //When using unit vectors, the project on the plane is simply planeNormal X (lineDirection X planeNormal)
-            Vector aCrossB = this.Direction.UnitVector(DistanceType.Inch).CrossProduct(projectOnto.NormalVector.UnitVector(DistanceType.Inch));
-            Vector projectionVector = projectOnto.NormalVector.UnitVector(DistanceType.Inch).CrossProduct(aCrossB);
+            Vector aCrossB = this.Direction.UnitVector(new Inch()).CrossProduct(projectOnto.NormalVector.UnitVector(new Inch()));
+            Vector projectionVector = projectOnto.NormalVector.UnitVector(new Inch()).CrossProduct(aCrossB);
 
             return new Line(projectionVector.Direction, this.BasePoint);
         }

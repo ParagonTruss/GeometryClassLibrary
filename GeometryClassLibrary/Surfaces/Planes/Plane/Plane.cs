@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using MoreLinq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibrary
 {
@@ -256,7 +260,7 @@ namespace GeometryClassLibrary
             Area referenceDot = new Vector(this.BasePoint, referencePoint).DotProduct(this.NormalVector);
 
             //if they are both either positive or negative than they are both on the same side
-            if ((testDot < new Area() && referenceDot < new Area()) || (testDot > new Area() && referenceDot > new Area()))
+            if ((testDot < Area.Zero && referenceDot < Area.Zero) || (testDot > Area.Zero && referenceDot > Area.Zero))
             {
                 return true;
             }
@@ -268,7 +272,7 @@ namespace GeometryClassLibrary
         public bool PointIsOnNormalSide(Point point)
         {
             var dotProduct = this.NormalVector.DotProduct(new Vector(this.BasePoint, point));
-            return dotProduct != new Area() && dotProduct > new Area();
+            return dotProduct != Area.Zero && dotProduct > Area.Zero;
 
         }
 
@@ -302,9 +306,9 @@ namespace GeometryClassLibrary
 
         public Line GetLineOnThisPlane()
         {
-            Vector vector1 = this.NormalVector.CrossProduct(Line.XAxis.UnitVector(DistanceType.Inch));
-            Vector vector2 = this.NormalVector.CrossProduct(Line.YAxis.UnitVector(DistanceType.Inch));
-            Vector vector3 = this.NormalVector.CrossProduct(Line.ZAxis.UnitVector(DistanceType.Inch));
+            Vector vector1 = this.NormalVector.CrossProduct(Line.XAxis.UnitVector(new Inch()));
+            Vector vector2 = this.NormalVector.CrossProduct(Line.YAxis.UnitVector(new Inch()));
+            Vector vector3 = this.NormalVector.CrossProduct(Line.ZAxis.UnitVector(new Inch()));
             Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
             
             //vectors 1,2,&3 all will be parallel to the plane, but the most precise will be the one with the largest magnitude.
@@ -413,7 +417,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            Vector lineVector = passedLine.Direction.UnitVector(DistanceType.Inch);
+            Vector lineVector = passedLine.Direction.UnitVector(new Inch());
             Vector planeNormal = this.NormalVector;
             return (lineVector.IsPerpendicularTo(planeNormal));
         }
@@ -537,7 +541,7 @@ namespace GeometryClassLibrary
         public Angle SmallestAngleBetween(Line line)
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
-            return new Angle(90 * Angle.Degree - angle);
+            var complement = new Angle(new Degree(), 90) - angle;
         }
 
         public Vector NormalVectorThrough(Point point)

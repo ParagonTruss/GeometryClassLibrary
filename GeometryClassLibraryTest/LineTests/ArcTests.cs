@@ -3,6 +3,7 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -52,7 +53,7 @@ namespace GeometryClassLibraryTest
             //test arc length
             Distance arcLength = quarterArc.ArcLength;
             //s = r(theta)
-            Distance expectedArclength = new Distance(DistanceType.Inch, 4.24264 * Math.PI / 2);
+            Distance expectedArclength = new Distance(new Inch(), 4.24264 * Math.PI / 2);
             (arcLength == expectedArclength).Should().BeTrue();
 
             //test arc area

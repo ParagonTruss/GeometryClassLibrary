@@ -5,7 +5,8 @@ using System.Diagnostics;
 using UnitClassLibrary;
 using System.Linq;
 using MoreLinq;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibrary
 {
@@ -14,7 +15,7 @@ namespace GeometryClassLibrary
     public class Rotation
     {
         #region Properties and Fields
-        private AngularDistance _rotationAngle;
+        private Angle _rotationAngle;
         private Line _axisOfRotation;
 
         private Matrix _matrix;
@@ -31,7 +32,7 @@ namespace GeometryClassLibrary
         }
 
         [JsonProperty]
-        public AngularDistance RotationAngle
+        public Angle RotationAngle
         {
             get
             {
@@ -43,7 +44,7 @@ namespace GeometryClassLibrary
                 }
                 return _rotationAngle;
             }
-            private set { _rotationAngle = new Angle(value); }
+            private set { _rotationAngle = value.ModOutTwoPi(); }
         }
 
         [JsonProperty]
@@ -76,13 +77,13 @@ namespace GeometryClassLibrary
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
         [JsonConstructor]
-        public Rotation(Line axisOfRotation, AngularDistance rotationAngle)
+        public Rotation(Line axisOfRotation, Angle rotationAngle)
         {
             this.RotationAngle = rotationAngle;
             this.AxisOfRotation = axisOfRotation;
         }
 
-        public Rotation(AngularDistance rotationAngle, Line axisOfRotation = null)
+        public Rotation(Angle rotationAngle, Line axisOfRotation = null)
         {
             if (axisOfRotation == null)
             {
@@ -117,13 +118,13 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = this.AxisOfRotation.Direction;
 
-            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis
-            double unitY = rotationUnitVector.YComponent;
-            double unitZ = rotationUnitVector.ZComponent;
-            double theta = this.RotationAngle.Radians;
+            double unitX = rotationUnitVector.XComponent.Value; //Projection onto x-axis
+            double unitY = rotationUnitVector.YComponent.Value;
+            double unitZ = rotationUnitVector.ZComponent.Value;
+            Angle theta = this.RotationAngle;
 
-            double sinTheta = Math.Sin(theta);
-            double cosTheta = Math.Cos(theta);
+            double sinTheta = Angle.Sine(theta).Value;
+            double cosTheta = Angle.Cosine(theta).Value;
 
             double row0column0 = cosTheta + unitX * unitX * (1 - cosTheta);
             double row0column1 = unitX * unitY * (1 - cosTheta) - unitZ * sinTheta;
@@ -170,14 +171,14 @@ namespace GeometryClassLibrary
             var angle = rowVector.SignedAngleBetween(rotated, axis);
 
             var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
-                .Select(d => d.Inches).ToArray()).Select(d => d * Inch).ToList();
+                .Select(d => d.Inches.Value).ToArray()).Select(d => d * Inch).ToList();
             axis = axis.Translate(new Point(translation));
 
             this.AxisOfRotation = axis;
             this.RotationAngle = angle;
         }
 
-        private Rotation(Line axis, AngularDistance angle, Matrix matrix)
+        private Rotation(Line axis, Angle angle, Matrix matrix)
         {
             this._axisOfRotation = axis;
             this._rotationAngle = angle;

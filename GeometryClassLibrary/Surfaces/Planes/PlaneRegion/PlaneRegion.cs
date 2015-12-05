@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {

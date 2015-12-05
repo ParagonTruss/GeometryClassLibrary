@@ -1,5 +1,10 @@
 ﻿using System;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
@@ -30,7 +35,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcArea = r^2/2 * (theta), where theta is in radians
-                return new Area(AreaType.InchesSquared, .5 * Math.Pow(RadiusOfCurvature.Inches, 2) * CentralAngle.Radians);
+                return new Area(new SquareInch(), .5 * RadiusOfCurvature.Inches^2 * CentralAngle.Radians);
             }
         }
 
@@ -42,7 +47,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcSegmentArea = r^2 / 2 * (theta - sin(theta))
-                return new Area(AreaType.InchesSquared, .5 * Math.Pow(RadiusOfCurvature.Inches, 2) * (CentralAngle.Radians - Math.Sin(CentralAngle.Radians)));
+                return new Area(new SquareInch(), .5 * RadiusOfCurvature.Inches^2 * (CentralAngle.Radians - Angle.Sine(CentralAngle)));
             }
         }
 
@@ -53,17 +58,17 @@ namespace GeometryClassLibrary
         ///  It is also known as the arc segment's angular distance.
         /// http://en.wikipedia.org/wiki/Central_angle
         /// </summary>
-        public AngularDistance CentralAngle
+        public Angle CentralAngle
         {
             get
             {
                 if (this.IsClosed)
                 {
-                    return 2 * Math.PI * AngularDistance.Radian;
+                    return new Angle(new Radian(), 2 * Math.PI);
                 }
                 else
                 {
-                    return new Angle(new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection));
+                    return new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection).ModOutTwoPi();
                 }
             }
         }

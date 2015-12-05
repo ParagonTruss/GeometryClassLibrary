@@ -2,6 +2,11 @@
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using System.Diagnostics;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
+using UnitClassLibrary.GenericUnit;
 
 namespace GeometryClassLibrary
 {
@@ -19,27 +24,27 @@ namespace GeometryClassLibrary
         /// A staticly defined Direction that is positive in the X direction, which can be thought of as going "right" in the XY plane.
         /// This is also the "zero" equivalent and is the same as Direction.Right
         /// </summary>
-        public static readonly Direction Right = new Direction(Angle.Zero, new Angle(AngleType.Degree, 90));
+        public static readonly Direction Right = new Direction(Angle.Zero, new Angle(new Degree(), 90));
         /// <summary>
         /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
         /// </summary>
-        public static readonly Direction Up = new Direction(new Angle(AngleType.Degree, 90));
+        public static readonly Direction Up = new Direction(new Angle(new Degree(), 90));
         /// <summary>
         /// A staticly defined Direction that is negative in the X direction, which can be thought of as going "left" in the XY plane
         /// </summary>
-        public static readonly Direction Left = new Direction(new Angle(AngleType.Degree, 180));
+        public static readonly Direction Left = new Direction(new Angle(new Degree(), 180));
         /// <summary>
         /// A staticly defined Direction that is negative in the Y direction, which can be thought of as going "down" in the XY plane
         /// </summary>
-        public static readonly Direction Down = new Direction(new Angle(AngleType.Degree, 270));
+        public static readonly Direction Down = new Direction(new Angle(new Degree(), 270));
         /// <summary>
         /// A staticly defined Direction that is positive in the Z direction, which can be thought of comming out of the screen towards you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Out = new Direction(Angle.Zero, new Angle(AngleType.Degree, 0));
+        public static readonly Direction Out = new Direction(Angle.Zero, new Angle(new Degree(), 0));
         /// <summary>
         /// A staticly defined Direction that is negative in the Z direction, which can be thought of going back out of the screen away you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Back = new Direction(Angle.Zero, new Angle(AngleType.Degree, 180));
+        public static readonly Direction Back = new Direction(Angle.Zero, new Angle(new Degree(), 180));
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azumuth)
@@ -70,7 +75,7 @@ namespace GeometryClassLibrary
                 //Note: if it is between 180 and 360, we need to flip the directon of phi as well
 
                 //if it is greater than 180, we need to flip the _phi and the _theta by subtracting 180 degrees
-                if (_theta > new Angle(AngleType.Degree, 180))
+                if (_theta > new Angle(new Degree(), 180))
                 {
                     _theta = _theta.Reverse();
 
@@ -90,25 +95,25 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public double XComponent
+        public Measurement XComponent
         {
-            get { return Math.Cos(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
+            get { return Angle.Cosine(this.Phi) * Angle.Sine(this.Theta); }
         }
 
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public double YComponent
+        public Measurement YComponent
         {
-            get { return Math.Sin(this.Phi.Radians) * Math.Sin(this.Theta.Radians); }
+            get { return Angle.Sine(this.Phi) * Angle.Sine(this.Theta); }
         }
 
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public double ZComponent
+        public Measurement ZComponent
         {
-            get { return Math.Cos(this.Theta.Radians); }
+            get { return Angle.Cosine(this.Theta); }
         }
 
         #endregion
@@ -139,8 +144,8 @@ namespace GeometryClassLibrary
         /// <param name="xyPlaneAngle">The angle from the x-axis in the xy-plane</param>
         public Direction(Angle xyPlaneAngle)
         {
-            this.Phi = new Angle(xyPlaneAngle);
-            this.Theta = new Angle(AngleType.Degree, 90);
+            this.Phi = xyPlaneAngle;
+            this.Theta = new Angle(new Degree(), 90);
         }
 
         /// <summary>
@@ -150,105 +155,106 @@ namespace GeometryClassLibrary
         /// <param name="acceptedDeviationConstant">The value to use for accepted deviation constant for if the distances are small</param>
         public Direction(Point directionPoint, Distance acceptedDeviationConstant = null)
         {
-            this.Phi = Angle.Zero;
-            this.Theta = new Angle(AngleType.Degree, 90);
-            //if they didnt pass in a value, use the default
-            if (acceptedDeviationConstant == null)
-            {
-                acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
-            }
+            throw new NotImplementedException();
+        //    this.Phi = Angle.Zero;
+        //    this.Theta = new Angle(new Degree(), 90);
+        //    //if they didnt pass in a value, use the default
+        //    if (acceptedDeviationConstant == null)
+        //    {
+        //        acceptedDeviationConstant = DeviationDefaults.AcceptedEqualityDeviationDistance;
+        //    }
 
-            Distance distanceToOrigin = directionPoint.DistanceTo(Point.Origin);
+        //    Distance distanceToOrigin = directionPoint.DistanceTo(Point.Origin);
 
-            //if it is the origin we just leave it as the base constructor
-            if (!_lessThanButNotEqualToAcceptanceConstantFrom0(distanceToOrigin, acceptedDeviationConstant))
-            {
-                //if the z is 0 than the angle should be 90 so we can use the xyplane angle
-                //Note: we called the base contructor first so it is already 90 unless we change it
-                if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Z, acceptedDeviationConstant))
-                {
-                    //arcos handles negatives how we want so we dont have to worry about it
-                    this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
-                }
+        //    //if it is the origin we just leave it as the base constructor
+        //    if (!_lessThanButNotEqualToAcceptanceConstantFrom0(distanceToOrigin, acceptedDeviationConstant))
+        //    {
+        //        //if the z is 0 than the angle should be 90 so we can use the xyplane angle
+        //        //Note: we called the base contructor first so it is already 90 unless we change it
+        //        if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Z, acceptedDeviationConstant))
+        //        {
+        //            //arcos handles negatives how we want so we dont have to worry about it
+        //            this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
+        //        }
 
-                //if the x is not zero then we use it for the phi - other wise check y and if y is 0 also then we want it either up or down
-                if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.X, acceptedDeviationConstant))
-                {
-                    //if y is 0 then we are either left or right
-                    if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Y, acceptedDeviationConstant))
-                    {
-                        //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
-                        this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
+        //        //if the x is not zero then we use it for the phi - other wise check y and if y is 0 also then we want it either up or down
+        //        if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.X, acceptedDeviationConstant))
+        //        {
+        //            //if y is 0 then we are either left or right
+        //            if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Y, acceptedDeviationConstant))
+        //            {
+        //                //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
+        //                this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
 
-                        //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
-                        //we can use this because we know at this point x isnt equal to zero and if we used Distance it could be
-                        //to close within the default deviation constant but not in the passed one
-                        if (directionPoint.X.Inches < 0)
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 180) - this.Phi;
-                        }
-                    }
-                    else
-                    {
-                        //we know y is zero and x is non zero so we just need to know which way x is and we use inches
-                        //in case the passed deviation is smaller than the default
-                        if (directionPoint.X.Inches > 0)
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 0);
-                        }
-                        else if (directionPoint.X.Inches < 0)
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 180);
-                        }
-                    }
-                }
-                else
-                {
-                    //check the y still because we could just have really small x and ys in which case we probaly want it up or down
-                    //and we know x is zero already so we dont have to check it
-                    if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Y, acceptedDeviationConstant))
-                    {
-                        //set the angle based on if the y is positive or negative
-                        //if y is also zero, just make the xy an angle of 0
-                        //Note: we called the base contructor first so it is already 0 unless we change it
-                        //Also we already know x is zero so we only care about the Y direction and we use inches
-                        //in case the passed deviation is smaller than the default
-                        if (directionPoint.Y.Inches > 0)
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 90);
-                        }
-                        else if (directionPoint.Y.Inches < 0)
-                        {
-                            this.Phi = new Angle(AngleType.Degree, 270);
-                        }
-                    }
-                    else
-                    {
-                        //if we were close enough in x and y then we really should be either up or down so if its closer to
-                        //up then make it up
-                        if(this.Theta < new Angle(AngleType.Degree, 90))
-                        {
-                            this.Theta = Angle.Zero;
-                        }
-                        else
-                        {
-                            this.Theta = new Angle(AngleType.Degree, 180);
-                        }
-                    }
-                }
-            }
+        //                //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
+        //                //we can use this because we know at this point x isnt equal to zero and if we used Distance it could be
+        //                //to close within the default deviation constant but not in the passed one
+        //                if (directionPoint.X.Inches < 0)
+        //                {
+        //                    this.Phi = new Angle(new Degree(), 180) - this.Phi;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //we know y is zero and x is non zero so we just need to know which way x is and we use inches
+        //                //in case the passed deviation is smaller than the default
+        //                if (directionPoint.X.Inches > 0)
+        //                {
+        //                    this.Phi = new Angle(new Degree(), 0);
+        //                }
+        //                else if (directionPoint.X.Inches < 0)
+        //                {
+        //                    this.Phi = new Angle(new Degree(), 180);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //check the y still because we could just have really small x and ys in which case we probaly want it up or down
+        //            //and we know x is zero already so we dont have to check it
+        //            if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Y, acceptedDeviationConstant))
+        //            {
+        //                //set the angle based on if the y is positive or negative
+        //                //if y is also zero, just make the xy an angle of 0
+        //                //Note: we called the base contructor first so it is already 0 unless we change it
+        //                //Also we already know x is zero so we only care about the Y direction and we use inches
+        //                //in case the passed deviation is smaller than the default
+        //                if (directionPoint.Y.Inches > 0)
+        //                {
+        //                    this.Phi = new Angle(new Degree(), 90);
+        //                }
+        //                else if (directionPoint.Y.Inches < 0)
+        //                {
+        //                    this.Phi = new Angle(new Degree(), 270);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //if we were close enough in x and y then we really should be either up or down so if its closer to
+        //                //up then make it up
+        //                if(this.Theta < new Angle(new Degree(), 90))
+        //                {
+        //                    this.Theta = Angle.Zero;
+        //                }
+        //                else
+        //                {
+        //                    this.Theta = new Angle(new Degree(), 180);
+        //                }
+        //            }
+        //        }
+        //    }
         }
 
-        /// <summary>
-        /// Compares the two distances to see if the first is less than the accepted deviance constant from 0
-        /// </summary>
-        /// <param name="distance">The distance to check if it is closer to zero that then deviation constant</param>
-        /// <param name="acceptedDeviationConstant">The Distance value of which we care about and distances within this we consider equal to each other</param>
-        /// <returns>Returns whether or not the distance is closer to 0 than the deviation constant</returns>
-        private static bool _lessThanButNotEqualToAcceptanceConstantFrom0(Distance distance, Distance acceptedDeviationConstant)
-        {
-            return (!(distance.Inches == acceptedDeviationConstant.Inches)) && distance.EqualsWithinDeviationConstant(Distance.Zero, acceptedDeviationConstant);
-        }
+        ///// <summary>
+        ///// Compares the two distances to see if the first is less than the accepted deviance constant from 0
+        ///// </summary>
+        ///// <param name="distance">The distance to check if it is closer to zero that then deviation constant</param>
+        ///// <param name="acceptedDeviationConstant">The Distance value of which we care about and distances within this we consider equal to each other</param>
+        ///// <returns>Returns whether or not the distance is closer to 0 than the deviation constant</returns>
+        //private static bool _lessThanButNotEqualToAcceptanceConstantFrom0(Distance distance, Distance acceptedDeviationConstant)
+        //{
+        //    return (!(distance.Inches == acceptedDeviationConstant.Inches)) && distance.EqualsWithinDeviationConstant(Distance.Zero, acceptedDeviationConstant);
+        //}
 
         /// <summary>
         /// Makes a direction that represents the angle of the second point realtive to the first
@@ -276,7 +282,7 @@ namespace GeometryClassLibrary
             if (!allowAnglesOutOfBounds)
             {
                 //if we give it a value outside of what we would expect throw an exception
-                if (theta < Angle.Zero || theta > new Angle(AngleType.Degree, 180))
+                if (theta < Angle.Zero || theta > new Angle(new Degree(), 180))
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -289,8 +295,8 @@ namespace GeometryClassLibrary
         /// <param name="toCopy"></param>
         public Direction(Direction toCopy)
         {
-            this.Theta = new Angle(toCopy.Theta);
-            this.Phi = new Angle(toCopy.Phi);
+            this.Theta = toCopy.Theta;
+            this.Phi = toCopy.Phi;
         }
 
         #endregion
@@ -352,14 +358,14 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            AngularDistance angleBetween = this.AngleBetween(dir);
+            Angle angleBetween = this.AngleBetween(dir);
             bool angleIsCloseToZero = (angleBetween == Angle.Zero);
             return angleIsCloseToZero;
         }
 
         public override string ToString()
         {
-            return String.Format("X = {0}, Y = {1}, Z = {2}", Math.Round(XComponent, 2), Math.Round(YComponent, 2), Math.Round(ZComponent, 2));
+            return String.Format("X = {0}, Y = {1}, Z = {2}", Math.Round(XComponent.Value, 2), Math.Round(YComponent.Value, 2), Math.Round(ZComponent.Value, 2));
         }
         #endregion
 
@@ -379,13 +385,13 @@ namespace GeometryClassLibrary
         public Direction Reverse()
         {
             //reverse phi(xy) and then complement theta (from z) around 90 since its only 180 range
-            return new Direction(this.Phi.Reverse(), new Angle(AngleType.Degree, 180) - this.Theta);
+            return new Direction(this.Phi.Reverse(), new Angle(new Degree(), 180 - this.Theta.Degrees));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public double DotProduct(Direction otherDirection)
+        public Measurement DotProduct(Direction otherDirection)
         {
             var xTerm = this.XComponent * otherDirection.XComponent;
             var yTerm = this.YComponent * otherDirection.YComponent;
@@ -400,9 +406,9 @@ namespace GeometryClassLibrary
             var d1 = this;
             var d2 = otherdirection;
 
-            double xTerm = d1.YComponent * d2.ZComponent - d1.ZComponent * d2.YComponent;
-            double yTerm = d1.ZComponent * d2.XComponent - d1.XComponent * d2.ZComponent;
-            double zTerm = d1.XComponent * d2.YComponent - d1.YComponent * d2.XComponent;
+            double xTerm = (d1.YComponent * d2.ZComponent - d1.ZComponent * d2.YComponent).Value;
+            double yTerm = (d1.ZComponent * d2.XComponent - d1.XComponent * d2.ZComponent).Value;
+            double zTerm = (d1.XComponent * d2.YComponent - d1.YComponent * d2.XComponent).Value;
 
             var point = Point.MakePointWithInches(xTerm, yTerm, zTerm);
             if (point != Point.Origin)
@@ -427,17 +433,17 @@ namespace GeometryClassLibrary
         /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
         /// </summary>
         /// <returns></returns>
-        public AngularDistance SignedAngleBetween(Direction direction, Direction referenceNormal = null)
+        public Angle SignedAngleBetween(Direction direction, Direction referenceNormal = null)
         {
             if (referenceNormal == null)
             {
                 referenceNormal = Out;
             }
 
-            AngularDistance testAngle = new AngularDistance(this.AngleBetween(direction));
+            Angle testAngle = this.AngleBetween(direction).ModOutTwoPi();
             Direction testNormal = this.CrossProduct(direction);
            
-            if (testNormal == null || testAngle % new Angle(AngleType.Degree, 180) == Angle.Zero || testNormal == referenceNormal)
+            if (testNormal == null || testAngle % new Angle(new Degree(), 180) == Angle.Zero || testNormal == referenceNormal)
             {
                 return testAngle;
             }

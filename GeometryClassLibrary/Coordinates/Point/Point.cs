@@ -1,8 +1,15 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using static UnitClassLibrary.DistanceUnit.Distance;
 using System.Collections.Generic;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.GenericUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.MillimeterUnit;
 //using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
@@ -217,14 +224,14 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates one point around another
         /// </summary>
-        public Point Rotate2D(AngularDistance rotateAngle, Point centerPoint = null)
+        public Point Rotate2D(Angle rotateAngle, Point centerPoint = null)
         {
             if (centerPoint == null)
             {
                 centerPoint = Origin;
             }
-            double cosTheta = Math.Cos(rotateAngle.Radians);
-            double sinTheta = Math.Sin(rotateAngle.Radians);
+           Measurement cosTheta = Angle.Cosine(rotateAngle);
+           Measurement sinTheta = Angle.Sine(rotateAngle);
 
             var point = this - centerPoint;
             return new Point(
@@ -246,7 +253,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point MirrorAcross(Line passedAxisLine)
         {
-            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(AngleType.Degree, 180)));
+            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(new Degree(), 180)));
         }
 
         /// <summary>
@@ -263,13 +270,13 @@ namespace GeometryClassLibrary
         public Distance DistanceTo(Point endPoint)
         {
             //distance formula
-            double term1 = Math.Pow((X - endPoint.X).Inches, 2);
-            double term2 = Math.Pow((Y - endPoint.Y).Inches, 2);
-            double term3 = Math.Pow((Z - endPoint.Z).Inches, 2);
+            Measurement term1 = (X - endPoint.X).Inches ^ 2;
+            Measurement term2 = (Y - endPoint.Y).Inches ^ 2;
+            Measurement term3 = (Z - endPoint.Z).Inches ^ 2;
 
-            double distanceInInches = Math.Sqrt(term1 + term2 + term3);
+           Measurement distanceInInches = (term1 + term2 + term3).SquareRoot();
 
-            return new Distance(DistanceType.Inch, distanceInInches);
+            return new Distance(new Inch(), distanceInInches);
         }
 
         /// <summary>
@@ -403,20 +410,21 @@ namespace GeometryClassLibrary
 
         #region Static Factory Methods
 
-        public static Point MakePointWithInches(double inputValue1, double inputValue2, double inputValue3 = 0)
+        public static Point MakePointWithInches(double x, double y, double z = 0)
         {
-            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
-            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
-            Distance dim3 = new Distance(DistanceType.Inch, inputValue3);
+            var unitType = new Inch();
+            Distance xDim = new Distance(unitType, x); 
+            Distance yDim = new Distance(unitType, y);
+            Distance zDim = new Distance(unitType, z);
 
-            return new Point(dim1, dim2, dim3);
+            return new Point(xDim, yDim, zDim);
         }
 
         public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3 = 0)
         {
-            Distance dim1 = new Distance(DistanceType.Millimeter, inputValue1);
-            Distance dim2 = new Distance(DistanceType.Millimeter, inputValue2);
-            Distance dim3 = new Distance(DistanceType.Millimeter, inputValue3);
+            Distance dim1 = new Distance(new Millimeter(), inputValue1);
+            Distance dim2 = new Distance(new Millimeter(), inputValue2);
+            Distance dim3 = new Distance(new Millimeter(), inputValue3);
 
             return new Point(dim1, dim2, dim3);
         }
@@ -426,8 +434,8 @@ namespace GeometryClassLibrary
             double inputValue1 = double.Parse(inputString1);
             double inputValue2 = double.Parse(inputString2);
 
-            Distance dim1 = new Distance(DistanceType.Inch, inputValue1);
-            Distance dim2 = new Distance(DistanceType.Inch, inputValue2);
+            Distance dim1 = new Distance(new Inch(), inputValue1);
+            Distance dim2 = new Distance(new Inch(), inputValue2);
             return new Point(dim1, dim2);
         }
 

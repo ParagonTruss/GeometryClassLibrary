@@ -1,7 +1,10 @@
 ﻿using System;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using UnitClassLibrary.DistanceUnit;
+using static UnitClassLibrary.DistanceUnit.Distance;
+using UnitClassLibrary.AngleUnit.AngleTypes;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibrary
 {
@@ -445,25 +448,26 @@ namespace GeometryClassLibrary
         /// </summary>
         public Vector CrossProduct(Vector passedVector)
         {
-            Vector v1 = new Vector(this);
-            Vector v2 = new Vector(passedVector);
+            throw new NotImplementedException();
+            //Vector v1 = new Vector(this);
+            //Vector v2 = new Vector(passedVector);
 
-            //Find each component 
+            ////Find each component 
 
-            double xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
-            double xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
+            //double xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
+            //double xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
 
-            double yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
-            double yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
+            //double yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
+            //double yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
 
-            double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
-            double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
+            //double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
+            //double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
 
-            double newX = (xProduct1) - (xProduct2);
-            double newY = (yProduct1) - (yProduct2);
-            double newZ = (zProduct1) - (zProduct2);
+            //double newX = (xProduct1) - (xProduct2);
+            //double newY = (yProduct1) - (yProduct2);
+            //double newZ = (zProduct1) - (zProduct2);
 
-            return new Vector(Point.MakePointWithInches(newX, newY, newZ));
+            //return new Vector(Point.MakePointWithInches(newX, newY, newZ));
         }
 
         /// <summary>
@@ -498,7 +502,7 @@ namespace GeometryClassLibrary
             Vector vector2 = passedVector;
             
             //return (vector1.Direction == vector2.Direction.Reverse());
-            return vector1.AngleBetween(vector2) == new Angle(AngleType.Degree, 180);
+            return vector1.AngleBetween(vector2) == new Angle(new Degree(), 180);
         }
 
         /// <summary>
@@ -546,10 +550,11 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix ConvertToMatrixColumn()
         {
-            Matrix returnMatrix = new Matrix(3, 1);
-            double[] vectorArray = { XComponent.Inches, YComponent.Inches, ZComponent.Inches };
-            returnMatrix.SetColumn(0, vectorArray);
-            return returnMatrix;
+            throw new NotImplementedException("Make matrices use measurements");
+            //Matrix returnMatrix = new Matrix(3, 1);
+            //double[] vectorArray = { XComponent.Inches.Value, YComponent.Inches.Value, ZComponent.Inches.Value };
+            //returnMatrix.SetColumn(0, vectorArray);
+            //return returnMatrix;
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
 ﻿using System;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 
 namespace GeometryClassLibrary.Generators
 {
@@ -24,17 +26,17 @@ namespace GeometryClassLibrary.Generators
 
         public static Line X_Axis()
         {
-            return new Line(Point.Origin, new Point(new Distance(DistanceType.Inch, 1), Distance.Zero, Distance.Zero));
+            return new Line(Point.Origin, new Point(new Distance(new Inch(), 1), Distance.Zero, Distance.Zero));
         }
 
         public static Line Y_Axis()
         {
-            return new Line(Point.Origin, new Point(Distance.Zero, new Distance(DistanceType.Inch, 1), Distance.Zero));
+            return new Line(Point.Origin, new Point(Distance.Zero, new Distance(new Inch(), 1), Distance.Zero));
         }
 
         public static Line Z_Axis()
         {
-            return new Line(Point.Origin, new Point(Distance.Zero, Distance.Zero, new Distance(DistanceType.Inch, 1)));
+            return new Line(Point.Origin, new Point(Distance.Zero, Distance.Zero, new Distance(new Inch(), 1)));
         }
     }
 }
