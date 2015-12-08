@@ -1,6 +1,7 @@
 ﻿using UnitClassLibrary;
 using System;
 using Newtonsoft.Json;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {

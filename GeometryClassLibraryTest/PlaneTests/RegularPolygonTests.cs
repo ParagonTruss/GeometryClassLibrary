@@ -7,6 +7,8 @@ using MoreLinq;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.DerivedUnits.Area.AreaTypes.Imperial;
 
 namespace GeometryClassLibraryTest
 {

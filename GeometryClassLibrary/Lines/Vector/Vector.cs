@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.DistanceUnit.Distance;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AreaUnit;

@@ -1,7 +1,6 @@
 ﻿using System;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 using UnitClassLibrary.DistanceUnit;

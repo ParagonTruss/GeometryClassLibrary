@@ -1,4 +1,5 @@
 ﻿using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {

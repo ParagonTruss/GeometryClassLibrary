@@ -5,7 +5,6 @@ using System.Diagnostics;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.GenericUnit;
 
 namespace GeometryClassLibrary

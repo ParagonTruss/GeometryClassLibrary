@@ -8,7 +8,6 @@ using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 
 namespace GeometryClassLibrary
 {

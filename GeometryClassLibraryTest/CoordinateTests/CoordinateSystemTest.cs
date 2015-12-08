@@ -6,6 +6,7 @@ using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -24,26 +25,26 @@ namespace GeometryClassLibraryTest
             areEqual.Should().BeTrue();
         }
 
-        [Test]
-        public void CoordinateSystem_PlaneAndVectorConstuctor()
-        {
-            CoordinateSystem expected = new CoordinateSystem(Point.Origin, new Angle(new Degree(), 45), new Angle(new Degree(), 45), new Angle(new Degree(), 90));
+        //[Test]
+        //public void CoordinateSystem_PlaneAndVectorConstuctor()
+        //{
+        //    CoordinateSystem expected = new CoordinateSystem(Point.Origin, new Angle(new Degree(), 45), new Angle(new Degree(), 45), new Angle(new Degree(), 90));
 
-            Vector xVector = new Vector(Point.MakePointWithInches(-.5, -.707106781, -.5));
-            Vector yVector = new Vector(Point.MakePointWithInches(.707106781, 0, -.707106781));
-            Vector zVector = new Vector(Point.MakePointWithInches(.5, -.707106781, .5));
+        //    Vector xVector = new Vector(Point.MakePointWithInches(-.5, -.707106781, -.5));
+        //    Vector yVector = new Vector(Point.MakePointWithInches(.707106781, 0, -.707106781));
+        //    Vector zVector = new Vector(Point.MakePointWithInches(.5, -.707106781, .5));
 
-            //make sure our vectors are right
-            xVector.IsPerpendicularTo(yVector).Should().BeTrue();
-            yVector.IsPerpendicularTo(zVector).Should().BeTrue();
-            zVector.IsPerpendicularTo(xVector).Should().BeTrue();
+        //    //make sure our vectors are right
+        //    xVector.IsPerpendicularTo(yVector).Should().BeTrue();
+        //    yVector.IsPerpendicularTo(zVector).Should().BeTrue();
+        //    zVector.IsPerpendicularTo(xVector).Should().BeTrue();
 
-            Plane xyPlane = new Plane(xVector, yVector);
-            CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
+        //    Plane xyPlane = new Plane(xVector, yVector);
+        //    CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
 
-            results.DirectionsAreEquivalent(expected).Should().BeTrue();
+        //    results.DirectionsAreEquivalent(expected).Should().BeTrue();
 
-        }
+        //}
 
         [Test()]
         public void CoordinateSystem_RotationMatrix()

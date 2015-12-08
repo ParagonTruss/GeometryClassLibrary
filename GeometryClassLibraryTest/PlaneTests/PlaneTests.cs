@@ -3,6 +3,7 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {

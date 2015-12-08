@@ -4,7 +4,6 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {

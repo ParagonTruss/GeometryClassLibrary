@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;

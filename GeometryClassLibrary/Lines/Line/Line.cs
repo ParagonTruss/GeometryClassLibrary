@@ -7,7 +7,6 @@ using static GeometryClassLibrary.Point;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.GenericUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;

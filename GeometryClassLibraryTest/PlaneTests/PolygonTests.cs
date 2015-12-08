@@ -967,13 +967,13 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion()
         {
-            var rectangle1 = Polygon.Rectangle(3 * Inch, 1 * Inch);
-            var rectangle2 = Polygon.Rectangle(1 * Inch, 3 * Inch, Point.MakePointWithInches(1, -1));
+            var rectangle1 = Polygon.Rectangle(3 * Distance.Inch, 1 * Distance.Inch);
+            var rectangle2 = Polygon.Rectangle(1 * Distance.Inch, 3 * Distance.Inch, Point.MakePointWithInches(1, -1));
 
             var results = rectangle1.RemoveRegion(rectangle2);
 
-            var expected1 = Polygon.Square(Inch);
-            var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            var expected1 = Polygon.Square(Distance.Inch);
+            var expected2 = Polygon.Square(Distance.Inch, Point.MakePointWithInches(2, 0));
             (results.Count).Should().Be(2);
             (results[0] == expected1).Should().BeTrue();
             (results[1] == expected2).Should().BeTrue();
@@ -982,13 +982,13 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion_SharedEdges()
         {
-            var rectangle = Polygon.Rectangle(3 * Inch, 1 * Inch);
-            var square = Polygon.Square(1 * Inch, Point.MakePointWithInches(1, 0));
+            var rectangle = Polygon.Rectangle(3 * Distance.Inch, 1 * Distance.Inch);
+            var square = Polygon.Square(1 * Distance.Inch, Point.MakePointWithInches(1, 0));
 
             var results = rectangle.RemoveRegion(square);
 
-            var expected1 = Polygon.Square(Inch);
-            var expected2 = Polygon.Square(Inch, Point.MakePointWithInches(2, 0));
+            var expected1 = Polygon.Square(Distance.Inch);
+            var expected2 = Polygon.Square(Distance.Inch, Point.MakePointWithInches(2, 0));
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
         }
@@ -996,16 +996,16 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion_CutThroughCorners()
         {
-            var square = Polygon.Square(4 * Inch);
-            var rectangle = Polygon.Rectangle(4*Math.Sqrt(2) * Inch, 1 * Inch);
+            var square = Polygon.Square(4 * Distance.Inch);
+            var rectangle = Polygon.Rectangle(4*Math.Sqrt(2) * Distance.Inch, 1 * Distance.Inch);
             rectangle = rectangle.Rotate(new Rotation(45 * Angle.Degree));
             rectangle = rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
 
             var results = square.RemoveRegion(rectangle);
 
             results.Count.Should().Be(2);
-            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 3.29289 * Inch), new Vector(Direction.Down, 3.29289 * Inch), Point.MakePointWithInches(0, 4));
-            var expected2 = Polygon.Triangle(new Vector(Direction.Left, 3.29289 * Inch), new Vector(Direction.Up, 3.29289 * Inch), Point.MakePointWithInches(4, 0));
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 3.29289 * Distance.Inch), new Vector(Direction.Down, 3.29289 * Distance.Inch), Point.MakePointWithInches(0, 4));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Left, 3.29289 * Distance.Inch), new Vector(Direction.Up, 3.29289 * Distance.Inch), Point.MakePointWithInches(4, 0));
 
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
@@ -1015,8 +1015,8 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion_SquareRemoveDiamond()
         {
-            var square1 = Polygon.Square(4 * Inch);
-            var square2 = Polygon.Square(4/Math.Sqrt(2) * Inch);
+            var square1 = Polygon.Square(4 * Distance.Inch);
+            var square2 = Polygon.Square(4/Math.Sqrt(2) * Distance.Inch);
             var diamond = square2.Rotate(new Rotation(Angle.Degree*45));
             diamond = diamond.Translate(square1.CenterPoint - diamond.CenterPoint);
 

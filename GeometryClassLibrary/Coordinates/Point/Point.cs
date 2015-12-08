@@ -8,7 +8,6 @@ using UnitClassLibrary.GenericUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.MillimeterUnit;
 //using VisualGeometryDebugger;
 
