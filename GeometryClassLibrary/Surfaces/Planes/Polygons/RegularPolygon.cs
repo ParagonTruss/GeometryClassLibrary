@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {

@@ -16,9 +16,9 @@ namespace GeometryClassLibrary.Vectors
         public Measurement X { get { return (EndPoint.X - BasePoint.X).ValueInThisUnit(UnitType); } }
         public Measurement Y { get { return (EndPoint.Y - BasePoint.Y).ValueInThisUnit(UnitType); } }
         public Measurement Z { get { return (EndPoint.Z - BasePoint.Z).ValueInThisUnit(UnitType); } }
-        public DistanceType UnitType { get { return BasePoint.X.UnitType; } }
+        public DistanceType UnitType { get { return (DistanceType)BasePoint.X.UnitType; } }
 
-        public Point ApplicationPoint { get { return BasePoint; } }
+        //public Point ApplicationPoint { get { return BasePoint; } }
         public Direction Direction { get { return new Direction(BasePoint, EndPoint); } }
         public Unit Magnitude { get { return BasePoint.DistanceTo(EndPoint); } }
         #endregion

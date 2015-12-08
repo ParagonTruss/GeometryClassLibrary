@@ -6,6 +6,7 @@ using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -130,7 +131,7 @@ namespace GeometryClassLibraryTest
         {
             LineSegment originalSegment = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 5, 0));
             Line axis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 0, 0));
-            Angle toRotate = new Angle(AngleType.Degree, 180);
+            Angle toRotate = new Angle(new Degree(), 180);
 
             LineSegment actualSegment = originalSegment.Rotate(new Rotation(axis, toRotate));
             LineSegment expectedSegment = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, -5, 0));
@@ -145,7 +146,7 @@ namespace GeometryClassLibraryTest
             LineSegment segment2 = new LineSegment(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(0, 2, 3));
 
             Line rotationAxis = new Line(new Direction(Point.MakePointWithInches(1, 1, 1)), Point.MakePointWithInches(1, -1, -1));
-            Angle rotationAngle = new Angle(AngleType.Degree, 212);
+            Angle rotationAngle = new Angle(new Degree(), 212);
 
             LineSegment actualSegment1 = segment1.Rotate(new Rotation(rotationAxis, rotationAngle));
             LineSegment actualSegment2 = segment2.Rotate(new Rotation(rotationAxis, rotationAngle));
@@ -165,7 +166,7 @@ namespace GeometryClassLibraryTest
             LineSegment segment1 = new LineSegment(Point.MakePointWithInches(1, 2, 3), Point.MakePointWithInches(-3, -2, 0));
 
             //Direction testDirection = new Direction(Point.MakePointWithInches(-1, 5, 4));
-            //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
+            //Distance testDisplacement = new Distance(new Inch(), 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
             LineSegment actualSegment1 = segment1.Translate(testDisplacement);

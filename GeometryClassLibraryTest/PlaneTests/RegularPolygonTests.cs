@@ -4,7 +4,9 @@ using NUnit.Framework;
 using UnitClassLibrary;
 using System.Linq;
 using MoreLinq;
-using static UnitClassLibrary.Distance;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AreaUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -14,16 +16,16 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void RegularPolygon_Constructor()
         {
-            Polygon polygon = new RegularPolygon(4, 4*Foot);
+            Polygon polygon = new RegularPolygon(4, 4*Distance.Foot);
             polygon.IsRectangle().Should().BeTrue();
-            polygon.Area.Should().Be(new Area(AreaType.FeetSquared, 16));
+            polygon.Area.Should().Be(new Area(new SquareFoot(), 16));
         }
 
         [Test()]
         public void RegularPentagon()
         {
-            Polygon pentagon = Polygon.Pentagon(5 * Inch);
-            pentagon.Area.Should().Be(new Area(AreaType.InchesSquared, 43));
+            Polygon pentagon = Polygon.Pentagon(5 * Distance.Inch);
+            pentagon.Area.Should().Be(new Area(new SquareInch(), 43));
 
             //verify the bottom segment is flat and symmetric about zero.
             var bottomSegment =  pentagon.LineSegments.MinBy(s => s.MidPoint.Y);

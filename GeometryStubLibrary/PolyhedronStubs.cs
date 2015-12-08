@@ -6,21 +6,21 @@ namespace GeometryStubLibrary
 {
     public class TestRectangularBox1 : RectangularPrism
     {
-        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
+        public override Volume Volume { get { return new Volume(new CubicInch(), 96); } }
         public override Point Centroid { get { return Point.MakePointWithInches(2, 6, 1); } }
         public TestRectangularBox1() : base(Point.MakePointWithInches(3.5, 144, 2)) { }
     }
 
     public class TestRectangularBox2 : RectangularPrism
     {
-        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 96); } }
+        public override Volume Volume { get { return new Volume(new CubicInch(), 96); } }
         public override Point Centroid  { get { return Point.MakePointWithInches(2, 4, 1.5); } }
         public TestRectangularBox2() : base(Point.MakePointWithInches(4, 8, 3)) { }
     }
 
     public class TestTetrahedron : Polyhedron
     {
-        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 48); } }
+        public override Volume Volume { get { return new Volume(new CubicInch(), 48); } }
         public override Point Centroid { get { return Point.MakePointWithInches(1, 3, 1.5); } }
         public TestTetrahedron()
             : base(_makeFaces())
@@ -47,7 +47,7 @@ namespace GeometryStubLibrary
 
     public class TestConcavePentagonalPrism : Polyhedron
     {
-        public override Volume Volume { get { return new Volume(VolumeType.CubicInches, 18); } }
+        public override Volume Volume { get { return new Volume(new CubicInch(), 18); } }
         public override Point Centroid { get { return Point.MakePointWithInches(11.0 / 9, 1, 2); } }
         public TestConcavePentagonalPrism()
             : base(_makeFaces())

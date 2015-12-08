@@ -4,6 +4,8 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -53,7 +55,7 @@ namespace GeometryClassLibraryTest
             List<LineSegment> rt_sides = new List<LineSegment>() { rt_sideOne, rt_sideTwo, rt_sideThree };
             RightTriangle rt = new RightTriangle(rt_sides);
 
-            (rt.Area == new Area(AreaType.InchesSquared, 3)).Should().BeTrue();
+            (rt.Area == new Area(new SquareInch(), 3)).Should().BeTrue();
         }
 
         [Test()]

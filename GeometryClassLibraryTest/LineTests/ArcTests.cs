@@ -4,6 +4,10 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -23,7 +27,7 @@ namespace GeometryClassLibraryTest
         //    //now make it some other ways and make sure we end up with the same thing
 
         //    //using the center point and the containing plane     
-        //    Vector directionVector = new Vector(basePoint, directionAtStart, new Distance(DistanceType.Inch, 5));
+        //    Vector directionVector = new Vector(basePoint, directionAtStart, new Distance(new Inch(), 5));
         //    Point thirdPlanePoint = directionVector.EndPoint;
         //    Plane containingPlane = new Plane(basePoint, thirdPlanePoint, endPoint);
 
@@ -59,18 +63,18 @@ namespace GeometryClassLibraryTest
             //test arc area
             Area arcArea = quarterArc.SectorArea;
             //a = (theta)/2 * r^2
-            Area expectedArea = new Area(AreaType.InchesSquared, (Math.PI / 2) / 2 * (18)); //Pi/2 = 90 degrees, 18 = r^2
+            Area expectedArea = new Area(new SquareInch(), (Math.PI / 2) / 2 * (18)); //Pi/2 = 90 degrees, 18 = r^2
             (arcArea == expectedArea).Should().BeTrue();
 
             //test the arcSegmentArea
             Area arcSegmentArea = quarterArc.SegmentArea;
             //a = r^2 / 2 * (theta - sin(theta))
-            Area expectedSegmentLength = new Area(AreaType.InchesSquared, 18 / 2 * (Math.PI / 2 - Math.Sin(Math.PI / 2))); //Pi/2 = 90 degrees, 18 = r^2
+            Area expectedSegmentLength = new Area(new SquareInch(), 18 / 2 * (Math.PI / 2 - Math.Sin(Math.PI / 2))); //Pi/2 = 90 degrees, 18 = r^2
             (arcSegmentArea == expectedSegmentLength).Should().BeTrue();
 
             //test the central angle
-            AngularDistance centralAngle = quarterArc.CentralAngle;
-            (centralAngle == new Angle(AngleType.Degree, 90)).Should().BeTrue();
+            Angle centralAngle = quarterArc.CentralAngle;
+            (centralAngle == new Angle(new Degree(), 90)).Should().BeTrue();
 
             //test the center point
             Point centerPoint = quarterArc.CenterPoint;
@@ -78,11 +82,11 @@ namespace GeometryClassLibraryTest
 
             //test the radius
             Distance radius = quarterArc.RadiusOfCurvature;
-            (radius == new Distance(DistanceType.Inch, 4.24264)).Should().BeTrue();//sqr(3^2 + 3^2)
+            (radius == new Distance(new Inch(), 4.24264)).Should().BeTrue();//sqr(3^2 + 3^2)
 
             //test the straight line direction (same as direction)
             Direction straightDirection = quarterArc.StraightLineDirection;
-            (straightDirection == new Direction(new Angle(AngleType.Degree, 45), new Angle(AngleType.Degree, 45))).Should().BeTrue();
+            (straightDirection == new Direction(new Angle(new Degree(), 45), new Angle(new Degree(), 45))).Should().BeTrue();
         }
 
         [Test()]
@@ -98,24 +102,24 @@ namespace GeometryClassLibraryTest
             //test arc length
             Distance arcLength = halfArc.ArcLength;
             //s = r(theta)
-            Distance expectedArclength = new Distance(DistanceType.Inch, 3 * Math.PI);
+            Distance expectedArclength = new Distance(new Inch(), 3 * Math.PI);
             (arcLength == expectedArclength).Should().BeTrue();
 
             //test arc area
             Area arcArea = halfArc.SectorArea;
             //a = (theta)/2 * r^2
-            Area expectedArea = new Area(AreaType.InchesSquared, (Math.PI) / 2 * 9); //Pi = 180 degrees, 9 = r^2
+            Area expectedArea = new Area(new SquareInch(), (Math.PI) / 2 * 9); //Pi = 180 degrees, 9 = r^2
             (arcArea == expectedArea).Should().BeTrue();
 
             //test the arcSegmentArea
             Area arcSegmentArea = halfArc.SegmentArea;
             //a = r^2 / 2 * (theta - sin(theta))
-            Area expectedSegmentArea = new Area(AreaType.InchesSquared, 9 * 0.5 * (Math.PI - Math.Sin(Math.PI))); //Pi = 180 degrees, 9 = r^2
+            Area expectedSegmentArea = new Area(new SquareInch(), 9 * 0.5 * (Math.PI - Math.Sin(Math.PI))); //Pi = 180 degrees, 9 = r^2
             (arcSegmentArea == expectedSegmentArea).Should().BeTrue();
 
             //test the central angle
-            AngularDistance centralAngle = halfArc.CentralAngle;
-            (centralAngle == new Angle(AngleType.Degree, 180)).Should().BeTrue();
+            Angle centralAngle = halfArc.CentralAngle;
+            (centralAngle == new Angle(new Degree(), 180)).Should().BeTrue();
 
             //test the center point
             Point centerPoint = halfArc.CenterPoint;
@@ -123,7 +127,7 @@ namespace GeometryClassLibraryTest
 
             //test the radius
             Distance radius = halfArc.RadiusOfCurvature;
-            (radius == new Distance(DistanceType.Inch, 3)).Should().BeTrue();
+            (radius == new Distance(new Inch(), 3)).Should().BeTrue();
 
             //test the straight line direction (same as direction)
             Direction straightDirection = halfArc.StraightLineDirection;
@@ -143,24 +147,24 @@ namespace GeometryClassLibraryTest
             //test arc length
             Distance arcLength = threeQuartersArc.ArcLength;
             //s = r(theta)
-            Distance expectedArclength = new Distance(DistanceType.Inch, 4.24264 * Math.PI * 3 / 2);
+            Distance expectedArclength = new Distance(new Inch(), 4.24264 * Math.PI * 3 / 2);
             (arcLength == expectedArclength).Should().BeTrue();
 
             //test arc area
             Area arcArea = threeQuartersArc.SectorArea;
             //a = (theta)/2 * r^2
-            Area expectedArea = new Area(AreaType.InchesSquared, (Math.PI * 3 / 2) / 2 * 18); //Pi = 180 degrees, 18 = r^2
+            Area expectedArea = new Area(new SquareInch(), (Math.PI * 3 / 2) / 2 * 18); //Pi = 180 degrees, 18 = r^2
             (arcArea == expectedArea).Should().BeTrue();
 
             //test the arcSegmentArea
             Area arcSegmentArea = threeQuartersArc.SegmentArea;
             //a = r^2 / 2 * (theta - sin(theta))
-            Area expectedSegmentArea = new Area(AreaType.InchesSquared, 18 * 0.5 * (Math.PI * 3 / 2 - Math.Sin(Math.PI * 3 / 2))); //Pi = 180 degrees, 18 = r^2
+            Area expectedSegmentArea = new Area(new SquareInch(), 18 * 0.5 * (Math.PI * 3 / 2 - Math.Sin(Math.PI * 3 / 2))); //Pi = 180 degrees, 18 = r^2
             (arcSegmentArea == expectedSegmentArea).Should().BeTrue();
 
             //test the central angle
-            AngularDistance centralAngle = threeQuartersArc.CentralAngle;
-            (centralAngle == new Angle(AngleType.Degree, 270)).Should().BeTrue();
+            Angle centralAngle = threeQuartersArc.CentralAngle;
+            (centralAngle == new Angle(new Degree(), 270)).Should().BeTrue();
 
             //test the center point
             Point centerPoint = threeQuartersArc.CenterPoint;
@@ -168,11 +172,11 @@ namespace GeometryClassLibraryTest
 
             //test the radius
             Distance radius = threeQuartersArc.RadiusOfCurvature;
-            (radius == new Distance(DistanceType.Inch, 4.24264)).Should().BeTrue();
+            (radius == new Distance(new Inch(), 4.24264)).Should().BeTrue();
 
             //test the straight line direction (same as direction)
             Direction straightDirection = threeQuartersArc.StraightLineDirection;
-            (straightDirection == new Direction(new Angle(AngleType.Degree, 225), new Angle(AngleType.Degree, 45))).Should().BeTrue();
+            (straightDirection == new Direction(new Angle(new Degree(), 225), new Angle(new Degree(), 45))).Should().BeTrue();
         }
 
         [Test()]
@@ -202,14 +206,14 @@ namespace GeometryClassLibraryTest
 
             Arc testArc = new Arc(basePoint, endPoint, directionAtStart);
 
-            Arc results = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(1, -1, 0)), Point.MakePointWithInches(0, 0, 4.24264)), new Angle(AngleType.Degree, 90)));
+            Arc results = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(1, -1, 0)), Point.MakePointWithInches(0, 0, 4.24264)), new Angle(new Degree(), 90)));
 
             Arc expected = new Arc(endPoint, Point.MakePointWithInches(0, 0, 4.24264 * 2), new Direction(Point.MakePointWithInches(0, 0, 1)));
 
             (results == expected).Should().BeTrue();
 
             //try another rotation
-            Arc results2 = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(0, 0, 1)), Point.MakePointWithInches(1.5, 1.5, 0)), new Angle(AngleType.Degree, 180)));
+            Arc results2 = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(0, 0, 1)), Point.MakePointWithInches(1.5, 1.5, 0)), new Angle(new Degree(), 180)));
 
             Arc expected2 = new Arc(Point.MakePointWithInches(3, 3, 0), Point.MakePointWithInches(0, 0, 4.24264), new Direction(Point.MakePointWithInches(-1, -1, 0)));
 
@@ -226,7 +230,7 @@ namespace GeometryClassLibraryTest
 
             Arc testArc = new Arc(basePoint, endPoint, directionAtStart);
 
-            Shift testShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, 45)), Point.MakePointWithInches(-3, 0.25, -2));
+            Shift testShift = new Shift(new Rotation(Line.ZAxis, new Angle(new Degree(), 45)), Point.MakePointWithInches(-3, 0.25, -2));
             Arc results = testArc.Shift(testShift);
 
             Arc expected = new Arc(Point.MakePointWithInches(-3, 0.25, -2), Point.MakePointWithInches(0 - 3, 4.24264 + 0.25, 4.24264 - 2), Direction.Up);

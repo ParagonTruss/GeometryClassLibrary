@@ -3,7 +3,8 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
 using System.Diagnostics;
-using static UnitClassLibrary.AngularDistance;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -19,12 +20,12 @@ namespace GeometryClassLibraryTest
             //A very randomish axis
             Line testAxis = vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10));
 
-            AngularDistance angle = -173*Radian;
+            Angle angle = new Angle(new Radian(), -173);
 
             Rotation rotation = new Rotation(testAxis, angle);
             Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            (fromMatrixConstructor.RotationAngle == new Angle(angle)).Should().BeTrue();
+            (fromMatrixConstructor.RotationAngle == angle.ModOutTwoPi()).Should().BeTrue();
             (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();
         }
         
@@ -33,16 +34,16 @@ namespace GeometryClassLibraryTest
         public void Rotation_EqualityTests()
         {
             Line axis1 = new Line(Point.MakePointWithInches(-2, 7, 0), Point.MakePointWithInches(0, 1, 1));
-            Rotation rotation1 = new Rotation(axis1, new Angle(AngleType.Degree, 42));
+            Rotation rotation1 = new Rotation(axis1, new Angle(new Degree(), 42));
 
             Line axis2 = new Line(Point.MakePointWithInches(-2, 7, 0), Point.MakePointWithInches(0, 1, 1));
-            Rotation rotation2 = new Rotation(axis2, new Angle(AngleType.Degree, 42));
+            Rotation rotation2 = new Rotation(axis2, new Angle(new Degree(), 42));
 
             Line axis3 = new Line(Point.MakePointWithInches(-3, 7, 0), Point.MakePointWithInches(0, 1, 1));
-            Rotation rotation3 = new Rotation(axis3, new Angle(AngleType.Degree, 42));
+            Rotation rotation3 = new Rotation(axis3, new Angle(new Degree(), 42));
 
             Line axis4 = new Line(Point.MakePointWithInches(-3, 7, 0), Point.MakePointWithInches(0, 1, 1));
-            Rotation rotation4 = new Rotation(axis4, new Angle(AngleType.Degree, 63));
+            Rotation rotation4 = new Rotation(axis4, new Angle(new Degree(), 63));
 
             (rotation1 == rotation2).Should().BeTrue();
             (rotation1 != rotation2).Should().BeFalse();
@@ -55,7 +56,7 @@ namespace GeometryClassLibraryTest
         public void Rotation_Inverse()
         {
             Line axis = new Line(Point.MakePointWithInches(-2, 7, 0), Point.MakePointWithInches(0, 1, 1));
-            Rotation rotation = new Rotation(axis, new Angle(AngleType.Degree, 42));
+            Rotation rotation = new Rotation(axis, new Angle(new Degree(), 42));
             Point point = Point.MakePointWithInches(1, 1, 1);
             
             Point rotated = point.Rotate3D(rotation);

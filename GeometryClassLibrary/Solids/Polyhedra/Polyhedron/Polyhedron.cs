@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
@@ -119,19 +120,19 @@ namespace GeometryClassLibrary
             {
                 if (_volume == null)
                 {
-                    Volume totalVolume = new Volume(VolumeType.CubicInches, 0);
+                    Volume totalVolume = new Volume(new CubicInch(), 0);
 
                     List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
 
                     foreach (Polygon triangle in triangles)
                     {
-                        Volume volume = new Volume(VolumeType.CubicInches, _volumeOfTetrahedronFormedWithTheOrigin(triangle));
+                        Volume volume = new Volume(new CubicInch(), _volumeOfTetrahedronFormedWithTheOrigin(triangle));
 
-                        totalVolume += volume;
+                        totalVolume = (Volume)(totalVolume +volume);
                     }
                     _volume = totalVolume;
                 }
-                if (_volume < new Volume())
+                if (_volume < Volume.Zero)
                 {
                     throw new Exception("Bad Polyhedron! Volume should not be negative.");
                 }
@@ -147,17 +148,17 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
         {
-            double X1 = triangle.Vertices[0].X.Inches;
-            double X2 = triangle.Vertices[1].X.Inches;
-            double X3 = triangle.Vertices[2].X.Inches;
+            double X1 = triangle.Vertices[0].X.Inches.Value;
+            double X2 = triangle.Vertices[1].X.Inches.Value;
+            double X3 = triangle.Vertices[2].X.Inches.Value;
 
-            double Y1 = triangle.Vertices[0].Y.Inches;
-            double Y2 = triangle.Vertices[1].Y.Inches;
-            double Y3 = triangle.Vertices[2].Y.Inches;
+            double Y1 = triangle.Vertices[0].Y.Inches.Value;
+            double Y2 = triangle.Vertices[1].Y.Inches.Value;
+            double Y3 = triangle.Vertices[2].Y.Inches.Value;
 
-            double Z1 = triangle.Vertices[0].Z.Inches;
-            double Z2 = triangle.Vertices[1].Z.Inches;
-            double Z3 = triangle.Vertices[2].Z.Inches;
+            double Z1 = triangle.Vertices[0].Z.Inches.Value;
+            double Z2 = triangle.Vertices[1].Z.Inches.Value;
+            double Z3 = triangle.Vertices[2].Z.Inches.Value;
 
             double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
 

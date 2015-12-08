@@ -174,7 +174,7 @@ namespace GeometryClassLibrary
         //        if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Z, acceptedDeviationConstant))
         //        {
         //            //arcos handles negatives how we want so we dont have to worry about it
-        //            this.Theta = new Angle(AngleType.Radian, Math.Acos(directionPoint.Z / distanceToOrigin));
+        //            this.Theta = new Angle(new Radian(), Math.Acos(directionPoint.Z / distanceToOrigin));
         //        }
 
         //        //if the x is not zero then we use it for the phi - other wise check y and if y is 0 also then we want it either up or down
@@ -184,7 +184,7 @@ namespace GeometryClassLibrary
         //            if (!_lessThanButNotEqualToAcceptanceConstantFrom0(directionPoint.Y, acceptedDeviationConstant))
         //            {
         //                //Atan handels negative y fine, but not negative x so use absolute value and worry about fixing for x later
-        //                this.Phi = new Angle(AngleType.Radian, Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
+        //                this.Phi = new Angle(new Radian(), Math.Atan(directionPoint.Y / directionPoint.X.AbsoluteValue()));
 
         //                //this will handle x being negative since we ignored it earlier so we dont have to worry about y's sign
         //                //we can use this because we know at this point x isnt equal to zero and if we used Distance it could be
@@ -449,7 +449,7 @@ namespace GeometryClassLibrary
             }
             if (testNormal.Reverse() == referenceNormal)
             {
-                return testAngle.Negate();
+                return (Angle)(testAngle.Negate());
             }
             
 

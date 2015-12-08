@@ -5,6 +5,8 @@ using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using UnitClassLibrary;
 using Newtonsoft.Json;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
 
 namespace GeometryClassLibrary
 {
@@ -372,9 +374,9 @@ namespace GeometryClassLibrary
             //Note the Matrix is formed by multiplying together in the z,y,x order and so we need to multipy the matricies in that order as well
             //but this gets the angle for the x,y,z order shift. This is due to how matricies are multiplied together and is difficult to grasp conceptually
             List<Angle> extractedAngles = new List<Angle>();
-            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(this.GetElement(2, 1), this.GetElement(2, 2)))); //x
-            extractedAngles.Add(new Angle(AngleType.Radian, Math.Asin(-this.GetElement(2, 0)))); //y
-            extractedAngles.Add(new Angle(AngleType.Radian, Math.Atan2(this.GetElement(1, 0), this.GetElement(0, 0)))); //z
+            extractedAngles.Add(new Angle(new Radian(), Math.Atan2(this.GetElement(2, 1), this.GetElement(2, 2)))); //x
+            extractedAngles.Add(new Angle(new Radian(), Math.Asin(-this.GetElement(2, 0)))); //y
+            extractedAngles.Add(new Angle(new Radian(), Math.Atan2(this.GetElement(1, 0), this.GetElement(0, 0)))); //z
 
 
             return extractedAngles;
@@ -474,7 +476,7 @@ namespace GeometryClassLibrary
         public static Matrix PointAsProjectiveColumnVector(Point point)
         {
             return new Matrix(new double[]
-            { point.X.Inches, point.Y.Inches, point.Z.Inches, 1 });
+            { point.X.Inches.Value, point.Y.Inches.Value, point.Z.Inches.Value, 1 });
         }
         private static Point _pointFromProjectiveColumnVector(Matrix projectiveVector)
         {
@@ -757,8 +759,8 @@ namespace GeometryClassLibrary
             Matrix rotationMatrix = new Matrix(3);
 
             double[] row1 = { 1, 0, 0 };
-            double[] row2 = { 0, Angle.Cosine(rotationAngle.Radians), -Angle.Sine(rotationAngle.Radians) };
-            double[] row3 = { 0, Angle.Sine(rotationAngle.Radians), Angle.Cosine(rotationAngle.Radians) };
+            double[] row2 = { 0, Math.Cos(rotationAngle.Radians.Value), -Math.Sin(rotationAngle.Radians.Value) };
+            double[] row3 = { 0, Math.Sin(rotationAngle.Radians.Value), Math.Cos(rotationAngle.Radians.Value) };
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -774,9 +776,9 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { Angle.Cosine(rotationAngle.Radians), 0, Angle.Sine(rotationAngle.Radians) };
+            double[] row1 = { Math.Cos(rotationAngle.Radians.Value), 0, Math.Sin(rotationAngle.Radians.Value) };
             double[] row2 = { 0, 1, 0 };
-            double[] row3 = { -Angle.Sine(rotationAngle.Radians), 0, Angle.Cosine(rotationAngle.Radians) };
+            double[] row3 = { -Math.Sin(rotationAngle.Radians.Value), 0, Math.Cos(rotationAngle.Radians.Value) };
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -792,8 +794,8 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { Angle.Cosine(rotationAngle.Radians), -Angle.Sine(rotationAngle.Radians), 0 };
-            double[] row2 = { Angle.Sine(rotationAngle.Radians), Angle.Cosine(rotationAngle.Radians), 0 };
+            double[] row1 = { Math.Cos(rotationAngle.Radians.Value), -Math.Sin(rotationAngle.Radians.Value), 0 };
+            double[] row2 = { Math.Sin(rotationAngle.Radians.Value), Math.Cos(rotationAngle.Radians.Value), 0 };
             double[] row3 = { 0, 0, 1 };
 
             rotationMatrix.SetRow(0, row1);
@@ -812,23 +814,23 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = passedRotation.AxisOfRotation.Direction;
 
-            double unitX = rotationUnitVector.XComponent; //Projection onto x-axis
-            double unitY = rotationUnitVector.YComponent;
-            double unitZ = rotationUnitVector.ZComponent;
-            double theta = passedRotation.RotationAngle.Radians;
+            double unitX = rotationUnitVector.XComponent.Value; //Projection onto x-axis
+            double unitY = rotationUnitVector.YComponent.Value;
+            double unitZ = rotationUnitVector.ZComponent.Value;
+            double theta = passedRotation.RotationAngle.Radians.Value;
 
-            double sinTheta = Angle.Sine(theta);
-            double cosTheta = Angle.Cosine(theta);
+            double sinTheta = Math.Sin(theta);
+            double cosTheta = Math.Cos(theta);
 
-            double row0column0 = Angle.Cosine(theta) + unitX*unitX * (1 - Angle.Cosine(theta));
-            double row0column1 = unitX * unitY * (1 - Angle.Cosine(theta)) - unitZ * Angle.Sine(theta);
-            double row0column2 = unitX * unitZ * (1 - Angle.Cosine(theta)) + unitY * Angle.Sine(theta);
-            double row1column0 = unitY * unitX * (1 - Angle.Cosine(theta)) + unitZ * Angle.Sine(theta);
-            double row1column1 = Angle.Cosine(theta) + unitY*unitY * (1 - Angle.Cosine(theta));
-            double row1column2 = unitY * unitZ * (1 - Angle.Cosine(theta)) - unitX * Angle.Sine(theta);
-            double row2column0 = unitZ * unitX * (1 - Angle.Cosine(theta)) - unitY * Angle.Sine(theta);
-            double row2column1 = unitZ * unitY * (1 - Angle.Cosine(theta)) + unitX * Angle.Sine(theta);
-            double row2column2 = Angle.Cosine(theta) + unitZ*unitZ * (1 - Angle.Cosine(theta));
+            double row0column0 = Math.Cos(theta) + unitX*unitX * (1 - Math.Cos(theta));
+            double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);
+            double row0column2 = unitX * unitZ * (1 - Math.Cos(theta)) + unitY * Math.Sin(theta);
+            double row1column0 = unitY * unitX * (1 - Math.Cos(theta)) + unitZ * Math.Sin(theta);
+            double row1column1 = Math.Cos(theta) + unitY*unitY * (1 - Math.Cos(theta));
+            double row1column2 = unitY * unitZ * (1 - Math.Cos(theta)) - unitX * Math.Sin(theta);
+            double row2column0 = unitZ * unitX * (1 - Math.Cos(theta)) - unitY * Math.Sin(theta);
+            double row2column1 = unitZ * unitY * (1 - Math.Cos(theta)) + unitX * Math.Sin(theta);
+            double row2column2 = Math.Cos(theta) + unitZ*unitZ * (1 - Math.Cos(theta));
 
             rotationMatrix.SetElement(0, 0, row0column0);
             rotationMatrix.SetElement(0, 1, row0column1);

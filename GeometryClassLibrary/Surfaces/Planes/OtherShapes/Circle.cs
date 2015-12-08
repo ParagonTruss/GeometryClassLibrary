@@ -4,6 +4,9 @@ using MoreLinq;
 using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using System;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 
 namespace GeometryClassLibrary
 {
@@ -25,7 +28,7 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return Math.PI * new Area(Radius, Radius);
+                return (Area)(Math.PI * new Area(new SquareInch(),Radius* Radius));
             }
         }
 

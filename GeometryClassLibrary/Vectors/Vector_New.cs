@@ -6,7 +6,7 @@ using UnitClassLibrary.GenericUnit;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public class Vector<T> : IVector<T> where T : IUnitType
+    public class Vector_New<T> : IVector<T> where T : IUnitType
     {
         #region Properties
         public T UnitType { get; private set; }
@@ -34,7 +34,7 @@ namespace GeometryClassLibrary.Vectors
         #endregion
 
         #region Constructors
-        public Vector(T unitType, Measurement x, Measurement y, Measurement z, Point applicationPoint = null)
+        public Vector_New(T unitType, Measurement x, Measurement y, Measurement z, Point applicationPoint = null)
         {
             this.X = x;
             this.Y = y;
@@ -45,14 +45,14 @@ namespace GeometryClassLibrary.Vectors
                 this.ApplicationPoint = applicationPoint;
             }
         }
-        public Vector(Unit<T> x, Unit<T> y, Unit<T> z)
+        public Vector_New(Unit<T> x, Unit<T> y, Unit<T> z)
         {
             this.UnitType = (T)x.UnitType;
             this.X = x.Measurement;
             this.Y = y.ValueInThisUnit(UnitType);
             this.Z = z.ValueInThisUnit(UnitType);
         }
-        public Vector(Point basePoint, Unit<T> magnitude, Direction direction)
+        public Vector_New(Point basePoint, Unit<T> magnitude, Direction direction)
         {
             this.ApplicationPoint = basePoint;
             this.UnitType = (T)magnitude.UnitType;

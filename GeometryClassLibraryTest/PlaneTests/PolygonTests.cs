@@ -6,7 +6,10 @@ using GeometryStubLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
-using static UnitClassLibrary.Distance;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -38,7 +41,7 @@ namespace GeometryClassLibraryTest
 
             Polygon correctPolygon = new Polygon(verticesInCorrectOrder);
             Area area = correctPolygon.Area;
-            area.Should().Be(new Area(AreaType.InchesSquared, 1));
+            area.Should().Be(new Area(new SquareInch(), 1));
 
             //this part should throw an exception
             Polygon badPolygon = new Polygon(verticesInWrongOrder);
@@ -122,7 +125,7 @@ namespace GeometryClassLibraryTest
             Polygon testPolygon = new Polygon(lineSegments);
 
             Line rotationAxis = new Line(Point.MakePointWithInches(1, 0, 0)); //This is the X axis
-            Angle rotationAngle = new Angle(AngleType.Degree, 90);
+            Angle rotationAngle = new Angle(new Degree(), 90);
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
@@ -146,7 +149,7 @@ namespace GeometryClassLibraryTest
             Polygon testPolygon = new Polygon(lineSegments);
 
             Line rotationAxis = new Line(new Direction(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(1, -1, -1)));
-            Angle rotationAngle = new Angle(AngleType.Degree, 212);
+            Angle rotationAngle = new Angle(new Degree(), 212);
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
@@ -202,7 +205,7 @@ namespace GeometryClassLibraryTest
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
-            planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 45)), Point.MakePointWithInches(1, 4, -2)));
+            planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, new Angle(new Degree(), 45)), Point.MakePointWithInches(1, 4, -2)));
 
             foreach (LineSegment line in testPolygon.LineSegments)
             {
@@ -526,7 +529,7 @@ namespace GeometryClassLibraryTest
 
             //check to see if its what we expected
             Area testArea1 = testPolygon1.Area;
-            testArea1.Should().Be(new Area(AreaType.InchesSquared, 8));
+            testArea1.Should().Be(new Area(new SquareInch(), 8));
         }
 
         [Test()]
@@ -539,7 +542,7 @@ namespace GeometryClassLibraryTest
             Polygon testPolygon2 = new Polygon(lineSegments);
 
             Area area = testPolygon2.Area;
-            Area expected2 = new Area(AreaType.InchesSquared, 10.52);
+            Area expected2 = new Area(new SquareInch(), 10.52);
 
             (area == expected2).Should().BeTrue();
 
@@ -551,7 +554,7 @@ namespace GeometryClassLibraryTest
 
             //check to see if its what we expected
             Area testArea2 = testPolygon.Area;
-            testArea2.Should().Be(new Area(AreaType.InchesSquared, 3));
+            testArea2.Should().Be(new Area(new SquareInch(), 3));
         }
 
         [Test()]
@@ -559,7 +562,7 @@ namespace GeometryClassLibraryTest
         {
             Polygon concavePentagon = new ConcavePentagon();
             Area area = concavePentagon.Area;
-            Area expected = new Area(AreaType.InchesSquared, 3);
+            Area expected = new Area(new SquareInch(), 3);
             (area == expected).Should().BeTrue();
         }
 
@@ -575,7 +578,7 @@ namespace GeometryClassLibraryTest
 
             //check to see if its what we expected
             Area testArea1 = testPolygon1.Area;
-            testArea1.Should().Be(new Area(AreaType.InchesSquared, 16));
+            testArea1.Should().Be(new Area(new SquareInch(), 16));
         }
 
         [Test()]
@@ -590,7 +593,7 @@ namespace GeometryClassLibraryTest
 
             //check to see if its what we expected
             Area testArea1 = testPolygon1.Area;
-            testArea1.Should().Be(new Area(AreaType.InchesSquared, 16));
+            testArea1.Should().Be(new Area(new SquareInch(), 16));
         }
 
         [Test()]
@@ -721,7 +724,7 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Plane slicingPlane = new Plane(new Direction(new Angle(AngleType.Radian, 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
+            Plane slicingPlane = new Plane(new Direction(new Angle(new Radian(), 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
 
             List<Polygon> results = testPolygon.Slice(slicingPlane);
 
@@ -763,7 +766,7 @@ namespace GeometryClassLibraryTest
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
-            Plane slicingPlane = new Plane(new Direction(new Angle(AngleType.Radian, 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
+            Plane slicingPlane = new Plane(new Direction(new Angle(new Radian(), 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
 
             List<Polygon> results = testPolygon.Slice(slicingPlane);
 
@@ -952,11 +955,11 @@ namespace GeometryClassLibraryTest
         public void Polygon_Rectangle_Constructor()
         {
             LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left));
-            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(Angle.Degree * 33)));
+            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, Angle.Degree * 33));
             Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
             
             Area myArea = myRectangle.Area;
-            (myArea == new Area(AreaType.InchesSquared, 1)).Should().BeTrue();
+            (myArea == new Area(new SquareInch(), 1)).Should().BeTrue();
             myRectangle.IsRectangle().Should().BeTrue();
            
         }
@@ -1021,10 +1024,10 @@ namespace GeometryClassLibraryTest
 
             results.Count.Should().Be(4);
 
-            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 2 * Inch), new Vector(Direction.Up, 2 * Inch));
-            var expected2 = Polygon.Triangle(new Vector(Direction.Right, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(0, 4));
-            var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Down, 2 * Inch), Point.MakePointWithInches(4, 4));
-            var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Inch), new Vector(Direction.Up, 2 * Inch), Point.MakePointWithInches(4, 0));
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 2 * Distance.Inch), new Vector(Direction.Up, 2 * Distance.Inch));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Right, 2 * Distance.Inch), new Vector(Direction.Down, 2 * Distance.Inch), Point.MakePointWithInches(0, 4));
+            var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Distance.Inch), new Vector(Direction.Down, 2 * Distance.Inch), Point.MakePointWithInches(4, 4));
+            var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Distance.Inch), new Vector(Direction.Up, 2 * Distance.Inch), Point.MakePointWithInches(4, 0));
 
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
@@ -1039,8 +1042,8 @@ namespace GeometryClassLibraryTest
             // There's no overlapping region, 
             // so the results should be just one square or the other
 
-            var square1 = Polygon.Square(3 * Inch);
-            var square2 = Polygon.Square(3 * Inch);
+            var square1 = Polygon.Square(3 * Distance.Inch);
+            var square2 = Polygon.Square(3 * Distance.Inch);
             square2 = square2.Rotate(new Rotation(65 * Angle.Degree));
             square2 = square2.Translate(Point.MakePointWithInches(3, 3));
 
@@ -1060,24 +1063,24 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_OverlappingPolygons()
         {
-            var initialRectangle = Polygon.Rectangle(2 * Inch, 3 * Inch);
-            var square = Polygon.Square(Inch, Point.MakePointWithInches(1, 1));
+            var initialRectangle = Polygon.Rectangle(2 * Distance.Inch, 3 * Distance.Inch);
+            var square = Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 1));
 
             var cShape = initialRectangle.RemoveRegion(square)[0];
-            var rectangle = Polygon.Rectangle(Inch, 3 * Inch, Point.MakePointWithInches(1, 0));
+            var rectangle = Polygon.Rectangle(Distance.Inch, 3 * Distance.Inch, Point.MakePointWithInches(1, 0));
 
             var results = cShape.OverlappingPolygons(rectangle);
 
             results.Count.Should().Be(2);
-            results.Contains(Polygon.Square(Inch, Point.MakePointWithInches(1, 2))).Should().BeTrue();
-            results.Contains(Polygon.Square(Inch, Point.MakePointWithInches(1, 0))).Should().BeTrue();
+            results.Contains(Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 2))).Should().BeTrue();
+            results.Contains(Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 0))).Should().BeTrue();
 
         }
 
         [Test]
         public void Polygon_OverlappingPolygons_NoOverlap()
         {
-            var rectangle1 = Polygon.Rectangle(3 * Inch, 2 * Inch);
+            var rectangle1 = Polygon.Rectangle(3 * Distance.Inch, 2 * Distance.Inch);
             var rectangle2 = rectangle1.Translate(Point.MakePointWithInches(3, 0));
 
             var results = rectangle1.OverlappingPolygons(rectangle2);

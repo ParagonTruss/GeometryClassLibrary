@@ -5,6 +5,12 @@ using GeometryClassLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.CentimeterUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -33,7 +39,7 @@ namespace GeometryClassLibraryTest
 
             Point pointOnLine = Point.MakePointWithInches(3, 6, 0);
 
-            testLine.GetPointAlongLine(new Distance(DistanceType.Inch, 6.62)).Should().Be(pointOnLine);         
+            testLine.GetPointAlongLine(new Distance(new Inch(), 6.62)).Should().Be(pointOnLine);         
         }
 
         [Test()]
@@ -157,7 +163,7 @@ namespace GeometryClassLibraryTest
             Line line1 = new Line(basePointLine1, Point.MakePointWithInches(-2, 4, 3));
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
-            Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
+            Angle expectedResult = new Angle(new Radian(), 1.080839);
             Angle actualResult = line1.SmallestAngleBetween(line2);
             
             actualResult.Should().Be(expectedResult);
@@ -172,7 +178,7 @@ namespace GeometryClassLibraryTest
             Line line1 = new Line(basePointLine1, Point.MakePointWithInches(-2, 4, 3));
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(-2, 1, 3));
 
-            Angle expectedResult = new Angle(AngleType.Radian, 1.080839);
+            Angle expectedResult = new Angle(new Radian(), 1.080839);
             Angle actualResult = line1.SmallestAngleBetween(line2);
 
             actualResult.Should().Be(expectedResult);
@@ -188,7 +194,7 @@ namespace GeometryClassLibraryTest
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
             double angleBetweenLinesInRadians = Math.Acos(1 / Math.Sqrt(3));
-            Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
+            Angle angleBetweenLines = new Angle(new Radian(), angleBetweenLinesInRadians);
 
             line1.SmallestAngleBetween(line2).Should().Be(angleBetweenLines);
         }
@@ -203,7 +209,7 @@ namespace GeometryClassLibraryTest
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
             double angleBetweenLinesInRadians = Math.Acos(0);
-            Angle angleBetweenLines = new Angle(AngleType.Radian, angleBetweenLinesInRadians);
+            Angle angleBetweenLines = new Angle(new Radian(), angleBetweenLinesInRadians);
 
             line1.SmallestAngleBetween(line2).Should().Be(angleBetweenLines);
 
@@ -247,9 +253,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_IsPerpendicularTo()
         {
-            Line line1 = new LineSegment(Point.Origin, new Direction(new Angle(AngleType.Degree, 45)), new Distance(DistanceType.Inch, 1));
-            Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(AngleType.Degree, 135)), new Distance(DistanceType.Inch, 1));
-            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(AngleType.Degree, 45), Angle.Zero), new Distance(DistanceType.Inch, 1));
+            Line line1 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 45)), new Distance(new Inch(), 1));
+            Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 135)), new Distance(new Inch(), 1));
+            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(new Degree(), 45), Angle.Zero), new Distance(new Inch(), 1));
 
             Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
             Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
@@ -278,7 +284,7 @@ namespace GeometryClassLibraryTest
             Line line1 = new Line(basePointLine1, otherPointLine1);
             Line axisLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
 
-            Angle rotationAngle = new Angle(AngleType.Degree, 199);
+            Angle rotationAngle = new Angle(new Degree(), 199);
 
             Line actualResult = line1.Rotate(new Rotation(axisLine, rotationAngle));
 
@@ -298,7 +304,7 @@ namespace GeometryClassLibraryTest
             Line toRotate = new Line(start, end);
             Line startPointYAxis = new Line(start, Point.MakePointWithInches(0, 2, 3)); //relative y axis
 
-            Angle rotationAngle = new Angle(AngleType.Degree, 90);
+            Angle rotationAngle = new Angle(new Degree(), 90);
 
             Line afterRotate = toRotate.Rotate(new Rotation(startPointYAxis, rotationAngle));
 
@@ -315,7 +321,7 @@ namespace GeometryClassLibraryTest
             Line line1 = new Line(Point.MakePointWithInches(1, 2, 3), Point.MakePointWithInches(-3, -2, 0));
 
             //Direction testDirection = new Direction(Point.MakePointWithInches(-1, 5, 4));
-            //Distance testDisplacement = new Distance(DistanceType.Inch, 12.9614814);
+            //Distance testDisplacement = new Distance(new Inch(), 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
             Line actualLine1 = line1.Translate((testDisplacement));
@@ -446,10 +452,10 @@ namespace GeometryClassLibraryTest
             Distance intercept3 = line3.XInterceptIn2D;
             Distance intercept4 = line4.XInterceptIn2D;
 
-            intercept1.Should().Be(new Distance(DistanceType.Inch, -1));
-            intercept2.Should().Be(new Distance(DistanceType.Inch, 6));
-            intercept3.Should().Be(new Distance(DistanceType.Inch, 0));
-            intercept4.Should().Be(new Distance(DistanceType.Inch, 4));
+            intercept1.Should().Be(new Distance(new Inch(), -1));
+            intercept2.Should().Be(new Distance(new Inch(), 6));
+            intercept3.Should().Be(new Distance(new Inch(), 0));
+            intercept4.Should().Be(new Distance(new Inch(), 4));
         }
 
         [Test()]
@@ -475,10 +481,10 @@ namespace GeometryClassLibraryTest
             Distance intercept3 = line3.YInterceptIn2D;
             Distance intercept4 = line4.YInterceptIn2D;
 
-            intercept1.Should().Be(new Distance(DistanceType.Inch, 1));
-            intercept2.Should().Be(new Distance(DistanceType.Inch, 1.5));
-            intercept3.Should().Be(new Distance(DistanceType.Inch, 0));
-            intercept4.Should().Be(new Distance(DistanceType.Inch, -1));
+            intercept1.Should().Be(new Distance(new Inch(), 1));
+            intercept2.Should().Be(new Distance(new Inch(), 1.5));
+            intercept3.Should().Be(new Distance(new Inch(), 0));
+            intercept4.Should().Be(new Distance(new Inch(), -1));
         }
 
         [Test()]
@@ -601,9 +607,9 @@ namespace GeometryClassLibraryTest
         public void Line_UnitVector()
         {
             Line testLine = new Line(Point.MakePointWithInches(2, 3, 1), Point.MakePointWithInches(5, -7, 0));
-            Vector unitVector = testLine.UnitVector(DistanceType.Inch);
+            Vector unitVector = testLine.UnitVector(new Inch());
 
-            unitVector.Magnitude.Should().Be(new Distance(DistanceType.Centimeter, 2.54));
+            unitVector.Magnitude.Should().Be(new Distance(new Centimeter(), 2.54));
             unitVector.Direction.Should().Be(testLine.Direction);
             unitVector.BasePoint.Should().Be(testLine.BasePoint);
         }

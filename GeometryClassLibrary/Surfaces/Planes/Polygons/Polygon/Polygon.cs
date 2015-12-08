@@ -4,8 +4,12 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using MoreLinq;
-using static UnitClassLibrary.AngularDistance;
 using System.Collections;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibrary
 {
@@ -93,7 +97,7 @@ namespace GeometryClassLibrary
             {   
                 if (_area == null)
                 {
-                    _area = new Area(AreaType.InchesSquared, Math.Abs(_findArea()));
+                    _area = new Area(new SquareInch(), Math.Abs(_findArea()));
                 }
                 return _area;
             }
@@ -674,7 +678,7 @@ namespace GeometryClassLibrary
             }
 
             //find the normal direction of the plane we will use to slice with
-            Vector divisionPlaneNormal = this.NormalVector.CrossProduct(slicingLine.UnitVector(DistanceType.Inch));
+            Vector divisionPlaneNormal = this.NormalVector.CrossProduct(slicingLine.UnitVector(new Inch()));
 
             //now make it with the normal we found and the lines basepoint
             Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
@@ -1274,7 +1278,7 @@ namespace GeometryClassLibrary
                     }
                 }
 
-                AngularDistance angularDistance = Angle.Zero;
+                Angle angularDistance = Angle.Zero;
                 for (int i = 0; i < this.Vertices.Count; i++)
                 {
                     Point previous;
@@ -1290,16 +1294,16 @@ namespace GeometryClassLibrary
                     var segment1 = new LineSegment(passedPoint, previous);
                     var segment2 = new LineSegment(passedPoint, next);
                     
-                    var angle = new AngularDistance(segment1.AngleBetween(segment2));
+                    var angle = segment1.AngleBetween(segment2).ModOutTwoPi();
                     if (segment1.CrossProduct(segment2).HasOppositeDirectionOf(this.NormalVector))
                     {
-                        angle = angle.Negate();
+                        angle = (Angle)angle.Negate();
                     }
-                    angularDistance += angle;
+                    angularDistance = (Angle)(angularDistance + angle);
 
                 }
                
-                if (angularDistance % new AngularDistance(AngleType.Degree, 720) == Angle.Zero)
+                if (angularDistance % new Angle(new Degree(), 720) == Angle.Zero)
                 {
                     return false;
                 }
@@ -1419,7 +1423,7 @@ namespace GeometryClassLibrary
                 var vector2 = new Vector(vertices.First(), vertices[i]);
                total += vector1.CrossProduct(vector2);
             }
-            return total.Magnitude.Inches / 2;
+            return total.Magnitude.Inches.Value / 2;
         }
 
         private Point _findCentroid()
@@ -1490,7 +1494,7 @@ namespace GeometryClassLibrary
             }
             for (int i = 0; i < 3; i++)//we only need to check 3 angles, because the last angle is determined by the need to close the polygon.
             {
-                if (LineSegments[i].AngleBetween(LineSegments[i + 1]) != new Angle(AngleType.Degree, 90))
+                if (LineSegments[i].AngleBetween(LineSegments[i + 1]) != new Angle(new Degree(), 90))
                 {
                     return false;
                 }
@@ -1750,8 +1754,8 @@ namespace GeometryClassLibrary
                             #endregion
 
                             var normal = Math.Pow(-1, index) * polygon1.NormalVector;
-                            var angle1 = new Angle(nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal));
-                            var angle2 = new Angle(nextSegment.SignedAngleBetween(lineSegment, normal));
+                            var angle1 = (nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal)).ModOutTwoPi();
+                            var angle2 = (nextSegment.SignedAngleBetween(lineSegment, normal)).ModOutTwoPi();
                             if (angle2 < angle1)
                             {
                                 found = true;
@@ -1955,11 +1959,11 @@ namespace GeometryClassLibrary
                 throw new ArgumentException("A polygon must have more than 2 sides.");
             }
 
-            AngularDistance step = Angle.Degree * 360.0 / numberOfSides;
-            AngularDistance otherAngle = (Angle.Degree * 180 - step) / 2;
+            Angle step = (Angle)(Angle.Degree * 360.0 / numberOfSides);
+            Angle otherAngle = (Angle)((Angle.Degree * 180 - step) / 2);
 
             //Law of Sines
-            Distance length = sideLength * Math.Sin(otherAngle.Radians) / Math.Sin((step.Radians));
+            Distance length = sideLength * Angle.Sine(otherAngle) / Angle.Sine(step);
 
             Point firstPoint;
             if (startingAngle == null)
@@ -1968,7 +1972,7 @@ namespace GeometryClassLibrary
                 if (numberOfSides % 4 == 0)
                 {
                     firstPoint = new Point(length, Distance.Zero);
-                    firstPoint = firstPoint.Rotate2D(step / 2);
+                    firstPoint = firstPoint.Rotate2D((Angle)(step / 2));
                 }
                 else if (numberOfSides % 2 == 0)
                 {
@@ -1987,7 +1991,7 @@ namespace GeometryClassLibrary
             List<Point> points = new List<Point>() { firstPoint };
             for (int i = 1; i < numberOfSides; i++)
             {
-                points.Add(firstPoint.Rotate2D(step*i));
+                points.Add(firstPoint.Rotate2D((Angle)(step*i)));
             }
             if (centerPoint == null)
             {

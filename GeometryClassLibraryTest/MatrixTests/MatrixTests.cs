@@ -5,6 +5,8 @@ using GeometryClassLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -1315,7 +1317,7 @@ namespace GeometryClassLibraryTest
         public void Matrix_RotateAboutXTest()
         {
             Point pointToRotate = Point.MakePointWithInches(4, -2, 2);
-            Angle angleToRotate = new Angle(AngleType.Degree, 199);
+            Angle angleToRotate = new Angle(new Degree(), 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutX(angleToRotate);
 
@@ -1333,7 +1335,7 @@ namespace GeometryClassLibraryTest
         public void Matrix_RotateAboutYTest()
         {
             Point pointToRotate = Point.MakePointWithInches(4, -2, 2);
-            Angle angleToRotate = new Angle(AngleType.Degree, 199);
+            Angle angleToRotate = new Angle(new Degree(), 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutY(angleToRotate);
 
@@ -1351,7 +1353,7 @@ namespace GeometryClassLibraryTest
         public void Matrix_RotateAboutZTest()
         {
             Point pointToRotate = Point.MakePointWithInches(4, -2, 2);
-            Angle angleToRotate = new Angle(AngleType.Degree, 199);
+            Angle angleToRotate = new Angle(new Degree(), 199);
 
             Matrix rotationMatrix = Matrix.RotationMatrixAboutZ(angleToRotate);
 
@@ -1412,9 +1414,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_GetAnglesOutOfRotationMatrix()
         {
-            Angle xAngle = new Angle(AngleType.Degree, 90);
-            Angle yAngle = new Angle(AngleType.Degree, -33);
-            Angle zAngle = new Angle(AngleType.Degree, 40);
+            Angle xAngle = new Angle(new Degree(), 90);
+            Angle yAngle = new Angle(new Degree(), -33);
+            Angle zAngle = new Angle(new Degree(), 40);
 
             Matrix xMatrix = Matrix.RotationMatrixAboutX(xAngle);
             Matrix yMatrix = Matrix.RotationMatrixAboutY(yAngle);
@@ -1428,9 +1430,9 @@ namespace GeometryClassLibraryTest
             (results[1] == yAngle).Should().BeTrue();
             (results[2] == zAngle).Should().BeTrue();
 
-            Angle xAngle2 = new Angle(AngleType.Degree, -124);
-            Angle yAngle2 = new Angle(AngleType.Degree, -56.32);
-            Angle zAngle2 = new Angle(AngleType.Degree, 6.221);
+            Angle xAngle2 = new Angle(new Degree(), -124);
+            Angle yAngle2 = new Angle(new Degree(), -56.32);
+            Angle zAngle2 = new Angle(new Degree(), 6.221);
 
             Matrix xMatrix2 = Matrix.RotationMatrixAboutX(xAngle2);
             Matrix yMatrix2 = Matrix.RotationMatrixAboutY(yAngle2);

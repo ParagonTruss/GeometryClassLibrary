@@ -4,6 +4,10 @@ using GeometryClassLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.MillimeterUnit;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -16,28 +20,28 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Point_2DConstructorTest()
         {
-            Distance xDistance = new Distance(DistanceType.Millimeter, 5);
-            Distance yDistance = new Distance(DistanceType.Millimeter, 10);
+            Distance xDistance = new Distance(new Millimeter(), 5);
+            Distance yDistance = new Distance(new Millimeter(), 10);
 
             Point p = new Point(xDistance, yDistance);
 
-            p.X.Should().Be(new Distance(DistanceType.Millimeter, 5));
-            p.Y.Should().Be(new Distance(DistanceType.Millimeter, 10));
-            p.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            p.X.Should().Be(new Distance(new Millimeter(), 5));
+            p.Y.Should().Be(new Distance(new Millimeter(), 10));
+            p.Z.Should().Be(new Distance(new Millimeter(), 0));
         }
 
         [Test()]
         public void Point_3DConstructorTest()
         {
-            Distance xDistance = new Distance(DistanceType.Millimeter, 0);
-            Distance yDistance = new Distance(DistanceType.Millimeter, 0);
-            Distance zDistance = new Distance(DistanceType.Millimeter, 0);
+            Distance xDistance = new Distance(new Millimeter(), 0);
+            Distance yDistance = new Distance(new Millimeter(), 0);
+            Distance zDistance = new Distance(new Millimeter(), 0);
 
             Point p = new Point(xDistance, yDistance, zDistance);
 
-            p.X.Should().Be(new Distance(DistanceType.Millimeter, 0));
-            p.Y.Should().Be(new Distance(DistanceType.Millimeter, 0));
-            p.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            p.X.Should().Be(new Distance(new Millimeter(), 0));
+            p.Y.Should().Be(new Distance(new Millimeter(), 0));
+            p.Z.Should().Be(new Distance(new Millimeter(), 0));
         }
 
         [Test()]
@@ -55,51 +59,51 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Point_PlusOperatorStandardTest()
         {
-            Distance xDistance1 = new Distance(DistanceType.Millimeter, 5);
-            Distance yDistance1 = new Distance(DistanceType.Millimeter, 5);
-            Distance zDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance xDistance1 = new Distance(new Millimeter(), 5);
+            Distance yDistance1 = new Distance(new Millimeter(), 5);
+            Distance zDistance1 = new Distance(new Millimeter(), 5);
 
-            Distance xDistance2 = new Distance(DistanceType.Millimeter, 5);
-            Distance yDistance2 = new Distance(DistanceType.Millimeter, 5);
-            Distance zDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance xDistance2 = new Distance(new Millimeter(), 5);
+            Distance yDistance2 = new Distance(new Millimeter(), 5);
+            Distance zDistance2 = new Distance(new Millimeter(), 5);
 
-            Distance xDistance3 = new Distance(DistanceType.Millimeter, -10);
-            Distance yDistance3 = new Distance(DistanceType.Millimeter, -10);
-            Distance zDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance xDistance3 = new Distance(new Millimeter(), -10);
+            Distance yDistance3 = new Distance(new Millimeter(), -10);
+            Distance zDistance3 = new Distance(new Millimeter(), -10);
 
             Point p1 = new Point(xDistance1, yDistance1, zDistance1);
             Point p2 = new Point(xDistance2, yDistance2, zDistance2);
             Point p3 = new Point(xDistance3, yDistance3, zDistance3);
 
             Point cumulativePoint = (p1 + p2 + p3);
-            cumulativePoint.X.Should().Be(new Distance(DistanceType.Millimeter, 0));
-            cumulativePoint.Y.Should().Be(new Distance(DistanceType.Millimeter, 0));
-            cumulativePoint.Z.Should().Be(new Distance(DistanceType.Millimeter, 0));
+            cumulativePoint.X.Should().Be(new Distance(new Millimeter(), 0));
+            cumulativePoint.Y.Should().Be(new Distance(new Millimeter(), 0));
+            cumulativePoint.Z.Should().Be(new Distance(new Millimeter(), 0));
         }
 
         [Test()]
         public void Point_MinusOperatorStandardTest()
         {
-            Distance xDistance1 = new Distance(DistanceType.Millimeter, 5);
-            Distance yDistance1 = new Distance(DistanceType.Millimeter, 5);
-            Distance zDistance1 = new Distance(DistanceType.Millimeter, 5);
+            Distance xDistance1 = new Distance(new Millimeter(), 5);
+            Distance yDistance1 = new Distance(new Millimeter(), 5);
+            Distance zDistance1 = new Distance(new Millimeter(), 5);
 
-            Distance xDistance2 = new Distance(DistanceType.Millimeter, 5);
-            Distance yDistance2 = new Distance(DistanceType.Millimeter, 5);
-            Distance zDistance2 = new Distance(DistanceType.Millimeter, 5);
+            Distance xDistance2 = new Distance(new Millimeter(), 5);
+            Distance yDistance2 = new Distance(new Millimeter(), 5);
+            Distance zDistance2 = new Distance(new Millimeter(), 5);
 
-            Distance xDistance3 = new Distance(DistanceType.Millimeter, -10);
-            Distance yDistance3 = new Distance(DistanceType.Millimeter, -10);
-            Distance zDistance3 = new Distance(DistanceType.Millimeter, -10);
+            Distance xDistance3 = new Distance(new Millimeter(), -10);
+            Distance yDistance3 = new Distance(new Millimeter(), -10);
+            Distance zDistance3 = new Distance(new Millimeter(), -10);
 
             Point p1 = new Point(xDistance1, yDistance1, zDistance1);
             Point p2 = new Point(xDistance2, yDistance2, zDistance2);
             Point p3 = new Point(xDistance3, yDistance3, zDistance3);
 
             Point cumulativePoint = (p1 - p2 - p3);
-            cumulativePoint.X.Should().Be(new Distance(DistanceType.Millimeter, 10));
-            cumulativePoint.Y.Should().Be(new Distance(DistanceType.Millimeter, 10));
-            cumulativePoint.Z.Should().Be(new Distance(DistanceType.Millimeter, 10));
+            cumulativePoint.X.Should().Be(new Distance(new Millimeter(), 10));
+            cumulativePoint.Y.Should().Be(new Distance(new Millimeter(), 10));
+            cumulativePoint.Z.Should().Be(new Distance(new Millimeter(), 10));
 
 
         }
@@ -141,7 +145,7 @@ namespace GeometryClassLibraryTest
         public void Point_Rotate3DTest()
         {
             Point originPoint = Point.MakePointWithInches(1, 0, 0);
-            Angle rotationAngle = new Angle(AngleType.Degree, 90);
+            Angle rotationAngle = new Angle(new Degree(), 90);
 
             Point newPoint = originPoint.Rotate3D(new Rotation(Line.ZAxis, rotationAngle));
 
@@ -154,7 +158,7 @@ namespace GeometryClassLibraryTest
             Point pointToRotate = Point.MakePointWithInches(4, -2, 2);
             Line axis = new Line(new Direction(Point.MakePointWithInches(-1, -5, -3)), Point.MakePointWithInches(2, -2, -3));
 
-            Angle rotationAngle = new Angle(AngleType.Degree, 322);
+            Angle rotationAngle = new Angle(new Degree(), 322);
 
             Point newPoint = pointToRotate.Rotate3D(new Rotation(axis, rotationAngle));
 
@@ -166,7 +170,7 @@ namespace GeometryClassLibraryTest
         {
             Point originPoint = Point.MakePointWithInches(0, 0, 0);
             Line axis = new Line(Point.MakePointWithInches(1, -1, 0), Point.MakePointWithInches(1, 1, 0));
-            Angle rotationAngle = new Angle(AngleType.Degree, 212);
+            Angle rotationAngle = new Angle(new Degree(), 212);
 
             Point newPoint = originPoint.Rotate3D(new Rotation(axis, rotationAngle));
 
@@ -249,7 +253,7 @@ namespace GeometryClassLibraryTest
         {
             Point pointToTranslate = Point.MakePointWithInches(1, 2, 3);
             //Direction directionToTranslate = new Direction(Point.MakePointWithInches(-1, 5, 4));
-            //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 12.9614814);
+            //Distance displacementOfTranslation = new Distance(new Inch(), 12.9614814);
             Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
 
             Point actualResult = pointToTranslate.Translate(testDisplacement);
@@ -265,7 +269,7 @@ namespace GeometryClassLibraryTest
             Point pointToTranslate = Point.MakePointWithInches(1,1,1);
             
             //Direction directionToTranslate = new Direction(Point.MakePointWithInches(1, 0, 0));
-            //Distance displacementOfTranslation = new Distance(DistanceType.Inch, 4);
+            //Distance displacementOfTranslation = new Distance(new Inch(), 4);
             Point testDisplacement = Point.MakePointWithInches(4, 0, 0);
 
             Point actualResult = pointToTranslate.Translate(testDisplacement);
@@ -282,9 +286,9 @@ namespace GeometryClassLibraryTest
 
             Point displacementPoint = Point.MakePointWithInches(1, -1, 1);
 
-            Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
+            Angle angleAboutZAxis = new Angle(new Degree(), 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
-            Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
+            Angle angleAboutXAxis = new Angle(new Degree(), 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
             Shift testShift = new Shift(new List<Rotation>() { zRotation, xRotation }, displacementPoint);
 
@@ -300,9 +304,9 @@ namespace GeometryClassLibraryTest
         {
             Point point1 = Point.MakePointWithInches(1, 1, 0);
 
-            Angle angleAboutZAxis = new Angle(AngleType.Degree, 45);
+            Angle angleAboutZAxis = new Angle(new Degree(), 45);
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
-            Angle angleAboutXAxis = new Angle(AngleType.Degree, 112);
+            Angle angleAboutXAxis = new Angle(new Degree(), 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
             Shift testShift = new Shift(new List<Rotation>() { zRotation, xRotation });
 

@@ -117,14 +117,14 @@ namespace GeometryClassLibraryTest
 
             List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
 
-            Line result = lines.LineWithXInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 3));
+            Line result = lines.LineWithXInterceptIn2DClosestTo(new Distance(new Inch(), 3));
 
             result.Should().Be(line4);
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithXInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 0));
+            Line result2 = lines2.LineWithXInterceptIn2DClosestTo(new Distance(new Inch(), 0));
 
             result2.Should().Be(line3);
         }
@@ -140,14 +140,14 @@ namespace GeometryClassLibraryTest
 
             List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
 
-            Line result = lines.LineWithXInterceptIn2DFarthestFrom(new Distance(DistanceType.Inch, 3));
+            Line result = lines.LineWithXInterceptIn2DFarthestFrom(new Distance(new Inch(), 3));
 
             result.Should().Be(line1);
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithXInterceptIn2DFarthestFrom(new Distance(DistanceType.Inch, 0));
+            Line result2 = lines2.LineWithXInterceptIn2DFarthestFrom(new Distance(new Inch(), 0));
 
             result2.Should().Be(line2);
         }
@@ -209,14 +209,14 @@ namespace GeometryClassLibraryTest
 
             List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
 
-            Line result = lines.LineWithYInterceptIn2DClosestTo(new Distance(DistanceType.Inch, 1.3));
+            Line result = lines.LineWithYInterceptIn2DClosestTo(new Distance(new Inch(), 1.3));
 
             result.Should().Be(line2);
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithYInterceptIn2DClosestTo(new Distance(DistanceType.Inch, -0.25));
+            Line result2 = lines2.LineWithYInterceptIn2DClosestTo(new Distance(new Inch(), -0.25));
 
             result2.Should().Be(line3);
         }
@@ -232,14 +232,14 @@ namespace GeometryClassLibraryTest
 
             List<Line> lines = new List<Line> { line4, line2, line1, line5, line3 };
 
-            Line result = lines.LineWithYInterceptIn2DFarthestFrom(new Distance(DistanceType.Inch, 1.3));
+            Line result = lines.LineWithYInterceptIn2DFarthestFrom(new Distance(new Inch(), 1.3));
 
             result.Should().Be(line4);
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithYInterceptIn2DFarthestFrom(new Distance(DistanceType.Inch, -0.25));
+            Line result2 = lines2.LineWithYInterceptIn2DFarthestFrom(new Distance(new Inch(), -0.25));
 
             result2.Should().Be(line2);
         }

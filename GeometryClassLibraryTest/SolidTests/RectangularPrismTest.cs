@@ -12,9 +12,9 @@ namespace GeometryClassLibraryTest
         [Test]
         public void RectangularPrism_ConstructorTest()
         {
-            var height = new Distance(DistanceType.Inch, 5);
-            var width = new Distance(DistanceType.Inch, 5);
-            var length = new Distance(DistanceType.Inch, 5);
+            var height = new Distance(new Inch(), 5);
+            var width = new Distance(new Inch(), 5);
+            var length = new Distance(new Inch(), 5);
             RectangularPrism prism = new RectangularPrism(width, height, length);
 
             //make sure it was made right

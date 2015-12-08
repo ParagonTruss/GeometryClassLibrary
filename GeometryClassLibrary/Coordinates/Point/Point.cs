@@ -157,12 +157,12 @@ namespace GeometryClassLibrary
             return new Point(newX, newY, newZ);
         }
 
-        public static Point operator *(double scalar, Point point)
+        public static Point operator *(Measurement scalar, Point point)
         {
             return new Point(scalar * point.X, scalar * point.Y, scalar * point.Z);
         }
 
-        public static Point operator /(Point point, double divisor)
+        public static Point operator /(Point point, Measurement divisor)
         {
             return new Point(point.X/ divisor, point.Y/divisor, point.Z/divisor);
 
@@ -337,7 +337,7 @@ namespace GeometryClassLibrary
         {
             Vector hypotenuse = new Vector(projectOnto.BasePoint, this);
             Direction lineDirection = projectOnto.Direction;
-            double dotProduct = hypotenuse.Direction.DotProduct(projectOnto.Direction);
+            Measurement dotProduct = hypotenuse.Direction.DotProduct(projectOnto.Direction);
             return projectOnto.GetPointAlongLine(dotProduct * hypotenuse.Magnitude);
         }
 

@@ -15,7 +15,7 @@ namespace GeometryClassLibrary.Vectors
             return new Unit<DerivedUnitType>(unitType, result);
         }
 
-        public static Vector<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
+        public static Vector_New<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
             var x1 = vector1.X;
             var y1 = vector1.Y;
@@ -30,8 +30,7 @@ namespace GeometryClassLibrary.Vectors
 
             var newDimensions = vector1.UnitType.Dimensions.Multiply(vector2.UnitType.Dimensions);
             var newUnitType = new DerivedUnitType(newDimensions);
-            return new Vector<DerivedUnitType>(newUnitType, newX, newY, newZ);
-
+            return new Vector_New<DerivedUnitType>(newUnitType, newX, newY, newZ);
         }
     }
 }

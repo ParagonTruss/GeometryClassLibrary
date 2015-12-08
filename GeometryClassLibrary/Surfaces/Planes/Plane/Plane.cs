@@ -8,6 +8,7 @@ using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit.AngleTypes;
 
 namespace GeometryClassLibrary
 {
@@ -30,7 +31,7 @@ namespace GeometryClassLibrary
         [JsonProperty]
         public Point BasePoint { get { return NormalLine.BasePoint; } }
 
-        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, Inch); } }
+        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, Distance.Inch); } }
 
         [JsonProperty]
         public Direction NormalDirection { get { return NormalLine.Direction; } }
@@ -71,12 +72,12 @@ namespace GeometryClassLibrary
                 if (line1.IsParallelTo(line2))
                 {
                     Vector lineBetween = new Vector(line1.BasePoint, line2.BasePoint);
-                    normal = new Vector(line1, Inch).CrossProduct(lineBetween);
+                    normal = new Vector(line1, Distance.Inch).CrossProduct(lineBetween);
                 }
                 //if they are coplanar and not parallel we can just cross them
                 else if (line1.IsCoplanarWith(line2))
                 {
-                    normal = new Vector(line1, Inch).CrossProduct(new Vector(line2, Inch));
+                    normal = new Vector(line1, Distance.Inch).CrossProduct(new Vector(line2, Distance.Inch));
                 }
                 else
                 {
@@ -542,6 +543,7 @@ namespace GeometryClassLibrary
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
             var complement = new Angle(new Degree(), 90) - angle;
+            return complement.ModOutTwoPi();
         }
 
         public Vector NormalVectorThrough(Point point)

@@ -10,6 +10,7 @@ using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.GenericUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 
 namespace GeometryClassLibrary
 {
@@ -401,7 +402,7 @@ namespace GeometryClassLibrary
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
             Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.Inches ^ 2;
-            double dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).InchesSquared;
+            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).ValueInThisUnit(new SquareInch());
 
             if (crossProductABMagnitudeSquared == 0)
             {

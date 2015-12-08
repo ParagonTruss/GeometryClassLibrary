@@ -28,7 +28,7 @@ namespace GeometryClassLibrary
             get
             {
                 var matrix = GeometryClassLibrary.Matrix.IdentityMatrix(4);
-                var array = new double[] { Point.X.Inches, Point.Y.Inches, Point.Z.Inches, 1 };
+                var array = new double[] { Point.X.Inches.Value, Point.Y.Inches.Value, Point.Z.Inches.Value, 1 };
                 matrix.SetColumn(3, array);
                 return matrix;
             }

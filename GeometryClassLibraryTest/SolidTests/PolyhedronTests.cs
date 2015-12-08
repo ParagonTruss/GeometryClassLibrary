@@ -5,6 +5,8 @@ using GeometryStubLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -29,7 +31,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees towards x
-            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(AngleType.Degree, -90)), Point.MakePointWithInches(8, 0));
+            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(new Degree(), -90)), Point.MakePointWithInches(8, 0));
             Polyhedron result = polyhedron.Shift(ninetyShift);
 
             result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 0), Point.MakePointWithInches(16, 0))).Should().BeTrue();
@@ -45,7 +47,7 @@ namespace GeometryClassLibraryTest
 
 
             //rotate 90 degrees towards z
-            Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(AngleType.Degree, 90)));
+            Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(new Degree(), 90)));
             Polyhedron result = polyhedron.Shift(nintyShift);
 
             result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
@@ -61,9 +63,9 @@ namespace GeometryClassLibraryTest
 
 
             //rotate 90 degrees towards z
-            Angle zAngle = new Angle(AngleType.Degree, 90);
+            Angle zAngle = new Angle(new Degree(), 90);
             Rotation zRotation = new Rotation(Line.ZAxis, zAngle);
-            Angle xAngle = new Angle(AngleType.Degree, 90); //This is the X axis
+            Angle xAngle = new Angle(new Degree(), 90); //This is the X axis
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Shift ninetyShift = new Shift(new List<Rotation>() { zRotation, xRotation });
             Polyhedron shifted = polyhedron.Shift(ninetyShift);
@@ -80,7 +82,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, 90);
+            Angle xAngle = new Angle(new Degree(), 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
 
             Polyhedron s = polyhedron.Shift(xRotation);
@@ -129,7 +131,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, 90);
+            Angle xAngle = new Angle(new Degree(), 90);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(1, -2, 5);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
@@ -148,7 +150,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, 63);
+            Angle xAngle = new Angle(new Degree(), 63);
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(0, 0, 1);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
@@ -166,7 +168,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, -90);
+            Angle xAngle = new Angle(new Degree(), -90);
             Line testAxis = new Line(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(-1, 2, 5);
@@ -187,7 +189,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(AngleType.Degree, 90);
+            Angle xAngle = new Angle(new Degree(), 90);
             Line testAxis = new Line(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(1, 3, -4);

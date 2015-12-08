@@ -3,6 +3,8 @@ using GeometryClassLibrary;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -13,9 +15,9 @@ namespace GeometryClassLibraryTest
         public void Direction_ConstuctorsAndEquality()
         {
             Direction direction1 = Direction.Up;
-            Direction direction2 = new Direction(new Angle(AngleType.Degree, 33));
+            Direction direction2 = new Direction(new Angle(new Degree(), 33));
             Direction direction3 = Direction.Out;
-            Direction direction4 = new Direction(new Angle(AngleType.Degree, 33), new Angle(AngleType.Degree, 90));
+            Direction direction4 = new Direction(new Angle(new Degree(), 33), new Angle(new Degree(), 90));
             Direction direction5 = null;
 
             direction1.Should().NotBe(direction2);
@@ -58,7 +60,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Direction_JSON()
         {
-            Direction direction = new Direction(new Angle(AngleType.Degree, 14), new Angle(AngleType.Degree, 37));
+            Direction direction = new Direction(new Angle(new Degree(), 14), new Angle(new Degree(), 37));
 
             var json = JsonConvert.SerializeObject(direction);
             Direction deserializedDirection = JsonConvert.DeserializeObject<Direction>(json);

@@ -13,7 +13,7 @@ namespace GeometryClassLibrary.Vectors
         Measurement X { get; }
         Measurement Y { get; }
         Measurement Z { get; }
-        Point ApplicationPoint { get; }
+        //Point ApplicationPoint { get; }
 
         Unit Magnitude { get; }
         Direction Direction { get; }

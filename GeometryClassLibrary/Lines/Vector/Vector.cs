@@ -5,6 +5,10 @@ using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AngleUnit.AngleTypes;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.GenericUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 
 namespace GeometryClassLibrary
 {
@@ -199,7 +203,7 @@ namespace GeometryClassLibrary
         /// <param name="passedVector"></param>
         /// <param name="scalar"></param>
         /// <returns></returns>
-        public static Vector operator *(Vector passedVector, double scalar)
+        public static Vector operator *(Vector passedVector, Measurement scalar)
         {
             return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude * scalar);
         }
@@ -612,12 +616,12 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = vector;
 
-            var xTerm = vector1.XComponent * vector2.XComponent;
-            var yTerm = vector1.YComponent * vector2.YComponent;
-            var zTerm = vector1.ZComponent * vector2.ZComponent;
+            var xTerm =( vector1.XComponent * vector2.XComponent).ValueInThisUnit(new SquareInch());
+            var yTerm =( vector1.YComponent * vector2.YComponent).ValueInThisUnit(new SquareInch()); 
+            var zTerm = (vector1.ZComponent * vector2.ZComponent).ValueInThisUnit(new SquareInch()); 
             
             var sum = xTerm + yTerm + zTerm;
-            return sum;
+            return new Area(new SquareInch(),sum);
         }
        
         public bool IsPerpendicularTo(Vector other)

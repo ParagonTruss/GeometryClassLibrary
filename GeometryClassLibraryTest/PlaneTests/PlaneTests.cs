@@ -74,7 +74,7 @@ namespace GeometryClassLibraryTest
             Plane testPlane = new Plane(testNormalVector.Direction, testBasePoint);
 
             Line rotationAxis = new Line(new Direction(Point.MakePointWithInches(1, 1, 1)), Point.MakePointWithInches(1, -1, -1));
-            Angle rotationAngle = new Angle(AngleType.Degree, 212);
+            Angle rotationAngle = new Angle(new Degree(), 212);
 
             Plane actualResult = testPlane.Rotate(new Rotation(rotationAxis, rotationAngle));
 

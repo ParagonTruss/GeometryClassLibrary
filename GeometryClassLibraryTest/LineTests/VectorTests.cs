@@ -3,6 +3,9 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibraryTest
 {
@@ -82,7 +85,7 @@ namespace GeometryClassLibraryTest
         public void Vector_CrossProduct()
         {
             Vector xAxis = new Vector(Point.Origin, Direction.Right);
-            Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(AngleType.Degree, 90)));
+            Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(new Degree(), 90)));
 
             Vector result = xAxis.CrossProduct(yAxis);
             Vector expected = new Vector(Point.Origin, new Direction(Angle.Zero, Angle.Zero));
@@ -173,9 +176,9 @@ namespace GeometryClassLibraryTest
             Vector vector4 = new Vector(Point.MakePointWithInches(1, 0));
             Vector vector5 = new Vector(Point.MakePointWithInches(1, Math.Sqrt(3)));
 
-            vector1.AngleBetween(vector2).Should().Be(new Angle(AngleType.Radian, 1.57079632679));
-            vector1.AngleBetween(vector3).Should().Be(new Angle(AngleType.Radian, 1.23732315));
-            vector4.AngleBetween(vector5).Should().Be(new Angle(AngleType.Degree, 60));
+            vector1.AngleBetween(vector2).Should().Be(new Angle(new Radian(), 1.57079632679));
+            vector1.AngleBetween(vector3).Should().Be(new Angle(new Radian(), 1.23732315));
+            vector4.AngleBetween(vector5).Should().Be(new Angle(new Degree(), 60));
 
         }
 

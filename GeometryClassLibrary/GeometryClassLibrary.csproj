@@ -139,7 +139,7 @@
     <Compile Include="Vectors\IVector.cs" />
     <Compile Include="Vectors\IVectorExtensionMethods.cs" />
     <Compile Include="Vectors\LineSegment_New.cs" />
-    <Compile Include="Vectors\Vector.cs" />
+    <Compile Include="Vectors\Vector_New.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Surfaces\Planes\Polygons\Rectangle.cs" />
