@@ -333,9 +333,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point GetPointAlongLine(Distance distance)
         {
-            Distance newX = _basePoint.X + distance * Direction.XComponent;
-            Distance newY = _basePoint.Y + distance * Direction.YComponent;
-            Distance newZ = _basePoint.Z + distance * Direction.ZComponent;
+            Distance newX = BasePoint.X + distance * Direction.XComponent;
+            Distance newY = BasePoint.Y + distance * Direction.YComponent;
+            Distance newZ = BasePoint.Z + distance * Direction.ZComponent;
             return new Point(newX, newY, newZ);
         }
 
@@ -457,7 +457,6 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPolygon"></param>
         /// <returns></returns>
-        //ToDo: Needs unit Test
         public virtual bool DoesIntersect(Polygon passedPolygon)
         {
             return (passedPolygon.DoesIntersect(this));
