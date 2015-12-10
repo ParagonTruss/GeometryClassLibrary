@@ -24,25 +24,14 @@ namespace GeometryClassLibrary
         /// A point on the line to use as a reference.
         /// </summary>
         [JsonProperty]
-        public virtual Point BasePoint
-        {
-            get { return _basePoint; }
-            set { this._basePoint = value; }
-        }
-        private Point _basePoint; //this is any point that is on the line
+        public Point BasePoint { get; private set; }
 
         /// <summary>
         /// The direction the line is extends from the base point in one direction
         /// Note: it also extends in the direction opposite
         /// </summary>
         [JsonProperty]
-        public virtual Direction Direction
-        {
-            get { return _direction; }
-            set { _direction = value; }
-        }
-        private Direction _direction;
-
+        public Direction Direction { get; private set; }
 
         /// <summary>
         /// Returns the X intercept of the line if the z Distance is ignored
@@ -120,8 +109,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line(Point point)
         {
-            _basePoint = Origin;
-            _direction = new Direction(point);
+            this.BasePoint = Origin;
+            this.Direction = new Direction(point);
         }
 
         /// <summary>
@@ -151,8 +140,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line(Point basePoint, Point otherPoint)
         {
-            _basePoint = basePoint;
-            _direction = new Direction(basePoint, otherPoint);
+            this.BasePoint = basePoint;
+            this.Direction = new Direction(basePoint, otherPoint);
         }
 
         /// <summary>
