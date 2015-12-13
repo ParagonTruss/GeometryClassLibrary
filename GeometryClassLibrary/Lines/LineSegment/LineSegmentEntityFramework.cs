@@ -1,4 +1,6 @@
-﻿namespace GeometryClassLibrary
+﻿using System;
+
+namespace GeometryClassLibrary
 {
     public partial class LineSegment
     {

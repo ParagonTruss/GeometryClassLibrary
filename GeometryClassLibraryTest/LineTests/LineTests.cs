@@ -137,10 +137,10 @@ namespace GeometryClassLibraryTest
             Line line5 = new Line(Point.MakePointWithInches(0, 5), Point.MakePointWithInches(0, -3));
             Line line6 = new Line(Point.MakePointWithInches(0, 2), Point.MakePointWithInches(0, -1));
 
-            bool resultT1 = line1.DoesIntersect(line2);
-            bool resultT2 = line3.DoesIntersect(line4);
-            bool resultT3 = line5.DoesIntersect(line6);
-            bool resultF1 = line1.DoesIntersect(line3);
+            bool resultT1 = line1.IntersectsLine(line2);
+            bool resultT2 = line3.IntersectsLine(line4);
+            bool resultT3 = line5.IntersectsLine(line6);
+            bool resultF1 = line1.IntersectsLine(line3);
 
             resultT1.Should().BeTrue();
             resultT2.Should().BeTrue();
@@ -333,9 +333,9 @@ namespace GeometryClassLibraryTest
             Line line3 = new Line(Point.MakePointWithInches(3, 3, 0), Point.MakePointWithInches(-3, -3, 2));
             Line line4 = new Line(Point.MakePointWithInches(3, -3, 0), Point.MakePointWithInches(-3, 3, 2));
 
-            bool resultT1 = line1.DoesIntersect(line2);
-            bool resultF1 = line2.DoesIntersect(line3);
-            bool resultT2 = line3.DoesIntersect(line4);
+            bool resultT1 = line1.IntersectsLine(line2);
+            bool resultF1 = line2.IntersectsLine(line3);
+            bool resultT2 = line3.IntersectsLine(line4);
 
             resultT1.Should().BeTrue();
             resultF1.Should().BeFalse();

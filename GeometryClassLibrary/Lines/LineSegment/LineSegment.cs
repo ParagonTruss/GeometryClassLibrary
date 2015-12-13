@@ -231,6 +231,67 @@ namespace GeometryClassLibrary
         #region Methods
 
         /// <summary>
+        /// Checks if this Vector intersects the given line and returns the point if it does or null otherwise
+        /// </summary>
+        /// <param name="passedLine">The line to check if this intersects with</param>
+        /// <returns>returns the intersection point of the two lines or null if they do not</returns>
+        public override Point IntersectWithLine(Line passedLine)
+        {
+            Point intersect = new Line(this).IntersectWithLine(passedLine);
+
+            if (!ReferenceEquals(intersect, null) && intersect.IsOnLineSegment(this))
+            {
+                return intersect;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
+        /// </summary>
+        /// <param name="passedLineSegment">The LineSegment to check for intersection with</param>
+        /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
+        public Point IntersectWithSegment(LineSegment segment)
+        {
+            Point potentialIntersect = base.IntersectWithLine(segment);
+
+            if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(segment) && potentialIntersect.IsOnLineSegment(this))
+            {
+                return potentialIntersect;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Returns true if the vector shares a base point or endpoint with the passed vector
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
+        public bool SharesABaseOrEndPointWith(LineSegment segment)
+        {
+            return (this.BasePoint == segment.EndPoint
+                || this.BasePoint == segment.BasePoint
+                || this.EndPoint == segment.EndPoint
+                || this.EndPoint == segment.BasePoint);
+        }
+
+
+
+        /// <summary>
+        /// Checks to see if a vector contains another vector.  Useful for checking if members touch
+        /// </summary>
+        /// <param name="passedVector">The Vector to see if is contained in this one</param>
+        /// <returns>Returns a bool of whether or not the Vector is contained</returns>
+        public bool Contains(LineSegment segment)
+        {
+            bool containsBasePoint = (this.Contains(segment.BasePoint));
+            bool containsEndPoint = (this.Contains(segment.EndPoint));
+
+            return containsBasePoint && containsEndPoint;
+        }
+
+        /// <summary>
         /// Slices this lineSegment into two lineSegments at the given point and returns them with the longer segment first
         /// or the original line segment if the point is not on it
         /// </summary>
@@ -427,7 +488,7 @@ namespace GeometryClassLibrary
 
         public bool DoesIntersectNotTouching(LineSegment segment)
         {
-            Point point = this.Intersection(segment);
+            Point point = this.IntersectWithSegment(segment);
             if (point != null)
             {
                 if (point.IsBaseOrEndPointOf(this) ||
@@ -453,6 +514,28 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+        /// <summary>
+        /// Determines whether or not the point is along/contained by this vector
+        /// </summary>
+        public new bool Contains(Point point)
+        {
+            //This method can make or break the Slice method. Handle very carefully.
+            //This checks for a null point, and checks the distance from the point to the line.
+            if (!new Line(this).Contains(point))
+            {
+                return false;
+            }
+            //We need this check before we check directions, because there is no direction if the point is the vector's basepoint
+            if (point == this.BasePoint || point == this.EndPoint)
+            {
+                return true;
+            }
+            Vector pointVector = new Vector(this.BasePoint, point);
+            bool sameDirection = this.HasSameDirectionAs(pointVector);
+            bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
+
+            return sameDirection && greaterMagnitude;
+        }
 
         public bool ContainsOnInside(LineSegment other)
         {
@@ -460,7 +543,10 @@ namespace GeometryClassLibrary
                    this.ContainsOnInside(other.EndPoint);
         }
 
-
+        public Point HypotheticalIntersection(Line line2)
+        {
+            return new Line(this).IntersectWithLine(line2);
+        }
         #endregion
     }
 }

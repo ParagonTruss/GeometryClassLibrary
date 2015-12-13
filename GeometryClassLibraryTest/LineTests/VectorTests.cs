@@ -119,50 +119,35 @@ namespace GeometryClassLibraryTest
             resultOn.Should().BeTrue();
             resultNotOn.Should().BeFalse();
         }
-
-        [Test()]
-        public void Vector_ContainsVector()
-        {
-            Vector vector1 = new Vector(Point.Origin);
-            Vector vector2 = new Vector(Point.MakePointWithInches(2, 2, 4));
-            Vector vector3 = new Vector(Point.MakePointWithInches(2, 2, 4), Point.Origin);
-            Vector vector4 = new Vector(Point.MakePointWithInches(1, 1, 2), Point.Origin);
-
-            (vector1.Contains(vector2)).Should().BeFalse();
-            (vector2.Contains(vector1)).Should().BeTrue();
-            (vector2.Contains(vector3)).Should().BeTrue();
-            (vector3.Contains(vector2)).Should().BeTrue();
-            (vector2.Contains(vector4)).Should().BeTrue();
-        }
         
-        [Test()]
-        public void Vector_DoesOverlapInSameDirection()
-        {
-            Vector testVector = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(4, 4, -4));
-            Vector testPartial = new Vector(Point.MakePointWithInches(2, 2, -2));
-            Vector testContained = new Vector(Point.MakePointWithInches(2, 2, -2), Point.MakePointWithInches(3, 3, -3));
-            Vector testContaining = new Vector(Point.MakePointWithInches(6, 6, -6));
+        //[Test()]
+        //public void Vector_DoesOverlapInSameDirection()
+        //{
+        //    Vector testVector = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(4, 4, -4));
+        //    Vector testPartial = new Vector(Point.MakePointWithInches(2, 2, -2));
+        //    Vector testContained = new Vector(Point.MakePointWithInches(2, 2, -2), Point.MakePointWithInches(3, 3, -3));
+        //    Vector testContaining = new Vector(Point.MakePointWithInches(6, 6, -6));
 
-            Vector testSameLineNotOverlap = new Vector(Point.MakePointWithInches(5, 5, -5), Point.MakePointWithInches(6, 6, -6));
-            Vector testSameBaseNoOverlap = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(2, 3, -3));
-            Vector testIntersecting = new Vector(Point.MakePointWithInches(0, 0, -1), Point.MakePointWithInches(4, 4, -3));
+        //    Vector testSameLineNotOverlap = new Vector(Point.MakePointWithInches(5, 5, -5), Point.MakePointWithInches(6, 6, -6));
+        //    Vector testSameBaseNoOverlap = new Vector(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(2, 3, -3));
+        //    Vector testIntersecting = new Vector(Point.MakePointWithInches(0, 0, -1), Point.MakePointWithInches(4, 4, -3));
 
-            bool resultPartial = testVector.DoesOverlapInSameDirection(testPartial);
-            bool resultContained = testVector.DoesOverlapInSameDirection(testContained);
-            bool resultContaining = testVector.DoesOverlapInSameDirection(testContaining);
+        //    bool resultPartial = testVector.DoesOverlapInSameDirection(testPartial);
+        //    bool resultContained = testVector.DoesOverlapInSameDirection(testContained);
+        //    bool resultContaining = testVector.DoesOverlapInSameDirection(testContaining);
 
-            bool resultSameLineNotOverlap = testVector.DoesOverlapInSameDirection(testSameLineNotOverlap);
-            bool resultSameBaseNoOverlap = testVector.DoesOverlapInSameDirection(testSameBaseNoOverlap);
-            bool resultIntersecting = testVector.DoesOverlapInSameDirection(testIntersecting);
+        //    bool resultSameLineNotOverlap = testVector.DoesOverlapInSameDirection(testSameLineNotOverlap);
+        //    bool resultSameBaseNoOverlap = testVector.DoesOverlapInSameDirection(testSameBaseNoOverlap);
+        //    bool resultIntersecting = testVector.DoesOverlapInSameDirection(testIntersecting);
 
-            resultPartial.Should().BeTrue();
-            resultContained.Should().BeTrue();
-            resultContaining.Should().BeTrue();
+        //    resultPartial.Should().BeTrue();
+        //    resultContained.Should().BeTrue();
+        //    resultContaining.Should().BeTrue();
 
-            resultSameLineNotOverlap.Should().BeFalse();
-            resultSameBaseNoOverlap.Should().BeFalse();
-            resultIntersecting.Should().BeFalse();
-        }
+        //    resultSameLineNotOverlap.Should().BeFalse();
+        //    resultSameBaseNoOverlap.Should().BeFalse();
+        //    resultIntersecting.Should().BeFalse();
+        //}
 
         [Test()]
         public void Vector_AngleBetween()

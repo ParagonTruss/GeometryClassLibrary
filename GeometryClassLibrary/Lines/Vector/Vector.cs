@@ -300,113 +300,24 @@ namespace GeometryClassLibrary
             return new Vector(BasePoint, Direction, newMagnitude);
         }
 
-        /// <summary>
-        /// Sometimes we want to check if the vector would intersect with line if it were extended towards the line
-        /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
-        public Point HypotheticalIntersection(Line passedLine)
-        {
-            return new Line(this).IntersectWithLine(passedLine);
-        }
-        
-        /// <summary>
-        /// Checks if this Vector intersects the given line and returns the point if it does or null otherwise
-        /// </summary>
-        /// <param name="passedLine">The line to check if this intersects with</param>
-        /// <returns>returns the intersection point of the two lines or null if they do not</returns>
-        public override Point IntersectWithLine(Line passedLine)
-        {
-            Point intersect = new Line(this).IntersectWithLine(passedLine);
+       
+        //// Do we need this method?
+        ///// <summary>
+        ///// Determines whether or not the two Vectors in the same direction overlap at all partially or completely 
+        ///// </summary>
+        ///// <param name="potentiallyOverlappingVector">The vector to see if we overlap with</param>
+        ///// <returns>Returns true if the vectors overlap at all or one contains the other</returns>
+        //public bool DoesOverlapInSameDirection(Vector potentiallyOverlappingVector)
+        //{
+        //    //see if we partially overlap
+        //    bool doesSharePoint = this.Contains(potentiallyOverlappingVector.EndPoint) || this.Contains(potentiallyOverlappingVector.BasePoint);
+        //    bool partiallyOverlap = this.HasSameDirectionAs(potentiallyOverlappingVector) && doesSharePoint;
 
-            if (!ReferenceEquals(intersect, null) && intersect.IsOnVector(this))
-            {
-                return intersect;
-            }
-            return null;
-        }
+        //    //or completely contain the other
+        //    bool doesContainOneOrOther = this.Contains(potentiallyOverlappingVector) || potentiallyOverlappingVector.Contains(this);
 
-        /// <summary>
-        /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
-        /// </summary>
-        /// <param name="passedLineSegment">The LineSegment to check for intersection with</param>
-        /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
-        public Point Intersection(Vector passedVector)
-        {
-            Point potentialIntersect = base.IntersectWithLine((Line)passedVector);
-
-            if (potentialIntersect != null && potentialIntersect.IsOnVector(passedVector) && potentialIntersect.IsOnVector(this))
-            {
-                return potentialIntersect;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Returns true if the vector shares a base point or endpoint with the passed vector
-        /// </summary>
-        /// <param name="passedVector"></param>
-        /// <returns></returns>
-        public bool SharesABaseOrEndPointWith(Vector passedVector)
-        {
-            return (this.BasePoint == passedVector.EndPoint
-                || this.BasePoint == passedVector.BasePoint
-                || this.EndPoint == passedVector.EndPoint
-                || this.EndPoint == passedVector.BasePoint);
-        }
-
-        /// <summary>
-        /// Checks to see if a vector contains another vector.  Useful for checking if members touch
-        /// </summary>
-        /// <param name="passedVector">The Vector to see if is contained in this one</param>
-        /// <returns>Returns a bool of whether or not the Vector is contained</returns>
-        public bool Contains(Vector vector)
-        {
-            bool containsBasePoint = (this.Contains(vector.BasePoint));
-            bool containsEndPoint = (this.Contains(vector.EndPoint));
-
-            return containsBasePoint && containsEndPoint;
-        }
-
-        /// <summary>
-        /// Determines whether or not the point is along/contained by this vector
-        /// </summary>
-        public new bool Contains(Point point)
-        {
-            //This method can make or break the Slice method. Handle very carefully.
-            //This checks for a null point, and checks the distance from the point to the line.
-            if (!new Line(this).Contains(point))
-            {
-                return false;
-            }
-            //We need this check before we check directions, because there is no direction if the point is the vector's basepoint
-            if (point == this.BasePoint || point == this.EndPoint)
-            {
-                return true;
-            }
-            Vector pointVector = new Vector(this.BasePoint, point);
-            bool sameDirection = this.HasSameDirectionAs(pointVector);
-            bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
-
-            return sameDirection && greaterMagnitude;
-        }
-        // Do we need this method?
-        /// <summary>
-        /// Determines whether or not the two Vectors in the same direction overlap at all partially or completely 
-        /// </summary>
-        /// <param name="potentiallyOverlappingVector">The vector to see if we overlap with</param>
-        /// <returns>Returns true if the vectors overlap at all or one contains the other</returns>
-        public bool DoesOverlapInSameDirection(Vector potentiallyOverlappingVector)
-        {
-            //see if we partially overlap
-            bool doesSharePoint = this.Contains(potentiallyOverlappingVector.EndPoint) || this.Contains(potentiallyOverlappingVector.BasePoint);
-            bool partiallyOverlap = this.HasSameDirectionAs(potentiallyOverlappingVector) && doesSharePoint;
-
-            //or completely contain the other
-            bool doesContainOneOrOther = this.Contains(potentiallyOverlappingVector) || potentiallyOverlappingVector.Contains(this);
-
-            return partiallyOverlap || doesContainOneOrOther;
-        }
+        //    return partiallyOverlap || doesContainOneOrOther;
+        //}
 
         /// <summary>
         /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto

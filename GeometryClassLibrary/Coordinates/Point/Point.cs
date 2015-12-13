@@ -358,11 +358,11 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Returns true if the point is on the passed vector, false otherwise
-        /// </summary>
-        public bool IsOnVector(Vector passedVector)
-        {
-            return passedVector.Contains(this);
-        }
+        ///// </summary>
+        //public bool IsOnVector(Vector passedVector)
+        //{
+        //    return passedVector.Contains(this);
+        //}
 
         /// <summary>
         /// Returns true if the point is on the passed line segment, false otherwise

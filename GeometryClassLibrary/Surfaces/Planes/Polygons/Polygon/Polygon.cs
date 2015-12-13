@@ -640,7 +640,7 @@ namespace GeometryClassLibrary
                     }
                     else
                     {
-                        Point intersection = segment.Intersection(otherSegment);
+                        Point intersection = segment.IntersectWithSegment(otherSegment);
                         if (intersection != null)
                         {
                             _addToList(newVertices, intersection);
@@ -1183,7 +1183,7 @@ namespace GeometryClassLibrary
 
             foreach (LineSegment edge in this.LineSegments)
             {
-                Point intersection = edge.Intersection(linesegment);
+                Point intersection = edge.IntersectWithSegment(linesegment);
                 if (intersection != null && !intersections.Contains(intersection))
                 {
                     intersections.Add(intersection);
@@ -1198,8 +1198,7 @@ namespace GeometryClassLibrary
         /// Returns a list of the lineSegments of intersection through the interior of the polygon
         /// </summary>
         public List<LineSegment> IntersectionCoplanarLineSegments(Line passedLine)
-        {
-            
+        {      
             List<LineSegment> lineSegmentsOfIntersection = new List<LineSegment>();
 
             List<Point> pointsOfIntersection = IntersectionCoplanarPoints(passedLine);
@@ -1212,38 +1211,26 @@ namespace GeometryClassLibrary
             return lineSegmentsOfIntersection;
         }
 
-        /// <summary>
-        /// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
-        /// </summary>
-        public new bool DoesIntersectNotCoplanar(Line passedLine)
-        {
-            var point = this.IntersectWithLine(passedLine);
-            return (point != null);
-            //doesn't check coplanar at all..
-        }
+        ///// <summary>
+        ///// Returns whether or not the polygon and line intersection, but returns false if they are coplanar
+        ///// </summary>
+        //public new bool DoesIntersectNotCoplanar(Line passedLine)
+        //{
+        //    var point = this.IntersectWithLine(passedLine);
+        //    return (point != null);
+        //    //doesn't check coplanar at all..
+        //}
 
         /// <summary>
         /// Returns whether or not the given line and polygon intersect or are coplanar and intersect on the plane
         /// </summary>
         public new bool DoesIntersect(Line line)
         {
-            //if the line is on the plane
-            if (new Plane(this).Contains(line))
-            {
-                //check if it intersects our boundaries
-                foreach (LineSegment segment in this.LineSegments)
-                {
-                    if (line.DoesIntersect(segment))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return DoesIntersectNotCoplanar(line);
+            Point intersection = new Plane(this).IntersectWithLine(line);
+            return this.Contains(intersection);
         }
 
-        public bool DoesIntersect(LineSegment segment)
+        public new bool DoesIntersect(LineSegment segment)
         {
             var point = this.IntersectWithLine(segment);
             return segment.Contains(point);
@@ -1258,10 +1245,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns true if the point is on the PlaneRegion, including on its boundaries
+        /// Returns true if the point is inside the Polygon, including on its boundaries.
         /// </summary>
         public new bool Contains(Point passedPoint)
         {
+
             //check if it is in our plane first
             if (((Plane)this).Contains(passedPoint))
             {
@@ -1697,7 +1685,7 @@ namespace GeometryClassLibrary
                 var candidates = new Dictionary<Point, LineSegment>();
                 foreach (var segment in otherList)
                 {
-                    var intersection = segment.Intersection(currentSegment);
+                    var intersection = segment.IntersectWithSegment(currentSegment);
                     if (intersection != null &&
                         intersection != segment.EndPoint &&
                         intersection != currentSegment.BasePoint)
@@ -1807,7 +1795,7 @@ namespace GeometryClassLibrary
                 {
                     var segment1 = polygonUnderConstruction[i];
                     var segment2 = polygonUnderConstruction[j];
-                    var intersection = segment1.Intersection(segment2);
+                    var intersection = segment1.IntersectWithSegment(segment2);
                     if (intersection != null)
                     {
                         if (intersection == segment2.EndPoint && !intersection.IsBaseOrEndPointOf(segment1))

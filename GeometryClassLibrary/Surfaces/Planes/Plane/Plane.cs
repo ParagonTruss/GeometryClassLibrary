@@ -195,6 +195,10 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
         public bool Contains(Point passedPoint)
         {
+            if (passedPoint == null)
+            {
+                return false;
+            }
             return passedPoint.DistanceTo(this) == Distance.Zero;
         }
 
@@ -347,33 +351,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        ///returns true if the line and the plane intersect, exlcuding if the line is on the plane
-        /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Line passedLine)
-        {
-            return IntersectWithLine(passedLine) != null;
-        }
-        
-        /// <summary>
-        ///returns true if the vector and the plane intersect, exlcuding if the line is on the plane
-        /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Vector passedVector)
-        {
-            if (!DoesIntersectNotCoplanar((Line)passedVector))
-            {
-                return false;
-            }
-
-            Point intersect = this.IntersectWithLine(passedVector);
-
-            return intersect != null && intersect.IsOnVector(passedVector);
-        }
-
-        /// <summary>
         /// Returns whether or not the two planes intersect
         /// </summary>
         /// <param name="passedPlane"></param>
@@ -383,28 +360,28 @@ namespace GeometryClassLibrary
             return !IsParallelTo(passedPlane);
         }
 
-        /// <summary>
-        /// Returns whether or not the polygon and plane intersect
-        /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Polygon passedPolygon)
-        {
-            if (!DoesIntersectNotCoplanar((Plane)passedPolygon))
-            {
-                return false;
-            }
+        ///// <summary>
+        ///// Returns whether or not the polygon and plane intersect
+        ///// </summary>
+        ///// <param name="passedPolygon"></param>
+        ///// <returns></returns>
+        //public virtual bool DoesIntersectNotCoplanar(Polygon passedPolygon)
+        //{
+        //    if (!DoesIntersectNotCoplanar((Plane)passedPolygon))
+        //    {
+        //        return false;
+        //    }
 
-            foreach (LineSegment segment in passedPolygon.LineSegments)
-            {
-                if (this.DoesIntersectNotCoplanar(segment))
-                {
-                    return true;
-                }
-            }
+        //    foreach (LineSegment segment in passedPolygon.LineSegments)
+        //    {
+        //        if (this.DoesIntersectNotCoplanar(segment))
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
  
         /// <summary>
         /// Returns whether or not the plane and line intersect, including if the line is on the plane
@@ -413,9 +390,8 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool DoesIntersect(Line passedLine)
         {
-            Vector lineVector = passedLine.Direction.UnitVector(DistanceType.Inch);
-            Vector planeNormal = this.NormalVector;
-            return (lineVector.IsPerpendicularTo(planeNormal));
+            Point intersection = this.IntersectWithLine(passedLine);
+            return (intersection != null);
         }
 
         /// <summary>
@@ -423,17 +399,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Vector passedVector)
+        public virtual bool DoesIntersect(LineSegment passedVector)
         {
-            if (this.Contains(passedVector.BasePoint) || this.Contains(passedVector.EndPoint))
-            {
-                return true;
-            }
-            if (this.PointIsOnSameSideAs(passedVector.BasePoint, passedVector.EndPoint))
-            {
-                return false;
-            }
-            return true;
+            var intersection = new Line(passedVector).IntersectWithPlane(this);
+            bool segmentContainsPoint = passedVector.Contains(intersection);
+            return segmentContainsPoint;
         }
 
         /// <summary>

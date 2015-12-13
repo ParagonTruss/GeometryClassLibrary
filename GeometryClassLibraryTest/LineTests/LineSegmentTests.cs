@@ -42,7 +42,7 @@ namespace GeometryClassLibraryTest
             LineSegment verticalLine = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
             LineSegment flatLine = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(5, 0));
 
-            verticalLine.Intersection(flatLine).Should().Be(Point.MakePointWithInches(0, 0));
+            verticalLine.IntersectWithSegment(flatLine).Should().Be(Point.MakePointWithInches(0, 0));
         }
 
         [Test()]
@@ -53,9 +53,9 @@ namespace GeometryClassLibraryTest
             LineSegment line3 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(3, -4, 2));
             LineSegment line4 = new LineSegment(Point.MakePointWithInches(0, -4, 0), Point.MakePointWithInches(3, 0, 2));
 
-            Point intersectT1 = line1.Intersection(line2);
-            Point intersectT2 = line3.Intersection(line4);
-            Point intersectF1 = line1.Intersection(line4);
+            Point intersectT1 = line1.IntersectWithSegment(line2);
+            Point intersectT2 = line3.IntersectWithSegment(line4);
+            Point intersectF1 = line1.IntersectWithSegment(line4);
 
             intersectT1.Should().Be(Point.MakePointWithInches(.5, .5, .5));
             intersectT2.Should().Be(Point.MakePointWithInches(1.5, -2, 1));
@@ -259,6 +259,18 @@ namespace GeometryClassLibraryTest
             result.Length.Should().Be(testSegment.Length);
             Direction expectedDirection = new Direction(Point.MakePointWithInches(0, 2, 1), Point.MakePointWithInches(2, 0, 4));
             result.Direction.Should().Be(expectedDirection);
+        }
+
+        [Test()]
+        public void LineSegment_ContainsLineSegment()
+        {
+            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(2, 2, 4));
+            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(2, 2, 4), Point.Origin);
+            LineSegment segment3 = new LineSegment(Point.MakePointWithInches(1, 1, 2), Point.Origin);
+
+            (segment1.Contains(segment2)).Should().BeTrue();
+            (segment2.Contains(segment1)).Should().BeTrue();
+            (segment1.Contains(segment3)).Should().BeTrue();
         }
     }
 }

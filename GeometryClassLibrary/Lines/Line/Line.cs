@@ -24,14 +24,14 @@ namespace GeometryClassLibrary
         /// A point on the line to use as a reference.
         /// </summary>
         [JsonProperty]
-        public Point BasePoint { get; private set; }
+        public Point BasePoint { get; protected set; }
 
         /// <summary>
         /// The direction the line is extends from the base point in one direction
         /// Note: it also extends in the direction opposite
         /// </summary>
         [JsonProperty]
-        public Direction Direction { get; private set; }
+        public Direction Direction { get; protected set; }
 
         /// <summary>
         /// Returns the X intercept of the line if the z Distance is ignored
@@ -424,7 +424,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Line passedLine)
+        public bool IntersectsLine(Line passedLine)
         {
             Point intersect = this.IntersectWithLine(passedLine);
 
@@ -438,18 +438,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the vector and line intersect
         /// </summary>
-        /// <param name="passedVector"></param>
+        /// <param name="segment"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Vector passedVector)
+        public virtual bool DoesIntersect(LineSegment segment)
         {
-            Line newLine = new Line(passedVector);
+            Line newLine = new Line(segment);
             Point intersect = this.IntersectWithLine(newLine);
 
             if (intersect == null)
             {
                 return false;
             }
-            return intersect.IsOnVector(passedVector);
+            return intersect.IsOnLineSegment(segment);
         }
 
         /// <summary>
