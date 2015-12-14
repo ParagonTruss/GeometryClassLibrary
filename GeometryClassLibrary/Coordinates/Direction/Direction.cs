@@ -439,7 +439,7 @@ namespace GeometryClassLibrary
                 referenceNormal = Out;
             }
 
-            Angle testAngle = this.AngleBetween(direction).ModOutTwoPi;
+            Angle testAngle = this.AngleBetween(direction).ModOutTwoPi();
             Direction testNormal = this.CrossProduct(direction);
            
             if (testNormal == null || testAngle % new Angle(new Degree(), 180) == Angle.Zero || testNormal == referenceNormal)

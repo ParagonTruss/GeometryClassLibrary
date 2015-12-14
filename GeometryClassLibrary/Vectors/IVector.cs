@@ -7,15 +7,17 @@ using UnitClassLibrary.GenericUnit;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public interface IVector<T> where T : IUnitType
+    public interface IVector
     {
-        T UnitType { get; }
         Measurement X { get; }
         Measurement Y { get; }
-        Measurement Z { get; }
-        //Point ApplicationPoint { get; }
+        Measurement Z { get; }    
+    }
+    public interface IVector<T> : IVector where T : IUnitType
+    {
+        T UnitType { get; }
 
-        Unit Magnitude { get; }
         Direction Direction { get; }
+        Unit<T> Magnitude { get; }      
     }
 }

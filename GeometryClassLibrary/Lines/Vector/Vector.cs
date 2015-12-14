@@ -306,24 +306,7 @@ namespace GeometryClassLibrary
             return new Vector(BasePoint, Direction, newMagnitude);
         }
 
-       
-        //// Do we need this method?
-        ///// <summary>
-        ///// Determines whether or not the two Vectors in the same direction overlap at all partially or completely 
-        ///// </summary>
-        ///// <param name="potentiallyOverlappingVector">The vector to see if we overlap with</param>
-        ///// <returns>Returns true if the vectors overlap at all or one contains the other</returns>
-        //public bool DoesOverlapInSameDirection(Vector potentiallyOverlappingVector)
-        //{
-        //    //see if we partially overlap
-        //    bool doesSharePoint = this.Contains(potentiallyOverlappingVector.EndPoint) || this.Contains(potentiallyOverlappingVector.BasePoint);
-        //    bool partiallyOverlap = this.HasSameDirectionAs(potentiallyOverlappingVector) && doesSharePoint;
-
-        //    //or completely contain the other
-        //    bool doesContainOneOrOther = this.Contains(potentiallyOverlappingVector) || potentiallyOverlappingVector.Contains(this);
-
-        //    return partiallyOverlap || doesContainOneOrOther;
-        //}
+    
 
         /// <summary>
         /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
@@ -414,8 +397,14 @@ namespace GeometryClassLibrary
         {
             Vector vector1 = this;
             Vector vector2 = passedVector;
-            
-            //return (vector1.Direction == vector2.Direction.Reverse());
+            if (vector2 == null)
+            {
+                return false; //Doesn't have a direction. Should be false
+            }
+            if (vector1.Magnitude == Distance.Zero || vector2.Magnitude == Distance.Zero)
+            {
+                return true;
+            }
             return vector1.AngleBetween(vector2) == new Angle(new Degree(), 180);
         }
 

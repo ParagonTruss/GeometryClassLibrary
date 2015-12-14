@@ -8,6 +8,7 @@ namespace GeometryClassLibrary.Vectors
 {
     public class Vector_New<T> : IVector<T> where T : IUnitType
     {
+        
         #region Properties
         public T UnitType { get; private set; }
         public Measurement X { get; private set; }
@@ -17,7 +18,7 @@ namespace GeometryClassLibrary.Vectors
         public Point ApplicationPoint { get { return _applicationPoint; } private set { _applicationPoint = value; } }
         private Point _applicationPoint = Point.Origin;
 
-        public Unit Magnitude { get { return _getMagnitude(); } }
+        public Unit<T> Magnitude { get { return _getMagnitude(); } }
 
         private Unit<T> _getMagnitude()
         {
@@ -25,12 +26,12 @@ namespace GeometryClassLibrary.Vectors
             return new Unit<T>(UnitType, result);
         }
 
-        public Direction Direction { get { return _getDirection(); } }
+        //public Direction Direction { get { return _getDirection(); } }
 
-        private Direction _getDirection()
-        {
-            throw new NotImplementedException();
-        }
+        //private Direction _getDirection()
+        //{
+        //    throw new NotImplementedException();
+        //}
         #endregion
 
         #region Constructors
@@ -61,5 +62,15 @@ namespace GeometryClassLibrary.Vectors
             this.Z = magnitude.Measurement * direction.ZComponent;
         }
         #endregion  
+    }
+
+    public class UnitLessVector : Vector_New<DimensionLess>
+    {
+        public implicit operator UnitLessVector(Direction d)
+        {
+            return new UnitLessVector(d);
+        }
+        public UnitLessVector(Direction d)
+            : base(DimensionLess.Instance, d.XComponent, d.YComponent, d.ZComponent) { }
     }
 }
