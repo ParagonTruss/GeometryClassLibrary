@@ -93,7 +93,7 @@ namespace GeometryClassLibrary
                 {
                     var segment1 = listOfSegments[i];
                     var segment2 = listOfSegments[j];
-                    var intersection = segment1.Intersection(segment2);
+                    var intersection = segment1.IntersectWithSegment(segment2);
                     if (intersection != null &&
                         (!intersection.IsBaseOrEndPointOf(segment1) ||
                         !intersection.IsBaseOrEndPointOf(segment2)))

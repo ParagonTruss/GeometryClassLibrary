@@ -67,7 +67,7 @@ namespace GeometryClassLibrary
                 }
                 else
                 {
-                    return new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection).ModOutTwoPi();
+                    return new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection).ModOutTwoPi;
                 }
             }
         }

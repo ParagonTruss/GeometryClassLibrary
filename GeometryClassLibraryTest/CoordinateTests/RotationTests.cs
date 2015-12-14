@@ -24,7 +24,7 @@ namespace GeometryClassLibraryTest
             Rotation rotation = new Rotation(testAxis, angle);
             Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            (fromMatrixConstructor.RotationAngle == angle.ModOutTwoPi()).Should().BeTrue();
+            (fromMatrixConstructor.RotationAngle == angle.ModOutTwoPi).Should().BeTrue();
             (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();
         }
         

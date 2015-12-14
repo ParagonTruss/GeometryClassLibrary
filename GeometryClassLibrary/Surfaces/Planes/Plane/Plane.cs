@@ -199,6 +199,10 @@ namespace GeometryClassLibrary
         /// <returns>returns true if the Point is in the Plane and false otherwise</returns>
         public bool Contains(Point passedPoint)
         {
+            if (passedPoint == null)
+            {
+                return false;
+            }
             return passedPoint.DistanceTo(this) == Distance.Zero;
         }
 
@@ -350,76 +354,48 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        /// <summary>
-        ///returns true if the line and the plane intersect, exlcuding if the line is on the plane
-        /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Line passedLine)
-        {
-            return IntersectWithLine(passedLine) != null;
-        }
-        
-        /// <summary>
-        ///returns true if the vector and the plane intersect, exlcuding if the line is on the plane
-        /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Vector passedVector)
-        {
-            if (!DoesIntersectNotCoplanar((Line)passedVector))
-            {
-                return false;
-            }
+        ///// <summary>
+        ///// Returns whether or not the two planes intersect
+        ///// </summary>
+        ///// <param name="passedPlane"></param>
+        ///// <returns></returns>
+        //public virtual bool DoesIntersectNotCoplanar(Plane passedPlane)
+        //{
+        //    return !IsParallelTo(passedPlane);
+        //}
 
-            Point intersect = this.IntersectWithLine(passedVector);
+        ///// <summary>
+        ///// Returns whether or not the polygon and plane intersect
+        ///// </summary>
+        ///// <param name="passedPolygon"></param>
+        ///// <returns></returns>
+        //public virtual bool DoesIntersectNotCoplanar(Polygon passedPolygon)
+        //{
+        //    if (!DoesIntersectNotCoplanar((Plane)passedPolygon))
+        //    {
+        //        return false;
+        //    }
 
-            return intersect != null && intersect.IsOnVector(passedVector);
-        }
+        //    foreach (LineSegment segment in passedPolygon.LineSegments)
+        //    {
+        //        if (this.DoesIntersectNotCoplanar(segment))
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-        /// <summary>
-        /// Returns whether or not the two planes intersect
-        /// </summary>
-        /// <param name="passedPlane"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Plane passedPlane)
-        {
-            return !IsParallelTo(passedPlane);
-        }
-
-        /// <summary>
-        /// Returns whether or not the polygon and plane intersect
-        /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
-        public virtual bool DoesIntersectNotCoplanar(Polygon passedPolygon)
-        {
-            if (!DoesIntersectNotCoplanar((Plane)passedPolygon))
-            {
-                return false;
-            }
-
-            foreach (LineSegment segment in passedPolygon.LineSegments)
-            {
-                if (this.DoesIntersectNotCoplanar(segment))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        //    return false;
+        //}
  
         /// <summary>
         /// Returns whether or not the plane and line intersect, including if the line is on the plane
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Line passedLine)
+        public bool DoesIntersect(Line passedLine)
         {
-            Vector lineVector = passedLine.Direction.UnitVector(new Inch());
-            Vector planeNormal = this.NormalVector;
-            return (lineVector.IsPerpendicularTo(planeNormal));
+            Point intersection = this.IntersectWithLine(passedLine);
+            return (intersection != null);
         }
 
         /// <summary>
@@ -427,17 +403,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Vector passedVector)
+        public virtual bool DoesIntersect(LineSegment passedVector)
         {
-            if (this.Contains(passedVector.BasePoint) || this.Contains(passedVector.EndPoint))
-            {
-                return true;
-            }
-            if (this.PointIsOnSameSideAs(passedVector.BasePoint, passedVector.EndPoint))
-            {
-                return false;
-            }
-            return true;
+            var intersection = new Line(passedVector).IntersectWithPlane(this);
+            bool segmentContainsPoint = passedVector.Contains(intersection);
+            return segmentContainsPoint;
         }
 
         /// <summary>
@@ -445,9 +415,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Plane passedPlane)
+        public bool DoesIntersect(Plane passedPlane)
         {
-            return this.DoesIntersectNotCoplanar(passedPlane) || this.IsCoplanarTo(passedPlane);
+            return !this.IsParallelTo(passedPlane) || this.IsCoplanarTo(passedPlane);
         }
 
         /// <summary>
@@ -455,7 +425,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPolygon"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Polygon passedPolygon)
+        public bool DoesIntersect(Polygon passedPolygon)
         {
             Line slicingLine = passedPolygon.Intersection(this);
             return (slicingLine != null && passedPolygon.DoesIntersect(slicingLine));
@@ -542,7 +512,7 @@ namespace GeometryClassLibrary
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
             var complement = new Angle(new Degree(), 90) - angle;
-            return complement.ModOutTwoPi();
+            return complement.ModOutTwoPi;
         }
 
         public Vector NormalVectorThrough(Point point)

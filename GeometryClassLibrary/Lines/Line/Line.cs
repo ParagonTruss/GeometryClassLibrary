@@ -30,25 +30,14 @@ namespace GeometryClassLibrary
         /// A point on the line to use as a reference.
         /// </summary>
         [JsonProperty]
-        public virtual Point BasePoint
-        {
-            get { return _basePoint; }
-            set { this._basePoint = value; }
-        }
-        private Point _basePoint; //this is any point that is on the line
+        public Point BasePoint { get; protected set; }
 
         /// <summary>
         /// The direction the line is extends from the base point in one direction
         /// Note: it also extends in the direction opposite
         /// </summary>
         [JsonProperty]
-        public virtual Direction Direction
-        {
-            get { return _direction; }
-            set { _direction = value; }
-        }
-        private Direction _direction;
-
+        public Direction Direction { get; protected set; }
 
         /// <summary>
         /// Returns the X intercept of the line if the z Distance is ignored
@@ -126,8 +115,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line(Point point)
         {
-            _basePoint = Origin;
-            _direction = new Direction(point);
+            this.BasePoint = Origin;
+            this.Direction = new Direction(point);
         }
 
         /// <summary>
@@ -157,8 +146,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line(Point basePoint, Point otherPoint)
         {
-            _basePoint = basePoint;
-            _direction = new Direction(basePoint, otherPoint);
+            this.BasePoint = basePoint;
+            this.Direction = new Direction(basePoint, otherPoint);
         }
 
         /// <summary>
@@ -350,9 +339,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point GetPointAlongLine(Distance distance)
         {
-            Distance newX = _basePoint.X + distance * Direction.XComponent;
-            Distance newY = _basePoint.Y + distance * Direction.YComponent;
-            Distance newZ = _basePoint.Z + distance * Direction.ZComponent;
+            Distance newX = BasePoint.X + distance * Direction.XComponent;
+            Distance newY = BasePoint.Y + distance * Direction.YComponent;
+            Distance newZ = BasePoint.Z + distance * Direction.ZComponent;
             return new Point(newX, newY, newZ);
         }
 
@@ -441,7 +430,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Line passedLine)
+        public bool IntersectsLine(Line passedLine)
         {
             Point intersect = this.IntersectWithLine(passedLine);
 
@@ -455,18 +444,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the vector and line intersect
         /// </summary>
-        /// <param name="passedVector"></param>
+        /// <param name="segment"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(Vector passedVector)
+        public virtual bool DoesIntersect(LineSegment segment)
         {
-            Line newLine = new Line(passedVector);
+            Line newLine = new Line(segment);
             Point intersect = this.IntersectWithLine(newLine);
 
             if (intersect == null)
             {
                 return false;
             }
-            return intersect.IsOnVector(passedVector);
+            return intersect.IsOnLineSegment(segment);
         }
 
         /// <summary>
@@ -474,7 +463,6 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPolygon"></param>
         /// <returns></returns>
-        //ToDo: Needs unit Test
         public virtual bool DoesIntersect(Polygon passedPolygon)
         {
             return (passedPolygon.DoesIntersect(this));

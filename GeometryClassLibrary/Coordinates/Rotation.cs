@@ -44,7 +44,7 @@ namespace GeometryClassLibrary
                 }
                 return _rotationAngle;
             }
-            private set { _rotationAngle = value.ModOutTwoPi(); }
+            private set { _rotationAngle = value.ModOutTwoPi; }
         }
 
         [JsonProperty]
