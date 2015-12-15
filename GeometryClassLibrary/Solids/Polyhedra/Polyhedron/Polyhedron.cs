@@ -501,7 +501,7 @@ namespace GeometryClassLibrary
         /// <param name="slicingPlaneLines">The list of lines creates by the slicing plane</param>
         private void _addSlicingLine(Plane slicingPlane, Polygon polygon, List<LineSegment> slicingPlaneLines)
         {
-            LineSegment slicingLine = polygon.Intersection(slicingPlane);
+            LineSegment slicingLine = polygon.IntersectingSegment(slicingPlane);
             if (slicingLine != null && polygon.DoesIntersect(slicingLine))
             {
                 if (!slicingPlaneLines.Contains(slicingLine))

@@ -427,7 +427,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool DoesIntersect(Polygon passedPolygon)
         {
-            Line slicingLine = passedPolygon.Intersection(this);
+            Line slicingLine = passedPolygon.IntersectingSegment(this);
             return (slicingLine != null && passedPolygon.DoesIntersect(slicingLine));
         }
 
