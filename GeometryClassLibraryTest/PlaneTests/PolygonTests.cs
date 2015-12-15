@@ -1035,6 +1035,7 @@ namespace GeometryClassLibraryTest
             (results.Contains(expected4)).Should().BeTrue();
         }
 
+        [Ignore]
         [Test]
         public void Polygon_RemoveRegion_TouchingVertices()
         {
@@ -1060,6 +1061,7 @@ namespace GeometryClassLibraryTest
             (results3.Count == 0).Should().BeTrue();
         }
 
+        [Ignore]
         [Test]
         public void Polygon_OverlappingPolygons()
         {
@@ -1077,6 +1079,7 @@ namespace GeometryClassLibraryTest
 
         }
 
+        [Ignore]
         [Test]
         public void Polygon_OverlappingPolygons_NoOverlap()
         {

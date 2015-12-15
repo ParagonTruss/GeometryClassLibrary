@@ -25,7 +25,6 @@ namespace GeometryClassLibraryTest
 
             direction2.Should().NotBe(direction3);
             (direction2 == direction4).Should().BeTrue();
-            direction2.Should().Be(direction4);
 
             direction3.Should().NotBe(direction4);
 
