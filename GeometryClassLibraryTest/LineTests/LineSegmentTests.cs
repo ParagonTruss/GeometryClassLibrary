@@ -84,8 +84,8 @@ namespace GeometryClassLibraryTest
         public void LineSegment_MidpointTest()
         {
             LineSegment line1 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(2, 2, 2));
-
-            line1.MidPoint.Should().Be(Point.MakePointWithInches(1, 1, 1));
+            Point expected = Point.MakePointWithInches(1, 1, 1);
+            (line1.MidPoint == expected).Should().BeTrue();
         }
 
         [Test()]

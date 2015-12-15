@@ -4,11 +4,23 @@ using System.Linq;
 using System.Text;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.GenericUnit;
+using GeometryClassLibrary;
 
 namespace GeometryClassLibrary.Vectors
 {
     public static class IVectorExtensionMethods
     {
+        public static Direction Direction(this IVector vector)
+        {
+            return GeometryClassLibrary.Direction.DetermineDirection(vector.X, vector.Y, vector.Z);
+        }
+
+        public static Unit<T> Magnitude<T>(this IVector<T> vector) where T :IUnitType
+        {
+            var m = (vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z).SquareRoot();
+            return new Unit<T>(vector.UnitType, m);
+        }
+
         public static Unit DotProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
             var result = vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
@@ -35,30 +47,29 @@ namespace GeometryClassLibrary.Vectors
         }
 
         /// <summary>
-        /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
+        /// Projects this vector onto the given Line.
         /// </summary>
-        /// <param name="projectOnto">the Line on which to project the LineSegment</param>
-        /// <returns></returns>
-        public static IVector ProjectOntoLine<T>(this Vector_New<T> vector, Line projectOnto) where T : IUnitType
+        public static Vector_New<T> ProjectOntoLine<T>(this IVector<T> vector, Line projectOnto) where T : IUnitType
         {
             //        Point basePoint = vector.ApplicationPoint.ProjectOntoLine(projectOnto);
             //        Measurement dotProduct = vector.DotProduct(projectOnto.Direction).Measurement;
             //        Measurement newX
             //        return new Vector_New<T>(vector.UnitType,basePoint,);
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Projects this vector on the given plane
+        /// Projects this vector onto the given plane
         /// </summary>
         /// <param name="projectOnto">The Plane to project this Vector onto</param>
         /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
-        public new Vector ProjectOntoPlane(Plane plane)
+        public static Vector_New<T> ProjectOntoPlane<T>(this IVector<T> vector, Plane plane) where T :IUnitType
         {
-            //find the line in the plane and then project this line onto it
-            Point newBasePoint = BasePoint.ProjectOntoPlane(plane);
-            Point newEndPoint = EndPoint.ProjectOntoPlane(plane);
-            return new Vector(newBasePoint, newEndPoint);
+            //    //find the line in the plane and then project this line onto it
+            //    Point newBasePoint = BasePoint.ProjectOntoPlane(plane);
+            //    Point newEndPoint = EndPoint.ProjectOntoPlane(plane);
+            //    return new Vector(newBasePoint, newEndPoint);
+            throw new NotImplementedException();
         }
 
      
@@ -68,21 +79,23 @@ namespace GeometryClassLibrary.Vectors
         /// </summary>
         public static bool HasSameDirectionAs(this IVector vector1, IVector vector2)
         {
-            return vector1.Direction == null || vector2.Direction == null || vector1.Direction == vector2.Direction;
+            var direction1 = vector1.Direction();
+            var direction2 = vector2.Direction();
+            return direction1 == null || direction2 == null || direction1 == direction2;
         }
 
         /// <summary>
         /// determines whether two vectors point in opposite directions 
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
         public static bool HasOppositeDirectionOf(this IVector vector1, IVector vector2)
-        {      
-            return vector1.Direction == null || vector2.Direction == null || vector1.Direction == vector2.Direction.Reverse();
+        {
+            var direction1 = vector1.Direction();
+            var direction2 = vector2.Direction();
+            return direction1 == null || direction2 == null || direction1 == direction2.Reverse();
         }
         
         /// <summary>
-        /// returns a vector with its base and end points swapped.
+        /// returns a vector pointing in the opposite direction.
         /// </summary>
         public static Vector_New<T> Reverse<T>(this Vector_New<T> vector) where T : IUnitType
         {
@@ -94,61 +107,57 @@ namespace GeometryClassLibrary.Vectors
         /// Converts a vector into a matrix with one column
         /// </summary>
         /// <returns></returns>
-        public Matrix ConvertToMatrixColumn()
+        public static Matrix ConvertToMatrixColumn(this IVector vector)
         {
-            throw new NotImplementedException("Make matrices use measurements");
-            //Matrix returnMatrix = new Matrix(3, 1);
-            //double[] vectorArray = { XComponent.Inches.Value, YComponent.Inches.Value, ZComponent.Inches.Value };
-            //returnMatrix.SetColumn(0, vectorArray);
-            //return returnMatrix;
+            Matrix returnMatrix = new Matrix(3, 1);
+            double[] vectorArray = { vector.X.Value, vector.Y.Value, vector.Z.Value };
+            returnMatrix.SetColumn(0, vectorArray);
+            return returnMatrix;
         }
 
-        /// <summary>
-        /// Rotates the vector about the given axis by the passed angle
-        /// </summary>
-        public static Vector_New<T> Rotate<T>(this Vector_New<T> vector, Rotation rotationToApply) where T : IUnitType
-        {
-            return null;
-        }
+        ///// <summary>
+        ///// Rotates the vector about the given axis by the passed angle
+        ///// </summary>
+        //public static Vector_New<T> Rotate<T>(this Vector_New<T> vector, Rotation rotationToApply) where T : IUnitType
+        //{
+        //    return null;
+        //}
 
-        /// <summary>
-        /// Performs the Shift on this vector
-        /// </summary>
-        /// <param name="passedShift"></param>
-        /// <returns></returns>
-        public static Vector Shift(this Vector vector, Shift passedShift)
-        {
-            return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
-        }
+        ///// <summary>
+        ///// Performs the Shift on this vector
+        ///// </summary>
+        ///// <param name="passedShift"></param>
+        ///// <returns></returns>
+        //public static Vector_New<T> Shift<T>(this Vector_New<T> vector, Shift passedShift)
+        //{
+        //    var newApplicationPoint = vector.Ap
+        //}
 
-        /// <summary>
-        /// Translates the vector the given distance in the given direction
-        /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
-        public new Vector Translate(Translation translation)
-        {
-            Point newBasePoint = this.BasePoint.Translate(translation);
-            Point newEndPoint = this.EndPoint.Translate(translation);
-
-            return new Vector(newBasePoint, newEndPoint);
-        }
+        ///// <summary>
+        ///// Translates the vector the given distance in the given direction
+        ///// </summary>
+        //public static Vector_New<T> Translate<T>(this Vector_New<T> vector, Translation translation) where T : IUnitType
+        //{
+        //    Point newBasePoint = vector.ApplicationPoint.Translate(translation);
+        //    var shifted = new Vector_New<T>(newBasePoint,vector);
+        //    return shifted;
+        //}
 
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if it is a zero vector and you call the unitVector it will throw an exception.
         /// </summary>
-        public static IVector UnitVector<T>(this Vector_New<T> vector, T  passedType) where T : IUnitType
+        public static IVector UnitVector<T>(this IVector<T> vector, T passedType) where T : IUnitType
         {
-            if (vector.Direction == null)
+            Direction direction = vector.Direction();
+            if (direction == GeometryClassLibrary.Direction.NoDirection)
             {
                 // return new Vector(Point.Origin);
                 throw new Exception();
             }
             else
             {
-                return new Vector_New<T>(vector.ApplicationPoint, new Unit<T>(passedType), vector.Direction);
+                return new Vector_New<T>(vector.ApplicationPoint, new Unit<T>(passedType), direction);
             }
 
         }
@@ -156,21 +165,27 @@ namespace GeometryClassLibrary.Vectors
 
         public static bool IsPerpendicularTo(this IVector vector1, IVector vector2)
         {
-            return vector1.SmallestAngleBetween(vector2) == 90 * Angle.Degree;
+            return vector1.AngleBetween(vector2) == Angle.RightAngle;
         }
 
         public static bool IsParallelTo(this IVector vector1, IVector vector2)
         {
-            return vector1.SmallestAngleBetween(vector2) == Angle.Zero;
+            Angle angle = vector1.AngleBetween(vector2);
+            return angle == Angle.Zero || angle == Angle.StraightAngle;
         }
 
         public static Angle SmallestAngleBetween(this IVector vector1, IVector vector2)
         {
-            return null;
+            var angle = vector1.AngleBetween(vector2);
+            if (angle > Angle.RightAngle)
+            {
+                angle = angle - Angle.RightAngle;
+            }
+            return angle;
         }
         public static Angle AngleBetween(this IVector vector1, IVector vector2)
         {
-            return null;
+            return vector1.Direction().AngleBetween(vector2.Direction());
         }
     }
 }

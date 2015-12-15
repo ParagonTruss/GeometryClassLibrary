@@ -308,7 +308,7 @@ namespace GeometryClassLibrary
 
             if (returnAngle.Degrees > 90)
             {
-                return (Angle)(new Angle(new Degree(), 180) - returnAngle);
+                return (Angle.StraightAngle - returnAngle);
             }
             else
             {
@@ -339,9 +339,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point GetPointAlongLine(Distance distance)
         {
-            Distance newX = BasePoint.X + distance * Direction.XComponent;
-            Distance newY = BasePoint.Y + distance * Direction.YComponent;
-            Distance newZ = BasePoint.Z + distance * Direction.ZComponent;
+            Distance newX = BasePoint.X + distance * Direction.X;
+            Distance newY = BasePoint.Y + distance * Direction.Y;
+            Distance newZ = BasePoint.Z + distance * Direction.Z;
             return new Point(newX, newY, newZ);
         }
 

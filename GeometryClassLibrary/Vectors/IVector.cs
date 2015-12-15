@@ -16,8 +16,8 @@ namespace GeometryClassLibrary.Vectors
     public interface IVector<T> : IVector where T : IUnitType
     {
         T UnitType { get; }
-
-        Direction Direction { get; }
-        Unit<T> Magnitude { get; }      
+        Point ApplicationPoint { get; }
+        //Direction Direction { get; }
+        //Unit<T> Magnitude { get; }      
     }
 }

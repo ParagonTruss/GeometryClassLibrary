@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
     public partial class Point
     {
         #region Properties and Fields
-        private static Point _origin = new Point(Distance.Zero,Distance.Zero,Distance.Zero);
+        private readonly static Point _origin = new Point(Distance.Zero, Distance.Zero, Distance.Zero);
         public static Point Origin { get { return _origin; } }
 
         private Distance _x;
@@ -84,9 +84,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Direction direction, Distance fromOrigin)
         {
-            this._x = direction.XComponent * fromOrigin;
-            this._y = direction.YComponent * fromOrigin;
-            this._z = direction.ZComponent * fromOrigin;
+            this._x = direction.X * fromOrigin;
+            this._y = direction.Y * fromOrigin;
+            this._z = direction.Z * fromOrigin;
         }
 
         /// <summary>
@@ -413,6 +413,15 @@ namespace GeometryClassLibrary
         {
             var unitType = new Inch();
             Distance xDim = new Distance(unitType, x); 
+            Distance yDim = new Distance(unitType, y);
+            Distance zDim = new Distance(unitType, z);
+
+            return new Point(xDim, yDim, zDim);
+        }
+        public static Point MakePointWithInches(Measurement x, Measurement y, Measurement z)
+        {
+            var unitType = new Inch();
+            Distance xDim = new Distance(unitType, x);
             Distance yDim = new Distance(unitType, y);
             Distance zDim = new Distance(unitType, z);
 

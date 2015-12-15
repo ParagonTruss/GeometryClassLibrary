@@ -38,7 +38,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance XComponent
         {
-            get { return _magnitude * base.Direction.XComponent; }
+            get { return _magnitude * base.Direction.X; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance YComponent
         {
-            get { return _magnitude * base.Direction.YComponent; }
+            get { return _magnitude * base.Direction.Y; }
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public virtual Distance ZComponent
         {
-            get { return _magnitude * base.Direction.ZComponent; }
+            get { return _magnitude * base.Direction.Z; }
         }
 
         /// <summary>
@@ -345,26 +345,25 @@ namespace GeometryClassLibrary
         /// </summary>
         public Vector CrossProduct(Vector passedVector)
         {
-            throw new NotImplementedException();
-            //Vector v1 = new Vector(this);
-            //Vector v2 = new Vector(passedVector);
+            Vector v1 = new Vector(this);
+            Vector v2 = new Vector(passedVector);
 
-            ////Find each component 
+            //Find each component 
 
-            //double xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
-            //double xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
+            Measurement xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
+            Measurement xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
 
-            //double yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
-            //double yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
+            Measurement yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
+            Measurement yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
 
-            //double zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
-            //double zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
+            Measurement zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
+            Measurement zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
 
-            //double newX = (xProduct1) - (xProduct2);
-            //double newY = (yProduct1) - (yProduct2);
-            //double newZ = (zProduct1) - (zProduct2);
+            Measurement newX = (xProduct1) - (xProduct2);
+            Measurement newY = (yProduct1) - (yProduct2);
+            Measurement newZ = (zProduct1) - (zProduct2);
 
-            //return new Vector(Point.MakePointWithInches(newX, newY, newZ));
+            return new Vector(Point.MakePointWithInches(newX, newY, newZ));
         }
 
         /// <summary>
@@ -453,11 +452,10 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix ConvertToMatrixColumn()
         {
-            throw new NotImplementedException("Make matrices use measurements");
-            //Matrix returnMatrix = new Matrix(3, 1);
-            //double[] vectorArray = { XComponent.Inches.Value, YComponent.Inches.Value, ZComponent.Inches.Value };
-            //returnMatrix.SetColumn(0, vectorArray);
-            //return returnMatrix;
+            Matrix returnMatrix = new Matrix(3, 1);
+            double[] vectorArray = { XComponent.Inches.Value, YComponent.Inches.Value, ZComponent.Inches.Value };
+            returnMatrix.SetColumn(0, vectorArray);
+            return returnMatrix;
         }
 
         /// <summary>

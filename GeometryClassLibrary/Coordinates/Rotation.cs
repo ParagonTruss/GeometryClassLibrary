@@ -118,9 +118,9 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = this.AxisOfRotation.Direction;
 
-            double unitX = rotationUnitVector.XComponent.Value; //Projection onto x-axis
-            double unitY = rotationUnitVector.YComponent.Value;
-            double unitZ = rotationUnitVector.ZComponent.Value;
+            double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
+            double unitY = rotationUnitVector.Y.Value;
+            double unitZ = rotationUnitVector.Z.Value;
             Angle theta = this.RotationAngle;
 
             double sinTheta = Angle.Sine(theta).Value;

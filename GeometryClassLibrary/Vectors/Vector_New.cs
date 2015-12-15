@@ -8,30 +8,16 @@ namespace GeometryClassLibrary.Vectors
 {
     public class Vector_New<T> : IVector<T> where T : IUnitType
     {
-        
         #region Properties
         public T UnitType { get; private set; }
         public Measurement X { get; private set; }
         public Measurement Y { get; private set; }
         public Measurement Z { get; private set; }
 
-        public Point ApplicationPoint { get { return _applicationPoint; } private set { _applicationPoint = value; } }
-        private Point _applicationPoint = Point.Origin;
+        public Point ApplicationPoint { get; private set; } = Point.Origin;
 
-        public Unit<T> Magnitude { get { return _getMagnitude(); } }
-
-        private Unit<T> _getMagnitude()
-        {
-            var result = (X ^ 2 + Y ^ 2 + Z ^ 2).SquareRoot();
-            return new Unit<T>(UnitType, result);
-        }
-
-        //public Direction Direction { get { return _getDirection(); } }
-
-        //private Direction _getDirection()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Unit<T> Magnitude { get { return this.Magnitude(); } }
+        public Direction Direction { get { return this.Direction(); } }    
         #endregion
 
         #region Constructors
@@ -57,20 +43,39 @@ namespace GeometryClassLibrary.Vectors
         {
             this.ApplicationPoint = basePoint;
             this.UnitType = (T)magnitude.UnitType;
-            this.X = magnitude.Measurement * direction.XComponent;
-            this.Y = magnitude.Measurement * direction.YComponent;
-            this.Z = magnitude.Measurement * direction.ZComponent;
+            this.X = magnitude.Measurement * direction.X;
+            this.Y = magnitude.Measurement * direction.Y;
+            this.Z = magnitude.Measurement * direction.Z;
         }
-        #endregion  
+
+        public Vector_New(Vector_New<T> vector)
+        {
+            this.ApplicationPoint = vector.ApplicationPoint;
+            this.UnitType = vector.UnitType;
+            this.X = vector.X;
+            this.Y = vector.Y;
+            this.Z = vector.Z;
+        }
+
+        public Vector_New(Point applicationPoint, Vector_New<T> vector)
+        {
+            this.ApplicationPoint = applicationPoint;
+            this.UnitType = vector.UnitType;
+            this.X = vector.X;
+            this.Y = vector.Y;
+            this.Z = vector.Z;
+        }
+        #endregion
     }
 
     public class UnitLessVector : Vector_New<DimensionLess>
     {
-        public implicit operator UnitLessVector(Direction d)
+        public static implicit operator UnitLessVector(Direction d)
         {
             return new UnitLessVector(d);
         }
+
         public UnitLessVector(Direction d)
-            : base(DimensionLess.Instance, d.XComponent, d.YComponent, d.ZComponent) { }
+            : base(DimensionLess.Instance, d.X, d.Y, d.Z) { }
     }
 }
