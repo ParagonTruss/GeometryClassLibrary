@@ -4,6 +4,10 @@ using NUnit.Framework;
 using UnitClassLibrary;
 using System.Diagnostics;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
+
 
 namespace GeometryClassLibraryTest
 {
@@ -13,7 +17,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Rotation_Constructor_Matrix()
         {
-            Vector vector1 = new Vector(Point.MakePointWithInches(2, 3, -6), Direction.Out);
+            Vector vector1 = new Vector(Point.MakePointWithInches(2, 3, -6), Direction.Out, new Distance(1, Inches));
             Vector vector2 = new Vector(Point.MakePointWithInches(-5, 3, 7));
 
             //A very randomish axis
@@ -24,7 +28,7 @@ namespace GeometryClassLibraryTest
             Rotation rotation = new Rotation(testAxis, angle);
             Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
 
-            (fromMatrixConstructor.RotationAngle == angle.ModOutTwoPi).Should().BeTrue();
+            (fromMatrixConstructor.RotationAngle == angle.ProperAngle).Should().BeTrue();
             (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();
         }
         

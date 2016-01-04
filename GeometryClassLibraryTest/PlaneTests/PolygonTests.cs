@@ -10,6 +10,8 @@ using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AngleUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest
 {
@@ -954,9 +956,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_Rectangle_Constructor()
         {
-            LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left));
-            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, Angle.Degree * 33));
-            Rectangle myRectangle = new Rectangle(testSegment, Distance.Inch);
+            LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left, new Distance(1, Inches)));
+            testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(33, Degrees)));
+            Rectangle myRectangle = new Rectangle(testSegment, new Distance(1, Inches));
             
             Area myArea = myRectangle.Area;
             (myArea == new Area(new SquareInch(), 1)).Should().BeTrue();
@@ -967,13 +969,13 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion()
         {
-            var rectangle1 = Polygon.Rectangle(3 * Distance.Inch, 1 * Distance.Inch);
-            var rectangle2 = Polygon.Rectangle(1 * Distance.Inch, 3 * Distance.Inch, Point.MakePointWithInches(1, -1));
+            var rectangle1 = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
+            var rectangle2 = Polygon.Rectangle(new Distance(1, Inches), new Distance(3, Inches), Point.MakePointWithInches(1, -1));
 
             var results = rectangle1.RemoveRegion(rectangle2);
 
-            var expected1 = Polygon.Square(Distance.Inch);
-            var expected2 = Polygon.Square(Distance.Inch, Point.MakePointWithInches(2, 0));
+            var expected1 = Polygon.Square(new Distance(1, Inches));
+            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
             (results.Count).Should().Be(2);
             (results[0] == expected1).Should().BeTrue();
             (results[1] == expected2).Should().BeTrue();
@@ -982,13 +984,13 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion_SharedEdges()
         {
-            var rectangle = Polygon.Rectangle(3 * Distance.Inch, 1 * Distance.Inch);
-            var square = Polygon.Square(1 * Distance.Inch, Point.MakePointWithInches(1, 0));
+            var rectangle = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
+            var square = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 0));
 
             var results = rectangle.RemoveRegion(square);
 
-            var expected1 = Polygon.Square(Distance.Inch);
-            var expected2 = Polygon.Square(Distance.Inch, Point.MakePointWithInches(2, 0));
+            var expected1 = Polygon.Square(new Distance(1, Inches));
+            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
         }
@@ -996,38 +998,38 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Polygon_RemoveRegion_CutThroughCorners()
         {
-            var square = Polygon.Square(4 * Distance.Inch);
-            var rectangle = Polygon.Rectangle(4*Math.Sqrt(2) * Distance.Inch, 1 * Distance.Inch);
-            rectangle = rectangle.Rotate(new Rotation(45 * Angle.Degree));
+            var square = Polygon.Square(new Distance(4, Inches));
+            var rectangle = Polygon.Rectangle(new Distance(4 * Math.Sqrt(2), Inches), new Distance(1, Inches));
+            rectangle = rectangle.Rotate(new Rotation(new Angle(45, Degrees)));
             rectangle = rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
 
             var results = square.RemoveRegion(rectangle);
 
             results.Count.Should().Be(2);
-            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 3.29289 * Distance.Inch), new Vector(Direction.Down, 3.29289 * Distance.Inch), Point.MakePointWithInches(0, 4));
-            var expected2 = Polygon.Triangle(new Vector(Direction.Left, 3.29289 * Distance.Inch), new Vector(Direction.Up, 3.29289 * Distance.Inch), Point.MakePointWithInches(4, 0));
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, new Distance(3.29289, Inches)), new Vector(Direction.Down, new Distance(3.29289, Inches)), Point.MakePointWithInches(0, 4));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Left, new Distance(3.29289, Inches)), new Vector(Direction.Up, new Distance(3.29289, Inches)), Point.MakePointWithInches(4, 0));
 
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
 
-            Assert.Pass();
         }
         [Test]
         public void Polygon_RemoveRegion_SquareRemoveDiamond()
         {
-            var square1 = Polygon.Square(4 * Distance.Inch);
-            var square2 = Polygon.Square(4/Math.Sqrt(2) * Distance.Inch);
-            var diamond = square2.Rotate(new Rotation(Angle.Degree*45));
+            var square1 = Polygon.Square(new Distance(4, Inches));
+            var square2 = Polygon.Square(new Distance(4 / Math.Sqrt(2), Inches));
+            var diamond = square2.Rotate(new Rotation(RightAngle / 2));
             diamond = diamond.Translate(square1.CenterPoint - diamond.CenterPoint);
 
             var results = square1.RemoveRegion(diamond);
 
             results.Count.Should().Be(4);
 
-            var expected1 = Polygon.Triangle(new Vector(Direction.Right, 2 * Distance.Inch), new Vector(Direction.Up, 2 * Distance.Inch));
-            var expected2 = Polygon.Triangle(new Vector(Direction.Right, 2 * Distance.Inch), new Vector(Direction.Down, 2 * Distance.Inch), Point.MakePointWithInches(0, 4));
-            var expected3 = Polygon.Triangle(new Vector(Direction.Left, 2 * Distance.Inch), new Vector(Direction.Down, 2 * Distance.Inch), Point.MakePointWithInches(4, 4));
-            var expected4 = Polygon.Triangle(new Vector(Direction.Left, 2 * Distance.Inch), new Vector(Direction.Up, 2 * Distance.Inch), Point.MakePointWithInches(4, 0));
+            Distance twoInches = new Distance(2, Inches);
+            var expected1 = Polygon.Triangle(new Vector(Direction.Right, twoInches), new Vector(Direction.Up, twoInches));
+            var expected2 = Polygon.Triangle(new Vector(Direction.Right, twoInches), new Vector(Direction.Down, twoInches), Point.MakePointWithInches(0, 4));
+            var expected3 = Polygon.Triangle(new Vector(Direction.Left, twoInches), new Vector(Direction.Down, twoInches), Point.MakePointWithInches(4, 4));
+            var expected4 = Polygon.Triangle(new Vector(Direction.Left, twoInches), new Vector(Direction.Up, twoInches), Point.MakePointWithInches(4, 0));
 
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
@@ -1035,7 +1037,6 @@ namespace GeometryClassLibraryTest
             (results.Contains(expected4)).Should().BeTrue();
         }
 
-        [Ignore]
         [Test]
         public void Polygon_RemoveRegion_TouchingVertices()
         {
@@ -1043,9 +1044,9 @@ namespace GeometryClassLibraryTest
             // There's no overlapping region, 
             // so the results should be just one square or the other
 
-            var square1 = Polygon.Square(3 * Distance.Inch);
-            var square2 = Polygon.Square(3 * Distance.Inch);
-            square2 = square2.Rotate(new Rotation(65 * Angle.Degree));
+            var square1 = Polygon.Square(3 * new Distance(1, Inches));
+            var square2 = Polygon.Square(3 * new Distance(1, Inches));
+            square2 = square2.Rotate(new Rotation(65 * new Angle(1, Degrees)));
             square2 = square2.Translate(Point.MakePointWithInches(3, 3));
 
             var results1 = square1.RemoveRegion(square2);
@@ -1061,29 +1062,29 @@ namespace GeometryClassLibraryTest
             (results3.Count == 0).Should().BeTrue();
         }
 
-        [Ignore]
+        
         [Test]
         public void Polygon_OverlappingPolygons()
         {
-            var initialRectangle = Polygon.Rectangle(2 * Distance.Inch, 3 * Distance.Inch);
-            var square = Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 1));
+            var initialRectangle = Polygon.Rectangle(2 * new Distance(1, Inches), 3 * new Distance(1, Inches));
+            var square = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 1));
 
             var cShape = initialRectangle.RemoveRegion(square)[0];
-            var rectangle = Polygon.Rectangle(Distance.Inch, 3 * Distance.Inch, Point.MakePointWithInches(1, 0));
+            var rectangle = Polygon.Rectangle(new Distance(1, Inches), 3 * new Distance(1, Inches), Point.MakePointWithInches(1, 0));
 
             var results = cShape.OverlappingPolygons(rectangle);
 
             results.Count.Should().Be(2);
-            results.Contains(Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 2))).Should().BeTrue();
-            results.Contains(Polygon.Square(Distance.Inch, Point.MakePointWithInches(1, 0))).Should().BeTrue();
+            results.Contains(Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 2))).Should().BeTrue();
+            results.Contains(Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 0))).Should().BeTrue();
 
         }
 
-        [Ignore]
+       
         [Test]
         public void Polygon_OverlappingPolygons_NoOverlap()
         {
-            var rectangle1 = Polygon.Rectangle(3 * Distance.Inch, 2 * Distance.Inch);
+            var rectangle1 = Polygon.Rectangle(new Distance(3, Inches), new Distance(2, Inches));
             var rectangle2 = rectangle1.Translate(Point.MakePointWithInches(3, 0));
 
             var results = rectangle1.OverlappingPolygons(rectangle2);

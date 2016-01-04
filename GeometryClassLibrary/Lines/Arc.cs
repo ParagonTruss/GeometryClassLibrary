@@ -4,6 +4,8 @@ using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 using UnitClassLibrary.DistanceUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -22,7 +24,7 @@ namespace GeometryClassLibrary
             get
             {
                 //length = r * theta), when theta is in radians
-                return RadiusOfCurvature * CentralAngle.Radians;
+                return RadiusOfCurvature * CentralAngle.InRadians;
             }
         }
 
@@ -34,7 +36,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcArea = r^2/2 * (theta), where theta is in radians
-                return new Area(new SquareInch(), .5 * RadiusOfCurvature.Inches^2 * CentralAngle.Radians);
+                return new Area(new SquareInch(), 0.5 * CentralAngle.InRadians * (RadiusOfCurvature.InInches^2));
             }
         }
 
@@ -46,7 +48,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcSegmentArea = r^2 / 2 * (theta - sin(theta))
-                return new Area(new SquareInch(), .5 * RadiusOfCurvature.Inches^2 * (CentralAngle.Radians - Angle.Sine(CentralAngle)));
+                return new Area(new SquareInch(), .5 * (RadiusOfCurvature.InInches^2) * (CentralAngle.InRadians - Angle.Sine(CentralAngle)));
             }
         }
 
@@ -63,11 +65,20 @@ namespace GeometryClassLibrary
             {
                 if (this.IsClosed)
                 {
-                    return new Angle(new Radian(), 2 * Math.PI);
+                    return Angle.FullCircle;
                 }
                 else
                 {
-                    return new Direction(CenterPoint, BasePoint).SignedAngleBetween(new Direction(CenterPoint, EndPoint), NormalDirection).ModOutTwoPi;
+                    var direction1 = new Direction(CenterPoint, BasePoint);
+                    var direction2 = new Direction(CenterPoint, EndPoint);
+                    //var normal = direction1.CrossProduct(direction2);
+                    //if (normal != NormalDirection)
+                    //{
+                    //    throw new Exception();
+                    //}
+                    var result = direction1.AngleFromThisToThat(direction2, NormalDirection);
+                    var modded = result.ProperAngle;
+                    return modded;
                 }
             }
         }
@@ -126,7 +137,7 @@ namespace GeometryClassLibrary
         private Direction _normalDirection;
 
         public bool IsClosed { get { return BasePoint == EndPoint; } }
-        public bool IsAcute { get { return this.CentralAngle < 180 * Angle.Degree; } }
+        public bool IsAcute { get { return this.CentralAngle < StraightAngle; } }
         #endregion
 
         #region Constructors
@@ -144,9 +155,15 @@ namespace GeometryClassLibrary
             var segmentBetweenPoints = new LineSegment(basePoint,endPoint);
             this._normalDirection = initialDirection.CrossProduct(segmentBetweenPoints.Direction);
 
-            var line1 = new Line(BasePoint, NormalDirection.CrossProduct(initialDirection));
-            var line2 = new Line(segmentBetweenPoints.MidPoint, NormalDirection.CrossProduct(segmentBetweenPoints.Direction));
-            this._centerPoint = line1.IntersectWithLine(line2);
+            var plane1 = new Plane(BasePoint, initialDirection);
+            var plane2 = new Plane(segmentBetweenPoints.MidPoint, segmentBetweenPoints.Direction);
+            var intersectingLine = plane1.IntersectWithPlane(plane2);
+            var containingPlane = new Plane(BasePoint, NormalDirection);
+            var centerPoint = intersectingLine.IntersectWithPlane(containingPlane);
+            this._centerPoint = centerPoint;
+            //var line1 = new Line(BasePoint, NormalDirection.CrossProduct(initialDirection));
+            //var line2 = new Line(segmentBetweenPoints.MidPoint, NormalDirection.CrossProduct(segmentBetweenPoints.Direction));
+            //this._centerPoint = line1.IntersectWithLine(line2);
         }
 
         public Arc(Point basePoint, Point endPoint, Line normalLine)
@@ -186,6 +203,107 @@ namespace GeometryClassLibrary
             _normalDirection = toCopy.NormalDirection;
         }
 
+        #endregion
+
+
+
+        #region Methods
+
+        public Plane ContainingPlane()
+        {
+            return new Plane(CenterPoint, NormalDirection);
+        }
+
+        /// <summary>
+        /// Performs the given shift on the Arc and returns a new Arc that has been shifted
+        /// </summary>
+        public Arc Shift(Shift passedShift)
+        {
+            Point newBasePoint = BasePoint.Shift(passedShift);
+            Point newEndPoint = EndPoint.Shift(passedShift);
+
+            // make the direction into a line and then shift it
+            Line directionLine = new Line(CenterPoint, NormalDirection).Shift(passedShift);
+
+            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
+        }
+
+        /// <summary>
+        /// Performs the given shift on this arc as an IEdge and returns it as an IEdge
+        /// </summary>
+        /// <param name="passedShift">The shift to apply to this arc</param>
+        /// <returns>A new Arc as an IEdge that has been shifted</returns>
+        IEdge IEdge.Shift(Shift passedShift)
+        {
+            return this.Shift(passedShift);
+        }
+
+        /// <summary>
+        /// Returns a copy of this Arc
+        /// </summary>
+        /// <returns>A new Arc object that is the same as this one</returns>
+        IEdge IEdge.Copy()
+        {
+            return new Arc(this);
+        }
+
+        /// <summary>
+        /// Perfomrs the given rotation on the Arc a returns a new object that has been rotated
+        /// </summary>
+        /// <param name="passedRotation">The Rotation to rotate this Arc with</param>
+        /// <returns>A new Arc that has been rotated</returns>
+        public Arc Rotate(Rotation passedRotation)
+        {
+            Point newBasePoint = BasePoint.Rotate3D(passedRotation);
+            Point newEndPoint = EndPoint.Rotate3D(passedRotation);
+
+            //cheat a bit and make the direction into a line and then shift it
+            Line directionLine = new Line(CenterPoint,NormalDirection).Rotate(passedRotation);
+
+            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
+        }
+
+        /// <summary>
+        /// Perfomrs the given rotation on the Arc as an IEdge and returns a new object that has been rotated
+        /// </summary>
+        /// <param name="passedRotation">The Rotation to rotate this Arc with</param>
+        /// <returns>A new Arc as an IEdge that has been rotated</returns>
+        IEdge IEdge.Rotate(Rotation passedRotation)
+        {
+            return this.Rotate(passedRotation);
+        }
+
+        /// <summary>
+        /// Translates the arc with the given translation
+        /// </summary>
+        /// <param name="translation">The translation to apply to the Arc</param>
+        /// <returns>A new Arc object that has been translated</returns>
+        public Arc Translate(Translation translation)
+        {
+            Point newBasePoint = BasePoint.Translate(translation);
+            Point newEndPoint = EndPoint.Translate(translation);
+            Point newCenterPoint = CenterPoint.Translate(translation);
+       
+            return new Arc(newBasePoint, newEndPoint, newCenterPoint, this.NormalDirection);
+        }
+
+        /// <summary>
+        /// Translates the arc as an IEdge with the given translation
+        /// </summary>
+        IEdge IEdge.Translate(Point point)
+        {
+            return this.Translate(point);
+        }
+
+        public Arc Reverse()
+        {
+            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
+        }
+
+        IEdge IEdge.Reverse()
+        {
+            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
+        }
         #endregion
 
         //These are currently only based on the points and not anything else about it!
@@ -267,98 +385,5 @@ namespace GeometryClassLibrary
         }
 
         #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Performs the given shift on the Arc and returns a new Arc that has been shifted
-        /// </summary>
-        public Arc Shift(Shift passedShift)
-        {
-            Point newBasePoint = BasePoint.Shift(passedShift);
-            Point newEndPoint = EndPoint.Shift(passedShift);
-
-            // make the direction into a line and then shift it
-            Line directionLine = new Line(CenterPoint, NormalDirection).Shift(passedShift);
-
-            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
-        }
-
-        /// <summary>
-        /// Performs the given shift on this arc as an IEdge and returns it as an IEdge
-        /// </summary>
-        /// <param name="passedShift">The shift to apply to this arc</param>
-        /// <returns>A new Arc as an IEdge that has been shifted</returns>
-        IEdge IEdge.Shift(Shift passedShift)
-        {
-            return this.Shift(passedShift);
-        }
-
-        /// <summary>
-        /// Returns a copy of this Arc
-        /// </summary>
-        /// <returns>A new Arc object that is the same as this one</returns>
-        IEdge IEdge.Copy()
-        {
-            return new Arc(this);
-        }
-
-        /// <summary>
-        /// Perfomrs the given rotation on the Arc a returns a new object that has been rotated
-        /// </summary>
-        /// <param name="passedRotation">The Rotation to rotate this Arc with</param>
-        /// <returns>A new Arc that has been rotated</returns>
-        public Arc Rotate(Rotation passedRotation)
-        {
-            Point newBasePoint = BasePoint.Rotate3D(passedRotation);
-            Point newEndPoint = EndPoint.Rotate3D(passedRotation);
-
-            //cheat a bit and make the direction into a line and then shift it
-            Line directionLine = new Line(CenterPoint,NormalDirection).Rotate(passedRotation);
-
-            return new Arc(newBasePoint, newEndPoint, directionLine.BasePoint, directionLine.Direction);
-        }
-
-        /// <summary>
-        /// Perfomrs the given rotation on the Arc as an IEdge and returns a new object that has been rotated
-        /// </summary>
-        /// <param name="passedRotation">The Rotation to rotate this Arc with</param>
-        /// <returns>A new Arc as an IEdge that has been rotated</returns>
-        IEdge IEdge.Rotate(Rotation passedRotation)
-        {
-            return this.Rotate(passedRotation);
-        }
-
-        /// <summary>
-        /// Translates the arc with the given translation
-        /// </summary>
-        /// <param name="translation">The translation to apply to the Arc</param>
-        /// <returns>A new Arc object that has been translated</returns>
-        public Arc Translate(Translation translation)
-        {
-            Point newBasePoint = BasePoint.Translate(translation);
-            Point newEndPoint = EndPoint.Translate(translation);
-            return new Arc(newBasePoint, newEndPoint, this.InitialDirection);
-        }
-
-        /// <summary>
-        /// Translates the arc as an IEdge with the given translation
-        /// </summary>
-        IEdge IEdge.Translate(Point point)
-        {
-            return this.Translate(point);
-        }
-
-        public Arc Reverse()
-        {
-            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
-        }
-
-        IEdge IEdge.Reverse()
-        {
-            return new Arc(EndPoint, BasePoint, CenterPoint, NormalDirection.Reverse());
-        }
-        #endregion
-
     }
 }

@@ -19,9 +19,9 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        public readonly static Plane XY = new Plane(Line.XAxis, Line.YAxis);
-        public readonly static Plane XZ = new Plane(Line.XAxis, Line.ZAxis);
-        public readonly static Plane YZ = new Plane(Line.YAxis, Line.ZAxis);
+        public static Plane XY { get { return new Plane(Point.Origin, Direction.Out); } }
+        public static Plane XZ { get { return new Plane(Point.Origin, Direction.Up); } }
+        public static Plane YZ { get { return new Plane(Point.Origin, Direction.Right); } }
 
         public virtual bool IsBounded { get { return true; } }
 
@@ -30,7 +30,7 @@ namespace GeometryClassLibrary
         [JsonProperty]
         public Point BasePoint { get { return NormalLine.BasePoint; } }
 
-        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, Distance.Inch); } }
+        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, new Distance(1, Inches)); } }
 
         [JsonProperty]
         public Direction NormalDirection { get { return NormalLine.Direction; } }
@@ -55,6 +55,10 @@ namespace GeometryClassLibrary
             }
             this.NormalLine = new Line(basePoint, normalDirection);
         }
+        public Plane(Point basePoint, Direction normalDirection)
+        {
+            this.NormalLine = new Line(basePoint, normalDirection);
+        }
 
         public Plane(Vector normalVector) : this(normalVector.Direction, normalVector.BasePoint) { }
 
@@ -71,12 +75,12 @@ namespace GeometryClassLibrary
                 if (line1.IsParallelTo(line2))
                 {
                     Vector lineBetween = new Vector(line1.BasePoint, line2.BasePoint);
-                    normal = new Vector(line1, Distance.Inch).CrossProduct(lineBetween);
+                    normal = new Vector(line1, new Distance(1, Inches)).CrossProduct(lineBetween);
                 }
                 //if they are coplanar and not parallel we can just cross them
                 else if (line1.IsCoplanarWith(line2))
                 {
-                    normal = new Vector(line1, Distance.Inch).CrossProduct(new Vector(line2, Distance.Inch));
+                    normal = new Vector(line1, new Distance(1, Inches)).CrossProduct(new Vector(line2, new Distance(1, Inches)));
                 }
                 else
                 {
@@ -203,7 +207,7 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            return passedPoint.DistanceTo(this) == Distance.Zero;
+            return passedPoint.DistanceTo(this) == Distance.ZeroDistance;
         }
 
         public Plane Translate(Translation translation)
@@ -458,7 +462,7 @@ namespace GeometryClassLibrary
         {
             //check to see if it is perpendicular to the normal vector and if it is then it is parallel to the plane because the plane is
             //by definition perpendicular to the normal
-            return this.NormalVector.IsPerpendicularTo(passedLine);
+            return this.NormalDirection.IsPerpendicularTo(passedLine.Direction);
         }
         
         /// <summary>
@@ -512,7 +516,7 @@ namespace GeometryClassLibrary
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
             var complement = new Angle(new Degree(), 90) - angle;
-            return complement.ModOutTwoPi;
+            return complement.ProperAngle;
         }
 
         public Vector NormalVectorThrough(Point point)

@@ -6,7 +6,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AreaUnit;
-using UnitClassLibrary.GenericUnit;
+
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 
 namespace GeometryClassLibrary
@@ -20,7 +20,7 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        public static readonly Vector Zero = new Vector(Point.Origin);
+        public static Vector Zero { get { return new Vector(Point.Origin); } }
 
         /// <summary>
         /// Returns the magnitude of the vector
@@ -134,17 +134,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
         /// </summary>
-        public Vector(Point passedBasePoint, Direction direction, Distance magnitude = null)
+        public Vector(Point passedBasePoint, Direction direction, Distance magnitude)
             : base(direction, passedBasePoint)
         {
-            if (magnitude == null)
-            {
-                _magnitude = Inch;
-            }
-            else
-            {
-                _magnitude = magnitude;
-            }
+             _magnitude = magnitude;
         }
 
         /// <summary>
@@ -350,14 +343,14 @@ namespace GeometryClassLibrary
 
             //Find each component 
 
-            Measurement xProduct1 = v1.YComponent.Inches * v2.ZComponent.Inches;
-            Measurement xProduct2 = v1.ZComponent.Inches * v2.YComponent.Inches;
+            Measurement xProduct1 = v1.YComponent.InInches * v2.ZComponent.InInches;
+            Measurement xProduct2 = v1.ZComponent.InInches * v2.YComponent.InInches;
 
-            Measurement yProduct1 = v1.ZComponent.Inches * v2.XComponent.Inches;
-            Measurement yProduct2 = v1.XComponent.Inches * v2.ZComponent.Inches;
+            Measurement yProduct1 = v1.ZComponent.InInches * v2.XComponent.InInches;
+            Measurement yProduct2 = v1.XComponent.InInches * v2.ZComponent.InInches;
 
-            Measurement zProduct1 = v1.XComponent.Inches * v2.YComponent.Inches;
-            Measurement zProduct2 = v1.YComponent.Inches * v2.XComponent.Inches;
+            Measurement zProduct1 = v1.XComponent.InInches * v2.YComponent.InInches;
+            Measurement zProduct2 = v1.YComponent.InInches * v2.XComponent.InInches;
 
             Measurement newX = (xProduct1) - (xProduct2);
             Measurement newY = (yProduct1) - (yProduct2);
@@ -378,7 +371,7 @@ namespace GeometryClassLibrary
             {
                 return false; //Doesn't have a direction. Should be false
             }
-            if (vector1.Magnitude == Distance.Zero || vector2.Magnitude == Distance.Zero)
+            if (vector1.Magnitude == Distance.ZeroDistance || vector2.Magnitude == Distance.ZeroDistance)
             {
                 return true;
             }
@@ -400,7 +393,7 @@ namespace GeometryClassLibrary
             {
                 return false; //Doesn't have a direction. Should be false
             }
-            if (vector1.Magnitude == Distance.Zero || vector2.Magnitude == Distance.Zero)
+            if (vector1.Magnitude == Distance.ZeroDistance || vector2.Magnitude == Distance.ZeroDistance)
             {
                 return true;
             }
@@ -453,7 +446,7 @@ namespace GeometryClassLibrary
         public Matrix ConvertToMatrixColumn()
         {
             Matrix returnMatrix = new Matrix(3, 1);
-            double[] vectorArray = { XComponent.Inches.Value, YComponent.Inches.Value, ZComponent.Inches.Value };
+            double[] vectorArray = { XComponent.InInches.Value, YComponent.InInches.Value, ZComponent.InInches.Value };
             returnMatrix.SetColumn(0, vectorArray);
             return returnMatrix;
         }
@@ -498,7 +491,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public new Vector UnitVector(DistanceType passedType)
         {
-            if (Magnitude == Distance.Zero)
+            if (Magnitude == Distance.ZeroDistance)
             {
                 // return new Vector(Point.Origin);
                 throw new Exception();
@@ -513,9 +506,9 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = vector;
 
-            var xTerm =( vector1.XComponent * vector2.XComponent).ValueInThisUnit(new SquareInch());
-            var yTerm =( vector1.YComponent * vector2.YComponent).ValueInThisUnit(new SquareInch()); 
-            var zTerm = (vector1.ZComponent * vector2.ZComponent).ValueInThisUnit(new SquareInch()); 
+            var xTerm =( vector1.XComponent * vector2.XComponent).ValueIn(new SquareInch());
+            var yTerm =( vector1.YComponent * vector2.YComponent).ValueIn(new SquareInch()); 
+            var zTerm = (vector1.ZComponent * vector2.ZComponent).ValueIn(new SquareInch()); 
             
             var sum = xTerm + yTerm + zTerm;
             return new Area(new SquareInch(),sum);
@@ -523,12 +516,12 @@ namespace GeometryClassLibrary
        
         public bool IsPerpendicularTo(Vector other)
         {
-            return this.SmallestAngleBetween(other) == 90 * Angle.Degree;
+            return this.SmallestAngleBetween(other) == Angle.RightAngle;
         }
 
         public bool IsParallelTo(Vector vector)
         {
-            return this.SmallestAngleBetween(vector) == Angle.Zero;
+            return this.SmallestAngleBetween(vector) == Angle.ZeroAngle;
         }
 
      

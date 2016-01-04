@@ -8,6 +8,7 @@ using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AngleUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibrary
 {
@@ -60,7 +61,7 @@ namespace GeometryClassLibrary
                 {
                     crossProduct = this.LineSegments.Last().CrossProduct(LineSegments.First());
                 }
-                if (crossProduct.Magnitude != Distance.Zero && crossProduct.Direction != NormalVector.Direction)
+                if (crossProduct.Magnitude != Distance.ZeroDistance && crossProduct.Direction != NormalVector.Direction)
                 {
                     return false;
                 }
@@ -889,7 +890,16 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool ContainsOnInside(Point passedPoint)
         {
-            return (Contains(passedPoint) && !Touches(passedPoint));
+            bool planeContains = new Plane(this).Contains(passedPoint);
+            if (!planeContains)
+            {
+                return false;
+            }
+            //bool notTouching = !Touches(passedPoint);
+
+            bool containsOnInside = _containsOnInside(passedPoint);
+      
+            return containsOnInside;
         }
 
         /// <summary>
@@ -897,55 +907,59 @@ namespace GeometryClassLibrary
         /// </summary>
         public new bool Contains(Point passedPoint)
         {
-
             //check if it is in our plane first
-            if (((Plane)this).Contains(passedPoint))
+            if (!((Plane)this).Contains(passedPoint))
             {
-                //now check if it is in the bounds each line at a time
-                foreach (LineSegment line in LineSegments)
-                {
-                    if (line.Contains(passedPoint))
-                    {
-                        return true;
-                    }
-                }
-
-                Angle angularDistance = Angle.Zero;
-                for (int i = 0; i < this.Vertices.Count; i++)
-                {
-                    Point previous;
-                    Point next = this.Vertices[i];
-                    if (i == 0)
-                    {
-                        previous = this.Vertices[this.Vertices.Count - 1];
-                    }
-                    else
-                    {
-                        previous = this.Vertices[i-1];
-                    }
-                    var segment1 = new LineSegment(passedPoint, previous);
-                    var segment2 = new LineSegment(passedPoint, next);
-                    
-                    var angle = segment1.AngleBetween(segment2).ModOutTwoPi;
-                    if (segment1.CrossProduct(segment2).HasOppositeDirectionOf(this.NormalVector))
-                    {
-                        angle = (Angle)angle.Negate();
-                    }
-                    angularDistance = (Angle)(angularDistance + angle);
-
-                }
-               
-                if (angularDistance % new Angle(new Degree(), 720) == Angle.Zero)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return false;
+            }
+            if (this.Touches(passedPoint))
+            {
+                return true;
+            }
+            if (this._containsOnInside(passedPoint))
+            {
+                return true;
             }
             return false;
         }
+
+        private bool _containsOnInside(Point passedPoint)
+        {
+            Angle angularDistance = Angle.ZeroAngle;
+            for (int i = 0; i < this.Vertices.Count; i++)
+            {
+                Point previous;
+                Point next = this.Vertices[i];
+                if (i == 0)
+                {
+                    previous = this.Vertices[this.Vertices.Count - 1];
+                }
+                else
+                {
+                    previous = this.Vertices[i - 1];
+                }
+                var direction1 = new Direction(passedPoint, previous);
+                var direction2 = new Direction(passedPoint, next);
+
+                var angle = direction1.AngleBetween(direction2);
+                if (direction1.CrossProduct(direction2) == this.NormalVector.Direction.Reverse())
+                {
+                    angle = angle.Negate();
+                }
+                angularDistance += angle;
+
+            }
+            angularDistance -= Angle.FullCircle;
+            if (angularDistance % (2*Angle.FullCircle) == Angle.ZeroAngle)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// determines if this polygon contains the entirety of the other polygon
@@ -1049,13 +1063,13 @@ namespace GeometryClassLibrary
         {
             var vertices = Vertices;
             var total = Vector.Zero;
-            for (int i = 2; i < this.LineSegments.Count; i++)
+            for (int i = 1; i + 1 < this.LineSegments.Count; i++)
             {
-                var vector1 = new Vector(vertices.First(), vertices[i - 1]);
-                var vector2 = new Vector(vertices.First(), vertices[i]);
-               total += vector1.CrossProduct(vector2);
+                var vector1 = new Vector(vertices[0], vertices[i]);
+                var vector2 = new Vector(vertices[0], vertices[i+1]);
+                total += vector1.CrossProduct(vector2);
             }
-            return total.Magnitude.Inches.Value / 2;
+            return total.Magnitude.InInches.Value / 2;
         }
 
         private Point _findCentroid()
@@ -1071,11 +1085,11 @@ namespace GeometryClassLibrary
                 var  centroidOfLocalTriangle = new List<Point>() { vertices[0],vector1.EndPoint,vector2.EndPoint }.CenterPoint();
                 if (crossProduct.Direction == NormalVector.Direction)
                 {
-                    total += crossProduct.Magnitude.Inches * centroidOfLocalTriangle;
+                    total += crossProduct.Magnitude.InInches * centroidOfLocalTriangle;
                 }
                 else
                 {
-                    total -= crossProduct.Magnitude.Inches * centroidOfLocalTriangle;
+                    total -= crossProduct.Magnitude.InInches * centroidOfLocalTriangle;
                 }
             }
             return total/(2*_findArea());
@@ -1200,8 +1214,10 @@ namespace GeometryClassLibrary
             {
                 polygon2 = polygon2.ReverseOrientation();
             }
-            var results = _traceRegions(polygon1, polygon2).Where(p => p.NormalDirection == this.NormalDirection).ToList();
-            return results;
+            var results = _traceRegions(polygon1, polygon2).ToList();
+            var filtered = results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
+            filtered = results.Where(p => polygon1.Contains(p) && polygon2.Contains(p)).ToList();
+            return filtered;
         }
 
         /// <summary>
@@ -1252,7 +1268,7 @@ namespace GeometryClassLibrary
                     var segment2 = segments2[j];
                     if (segment1.Overlaps(segment2))
                     {
-                        if (segment1.AngleBetween(segment2) == 180*Angle.Degree)
+                        if (segment1.AngleBetween(segment2) == Angle.StraightAngle)
                         {
                             List<List<LineSegment>> segments = _subtract(segment1, segment2);
                             segments1.RemoveAt(i);
@@ -1385,9 +1401,9 @@ namespace GeometryClassLibrary
                             }
                             #endregion
 
-                            var normal = Math.Pow(-1, index) * polygon1.NormalVector;
-                            var angle1 = (nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal)).ModOutTwoPi;
-                            var angle2 = (nextSegment.SignedAngleBetween(lineSegment, normal)).ModOutTwoPi;
+                            var normal = polygons[index % 2].NormalVector;
+                            var angle1 = (nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal)).ProperAngle;
+                            var angle2 = (nextSegment.SignedAngleBetween(lineSegment, normal)).ProperAngle;
                             if (angle2 < angle1)
                             {
                                 found = true;
@@ -1588,11 +1604,11 @@ namespace GeometryClassLibrary
         {
             if (numberOfSides < 3)
             {
-                throw new ArgumentException("A polygon must have more than 2 sides.");
+                throw new ArgumentException("A polygon must have atleast 3 sides.");
             }
 
-            Angle step = (Angle)(Angle.Degree * 360.0 / numberOfSides);
-            Angle otherAngle = (Angle)((Angle.Degree * 180 - step) / 2);
+            Angle step = new Angle(360.0 / numberOfSides, Degrees);
+            Angle otherAngle = (Angle.StraightAngle - step) / 2;
 
             //Law of Sines
             Distance length = sideLength * Angle.Sine(otherAngle) / Angle.Sine(step);
@@ -1603,21 +1619,21 @@ namespace GeometryClassLibrary
                 // and lie "flat" from the viewers perspective
                 if (numberOfSides % 4 == 0)
                 {
-                    firstPoint = new Point(length, Distance.Zero);
+                    firstPoint = new Point(length, Distance.ZeroDistance);
                     firstPoint = firstPoint.Rotate2D((Angle)(step / 2));
                 }
                 else if (numberOfSides % 2 == 0)
                 {
-                    firstPoint = new Point(length, Distance.Zero);
+                    firstPoint = new Point(length, Distance.ZeroDistance);
                 }
                 else
                 {
-                    firstPoint = new Point(Distance.Zero, length);
+                    firstPoint = new Point(Distance.ZeroDistance, length);
                 }
             }
             else
             {
-                firstPoint = new Point(length, Distance.Zero);
+                firstPoint = new Point(length, Distance.ZeroDistance);
                 firstPoint = firstPoint.Rotate2D(startingAngle);
             }
             List<Point> points = new List<Point>() { firstPoint };

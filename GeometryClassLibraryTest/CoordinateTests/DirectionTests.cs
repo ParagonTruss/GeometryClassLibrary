@@ -44,15 +44,16 @@ namespace GeometryClassLibraryTest
             Direction expectedErrorDirection = Direction.Back;
             (testErrorHandling == expectedErrorDirection).Should().BeTrue();
 
-            //now try the 0 Direction too
+            //now try the Z Direction too
             Point testPoint0 = Point.MakePointWithInches(0.006, 0.003, 1.4999);
-            Direction testErrorHandling0 = new Direction(testPoint0);
-            Direction expectedErrorDirection0 = Direction.Out;
-            (testErrorHandling0 == expectedErrorDirection0).Should().BeTrue();
+            Direction testDirection1 = new Direction(testPoint0);
+            Direction expected = Direction.Out;
+            (testDirection1 == expected).Should().BeTrue();
 
-            Point testPointPassedEqualityTo0 = Point.MakePointWithInches(1.0 / 32, 0.006, 1.488);
-            Direction testErrorNotEqualTo0 = new Direction(testPointPassedEqualityTo0);
-            (testErrorNotEqualTo0 == expectedErrorDirection0).Should().BeFalse();
+            Point testPoint2 = Point.MakePointWithInches(1.0 / 32, 0.006, 1.488);
+            Direction testDirection2 = new Direction(testPoint2);
+            //Just barely more than a 1 degree angle between them
+            (testDirection2 == expected).Should().BeFalse();
         }
 
         [Test]

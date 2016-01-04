@@ -98,14 +98,14 @@ namespace GeometryClassLibraryTest
 
             Line result = lines.LineWithLargestXInterceptIn2D();
 
-            result.Should().Be(line2);
+            (result == line2).Should().BeTrue();
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
             Line result2 = lines2.LineWithLargestXInterceptIn2D();
 
-            result2.Should().Be(line2);
+            (result2 == line2).Should().BeTrue();
         }
 
         [Test()]
@@ -121,7 +121,7 @@ namespace GeometryClassLibraryTest
 
             Line result = lines.LineWithXInterceptIn2DClosestTo(new Distance(new Inch(), 3));
 
-            result.Should().Be(line4);
+            (result == line4).Should().BeTrue();
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
@@ -151,7 +151,7 @@ namespace GeometryClassLibraryTest
 
             Line result2 = lines2.LineWithXInterceptIn2DFarthestFrom(new Distance(new Inch(), 0));
 
-            result2.Should().Be(line2);
+            (result2 == line2).Should().BeTrue();
         }
 
         [Test()]
@@ -213,14 +213,14 @@ namespace GeometryClassLibraryTest
 
             Line result = lines.LineWithYInterceptIn2DClosestTo(new Distance(new Inch(), 1.3));
 
-            result.Should().Be(line2);
+            (result == line2).Should().BeTrue();
 
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
             Line result2 = lines2.LineWithYInterceptIn2DClosestTo(new Distance(new Inch(), -0.25));
 
-            result2.Should().Be(line3);
+            (result2 == line3).Should().BeTrue();
         }
 
         [Test()]

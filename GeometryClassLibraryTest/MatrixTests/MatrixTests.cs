@@ -1414,7 +1414,7 @@ namespace GeometryClassLibraryTest
         public void Matrix_GetAnglesOutOfRotationMatrix()
         {
             Angle xAngle = new Angle(new Degree(), 90);
-            Angle yAngle = new Angle(new Degree(), -33);
+            Angle yAngle = new Angle(new Degree(), -33).ProperAngle;
             Angle zAngle = new Angle(new Degree(), 40);
 
             Matrix xMatrix = Matrix.RotationMatrixAboutX(xAngle);
@@ -1429,8 +1429,8 @@ namespace GeometryClassLibraryTest
             (results[1] == yAngle).Should().BeTrue();
             (results[2] == zAngle).Should().BeTrue();
 
-            Angle xAngle2 = new Angle(new Degree(), -124);
-            Angle yAngle2 = new Angle(new Degree(), -56.32);
+            Angle xAngle2 = new Angle(new Degree(), -124).ProperAngle;
+            Angle yAngle2 = new Angle(new Degree(), -56.32).ProperAngle;
             Angle zAngle2 = new Angle(new Degree(), 6.221);
 
             Matrix xMatrix2 = Matrix.RotationMatrixAboutX(xAngle2);

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
-using static UnitClassLibrary.DistanceUnit.Distance;
-using static GeometryClassLibrary.Point;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
-using UnitClassLibrary.GenericUnit;
+using static GeometryClassLibrary.Point;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
 
 namespace GeometryClassLibrary
@@ -17,14 +17,14 @@ namespace GeometryClassLibrary
     /// A line in 3d space.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Line : IComparable<Line>
+    public partial class Line : IEquatable<Line>
     {
         #region Properties and Fields
 
         //Predefined lines to use as references
-        public readonly static Line XAxis = new Line(MakePointWithInches(1, 0, 0));
-        public readonly static Line YAxis = new Line(MakePointWithInches(0, 1, 0));
-        public readonly static Line ZAxis = new Line(MakePointWithInches(0, 0, 1));
+        public static Line XAxis = new Line(MakePointWithInches(1, 0, 0));
+        public static Line YAxis = new Line(MakePointWithInches(0, 1, 0));
+        public static Line ZAxis = new Line(MakePointWithInches(0, 0, 1));
 
         /// <summary>
         /// A point on the line to use as a reference.
@@ -39,70 +39,8 @@ namespace GeometryClassLibrary
         [JsonProperty]
         public Direction Direction { get; protected set; }
 
-        /// <summary>
-        /// Returns the X intercept of the line if the z Distance is ignored
-        /// </summary>
-        public Distance XInterceptIn2D
-        {
-            //if we are ignoring z, we can just take the x component of where it intersects the xz plane
-            get
-            {
-                if (XZIntercept == null)
-                {
-                    throw new Exception("This line does not intercept the x axis");
-                }
-                else
-                {
-                    return XZIntercept.X;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the Y intecept of the Line if the z Distance is ignored
-        /// </summary>
-        public Distance YInterceptIn2D
-        {
-            //if we are ignoring z, we can just take the y component of where it intersects the yz plane
-            get
-            {
-                if (YZIntercept == null)
-                {
-                    throw new Exception("This line does not intercept the y axis");
-                }
-                else
-                {
-                    return YZIntercept.Y;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the point at which this line intercepts the XY-Plane
-        /// </summary>
-        public Point XYIntercept
-        {
-            get { return Plane.XY.IntersectWithLine(this); }
-        }
-
-        /// <summary>
-        /// Returns the point at which this line intercepts the XZ-Plane
-        /// </summary>
-        public Point XZIntercept
-        {
-            get { return Plane.XZ.IntersectWithLine(this); }
-        }
-
-        /// <summary>
-        /// Returns the point at which this line intercepts the YZ-Plane
-        /// </summary>
-        public Point YZIntercept
-        {
-            get { return Plane.YZ.IntersectWithLine(this); }
-        }
-
         #endregion
-
+     
         #region Constructors
 
         /// <summary>
@@ -218,62 +156,126 @@ namespace GeometryClassLibrary
             return (linesAreParallel && basePointIsOnLine);
            
         }
-
-        /// <summary>
-        /// planning on implementing by sorting based on smallest x intercept in 2d plane
-        /// from left to right and if they share then the one that occurs first
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Line other)
+        public bool Equals(Line other)
         {
-            //see if the first line doesnt intersect
-            try
+            //make sure the passed object is not null
+            if (other == null)
             {
-                //if it doesnt throw an error it does and we can keep going
-                Distance nullTest = this.XInterceptIn2D;
-            }
-            catch (Exception)
-            {
-                //see if the second line also doesnt intersect
-                try
-                {
-                    //the second one intersects, so the first is "greater" than the second
-                    Distance nullTest = this.XInterceptIn2D;
-                    return 1;
-                }
-                catch (Exception) //if they both dont intersect they are "equal" in this way of sorting
-                {
-                    return 0;
-                }
+                return false;
             }
 
-            //see if only the second one doesnt intersect
-            try
-            {
-                //if it doesnt throw an error it does and we can keep going
-                Distance nullTest = other.XInterceptIn2D;
-            }
-            catch (Exception)
-            {
-                //the second doesnt intersect so the first is "smaller" than the second
-                return -1;
-            }
+            bool linesAreParallel = IsParallelTo(other);
+            bool basePointIsOnLine = BasePoint.IsOnLine(other);
 
-            //now that we've handled the cases where they dont intersect, we can check the values
-            if (this.XInterceptIn2D == other.XInterceptIn2D)
-            {
-                return 0;
-            }
-            else
-            {
-                return this.XInterceptIn2D.CompareTo(other.XInterceptIn2D);
-            }
+            return (linesAreParallel && basePointIsOnLine);
+
         }
+        ///// <summary>
+        ///// planning on implementing by sorting based on smallest x intercept in 2d plane
+        ///// from left to right and if they share then the one that occurs first
+        ///// </summary>
+        //public int CompareTo(Line other)
+        //{
+        //    //see if the first line doesnt intersect
+        //    try
+        //    {
+        //        //if it doesnt throw an error it does and we can keep going
+        //        Distance nullTest = this.XInterceptIn2D();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //see if the second line also doesnt intersect
+        //        try
+        //        {
+        //            //the second one intersects, so the first is "greater" than the second
+        //            Distance nullTest = this.XInterceptIn2D();
+        //            return 1;
+        //        }
+        //        catch (Exception) //if they both dont intersect they are "equal" in this way of sorting
+        //        {
+        //            return 0;
+        //        }
+        //    }
+
+        //    //see if only the second one doesnt intersect
+        //    try
+        //    {
+        //        //if it doesnt throw an error it does and we can keep going
+        //        Distance nullTest = other.XInterceptIn2D();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //the second doesnt intersect so the first is "smaller" than the second
+        //        return -1;
+        //    }
+
+        //    //now that we've handled the cases where they dont intersect, we can check the values
+        //    if (this.XInterceptIn2D() == other.XInterceptIn2D())
+        //    {
+        //        return 0;
+        //    }
+        //    else
+        //    {
+        //        return this.XInterceptIn2D().CompareTo(other.XInterceptIn2D());
+        //    }
+        //}
 
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Returns the X intercept of the line if the z Distance is ignored
+        /// </summary>
+        public Distance XInterceptIn2D()
+        {
+            if (XZIntercept() == null)
+            {
+                return null;
+            }
+            else
+            {
+                return XZIntercept().X;
+            }
+        }
+
+        /// <summary>
+        /// Returns the Y intecept of the Line if the z Distance is ignored
+        /// </summary>
+        public Distance YInterceptIn2D()
+        {
+            if (YZIntercept() == null)
+            {
+                return null;
+            }
+            else
+            {
+                return YZIntercept().Y;
+            }
+        }
+
+        /// <summary>
+        /// Returns the point at which this line intercepts the XY-Plane
+        /// </summary>
+        public Point XYIntercept()
+        {
+            return this.IntersectWithPlane(Plane.XY);
+        }
+
+        /// <summary>
+        /// Returns the point at which this line intercepts the XZ-Plane
+        /// </summary>
+        public Point XZIntercept()
+        {
+            return this.IntersectWithPlane(Plane.XZ);
+        }
+
+        /// <summary>
+        /// Returns the point at which this line intercepts the YZ-Plane
+        /// </summary>
+        public Point YZIntercept()
+        {
+            return Plane.YZ.IntersectWithLine(this);
+        }
 
         public Plane PlaneThroughLineInDirectionOf(Enums.Axis passedAxis)
         {
@@ -306,7 +308,7 @@ namespace GeometryClassLibrary
         {
             Angle returnAngle = AngleBetween(passedIntersectingLine);
 
-            if (returnAngle.Degrees > 90)
+            if (returnAngle.InDegrees > 90)
             {
                 return (Angle.StraightAngle - returnAngle);
             }
@@ -331,7 +333,7 @@ namespace GeometryClassLibrary
                 referenceNormal = Line.ZAxis;
             }
 
-            return this.Direction.SignedAngleBetween(line.Direction, referenceNormal.Direction);
+            return this.Direction.AngleFromThisToThat(line.Direction, referenceNormal.Direction);
 	    }
 
         /// <summary>
@@ -360,7 +362,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public virtual bool IsPerpendicularTo(Line passedLine)
         {
-            return this.SmallestAngleBetween(passedLine) == 90 * Angle.Degree;
+            return this.SmallestAngleBetween(passedLine) == 90 * new Angle(1, Degrees);
         }
 
         /// <summary>
@@ -389,8 +391,8 @@ namespace GeometryClassLibrary
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
-            Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.Inches ^ 2;
-            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).ValueInThisUnit(new SquareInch());
+            Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.InInches ^ 2;
+            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).ValueIn(new SquareInch());
 
             if (crossProductABMagnitudeSquared == 0)
             {
@@ -526,15 +528,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsCoplanarWith(Line passedLine)
         {
-            double[] point1Line1 = { this.BasePoint.X.Inches.Value, this.BasePoint.Y.Inches.Value, this.BasePoint.Z.Inches.Value };
+            double[] point1Line1 = { this.BasePoint.X.InInches.Value, this.BasePoint.Y.InInches.Value, this.BasePoint.Z.InInches.Value };
 
-            Point anotherPointOnLine1 = this.GetPointAlongLine(Distance.Inch);
-            double[] point2Line1 = { anotherPointOnLine1.X.Inches.Value, anotherPointOnLine1.Y.Inches.Value, anotherPointOnLine1.Z.Inches.Value };
+            Point anotherPointOnLine1 = this.GetPointAlongLine(new Distance(1, Inches));
+            double[] point2Line1 = { anotherPointOnLine1.X.InInches.Value, anotherPointOnLine1.Y.InInches.Value, anotherPointOnLine1.Z.InInches.Value };
 
-            double[] point1Line2 = { passedLine.BasePoint.X.Inches.Value, passedLine.BasePoint.Y.Inches.Value, passedLine.BasePoint.Z.Inches.Value };
+            double[] point1Line2 = { passedLine.BasePoint.X.InInches.Value, passedLine.BasePoint.Y.InInches.Value, passedLine.BasePoint.Z.InInches.Value };
 
-            Point anotherPointOnLine2 = passedLine.GetPointAlongLine(Distance.Inch * 2);
-            double[] point2Line2 = { anotherPointOnLine2.X.Inches.Value, anotherPointOnLine2.Y.Inches.Value, anotherPointOnLine2.Z.Inches.Value };
+            Point anotherPointOnLine2 = passedLine.GetPointAlongLine(new Distance(1, Inches) * 2);
+            double[] point2Line2 = { anotherPointOnLine2.X.InInches.Value, anotherPointOnLine2.Y.InInches.Value, anotherPointOnLine2.Z.InInches.Value };
 
             Matrix pointsMatrix = new Matrix(4, 4);
 
@@ -548,8 +550,8 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinant = Math.Abs(pointsMatrix.Determinant());
-            Distance determinateDistance = determinant*Distance.Inch;
-            return determinateDistance == Distance.Zero;
+            Distance determinateDistance = determinant*new Distance(1, Inches);
+            return determinateDistance == Distance.ZeroDistance;
         }
 
         /// <summary>
@@ -559,7 +561,7 @@ namespace GeometryClassLibrary
         public Line Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
-            Point newOtherPoint = this.GetPointAlongLine(Distance.Inch * 2).Translate(translation);
+            Point newOtherPoint = this.GetPointAlongLine(new Distance(1, Inches) * 2).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
         }
@@ -633,7 +635,7 @@ namespace GeometryClassLibrary
                 return false;
             }
             Distance distance = point.DistanceTo(this);
-            bool equal = distance.Equals(Distance.Zero);
+            bool equal = distance.Equals(Distance.ZeroDistance);
             return equal;
         }
 

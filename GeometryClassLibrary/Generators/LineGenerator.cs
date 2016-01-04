@@ -26,17 +26,17 @@ namespace GeometryClassLibrary.Generators
 
         public static Line X_Axis()
         {
-            return new Line(Point.Origin, new Point(new Distance(new Inch(), 1), Distance.Zero, Distance.Zero));
+            return new Line(Point.Origin, new Point(new Distance(new Inch(), 1), Distance.ZeroDistance, Distance.ZeroDistance));
         }
 
         public static Line Y_Axis()
         {
-            return new Line(Point.Origin, new Point(Distance.Zero, new Distance(new Inch(), 1), Distance.Zero));
+            return new Line(Point.Origin, new Point(Distance.ZeroDistance, new Distance(new Inch(), 1), Distance.ZeroDistance));
         }
 
         public static Line Z_Axis()
         {
-            return new Line(Point.Origin, new Point(Distance.Zero, Distance.Zero, new Distance(new Inch(), 1)));
+            return new Line(Point.Origin, new Point(Distance.ZeroDistance, Distance.ZeroDistance, new Distance(new Inch(), 1)));
         }
     }
 }

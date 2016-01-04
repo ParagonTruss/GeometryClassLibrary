@@ -21,7 +21,7 @@ namespace GeometryClassLibrary
 
         private static Polyhedron _makePrismFromRectangle(Rectangle rectangle, Distance height)
         {
-            var prism = rectangle.Extrude(rectangle.NormalVector * height.Inches);
+            var prism = rectangle.Extrude(rectangle.NormalVector * height.InInches);
             return prism;
         }
 
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
             {
                 basePoint = Point.Origin;
             }
-            Distance zero = Distance.Zero;
+            Distance zero = Distance.ZeroDistance;
 
             Vector vector1 = new Vector(new Point(zero, width, zero));
             Vector vector2 = new Vector(new Point(length, zero, zero));

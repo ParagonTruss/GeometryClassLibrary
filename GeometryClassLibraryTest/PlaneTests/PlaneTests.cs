@@ -256,7 +256,10 @@ namespace GeometryClassLibraryTest
             Plane testPlane = new Plane(Direction.Out, point3);
             Line line = new Line(point1, point2);
 
-            testPlane.IntersectWithLine(line).Should().Be(point2);
+            Point actualIntersection = testPlane.IntersectWithLine(line);
+            Point expectedIntersection = point2;
+
+            (actualIntersection == expectedIntersection).Should().BeTrue();
         }
     }
 }

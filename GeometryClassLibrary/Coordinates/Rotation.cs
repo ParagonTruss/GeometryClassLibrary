@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using UnitClassLibrary;
 using System.Linq;
 using MoreLinq;
-using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -44,7 +44,7 @@ namespace GeometryClassLibrary
                 }
                 return _rotationAngle;
             }
-            private set { _rotationAngle = value.ModOutTwoPi; }
+            private set { _rotationAngle = value.ProperAngle; }
         }
 
         [JsonProperty]
@@ -158,22 +158,31 @@ namespace GeometryClassLibrary
 
         private void _setAxisAndAngle()
         {
+            Line axis;
+            Angle angle;
             var shift = new Shift(this.Matrix);
             var rotationMatrix = Matrix.ProjectiveMatrixToRotationMatrix(Matrix);
             var singularMatrix = rotationMatrix  - Matrix.IdentityMatrix(3);
 
             var nullSpace = (singularMatrix).NullSpace();
-            var axis = nullSpace[0];
+            axis = nullSpace[0];
 
-            var rowVector = new Vector(new Point(singularMatrix.Rows().First(d => d.Any(v => Math.Abs(v) > 0.5)).Select(d => d*Inch).ToList()));
-            Vector rotated = new Vector(rowVector.EndPoint.Rotate3D(shift.RotationAboutOrigin));
+            var row = singularMatrix.Rows().FirstOrDefault(d => d.Any(v => Math.Abs(v) > 0.5));
+            if (row != null)
+            {
+                var rowVector = new Vector(new Point(row.Select(d => new Distance(d, Inches)).ToList()));
+                Vector rotated = new Vector(rowVector.EndPoint.Rotate3D(shift.RotationAboutOrigin));
 
-            var angle = rowVector.SignedAngleBetween(rotated, axis);
+                angle = rowVector.SignedAngleBetween(rotated, axis);
 
-            var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
-                .Select(d => d.Inches.Value).ToArray()).Select(d => d * Inch).ToList();
-            axis = axis.Translate(new Point(translation));
-
+                var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
+                    .Select(d => d.InInches.Value).ToArray()).Select(d => new Distance(d, Inches)).ToList();
+                axis = axis.Translate(new Point(translation));
+            }
+            else
+            {
+                angle = new Angle(0, Degrees);
+            }
             this.AxisOfRotation = axis;
             this.RotationAngle = angle;
         }
@@ -252,8 +261,30 @@ namespace GeometryClassLibrary
                 return false;
             }
             Rotation rotation = (Rotation)other;
-
-            return this.Matrix == rotation.Matrix;
+            if (this.RotationAngle == ZeroAngle &&
+                rotation.RotationAngle == ZeroAngle)
+            {
+                return true;
+            }
+            if (this.AxisOfRotation != rotation.AxisOfRotation)
+            {
+                return false;
+            }      
+            if (this.AxisOfRotation.Direction == rotation.AxisOfRotation.Direction)
+            {
+                if (this.RotationAngle == rotation.RotationAngle)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (this.RotationAngle == rotation.RotationAngle.Negate().ProperAngle)
+                {
+                    return true;
+                }
+            }
+            return false;        
         }
 
         #endregion 

@@ -47,7 +47,8 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The world coordinate system
         /// </summary>
-        public readonly static CoordinateSystem WorldCoordinateSystem = new CoordinateSystem(Point.Origin, Angle.Zero,Angle.Zero,Angle.Zero);
+        public static CoordinateSystem WorldCoordinateSystem { get { return _worldCoordinateSystem; } }
+        private readonly static CoordinateSystem _worldCoordinateSystem = new CoordinateSystem(Point.Origin, Angle.ZeroAngle, Angle.ZeroAngle, Angle.ZeroAngle);
 
         [JsonProperty]
         public Shift ShiftFromThisToWorld { get; set; }

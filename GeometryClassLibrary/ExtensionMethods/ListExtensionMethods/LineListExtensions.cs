@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnitClassLibrary;
 using System.Linq;
 using UnitClassLibrary.DistanceUnit;
+using MoreLinq;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
@@ -16,30 +19,14 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line with the smallest x intercept</returns>
         public static Line LineWithSmallestXInterceptIn2D(this IList<Line> passedLines)
         {
-            if (passedLines.Count < 1)
+            var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
+            if (withoutNullIntercepts.Count() == 0)
             {
                 return null;
             }
+            var largestXLine = withoutNullIntercepts.MinBy(line => (line.XInterceptIn2D()).AbsoluteValue());
 
-            //make them null so that we can handle if the first element in the list never intersects
-            Line smallestXLine = null;
-            Distance smallestX = null;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    if (smallestX == null || passedLines[i].XInterceptIn2D < smallestX)
-                    {
-                        smallestXLine = passedLines[i];
-                        smallestX = passedLines[i].XInterceptIn2D;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
-
-            return smallestXLine;
+            return largestXLine;
         }
 
         /// <summary>
@@ -50,28 +37,12 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line with the largest x intercept</returns>
         public static Line LineWithLargestXInterceptIn2D(this IList<Line> passedLines)
         {
-            if (passedLines.Count < 1)
+            var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
+            if (withoutNullIntercepts.Count() == 0)
             {
                 return null;
             }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line largestXLine = null;// passedLines[0];
-            Distance largestX = null;// passedLines[0].XInterceptIn2D;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    if (largestX == null || passedLines[i].XInterceptIn2D > largestX)
-                    {
-                        largestXLine = passedLines[i];
-                        largestX = passedLines[i].XInterceptIn2D;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
+            var largestXLine = withoutNullIntercepts.MaxBy(line => (line.XInterceptIn2D()).AbsoluteValue());
 
             return largestXLine;
         }
@@ -85,32 +56,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is closest to the specified point on the x-axis</returns>
         public static Line LineWithXInterceptIn2DClosestTo(this IList<Line> passedLines, Distance pointToFindTheClosestInterceptTo)
         {
-            if (passedLines.Count < 1)
+            if (passedLines.Count == 0)
             {
                 return null;
             }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line closetXLine = null;// passedLines[0];
-            Distance closestX = null;// passedLines[0].XInterceptIn2D;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    Distance distanceAway = passedLines[i].XInterceptIn2D - pointToFindTheClosestInterceptTo;
-                    distanceAway = distanceAway.AbsoluteValue();
-                    if (closestX == null || distanceAway < closestX)
-                    {
-                        closetXLine = passedLines[i];
-                        closestX = distanceAway;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
-
-            return closetXLine;
+            var closestXLine = passedLines.Where(line => line.XInterceptIn2D() != null).MinBy(line => (line.XInterceptIn2D() - pointToFindTheClosestInterceptTo).AbsoluteValue());
+            
+            return closestXLine;
         }
 
         /// <summary>
@@ -122,30 +74,11 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is farthest from the specified point on the x-axis</returns>
         public static Line LineWithXInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
         {
-            if (passedLines.Count < 1)
+            if (passedLines.Count == 0)
             {
                 return null;
             }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line farthestXLine = null;// passedLines[0];
-            Distance farthestX = null;// passedLines[0].XInterceptIn2D;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    Distance distanceAway = passedLines[i].XInterceptIn2D - pointToFindTheFarthestInterceptTo;
-                    distanceAway = distanceAway.AbsoluteValue();
-                    if (farthestX == null || distanceAway > farthestX)
-                    {
-                        farthestXLine = passedLines[i];
-                        farthestX = distanceAway;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
+            var farthestXLine = passedLines.Where(line => line.XInterceptIn2D() != null).MaxBy(line => (line.XInterceptIn2D() - pointToFindTheFarthestInterceptTo).AbsoluteValue());
 
             return farthestXLine;
         }
@@ -158,28 +91,11 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line with the smallest y intercept</returns>
         public static Line LineWithSmallestYInterceptIn2D(this IList<Line> passedLines)
         {
-            if (passedLines.Count < 1)
+            if (passedLines.Count == 0)
             {
                 return null;
             }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line smallestYLine = null;
-            Distance smallestY = null;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    if (smallestY == null || passedLines[i].YInterceptIn2D < smallestY)
-                    {
-                        smallestYLine = passedLines[i];
-                        smallestY = passedLines[i].YInterceptIn2D;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
+            var smallestYLine = passedLines.Where(line => line.YInterceptIn2D() != null).MinBy(line => (line.YInterceptIn2D()).AbsoluteValue());
 
             return smallestYLine;
         }
@@ -192,30 +108,7 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line with the largest y intercept</returns>
         public static Line LineWithLargestYInterceptIn2D(this IList<Line> passedLines)
         {
-            if (passedLines.Count < 1)
-            {
-                return null;
-            }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line largestYLine = null;
-            Distance largestY = null;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    if (largestY == null || passedLines[i].YInterceptIn2D > largestY)
-                    {
-                        largestYLine = passedLines[i];
-                        largestY = passedLines[i].YInterceptIn2D;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
-
-            return largestYLine;
+            return passedLines.LineWithYInterceptIn2DFarthestFrom(Distance.ZeroDistance);
         }
 
         /// <summary>
@@ -227,32 +120,12 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is closest to the specified point on the y-axis</returns>
         public static Line LineWithYInterceptIn2DClosestTo(this IList<Line> passedLines, Distance pointToFindTheClosestInterceptTo)
         {
-            if (passedLines.Count < 1)
-            {
-                return null;
-            }
+            var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
-            //make them null so that we can handle if the first element in the list never intersects
-            Line closetYLine = null;
-            Distance closestY = null;
+            var orderedLines = withoutNullIntercepts.OrderBy(line => (line.YInterceptIn2D() - pointToFindTheClosestInterceptTo).AbsoluteValue()).ToList();
+            var result = orderedLines.FirstOrDefault();
 
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    Distance distanceAway = passedLines[i].YInterceptIn2D - pointToFindTheClosestInterceptTo;
-                    distanceAway = distanceAway.AbsoluteValue();
-                    if (closestY == null || distanceAway < closestY)
-                    {
-                        closetYLine = passedLines[i];
-                        closestY = distanceAway;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
-
-            return closetYLine;
+            return result;
         }
 
         /// <summary>
@@ -264,43 +137,14 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is farthest from the specified point on the y-axis</returns>
         public static Line LineWithYInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
         {
-            if (passedLines.Count < 1)
+            if (passedLines.Count == 0)
             {
                 return null;
             }
-
-            //make them null so that we can handle if the first element in the list never intersects
-            Line farYLine = null;
-            Distance farY = null;
-
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                try
-                {
-                    Distance distanceAway = passedLines[i].YInterceptIn2D - pointToFindTheFarthestInterceptTo;
-                    distanceAway = distanceAway.AbsoluteValue();
-                    if (farY == null || distanceAway > farY)
-                    {
-                        farYLine = passedLines[i];
-                        farY = distanceAway;
-                    }
-                }
-                //if the line doesnt intersect it throws an exception but we dont have to worry about it
-                catch (Exception) { }
-            }
+            var farYLine = passedLines.Where(line => line.YInterceptIn2D() != null).MaxBy(line => (line.YInterceptIn2D() - pointToFindTheFarthestInterceptTo).AbsoluteValue());
 
             return farYLine;
         }
-
-        /*public static Line LineWithSmallesZIntercept(this IList<Line> passedLines)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static Line LineWithLargestZIntercept(this IList<Line> passedLines)
-        {
-            throw new NotImplementedException();
-        }*/
 
         /// <summary>
         /// checks to see whether every line is parallel
@@ -329,7 +173,7 @@ namespace GeometryClassLibrary
         /// <returns>returns a bool of whether or not they are all coplanar</returns>
         public static bool AreAllCoplanar(this IList<Line> passedLineList)
         {
-            List<LineSegment> segments = passedLineList.AsSegments(Distance.Inch);
+            List<LineSegment> segments = passedLineList.AsSegments(new Distance(1, Inches));
 
             return segments.AreAllCoplanar();
         }

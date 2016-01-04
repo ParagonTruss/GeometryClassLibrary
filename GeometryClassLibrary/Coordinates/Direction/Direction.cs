@@ -5,8 +5,10 @@ using System.Diagnostics;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.GenericUnit;
 using GeometryClassLibrary.Vectors;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
+
 
 namespace GeometryClassLibrary
 {
@@ -14,64 +16,80 @@ namespace GeometryClassLibrary
     /// St
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Direction : IVector
+    public partial class Direction
     {
         #region Properties and Fields
 
-        public static readonly Direction NoDirection = new Direction(Measurement.Zero, Measurement.Zero, Measurement.Zero);
+        public static Direction NoDirection { get { return new Direction(0, 0, 0); } }
         /// <summary>
         /// A staticly defined Direction that is positive in the X direction, which can be thought of as going "right" in the XY plane.
         /// </summary>
-        public static readonly Direction Right = new Direction(Angle.Zero, new Angle(new Degree(), 90));
-        /// <summary>
-        /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
-        /// </summary>
-        public static readonly Direction Up = new Direction(new Angle(new Degree(), 90));
+        public static Direction Right { get { return new Direction(1, 0, 0); } }
         /// <summary>
         /// A staticly defined Direction that is negative in the X direction, which can be thought of as going "left" in the XY plane
         /// </summary>
-        public static readonly Direction Left = new Direction(new Angle(new Degree(), 180));
+        public static Direction Left { get { return new Direction(-1, 0, 0); } }
+        /// <summary>
+        /// A staticly defined Direction that is positive in the Y direction, which can be thought of as going "up" in the XY plane
+        /// </summary>
+        public static Direction Up { get { return new Direction(0, 1, 0); } }
         /// <summary>
         /// A staticly defined Direction that is negative in the Y direction, which can be thought of as going "down" in the XY plane
         /// </summary>
-        public static readonly Direction Down = new Direction(new Angle(new Degree(), 270));
+        public static Direction Down { get { return new Direction(0, -1, 0); } }
         /// <summary>
         /// A staticly defined Direction that is positive in the Z direction, which can be thought of coming out of the screen towards you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Out = new Direction(Angle.Zero, new Angle(new Degree(), 0));
+        public static Direction Out { get { return new Direction(0, 0, 1); } }
         /// <summary>
         /// A staticly defined Direction that is negative in the Z direction, which can be thought of going back out of the screen away you when viewing the XY plane
         /// </summary>
-        public static readonly Direction Back = new Direction(Angle.Zero, new Angle(new Degree(), 180));
+        public static Direction Back { get { return new Direction(0, 0, -1); } }
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azimuth)
         /// currently, this should be between 0 and 360
         /// </summary>     
-        [JsonProperty]
         public Angle Phi { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// The angle from the positive z-axis (should be a max of 180 degrees) (inclination)
         /// </summary>
-        [JsonProperty]
         public Angle Theta { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public Measurement X { get; private set; }
+        public Measurement X { get { return Normalized.X; } }
 
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public Measurement Y { get; private set; }
+        public Measurement Y { get { return Normalized.Y; } }
 
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public Measurement Z { get; private set; }
+        public Measurement Z { get { return Normalized.Z; } }
+        [JsonProperty]
+        private GenericVector _vector;
+        private GenericVector _normalized;
 
+        private GenericVector Normalized
+        {
+            get
+            {
+                if (_normalized == null)
+                {
+                    _normalized = Normalize(_vector);
+                }
+                return _normalized;
+            }
+            set
+            {
+                _normalized = value;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -81,25 +99,28 @@ namespace GeometryClassLibrary
         /// </summary>
         private Direction() { }
 
-        public Direction(Measurement x, Measurement y, Measurement z) : this(DetermineDirection(x,y,z)) { }
-
+        public Direction(Measurement x, Measurement y, Measurement z)
+        {
+            this._vector = new GenericVector(x, y, z);
+        }
    
         /// <summary>
         /// Create a Direction with no Z component, by giving the angle in the XY plane.
         /// </summary>
         public Direction(Angle xyPlaneAngle)
         {
-            this.X = Angle.Cosine(xyPlaneAngle);
-            this.Y = Angle.Sine(xyPlaneAngle);
-            this.Z = new Measurement(0.0);
+            var X = Angle.Cosine(xyPlaneAngle);
+            var Y = Angle.Sine(xyPlaneAngle);
+            this._vector = new GenericVector(X, Y);
+            this._normalized = _vector;
         }
 
         /// <summary>
         /// Makes a direction from the origin to the given point
         /// </summary>
-        public Direction(Point directionPoint) 
-            : this (DetermineDirection(directionPoint.X.Measurement,directionPoint.Y.Measurement,directionPoint.Z.Measurement))
+        public Direction(Point point)
         {
+            this._vector = new GenericVector(point.X.InInches, point.Y.InInches, point.Z.InInches);
         }
 
         /// <summary>
@@ -113,9 +134,11 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction(Angle phi, Angle theta)
         {
-            this.X = Angle.Cosine(phi) * Angle.Sine(theta);
-            this.Y = Angle.Sine(phi) * Angle.Sine(theta);
-            this.Z = Angle.Cosine(theta);
+            var X = Angle.Cosine(phi) * Angle.Sine(theta);
+            var Y = Angle.Sine(phi) * Angle.Sine(theta);
+            var Z = Angle.Cosine(theta);
+            this._vector = new GenericVector(X, Y, Z);
+            this._normalized = _vector;
         }
        
         /// <summary>
@@ -124,28 +147,32 @@ namespace GeometryClassLibrary
         /// <param name="toCopy"></param>
         public Direction(Direction toCopy)
         {
-            this.X = toCopy.X;
-            this.Y = toCopy.Y;
-            this.Z = toCopy.Z;
+            this._vector = toCopy._vector;
+            this._normalized = toCopy._normalized;
         }
 
-        public static Direction DetermineDirection(Measurement x, Measurement y, Measurement z)
+        [JsonConstructor]
+        public Direction(GenericVector genericVector)
         {
+            this._vector = genericVector;
+        }
+
+        public static GenericVector Normalize(GenericVector vector)
+        {
+            var x = vector.X;
+            var y = vector.Y;
+            var z = vector.Z;
             Direction result = new Direction();
             var r = (x * x + y * y + z * z).SquareRoot();
             if (r == Measurement.Zero)
             {
-                result.X = Measurement.Zero;
-                result.Y = Measurement.Zero;
-                result.Z = Measurement.Zero;
+                return GenericVector.Zero;
             }
             else
-            {             
-                result.X = x / r;
-                result.Y = y / r;
-                result.Z = z / r;
+            {
+                var d = r.Value;
+                return new GenericVector(x / d, y / d, z / d);     
             }
-            return result;
         }
         #endregion
 
@@ -206,13 +233,13 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            if (new UnitLessVector(this).Magnitude.IntrinsicValue == Measurement.Zero &&
-                new UnitLessVector(dir).Magnitude.IntrinsicValue == Measurement.Zero)
+            if (this._vector.Magnitude() == new Measurement(0, 0) &&
+                dir._vector.Magnitude()== new Measurement(0, 0))
             {
                 return true;
             }
             Angle angleBetween = this.AngleBetween(dir);
-            bool angleIsCloseToZero = (angleBetween == Angle.Zero);
+            bool angleIsCloseToZero = (angleBetween == Angle.ZeroAngle);
             return angleIsCloseToZero;
         }
 
@@ -237,11 +264,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction Reverse()
         {
-            var direction = new Direction();
-            direction.X = this.X.Negate();
-            direction.Y = this.Y.Negate();
-            direction.Z = this.Z.Negate();
-            return direction;
+            return new Direction( _vector.Reverse());
         }
 
         /// <summary>
@@ -259,26 +282,14 @@ namespace GeometryClassLibrary
 
         public Direction CrossProduct(Direction otherdirection)
         {
-            var d1 = this;
-            var d2 = otherdirection;
-
-            double xTerm = (d1.Y * d2.Z - d1.Z * d2.Y).Value;
-            double yTerm = (d1.Z * d2.X - d1.X * d2.Z).Value;
-            double zTerm = (d1.X * d2.Y - d1.Y * d2.X).Value;
-
-            var point = Point.MakePointWithInches(xTerm, yTerm, zTerm);
-            if (point != Point.Origin)
-            {
-                return new Direction(point);
-            }
-            return null; //The directions are parallel
+            var result = this._vector.CrossProduct(otherdirection._vector);
+            return new Direction(result);
         }
 
         public Angle AngleBetween(Direction direction)
         {
-            var dotProduct = this.DotProduct(direction);
-            Angle angle = Angle.ArcCos(dotProduct);
-            return angle;
+            var result = this._vector.AngleBetween(direction._vector);
+            return result;
         }
 
 
@@ -289,23 +300,23 @@ namespace GeometryClassLibrary
         /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
         /// </summary>
         /// <returns></returns>
-        public Angle SignedAngleBetween(Direction direction, Direction referenceNormal = null)
+        public Angle AngleFromThisToThat(Direction direction, Direction referenceNormal = null)
         {
             if (referenceNormal == null)
             {
                 referenceNormal = Out;
             }
 
-            Angle testAngle = this.AngleBetween(direction).ModOutTwoPi;
+            Angle testAngle = this.AngleBetween(direction);
             Direction testNormal = this.CrossProduct(direction);
            
-            if (testNormal == null || testAngle % new Angle(new Degree(), 180) == Angle.Zero || testNormal == referenceNormal)
+            if (testNormal == null || testAngle % Angle.StraightAngle == Angle.ZeroAngle || testNormal == referenceNormal)
             {
                 return testAngle;
             }
             if (testNormal.Reverse() == referenceNormal)
             {
-                return (testAngle.Negate());
+                return (Angle.FullCircle - testAngle);
             }
             
 
@@ -314,14 +325,14 @@ namespace GeometryClassLibrary
 
         public bool IsPerpendicularTo(Direction d)
         {
-            return AngleBetween(d) == 90 * Angle.Degree;
+            return AngleBetween(d) == Angle.RightAngle;
         }
 
         public bool IsParallelTo(Direction d)
         {
             var angle = AngleBetween(d);
-            return angle == Angle.Zero ||
-                angle == 180 * Angle.Degree;
+            return angle == Angle.ZeroAngle ||
+                angle == 180 * new Angle(1, Degrees);
         }
         #endregion
     }

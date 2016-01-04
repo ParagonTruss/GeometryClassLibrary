@@ -5,6 +5,9 @@ using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
+using static UnitClassLibrary.AngleUnit.Angle;
+using static UnitClassLibrary.DistanceUnit.Distance;
+
 
 namespace GeometryClassLibraryTest
 {
@@ -83,16 +86,16 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Vector_CrossProduct()
         {
-            Vector xAxis = new Vector(Point.Origin, Direction.Right);
-            Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(new Degree(), 90)));
+            Vector xAxis = new Vector(Point.Origin, Direction.Right, new Distance(1, Inches));
+            Vector yAxis = new Vector(Point.Origin, new Direction(new Angle(90, Degrees)), new Distance(1, Inches));
 
             Vector result = xAxis.CrossProduct(yAxis);
-            Vector expected = new Vector(Point.Origin, new Direction(Angle.Zero, Angle.Zero));
+            Vector expected = new Vector(Point.Origin, new Direction(Angle.ZeroAngle, Angle.ZeroAngle), new Distance(1, Inches));
 
             result.Should().Be(expected);
 
             Vector resultParallel = xAxis.CrossProduct(xAxis);
-            (resultParallel.Magnitude == Distance.Zero).Should().BeTrue();
+            (resultParallel.Magnitude == Distance.ZeroDistance).Should().BeTrue();
         }
 
         [Test()]
@@ -159,11 +162,18 @@ namespace GeometryClassLibraryTest
             Vector vector3 = new Vector(Point.MakePointWithInches(-2, 1, 1));
             Vector vector4 = new Vector(Point.MakePointWithInches(1, 0));
             Vector vector5 = new Vector(Point.MakePointWithInches(1, Math.Sqrt(3)));
+           
+            Angle result1 = vector1.AngleBetween(vector2);
+            Angle result2 = vector1.AngleBetween(vector3);
+            Angle result3 = vector4.AngleBetween(vector5);
 
-            vector1.AngleBetween(vector2).Should().Be(new Angle(new Radian(), 1.57079632679));
-            vector1.AngleBetween(vector3).Should().Be(new Angle(new Radian(), 1.23732315));
-            vector4.AngleBetween(vector5).Should().Be(new Angle(new Degree(), 60));
+            Angle expectedAngle1 = new Angle(1.57079632679, Radians);
+            Angle expectedAngle2 = new Angle(1.23732315, Radians);
+            Angle expectedAngle3 = new Angle(60, Degrees);
 
+            (result1 == expectedAngle1).Should().BeTrue();
+            (result2 == expectedAngle2).Should().BeTrue();
+            (result3 == expectedAngle3).Should().BeTrue();
         }
 
     }

@@ -3,47 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.GenericUnit;
 using GeometryClassLibrary;
+using UnitClassLibrary;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public static class IVectorExtensionMethods
+    public static class IVectorExtensions
     {
-        public static Direction Direction(this IVector vector)
+        public static Unit<T> X<T>(this IVector<T> vector) where T : IUnitType
         {
-            return GeometryClassLibrary.Direction.DetermineDirection(vector.X, vector.Y, vector.Z);
+            return new Unit<T>(vector.UnitType, vector.UnitLessVector.X);
         }
-
+        public static Unit<T> Y<T>(this IVector<T> vector) where T : IUnitType
+        {
+            return new Unit<T>(vector.UnitType, vector.UnitLessVector.Y);
+        }
+        public static Unit<T> Z<T>(this IVector<T> vector) where T : IUnitType
+        {
+            return new Unit<T>(vector.UnitType, vector.UnitLessVector.Z);
+        }
+        public static Direction Direction<T>(this IVector<T> vector) where T : IUnitType
+        {
+            return vector.UnitLessVector.Direction();
+        }
         public static Unit<T> Magnitude<T>(this IVector<T> vector) where T :IUnitType
         {
-            var m = (vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z).SquareRoot();
-            return new Unit<T>(vector.UnitType, m);
+            var result = vector.UnitLessVector.Magnitude();
+            return new Unit<T>(vector.UnitType, result);
         }
 
         public static Unit DotProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
-            var result = vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
-            var unitType = new DerivedUnitType(vector1.UnitType.Dimensions.Multiply(vector2.UnitType.Dimensions));
+            var result = vector1.UnitLessVector.DotProduct(vector2.UnitLessVector);
+            var unitType = new DerivedUnitType(vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions()));
             return new Unit<DerivedUnitType>(unitType, result);
         }
 
         public static Vector_New<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
-            var x1 = vector1.X;
-            var y1 = vector1.Y;
-            var z1 = vector1.Z;
-            var x2 = vector2.X;
-            var y2 = vector2.Y;
-            var z2 = vector2.Z;
-
-            var newX = y1 * z2 - y2 * z1;
-            var newY = z1 * x2 - z2 * x1;
-            var newZ = x1 * y2 - x2 * y1;
-
-            var newDimensions = vector1.UnitType.Dimensions.Multiply(vector2.UnitType.Dimensions);
+            var underlyingVector = vector1.UnitLessVector.CrossProduct(vector2.UnitLessVector);
+            var newDimensions = vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions());
             var newUnitType = new DerivedUnitType(newDimensions);
-            return new Vector_New<DerivedUnitType>(newUnitType, newX, newY, newZ);
+            return new Vector_New<DerivedUnitType>(newUnitType, underlyingVector);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace GeometryClassLibrary.Vectors
         /// <summary>
         /// determines whether two vectors point in the same direction
         /// </summary>
-        public static bool HasSameDirectionAs(this IVector vector1, IVector vector2)
+        public static bool HasSameDirectionAs(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
             var direction1 = vector1.Direction();
             var direction2 = vector2.Direction();
@@ -87,7 +88,7 @@ namespace GeometryClassLibrary.Vectors
         /// <summary>
         /// determines whether two vectors point in opposite directions 
         /// </summary>
-        public static bool HasOppositeDirectionOf(this IVector vector1, IVector vector2)
+        public static bool HasOppositeDirectionOf(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
             var direction1 = vector1.Direction();
             var direction2 = vector2.Direction();
@@ -99,7 +100,7 @@ namespace GeometryClassLibrary.Vectors
         /// </summary>
         public static Vector_New<T> Reverse<T>(this Vector_New<T> vector) where T : IUnitType
         {
-            return new Vector_New<T>(vector.UnitType,vector.X.Negate(),vector.Y.Negate(),vector.Z.Negate(),vector.ApplicationPoint);
+            return new Vector_New<T>(vector.X.Negate(),vector.Y.Negate(),vector.Z.Negate(),vector.ApplicationPoint);
         }
 
         
@@ -107,7 +108,7 @@ namespace GeometryClassLibrary.Vectors
         /// Converts a vector into a matrix with one column
         /// </summary>
         /// <returns></returns>
-        public static Matrix ConvertToMatrixColumn(this IVector vector)
+        public static Matrix ConvertToMatrixColumn(this IUnitLessVector vector)
         {
             Matrix returnMatrix = new Matrix(3, 1);
             double[] vectorArray = { vector.X.Value, vector.Y.Value, vector.Z.Value };
@@ -147,7 +148,7 @@ namespace GeometryClassLibrary.Vectors
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if it is a zero vector and you call the unitVector it will throw an exception.
         /// </summary>
-        public static IVector UnitVector<T>(this IVector<T> vector, T passedType) where T : IUnitType
+        public static Vector_New<T> UnitVector<T>(this IVector<T> vector, T passedType) where T : IUnitType
         {
             Direction direction = vector.Direction();
             if (direction == GeometryClassLibrary.Direction.NoDirection)
@@ -163,18 +164,18 @@ namespace GeometryClassLibrary.Vectors
         }
     
 
-        public static bool IsPerpendicularTo(this IVector vector1, IVector vector2)
+        public static bool IsPerpendicularTo(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
             return vector1.AngleBetween(vector2) == Angle.RightAngle;
         }
 
-        public static bool IsParallelTo(this IVector vector1, IVector vector2)
+        public static bool IsParallelTo(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
             Angle angle = vector1.AngleBetween(vector2);
-            return angle == Angle.Zero || angle == Angle.StraightAngle;
+            return angle == Angle.ZeroAngle || angle == Angle.StraightAngle;
         }
 
-        public static Angle SmallestAngleBetween(this IVector vector1, IVector vector2)
+        public static Angle SmallestAngleBetween(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
             var angle = vector1.AngleBetween(vector2);
             if (angle > Angle.RightAngle)
@@ -183,9 +184,21 @@ namespace GeometryClassLibrary.Vectors
             }
             return angle;
         }
-        public static Angle AngleBetween(this IVector vector1, IVector vector2)
+        public static Angle AngleBetween(this IUnitLessVector vector1, IUnitLessVector vector2)
         {
-            return vector1.Direction().AngleBetween(vector2.Direction());
+            var dotProduct = vector1.DotProduct(vector2);
+            if (dotProduct == Measurement.Zero)
+            {
+                return Angle.RightAngle;
+            }
+            else
+            {
+                var magnitude1 = vector1.Magnitude();
+                var magnitude2 = vector2.Magnitude();
+                var divided = dotProduct / (magnitude1 * magnitude2);
+                var angle = Angle.ArcCos(divided);
+                return angle;
+            }
         }
     }
 }

@@ -254,7 +254,7 @@ namespace GeometryClassLibraryTest
         {
             Line line1 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 45)), new Distance(new Inch(), 1));
             Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 135)), new Distance(new Inch(), 1));
-            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(new Degree(), 45), Angle.Zero), new Distance(new Inch(), 1));
+            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(new Degree(), 45), Angle.ZeroAngle), new Distance(new Inch(), 1));
 
             Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
             Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
@@ -381,11 +381,11 @@ namespace GeometryClassLibraryTest
             Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
             Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
-            Point intercept1 = line1.XZIntercept;
-            Point intercept2 = line2.XZIntercept;
-            Point intercept3 = line3.XZIntercept;
-            Point intercept4 = line4.XZIntercept;
-            Point intercept5 = line5.XZIntercept;
+            Point intercept1 = line1.XZIntercept();
+            Point intercept2 = line2.XZIntercept();
+            Point intercept3 = line3.XZIntercept();
+            Point intercept4 = line4.XZIntercept();
+            Point intercept5 = line5.XZIntercept();
 
             intercept1.Should().Be(Point.MakePointWithInches(-1, 0, 1));
             intercept2.Should().Be(Point.MakePointWithInches(6, 0, 0));
@@ -403,11 +403,11 @@ namespace GeometryClassLibraryTest
             Line line4 = new Line(Point.MakePointWithInches(2, 1, 1), Point.MakePointWithInches(3, 2, 2)); //intersects at 0, -1, -1
             Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
-            Point intercept1 = line1.YZIntercept;
-            Point intercept2 = line2.YZIntercept;
-            Point intercept3 = line3.YZIntercept;
-            Point intercept4 = line4.YZIntercept;
-            Point intercept5 = line5.YZIntercept;
+            Point intercept1 = line1.YZIntercept();
+            Point intercept2 = line2.YZIntercept();
+            Point intercept3 = line3.YZIntercept();
+            Point intercept4 = line4.YZIntercept();
+            Point intercept5 = line5.YZIntercept();
 
             intercept1.Should().Be(Point.MakePointWithInches(0, 1, -3));
             intercept2.Should().Be(Point.MakePointWithInches(0, 1.5, -.5));
@@ -416,7 +416,7 @@ namespace GeometryClassLibraryTest
             intercept5.Should().Be(null);
         }
 
-        [Test()]
+        [Test]
         public void Line_XYIntercept()
         {
             Line line1 = new Line(Point.MakePointWithInches(3, 2, 1), Point.MakePointWithInches(5, 3, 2)); //intersects at 1, 1, 0
@@ -425,11 +425,11 @@ namespace GeometryClassLibraryTest
             Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 15, 0
             Line line5 = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 1, 2)); //doesnt intersect
 
-            Point intercept1 = line1.XYIntercept;
-            Point intercept2 = line2.XYIntercept;
-            Point intercept3 = line3.XYIntercept;
-            Point intercept4 = line4.XYIntercept;
-            Point intercept5 = line5.XYIntercept;
+            Point intercept1 = line1.XYIntercept();
+            Point intercept2 = line2.XYIntercept();
+            Point intercept3 = line3.XYIntercept();
+            Point intercept4 = line4.XYIntercept();
+            Point intercept5 = line5.XYIntercept();
 
             intercept1.Should().Be(Point.MakePointWithInches(1, 1, 0));
             intercept2.Should().Be(Point.MakePointWithInches(-2, 6, 0));
@@ -446,10 +446,10 @@ namespace GeometryClassLibraryTest
             Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0, 0, 6
             Line line4 = new Line(Point.MakePointWithInches(4, 10, 1), Point.MakePointWithInches(4, 5, 2)); //intersects at 4, 0, 3
 
-            Distance intercept1 = line1.XInterceptIn2D;
-            Distance intercept2 = line2.XInterceptIn2D;
-            Distance intercept3 = line3.XInterceptIn2D;
-            Distance intercept4 = line4.XInterceptIn2D;
+            Distance intercept1 = line1.XInterceptIn2D();
+            Distance intercept2 = line2.XInterceptIn2D();
+            Distance intercept3 = line3.XInterceptIn2D();
+            Distance intercept4 = line4.XInterceptIn2D();
 
             intercept1.Should().Be(new Distance(new Inch(), -1));
             intercept2.Should().Be(new Distance(new Inch(), 6));
@@ -458,13 +458,13 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        [ExpectedException(typeof(Exception))]
         public void Line_XInterceptIn2D_LineDoesNotIntersectXAxis()
         {            
             Line line = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
-            Distance intercept = line.XInterceptIn2D;
+            Distance intercept = line.XInterceptIn2D();
+            (intercept == null).Should().BeTrue();
         }
 
         [Test()]
@@ -475,10 +475,10 @@ namespace GeometryClassLibraryTest
             Line line3 = new Line(Point.MakePointWithInches(1, 1, 5), Point.MakePointWithInches(2, 2, 4)); //intersects at 0
             Line line4 = new Line(Point.MakePointWithInches(2, 1, 1), Point.MakePointWithInches(3, 2, 2)); //intersects at -1
 
-            Distance intercept1 = line1.YInterceptIn2D;
-            Distance intercept2 = line2.YInterceptIn2D;
-            Distance intercept3 = line3.YInterceptIn2D;
-            Distance intercept4 = line4.YInterceptIn2D;
+            Distance intercept1 = line1.YInterceptIn2D();
+            Distance intercept2 = line2.YInterceptIn2D();
+            Distance intercept3 = line3.YInterceptIn2D();
+            Distance intercept4 = line4.YInterceptIn2D();
 
             intercept1.Should().Be(new Distance(new Inch(), 1));
             intercept2.Should().Be(new Distance(new Inch(), 1.5));
@@ -487,13 +487,13 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        [ExpectedException(typeof(Exception))]
         public void Line_YInterceptIn2D_LineDoesNotIntersectYAxis()
         {
             Line line = new Line(Point.MakePointWithInches(4, 2, 2), Point.MakePointWithInches(4, 2, 1)); //doesnt intersect
 
             //should throw an exception
-            Distance intercept5 = line.YInterceptIn2D;
+            Distance intercept5 = line.YInterceptIn2D();
+            (intercept5 == null).Should().BeTrue();
         }
 
         [Test()]

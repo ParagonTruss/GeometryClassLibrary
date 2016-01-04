@@ -108,13 +108,13 @@ namespace GeometryClassLibraryTest
             //test arc area
             Area arcArea = halfArc.SectorArea;
             //a = (theta)/2 * r^2
-            Area expectedArea = new Area(new SquareInch(), (Math.PI) / 2 * 9); //Pi = 180 degrees, 9 = r^2
+            Area expectedArea = new Area(new SquareInch(), (Math.PI) *4.5 ); //Pi = 180 degrees, 9 = r^2
             (arcArea == expectedArea).Should().BeTrue();
 
             //test the arcSegmentArea
             Area arcSegmentArea = halfArc.SegmentArea;
             //a = r^2 / 2 * (theta - sin(theta))
-            Area expectedSegmentArea = new Area(new SquareInch(), 9 * 0.5 * (Math.PI - Math.Sin(Math.PI))); //Pi = 180 degrees, 9 = r^2
+            Area expectedSegmentArea = new Area(new SquareInch(), 9 * 0.5 * (Math.PI)); //Pi = 180 degrees, 9 = r^2
             (arcSegmentArea == expectedSegmentArea).Should().BeTrue();
 
             //test the central angle
@@ -131,7 +131,7 @@ namespace GeometryClassLibraryTest
 
             //test the straight line direction (same as direction)
             Direction straightDirection = halfArc.StraightLineDirection;
-            (straightDirection == new Direction(Angle.Zero, Angle.Zero)).Should().BeTrue();
+            (straightDirection == new Direction(Angle.ZeroAngle, Angle.ZeroAngle)).Should().BeTrue();
         }
 
         [Test()]

@@ -250,10 +250,16 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
         /// </summary>
-        /// <param name="passedLineSegment">The LineSegment to check for intersection with</param>
-        /// <returns>Returns the Point of intersection or null if they do not intersect</returns>
         public Point IntersectWithSegment(LineSegment segment)
         {
+            if (this.BasePoint.IsBaseOrEndPointOf(segment))
+            {
+                return this.BasePoint;
+            }
+            else if (this.EndPoint.IsBaseOrEndPointOf(segment))
+            {
+                return this.EndPoint;
+            }
             Point potentialIntersect = base.IntersectWithLine(segment);
 
             if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(segment) && potentialIntersect.IsOnLineSegment(this))
@@ -329,7 +335,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoLine(Line projectOnto)
         {
             Vector projection = base.ProjectOntoLine(projectOnto);
-            if (projection.Magnitude != Distance.Zero)
+            if (projection.Magnitude != Distance.ZeroDistance)
             {
                 return new LineSegment(projection);
             }
@@ -339,7 +345,7 @@ namespace GeometryClassLibrary
         public new LineSegment ProjectOntoPlane(Plane plane)
         {
             Vector projection = base.ProjectOntoPlane(plane);
-            if (projection.Magnitude != Distance.Zero)
+            if (projection.Magnitude != Distance.ZeroDistance)
             {
                 return new LineSegment(projection);
             }
@@ -459,7 +465,7 @@ namespace GeometryClassLibrary
                     vector = new Vector(this.BasePoint, segment.BasePoint);
                 }
             }
-            if (vector != null && vector.Magnitude != Distance.Zero)
+            if (vector != null && vector.Magnitude != Distance.ZeroDistance)
             {
                 return new LineSegment(vector);
             }

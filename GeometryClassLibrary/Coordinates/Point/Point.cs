@@ -4,7 +4,6 @@ using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using System.Collections.Generic;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.GenericUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
@@ -18,10 +17,10 @@ namespace GeometryClassLibrary
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Point
+    public partial class Point : IEquatable<Point>
     {
         #region Properties and Fields
-        private readonly static Point _origin = new Point(Distance.Zero, Distance.Zero, Distance.Zero);
+        private readonly static Point _origin = new Point(Distance.ZeroDistance, Distance.ZeroDistance, Distance.ZeroDistance);
         public static Point Origin { get { return _origin; } }
 
         private Distance _x;
@@ -65,7 +64,7 @@ namespace GeometryClassLibrary
         {
             _x = passedX;
             _y = passedY;
-            _z = Distance.Zero;
+            _z = Distance.ZeroDistance;
         }
 
         /// <summary>
@@ -191,19 +190,27 @@ namespace GeometryClassLibrary
             return !(point1 == point2);
         }
 
+        public bool Equals(Point other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return this.DistanceTo(other) == ZeroDistance;
+        }
         /// <summary>
         /// does the same thing as ==
         /// </summary>
         public override bool Equals(object obj)
         {
             //check for null (wont throw a castexception)
-            if (obj == null || !(obj is Point))
+            if (!(obj is Point))
             {
                 return false;
             }
             Point comparablePoint = (Point)obj;
 
-            return this.DistanceTo(comparablePoint) == Distance.Zero;
+            return this.Equals(comparablePoint);
         }
        
         public override string ToString()
@@ -269,11 +276,11 @@ namespace GeometryClassLibrary
         public Distance DistanceTo(Point endPoint)
         {
             //distance formula
-            Measurement term1 = (X - endPoint.X).Inches ^ 2;
-            Measurement term2 = (Y - endPoint.Y).Inches ^ 2;
-            Measurement term3 = (Z - endPoint.Z).Inches ^ 2;
+            Measurement term1 = (X - endPoint.X).InInches ^ 2;
+            Measurement term2 = (Y - endPoint.Y).InInches ^ 2;
+            Measurement term3 = (Z - endPoint.Z).InInches ^ 2;
 
-           Measurement distanceInInches = (term1 + term2 + term3).SquareRoot();
+            Measurement distanceInInches = (term1 + term2 + term3).SquareRoot();
 
             return new Distance(new Inch(), distanceInInches);
         }
@@ -378,10 +385,10 @@ namespace GeometryClassLibrary
             return lineSegment.Contains(this);
         }
 
-        public bool IsBaseOrEndPointOf(LineSegment vector)
+        public bool IsBaseOrEndPointOf(LineSegment segment)
         {
-            return this == vector.BasePoint ||
-                   this == vector.EndPoint;
+            return this == segment.BasePoint ||
+                   this == segment.EndPoint;
         }
 
         /// <summary>
@@ -463,6 +470,8 @@ namespace GeometryClassLibrary
 
             return toReturn;
         }
+
+    
 
         #endregion
     }

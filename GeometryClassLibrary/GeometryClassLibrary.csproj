@@ -136,8 +136,10 @@
     </Compile>
     <Compile Include="Solids\Polyhedra\TriangularPrism.cs" />
     <Compile Include="Surfaces\ISurface.cs" />
+    <Compile Include="Vectors\GenericVector.cs" />
+    <Compile Include="Vectors\IUnitLessVectorExtensions.cs" />
     <Compile Include="Vectors\IVector.cs" />
-    <Compile Include="Vectors\IVectorExtensionMethods.cs" />
+    <Compile Include="Vectors\IVectorExtensions.cs" />
     <Compile Include="Vectors\LineSegment_New.cs" />
     <Compile Include="Vectors\Vector_New.cs" />
   </ItemGroup>

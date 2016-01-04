@@ -29,7 +29,7 @@ namespace GeometryClassLibrary
             get
             {
                 var matrix = GeometryClassLibrary.Matrix.IdentityMatrix(4);
-                var array = new double[] { Point.X.Inches.Value, Point.Y.Inches.Value, Point.Z.Inches.Value, 1 };
+                var array = new double[] { Point.X.InInches.Value, Point.Y.InInches.Value, Point.Z.InInches.Value, 1 };
                 matrix.SetColumn(3, array);
                 return matrix;
             }
@@ -103,16 +103,8 @@ namespace GeometryClassLibrary
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>
         public static bool operator !=(Translation translation1, Translation translation2)
-        {
-            if ((object)translation1 == null)
-            {
-                if ((object)translation2 == null)
-                {
-                    return false;
-                }
-                return true;
-            }
-            return !translation1.Equals(translation2);
+        {            
+           return !(translation1 == translation2);
         }
 
         /// <summary>

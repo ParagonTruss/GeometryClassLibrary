@@ -244,7 +244,7 @@ namespace GeometryClassLibrary
                     for (int k = j + 1; k < vertices.Count(); k++)
                     {
                         Vector vector2 = new Vector(vertices[i], vertices[k]);
-                        if (whatTheNormalShouldBe == null || whatTheNormalShouldBe.Magnitude == Distance.Zero)
+                        if (whatTheNormalShouldBe == null || whatTheNormalShouldBe.Magnitude == Distance.ZeroDistance)
                         {
                             whatTheNormalShouldBe = vector1.CrossProduct(vector2);
                         }
