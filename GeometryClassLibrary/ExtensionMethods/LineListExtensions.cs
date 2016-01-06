@@ -151,26 +151,21 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLines">passed List of Lines</param>
         /// <returns>returns a bool of whether or not they are all parallel</returns>
-        public static bool AreAllParallel(this IList<Line> passedLines)
+        public static bool AreAllParallel(this List<Line> passedLines)
         {
-            List<Line> passedLineListCasted = new List<Line>(passedLines);
-
-            for (int i = 0; i < passedLineListCasted.Count - 1; i++)
+            for (int i = 0; i < passedLines.Count - 1; i++)
             {
-                if (!passedLineListCasted[i].IsParallelTo(passedLineListCasted[i + 1]))
+                if (!passedLines[i].IsParallelTo(passedLines[i + 1]))
                 {
                     return false;
                 }
             }
-
             return true;
         }
 
         /// <summary>
         /// Returns true if all of the passed lines are in the same plane, false otherwise
         /// </summary>
-        /// <param name="passedLine">passed lines</param>
-        /// <returns>returns a bool of whether or not they are all coplanar</returns>
         public static bool AreAllCoplanar(this IList<Line> passedLineList)
         {
             List<LineSegment> segments = passedLineList.AsSegments(new Distance(1, Inches));

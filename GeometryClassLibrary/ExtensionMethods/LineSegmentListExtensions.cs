@@ -235,27 +235,7 @@ namespace GeometryClassLibrary
         public static bool AreAllCoplanar(this IEnumerable<LineSegment> passedLineList)
         {
             List<Point> vertices = passedLineList.GetAllPoints();
-            Vector whatTheNormalShouldBe = null;
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                for (int j = i + 1; j < vertices.Count(); j++)
-                {
-                    Vector vector1 = new Vector(vertices[i], vertices[j]);
-                    for (int k = j + 1; k < vertices.Count(); k++)
-                    {
-                        Vector vector2 = new Vector(vertices[i], vertices[k]);
-                        if (whatTheNormalShouldBe == null || whatTheNormalShouldBe.Magnitude == Distance.ZeroDistance)
-                        {
-                            whatTheNormalShouldBe = vector1.CrossProduct(vector2);
-                        }
-                        if (!whatTheNormalShouldBe.IsPerpendicularTo(vector2))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
+            return vertices.AreAllCoplanar();
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace GeometryClassLibrary.Vectors
         public Direction Direction { get { return new Direction(BasePoint, EndPoint); } }
         public Distance Magnitude { get { return BasePoint.DistanceTo(EndPoint); } }
 
-        public IUnitLessVector UnitLessVector { get { return new GenericVector(_x, _y, _z); } }
+        public IMeasurementVector UnitLessVector { get { return new MeasurementVector(_x, _y, _z); } }
         private Measurement _x { get { return (EndPoint.X - BasePoint.X).ValueIn(UnitType); } }
         private Measurement _y { get { return (EndPoint.Y - BasePoint.Y).ValueIn(UnitType); } }
         private Measurement _z { get { return (EndPoint.Z - BasePoint.Z).ValueIn(UnitType); } }

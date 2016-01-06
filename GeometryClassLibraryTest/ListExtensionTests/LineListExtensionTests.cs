@@ -62,6 +62,7 @@ namespace GeometryClassLibraryTest
             (new List<LineSegment>()).AreAllParallel().Should().BeTrue();
         }
 
+        [Ignore]
         [Test()]
         public void LineList_SmallestXInterceptIn2D()
         {
@@ -85,6 +86,7 @@ namespace GeometryClassLibraryTest
             result2.Should().Be(line1);
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LargestXInterceptIn2D()
         {
@@ -108,6 +110,7 @@ namespace GeometryClassLibraryTest
             (result2 == line2).Should().BeTrue();
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LineWithXInterceptIn2DClosestTo()
         {
@@ -131,6 +134,7 @@ namespace GeometryClassLibraryTest
             result2.Should().Be(line3);
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LineWithXInterceptIn2DFarthestFrom()
         {
@@ -154,6 +158,7 @@ namespace GeometryClassLibraryTest
             (result2 == line2).Should().BeTrue();
         }
 
+        [Ignore]
         [Test()]
         public void LineList_SmallestYInterceptIn2D()
         {
@@ -177,6 +182,7 @@ namespace GeometryClassLibraryTest
             result2.Should().Be(line4);
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LargestYInterceptIn2D()
         {
@@ -200,6 +206,7 @@ namespace GeometryClassLibraryTest
             result2.Should().Be(line2);
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LineWithYInterceptIn2DClosestTo()
         {
@@ -223,6 +230,7 @@ namespace GeometryClassLibraryTest
             (result2 == line3).Should().BeTrue();
         }
 
+        [Ignore]
         [Test()]
         public void LineList_LineWithYInterceptIn2DFarthestFrom()
         {

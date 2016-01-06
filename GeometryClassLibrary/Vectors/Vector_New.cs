@@ -10,7 +10,7 @@ namespace GeometryClassLibrary.Vectors
     {
         #region Properties
         public T UnitType { get; private set; }
-        public IUnitLessVector UnitLessVector { get; private set; }
+        public IMeasurementVector UnitLessVector { get; private set; }
 
         public Unit<T> X { get { return new Unit<T>(this.UnitType, UnitLessVector.X); } }
         public Unit<T> Y { get { return new Unit<T>(this.UnitType, UnitLessVector.Y); } }
@@ -25,7 +25,7 @@ namespace GeometryClassLibrary.Vectors
         #region Constructors
         public Vector_New(T unitType, Measurement x, Measurement y, Measurement z, Point applicationPoint = null)
         {
-            this.UnitLessVector = new GenericVector(x, y, z);
+            this.UnitLessVector = new MeasurementVector(x, y, z);
             this.UnitType = unitType;
             if (applicationPoint != null)
             {
@@ -38,7 +38,7 @@ namespace GeometryClassLibrary.Vectors
             var newX = x.Measurement;
             var newY = y.ValueIn(UnitType);
             var newZ = z.ValueIn(UnitType);
-            this.UnitLessVector = new GenericVector(newX, newY, newZ);
+            this.UnitLessVector = new MeasurementVector(newX, newY, newZ);
             if (applicationPoint != null)
             {
                 this.ApplicationPoint = applicationPoint;
@@ -48,7 +48,7 @@ namespace GeometryClassLibrary.Vectors
         {
             this.ApplicationPoint = basePoint;
             this.UnitType = (T)magnitude.UnitType;
-            this.UnitLessVector = new GenericVector(magnitude.Measurement, direction);
+            this.UnitLessVector = new MeasurementVector(magnitude.Measurement, direction);
         }
 
         public Vector_New(Vector_New<T> vector)
@@ -65,7 +65,7 @@ namespace GeometryClassLibrary.Vectors
             this.UnitLessVector = vector.UnitLessVector;
         }
 
-        public Vector_New(T unitType, IUnitLessVector underlyingVector)
+        public Vector_New(T unitType, IMeasurementVector underlyingVector)
         {
             this.UnitType = unitType;
             this.UnitLessVector = underlyingVector;

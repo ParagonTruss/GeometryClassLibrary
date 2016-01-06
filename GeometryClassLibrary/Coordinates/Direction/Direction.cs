@@ -72,10 +72,10 @@ namespace GeometryClassLibrary
         /// </summary>
         public Measurement Z { get { return Normalized.Z; } }
         [JsonProperty]
-        private GenericVector _vector;
-        private GenericVector _normalized;
+        private MeasurementVector _vector;
+        private MeasurementVector _normalized;
 
-        private GenericVector Normalized
+        private MeasurementVector Normalized
         {
             get
             {
@@ -101,7 +101,7 @@ namespace GeometryClassLibrary
 
         public Direction(Measurement x, Measurement y, Measurement z)
         {
-            this._vector = new GenericVector(x, y, z);
+            this._vector = new MeasurementVector(x, y, z);
         }
    
         /// <summary>
@@ -111,7 +111,7 @@ namespace GeometryClassLibrary
         {
             var X = Angle.Cosine(xyPlaneAngle);
             var Y = Angle.Sine(xyPlaneAngle);
-            this._vector = new GenericVector(X, Y);
+            this._vector = new MeasurementVector(X, Y);
             this._normalized = _vector;
         }
 
@@ -120,7 +120,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction(Point point)
         {
-            this._vector = new GenericVector(point.X.InInches, point.Y.InInches, point.Z.InInches);
+            this._vector = new MeasurementVector(point.X.InInches, point.Y.InInches, point.Z.InInches);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace GeometryClassLibrary
             var X = Angle.Cosine(phi) * Angle.Sine(theta);
             var Y = Angle.Sine(phi) * Angle.Sine(theta);
             var Z = Angle.Cosine(theta);
-            this._vector = new GenericVector(X, Y, Z);
+            this._vector = new MeasurementVector(X, Y, Z);
             this._normalized = _vector;
         }
        
@@ -152,12 +152,12 @@ namespace GeometryClassLibrary
         }
 
         [JsonConstructor]
-        public Direction(GenericVector genericVector)
+        public Direction(MeasurementVector genericVector)
         {
             this._vector = genericVector;
         }
 
-        public static GenericVector Normalize(GenericVector vector)
+        public static MeasurementVector Normalize(MeasurementVector vector)
         {
             var x = vector.X;
             var y = vector.Y;
@@ -166,12 +166,12 @@ namespace GeometryClassLibrary
             var r = (x * x + y * y + z * z).SquareRoot();
             if (r == Measurement.Zero)
             {
-                return GenericVector.Zero;
+                return MeasurementVector.Zero;
             }
             else
             {
                 var d = r.Value;
-                return new GenericVector(x / d, y / d, z / d);     
+                return new MeasurementVector(x / d, y / d, z / d);     
             }
         }
         #endregion

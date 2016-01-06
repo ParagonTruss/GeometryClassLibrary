@@ -8,7 +8,7 @@ using UnitClassLibrary;
 namespace GeometryClassLibrary.Vectors
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class GenericVector : IUnitLessVector
+    public class MeasurementVector : IMeasurementVector
     {
         [JsonProperty]
         public Measurement X { get; private set; }
@@ -19,9 +19,9 @@ namespace GeometryClassLibrary.Vectors
 
         public Measurement Magnitude { get { return this.Magnitude(); } }
 
-        public static GenericVector Zero { get { return new GenericVector(0.0, 0.0, 0.0); } }
+        public static MeasurementVector Zero { get { return new MeasurementVector(0.0, 0.0, 0.0); } }
 
-        public GenericVector(Measurement x, Measurement y)
+        public MeasurementVector(Measurement x, Measurement y)
         {
             this.X = x;
             this.Y = y;
@@ -29,7 +29,7 @@ namespace GeometryClassLibrary.Vectors
         }
 
         [JsonConstructor]
-        public GenericVector(Measurement x, Measurement y, Measurement z)
+        public MeasurementVector(Measurement x, Measurement y, Measurement z)
         {
             if (Measurement.ErrorPropagationIsEnabled)
             {
@@ -45,16 +45,16 @@ namespace GeometryClassLibrary.Vectors
             }
         }
 
-        public GenericVector(Measurement magnitude, Direction direction)
+        public MeasurementVector(Measurement magnitude, Direction direction)
         {
             this.X = magnitude * direction.X;
             this.Y = magnitude * direction.Y;
             this.Z = magnitude * direction.Z;
         }
 
-        public GenericVector Reverse()
+        public MeasurementVector Reverse()
         {
-            return new GenericVector(X.Negate(), Y.Negate(), Z.Negate());
+            return new MeasurementVector(X.Negate(), Y.Negate(), Z.Negate());
         }
     }
 }

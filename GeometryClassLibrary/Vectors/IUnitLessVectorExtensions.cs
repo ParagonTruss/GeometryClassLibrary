@@ -8,18 +8,18 @@ namespace GeometryClassLibrary.Vectors
 {
     public static class IUnitLessVectorExtensions
     {
-        public static Measurement Magnitude(this IUnitLessVector vector)
+        public static Measurement Magnitude(this IMeasurementVector vector)
         {
             var result = (vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z).SquareRoot();
             return result;
         }
 
-        public static Direction Direction(this IUnitLessVector vector)
+        public static Direction Direction(this IMeasurementVector vector)
         {
             return new Direction(vector.X, vector.Y, vector.Z);
         }
 
-        public static Measurement DotProduct(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static Measurement DotProduct(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var xTerm = vector1.X * vector2.X;
             var yTerm = vector1.Y * vector2.Y;
@@ -29,7 +29,7 @@ namespace GeometryClassLibrary.Vectors
             return sum;
         }
 
-        public static GenericVector CrossProduct(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static MeasurementVector CrossProduct(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var x1 = vector1.X;
             var y1 = vector1.Y;
@@ -42,7 +42,7 @@ namespace GeometryClassLibrary.Vectors
             var newY = z1 * x2 - z2 * x1;
             var newZ = x1 * y2 - x2 * y1;
 
-            return new GenericVector(newX, newY, newZ);
+            return new MeasurementVector(newX, newY, newZ);
         }
     }
 }

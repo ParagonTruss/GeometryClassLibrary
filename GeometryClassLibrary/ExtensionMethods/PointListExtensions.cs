@@ -10,6 +10,30 @@ namespace GeometryClassLibrary
 {
     public static class PointListExtensions
     {
+        public static bool AreAllCoplanar(this List<Point> points)
+        {
+            Vector whatTheNormalShouldBe = null;
+            for (int i = 0; i < points.Count; i++)
+            {
+                for (int j = i + 1; j < points.Count(); j++)
+                {
+                    Vector vector1 = new Vector(points[i], points[j]);
+                    for (int k = j + 1; k < points.Count(); k++)
+                    {
+                        Vector vector2 = new Vector(points[i], points[k]);
+                        if (whatTheNormalShouldBe == null || whatTheNormalShouldBe.Magnitude == Distance.ZeroDistance)
+                        {
+                            whatTheNormalShouldBe = vector1.CrossProduct(vector2);
+                        }
+                        if (!whatTheNormalShouldBe.IsPerpendicularTo(vector2))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         public static Distance GreatestXDistance(this List<Point> points)
         {
             var min = points.Min(p => p.X);

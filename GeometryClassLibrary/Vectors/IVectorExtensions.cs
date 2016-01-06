@@ -78,7 +78,7 @@ namespace GeometryClassLibrary.Vectors
         /// <summary>
         /// determines whether two vectors point in the same direction
         /// </summary>
-        public static bool HasSameDirectionAs(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static bool HasSameDirectionAs(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var direction1 = vector1.Direction();
             var direction2 = vector2.Direction();
@@ -88,7 +88,7 @@ namespace GeometryClassLibrary.Vectors
         /// <summary>
         /// determines whether two vectors point in opposite directions 
         /// </summary>
-        public static bool HasOppositeDirectionOf(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static bool HasOppositeDirectionOf(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var direction1 = vector1.Direction();
             var direction2 = vector2.Direction();
@@ -108,7 +108,7 @@ namespace GeometryClassLibrary.Vectors
         /// Converts a vector into a matrix with one column
         /// </summary>
         /// <returns></returns>
-        public static Matrix ConvertToMatrixColumn(this IUnitLessVector vector)
+        public static Matrix ConvertToMatrixColumn(this IMeasurementVector vector)
         {
             Matrix returnMatrix = new Matrix(3, 1);
             double[] vectorArray = { vector.X.Value, vector.Y.Value, vector.Z.Value };
@@ -164,18 +164,18 @@ namespace GeometryClassLibrary.Vectors
         }
     
 
-        public static bool IsPerpendicularTo(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static bool IsPerpendicularTo(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             return vector1.AngleBetween(vector2) == Angle.RightAngle;
         }
 
-        public static bool IsParallelTo(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static bool IsParallelTo(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             Angle angle = vector1.AngleBetween(vector2);
             return angle == Angle.ZeroAngle || angle == Angle.StraightAngle;
         }
 
-        public static Angle SmallestAngleBetween(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static Angle SmallestAngleBetween(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var angle = vector1.AngleBetween(vector2);
             if (angle > Angle.RightAngle)
@@ -184,7 +184,7 @@ namespace GeometryClassLibrary.Vectors
             }
             return angle;
         }
-        public static Angle AngleBetween(this IUnitLessVector vector1, IUnitLessVector vector2)
+        public static Angle AngleBetween(this IMeasurementVector vector1, IMeasurementVector vector2)
         {
             var dotProduct = vector1.DotProduct(vector2);
             if (dotProduct == Measurement.Zero)
