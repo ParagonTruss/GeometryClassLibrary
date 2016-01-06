@@ -73,11 +73,12 @@
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystemEntityFramework.cs" />
     <Compile Include="Coordinates\Direction\DirectionEntityFramework.cs" />
+    <Compile Include="Coordinates\Direction\DirectionFactoryProperties.cs" />
     <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
     <Compile Include="Coordinates\Shift\ShiftEntityFramework.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\ShiftListExtensions.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\SurfaceListExtensions.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\VectorListExtensions.cs" />
+    <Compile Include="ExtensionMethods\ShiftListExtensions.cs" />
+    <Compile Include="ExtensionMethods\SurfaceListExtensions.cs" />
+    <Compile Include="ExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Interfaces\IShiftable.cs" />
     <Compile Include="Interfaces\IShiftableCollection.cs" />
     <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
@@ -110,13 +111,13 @@
     <Compile Include="Generators\HashGenerator.cs" />
     <Compile Include="Generators\LineGenerator.cs" />
     <Compile Include="Lines\IEdge.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\LineListExtensions.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\LineSegmentListExtensions.cs" />
+    <Compile Include="ExtensionMethods\LineListExtensions.cs" />
+    <Compile Include="ExtensionMethods\LineSegmentListExtensions.cs" />
     <Compile Include="Lines\Line\Line.cs" />
     <Compile Include="Lines\LineSegment\LineSegment.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\EdgeListExtensions.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\PointListExtensions.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\PolygonListExtensions.cs" />
+    <Compile Include="ExtensionMethods\EdgeListExtensions.cs" />
+    <Compile Include="ExtensionMethods\PointListExtensions.cs" />
+    <Compile Include="ExtensionMethods\PolygonListExtensions.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
     <Compile Include="Matrices\Matrix\Matrix.cs" />
     <Compile Include="Solids\OtherSolids\NonPolyhedron.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="Surfaces\Planes\Plane\Plane.cs" />
     <Compile Include="Surfaces\Planes\PlaneRegion\PlaneRegion.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Polygon\Polygon.cs" />
-    <Compile Include="ExtensionMethods\ListExtensionMethods\PlaneRegionListExtensions.cs" />
+    <Compile Include="ExtensionMethods\PlaneRegionListExtensions.cs" />
     <Compile Include="Coordinates\Point\Point.cs" />
     <Compile Include="Solids\Polyhedra\Parallelepiped.cs" />
     <Compile Include="Solids\Polyhedra\Polyhedron\Polyhedron.cs" />
@@ -136,9 +137,9 @@
     </Compile>
     <Compile Include="Solids\Polyhedra\TriangularPrism.cs" />
     <Compile Include="Surfaces\ISurface.cs" />
-    <Compile Include="Vectors\GenericVector.cs" />
-    <Compile Include="Vectors\IUnitLessVectorExtensions.cs" />
-    <Compile Include="Vectors\IVector.cs" />
+    <Compile Include="Vectors\MeasurementVector.cs" />
+    <Compile Include="Vectors\IMeasurementVectorExtensions.cs" />
+    <Compile Include="Vectors\IMeasurementVector.cs" />
     <Compile Include="Vectors\IVectorExtensions.cs" />
     <Compile Include="Vectors\LineSegment_New.cs" />
     <Compile Include="Vectors\Vector_New.cs" />
