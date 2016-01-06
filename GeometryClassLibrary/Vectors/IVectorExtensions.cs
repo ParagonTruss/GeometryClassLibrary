@@ -12,36 +12,36 @@ namespace GeometryClassLibrary.Vectors
     {
         public static Unit<T> X<T>(this IVector<T> vector) where T : IUnitType
         {
-            return new Unit<T>(vector.UnitType, vector.UnitLessVector.X);
+            return new Unit<T>(vector.UnitType, vector.MeasurementVector.X);
         }
         public static Unit<T> Y<T>(this IVector<T> vector) where T : IUnitType
         {
-            return new Unit<T>(vector.UnitType, vector.UnitLessVector.Y);
+            return new Unit<T>(vector.UnitType, vector.MeasurementVector.Y);
         }
         public static Unit<T> Z<T>(this IVector<T> vector) where T : IUnitType
         {
-            return new Unit<T>(vector.UnitType, vector.UnitLessVector.Z);
+            return new Unit<T>(vector.UnitType, vector.MeasurementVector.Z);
         }
         public static Direction Direction<T>(this IVector<T> vector) where T : IUnitType
         {
-            return vector.UnitLessVector.Direction();
+            return vector.MeasurementVector.Direction();
         }
         public static Unit<T> Magnitude<T>(this IVector<T> vector) where T :IUnitType
         {
-            var result = vector.UnitLessVector.Magnitude();
+            var result = vector.MeasurementVector.Magnitude();
             return new Unit<T>(vector.UnitType, result);
         }
 
         public static Unit DotProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
-            var result = vector1.UnitLessVector.DotProduct(vector2.UnitLessVector);
+            var result = vector1.MeasurementVector.DotProduct(vector2.MeasurementVector);
             var unitType = new DerivedUnitType(vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions()));
             return new Unit<DerivedUnitType>(unitType, result);
         }
 
         public static Vector_New<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
         {
-            var underlyingVector = vector1.UnitLessVector.CrossProduct(vector2.UnitLessVector);
+            var underlyingVector = vector1.MeasurementVector.CrossProduct(vector2.MeasurementVector);
             var newDimensions = vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions());
             var newUnitType = new DerivedUnitType(newDimensions);
             return new Vector_New<DerivedUnitType>(newUnitType, underlyingVector);

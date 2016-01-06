@@ -5,7 +5,7 @@ using System.Text;
 using UnitClassLibrary;
 
 
-namespace GeometryClassLibrary.Vectors
+namespace GeometryClassLibrary
 {
     public interface IMeasurementVector
     {
@@ -18,7 +18,7 @@ namespace GeometryClassLibrary.Vectors
     {
         T UnitType { get; }
         Point ApplicationPoint { get; }
-        IMeasurementVector UnitLessVector { get; }
+        IMeasurementVector MeasurementVector { get; }
         //Direction Direction { get; }
         //Unit<T> Magnitude { get; }      
     }

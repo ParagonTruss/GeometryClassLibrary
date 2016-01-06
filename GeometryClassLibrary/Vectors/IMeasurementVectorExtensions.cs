@@ -6,7 +6,7 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public static class IUnitLessVectorExtensions
+    public static class IMeasurementVectorExtensions
     {
         public static Measurement Magnitude(this IMeasurementVector vector)
         {
