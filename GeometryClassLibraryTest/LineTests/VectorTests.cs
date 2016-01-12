@@ -74,16 +74,16 @@ namespace GeometryClassLibraryTest
             v.FlipAboutTail().Should().NotBe(new Vector(Point.MakePointWithInches(3, 3), Point.MakePointWithInches(1, 2)));
         }
 
-        [Test()]
+        [Test]
         public void Vector_FlipAboutHead()
         {
             Vector v = new Vector(Point.MakePointWithInches(2, 2), Point.MakePointWithInches(4, 3));
-
-            v.FlipAboutHead().Should().Be(new Vector(Point.MakePointWithInches(6,4), Point.MakePointWithInches(4, 3)));
-            v.FlipAboutHead().Should().NotBe(new Vector(Point.MakePointWithInches(5, 3), Point.MakePointWithInches(3, 2)));
+            Vector flipped = v.FlipAboutHead();
+            flipped.Should().Be(new Vector(Point.MakePointWithInches(6,4), Point.MakePointWithInches(4, 3)));
+            flipped.Should().NotBe(new Vector(Point.MakePointWithInches(5, 3), Point.MakePointWithInches(3, 2)));
         }
 
-        [Test()]
+        [Test]
         public void Vector_CrossProduct()
         {
             Vector xAxis = new Vector(Point.Origin, Direction.Right, new Distance(1, Inches));
@@ -98,7 +98,7 @@ namespace GeometryClassLibraryTest
             (resultParallel.Magnitude == ZeroDistance).Should().BeTrue();
         }
 
-        [Test()]
+        [Test]
         public void Vector_ProjectOntoPlane()
         {
             Vector testSegment = new Vector(Point.MakePointWithInches(2, 5, 3));
@@ -111,7 +111,7 @@ namespace GeometryClassLibraryTest
             result.Should().Be(expected);
         }
 
-        [Test()]
+        [Test]
         public void Vector_ContainsPoint()
         {
             Vector testVector = new Vector(Point.MakePointWithInches(4, 4, -4));
@@ -154,7 +154,7 @@ namespace GeometryClassLibraryTest
         //    resultIntersecting.Should().BeFalse();
         //}
 
-        [Test()]
+        [Test]
         public void Vector_AngleBetween()
         {
             Vector vector1 = new Vector(Point.MakePointWithInches(1, 2, 3));

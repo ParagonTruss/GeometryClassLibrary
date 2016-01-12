@@ -163,18 +163,15 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Adds the two vectors and returns the resultant vector
         /// </summary>
-        /// <param name="passedVector1"></param>
-        /// <param name="passedVector2"></param>
-        /// <returns></returns>
-        public static Vector operator +(Vector passedVector1, Vector passedVector2)
+        public static Vector operator +(Vector vector1, Vector vector2)
         {
-            //Recreates Vector 2 with its base point at the end point of Vector 1
-            Vector relocatedVector2 = new Vector(passedVector1.EndPoint, passedVector2);
+            Distance x = vector1.XComponent + vector2.XComponent;
+            Distance y = vector1.YComponent + vector2.YComponent;
+            Distance z = vector1.ZComponent + vector2.ZComponent;
 
-            Point newBasePoint = passedVector1.BasePoint; //The new vector has the same base point as Vector 1
-            Point newEndPoint = relocatedVector2.EndPoint; //The new vector has the same end point as the relocated Vector 2
+            Point p = new Point(x,y,z);
 
-            return new Vector(newBasePoint, newEndPoint);
+            return new Vector(vector1.BasePoint, p + vector1.BasePoint);
         }
 
         /// <summary>
@@ -421,9 +418,8 @@ namespace GeometryClassLibrary
         
        /// <summary>
         /// Flips the vector about its tail.
-        /// Like this:  <-------|------->
+        /// Like this:  {-------|-------}
        /// </summary>
-       /// <returns></returns>
         public Vector FlipAboutTail()
         {
             Vector reversed = this.Reverse();
@@ -432,11 +428,11 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// Flips the vector about its head.
-        /// Like this: ------>|<-------
-        /// </summary><
+        /// Like this: ------}|{-------
+        /// </summary>
         public Vector FlipAboutHead()
         {
-            return new Vector((this + this).EndPoint, this.BasePoint);
+            return new Vector((this + this).EndPoint, this.EndPoint);
         }
 
         /// <summary>

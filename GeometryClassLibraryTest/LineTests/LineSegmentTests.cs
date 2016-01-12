@@ -203,8 +203,9 @@ namespace GeometryClassLibraryTest
             Line projectOnto = new Line(Point.MakePointWithInches(5, 1, 2), Point.MakePointWithInches(0, 0, 4.25));
             LineSegment result = testSegment.ProjectOntoLine(projectOnto);
 
-            result.Magnitude.Should().Be(new Distance(new Inch(), 0.22428));
-            ((Line)result).Should().Be(projectOnto);
+            Distance expectedMagnitude = new Distance(new Inch(), 0.22428);
+            (result.Magnitude == expectedMagnitude).Should().BeTrue();
+            (new Line(result) == projectOnto).Should().BeTrue();
         }
 
         [Test()]

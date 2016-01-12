@@ -136,31 +136,19 @@ namespace GeometryClassLibrary
 
         public static Point operator +(Point point1, Point point2)
         {
-            //first calculate the new x
             Distance newX = point1.X + point2.X;
-
-            //then calcutate the new y
             Distance newY = point1.Y + point2.Y;
-
-            //then calcutate the new z
             Distance newZ = point1.Z + point2.Z;
 
-            //create a new Point object with your new values
             return new Point(newX, newY, newZ);
         }
 
         public static Point operator -(Point point1, Point point2)
         {
-            //first calculate the new x
             Distance newX = point1.X - point2.X;
-
-            //then calcutate the new y
             Distance newY = point1.Y - point2.Y;
-
-            //then calcutate the new z
             Distance newZ = point1.Z - point2.Z;
 
-            //create a new Point object with your new values
             return new Point(newX, newY, newZ);
         }
 
