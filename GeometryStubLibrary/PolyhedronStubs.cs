@@ -29,7 +29,7 @@ namespace GeometryStubLibrary
         }
         private static List<Polygon> _makeFaces()
         {
-            Point basePoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint1 = Point.Origin;
             Point basePoint2 = Point.MakePointWithInches(0, 12, 0);
             Point basePoint3 = Point.MakePointWithInches(4, 0, 0);
             Point peakPoint = Point.MakePointWithInches(0, 0, 6);
@@ -96,7 +96,7 @@ namespace GeometryStubLibrary
 
         private static List<Polygon> _makeFaces()
         {
-            Point bottomPoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottomPoint1 = Point.Origin;
             Point bottomPoint2 = Point.MakePointWithInches(0, 4, 0);
             Point bottomPoint3 = Point.MakePointWithInches(4, 4, 0);
             Point bottomPoint4 = Point.MakePointWithInches(4, 0, 0);

@@ -16,7 +16,7 @@ namespace GeometryClassLibraryTest
             Direction direction1 = Direction.Up;
             Direction direction2 = new Direction(new Angle(new Degree(), 33));
             Direction direction3 = Direction.Out;
-            Direction direction4 = new Direction(new Angle(new Degree(), 33), new Angle(new Degree(), 90));
+            Direction direction4 = new Direction(new Angle(new Degree(), 33), Angle.RightAngle);
             Direction direction5 = null;
 
             direction1.Should().NotBe(direction2);

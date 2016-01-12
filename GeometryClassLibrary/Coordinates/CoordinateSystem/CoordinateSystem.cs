@@ -116,13 +116,13 @@ namespace GeometryClassLibrary
         //                case Enums.Axis.X:
         //                    xAxis = axisInPassedPlaneToUseAsBase;
         //                    yAxis = zAxis.CrossProduct(xAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, Angle.RightAngle);
         //                    break;
         //                //if its the y we were the the y axis and we need to calculate the x which will be -90 degrees (to the right)
         //                case Enums.Axis.Y:
         //                    yAxis = axisInPassedPlaneToUseAsBase;
         //                    xAxis = yAxis.CrossProduct(zAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, -1 * Angle.RightAngle);
         //                    break;
         //                //the axis must be in the plane we were passed
         //                case Enums.Axis.Z:
@@ -137,7 +137,7 @@ namespace GeometryClassLibrary
         //                case Enums.Axis.X:
         //                    xAxis = axisInPassedPlaneToUseAsBase;
         //                    zAxis = xAxis.CrossProduct(yAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, -1 * Angle.RightAngle);
         //                    break;
         //                //the axis must be in the plane we were passed
         //                case Enums.Axis.Y:
@@ -146,7 +146,7 @@ namespace GeometryClassLibrary
         //                case Enums.Axis.Z:
         //                    zAxis = axisInPassedPlaneToUseAsBase;
         //                    xAxis = yAxis.CrossProduct(zAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, Angle.RightAngle);
         //                    break;
         //            }
         //            break;
@@ -161,13 +161,13 @@ namespace GeometryClassLibrary
         //                case Enums.Axis.Y:
         //                    yAxis = axisInPassedPlaneToUseAsBase;
         //                    zAxis = xAxis.CrossProduct(yAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), 90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, Angle.RightAngle);
         //                    break;
         //                //if it is the Z axis then we need to find the y, which is -90 degrees (to the right)
         //                case Enums.Axis.Z:
         //                    zAxis = axisInPassedPlaneToUseAsBase;
         //                    yAxis = zAxis.CrossProduct(xAxis);
-        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, new Angle(new Degree(), -90)));
+        //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, -1 * Angle.RightAngle);
         //                    break;
         //            }
         //            break;
@@ -203,7 +203,7 @@ namespace GeometryClassLibrary
         //    //we can simplify the equation as this since it is unit vectors
         //    //sin(angle to plane) = z * planeNormal (which is the x axis by definition)
         //    //Distance dotProductOfZAndNormal = zAxis * Line.XAxis.UnitVector(new Inch());
-        //    //Angle angleBetweenCurrentZAndYZPlane = new Angle(new Radian(), Math.Asin(dotProductOfZAndNormal.Inches));
+        //    //Angle angleBetweenCurrentZAndYZPlane = new Angle(new Radian(), Math.Asin(dotProductOfZAndNormal.InInches));
 
         //    //now rotate the axis (we only need to do z and x since we are done with y now)
         //    xAxis = xAxis.Rotate(new Rotation(Line.YAxis, angleBetweenCurrentZAndYZPlane));

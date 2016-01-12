@@ -36,8 +36,8 @@ namespace GeometryClassLibrary.Vectors
         {
             this.UnitType = (T)x.UnitType;
             var newX = x.Measurement;
-            var newY = y.ValueIn(UnitType);
-            var newZ = z.ValueIn(UnitType);
+            var newY = y.MeasurementIn(UnitType);
+            var newZ = z.MeasurementIn(UnitType);
             this.MeasurementVector = new MeasurementVector(newX, newY, newZ);
             if (applicationPoint != null)
             {

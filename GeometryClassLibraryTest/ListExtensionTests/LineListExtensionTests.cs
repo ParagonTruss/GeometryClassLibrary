@@ -26,7 +26,7 @@ namespace GeometryClassLibraryTest
             testList1.AreAllCoplanar().Should().BeTrue();
 
             List<LineSegment> testList2 = new List<LineSegment>();
-            testList2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0)));
+            testList2.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 1, 0)));
             testList2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(0, 1, 1)));
             testList2.Add(new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 1, 0)));
 
@@ -129,7 +129,7 @@ namespace GeometryClassLibraryTest
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithXInterceptIn2DClosestTo(new Distance(new Inch(), 0));
+            Line result2 = lines2.LineWithXInterceptIn2DClosestTo(Distance.ZeroDistance);
 
             result2.Should().Be(line3);
         }
@@ -153,7 +153,7 @@ namespace GeometryClassLibraryTest
             //check it can handle a null intersect in the first spot
             List<Line> lines2 = new List<Line> { line5, line2, line1, line4, line3 };
 
-            Line result2 = lines2.LineWithXInterceptIn2DFarthestFrom(new Distance(new Inch(), 0));
+            Line result2 = lines2.LineWithXInterceptIn2DFarthestFrom(Distance.ZeroDistance);
 
             (result2 == line2).Should().BeTrue();
         }

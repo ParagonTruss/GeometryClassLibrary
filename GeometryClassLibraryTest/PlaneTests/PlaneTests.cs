@@ -13,7 +13,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Plane_ContainsLine()
         {
-            Plane testPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 3, 0), Point.MakePointWithInches(4, -2, 0));
+            Plane testPlane = new Plane(Point.Origin, Point.MakePointWithInches(1, 3, 0), Point.MakePointWithInches(4, -2, 0));
             Line testLine = new Line(Point.MakePointWithInches(2, 0, 0), Point.MakePointWithInches(0, -1, 0));
             Line testFalseLine = new Line(Point.MakePointWithInches(1, 2, -2), Point.MakePointWithInches(2, 4, 3));
 
@@ -27,8 +27,8 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Plane_ContainsLineOnOrigin()
         {
-            Plane testPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 3, 0), Point.MakePointWithInches(-3, -1, 0));
-            Line testLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 1, 0));
+            Plane testPlane = new Plane(Point.Origin, Point.MakePointWithInches(1, 3, 0), Point.MakePointWithInches(-3, -1, 0));
+            Line testLine = new Line(Point.Origin, Point.MakePointWithInches(1, 1, 0));
 
             bool result = testPlane.Contains(testLine);
 
@@ -152,7 +152,7 @@ namespace GeometryClassLibraryTest
         public void Plane_IntersectionWithPlane_ZeroCases()
         {
             //try all the zero cases
-            Point testPoint = Point.MakePointWithInches(0, 0, 0);
+            Point testPoint = Point.Origin;
             Point testPointX = Point.MakePointWithInches(10, 0, 0);
             Point testPointY = Point.MakePointWithInches(0, 10, 0);
             Point testPointZ = Point.MakePointWithInches(0, 0, 10);

@@ -22,9 +22,9 @@ namespace GeometryClassLibrary.Vectors
         public Distance Magnitude { get { return BasePoint.DistanceTo(EndPoint); } }
 
         public IMeasurementVector MeasurementVector { get { return new MeasurementVector(_x, _y, _z); } }
-        private Measurement _x { get { return (EndPoint.X - BasePoint.X).ValueIn(UnitType); } }
-        private Measurement _y { get { return (EndPoint.Y - BasePoint.Y).ValueIn(UnitType); } }
-        private Measurement _z { get { return (EndPoint.Z - BasePoint.Z).ValueIn(UnitType); } }
+        private Measurement _x { get { return (EndPoint.X - BasePoint.X).MeasurementIn(UnitType); } }
+        private Measurement _y { get { return (EndPoint.Y - BasePoint.Y).MeasurementIn(UnitType); } }
+        private Measurement _z { get { return (EndPoint.Z - BasePoint.Z).MeasurementIn(UnitType); } }
         #endregion
     }
 }

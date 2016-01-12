@@ -26,8 +26,8 @@ namespace GeometryStubLibrary
         public StubPolyhedron3()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 4, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 4, 0), Point.MakePointWithInches(0, 4, 0)));
             Polyhedron polyhedron = new Polyhedron(lineSegments);
@@ -47,7 +47,7 @@ namespace GeometryStubLibrary
     {
         public StubPolyhedron4()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);

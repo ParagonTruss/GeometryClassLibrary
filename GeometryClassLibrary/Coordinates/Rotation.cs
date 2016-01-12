@@ -10,7 +10,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Angle to Rotate = {AngleToRotate.Degrees}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.Inches}, {AxisToRotateAround.BasePoint.Y.Inches}, {AxisToRotateAround.BasePoint.Z.Inches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.Inches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.Inches}")]
+    [DebuggerDisplay("Angle to Rotate = {AngleToRotate.InDegrees.Value}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.InInches}, {AxisToRotateAround.BasePoint.Y.InInches}, {AxisToRotateAround.BasePoint.Z.InInches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.InInches}")]
     [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {

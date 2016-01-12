@@ -60,7 +60,10 @@ namespace GeometryClassLibrary
             this.NormalLine = new Line(basePoint, normalDirection);
         }
 
-        public Plane(Vector normalVector) : this(normalVector.Direction, normalVector.BasePoint) { }
+        public Plane(Line normalLine)
+        {
+            this.NormalLine = normalLine;
+        }
 
         /// <summary>
         /// Creates a plane that contains the two lines, provided the lines are not the same.
@@ -515,7 +518,7 @@ namespace GeometryClassLibrary
         public Angle SmallestAngleBetween(Line line)
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
-            var complement = new Angle(new Degree(), 90) - angle;
+            var complement = Angle.RightAngle - angle;
             return complement.ProperAngle;
         }
 

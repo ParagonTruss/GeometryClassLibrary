@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
@@ -74,7 +74,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_Extrude()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 4, 0);
             Point bottomRightPoint = Point.MakePointWithInches(8, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(8, 4, 0);
@@ -120,22 +120,22 @@ namespace GeometryClassLibraryTest
         public void Polygon_RotateAndRoundTest_Orthogonal()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 4, 0), Point.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 4, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 4, 0), Point.Origin));
             Polygon testPolygon = new Polygon(lineSegments);
 
             Line rotationAxis = new Line(Point.MakePointWithInches(1, 0, 0)); //This is the X axis
-            Angle rotationAngle = new Angle(new Degree(), 90);
+            Angle rotationAngle = Angle.RightAngle;
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
             List<LineSegment> expectedLineSegments = new List<LineSegment>();
-            expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(8, 0, 0)));
+            expectedLineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
             expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(8, 0, 4)));
             expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 4), Point.MakePointWithInches(0, 0, 4)));
-            expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.MakePointWithInches(0, 0, 0)));
+            expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon expectedPolygon = new Polygon(expectedLineSegments);
 
             (actualPolygon == expectedPolygon).Should().BeTrue();
@@ -167,7 +167,7 @@ namespace GeometryClassLibraryTest
 
             Point point1 = Point.MakePointWithInches(1, -5, -4);
             Point point2 = Point.MakePointWithInches(1, 0, 0);
-            Point point3 = Point.MakePointWithInches(0, 0, 0);
+            Point point3 = Point.Origin;
             Point point4 = Point.MakePointWithInches(0, -5, -4);
             List<Point> vertices = new List<Point>() { point1, point2, point3, point4 };
             Polygon testPolygon = new Polygon(vertices);
@@ -176,7 +176,7 @@ namespace GeometryClassLibraryTest
 
             Polygon actualPolygon = testPolygon.Translate(testDiplacement);
 
-            Point point5 = Point.MakePointWithInches(0, 0, 0);
+            Point point5 = Point.Origin;
             Point point6 = Point.MakePointWithInches(0, 5, 4);
             Point point7 = Point.MakePointWithInches(-1, 5, 4);
             Point point8 = Point.MakePointWithInches(-1, 0, 0);
@@ -190,8 +190,8 @@ namespace GeometryClassLibraryTest
         public void Polygon_Copy()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-1, 5, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-4, 2, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-4, 2, 0), Point.MakePointWithInches(-5, 5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-1, 5, 0), Point.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
@@ -207,7 +207,7 @@ namespace GeometryClassLibraryTest
             (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
-            planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, new Angle(new Degree(), 45)), Point.MakePointWithInches(1, 4, -2)));
+            planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, Angle.RightAngle / 2), Point.MakePointWithInches(1, 4, -2)));
 
             foreach (LineSegment line in testPolygon.LineSegments)
             {
@@ -221,8 +221,8 @@ namespace GeometryClassLibraryTest
         public void Polygon_Contains_ContainsNotOnBoundary_Touches()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-1, 5, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-4, 2, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-4, 2, 0), Point.MakePointWithInches(-5, 5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-1, 5, 0), Point.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
@@ -233,7 +233,7 @@ namespace GeometryClassLibraryTest
             Point center1 = testPolygon.CenterPoint;
 
             //make sure the sides are not included
-            Point sideTest = Point.MakePointWithInches(0, 0, 0);
+            Point sideTest = Point.Origin;
 
 
             List<LineSegment> lineSegments = new List<LineSegment>();
@@ -572,10 +572,10 @@ namespace GeometryClassLibraryTest
         public void Polygon_AreaOfSquareInXZPlane()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(4, 0, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 4)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 4), Point.MakePointWithInches(0, 0, 4)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon testPolygon1 = new Polygon(bounds);
 
             //check to see if its what we expected
@@ -587,10 +587,10 @@ namespace GeometryClassLibraryTest
         public void Polygon_AreaOfSquareInYZPlane()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 4, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 4, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 4, 0), Point.MakePointWithInches(0, 4, 4)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 4, 4), Point.MakePointWithInches(0, 0, 4)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon testPolygon1 = new Polygon(bounds);
 
             //check to see if its what we expected
@@ -602,8 +602,8 @@ namespace GeometryClassLibraryTest
         public void Polygon_Centroid()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-1, 5, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-4, 2, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-4, 2, 0), Point.MakePointWithInches(-5, 5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-1, 5, 0), Point.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
@@ -679,9 +679,9 @@ namespace GeometryClassLibraryTest
         {
             //changed to inches because mm were gave results smaller than what we are considering equivalent
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(2, 1, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(2, 1, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(2, 1, 0), Point.MakePointWithInches(6, 1, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(6, 0, 0), Point.Origin));
             bounds.Add(new LineSegment(Point.MakePointWithInches(6, 1, 0), Point.MakePointWithInches(6, 0, 0)));
             Polygon testPolygon = new Polygon(bounds);
 
@@ -698,9 +698,9 @@ namespace GeometryClassLibraryTest
             Polygon expected1 = new Polygon(expected1Bounds);
 
             List<LineSegment> expected2Bounds = new List<LineSegment>();
-            expected2Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 0, 0)));
+            expected2Bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(1, 0, 0)));
             expected2Bounds.Add(new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(2, 1, 0)));
-            expected2Bounds.Add(new LineSegment(Point.MakePointWithInches(2, 1, 0), Point.MakePointWithInches(0, 0, 0)));
+            expected2Bounds.Add(new LineSegment(Point.MakePointWithInches(2, 1, 0), Point.Origin));
             Polygon expected2 = new Polygon(expected2Bounds);
 
 
@@ -720,10 +720,10 @@ namespace GeometryClassLibraryTest
         public void Polygon_SliceACaseThatDidntWorkBefore()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 3.5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 3.5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 3.5, 0), Point.MakePointWithInches(240, 3.5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 3.5, 0), Point.MakePointWithInches(240, 0, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.Origin));
             Polygon testPolygon = new Polygon(bounds);
 
             Plane slicingPlane = new Plane(new Direction(new Angle(new Radian(), 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
@@ -732,11 +732,11 @@ namespace GeometryClassLibraryTest
 
             //create the expected planes to compare to
             List<LineSegment> expected1Bounds = new List<LineSegment>();
-            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0.25, 0)));
+            expected1Bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 0.25, 0)));
             expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0.25, 0), Point.MakePointWithInches(2.36126321602, 3.5, 0)));
             expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(2.36126321602, 3.5, 0), Point.MakePointWithInches(240, 3.5, 0)));
             expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(240, 3.5, 0), Point.MakePointWithInches(240, 0, 0)));
-            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.Origin));
             Polygon expected1 = new Polygon(expected1Bounds);
 
             List<LineSegment> expected2Bounds = new List<LineSegment>();
@@ -762,10 +762,10 @@ namespace GeometryClassLibraryTest
         public void Polygon_SliceAnotherCaseThatDidntWorkBefore()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1.5)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 0, 1.5)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 1.5), Point.MakePointWithInches(240, 0, 1.5)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 1.5), Point.MakePointWithInches(240, 0, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.Origin));
             Polygon testPolygon = new Polygon(bounds);
 
             Plane slicingPlane = new Plane(new Direction(new Angle(new Radian(), 5.6548667765)), Point.MakePointWithInches(122.8315595, 169.313137732, 0));
@@ -774,10 +774,10 @@ namespace GeometryClassLibraryTest
 
             //create the expected planes to compare to
             List<LineSegment> expected1Bounds = new List<LineSegment>();
-            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(240, 0, 0)));
+            expected1Bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(240, 0, 0)));
             expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(240, 0, 1.5)));
             expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 1.5), Point.MakePointWithInches(0, 0, 1.5)));
-            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 1.5), Point.MakePointWithInches(0, 0, 0)));
+            expected1Bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 1.5), Point.Origin));
             Polygon expected1 = new Polygon(expected1Bounds);
 
             //should only return the original plane
@@ -812,13 +812,13 @@ namespace GeometryClassLibraryTest
         //public void Polygon_FindVertexNotOnTheGivenPlane()
         //{
         //    List<LineSegment> lineSegments = new List<LineSegment>();
-        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+        //    lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
         //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
-        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
+        //    lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.Origin));
         //    Polygon testPolygon = new Polygon(lineSegments);
 
-        //    Plane borderPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(0, 0, 1));
-        //    Plane containingPlane = new Plane(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 0, 0));
+        //    Plane borderPlane = new Plane(Point.Origin, Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(0, 0, 1));
+        //    Plane containingPlane = new Plane(Point.Origin, Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 0, 0));
 
         //    Point results1 = testPolygon.FindVertexNotOnTheGivenPlane(borderPlane);
         //    Point results2 = testPolygon.FindVertexNotOnTheGivenPlane(containingPlane);
@@ -831,15 +831,15 @@ namespace GeometryClassLibraryTest
         public void Polygon_DoesShareOrContainSide()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.Origin));
             Polygon testPolygon = new Polygon(lineSegments);
 
             List<LineSegment> lineSegments2 = new List<LineSegment>();
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.Origin));
             Polygon testExactSide = new Polygon(lineSegments2);
 
             List<LineSegment> lineSegments3 = new List<LineSegment>();
@@ -867,9 +867,9 @@ namespace GeometryClassLibraryTest
         public void Polygon_IntersectWithLine()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.Origin));
             Polygon testPolygon = new Polygon(lineSegments);
 
             Line testIntersect = new Line(Point.MakePointWithInches(-1.5, 1, 0), Point.MakePointWithInches(-3, -2, 1));
@@ -888,7 +888,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_DoesIntersectNotCoplanar()
         {
-            Point front1 = Point.MakePointWithInches(0, 0, 0);
+            Point front1 = Point.Origin;
             Point front2 = Point.MakePointWithInches(4, 0, 0);
             Point front3 = Point.MakePointWithInches(4, 0, 2);
             Point front4 = Point.MakePointWithInches(0, 0, 2);
@@ -903,7 +903,7 @@ namespace GeometryClassLibraryTest
            
             Line intersecting1 = new Line(Point.MakePointWithInches(2, 0, 1), Point.MakePointWithInches(2, 1, 1));
             Line intersecting2 = new Line(Point.MakePointWithInches(2, 0, .5), Point.MakePointWithInches(5, 12, 1));
-            Line intersectingAlongSide = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+            Line intersectingAlongSide = new Line(Point.Origin, Point.MakePointWithInches(0, 1, 0));
             Line noIntersect = new Line(Point.MakePointWithInches(5, 0, 0), Point.MakePointWithInches(5, 1, 0));
 
             

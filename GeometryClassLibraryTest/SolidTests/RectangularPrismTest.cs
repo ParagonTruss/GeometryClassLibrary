@@ -24,7 +24,7 @@ namespace GeometryClassLibraryTest
             (prism.Polygons.Count == 6).Should().BeTrue();
             (prism.Vertices.Count == 8).Should().BeTrue();
 
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 5, 0);
             Point bottomRightPoint = Point.MakePointWithInches(5, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(5, 5, 0);

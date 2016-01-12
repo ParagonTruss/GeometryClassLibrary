@@ -9,7 +9,7 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using static GeometryClassLibrary.Point;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
 
 namespace GeometryClassLibrary
 {
@@ -22,9 +22,9 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         //Predefined lines to use as references
-        public static Line XAxis = new Line(MakePointWithInches(1, 0, 0));
-        public static Line YAxis = new Line(MakePointWithInches(0, 1, 0));
-        public static Line ZAxis = new Line(MakePointWithInches(0, 0, 1));
+        public static Line XAxis = new Line(Point.Origin, Direction.Right);
+        public static Line YAxis = new Line(Point.Origin, Direction.Up);
+        public static Line ZAxis = new Line(Point.Origin, Direction.Out);
 
         /// <summary>
         /// A point on the line to use as a reference.
@@ -392,7 +392,7 @@ namespace GeometryClassLibrary
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
             Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.InInches ^ 2;
-            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).ValueIn(new SquareInch());
+            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).MeasurementIn(new SquareInch());
 
             if (crossProductABMagnitudeSquared == 0)
             {
@@ -594,13 +594,12 @@ namespace GeometryClassLibrary
         /// Makes a Perpendicular Line to this line that is in the passed plane
         /// this assumes the line is in the plane
         /// </summary>
-        /// <param name="planeToMakePerpindicularLineIn">The plane in which this line and the perpindicular line should both contain</param>
-        /// <returns>A new Line that is in the passed plane and perpindicular to this line</returns>
-        public Line MakePerpendicularLineInGivenPlane(Plane planeToMakePerpendicularLineIn)        {
+        public Line MakePerpendicularLineInGivenPlane(Plane planeToMakePerpendicularLineIn)
+        {
             if (planeToMakePerpendicularLineIn.IsParallelTo(this))
             {
                 //rotate it 90 degrees in the nornal of the plane and it will be perpendicular to the original
-                return this.Rotate(new Rotation(new Vector(this.BasePoint, planeToMakePerpendicularLineIn.NormalVector), new Angle(new Degree(), 90)));
+                return this.Rotate(new Rotation(new Vector(this.BasePoint, planeToMakePerpendicularLineIn.NormalVector), RightAngle));
             }
             else
             {

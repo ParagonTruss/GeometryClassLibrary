@@ -54,17 +54,17 @@ namespace GeometryClassLibraryTest
         public void PolygonList_FindPolygonsTouchingPlane()
         {
             List<LineSegment> lineSegments1 = new List<LineSegment>();
-            lineSegments1.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments1.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments1.Add(new LineSegment(Point.MakePointWithInches(0, 2, 4), Point.MakePointWithInches(0, 2, 0)));
             lineSegments1.Add(new LineSegment(Point.MakePointWithInches(0, 2, 4), Point.MakePointWithInches(0, 0, 4)));
-            lineSegments1.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments1.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon testPolygon1 = new Polygon(lineSegments1);
 
             List<LineSegment> lineSegments2 = new List<LineSegment>();
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
             lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(-3, 0, 0)));
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-3, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-3, 0, 0), Point.Origin));
             Polygon testPolygon2 = new Polygon(lineSegments2);
 
             List<LineSegment> lineSegments3 = new List<LineSegment>();

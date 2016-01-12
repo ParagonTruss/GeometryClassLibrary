@@ -95,7 +95,7 @@ namespace GeometryClassLibraryTest
             result.Should().Be(expected);
 
             Vector resultParallel = xAxis.CrossProduct(xAxis);
-            (resultParallel.Magnitude == Distance.ZeroDistance).Should().BeTrue();
+            (resultParallel.Magnitude == ZeroDistance).Should().BeTrue();
         }
 
         [Test()]
@@ -106,7 +106,7 @@ namespace GeometryClassLibraryTest
 
             Vector result = testSegment.ProjectOntoPlane(projectOnto);
 
-            Vector expected = new Vector(Point.MakePointWithInches(2, 5, 0));
+            Vector expected = new Vector(Point.MakePointWithInches(2, 5));
 
             result.Should().Be(expected);
         }

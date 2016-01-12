@@ -6,7 +6,7 @@ using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 
 namespace GeometryClassLibraryTest
@@ -48,7 +48,7 @@ namespace GeometryClassLibraryTest
         public void Arc_Properties_Quarter_Circle()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(3, 3, 4.24264); //sqr(3^2 + 3^2)
             Direction directionAtStart = new Direction(Point.MakePointWithInches(1, 1, 0));
 
@@ -74,7 +74,7 @@ namespace GeometryClassLibraryTest
 
             //test the central angle
             Angle centralAngle = quarterArc.CentralAngle;
-            (centralAngle == new Angle(new Degree(), 90)).Should().BeTrue();
+            (centralAngle == Angle.RightAngle).Should().BeTrue();
 
             //test the center point
             Point centerPoint = quarterArc.CenterPoint;
@@ -86,14 +86,14 @@ namespace GeometryClassLibraryTest
 
             //test the straight line direction (same as direction)
             Direction straightDirection = quarterArc.StraightLineDirection;
-            (straightDirection == new Direction(new Angle(new Degree(), 45), new Angle(new Degree(), 45))).Should().BeTrue();
+            (straightDirection == new Direction(Angle.RightAngle / 2, Angle.RightAngle / 2)).Should().BeTrue();
         }
 
         [Test()]
         public void Arc_Properties_Half_Circle()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(0, 0, 6);
             Direction directionAtStart = new Direction(Point.MakePointWithInches(1, 1, 0));
 
@@ -119,7 +119,7 @@ namespace GeometryClassLibraryTest
 
             //test the central angle
             Angle centralAngle = halfArc.CentralAngle;
-            (centralAngle == new Angle(new Degree(), 180)).Should().BeTrue();
+            (centralAngle == Angle.StraightAngle).Should().BeTrue();
 
             //test the center point
             Point centerPoint = halfArc.CenterPoint;
@@ -138,7 +138,7 @@ namespace GeometryClassLibraryTest
         public void Arc_Properties_Three_Quarters_Circle()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(-3, -3, 4.24264);
             Direction directionAtStart = new Direction(Point.MakePointWithInches(1, 1, 0));
 
@@ -176,14 +176,14 @@ namespace GeometryClassLibraryTest
 
             //test the straight line direction (same as direction)
             Direction straightDirection = threeQuartersArc.StraightLineDirection;
-            (straightDirection == new Direction(new Angle(new Degree(), 225), new Angle(new Degree(), 45))).Should().BeTrue();
+            (straightDirection == new Direction(new Angle(new Degree(), 225), Angle.RightAngle / 2)).Should().BeTrue();
         }
 
         [Test()]
         public void Arc_Translate()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(-3, 2, 1);
             Direction directionAtStart = new Direction(Point.MakePointWithInches(-1, 1, 0.5));
 
@@ -200,20 +200,20 @@ namespace GeometryClassLibraryTest
         public void Arc_Rotate()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(3, 3, 4.24264);
             Direction directionAtStart = new Direction(Point.MakePointWithInches(1, 1, 0));
 
             Arc testArc = new Arc(basePoint, endPoint, directionAtStart);
 
-            Arc results = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(1, -1, 0)), Point.MakePointWithInches(0, 0, 4.24264)), new Angle(new Degree(), 90)));
+            Arc results = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(1, -1, 0)), Point.MakePointWithInches(0, 0, 4.24264)), Angle.RightAngle));
 
             Arc expected = new Arc(endPoint, Point.MakePointWithInches(0, 0, 4.24264 * 2), new Direction(Point.MakePointWithInches(0, 0, 1)));
 
             (results == expected).Should().BeTrue();
 
             //try another rotation
-            Arc results2 = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(0, 0, 1)), Point.MakePointWithInches(1.5, 1.5, 0)), new Angle(new Degree(), 180)));
+            Arc results2 = testArc.Rotate(new Rotation(new Line(new Direction(Point.MakePointWithInches(0, 0, 1)), Point.MakePointWithInches(1.5, 1.5, 0)), Angle.StraightAngle));
 
             Arc expected2 = new Arc(Point.MakePointWithInches(3, 3, 0), Point.MakePointWithInches(0, 0, 4.24264), new Direction(Point.MakePointWithInches(-1, -1, 0)));
 
@@ -224,13 +224,13 @@ namespace GeometryClassLibraryTest
         public void Arc_Shift()
         {
             //make our default arc
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point endPoint = Point.MakePointWithInches(3, 3, 4.24264);
             Direction directionAtStart = new Direction(Point.MakePointWithInches(1, 1, 0));
 
             Arc testArc = new Arc(basePoint, endPoint, directionAtStart);
 
-            Shift testShift = new Shift(new Rotation(Line.ZAxis, new Angle(new Degree(), 45)), Point.MakePointWithInches(-3, 0.25, -2));
+            Shift testShift = new Shift(new Rotation(Line.ZAxis, Angle.RightAngle / 2), Point.MakePointWithInches(-3, 0.25, -2));
             Arc results = testArc.Shift(testShift);
 
             Arc expected = new Arc(Point.MakePointWithInches(-3, 0.25, -2), Point.MakePointWithInches(0 - 3, 4.24264 + 0.25, 4.24264 - 2), Direction.Up);

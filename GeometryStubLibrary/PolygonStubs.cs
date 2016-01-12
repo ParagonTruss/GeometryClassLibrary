@@ -57,10 +57,10 @@ namespace GeometryStubLibrary
         private static List<LineSegment> _makeLineSegments()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(8, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(8, 4, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 4, 0), Point.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 4, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 4, 0), Point.Origin));
             return lineSegments;
         }
 
@@ -77,9 +77,9 @@ namespace GeometryStubLibrary
         private static List<LineSegment> _makeLineSegments()
         {
             List<LineSegment> lineSegments2 = new List<LineSegment>();
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(8, 0, 0)));
+            lineSegments2.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
             lineSegments2.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(4, -4, 0)));
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(4, -4, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(4, -4, 0), Point.Origin));
             return lineSegments2;
         }
     }
@@ -123,9 +123,9 @@ namespace GeometryStubLibrary
         public Polygon4()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(-3, 2, 0), Point.Origin));
             Polygon testPolygon = new Polygon(lineSegments);
             //Polygon_FindVertexNotOnTheGivenPlane()
             //Polygon_DoesShareOrContainSide()
@@ -138,8 +138,8 @@ namespace GeometryStubLibrary
         public Polygon5()
         {
             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(1, -5, -4), Point.MakePointWithInches(0, 0, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-1, 5, 4)));
+            lineSegments.Add(new LineSegment(Point.MakePointWithInches(1, -5, -4), Point.Origin));
+            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 4)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-1, 5, 4), Point.MakePointWithInches(-2, 10, 8)));
             lineSegments.Add(new LineSegment(Point.MakePointWithInches(-2, 10, 8), Point.MakePointWithInches(1, -5, -4)));
             Polygon testPolygon = new Polygon(lineSegments);
@@ -151,8 +151,8 @@ namespace GeometryStubLibrary
         public Polygon6()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-1, 5, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-4, 2, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-4, 2, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-4, 2, 0), Point.MakePointWithInches(-5, 5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(-1, 5, 0), Point.MakePointWithInches(-5, 5, 0)));
             Polygon testPolygon = new Polygon(bounds);
@@ -236,9 +236,9 @@ namespace GeometryStubLibrary
         public Polygon12()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(2, 1, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(2, 1, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(2, 1, 0), Point.MakePointWithInches(6, 1, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(6, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(6, 0, 0), Point.Origin));
             bounds.Add(new LineSegment(Point.MakePointWithInches(6, 1, 0), Point.MakePointWithInches(6, 0, 0)));
             Polygon testPolygon = new Polygon(bounds);
             // appears in polygon slice with line test
@@ -249,10 +249,10 @@ namespace GeometryStubLibrary
         public Polygon13()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 3.5, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 3.5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 3.5, 0), Point.MakePointWithInches(240, 3.5, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 3.5, 0), Point.MakePointWithInches(240, 0, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.Origin));
             Polygon testPolygon = new Polygon(bounds);
             // appears in polygon slice a case that didn't work before
         }
@@ -262,10 +262,10 @@ namespace GeometryStubLibrary
         public Polygon14()
         {
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1.5)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 0, 1.5)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 1.5), Point.MakePointWithInches(240, 0, 1.5)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 1.5), Point.MakePointWithInches(240, 0, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.MakePointWithInches(0, 0, 0)));
+            bounds.Add(new LineSegment(Point.MakePointWithInches(240, 0, 0), Point.Origin));
             Polygon testPolygon = new Polygon(bounds);
             //appears in Polygon_SliceAnotherCaseThatDidntWorkBefore
         }
@@ -275,8 +275,8 @@ namespace GeometryStubLibrary
         public Polygon15()
         {
             List<LineSegment> bounds1 = new List<LineSegment>();
-            bounds1.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(3, 0, 0)));
-            bounds1.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            bounds1.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(3, 0, 0)));
+            bounds1.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             bounds1.Add(new LineSegment(Point.MakePointWithInches(3, 0, 0), Point.MakePointWithInches(3, 2, 0)));
             bounds1.Add(new LineSegment(Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(3, 2, 0)));
             Polygon testPolygon1 = new Polygon(bounds1);
@@ -367,9 +367,9 @@ namespace GeometryStubLibrary
         public Polygon22()
         {
             List<LineSegment> lineSegments2 = new List<LineSegment>();
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
+            lineSegments2.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
             lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.MakePointWithInches(0, 2, 0)));
-            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.MakePointWithInches(0, 0, 0)));
+            lineSegments2.Add(new LineSegment(Point.MakePointWithInches(-7, 1, 0), Point.Origin));
             Polygon testExactSide = new Polygon(lineSegments2);
             //Polygon_DoesShareOrContainSide
         }

@@ -39,7 +39,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_RotateToCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(Point.Origin, new Angle(new Degree(), 45), Angle.ZeroAngle, new Angle(new Degree(), 45));
+            CoordinateSystem system = new CoordinateSystem(Point.Origin, Angle.RightAngle / 2, Angle.ZeroAngle, Angle.RightAngle / 2);
 
             Point testPoint = Point.MakePointWithInches(0, 3, 0);
 
@@ -62,7 +62,7 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_ShiftToCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(Point.MakePointWithInches(1, -2, -4), new Angle(new Degree(), 90), new Angle(new Degree(), -45), Angle.ZeroAngle);
+            CoordinateSystem system = new CoordinateSystem(Point.MakePointWithInches(1, -2, -4), Angle.RightAngle, new Angle(new Degree(), -45), Angle.ZeroAngle);
 
             Point testPoint = Point.MakePointWithInches(0, 3, 0);
 
@@ -76,11 +76,11 @@ namespace GeometryClassLibraryTest
         [Test]
         public void Shift_ShiftPolygonFromCoordinateSystem()
         {
-            CoordinateSystem system = new CoordinateSystem(Point.MakePointWithInches(0, 1, 0), new Angle(new Degree(), 45), new Angle(new Degree(), -45), Angle.ZeroAngle);
+            CoordinateSystem system = new CoordinateSystem(Point.MakePointWithInches(0, 1, 0), Angle.RightAngle / 2, new Angle(new Degree(), -45), Angle.ZeroAngle);
 
             List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 2, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 2, 0)));
+            bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(4, 0, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(4, 2, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 2, 0)));
             Polygon testPolygon = new Polygon(bounds);

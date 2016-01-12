@@ -119,13 +119,13 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_Intersection_Origin()
         {
-            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.Origin;
+            Point basePointLine2 = Point.Origin;
 
             Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 0, 0));
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
 
-            Point expectedResult = Point.MakePointWithInches(0, 0, 0);
+            Point expectedResult = Point.Origin;
             Point actualResult = line1.IntersectWithLine(line2);
 
             (expectedResult == actualResult).Should().BeTrue();  
@@ -135,7 +135,7 @@ namespace GeometryClassLibraryTest
         public void Line_WillTwoLinesOnTopOfOneAnotherIntersectTest()
         {
 
-            Line line1 = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(10, 0, 0));
+            Line line1 = new Line(Point.Origin, Point.MakePointWithInches(10, 0, 0));
             Line line2 = new Line(Point.MakePointWithInches(3, 0, 0), Point.MakePointWithInches(6, 0, 0));
             Line line3 = new Line(Point.MakePointWithInches(3, 2, 0), Point.MakePointWithInches(-2, 5, 3));
             Line line4 = new Line(Point.MakePointWithInches(3, 5, 0), Point.MakePointWithInches(-2, 2, 3));
@@ -186,8 +186,8 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_SmallestAngleBetween_IntersectAtOrigin()
         {
-            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.Origin;
+            Point basePointLine2 = Point.Origin;
 
             Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 1, 1));
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
@@ -201,8 +201,8 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_SmallestAngleBetween_Perpendicular()
         {
-            Point basePointLine1 = Point.MakePointWithInches(0, 0, 0);
-            Point basePointLine2 = Point.MakePointWithInches(0, 0, 0);
+            Point basePointLine1 = Point.Origin;
+            Point basePointLine2 = Point.Origin;
 
             Line line1 = new Line(basePointLine1, Point.MakePointWithInches(1, 0, 0));
             Line line2 = new Line(basePointLine2, Point.MakePointWithInches(0, 0, 1));
@@ -217,7 +217,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_IsCoplanarWith()
         {
-            Line line1 = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+            Line line1 = new Line(Point.Origin, Point.MakePointWithInches(0, 1, 0));
             Line line2 = new Line(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(1, 1, 0));
             Line line3 = new Line(Point.MakePointWithInches(1, 1, 0), Point.MakePointWithInches(1, 0, 0));
             Line line4 = new Line(Point.MakePointWithInches(2, 0, 0), Point.MakePointWithInches(3, 0, 4));
@@ -252,9 +252,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_IsPerpendicularTo()
         {
-            Line line1 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 45)), new Distance(new Inch(), 1));
+            Line line1 = new LineSegment(Point.Origin, new Direction(Angle.RightAngle / 2), new Distance(new Inch(), 1));
             Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 135)), new Distance(new Inch(), 1));
-            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(new Angle(new Degree(), 45), Angle.ZeroAngle), new Distance(new Inch(), 1));
+            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(Angle.RightAngle / 2, Angle.ZeroAngle), new Distance(new Inch(), 1));
 
             Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
             Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
@@ -281,7 +281,7 @@ namespace GeometryClassLibraryTest
             Point otherPointLine1 = Point.MakePointWithInches(3, 3, 3);
 
             Line line1 = new Line(basePointLine1, otherPointLine1);
-            Line axisLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
+            Line axisLine = new Line(Point.Origin, Point.MakePointWithInches(0, 0, 1));
 
             Angle rotationAngle = new Angle(new Degree(), 199);
 
@@ -303,7 +303,7 @@ namespace GeometryClassLibraryTest
             Line toRotate = new Line(start, end);
             Line startPointYAxis = new Line(start, Point.MakePointWithInches(0, 2, 3)); //relative y axis
 
-            Angle rotationAngle = new Angle(new Degree(), 90);
+            Angle rotationAngle = Angle.RightAngle;
 
             Line afterRotate = toRotate.Rotate(new Rotation(startPointYAxis, rotationAngle));
 
@@ -453,7 +453,7 @@ namespace GeometryClassLibraryTest
 
             intercept1.Should().Be(new Distance(new Inch(), -1));
             intercept2.Should().Be(new Distance(new Inch(), 6));
-            intercept3.Should().Be(new Distance(new Inch(), 0));
+            intercept3.Should().Be(Distance.ZeroDistance);
             intercept4.Should().Be(new Distance(new Inch(), 4));
         }
 
@@ -482,7 +482,7 @@ namespace GeometryClassLibraryTest
 
             intercept1.Should().Be(new Distance(new Inch(), 1));
             intercept2.Should().Be(new Distance(new Inch(), 1.5));
-            intercept3.Should().Be(new Distance(new Inch(), 0));
+            intercept3.Should().Be(Distance.ZeroDistance);
             intercept4.Should().Be(new Distance(new Inch(), -1));
         }
 
@@ -532,7 +532,7 @@ namespace GeometryClassLibraryTest
         public void Line_DoesIntersectPolyhedron()
         {
             //make a polyhedron
-            Point bottom1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottom1 = Point.Origin;
             Point bottom2 = Point.MakePointWithInches(4, 0, 0);
             Point bottom3 = Point.MakePointWithInches(4, 12, 0);
             Point bottom4 = Point.MakePointWithInches(0, 12, 0);
@@ -562,7 +562,7 @@ namespace GeometryClassLibraryTest
             //now make some lines that will intersect it
             Line intersecting1 = new Line(Point.MakePointWithInches(2, 0, 1), Point.MakePointWithInches(2, 1, 1));
             Line intersecting2 = new Line(Point.MakePointWithInches(2, 0, .5), Point.MakePointWithInches(5, 12, 1));
-            Line intersectingAlongSide = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 1, 0));
+            Line intersectingAlongSide = new Line(Point.Origin, Point.MakePointWithInches(0, 1, 0));
             Line noIntersect = new Line(Point.MakePointWithInches(5, 0, 0), Point.MakePointWithInches(5, 1, 0));
 
             // Temporary

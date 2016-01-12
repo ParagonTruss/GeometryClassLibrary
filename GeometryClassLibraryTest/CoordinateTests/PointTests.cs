@@ -144,7 +144,7 @@ namespace GeometryClassLibraryTest
         public void Point_Rotate3DTest()
         {
             Point originPoint = Point.MakePointWithInches(1, 0, 0);
-            Angle rotationAngle = new Angle(new Degree(), 90);
+            Angle rotationAngle = Angle.RightAngle;
 
             Point newPoint = originPoint.Rotate3D(new Rotation(Line.ZAxis, rotationAngle));
 
@@ -167,7 +167,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Point_Rotate3DTest_AxisNotThroughOrigin_PointIsOrigin()
         {
-            Point originPoint = Point.MakePointWithInches(0, 0, 0);
+            Point originPoint = Point.Origin;
             Line axis = new Line(Point.MakePointWithInches(1, -1, 0), Point.MakePointWithInches(1, 1, 0));
             Angle rotationAngle = new Angle(new Degree(), 212);
 
@@ -180,7 +180,7 @@ namespace GeometryClassLibraryTest
         public void Point_IsOnLineSegment()
         {
             LineSegment testSegment = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(5, 0));
-            LineSegment testSegment2 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-5, -5, 0));
+            LineSegment testSegment2 = new LineSegment(Point.Origin, Point.MakePointWithInches(-5, -5, 0));
             Point testPointT1 = Point.MakePointWithInches(3, 0);
             Point testPointT2 = Point.MakePointWithInches(0, 0);
             Point testPointT3 = Point.MakePointWithInches(5, 0);
@@ -208,7 +208,7 @@ namespace GeometryClassLibraryTest
         {
             Point pointToRotate = Point.MakePointWithInches(3, 1, 2);
 
-            Line axisLine = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 1));
+            Line axisLine = new Line(Point.Origin, Point.MakePointWithInches(0, 0, 1));
             Point actualResult = pointToRotate.MirrorAcross(axisLine);
 
             Point expectedResult = Point.MakePointWithInches(-3, -1, 2);
@@ -285,7 +285,7 @@ namespace GeometryClassLibraryTest
 
             Point displacementPoint = Point.MakePointWithInches(1, -1, 1);
 
-            Angle angleAboutZAxis = new Angle(new Degree(), 45);
+            Angle angleAboutZAxis = Angle.RightAngle / 2;
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(new Degree(), 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);
@@ -303,7 +303,7 @@ namespace GeometryClassLibraryTest
         {
             Point point1 = Point.MakePointWithInches(1, 1, 0);
 
-            Angle angleAboutZAxis = new Angle(new Degree(), 45);
+            Angle angleAboutZAxis = Angle.RightAngle / 2;
             Rotation zRotation = new Rotation(Line.ZAxis, angleAboutZAxis);
             Angle angleAboutXAxis = new Angle(new Degree(), 112);
             Rotation xRotation = new Rotation(Line.XAxis, angleAboutXAxis);

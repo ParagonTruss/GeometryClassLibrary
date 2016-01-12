@@ -30,7 +30,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees towards x
-            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, new Angle(new Degree(), -90)), Point.MakePointWithInches(8, 0));
+            Shift ninetyShift = new Shift(new Rotation(Line.ZAxis, -1 * Angle.RightAngle), Point.MakePointWithInches(8, 0));
             Polyhedron result = polyhedron.Shift(ninetyShift);
 
             result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(8, 0), Point.MakePointWithInches(16, 0))).Should().BeTrue();
@@ -46,11 +46,11 @@ namespace GeometryClassLibraryTest
 
 
             //rotate 90 degrees towards z
-            Shift nintyShift = new Shift(new Rotation(Line.XAxis, new Angle(new Degree(), 90)));
+            Shift nintyShift = new Shift(new Rotation(Line.XAxis, Angle.RightAngle));
             Polyhedron result = polyhedron.Shift(nintyShift);
 
-            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
-            result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
+            result.LineSegments.Contains(new LineSegment(Point.Origin, Point.MakePointWithInches(4, 0, 0))).Should().BeTrue();
             result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 8))).Should().BeTrue();
             result.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
         }
@@ -62,9 +62,9 @@ namespace GeometryClassLibraryTest
 
 
             //rotate 90 degrees towards z
-            Angle zAngle = new Angle(new Degree(), 90);
+            Angle zAngle = Angle.RightAngle;
             Rotation zRotation = new Rotation(Line.ZAxis, zAngle);
-            Angle xAngle = new Angle(new Degree(), 90); //This is the X axis
+            Angle xAngle = Angle.RightAngle; //This is the X axis
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Shift ninetyShift = new Shift(new List<Rotation>() { zRotation, xRotation });
             Polyhedron shifted = polyhedron.Shift(ninetyShift);
@@ -81,22 +81,22 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(new Degree(), 90);
+            Angle xAngle = Angle.RightAngle;
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
 
             Polyhedron s = polyhedron.Shift(xRotation);
 
-            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(4, 0, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(Point.Origin, Point.MakePointWithInches(4, 0, 0))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 8))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(0, 0, 8))).Should().BeTrue();
-            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 8), Point.MakePointWithInches(0, 0, 0))).Should().BeTrue(); //from y axis to z axis
+            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 8), Point.Origin)).Should().BeTrue(); //from y axis to z axis
 
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, -3, 0), Point.MakePointWithInches(4, -3, 0))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, -3, 0), Point.MakePointWithInches(4, -3, 8))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, -3, 8), Point.MakePointWithInches(0, -3, 8))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, -3, 8), Point.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //from y axis to z axis
 
-            s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //no change
+            s.LineSegments.Contains(new LineSegment(Point.Origin, Point.MakePointWithInches(0, -3, 0))).Should().BeTrue(); //no change
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, -3, 0))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(4, 0, 8), Point.MakePointWithInches(4, -3, 8))).Should().BeTrue();
             s.LineSegments.Contains(new LineSegment(Point.MakePointWithInches(0, 0, 8), Point.MakePointWithInches(0, -3, 8))).Should().BeTrue(); //from y axis to z axis
@@ -130,7 +130,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(new Degree(), 90);
+            Angle xAngle = Angle.RightAngle;
             Rotation xRotation = new Rotation(Line.XAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(1, -2, 5);
             Shift ninetyShift = new Shift(xRotation, displacementPoint);
@@ -188,7 +188,7 @@ namespace GeometryClassLibraryTest
             Polyhedron polyhedron = new TestRectangularBox2();
 
             //rotate 90 degrees toward z
-            Angle xAngle = new Angle(new Degree(), 90);
+            Angle xAngle = Angle.RightAngle;
             Line testAxis = new Line(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 0, 1));
             Rotation xRotation = new Rotation(testAxis, xAngle);
             Point displacementPoint = Point.MakePointWithInches(1, 3, -4);
@@ -204,7 +204,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_Slice_Across()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
@@ -260,7 +260,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_Slice_Diagonal()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
@@ -316,7 +316,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_Slice_Multiple()
         {
-            Point bottomLeft = Point.MakePointWithInches(0, 0, 0);
+            Point bottomLeft = Point.Origin;
             Point topLeft = Point.MakePointWithInches(0, 12, 0);
             Point bottomRight = Point.MakePointWithInches(4, 0, 0);
             Point topRight = Point.MakePointWithInches(4, 12, 0);
@@ -410,7 +410,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_SliceAtVertex()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
@@ -463,7 +463,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_SliceThroughOppositeEdges()
         {
-            Point bottomPoint1 = Point.MakePointWithInches(0, 0, 0);
+            Point bottomPoint1 = Point.Origin;
             Point bottomPoint2 = Point.MakePointWithInches(0, 12, 0);
             Point bottomPoint3 = Point.MakePointWithInches(4, 12, 0);
             Point bottomPoint4 = Point.MakePointWithInches(4, 0, 0);
@@ -512,7 +512,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_DoesContainPointAlongSides()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);
@@ -547,7 +547,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polyhedron_Vertices()
         {
-            Point basePoint = Point.MakePointWithInches(0, 0, 0);
+            Point basePoint = Point.Origin;
             Point topLeftPoint = Point.MakePointWithInches(0, 12, 0);
             Point bottomRightPoint = Point.MakePointWithInches(4, 0, 0);
             Point topRightPoint = Point.MakePointWithInches(4, 12, 0);

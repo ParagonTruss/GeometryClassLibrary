@@ -1413,7 +1413,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_GetAnglesOutOfRotationMatrix()
         {
-            Angle xAngle = new Angle(new Degree(), 90);
+            Angle xAngle = Angle.RightAngle;
             Angle yAngle = new Angle(new Degree(), -33).ProperAngle;
             Angle zAngle = new Angle(new Degree(), 40);
 

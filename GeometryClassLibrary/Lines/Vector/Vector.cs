@@ -7,7 +7,7 @@ using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AreaUnit;
 
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
 
 namespace GeometryClassLibrary
 {
@@ -397,7 +397,7 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-            return vector1.AngleBetween(vector2) == new Angle(new Degree(), 180);
+            return vector1.AngleBetween(vector2) == Angle.StraightAngle;
         }
 
         /// <summary>
@@ -506,9 +506,9 @@ namespace GeometryClassLibrary
             Vector vector1 = this;
             Vector vector2 = vector;
 
-            var xTerm =( vector1.XComponent * vector2.XComponent).ValueIn(new SquareInch());
-            var yTerm =( vector1.YComponent * vector2.YComponent).ValueIn(new SquareInch()); 
-            var zTerm = (vector1.ZComponent * vector2.ZComponent).ValueIn(new SquareInch()); 
+            var xTerm =( vector1.XComponent * vector2.XComponent).MeasurementIn(new SquareInch());
+            var yTerm =( vector1.YComponent * vector2.YComponent).MeasurementIn(new SquareInch()); 
+            var zTerm = (vector1.ZComponent * vector2.ZComponent).MeasurementIn(new SquareInch()); 
             
             var sum = xTerm + yTerm + zTerm;
             return new Area(new SquareInch(),sum);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using MoreLinq;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InchesSquaredUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
@@ -1140,7 +1140,7 @@ namespace GeometryClassLibrary
             }
             for (int i = 0; i < 3; i++)//we only need to check 3 angles, because the last angle is determined by the need to close the polygon.
             {
-                if (LineSegments[i].AngleBetween(LineSegments[i + 1]) != new Angle(new Degree(), 90))
+                if (LineSegments[i].AngleBetween(LineSegments[i + 1]) != Angle.RightAngle)
                 {
                     return false;
                 }

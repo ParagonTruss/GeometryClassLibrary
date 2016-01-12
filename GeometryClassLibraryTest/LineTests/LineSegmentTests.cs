@@ -16,7 +16,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_JSON()
         {
-            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
 
             var json = JsonConvert.SerializeObject(lineSegment);
             LineSegment deserializedLineSegment = JsonConvert.DeserializeObject<LineSegment>(json);
@@ -51,9 +51,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_SegmentIntersectionTest()
         {
-            LineSegment line1 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 1, 1));
+            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
             LineSegment line2 = new LineSegment(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
-            LineSegment line3 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(3, -4, 2));
+            LineSegment line3 = new LineSegment(Point.Origin, Point.MakePointWithInches(3, -4, 2));
             LineSegment line4 = new LineSegment(Point.MakePointWithInches(0, -4, 0), Point.MakePointWithInches(3, 0, 2));
 
             Point intersectT1 = line1.IntersectWithSegment(line2);
@@ -68,9 +68,9 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_LineIntersectionTest()
         {
-            LineSegment line1 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 1, 1));
+            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
             Line line2 = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
-            LineSegment line3 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-5, -5, 0));
+            LineSegment line3 = new LineSegment(Point.Origin, Point.MakePointWithInches(-5, -5, 0));
             Line line4 = new Line(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
 
             Point intersectT1 = line1.IntersectWithLine(line2);
@@ -83,7 +83,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_MidpointTest()
         {
-            LineSegment line1 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(2, 2, 2));
+            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(2, 2, 2));
             Point expected = Point.MakePointWithInches(1, 1, 1);
             (line1.MidPoint == expected).Should().BeTrue();
         }
@@ -91,7 +91,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_HypotheticalIntersectionTest()
         {
-            LineSegment line1 = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(-5, -5, 0));
+            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(-5, -5, 0));
             LineSegment line2 = new LineSegment(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
 
             Point intersectT1 = line1.HypotheticalIntersection(line2);
@@ -129,12 +129,12 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void LineSegment_3dRotateTest_Orthogonal()
         {
-            LineSegment originalSegment = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, 5, 0));
-            Line axis = new Line(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(1, 0, 0));
-            Angle toRotate = new Angle(new Degree(), 180);
+            LineSegment originalSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(0, 5, 0));
+            Line axis = new Line(Point.Origin, Point.MakePointWithInches(1, 0, 0));
+            Angle toRotate = Angle.StraightAngle;
 
             LineSegment actualSegment = originalSegment.Rotate(new Rotation(axis, toRotate));
-            LineSegment expectedSegment = new LineSegment(Point.MakePointWithInches(0, 0, 0), Point.MakePointWithInches(0, -5, 0));
+            LineSegment expectedSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(0, -5, 0));
             (actualSegment == expectedSegment).Should().BeTrue();
         }
 

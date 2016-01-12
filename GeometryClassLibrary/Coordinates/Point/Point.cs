@@ -7,6 +7,7 @@ using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.FootUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.MillimeterUnit;
 //using VisualGeometryDebugger;
 
@@ -97,8 +98,13 @@ namespace GeometryClassLibrary
             _y = new Distance(passedType, passedY);
             _z = new Distance(passedType, passedZ);
         }
-
-        public Point(IList<Distance> coordinates)
+        public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ)
+        {
+            _x = new Distance(passedType, passedX);
+            _y = new Distance(passedType, passedY);
+            _z = new Distance(passedType, passedZ);
+        }
+        public Point(List<Distance> coordinates)
         {
             _x = coordinates[0];
             _y = coordinates[1];
@@ -115,6 +121,9 @@ namespace GeometryClassLibrary
             _z = toCopy.Z;
         }
 
+        public Point(Unit<DistanceType> x, Unit<DistanceType> y, Unit<DistanceType> z)
+            : this((Distance)x,(Distance)y, (Distance)z)
+        { }
         #endregion
 
         #region Overloaded Operators
@@ -259,7 +268,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point MirrorAcross(Line passedAxisLine)
         {
-            return this.Rotate3D(new Rotation(passedAxisLine, new Angle(new Degree(), 180)));
+            return this.Rotate3D(new Rotation(passedAxisLine, Angle.StraightAngle));
         }
 
         /// <summary>
@@ -415,33 +424,22 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Static Factory Methods
-
+        public static Point MakePointWithFeet(double x, double y, double z)
+        {
+            return new Point(new Foot(), x, y, z);
+        }
         public static Point MakePointWithInches(double x, double y, double z = 0)
         {
-            var unitType = new Inch();
-            Distance xDim = new Distance(unitType, x); 
-            Distance yDim = new Distance(unitType, y);
-            Distance zDim = new Distance(unitType, z);
-
-            return new Point(xDim, yDim, zDim);
+            return new Point(new Inch(), x, y, z);
         }
         public static Point MakePointWithInches(Measurement x, Measurement y, Measurement z)
         {
-            var unitType = new Inch();
-            Distance xDim = new Distance(unitType, x);
-            Distance yDim = new Distance(unitType, y);
-            Distance zDim = new Distance(unitType, z);
-
-            return new Point(xDim, yDim, zDim);
+            return new Point(new Inch(), x, y, z);
         }
 
-        public static Point MakePointWithMillimeters(double inputValue1, double inputValue2, double inputValue3 = 0)
+        public static Point MakePointWithMillimeters(double x, double y, double z = 0)
         {
-            Distance dim1 = new Distance(new Millimeter(), inputValue1);
-            Distance dim2 = new Distance(new Millimeter(), inputValue2);
-            Distance dim3 = new Distance(new Millimeter(), inputValue3);
-
-            return new Point(dim1, dim2, dim3);
+            return new Point(new Millimeter(), x, y, z);
         }
 
         public static Point MakePointWithInches(string inputString1, string inputString2)
@@ -470,9 +468,8 @@ namespace GeometryClassLibrary
 
             return toReturn;
         }
-
-    
-
         #endregion
+
+        
     }
 }
