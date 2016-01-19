@@ -86,7 +86,7 @@ namespace GeometryClassLibraryTest
             result2.Should().Be(line1);
         }
 
-        [Ignore]
+ 
         [Test()]
         public void LineList_LargestXInterceptIn2D()
         {

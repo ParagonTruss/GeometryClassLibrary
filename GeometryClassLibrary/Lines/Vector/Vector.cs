@@ -301,8 +301,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
         /// </summary>
-        /// <param name="projectOnto">the Line on which to project the LineSegment</param>
-        /// <returns></returns>
         public Vector ProjectOntoLine(Line projectOnto)
         {
             if (this.IsCoplanarWith(projectOnto))
@@ -317,8 +315,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects this vector on the given plane
         /// </summary>
-        /// <param name="projectOnto">The Plane to project this Vector onto</param>
-        /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
         public new Vector ProjectOntoPlane(Plane plane)
         {
             //find the line in the plane and then project this line onto it
@@ -380,8 +376,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in opposite directions 
         /// </summary>
-        /// <param name="v1">vector to compare against</param>
-        /// <returns></returns>
         public bool HasOppositeDirectionOf(Vector passedVector)
         {
             Vector vector1 = this;
@@ -400,10 +394,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in the same or opposite directions.
         /// </summary>
-        public bool HasSameOrOppositeDirectionAs(Vector v1)
+        public bool HasSameOrOppositeDirectionAs(Vector vector)
         {
-            bool sameDirection = this.HasSameDirectionAs(v1);
-            bool oppositeDirections = this.HasOppositeDirectionOf(v1);
+            bool sameDirection = this.HasSameDirectionAs(vector);
+            bool oppositeDirections = this.HasOppositeDirectionOf(vector);
 
             return sameDirection || oppositeDirections;
         }
@@ -460,8 +454,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Performs the Shift on this vector
         /// </summary>
-        /// <param name="passedShift"></param>
-        /// <returns></returns>
         public new Vector Shift(Shift passedShift)
         {
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
@@ -470,9 +462,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
-        /// <param name="passedDirection"></param>
-        /// <param name="passedDisplacement"></param>
-        /// <returns></returns>
         public new Vector Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
@@ -489,7 +478,6 @@ namespace GeometryClassLibrary
         {
             if (Magnitude == Distance.ZeroDistance)
             {
-                // return new Vector(Point.Origin);
                 throw new Exception();
             }
             else return Direction.UnitVector(passedType);

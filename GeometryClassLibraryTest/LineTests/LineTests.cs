@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GeometryClassLibrary;
 using Newtonsoft.Json;
@@ -506,8 +507,7 @@ namespace GeometryClassLibraryTest
 
             List<Line> lines = new List<Line> { line2, line3, line4, line1 };
 
-
-            lines.Sort();
+            lines = lines.OrderBy(line => line.XInterceptIn2D()).ToList();
 
             lines[0].Should().Be(line1);
             lines[1].Should().Be(line3);
