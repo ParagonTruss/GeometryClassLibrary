@@ -15,18 +15,15 @@ namespace GeometryClassLibrary
         /// Returns the line with the smallest x intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>
-        /// <param name="passedLines">The list of lines to find the smallest x from</param>
-        /// <returns>Returns the Line with the smallest x intercept</returns>
-        public static Line LineWithSmallestXInterceptIn2D(this IList<Line> passedLines)
+        public static Line LineWithLowestXInterceptIn2D(this IList<Line> passedLines)
         {
-            var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
-            if (withoutNullIntercepts.Count() == 0)
-            {
-                return null;
-            }
-            var largestXLine = withoutNullIntercepts.MinBy(line => (line.XInterceptIn2D()).AbsoluteValue());
+            var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
-            return largestXLine;
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D()));
+            var list = dictionary.OrderBy(pair =>(pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>
@@ -38,13 +35,12 @@ namespace GeometryClassLibrary
         public static Line LineWithLargestXInterceptIn2D(this IList<Line> passedLines)
         {
             var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
-            if (withoutNullIntercepts.Count() == 0)
-            {
-                return null;
-            }
-            var largestXLine = withoutNullIntercepts.MaxBy(line => (line.XInterceptIn2D()).AbsoluteValue());
 
-            return largestXLine;
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D()));
+            var list = dictionary.OrderByDescending(pair => (pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>
@@ -56,13 +52,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is closest to the specified point on the x-axis</returns>
         public static Line LineWithXInterceptIn2DClosestTo(this IList<Line> passedLines, Distance pointToFindTheClosestInterceptTo)
         {
-            if (passedLines.Count == 0)
-            {
-                return null;
-            }
-            var closestXLine = passedLines.Where(line => line.XInterceptIn2D() != null).MinBy(line => (line.XInterceptIn2D() - pointToFindTheClosestInterceptTo).AbsoluteValue());
-            
-            return closestXLine;
+            var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
+
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D() - pointToFindTheClosestInterceptTo));
+            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>
@@ -74,13 +70,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is farthest from the specified point on the x-axis</returns>
         public static Line LineWithXInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
         {
-            if (passedLines.Count == 0)
-            {
-                return null;
-            }
-            var farthestXLine = passedLines.Where(line => line.XInterceptIn2D() != null).MaxBy(line => (line.XInterceptIn2D() - pointToFindTheFarthestInterceptTo).AbsoluteValue());
+            var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
 
-            return farthestXLine;
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D() - pointToFindTheFarthestInterceptTo));
+            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>
@@ -91,13 +87,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line with the smallest y intercept</returns>
         public static Line LineWithSmallestYInterceptIn2D(this IList<Line> passedLines)
         {
-            if (passedLines.Count == 0)
-            {
-                return null;
-            }
-            var smallestYLine = passedLines.Where(line => line.YInterceptIn2D() != null).MinBy(line => (line.YInterceptIn2D()).AbsoluteValue());
+            var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
-            return smallestYLine;
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D()));
+            var list = dictionary.OrderBy(pair => pair.Value.InInches.Value);
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>
@@ -122,8 +118,9 @@ namespace GeometryClassLibrary
         {
             var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
-            var orderedLines = withoutNullIntercepts.OrderBy(line => (line.YInterceptIn2D() - pointToFindTheClosestInterceptTo).AbsoluteValue()).ToList();
-            var result = orderedLines.FirstOrDefault();
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D() - pointToFindTheClosestInterceptTo));
+            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
 
             return result;
         }
@@ -137,13 +134,13 @@ namespace GeometryClassLibrary
         /// <returns>Returns the Line whose intercept is farthest from the specified point on the y-axis</returns>
         public static Line LineWithYInterceptIn2DFarthestFrom(this IList<Line> passedLines, Distance pointToFindTheFarthestInterceptTo)
         {
-            if (passedLines.Count == 0)
-            {
-                return null;
-            }
-            var farYLine = passedLines.Where(line => line.YInterceptIn2D() != null).MaxBy(line => (line.YInterceptIn2D() - pointToFindTheFarthestInterceptTo).AbsoluteValue());
+            var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
-            return farYLine;
+            var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D() - pointToFindTheFarthestInterceptTo));
+            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.InInches.Value));
+            var result = list.FirstOrDefault().Key;
+
+            return result;
         }
 
         /// <summary>

@@ -172,9 +172,9 @@ namespace GeometryClassLibraryTest
             List<Point> vertices = new List<Point>() { point1, point2, point3, point4 };
             Polygon testPolygon = new Polygon(vertices);
 
-            Point testDiplacement = Point.MakePointWithInches(-1, 5, 4);
+            Point testDisplacement = Point.MakePointWithInches(-1, 5, 4);
 
-            Polygon actualPolygon = testPolygon.Translate(testDiplacement);
+            Polygon actualPolygon = testPolygon.Translate(testDisplacement);
 
             Point point5 = Point.Origin;
             Point point6 = Point.MakePointWithInches(0, 5, 4);
@@ -218,7 +218,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void Polygon_Contains_ContainsNotOnBoundary_Touches()
+        public void Polygon_Contains_ContainsOnInside_Touches()
         {
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(-1, 5, 0)));

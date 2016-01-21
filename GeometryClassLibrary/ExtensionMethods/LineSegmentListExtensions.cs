@@ -241,8 +241,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if all of the passed LineSegments are in the same plane, false otherwise
         /// </summary>
-        /// <param name="passedLine">passed LineSegments</param>
-        /// <returns></returns>
         public static bool AreAllParallel(this List<LineSegment> passedLineList)
         {
             for (int i = 0; i < passedLineList.Count - 1; i++)
