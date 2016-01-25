@@ -26,11 +26,10 @@ namespace GeometryClassLibraryTest
             list.Add(point1);
 
             point1 = Point.MakePointWithInches(3, 3, 3);
-            bool test = list[0] == point1;
-            Assert.Pass();
+			list[0].Should().NotBeSameAs(point1);
         }
+
         [Test()]
-        [ExpectedException(typeof(Exception))]
         public void Polygon_Constructor_NoSelfIntersections()
         {
             Point point1 = Point.MakePointWithInches(0, 0);
@@ -45,11 +44,12 @@ namespace GeometryClassLibraryTest
             Area area = correctPolygon.Area;
             area.Should().Be(new Area(new SquareInch(), 1));
 
-            //this part should throw an exception
-            Polygon badPolygon = new Polygon(verticesInWrongOrder);
+			Action polygonConstructor = () => new Polygon(verticesInWrongOrder);
+			polygonConstructor.ShouldThrow<Exception>();
         }
 
-        [Test()]
+		[Test()]
+		[Ignore("JSON")]
         public void Polygon_JSON()
         {
             Point basePoint = Point.MakePointWithInches(4, 4, 0);
@@ -67,8 +67,7 @@ namespace GeometryClassLibraryTest
             Console.WriteLine(json);
             Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
 
-            bool areEqual = (polygon == deserializedPolygon);
-            areEqual.Should().BeTrue();
+			polygon.Should().Be(deserializedPolygon);
         }
 
         [Test()]
@@ -108,12 +107,13 @@ namespace GeometryClassLibraryTest
 
 
             Polyhedron extrudedResult = frontRegion.Extrude(new Vector(Point.MakePointWithInches(0, 0, -4)));
-            extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
-            extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
-            extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();
-            extrudedResult.Polygons.Contains(bottomRegion).Should().BeTrue();
-            extrudedResult.Polygons.Contains(leftRegion).Should().BeTrue();
-            extrudedResult.Polygons.Contains(rightRegion).Should().BeTrue();
+			extrudedResult.Polygons.Should().Contain(frontRegion);
+			extrudedResult.Polygons.Should().Contain(frontRegion);
+			extrudedResult.Polygons.Should().Contain(backRegion);
+			extrudedResult.Polygons.Should().Contain(topRegion);
+			extrudedResult.Polygons.Should().Contain(bottomRegion);
+			extrudedResult.Polygons.Should().Contain(leftRegion);
+			extrudedResult.Polygons.Should().Contain(rightRegion);
         }
 
         [Test()]
@@ -138,7 +138,7 @@ namespace GeometryClassLibraryTest
             expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon expectedPolygon = new Polygon(expectedLineSegments);
 
-            (actualPolygon == expectedPolygon).Should().BeTrue();
+			actualPolygon.Should().Be(expectedPolygon);
         }
 
         [Test()]
@@ -155,10 +155,9 @@ namespace GeometryClassLibraryTest
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
-            List<LineSegment> expectedLineSegments = new List<LineSegment>();
-            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(5.238195, 1.6816970, -1.919892), Point.MakePointWithInches(1.31623019, -1.08627088, -5.229959)));
-            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(1.3162301, -1.0862708, -5.229959), Point.MakePointWithInches(2.843930, -1.46406412, -0.379865)));
-            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(2.8439301, -1.4640641, -0.379865), Point.MakePointWithInches(5.238195, 1.681697053, -1.9198923)));
+			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(5.238195, 1.6816970, -1.919892), Point.MakePointWithInches(1.31623019, -1.08627088, -5.229959))).Should().BeTrue();
+			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(1.3162301, -1.0862708, -5.229959), Point.MakePointWithInches(2.843930, -1.46406412, -0.379865))).Should().BeTrue();
+			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(2.8439301, -1.4640641, -0.379865), Point.MakePointWithInches(5.238195, 1.681697053, -1.9198923))).Should().BeTrue();
         }
 
         [Test()]
@@ -202,9 +201,9 @@ namespace GeometryClassLibraryTest
             foreach (LineSegment line in testPolygon.LineSegments)
             {
                 planeCopy.LineSegments.Contains(line).Should().BeTrue();
-            }
-            (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeTrue();
-            (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
+			}
+			planeCopy.BasePoint.Should().Be(testPolygon.BasePoint);
+			planeCopy.NormalVector.Should().Be(testPolygon.NormalVector);
 
             //now make sure the copy is independent by shifting it and then testing again
             planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, Angle.RightAngle / 2), Point.MakePointWithInches(1, 4, -2)));
@@ -213,8 +212,8 @@ namespace GeometryClassLibraryTest
             {
                 planeCopy.LineSegments.Contains(line).Should().BeFalse();
             }
-            (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeFalse();
-            (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeFalse();
+			planeCopy.BasePoint.Should().NotBe(testPolygon.BasePoint);
+			planeCopy.NormalVector.Should().NotBe(testPolygon.NormalVector);
         }
 
         [Test()]

@@ -14,6 +14,7 @@ namespace GeometryClassLibraryTest
     public class LineSegmentTests
     {
         [Test()]
+        [Ignore("JSON")]
         public void LineSegment_JSON()
         {
             LineSegment lineSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));

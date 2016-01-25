@@ -57,6 +57,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
+        [Ignore("JSON")]
         public void Direction_JSON()
         {
             Direction direction = new Direction(new Angle(new Degree(), 14), new Angle(new Degree(), 37));
