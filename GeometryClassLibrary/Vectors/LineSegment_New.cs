@@ -9,7 +9,7 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public class LineSegment_New : IVector<DistanceType>
+    public sealed class LineSegment_New : IVector<DistanceType>
     {
         #region Properties
         public Point BasePoint { get; private set; }

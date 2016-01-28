@@ -56,5 +56,10 @@ namespace GeometryClassLibrary.Vectors
         {
             return new MeasurementVector(X.Negate(), Y.Negate(), Z.Negate());
         }
+
+        public static MeasurementVector operator /(MeasurementVector vector, double divisor)
+        {
+            return new MeasurementVector(vector.X/divisor, vector.Y/divisor, vector.Z/divisor);
+        }
     }
 }

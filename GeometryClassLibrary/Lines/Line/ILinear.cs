@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary.Lines.Line
 {
-    interface ILine
+    interface ILinear
     {
         Point BasePoint { get; }
         Direction Direction { get; }

@@ -19,7 +19,7 @@ namespace GeometryClassLibrary.Vectors
         public Point ApplicationPoint { get; private set; } = Point.Origin;
 
         public Unit<T> Magnitude { get { return this.Magnitude(); } }
-        public Direction Direction { get { return this.Direction(); } }    
+        public Direction Direction { get { return this.MeasurementVector.Direction(); } }    
         #endregion
 
         #region Constructors
@@ -69,6 +69,13 @@ namespace GeometryClassLibrary.Vectors
         {
             this.UnitType = unitType;
             this.MeasurementVector = underlyingVector;
+        }
+
+        public Vector_New(Point applicationPoint, IMeasurementVector underlyingVector, T unitType)
+        {
+            this.ApplicationPoint = applicationPoint; 
+            this.MeasurementVector = underlyingVector;
+            this.UnitType = unitType;
         }
         #endregion
     }
