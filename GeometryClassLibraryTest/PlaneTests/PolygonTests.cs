@@ -26,10 +26,11 @@ namespace GeometryClassLibraryTest
             list.Add(point1);
 
             point1 = Point.MakePointWithInches(3, 3, 3);
-			list[0].Should().NotBeSameAs(point1);
+            bool test = list[0] == point1;
+            Assert.Pass();
         }
-
         [Test()]
+        [ExpectedException(typeof(Exception))]
         public void Polygon_Constructor_NoSelfIntersections()
         {
             Point point1 = Point.MakePointWithInches(0, 0);
@@ -44,12 +45,12 @@ namespace GeometryClassLibraryTest
             Area area = correctPolygon.Area;
             area.Should().Be(new Area(new SquareInch(), 1));
 
-			Action polygonConstructor = () => new Polygon(verticesInWrongOrder);
-			polygonConstructor.ShouldThrow<Exception>();
+            //this part should throw an exception
+            Polygon badPolygon = new Polygon(verticesInWrongOrder);
         }
 
-		[Test()]
-		[Ignore("JSON")]
+        [Test()]
+        [Ignore("JSON")]
         public void Polygon_JSON()
         {
             Point basePoint = Point.MakePointWithInches(4, 4, 0);
@@ -67,7 +68,8 @@ namespace GeometryClassLibraryTest
             Console.WriteLine(json);
             Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
 
-			polygon.Should().Be(deserializedPolygon);
+            bool areEqual = (polygon == deserializedPolygon);
+            areEqual.Should().BeTrue();
         }
 
         [Test()]
@@ -107,13 +109,12 @@ namespace GeometryClassLibraryTest
 
 
             Polyhedron extrudedResult = frontRegion.Extrude(new Vector(Point.MakePointWithInches(0, 0, -4)));
-			extrudedResult.Polygons.Should().Contain(frontRegion);
-			extrudedResult.Polygons.Should().Contain(frontRegion);
-			extrudedResult.Polygons.Should().Contain(backRegion);
-			extrudedResult.Polygons.Should().Contain(topRegion);
-			extrudedResult.Polygons.Should().Contain(bottomRegion);
-			extrudedResult.Polygons.Should().Contain(leftRegion);
-			extrudedResult.Polygons.Should().Contain(rightRegion);
+            extrudedResult.Polygons.Contains(frontRegion).Should().BeTrue();
+            extrudedResult.Polygons.Contains(backRegion).Should().BeTrue();
+            extrudedResult.Polygons.Contains(topRegion).Should().BeTrue();
+            extrudedResult.Polygons.Contains(bottomRegion).Should().BeTrue();
+            extrudedResult.Polygons.Contains(leftRegion).Should().BeTrue();
+            extrudedResult.Polygons.Contains(rightRegion).Should().BeTrue();
         }
 
         [Test()]
@@ -138,7 +139,7 @@ namespace GeometryClassLibraryTest
             expectedLineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0, 4), Point.Origin));
             Polygon expectedPolygon = new Polygon(expectedLineSegments);
 
-			actualPolygon.Should().Be(expectedPolygon);
+            (actualPolygon == expectedPolygon).Should().BeTrue();
         }
 
         [Test()]
@@ -155,9 +156,10 @@ namespace GeometryClassLibraryTest
 
             Polygon actualPolygon = testPolygon.Rotate(new Rotation(rotationAxis, rotationAngle));
 
-			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(5.238195, 1.6816970, -1.919892), Point.MakePointWithInches(1.31623019, -1.08627088, -5.229959))).Should().BeTrue();
-			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(1.3162301, -1.0862708, -5.229959), Point.MakePointWithInches(2.843930, -1.46406412, -0.379865))).Should().BeTrue();
-			actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(2.8439301, -1.4640641, -0.379865), Point.MakePointWithInches(5.238195, 1.681697053, -1.9198923))).Should().BeTrue();
+            List<LineSegment> expectedLineSegments = new List<LineSegment>();
+            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(5.238195, 1.6816970, -1.919892), Point.MakePointWithInches(1.31623019, -1.08627088, -5.229959)));
+            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(1.3162301, -1.0862708, -5.229959), Point.MakePointWithInches(2.843930, -1.46406412, -0.379865)));
+            actualPolygon.Contains(new LineSegment(Point.MakePointWithInches(2.8439301, -1.4640641, -0.379865), Point.MakePointWithInches(5.238195, 1.681697053, -1.9198923)));
         }
 
         [Test()]
@@ -201,9 +203,9 @@ namespace GeometryClassLibraryTest
             foreach (LineSegment line in testPolygon.LineSegments)
             {
                 planeCopy.LineSegments.Contains(line).Should().BeTrue();
-			}
-			planeCopy.BasePoint.Should().Be(testPolygon.BasePoint);
-			planeCopy.NormalVector.Should().Be(testPolygon.NormalVector);
+            }
+            (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeTrue();
+            (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeTrue();
 
             //now make sure the copy is independent by shifting it and then testing again
             planeCopy = planeCopy.Shift(new Shift(new Rotation(Line.XAxis, Angle.RightAngle / 2), Point.MakePointWithInches(1, 4, -2)));
@@ -212,8 +214,8 @@ namespace GeometryClassLibraryTest
             {
                 planeCopy.LineSegments.Contains(line).Should().BeFalse();
             }
-			planeCopy.BasePoint.Should().NotBe(testPolygon.BasePoint);
-			planeCopy.NormalVector.Should().NotBe(testPolygon.NormalVector);
+            (planeCopy.BasePoint == testPolygon.BasePoint).Should().BeFalse();
+            (planeCopy.NormalVector == testPolygon.NormalVector).Should().BeFalse();
         }
 
         [Test()]
@@ -391,13 +393,13 @@ namespace GeometryClassLibraryTest
             Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
             intersect1.Should().Be(expected);
             intersect1.Should().Be(intersect2);
-            
+
         }
 
         [Test()]
         public void Polygon_OverlappingPolygon()
         {
-            
+
             List<LineSegment> bounds = new List<LineSegment>();
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(0, 3, 0)));
             bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(4, 1, 0)));
@@ -445,7 +447,7 @@ namespace GeometryClassLibraryTest
             var polygon2 = new Polygon(vertices2);
 
             var result = polygon1.OverlappingPolygon(polygon2);
-            
+
             var expectedVertices = new List<Point>() {
                 Point.MakePointWithInches(3.5,0),
                 Point.MakePointWithInches(7,0),
@@ -465,7 +467,7 @@ namespace GeometryClassLibraryTest
             Point point4 = Point.MakePointWithInches(4, 1, 0);
             List<Point> vertices1 = new List<Point>(){ point1, point2, point3, point4 };
             Polygon upsideDownSquare = new Polygon(vertices1);
-           
+
             Line normal1 = upsideDownSquare.NormalLine;
             (normal1.Direction == new Direction(0, 0, -1)).Should().BeTrue();
             (new Plane(upsideDownSquare).Contains(normal1.BasePoint)).Should().BeTrue();
@@ -476,7 +478,7 @@ namespace GeometryClassLibraryTest
             Point topPoint3 = Point.MakePointWithInches(2, 0, 5);
             Point topPoint4 = Point.MakePointWithInches(2, 2, 5);
             Point topPoint5 = Point.MakePointWithInches(0, 2, 5);
-            
+
             Polygon concavePentagon = new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }, false);
 
             Line normal2 = concavePentagon.NormalLine;
@@ -488,7 +490,7 @@ namespace GeometryClassLibraryTest
             bounds3.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(4, 3, 0)));
             bounds3.Add(new LineSegment(Point.MakePointWithInches(3, 2, 1), Point.MakePointWithInches(4, 3, 0)));
             Polygon testPolygon3 = new Polygon(bounds3);
-            
+
             Line normal3 = testPolygon3.NormalLine;
             (normal3.Direction == new Direction(-1, 2, 1)).Should().BeTrue();
             (new Plane(testPolygon3).Contains(normal3.BasePoint)).Should().BeTrue();   
@@ -891,7 +893,7 @@ namespace GeometryClassLibraryTest
             Point front2 = Point.MakePointWithInches(4, 0, 0);
             Point front3 = Point.MakePointWithInches(4, 0, 2);
             Point front4 = Point.MakePointWithInches(0, 0, 2);
-            
+
             Point back1 = Point.MakePointWithInches(0, 12, 0);
             Point back2 = Point.MakePointWithInches(4, 12, 0);
             Point back3 = Point.MakePointWithInches(4, 12, 2);
@@ -899,16 +901,16 @@ namespace GeometryClassLibraryTest
 
             Polygon frontFace = new Polygon(new List<Point> { front1, front2, front3, front4 });
             Polygon backFace = new Polygon(new List<Point> { back1, back2, back3, back4 });
-           
+
             Line intersecting1 = new Line(Point.MakePointWithInches(2, 0, 1), Point.MakePointWithInches(2, 1, 1));
             Line intersecting2 = new Line(Point.MakePointWithInches(2, 0, .5), Point.MakePointWithInches(5, 12, 1));
             Line intersectingAlongSide = new Line(Point.Origin, Point.MakePointWithInches(0, 1, 0));
             Line noIntersect = new Line(Point.MakePointWithInches(5, 0, 0), Point.MakePointWithInches(5, 1, 0));
 
-            
+
             frontFace.DoesIntersect(intersecting1).Should().BeTrue();
             backFace.DoesIntersect(intersecting1).Should().BeTrue();
-            
+
         }
 
         [Test()]
@@ -958,13 +960,13 @@ namespace GeometryClassLibraryTest
             LineSegment testSegment = new LineSegment(new Vector(Point.Origin, Direction.Left, new Distance(1, Inches)));
             testSegment = testSegment.Rotate(new Rotation(Line.ZAxis, new Angle(33, Degrees)));
             Rectangle myRectangle = new Rectangle(testSegment, new Distance(1, Inches));
-            
+
             Area myArea = myRectangle.Area;
             (myArea == new Area(new SquareInch(), 1)).Should().BeTrue();
             myRectangle.IsRectangle().Should().BeTrue();
-           
+
         }
-       
+
         [Test]
         public void Polygon_RemoveRegion()
         {
@@ -1061,7 +1063,7 @@ namespace GeometryClassLibraryTest
             (results3.Count == 0).Should().BeTrue();
         }
 
-        
+
         [Test]
         public void Polygon_OverlappingPolygons()
         {
@@ -1079,7 +1081,7 @@ namespace GeometryClassLibraryTest
 
         }
 
-       
+
         [Test]
         public void Polygon_OverlappingPolygons_NoOverlap()
         {

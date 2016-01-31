@@ -11,7 +11,7 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class LineSegment : Vector, IComparable<LineSegment>, IEdge
+    public partial class LineSegment : Vector, IEdge, IEquatable<LineSegment>
     {
         #region Properties and Fields
 
@@ -21,7 +21,6 @@ namespace GeometryClassLibrary
         public virtual Distance Length
         {
             get { return base.Magnitude; }
-            set { base.Magnitude = value; }
         }
 
         /// <summary>
@@ -155,38 +154,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Determines if the first segment is longer than the second.
-        /// </summary>
-        public static bool operator >(LineSegment segment1, LineSegment segment2)
-        {
-            if (segment1 == null || segment2 == null)
-            {
-                throw new Exception("No comparison can be made, objects don't exist!");
-            }
-            if (segment1.Magnitude > segment2.Magnitude)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Determines if the first segment is shorter than the second.
-        /// </summary>
-        public static bool operator <(LineSegment segment1, LineSegment segment2)
-        {
-            if (segment1 == null || segment2 == null)
-            {
-                throw new Exception("No comparison can be made, objects don't exist!");
-            }
-            if (segment1.Magnitude < segment2.Magnitude)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// does the same thing as ==
         /// </summary>
         public override bool Equals(object obj)
@@ -206,17 +173,20 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
-        /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
+        /// does the same thing as ==
         /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(LineSegment other)
+        public bool Equals(LineSegment segment)
         {
-            if (this.Length.Equals(other.Length))
-                return 0;
-            else
-                return this.Length.CompareTo(other.Length);
+            if (segment == null)
+            {
+                return false;
+            }
+
+            // if the two points' x and y are equal, returns true
+            bool pointsAreEqual = segment.BasePoint.Equals(this.BasePoint) && segment.EndPoint.Equals(this.EndPoint);
+            bool pointsAreReverse = segment.BasePoint.Equals(this.EndPoint) && segment.EndPoint.Equals(this.BasePoint);
+
+            return pointsAreEqual || pointsAreReverse;  
         }
 
         /// <summary>
@@ -313,10 +283,6 @@ namespace GeometryClassLibrary
                 //add the two segments to the return list
                 returnLines.Add(new LineSegment(this.BasePoint, spotToSliceAt));
                 returnLines.Add(new LineSegment(spotToSliceAt, this.EndPoint));
-
-                //sort them so the longest is first (sort is ascending by default so we need to reverse if)
-                returnLines.Sort();
-                returnLines.Reverse();
 
                 return returnLines;
             }
@@ -432,52 +398,37 @@ namespace GeometryClassLibrary
         /// </summary>
         public LineSegment OverlappingSegment(LineSegment segment)
         {
-            //variable to store the overlap, in.
-            //check if its null before returning it
-            Vector vector = null;
-            if (this.Contains(segment.BasePoint))
+            HashSet<Point> pointList = new HashSet<Point>();
+            foreach(Point point in segment.EndPoints)
             {
-                if (this.Contains(segment.EndPoint))
+                if(this.Contains(point))
                 {
-                    return new LineSegment(segment);
-                }
-                if (this.HasSameDirectionAs(segment))
-                {
-                    vector = new Vector(segment.BasePoint, this.EndPoint);
-                }
-                if (this.HasOppositeDirectionOf(segment))
-                {
-                    vector = new Vector(segment.BasePoint, this.BasePoint);
+                    pointList.Add(point);
                 }
             }
-            if (segment.Contains(this.BasePoint))
+            foreach(Point point in this.EndPoints)
             {
-                if (segment.Contains(this.EndPoint))
+                if(segment.Contains(point))
                 {
-                    return new LineSegment(this);
-                }
-                if (segment.HasSameDirectionAs(this))
-                {
-                    vector = new Vector(this.BasePoint, segment.EndPoint);
-                }
-                if (segment.HasOppositeDirectionOf(this))
-                {
-                    vector = new Vector(this.BasePoint, segment.BasePoint);
+                    pointList.Add(point);
                 }
             }
-            if (vector != null && vector.Magnitude != Distance.ZeroDistance)
+            if (pointList.Count == 2)
             {
-                return new LineSegment(vector);
+                return new LineSegment(pointList.ElementAt(0), pointList.ElementAt(1));
             }
-            return null;
+            else
+            {
+                return null;
+            }
         }
 
         public bool Overlaps(LineSegment segment)
         {
             return (this == segment) ||
                 (this.IsParallelTo(segment) &&
-                (this.EndPoints.Any(p => segment.ContainsOnInside(p)) ||
-                segment.EndPoints.Any(p => this.ContainsOnInside(p))));
+                    (this.EndPoints.Any(p => segment.ContainsOnInside(p)) ||
+                    segment.EndPoints.Any(p => this.ContainsOnInside(p))));
         }
 
         public bool DoesIntersectNotTouching(Plane passedPlane)
