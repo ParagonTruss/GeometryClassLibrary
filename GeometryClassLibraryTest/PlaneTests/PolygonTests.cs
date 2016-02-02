@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;

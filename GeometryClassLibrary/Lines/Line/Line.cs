@@ -9,7 +9,7 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using static GeometryClassLibrary.Point;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 
 namespace GeometryClassLibrary
 {

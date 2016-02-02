@@ -6,7 +6,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 using System;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 
 namespace GeometryClassLibrary
 {
