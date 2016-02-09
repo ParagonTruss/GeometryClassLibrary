@@ -210,10 +210,10 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void MatricesMatrix_ConvertToMatrixTest_VariedDistances()
         {
-            Matrix m1 = new Matrix(1);
-            Matrix m2 = new Matrix(2);
-            Matrix m3 = new Matrix(3);
-            Matrix m4 = new Matrix(4);
+            Matrix m1 = new Matrix(1,1);
+            Matrix m2 = new Matrix(2,2);
+            Matrix m3 = new Matrix(3,3);
+            Matrix m4 = new Matrix(4,4);
 
             double[] m1Row1 = { 1};
 

@@ -633,7 +633,7 @@ namespace GeometryClassLibraryTest
             LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
             LineSegment lineSegment2 = null;
 
-            Action contains = () => (lineSegment1.Contains(lineSegment2));
+            Action contains = () => lineSegment1.Contains(lineSegment2);
             contains.ShouldThrow<Exception>();
         }
 

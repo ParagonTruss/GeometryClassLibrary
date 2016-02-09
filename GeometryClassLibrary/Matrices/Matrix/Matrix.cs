@@ -6,7 +6,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using UnitClassLibrary;
 using Newtonsoft.Json;
 using UnitClassLibrary.AngleUnit;
-using static UnitClassLibrary.AngleUnit.AngleTypeFactory;
+using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibrary
 {

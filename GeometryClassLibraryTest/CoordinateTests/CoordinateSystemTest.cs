@@ -7,7 +7,7 @@ using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
-using static UnitClassLibrary.AngleUnit.AngleTypeFactory;
+using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibraryTest
 {

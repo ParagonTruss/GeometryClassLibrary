@@ -468,7 +468,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_DecomposeTest2()
         {
-            Matrix matrixA = new Matrix(9);
+            Matrix matrixA = new Matrix(9,9);
 
             //Set up matrix A
             double[] row1OfMatrixA = { 3, 0, 0, 7, 0, 0, 0, 0, 0 };
@@ -494,7 +494,7 @@ namespace GeometryClassLibraryTest
             //The LUP Decomposition
 
             //Correct L Part
-            Matrix correctLPartOfLUPDecomposition = new Matrix(9);
+            Matrix correctLPartOfLUPDecomposition = new Matrix(9,9);
 
             double[] row1OfLMatrix = { 1, 0, 0, 0, 0, 0, 0, 0, 0 };
             double[] row2OfLMatrix = { 0, 1, 0, 0, 0, 0, 0, 0, 0 };
@@ -517,7 +517,7 @@ namespace GeometryClassLibraryTest
             correctLPartOfLUPDecomposition.SetRow(8, row9OfLMatrix);
           
             //Correct U Part
-            Matrix correctUPartOfLUPDecomposition = new Matrix(9);
+            Matrix correctUPartOfLUPDecomposition = new Matrix(9,9);
 
             double[] row1OfUMatrix = { 5.000,  0.000,  0.000,  4.000,  0.000,  7.000 , 1.000 , 0.000 , 3.000 };
             double[] row2OfUMatrix = { 0.000, 7.000, 2.000, 5.000, 3.000, 7.000, 2.000, 0.000, 4.000 };
@@ -574,7 +574,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_DecomposeTest3_DifferentSigns()
         {
-            Matrix matrixA = new Matrix(9);
+            Matrix matrixA = new Matrix(9,9);
 
             //Set up matrix A
             double[] row1OfMatrixA = { 3, 0, 0, -7, 0, 0, 0, 0, 0 };
@@ -602,7 +602,7 @@ namespace GeometryClassLibraryTest
             //The LUP Decomposition
 
             //Correct L Part
-            Matrix correctLPartOfLUPDecomposition = new Matrix(9);
+            Matrix correctLPartOfLUPDecomposition = new Matrix(9,9);
 
             double[] row1OfLMatrix = { 1, 0, 0, 0, 0, 0, 0, 0, 0 };
             double[] row2OfLMatrix = { 0, 1, 0, 0, 0, 0, 0, 0, 0 };
@@ -625,7 +625,7 @@ namespace GeometryClassLibraryTest
             correctLPartOfLUPDecomposition.SetRow(8, row9OfLMatrix);
 
             //Correct U Part
-            Matrix correctUPartOfLUPDecomposition = new Matrix(9);
+            Matrix correctUPartOfLUPDecomposition = new Matrix(9,9);
 
             double[] row1OfUMatrix = { -5.000, 0.000, 0.000, 4.000, 0.000, 7.000, -1.000, 0.000, 3.000 };
             double[] row2OfUMatrix = { 0.000, 7.000, 2.000, 5.000, -3.000, 7.000, -2.000, 0.000, 4.000 };
@@ -907,7 +907,7 @@ namespace GeometryClassLibraryTest
 
             double multiplier = 3;
 
-            Matrix expectedResult = new Matrix(2);
+            Matrix expectedResult = new Matrix(2,2);
 
             double[] expectedResultColumn1 = { 6, 9 };
             double[] expectedResultColumn2 = { 12, 15 };
@@ -968,7 +968,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_GetSubMatrixTwiceTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { 1, 5, 6 };
             double[] matrix1Column2 = { 2, 4, 7 };
@@ -995,7 +995,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_GetSubMatrixStandardTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { 1, 5, 6 };
             double[] matrix1Column2 = { 2, 4, 7 };
@@ -1026,7 +1026,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_InsertMatrixTest()
         {
-            Matrix originalMatrix = new Matrix(3);
+            Matrix originalMatrix = new Matrix(3,3);
 
             double[] matrix1Row1 = { 1, 5, 6 };
             double[] matrix1Row2 = { 2, 4, 7 };
@@ -1038,7 +1038,7 @@ namespace GeometryClassLibraryTest
 
             Matrix matrixToInsert = Matrix.IdentityMatrix(2);
 
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultRow1 = { 1, 5, 6 };
             double[] expectedResultRow2 = { 1, 0, 7 };
@@ -1151,7 +1151,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_GenerateCofactorMatrixTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { 1, 5, 6 };
             double[] matrix1Column2 = { 2, 4, 7 };
@@ -1161,7 +1161,7 @@ namespace GeometryClassLibraryTest
             matrix1.SetColumn(1, matrix1Column2);
             matrix1.SetColumn(2, matrix1Column3);
 
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultColumn1 = { -10, 5, 0 };
             double[] expectedResultColumn2 = { -4, -10, 9};
@@ -1181,7 +1181,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_InvertTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { 1, 5, 6 };
             double[] matrix1Column2 = { 2, 4, 7 };
@@ -1191,7 +1191,7 @@ namespace GeometryClassLibraryTest
             matrix1.SetColumn(1, matrix1Column2);
             matrix1.SetColumn(2, matrix1Column3);
 
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultColumn1 = { (double)-2 / 3, (double)-4 / 15, (double)11 / 15 };
             double[] expectedResultColumn2 = { (double)1 / 3, (double)-2 / 3, (double)1 / 3 };
@@ -1235,7 +1235,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_AbsoluteValueOfMatrixTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { -1, 5, 6 };
             double[] matrix1Column2 = { 2, -4, 7 };
@@ -1245,7 +1245,7 @@ namespace GeometryClassLibraryTest
             matrix1.SetColumn(1, matrix1Column2);
             matrix1.SetColumn(2, matrix1Column3);
 
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultColumn1 = { 1, 5, 6 };
             double[] expectedResultColumn2 = { 2, 4, 7 };
@@ -1265,7 +1265,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_CreateIdentityMatrixTest()
         {
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultColumn1 = { 1, 0, 0 };
             double[] expectedResultColumn2 = { 0, 1, 0 };
@@ -1285,7 +1285,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_TransposeTest()
         {
-            Matrix matrix1 = new Matrix(3);
+            Matrix matrix1 = new Matrix(3,3);
 
             double[] matrix1Column1 = { 1, 5, 6 };
             double[] matrix1Column2 = { 2, 4, 7 };
@@ -1295,7 +1295,7 @@ namespace GeometryClassLibraryTest
             matrix1.SetColumn(1, matrix1Column2);
             matrix1.SetColumn(2, matrix1Column3);
 
-            Matrix expectedResult = new Matrix(3);
+            Matrix expectedResult = new Matrix(3,3);
 
             double[] expectedResultColumn1 = { 1, 2, 3 };
             double[] expectedResultColumn2 = { 5, 4, 6 };
@@ -1369,7 +1369,7 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Matrix_RemoveRowsAndColumnsTest()
         {
-            Matrix testMatrix = new Matrix(3);
+            Matrix testMatrix = new Matrix(3,3);
             testMatrix.InsertMatrixAt(Matrix.IdentityMatrix(2), 1, 1);
 
             int[] rowsToRemove = { 0 };

@@ -73,7 +73,7 @@
       <Project>{be165769-e5c6-4d8e-ae6a-7075b1dd3d2d}</Project>
       <Name>GeometryClassLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
+    <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
       <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
       <Name>UnitClassLibrary</Name>
     </ProjectReference>
