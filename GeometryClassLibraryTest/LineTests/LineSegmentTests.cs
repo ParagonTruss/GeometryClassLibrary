@@ -666,13 +666,15 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void LineSegment_Slice_ShouldThrowException_IfPointIsOnBasePointLineSegment()
+        public void LineSegment_Slice_ShouldReturnOriginalSegment_IfPointIsOnBasePointLineSegment()
         {
             LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
             Point point = Point.MakePointWithInches(0, 0, 0);
 
-            Action slice = () => lineSegment.Slice(point);
-            slice.ShouldThrow<Exception>();
+            List<LineSegment> lineSegmentList = new List<LineSegment>();
+            lineSegmentList.Add(lineSegment);
+
+            lineSegment.Slice(point).Should().BeEquivalentTo(lineSegmentList);
         }
 
         [Test()]

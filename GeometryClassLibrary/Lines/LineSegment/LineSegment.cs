@@ -276,7 +276,7 @@ namespace GeometryClassLibrary
         /// <returns>returns the two parts the LineSegment is sliced into, or the original line segment if the point is not on it</returns>
         public List<LineSegment> Slice(Point spotToSliceAt)
         {
-            if (spotToSliceAt.IsOnLineSegment(this))
+            if (this.ContainsOnInside(spotToSliceAt))
             {
                 List<LineSegment> returnLines = new List<LineSegment>();
 
