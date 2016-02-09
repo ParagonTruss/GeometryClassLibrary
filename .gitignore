@@ -185,3 +185,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 *.orig
 *.original
+
+# MonoDevelop user pereferences
+*.userprefs

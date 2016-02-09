@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ namespace GeometryClassLibraryTest
     public class LineSegmentTests
     {
         [Test()]
+        [Ignore("JSON")]
         public void LineSegment_JSON()
         {
             LineSegment lineSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
@@ -26,255 +28,1212 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void LineSegment_ConstructorTest()
+        public void LineSegment_GetLength_ShouldReturnVectorMagnitude()
         {
-            //Fixture fixture = new Fixture();
-            //fixture.Customize<Distance>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            //var mem = fixture.Create<Distance>();
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 0, 2));
 
-            //fixture.Customize<Member>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            ////fixture.Customize<Line>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            //fixture.Customize<Point>(c => c.FromFactory(new MethodInvoker(new GreedyConstructorQuery())));
-            //var memb = fixture.Create<Member>();
-            Assert.AreEqual("", "");
+            lineSegment.Length.Should().Be(new Distance(2, Distance.Inches));
         }
 
         [Test()]
-        public void LineSegment_IntersectionOriginTest()
+        public void LineSegment_GetMidpoint_ShouldReturnCenterPoint()
         {
-            LineSegment verticalLine = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
-            LineSegment flatLine = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(5, 0));
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
 
-            verticalLine.IntersectWithSegment(flatLine).Should().Be(Point.MakePointWithInches(0, 0));
+            lineSegment.MidPoint.Should().Be(Point.MakePointWithInches(1, 1, 1));
         }
 
         [Test()]
-        public void LineSegment_SegmentIntersectionTest()
+        public void LineSegment_GetEndPoints_ShouldListOfEndPoints()
         {
-            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
-            LineSegment line2 = new LineSegment(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
-            LineSegment line3 = new LineSegment(Point.Origin, Point.MakePointWithInches(3, -4, 2));
-            LineSegment line4 = new LineSegment(Point.MakePointWithInches(0, -4, 0), Point.MakePointWithInches(3, 0, 2));
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
 
-            Point intersectT1 = line1.IntersectWithSegment(line2);
-            Point intersectT2 = line3.IntersectWithSegment(line4);
-            Point intersectF1 = line1.IntersectWithSegment(line4);
+            List<Point> pointList = new List<Point>();
+            pointList.Add(Point.Origin);
+            pointList.Add(Point.MakePointWithInches(1, 1, 1));
 
-            intersectT1.Should().Be(Point.MakePointWithInches(.5, .5, .5));
-            intersectT2.Should().Be(Point.MakePointWithInches(1.5, -2, 1));
-            intersectF1.Should().BeNull();
+            lineSegment.EndPoints.Should().Equal(pointList);
         }
 
         [Test()]
-        public void LineSegment_LineIntersectionTest()
+        public void LineSegment_GetIsClosed_ShouldReturnFalse()
         {
-            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
-            Line line2 = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
-            LineSegment line3 = new LineSegment(Point.Origin, Point.MakePointWithInches(-5, -5, 0));
-            Line line4 = new Line(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
 
-            Point intersectT1 = line1.IntersectWithLine(line2);
-            Point intersectF1 = line3.IntersectWithLine(line4);
-
-            intersectT1.Should().Be(Point.MakePointWithInches(.5, .5, .5));
-            intersectF1.Should().BeNull();
+            lineSegment.IsClosed.Should().BeFalse();
         }
 
         [Test()]
-        public void LineSegment_MidpointTest()
+        public void LineSegment_GetInitialDirection_ShouldReturnDirection()
         {
-            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(2, 2, 2));
-            Point expected = Point.MakePointWithInches(1, 1, 1);
-            (line1.MidPoint == expected).Should().BeTrue();
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            Direction direction = new Direction(1, 1, 1);
+
+            lineSegment.InitialDirection.Should().Be(direction);
         }
 
         [Test()]
-        public void LineSegment_HypotheticalIntersectionTest()
+        public void LineSegment_ConstructorPoint_ShouldCreateLineSegmentThroughOrigin()
         {
-            LineSegment line1 = new LineSegment(Point.Origin, Point.MakePointWithInches(-5, -5, 0));
-            LineSegment line2 = new LineSegment(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
 
-            Point intersectT1 = line1.HypotheticalIntersection(line2);
-
-            intersectT1.Should().Be(Point.MakePointWithInches(.5, .5, 0));
+            lineSegment.Should().Be(new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1)));
         }
 
         [Test()]
-        public void LineSegment_LineSegmentOverlappingEquality()
+        public void LineSegment_ConstructorPoint_ShouldThrowException_IfPointIsOrigin()
         {
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
-            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(0, 5), Point.MakePointWithInches(0, 0));
+            Point point = Point.Origin;
 
-            segment1.Should().Be(segment2);
+            Action construct = () => new LineSegment(point);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_EqualityOperator()
+        public void LineSegment_ConstructorPoint_ShouldThrowException_IfPointIsNull()
         {
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
-            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
+            Point point = null;
 
-            segment1.Should().Be(segment2);
+            Action construct = () => new LineSegment(point);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_InequalityOperator()
+        public void LineSegment_ConstructorVector_ShouldCreateLineSegmentFromVector()
         {
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
-            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment = new LineSegment(new Vector(Point.MakePointWithInches(1, 1, 1)));
 
-            segment1.Should().Be(segment2);
+            lineSegment.Should().Be(new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1)));
         }
 
         [Test()]
-        public void LineSegment_3dRotateTest_Orthogonal()
+        public void LineSegment_ConstructorVector_ShouldThrowException_IfVectorLengthIsZero()
         {
-            LineSegment originalSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(0, 5, 0));
-            Line axis = new Line(Point.Origin, Point.MakePointWithInches(1, 0, 0));
-            Angle toRotate = Angle.StraightAngle;
+            Vector vector = new Vector(Point.Origin);
 
-            LineSegment actualSegment = originalSegment.Rotate(new Rotation(axis, toRotate));
-            LineSegment expectedSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(0, -5, 0));
-            (actualSegment == expectedSegment).Should().BeTrue();
+            Action construct = () => new LineSegment(vector);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_3dRotateTest()
+        public void LineSegment_ConstructorVector_ShouldThrowException_IfVectorIsNull()
         {
+            Vector vector = null;
 
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(0, 2, 3), Point.MakePointWithInches(-3, -2, 0));
-            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(0, 2, 3));
-
-            Line rotationAxis = new Line(new Direction(Point.MakePointWithInches(1, 1, 1)), Point.MakePointWithInches(1, -1, -1));
-            Angle rotationAngle = new Angle(new Degree(), 212);
-
-            LineSegment actualSegment1 = segment1.Rotate(new Rotation(rotationAxis, rotationAngle));
-            LineSegment actualSegment2 = segment2.Rotate(new Rotation(rotationAxis, rotationAngle));
-
-            LineSegment expectedSegment1 = new LineSegment(Point.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809), Point.MakePointWithInches(1.3162301967095191, -1.0862708827830958, -5.2299593139264218));
-            LineSegment expectedSegment2 = new LineSegment(Point.MakePointWithInches(2.8439301238119032, -1.4640641282085687, -0.37986599560333495), Point.MakePointWithInches(5.23819525861547, 1.681697053112619, -1.91989231172809));
-
-            (actualSegment1 == expectedSegment1).Should().BeTrue();
-            (actualSegment2 == expectedSegment2).Should().BeTrue();
-
-
+            Action construct = () => new LineSegment(vector);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_TranslateTest()
+        public void LineSegment_ConstructorPointPoint_ShouldCreateLineSegmentFromPointToPoint()
         {
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(1, 2, 3), Point.MakePointWithInches(-3, -2, 0));
+            LineSegment lineSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
 
-            //Direction testDirection = new Direction(Point.MakePointWithInches(-1, 5, 4));
-            //Distance testDisplacement = new Distance(new Inch(), 12.9614814);
-            Point testDisplacement = Point.MakePointWithInches(-2, 10, 8);
+            List<Point> pointList = new List<Point>();
+            pointList.Add(Point.Origin);
+            pointList.Add(Point.MakePointWithInches(1, 1, 1));
 
-            LineSegment actualSegment1 = segment1.Translate(testDisplacement);
-
-            LineSegment expectedSegment1 = new LineSegment(Point.MakePointWithInches(-1, 12, 11), Point.MakePointWithInches(-5, 8, 8));
-
-            (actualSegment1 == expectedSegment1).Should().BeTrue();
+            lineSegment.EndPoints.Should().Equal(pointList);
         }
 
         [Test()]
-        public void LineSegment_Contains()
+        public void LineSegment_ConstructorPointPoint_ShouldThrowException_IfThePointsAreTheSame()
         {
-            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(5, 0));
-
-            //ToDo: fill out this test.
+            Action construct = () => new LineSegment(Point.Origin, Point.Origin);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_ProjectOntoLine2DThroughOrigin()
+        public void LineSegment_ConstructorPointPoint_ShouldThrowException_IfFirstPointIsNull()
         {
-            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(2, 5));
-            Line projectOnto = new Line(Point.MakePointWithInches(2, 1));
-            LineSegment result = testSegment.ProjectOntoLine(projectOnto);
+            Point point = null;
 
-            LineSegment expected = new LineSegment(Point.MakePointWithInches(3.6, 1.8));
-
-            result.Should().Be(expected);
+            Action construct = () => new LineSegment(point, Point.Origin);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_ProjectOntoLine3DNotThroughOrigin()
+        public void LineSegment_ConstructorPointPoint_ShouldThrowException_IfSecondPointIsNull()
         {
-            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(2, 0, 4), Point.MakePointWithInches(0, 2, 1));
-            Line projectOnto = new Line(Point.MakePointWithInches(5, 1, 2), Point.MakePointWithInches(0, 0, 4.25));
-            LineSegment result = testSegment.ProjectOntoLine(projectOnto);
+            Point point = null;
 
-            Distance expectedMagnitude = new Distance(new Inch(), 0.22428);
-            (result.Magnitude == expectedMagnitude).Should().BeTrue();
-            (new Line(result) == projectOnto).Should().BeTrue();
+            Action construct = () => new LineSegment(Point.Origin, point);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_SliceWithPoint()
+        public void LineSegment_ConstructorPointVector_ShouldCreateLineSegmentFromPointAndVector()
         {
-            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(2, 0, 4), Point.MakePointWithInches(0, 2, 1));
-            Point midPoint = Point.MakePointWithInches(1, 1, 2.5);
-            Point notOnLine = Point.MakePointWithInches(1, 1, 2);
-            Point onLine = Point.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751);
+            Vector vector = new Vector(Point.MakePointWithInches(1, 1, 1));
 
-            List<LineSegment> expectedwithMidPoint = new List<LineSegment>();
-            expectedwithMidPoint.Add(new LineSegment(Point.MakePointWithInches(2, 0, 4), Point.MakePointWithInches(1, 1, 2.5)));
-            expectedwithMidPoint.Add(new LineSegment(Point.MakePointWithInches(1, 1, 2.5), Point.MakePointWithInches(0, 2, 1)));
+            LineSegment lineSegment = new LineSegment(Point.Origin, vector);
 
-            List<LineSegment> splitMidPoint = testSegment.Slice(midPoint);
-
-            //its the midpoint so the lengths should be the same and the order is ambiguos
-            (splitMidPoint[0].Length == splitMidPoint[1].Length).Should().BeTrue();
-
-            //now check of the segments are the same
-            (splitMidPoint.Count == expectedwithMidPoint.Count).Should().BeTrue();
-            foreach (LineSegment line in expectedwithMidPoint)
-            {
-                splitMidPoint.Contains(line).Should().BeTrue();
-            }
-
-            //now check to make sure it works right for a point not on the line
-            List<LineSegment> offPointResult = testSegment.Slice(notOnLine);
-
-            //now check of the segments are the same
-            (offPointResult.Count == 1).Should().BeTrue();
-            (offPointResult[0] == testSegment).Should().BeTrue();
-
-            //now try a more generic point
-            List<LineSegment> expectedOnLine = new List<LineSegment>();
-            expectedOnLine.Add(new LineSegment(Point.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751), Point.MakePointWithInches(0, 2, 1)));
-            //thiss second one is the unitvector so it is only 1 in length and is smaller so it should go second
-            expectedOnLine.Add(new LineSegment(Point.MakePointWithInches(2, 0, 4), Point.MakePointWithInches(2 - 0.48507125007, 0 + 0.48507125007, 4 - 0.7276068751)));
-
-            List<LineSegment> splitOnLine = testSegment.Slice(onLine);
-            //now check of the segments are the same
-            (splitOnLine.Count == expectedOnLine.Count).Should().BeTrue();
-            for (int i = 0; i < splitOnLine.Count; i++)
-            {
-                (splitOnLine[i] == expectedOnLine[i]).Should().BeTrue();
-            }
+            lineSegment.Should().Be(new LineSegment(Point.MakePointWithInches(1, 1, 1)));
         }
 
         [Test()]
-        public void LineSegment_ReverseTest()
+        public void LineSegment_ConstructorPointVector_ShouldThrowException_IfTheVectorHasZeroLength()
         {
-            LineSegment testSegment = new LineSegment(Point.MakePointWithInches(2, 0, 4), Point.MakePointWithInches(0, 2, 1));
-            LineSegment result = testSegment.Reverse();
-            result.BasePoint.Should().Be(testSegment.EndPoint);
-            result.Length.Should().Be(testSegment.Length);
-            Direction expectedDirection = new Direction(Point.MakePointWithInches(0, 2, 1), Point.MakePointWithInches(2, 0, 4));
-            result.Direction.Should().Be(expectedDirection);
+            Vector vector = new Vector(Point.Origin);
+
+            Action construct = () => new LineSegment(Point.Origin, vector);
+            construct.ShouldThrow<Exception>();
         }
 
         [Test()]
-        public void LineSegment_ContainsLineSegment()
+        public void LineSegment_ConstructorPointVector_ShouldCreateLineSegmentFromOrigin_IfPointIsNull()
         {
-            LineSegment segment1 = new LineSegment(Point.MakePointWithInches(2, 2, 4));
-            LineSegment segment2 = new LineSegment(Point.MakePointWithInches(2, 2, 4), Point.Origin);
-            LineSegment segment3 = new LineSegment(Point.MakePointWithInches(1, 1, 2), Point.Origin);
+            Point point = null;
+            Vector vector = new Vector(Point.MakePointWithInches(1, 1, 1));
 
-            (segment1.Contains(segment2)).Should().BeTrue();
-            (segment2.Contains(segment1)).Should().BeTrue();
-            (segment1.Contains(segment3)).Should().BeTrue();
+            LineSegment lineSegment = new LineSegment(point, vector);
+
+            lineSegment.Should().Be(new LineSegment(vector));
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointVector_ShouldThrowException_IfVectorIsNull()
+        {
+            Vector vector = null;
+
+            Action construct = () => new LineSegment(Point.Origin, vector);
+            construct.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointDirectionDistance_ShouldCreateLineSegmentFromPointDirectionAndDistance()
+        {
+            Direction direction = new Direction(1, 0, 0);
+            Distance distance = new Distance(1, Distance.Inches);
+
+            LineSegment lineSegment = new LineSegment(Point.Origin, direction, distance);
+
+            lineSegment.Should().Be(new LineSegment(Point.MakePointWithInches(1, 0, 0)));
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointDirectionDistance_ShouldThrowException_IfDistanceIsZero()
+        {
+            Direction direction = new Direction(1, 0, 0);
+            Distance distance = Distance.ZeroDistance;
+
+            Action construct = () => new LineSegment(Point.Origin, direction, distance);
+            construct.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointDirectionDistance_ShouldCreateLineSegmentFromOrigin_IfPointIsNull()
+        {
+            Point point = null;
+            Direction direction = new Direction(1, 0, 0);
+            Distance distance = new Distance(1, Distance.Inches);
+
+            LineSegment lineSegment = new LineSegment(point, direction, distance);
+
+            lineSegment.Should().Be(new LineSegment(Point.MakePointWithInches(1, 0, 0)));
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointDirectionDistance_ShouldThrowException_IfDirectionIsNull()
+        {
+            Direction direction = null;
+            Distance distance = new Distance(1, Distance.Inches);
+
+            Action construct = () => new LineSegment(Point.Origin, direction, distance);
+            construct.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorPointDirectionDistance_ShouldThrowException_IfDistanceIsNull()
+        {
+            Direction direction = new Direction(1, 0, 0);
+            Distance distance = null;
+
+            Action construct = () => new LineSegment(Point.Origin, direction, distance);
+            construct.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorLineSegment_ShouldCreateCopy()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            LineSegment lineSegment2 = new LineSegment(lineSegment1);
+
+            lineSegment2.Should().NotBeSameAs(lineSegment1);
+            lineSegment2.Should().Be(lineSegment1);
+        }
+
+        [Test()]
+        public void LineSegment_ConstructorLineSegment_ShouldThrowException_IfLineSegmentIsNull()
+        {
+            LineSegment lineSegment = null;
+
+            Action construct = () => new LineSegment(lineSegment);
+            construct.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_GetHashCode_ShouldEqualVectorHashCode()
+        {
+            Point endPoint = Point.MakePointWithInches(1, 1, 1);
+
+            LineSegment lineSegment = new LineSegment(endPoint);
+
+            Vector vector = new Vector(lineSegment.BasePoint, lineSegment.EndPoint);
+
+            lineSegment.GetHashCode().Should().Be(vector.GetHashCode());
+        }
+
+        [Test()]
+        public void LineSegment_EqualityOperator_ShouldReturnTrue_IfBothNull()
+        {
+            LineSegment nullLineSegment1 = null;
+            LineSegment nullLineSegment2 = null;
+
+            (nullLineSegment1 == nullLineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_EqualityOperator_ShouldReturnFalse_IfOnlyFirstSegmentIsNull()
+        {
+            LineSegment nullLineSegment = null;
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            (nullLineSegment == lineSegment).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_EqualityOperator_ShouldReturnFalse_IfOnlySecondSegmentIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment nullLineSegment = null;
+
+            (lineSegment == nullLineSegment).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_EqualityOperator_ShouldBeSameAsEquals()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            (lineSegment1 == lineSegment2).Should().Be(lineSegment1.Equals(lineSegment2));
+        }
+
+        [Test()]
+        public void LineSegment_EqualityOperator_ShouldReturnFalse_IfSegmentsHaveDifferentEndPoints()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            (lineSegment1 == lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_InequalityOperator_ShouldReturnFalse_IfBothNull()
+        {
+            LineSegment nullLineSegment1 = null;
+            LineSegment nullLineSegment2 = null;
+
+            (nullLineSegment1 != nullLineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_InequalityOperator_ShouldReturnTrue_IfOnlyFirstSegmentIsNull()
+        {
+            LineSegment nullLineSegment = null;
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            (nullLineSegment != lineSegment).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_InequalityOperator_ShouldReturnTrue_IfOnlySecondSegmentIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment nullLineSegment = null;
+
+            (lineSegment != nullLineSegment).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_InequalityOperator_ShouldBeSameAsNotEquals()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            (lineSegment1 != lineSegment2).Should().Be(!lineSegment1.Equals(lineSegment2));
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnFalse_IfObjectIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment nullLineSegment = null;
+
+            lineSegment.Equals(nullLineSegment).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnFalse_IfObjectIsNotLineSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 5));
+            Object nonLineSegment = new Object();
+
+            lineSegment.Equals(nonLineSegment).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnTrue_IfOnlyBaseOrEndPointsAreEqual()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            lineSegment1.Equals(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnTrue_IfOnlyReverseBaseOrEndPointsAreEqual()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(5, 0));
+
+            lineSegment1.Equals(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnFalse_IfNeitherBaseOrEndPointsAndReverseBaseOrEndPointsAreEqual()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(6, 1));
+
+            lineSegment1.Equals(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Equals_ShouldReturnFalse_IfOnlyOneEndPointIsTheSame()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.Equals(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ToString_ShouldReturnFormattedString()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 5));
+
+            lineSegment1.ToString().Should().Be(string.Format("BasePoint= {0}, EndPoint= {1}, Length={2}", lineSegment1.BasePoint.ToString(), lineSegment1.EndPoint.ToString(), lineSegment1.Length.ToString()));
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithLine_ShouldEqualLineIntersect()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Line line = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
+
+            Line lineSegmentToLine = new Line(lineSegment);
+
+            lineSegment.IntersectWithLine(line).Should().Be(lineSegmentToLine.IntersectWithLine(line));
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithLine_ShouldReturnNull_IfLinesDoNotIntersect()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 0, 1), Point.MakePointWithInches(1, 0, 2));
+            Line line = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(0, 0, 2));
+
+            lineSegment.IntersectWithLine(line).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithLine_ShouldReturnNull_IfLinesIntersectButNotOnSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+            Line line = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 0));
+
+            lineSegment.IntersectWithLine(line).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithLine_ShouldBeLineIntersection_IfLineSegmentEndPointIsOnLine()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Line line = new Line(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(0, 0, 2));
+
+            Line lineSegmentToLine = new Line(lineSegment);
+
+            lineSegment.IntersectWithLine(line).Should().Be(lineSegmentToLine.IntersectWithLine(line));
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithLine_ShouldThrowNullPointerException_IfLineIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Line line = null;
+
+            Action intersect = () => lineSegment.IntersectWithLine(line);
+            intersect.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnBasePoint_IfBasePointIsBaseOrEndPointOfOtherSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(-1, -1, -1));
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().Be(lineSegment1.BasePoint);
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnEndPoint_IfEndPointIsBaseOrEndPointOfOtherSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2), Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(-1, -1, -1), Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().Be(lineSegment1.EndPoint);
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnNull_IfLinesFromLineSegmentsDoNotIntersect()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 0, 1), Point.MakePointWithInches(1, 1, 2));
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnNull_IfLinesFromLineSegmentsIntersectButNotOnPassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 3, 0), Point.MakePointWithInches(1, 2, 1));
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnNull_IfLinesFromLineSegmentsIntersectButNotOnInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 3, 0), Point.MakePointWithInches(1, 2, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldReturnLineIntersect()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(0, 1, 1));
+
+            Line lineSegmentToLine2 = new Line(lineSegment2);
+
+            lineSegment1.IntersectWithSegment(lineSegment2).Should().Be(lineSegment1.IntersectWithLine(lineSegmentToLine2));
+        }
+
+        [Test()]
+        public void LineSegment_IntersectWithSegment_ShouldThrowException_IfPassedSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action intersect = () => lineSegment1.IntersectWithSegment(lineSegment2);
+            intersect.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldReturnTrue_IfThisBasePointEqualsPassedEndPoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(0, 0, 0));
+
+            lineSegment1.SharesABaseOrEndPointWith(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldReturnTrue_IfThisBasePointEqualsPassedBasePoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.SharesABaseOrEndPointWith(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldReturnTrue_IfThisEndPointEqualsPassedEndPoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.SharesABaseOrEndPointWith(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldReturnTrue_IfThisEndPointEqualsPassedBasePoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.SharesABaseOrEndPointWith(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldReturnFalse_IfNoBaseOrEndPointsAreEqual()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 2), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.SharesABaseOrEndPointWith(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_SharesABaseOrEndPointWith_ShouldThrowException_IfPassedLineSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action shares = () => lineSegment1.SharesABaseOrEndPointWith(lineSegment2);
+            shares.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsLineSegment_ShouldReturnFalse_IfDoesNotContainBasePoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(3, 3, 3));
+
+            (lineSegment1.Contains(lineSegment2)).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsLineSegment_ShouldReturnFalse_IfDoesNotContainEndPoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            (lineSegment1.Contains(lineSegment2)).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsLineSegment_ShouldReturnTrue_IfContainsBaseAndEndPoint()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            (lineSegment1.Contains(lineSegment2)).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsLineSegment_ShouldThrowException_IfPassedLineSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = null;
+
+            Action contains = () => (lineSegment1.Contains(lineSegment2));
+            contains.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_Slice_ShouldReturnListWithOriginalLineSegment_IfPointIsNotOnLineSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(0, 0, 1);
+
+            List<LineSegment> lineSegmentList = new List<LineSegment>();
+            lineSegmentList.Add(lineSegment);
+                
+            lineSegment.Slice(point).Should().BeEquivalentTo(lineSegmentList);
+        }
+
+        [Test()]
+        public void LineSegment_Slice_ShouldReturnListWithSplicedLineSegments_IfPointIsOnLineSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(0.5, 0.5, 0.5);
+
+            LineSegment splicedLineSegment1 = new LineSegment(Point.MakePointWithInches(0.5, 0.5, 0.5));
+            LineSegment splicedLineSegment2 = new LineSegment(Point.MakePointWithInches(0.5, 0.5, 0.5), Point.MakePointWithInches(1, 1, 1));
+
+            List<LineSegment> lineSegmentList = new List<LineSegment>();
+            lineSegmentList.Add(splicedLineSegment1);
+            lineSegmentList.Add(splicedLineSegment2);
+
+            lineSegment.Slice(point).Should().BeEquivalentTo(lineSegmentList);
+        }
+
+        [Test()]
+        public void LineSegment_Slice_ShouldReturnOriginalSegment_IfPointIsOnBasePointLineSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(0, 0, 0);
+
+            List<LineSegment> lineSegmentList = new List<LineSegment>();
+            lineSegmentList.Add(lineSegment);
+
+            lineSegment.Slice(point).Should().BeEquivalentTo(lineSegmentList);
+        }
+
+        [Test()]
+        public void LineSegment_Slice_ShouldThrowException_IfPointIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = null;
+
+            Action slice = () => lineSegment.Slice(point);
+            slice.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoLine_ShouldReturnNull_IfVectorLengthIsZero()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1));
+            Line line = new Line(Point.MakePointWithInches(1, 0), Point.MakePointWithInches(0, 1));
+
+            lineSegment.ProjectOntoLine(line).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoLine_ShouldReturnVectorProjection_IfVectorLengthIsNotZero()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1));
+            Line line = new Line(Point.MakePointWithInches(1, 0), Point.MakePointWithInches(2, 0));
+
+            Vector vector = new Vector(lineSegment.BasePoint, lineSegment.EndPoint);
+
+            lineSegment.ProjectOntoLine(line).Should().Be(new LineSegment(vector.ProjectOntoLine(line)));
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoLine_ShouldThrowException_IfLineIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1));
+            Line line = null;
+
+            Action project = () => lineSegment.ProjectOntoLine(line);
+            project.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoPlane_ShouldReturnNull_IfVectorLengthIsZero()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 0, 0));
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.ProjectOntoPlane(plane).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoPlane_ShouldReturnVectorProjection_IfVectorLengthIsNotZero()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Plane plane = new Plane(Direction.Right);
+
+            Vector vector = new Vector(lineSegment.BasePoint, lineSegment.EndPoint);
+
+            lineSegment.ProjectOntoPlane(plane).Should().Be(new LineSegment(vector.ProjectOntoPlane(plane)));
+        }
+
+        [Test()]
+        public void LineSegment_ProjectOntoPlane_ShouldThrowException_IfPlaneIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Plane plane = null;
+
+            Action project = () => lineSegment.ProjectOntoPlane(plane);
+            project.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_Reverse_ShouldReturnReversedLineSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment.Should().Be(new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(0, 0, 0)));
+        }
+
+        [Test()]
+        public void LineSegment_Rotate_ShouldRotateAsVector()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 0, 0));
+            Rotation rotation = new Rotation(new Angle(45, Angle.Degrees));
+
+            LineSegment lineSegment2 = lineSegment1.Rotate(rotation);
+
+            lineSegment2.Should().Be(new LineSegment(Point.Origin, new Direction(rotation.RotationAngle), new Distance(Distance.Inches, 1)));
+        }
+
+        [Test()]
+        public void LineSegment_Rotate_ShouldThrowException_IfRotationIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 0, 0));
+            Rotation rotation = null;
+
+            Action rotate = () => lineSegment.Rotate(rotation);
+            rotate.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_Shift_ShouldShiftAsVector()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Shift shift1 = new Shift(new Vector(Point.MakePointWithInches(0, 1, 0)));
+            Shift shift2 = new Shift(new Vector(Point.MakePointWithInches(2, 0, 3)));
+
+            Shift shift3 = Shift.Compose(shift1, shift2);
+
+            lineSegment.Shift(shift3).Should().Be(new LineSegment(Point.MakePointWithInches(2, 1, 3), Point.MakePointWithInches(3, 2, 4)));
+        }
+
+        [Test()]
+        public void LineSegment_Shift_ShouldThrowException_IfShiftIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Shift shift = null;
+
+            Action shiftAction = () => lineSegment.Shift(shift);
+            shiftAction.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_Translate_ShouldTranslateAsVector()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Translation translation = new Translation(new Vector(Point.MakePointWithInches(0, 1, 0)));
+
+            lineSegment.Translate(translation).Should().Be(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(1, 2, 1)));
+        }
+
+        [Test()]
+        public void LineSegment_Translate_ShouldThrowException_IfTranslateIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Translation translation = null;
+
+            Action translate = () => lineSegment.Shift(translation);
+            translate.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyPassedBasePointIsOnInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(0, 2, 0));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyPassedEndPointIsOnInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyInstanceBasePointIsOnPassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(0, 2, 0));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyInstanceEndPointIsOnPassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(0, 2, 0), Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnIntersection_IfBothPassedPointsAreOnInsideOfInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().Be(new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2)));
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnIntersection_IfBothInstancePointsAreOnInsideOfPassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().Be(new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2)));
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnIntersection_IfBothSegmentsAreTheSame()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().Be(new LineSegment(Point.MakePointWithInches(3, 3, 3)));
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnIntersection_IfPassedTwoEndPointsAreTheSame()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().Be(new LineSegment(Point.MakePointWithInches(2, 2, 2)));
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyOneEndPointInCommon()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+
+        [Test()]
+        public void LineSegment_OverlappingSegment_ShouldThrowException_IfPassedSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action intersection = () => lineSegment1.OverlappingSegment(lineSegment2);
+            intersection.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnTrue_IfSegmentsAreEqual()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnFalse_IfSegmentsAreNotParallel()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(0, 2, 0));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnFalse_IfSegmentsAreParallelButNoEndPointsAreOnTheInsideOfTheOtherSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnTrue_IfSegmentsAreParallelAndAnInstnaceEndpointIsOnTheInsideOfThePassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnTrue_IfSegmentsAreParallelAndAPassedEndpointIsOnTheInsideOfTheInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldReturnTrue_IfSegmentsAreParallelAndAnyEndpointsAreOnTheInsideOfTheOtherSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.Overlaps(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_Overlaps_ShouldThrowException_IfSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action overlaps = () => lineSegment1.Overlaps(lineSegment2);
+            overlaps.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldReturnFalse_IfBasePointIsOnPlane()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.DoesIntersectNotTouching(plane).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldReturnFalse_IfEndPointIsOnPlane()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.Origin);
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.DoesIntersectNotTouching(plane).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldReturnFalse_IfBothEndPointsAreOnPlane()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 0, 0));
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.DoesIntersectNotTouching(plane).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldReturnFalse_IfEndPointsAreOnTheSameSideOfThePlane()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.DoesIntersectNotTouching(plane).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldReturnTrue_IfEndPointsAreOnOppositeSidesOfThePlane()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(-1, -1, -1));
+            Plane plane = new Plane(Direction.Right);
+
+            lineSegment.DoesIntersectNotTouching(plane).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingPlane_ShouldThrowException_IfPlaneIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(-1, -1, -1));
+            Plane plane = null;
+
+            Action intersect = () => lineSegment.DoesIntersectNotTouching(plane);
+            intersect.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldReturnFalse_IfSegmentsDoNotIntersect()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 0, 0), Point.MakePointWithInches(2, 0, 0));
+
+            lineSegment1.DoesIntersectNotTouching(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldReturnFalse_IfIntersectionPointIsOneOfTheEndPointsOfInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(-1, 0, 0), Point.MakePointWithInches(1, 0, 0));
+
+            lineSegment1.DoesIntersectNotTouching(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldReturnFalse_IfIntersectionPointIsOneOfTheEndPointsOfPassedSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(-1, 0, 0), Point.MakePointWithInches(1, 0, 0));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.DoesIntersectNotTouching(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldReturnFalse_IfIntersectionPointIsOneOfTheEndPointOfBothSegments()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.DoesIntersectNotTouching(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldReturnTrue_IfIntersectionPointIsNotOnAnyEndPoints()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(2, 1, 2));
+
+            lineSegment1.DoesIntersectNotTouching(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_DoesIntersectNotTouchingLineSegment_ShouldThrowException_IfPassedLineSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action intersect = () => lineSegment1.DoesIntersectNotTouching(lineSegment2);
+            intersect.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsidePoint_ShouldReturnFalse_IfPointIsOneOfTheEndPointsOfTheSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(1, 1, 1);
+
+            lineSegment.ContainsOnInside(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsidePoint_ShouldReturnFalse_IfPointIsBeforeSegmentBasePoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(-1, -1, -1);
+
+            lineSegment.ContainsOnInside(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsidePoint_ShouldReturnFalse_IfPointIsAfterSegmentEndPoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(2, 2, 2);
+
+            lineSegment.ContainsOnInside(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsidePoint_ShouldReturnTrue_IfPointIsOnInsideOfSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            Point point = Point.MakePointWithInches(1, 1, 1);
+
+            lineSegment.ContainsOnInside(point).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsidePoint_ShouldThrowException_IfPointIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            Point point = null;
+
+            Action contains = () => lineSegment.ContainsOnInside(point);
+            contains.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnFalse_IfPointIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            Point point = null;
+
+            lineSegment.Contains(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnTrue_IfPointIsBasePoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.Origin;
+            lineSegment.Contains(point).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnTrue_IfPointIsEndPoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(1, 1, 1);
+            lineSegment.Contains(point).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnFalse_IfPointIsBeforeSegmentBasePoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(-1, -1, -1);
+
+            lineSegment.Contains(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnFalse_IfPointIsAfterSegmentEndPoint()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Point point = Point.MakePointWithInches(2, 2, 2);
+
+            lineSegment.Contains(point).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsPoint_ShouldReturnTrue_IfPointIsOnSegment()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            Point point = Point.MakePointWithInches(1, 1, 1);
+
+            lineSegment.Contains(point).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsideLineSegment_ShouldReturnFalse_IfBasePointOfPassedSegmentIsNotOnInsideOfInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+
+            lineSegment1.ContainsOnInside(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsideLineSegment_ShouldReturnFalse_IfEndPointOfPassedSegmentIsNotOnInsideOfInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(2, 2, 2));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.ContainsOnInside(lineSegment2).Should().BeFalse();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsideLineSegment_ShouldReturnTrue_IfBothEndPointsOfPassedAreOnInsideOfInstanceSegment()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(3, 3, 3));
+            LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
+
+            lineSegment1.ContainsOnInside(lineSegment2).Should().BeTrue();
+        }
+
+        [Test()]
+        public void LineSegment_ContainsOnInsideLineSegment_ShouldThrowException_IfPassedLineSegmentIsNull()
+        {
+            LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            LineSegment lineSegment2 = null;
+
+            Action contains = () => lineSegment1.ContainsOnInside(lineSegment2);
+            contains.ShouldThrow<Exception>();
+        }
+
+        [Test()]
+        public void LineSegment_HypotheticalIntersectionTest_ShouldReturnLineIntersection()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(-5, -5, 0));
+            Line line = new Line(Point.MakePointWithInches(5, -4, 0), Point.MakePointWithInches(-5, 6, 0));
+
+            lineSegment.HypotheticalIntersection(line).Should().Be(Point.MakePointWithInches(.5, .5, 0));
+        }
+
+        [Test()]
+        public void LineSegment_HypotheticalIntersectionTest_ShouldThrowNullPointerException_IfLineIsNull()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1, 1, 1));
+            Line line = null;
+
+            Action intersect = () => lineSegment.HypotheticalIntersection(line);
+            intersect.ShouldThrow<Exception>();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace GeometryClassLibraryTest
     public class PolyhedronTests
     {
         [Test()]
+        [Ignore("JSON")]
         public void Polyhedron_JSON()
         {
             Polyhedron polyhedron = new TestRectangularBox2();

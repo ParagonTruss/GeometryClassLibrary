@@ -16,7 +16,7 @@ namespace GeometryClassLibrary
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Vector : Line
+    public partial class Vector : Line, IEquatable<Vector>
     {
         #region Properties and Fields
 
@@ -257,6 +257,20 @@ namespace GeometryClassLibrary
 
             bool basePointsEqual = (this.BasePoint == vec.BasePoint);
             bool endPointsEqual = (this.EndPoint == vec.EndPoint);
+
+            return basePointsEqual && endPointsEqual;        
+        }
+
+        public bool Equals(Vector vector)
+        {
+            //check for null
+            if (vector == null)
+            {
+                return false;
+            }
+
+            bool basePointsEqual = (this.BasePoint == vector.BasePoint);
+            bool endPointsEqual = (this.EndPoint == vector.EndPoint);
 
             return basePointsEqual && endPointsEqual;        
         }

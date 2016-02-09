@@ -71,7 +71,7 @@ namespace GeometryClassLibrary
 
                 LineSegment longLeg = null;
                 
-                if (legs[0] > legs[1])
+                if (legs[0].Length > legs[1].Length)
                 {
                     longLeg = legs[0];
                 }
