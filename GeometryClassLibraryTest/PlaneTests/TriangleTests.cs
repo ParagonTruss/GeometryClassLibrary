@@ -4,7 +4,7 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 
 namespace GeometryClassLibraryTest

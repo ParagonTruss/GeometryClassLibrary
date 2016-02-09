@@ -5,6 +5,8 @@ using System.Text;
 using UnitClassLibrary.AngleUnit;
 using GeometryClassLibrary;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary.Vectors
 {
@@ -22,11 +24,11 @@ namespace GeometryClassLibrary.Vectors
         {
             return new Unit<T>(vector.UnitType, vector.MeasurementVector.Z);
         }
-        public static Direction Direction<T>(this IVector<T> vector) where T : IUnitType
-        {
-            return vector.MeasurementVector.Direction();
-        }
-        public static Unit<T> Magnitude<T>(this IVector<T> vector) where T :IUnitType
+        //public static Direction Direction<T>(this IVector<T> vector) where T : IUnitType
+        //{
+        //    return vector.MeasurementVector.Direction();
+        //}
+        public static Unit<T> Magnitude<T>(this IVector<T> vector) where T : IUnitType
         {
             var result = vector.MeasurementVector.Magnitude();
             return new Unit<T>(vector.UnitType, result);
@@ -62,8 +64,6 @@ namespace GeometryClassLibrary.Vectors
         /// <summary>
         /// Projects this vector onto the given plane
         /// </summary>
-        /// <param name="projectOnto">The Plane to project this Vector onto</param>
-        /// <returns>Returns a new Vector that is this Vector projected onto the Plane</returns>
         public static Vector_New<T> ProjectOntoPlane<T>(this IVector<T> vector, Plane plane) where T :IUnitType
         {
             //    //find the line in the plane and then project this line onto it
@@ -143,6 +143,16 @@ namespace GeometryClassLibrary.Vectors
         //    var shifted = new Vector_New<T>(newBasePoint,vector);
         //    return shifted;
         //}
+        public static Vector_New<T> ToVector<T>(this IVector<T> vector) where T : IUnitType
+        {
+            return new Vector_New<T>(vector.ApplicationPoint, vector.MeasurementVector, vector.UnitType);
+        }
+
+        public static LineSegment ToLineSegment<T>(this IVector<T> vector) where T : DistanceType
+        {
+            var magnitude = vector.Magnitude();
+            return new LineSegment(vector.ApplicationPoint, vector.Direction, new Distance(magnitude.Measurement, (DistanceType)magnitude.UnitType));
+        }
 
         /// <summary>
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
@@ -150,7 +160,7 @@ namespace GeometryClassLibrary.Vectors
         /// </summary>
         public static Vector_New<T> UnitVector<T>(this IVector<T> vector, T passedType) where T : IUnitType
         {
-            Direction direction = vector.Direction();
+            Direction direction = vector.Direction;
             if (direction == GeometryClassLibrary.Direction.NoDirection)
             {
                 // return new Vector(Point.Origin);

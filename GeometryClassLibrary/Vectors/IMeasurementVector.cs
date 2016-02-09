@@ -13,13 +13,5 @@ namespace GeometryClassLibrary
         Measurement Y { get; }
         Measurement Z { get; }    
     }
-    //public interface IVector<T> : IVector where T : IUnitType
-    public interface IVector<T> where T : IUnitType
-    {
-        T UnitType { get; }
-        Point ApplicationPoint { get; }
-        IMeasurementVector MeasurementVector { get; }
-        //Direction Direction { get; }
-        //Unit<T> Magnitude { get; }      
-    }
+    
 }

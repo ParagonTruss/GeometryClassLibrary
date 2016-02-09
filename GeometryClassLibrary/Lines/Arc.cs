@@ -2,7 +2,7 @@
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.AreaUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;

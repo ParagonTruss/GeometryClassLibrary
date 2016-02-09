@@ -133,19 +133,19 @@ namespace GeometryClassLibrary
 
         public static MeasurementVector Normalize(MeasurementVector vector)
         {
-            var x = vector.X;
-            var y = vector.Y;
-            var z = vector.Z;
-            Direction result = new Direction();
-            var r = (x * x + y * y + z * z).SquareRoot();
+            var r = vector.Magnitude;
             if (r == Measurement.Zero)
             {
                 return MeasurementVector.Zero;
             }
+            else if (r == new Measurement(1, 0))
+            {
+                return vector;
+            }
             else
             {
                 var d = r.Value;
-                return new MeasurementVector(x / d, y / d, z / d);     
+                return vector/d;
             }
         }
         #endregion

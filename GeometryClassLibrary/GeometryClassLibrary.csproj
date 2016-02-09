@@ -88,7 +88,7 @@
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Lines\EllipticArc.cs" />
     <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
-    <Compile Include="Lines\Line\ILine.cs" />
+    <Compile Include="Lines\Line\ILinear.cs" />
     <Compile Include="Lines\Line\LineEntityFramework.cs" />
     <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
     <Compile Include="Matrices\Matrix\MatrixEntityFramework.cs" />
@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="Solids\Polyhedra\TriangularPrism.cs" />
     <Compile Include="Surfaces\ISurface.cs" />
+    <Compile Include="Vectors\IVector.cs" />
     <Compile Include="Vectors\MeasurementVector.cs" />
     <Compile Include="Vectors\IMeasurementVectorExtensions.cs" />
     <Compile Include="Vectors\IMeasurementVector.cs" />

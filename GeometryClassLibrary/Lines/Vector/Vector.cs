@@ -7,7 +7,7 @@ using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AreaUnit;
 
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.InSquareInchesUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 
 namespace GeometryClassLibrary
 {
@@ -211,9 +211,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new Vector with each component divided by the divisor
         /// </summary>
-        /// <param name="passedVector1"></param>
-        /// <param name="divisor"></param>
-        /// <returns></returns>
         public static Vector operator /(Vector passedVector, double divisor)
         {
             return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude / divisor);
