@@ -24,12 +24,21 @@ namespace GeometryClassLibrary
         /// The angle from the positive x-axis in the xy-plane (azimuth)
         /// currently, this should be between 0 and 360
         /// </summary>     
-        public Angle Phi { get { throw new NotImplementedException(); } }
+        public Angle Phi { get { return new Angle(Math.Atan2(Y.Value, X.Value), Radians); } }
 
         /// <summary>
         /// The angle from the positive z-axis (should be a max of 180 degrees) (inclination)
         /// </summary>
-        public Angle Theta { get { throw new NotImplementedException(); } }
+        public Angle Theta
+        {
+            get
+            {
+                var x = X.Value;
+                var y = Y.Value;
+                var r = Math.Sqrt(x*x + y*y);
+                return new Angle(Math.Atan2(r, Z.Value), Radians);
+            }
+        }
 
         /// <summary>
         /// Gets for the x-component of this directions unitVector

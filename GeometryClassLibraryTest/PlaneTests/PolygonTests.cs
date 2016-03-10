@@ -29,8 +29,8 @@ namespace GeometryClassLibraryTest
             bool test = list[0] == point1;
             Assert.Pass();
         }
+
         [Test()]
-        [ExpectedException(typeof(Exception))]
         public void Polygon_Constructor_NoSelfIntersections()
         {
             Point point1 = Point.MakePointWithInches(0, 0);
@@ -45,8 +45,8 @@ namespace GeometryClassLibraryTest
             Area area = correctPolygon.Area;
             area.Should().Be(new Area(new SquareInch(), 1));
 
-            //this part should throw an exception
-            Polygon badPolygon = new Polygon(verticesInWrongOrder);
+     
+            Assert.Throws<Exception>(() => new Polygon(verticesInWrongOrder));       
         }
 
         [Test()]
