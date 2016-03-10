@@ -93,6 +93,11 @@ namespace GeometryClassLibrary
             _checkSegment();
         }
 
+        public LineSegment(List<Point> points) : base(points[0],points[1])
+        {
+            _checkSegment();
+        }
+
         /// <summary>
         /// Copies a Linesegment
         /// </summary>
