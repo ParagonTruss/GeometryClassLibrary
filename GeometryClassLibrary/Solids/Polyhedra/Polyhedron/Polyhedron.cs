@@ -69,29 +69,16 @@ namespace GeometryClassLibrary
                 }
 
                 //Now we check to see if any of the faces are concave, which would make the polyhedron concave
-                foreach (Polygon face in Polygons)
+                if (Polygons.Any(face => !face.IsConvex))
                 {
-                    if (!face.IsConvex)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 //Now we check that for every face all the remaining vertices are on the same side of that plane
                 //http://stackoverflow.com/a/30380541/4875161
-                foreach (Polygon face in Polygons)
-                {
-                    List<Point> verticesToCheck = this.Vertices;
-                    verticesToCheck = verticesToCheck.Except(face.Vertices).ToList();
-                    for (int i = 0; i < verticesToCheck.Count; i++)
-                    {
-                        if (face.PointIsOnNormalSide(verticesToCheck[i]))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                return true;
+                var dir = Polygons.Select(f => f.NormalDirection);
+                return !Polygons.Any(face => Vertices.Except(face.Vertices).Any(vertex => face.PointIsOnNormalSide(vertex)));
+               
             }
         }
         /// <summary>
@@ -120,17 +107,9 @@ namespace GeometryClassLibrary
             {
                 if (_volume == null)
                 {
-                    Volume totalVolume = new Volume(new CubicInch(), 0);
-
-                    List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
-
-                    foreach (Polygon triangle in triangles)
-                    {
-                        Volume volume = new Volume(new CubicInch(), _volumeOfTetrahedronFormedWithTheOrigin(triangle));
-
-                        totalVolume = (Volume)(totalVolume +volume);
-                    }
-                    _volume = totalVolume;
+                    var volume = this.Polygons.SplitIntoTriangles()
+                        .Select(p => _volumeOfTetrahedronFormedWithTheOrigin(p)).Sum();
+                    _volume = new Volume(new CubicInch(), volume);
                 }
                 if (_volume < Volume.Zero)
                 {
@@ -548,22 +527,36 @@ namespace GeometryClassLibrary
             return new Polyhedron(shiftedRegions, false);
         }
 
-        public bool Contains(Polyhedron polyhedron)
+        public bool Contains(Point point)
         {
-            if (this.IsConvex)
+            if (Polygons.Any(face => face.Contains(point)))
             {
-                foreach(Point vertex in polyhedron.Vertices)
-                {
-                    foreach(Plane face in this.Polygons)
-                    {
-                        if (face.PointIsOnNormalSide(vertex))
-                        {
-                            return false;
-                        }
-                    }
-                }
                 return true;
             }
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(Polygon polygon)
+        {
+            return polygon.Vertices.All(vertex => this.Contains(vertex));
+        }
+        public bool Contains(Polyhedron polyhedron)
+        {
+            polyhedron.Vertices.All(vertex => this.Contains(vertex));
+            //if (this.IsConvex)
+            //{
+            //    foreach(Point vertex in polyhedron.Vertices)
+            //    {
+            //        foreach(Plane face in this.Polygons)
+            //        {
+            //            if (face.PointIsOnNormalSide(vertex))
+            //            {
+            //                return false;
+            //            }
+            //        }
+            //    }
+            //    return true;
+            //}
             throw new NotImplementedException();
         }
 

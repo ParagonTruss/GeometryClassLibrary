@@ -285,7 +285,7 @@ namespace GeometryClassLibrary
             {
                 case Enums.Axis.X:
                     extrusionLine = new Line(this.BasePoint,
-                        this.BasePoint - Point.MakePointWithInches(1,0));
+                        this.BasePoint - Point.MakePointWithInches(1, 0));
                     break;
                 case Enums.Axis.Y:
                     extrusionLine = new Line(this.BasePoint,
@@ -293,7 +293,7 @@ namespace GeometryClassLibrary
                     break;
                 case Enums.Axis.Z:
                     extrusionLine = new Line(this.BasePoint,
-                       this.BasePoint - Point.MakePointWithInches(1, 0));
+                        this.BasePoint - Point.MakePointWithInches(0, 0, 1));
                     break;
                 default:
                     throw new ArgumentException("You passed in an unknown Axis Enum");
