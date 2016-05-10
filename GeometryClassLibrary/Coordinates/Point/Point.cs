@@ -412,7 +412,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Static Factory Methods
-        public static Point MakePointWithFeet(double x, double y, double z)
+        public static Point MakePointWithFeet(double x, double y, double z = 0)
         {
             return new Point(new Foot(), x, y, z);
         }
