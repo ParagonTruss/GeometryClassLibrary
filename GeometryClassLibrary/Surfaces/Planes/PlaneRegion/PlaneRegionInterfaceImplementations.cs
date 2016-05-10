@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeometryClassLibrary
 {
-    public partial class PlaneRegion : ISurface, IComparable<PlaneRegion>
+    public partial class PlaneRegion : ISurface
     {
         public override bool IsBounded { get { return true; } }
 

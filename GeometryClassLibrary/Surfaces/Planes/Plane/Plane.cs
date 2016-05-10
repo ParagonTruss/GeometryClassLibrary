@@ -430,12 +430,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the polygon and plane intersect
         /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
-        public bool DoesIntersect(Polygon passedPolygon)
+        public bool DoesIntersect(Polygon polygon)
         {
-            Line slicingLine = passedPolygon.IntersectingSegment(this);
-            return (slicingLine != null && passedPolygon.DoesIntersect(slicingLine));
+            Line slicingLine = polygon.IntersectingSegment(this);
+            return (slicingLine != null && polygon.DoesIntersect(slicingLine));
         }
 
         /// <summary>

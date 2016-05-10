@@ -540,23 +540,24 @@ namespace GeometryClassLibrary
         {
             return polygon.Vertices.All(vertex => this.Contains(vertex));
         }
+
         public bool Contains(Polyhedron polyhedron)
         {
-            polyhedron.Vertices.All(vertex => this.Contains(vertex));
-            //if (this.IsConvex)
-            //{
-            //    foreach(Point vertex in polyhedron.Vertices)
-            //    {
-            //        foreach(Plane face in this.Polygons)
-            //        {
-            //            if (face.PointIsOnNormalSide(vertex))
-            //            {
-            //                return false;
-            //            }
-            //        }
-            //    }
-            //    return true;
-            //}
+            if (this.IsConvex)
+            {
+                foreach (Point vertex in polyhedron.Vertices)
+                {
+                    foreach (Plane face in this.Polygons)
+                    {
+                        if (face.PointIsOnNormalSide(vertex))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
             throw new NotImplementedException();
         }
 
