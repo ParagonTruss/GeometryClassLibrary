@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibrary", "GeometryClassLibrary\GeometryClassLibrary.csproj", "{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}"
 EndProject
@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibraryTest", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryStubLibrary", "GeometryStubLibrary\GeometryStubLibrary.csproj", "{0547226E-2A1A-4AAA-B91D-2AE879504706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitClassLibrary", "unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj", "{4D89E91C-BF44-49D8-ACF4-BE105C3428FE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{4F203178-AE28-43B7-BA3F-5BD20382C5AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitClassLibrary", "UnitClassLibrary\UnitClassLibrary\UnitClassLibrary.csproj", "{4D89E91C-BF44-49D8-ACF4-BE105C3428FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
