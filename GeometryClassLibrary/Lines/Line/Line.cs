@@ -277,21 +277,21 @@ namespace GeometryClassLibrary
             return Plane.YZ.IntersectWithLine(this);
         }
 
-        public Plane PlaneThroughLineInDirectionOf(Enums.Axis passedAxis)
+        public Plane PlaneThroughLineInDirectionOf(Axis passedAxis)
         {
             Line extrusionLine;
 
             switch (passedAxis)
             {
-                case Enums.Axis.X:
+                case Axis.X:
                     extrusionLine = new Line(this.BasePoint,
                         this.BasePoint - Point.MakePointWithInches(1, 0));
                     break;
-                case Enums.Axis.Y:
+                case Axis.Y:
                     extrusionLine = new Line(this.BasePoint,
                         this.BasePoint - Point.MakePointWithInches(0, 1));
                     break;
-                case Enums.Axis.Z:
+                case Axis.Z:
                     extrusionLine = new Line(this.BasePoint,
                         this.BasePoint - Point.MakePointWithInches(0, 0, 1));
                     break;

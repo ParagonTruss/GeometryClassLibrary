@@ -58,7 +58,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Constructs a line segment that corresponds to the given vector, with the smae basepoint, direction and length
+        /// Constructs a line segment that corresponds to the given vector, with the same basepoint, direction and length
         /// </summary>
         /// <param name="passedVector"></param>
         public LineSegment(Vector passedVector)

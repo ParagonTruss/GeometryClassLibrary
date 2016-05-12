@@ -365,8 +365,8 @@ namespace GeometryClassLibraryTest
         //    Line test1 = new Line(Point.MakePointWithMillimeters(2, 1, -1), Point.MakePointWithMillimeters(-1, 5, 0));
         //    Line test2 = new Line(Point.MakePointWithMillimeters(2, 1, -1),  Point.MakePointWithMillimeters(-1, 5, 2));
 
-        //    Plane result1 = test1.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
-        //    Plane result2 = test2.PlaneThroughLineInDirectionOf(Enums.Axis.Z);
+        //    Plane result1 = test1.PlaneThroughLineInDirectionOf(Axis.Z);
+        //    Plane result2 = test2.PlaneThroughLineInDirectionOf(Axis.Z);
 
         //    Plane expectedPlane = new Plane(Point.MakePointWithMillimeters(2, 1, 6), Point.MakePointWithMillimeters(2, 1, -1), Point.MakePointWithMillimeters(-1, 5, -23));
 

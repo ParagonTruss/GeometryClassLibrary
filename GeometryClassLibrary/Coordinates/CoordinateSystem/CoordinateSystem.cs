@@ -125,7 +125,7 @@ namespace GeometryClassLibrary
         //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, -1 * Angle.RightAngle);
         //                    break;
         //                //the axis must be in the plane we were passed
-        //                case Enums.Axis.Z:
+        //                case Axis.Z:
         //                    throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
         //            }
         //            break;
@@ -143,7 +143,7 @@ namespace GeometryClassLibrary
         //                case Enums.Axis.Y:
         //                    throw new ArgumentOutOfRangeException("the passed axis type was not in the plane type");
         //                //if its the z we were passed then we need to calculate x, which will be 90 degrees (to the left)
-        //                case Enums.Axis.Z:
+        //                case Axis.Z:
         //                    zAxis = axisInPassedPlaneToUseAsBase;
         //                    xAxis = yAxis.CrossProduct(zAxis);
         //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, Angle.RightAngle);
@@ -164,7 +164,7 @@ namespace GeometryClassLibrary
         //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, Angle.RightAngle);
         //                    break;
         //                //if it is the Z axis then we need to find the y, which is -90 degrees (to the right)
-        //                case Enums.Axis.Z:
+        //                case Axis.Z:
         //                    zAxis = axisInPassedPlaneToUseAsBase;
         //                    yAxis = zAxis.CrossProduct(xAxis);
         //                    //otherAxis = axisInPassedPlaneToUseAsBase.Rotate(new Rotation(planeContainingTwoOfTheAxes.NormalVector, -1 * Angle.RightAngle);
