@@ -12,6 +12,41 @@ namespace GeometryClassLibrary
     public static class LineListExtensions
     {
         /// <summary>
+        /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
+        /// ToDo: Needs a unit test
+        /// </summary>
+        /// <param name="passedBoundaries"></param>
+        public static Polygon GeneratePolygonFromIntersectingLines(this List<Line> passedLines)
+        {
+            List<LineSegment> toUse = new List<LineSegment>();
+
+            //find where they each intersect
+            for (int i = 0; i < passedLines.Count; i++)
+            {
+                List<Point> intersections = new List<Point>();
+
+                for (int j = i + 1; j < passedLines.Count; j++)
+                {
+                    Point intersection = passedLines[i].IntersectWithLine(passedLines[j]);
+                    if (intersection != null && !intersections.Contains(intersection))
+                    {
+                        intersections.Add(intersection);
+                    }
+
+                    if (intersections.Count == 2)
+                    {
+                        toUse.Add(new LineSegment(intersections[0], intersections[1]));
+                    }
+                    else
+                    {
+                        throw new ArgumentException("lines are invalid");
+                    }
+                }
+            }
+            return new Polygon(toUse);
+        }
+
+        /// <summary>
         /// Returns the line with the smallest x intercept on the 2D xy-plane. If two share the same intercept it returns the
         /// first line in the list with that segment
         /// </summary>

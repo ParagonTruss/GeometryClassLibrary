@@ -26,7 +26,7 @@ namespace GeometryClassLibrary
         #region Properties and Fields
 
         [JsonProperty]
-        public virtual List<LineSegment> LineSegments { get; set; }
+        public virtual List<LineSegment> LineSegments { get; private set; }
 
         public virtual List<Point> Vertices { get { return LineSegments.Select(s => s.BasePoint).ToList(); } }
         
@@ -165,44 +165,6 @@ namespace GeometryClassLibrary
 
             return new Line(vector1.BasePoint, normal.Direction);
         }
-        /// <summary>
-        /// Defines a plane region using the given lines and where they intersect as long as the lines are all coplanar
-        /// ToDo: Needs a unit test
-        /// </summary>
-        /// <param name="passedBoundaries"></param>
-        public Polygon(List<Line> passedLines)
-            : this(_generateLineSegmentsFromIntersectingLines(passedLines)) { }
-
-        private static List<LineSegment> _generateLineSegmentsFromIntersectingLines(List<Line> passedLines)
-        {
-            List<LineSegment> toUse = new List<LineSegment>();
-
-            //find where they each intersect
-            for (int i = 0; i < passedLines.Count; i++)
-            {
-                List<Point> intersections = new List<Point>();
-
-                for (int j = i + 1; j < passedLines.Count; j++)
-                {
-                    Point intersection = passedLines[i].IntersectWithLine(passedLines[j]);
-                    if (intersection != null && !intersections.Contains(intersection))
-                    {
-                        intersections.Add(intersection);
-                    }
-
-                    if (intersections.Count == 2)
-                    {
-                        toUse.Add(new LineSegment(intersections[0], intersections[1]));
-                    }
-                    else
-                    {
-                        throw new ArgumentException("lines are invalid");
-                    }
-                }
-            }
-            
-            return toUse;
-        }
 
         /// <summary>
         /// Creates a new Polygon that is a copy of the passed polygon
@@ -313,19 +275,15 @@ namespace GeometryClassLibrary
         /// </summary>
         public new Polygon Rotate(Rotation rotationToApply)
         {
-            List<LineSegment> newBoundaryList = new List<LineSegment>();
-            foreach (LineSegment segment in this.LineSegments)
-            {
-                newBoundaryList.Add(segment.Rotate(rotationToApply));
-            }
-
-            return new Polygon(newBoundaryList, false);
+            return new Polygon(
+                this.LineSegments.Select(segment => segment.Rotate(rotationToApply)).ToList(), false);
         }
 
 
         public new Polygon Translate(Translation translation)
         {
-            return new Polygon(this.Vertices.Select(v => v.Translate(translation)).ToList(), false);
+            return new Polygon(
+                this.Vertices.Select(v => v.Translate(translation)).ToList(), false);
         }
 
         public virtual Polygon SmallestEnclosingRectangle()
