@@ -26,9 +26,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Constructs the rectangular prism between the origin and the given point as opposite corners.
+        /// Constructs the rectangular prism between the two passed points and the given point as opposite corners.
         /// </summary>
-        /// <param name="point"></param>
         public RectangularPrism(Point oppositeCorner, Point basePoint = null) : this(oppositeCorner.X, oppositeCorner.Y, oppositeCorner.Z, basePoint) { }
 
         /// <summary>

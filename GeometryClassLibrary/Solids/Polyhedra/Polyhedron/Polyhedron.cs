@@ -722,32 +722,32 @@ namespace GeometryClassLibrary
             return solid;
         }
 
-        public static Polyhedron MakeRectangularPrism(Point point1, Point point2)
+        public static Polyhedron RectangularPrism(Point point1, Point point2)
         {
             return new RectangularPrism(point2, point1);
         }
 
-        public static Polyhedron MakeCube(Distance sidelength)
+        public static Polyhedron Cube(Distance sidelength)
         {
             throw new NotImplementedException();
         }
 
-        public static Polyhedron MakeRegularTetrahedron(Distance sidelength)
+        public static Polyhedron RegularTetrahedron(Distance sidelength)
         {
             throw new NotImplementedException();
         }
 
-        public static Polyhedron MakeRegularOctahedron(Distance sidelength)
+        public static Polyhedron RegularOctahedron(Distance sidelength)
         {
             throw new NotImplementedException();
         }
 
-        public static Polyhedron MakeRegularDodecahedron(Distance sidelength)
+        public static Polyhedron RegularDodecahedron(Distance sidelength)
         {
             throw new NotImplementedException();
         }
 
-        public static Polyhedron MakeRegularIcosahedron(Distance sidelength)
+        public static Polyhedron RegularIcosahedron(Distance sidelength)
         {
             throw new NotImplementedException();
         } 
