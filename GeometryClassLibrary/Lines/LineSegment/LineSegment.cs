@@ -109,11 +109,11 @@ namespace GeometryClassLibrary
         {
             if (this.BasePoint == null || this.EndPoint == null)
             {
-                throw new Exception("BasePoint or EndPoint is null!");
+                throw new GeometricException("BasePoint or EndPoint is null!");
             }
             if (this.BasePoint == this.EndPoint)
             {
-                throw new Exception("LineSegment has no breadth!");
+                throw new GeometricException("LineSegment has no breadth!");
             }
         }
         #endregion

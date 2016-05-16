@@ -17,7 +17,6 @@ namespace GeometryClassLibrary
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
     //[DebuggerVisualizer(typeof(GeometryVisualizer))]
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Point : IEquatable<Point>
     {
         #region Properties and Fields
@@ -63,9 +62,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Distance passedX, Distance passedY)
         {
-            _x = passedX;
-            _y = passedY;
-            _z = Distance.ZeroDistance;
+            this._x = passedX;
+            this._y = passedY;
+            this._z = Distance.ZeroDistance;
         }
 
         /// <summary>
@@ -79,15 +78,15 @@ namespace GeometryClassLibrary
             _z = z;
         }
 
-        /// <summary>
-        /// Creates the point that is the specified distance from the origin, in the specified direction.
-        /// </summary>
-        public Point(Direction direction, Distance fromOrigin)
-        {
-            this._x = direction.X * fromOrigin;
-            this._y = direction.Y * fromOrigin;
-            this._z = direction.Z * fromOrigin;
-        }
+        ///// <summary>
+        ///// Creates the point that is the specified distance from the origin, in the specified direction.
+        ///// </summary>
+        //public Point(Direction direction, Distance fromOrigin)
+        //{
+        //    this._x = direction.X * fromOrigin;
+        //    this._y = direction.Y * fromOrigin;
+        //    this._z = direction.Z * fromOrigin;
+        //}
 
         /// <summary>
         /// Creates a new point with the given values with the given Distance type

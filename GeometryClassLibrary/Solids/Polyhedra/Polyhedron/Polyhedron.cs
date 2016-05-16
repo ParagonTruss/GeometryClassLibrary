@@ -8,7 +8,7 @@ using UnitClassLibrary.DistanceUnit;
 namespace GeometryClassLibrary
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Polyhedron
+    public partial class Polyhedron : IShift<Polyhedron>
     {
         #region Properties and Fields
 
@@ -525,6 +525,11 @@ namespace GeometryClassLibrary
             List<Polygon> shiftedRegions = this.Polygons.Shift(passedShift);
 
             return new Polyhedron(shiftedRegions, false);
+        }
+
+        public Polyhedron Rotate(Rotation rotation)
+        {
+            return new Polyhedron(this.Polygons.Rotate(rotation), false);
         }
 
         public bool Contains(Point point)

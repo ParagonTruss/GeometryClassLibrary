@@ -26,7 +26,7 @@ namespace GeometryClassLibraryTest
             Angle angle = new Angle(new Radian(), -173);
 
             Rotation rotation = new Rotation(testAxis, angle);
-            Rotation fromMatrixConstructor = new Rotation(rotation.Matrix);
+            Rotation fromMatrixConstructor = Rotation.RotationFromMatrix(rotation.Matrix);
 
             (fromMatrixConstructor.RotationAngle == angle.ProperAngle).Should().BeTrue();
             (fromMatrixConstructor.AxisOfRotation == testAxis).Should().BeTrue();

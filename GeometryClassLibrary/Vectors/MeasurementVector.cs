@@ -7,14 +7,10 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary.Vectors
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class MeasurementVector : IMeasurementVector
     {
-        [JsonProperty]
         public Measurement X { get; private set; }
-        [JsonProperty]
         public Measurement Y { get; private set; }
-        [JsonProperty]
         public Measurement Z { get; private set; }
 
         public Measurement Magnitude { get { return this.Magnitude(); } }

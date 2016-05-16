@@ -150,7 +150,7 @@ namespace GeometryClassLibrary
             this._endPoint = endPoint;
             if (this.IsClosed)
             {
-                throw new Exception("Not enough information given to determine curvature.");
+                throw new GeometricException("Not enough information given to determine curvature.");
             }
             var segmentBetweenPoints = new LineSegment(basePoint,endPoint);
             this._normalDirection = initialDirection.CrossProduct(segmentBetweenPoints.Direction);
@@ -170,12 +170,12 @@ namespace GeometryClassLibrary
         {
             if (basePoint != endPoint && !new Direction(basePoint, endPoint).IsPerpendicularTo(normalLine.Direction))
             {
-                throw new Exception();
+                throw new GeometricException();
             }
             var projected = basePoint.ProjectOntoLine(normalLine);
             if (projected == basePoint)
             {
-                throw new Exception();
+                throw new GeometricException();
             }
             this._basePoint = basePoint;
             this._endPoint = endPoint;

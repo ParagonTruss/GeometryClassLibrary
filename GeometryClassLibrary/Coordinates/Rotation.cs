@@ -30,8 +30,7 @@ namespace GeometryClassLibrary
                 return _matrix;
             }
         }
-
-        [JsonProperty]
+        
         public Angle RotationAngle
         {
             get
@@ -47,7 +46,6 @@ namespace GeometryClassLibrary
             private set { _rotationAngle = value.ProperAngle; }
         }
 
-        [JsonProperty]
         public Line AxisOfRotation
         {
             get
@@ -103,15 +101,19 @@ namespace GeometryClassLibrary
             this._matrix = new Matrix(toCopy._matrix);
         }
 
-        private void _setMatrix()
+        private Rotation(Matrix matrix)
         {
-            var translateInverse = new Translation(_axisOfRotation.BasePoint.Negate()).Matrix;
-            var rotate = _matrixOfRotationAboutOrigin();
-            var translate = new Translation(_axisOfRotation.BasePoint).Matrix;
-
-            this._matrix = translate * (rotate * translateInverse);
+            this._matrix = matrix;
         }
 
+        private Rotation(Line axis, Angle angle, Matrix matrix)
+        {
+            this._axisOfRotation = axis;
+            this._rotationAngle = angle;
+            this._matrix = matrix;
+        }
+
+        #region Constructor Helpers
         private Matrix _matrixOfRotationAboutOrigin()
         {
             Matrix rotationMatrix = new Matrix(4, 4);
@@ -150,10 +152,13 @@ namespace GeometryClassLibrary
             return rotationMatrix;
         }
 
-   
-        public Rotation(Matrix matrix)
+        private void _setMatrix()
         {
-            this._matrix = matrix;
+            var translateInverse = new Translation(_axisOfRotation.BasePoint.Negate()).Matrix;
+            var rotate = _matrixOfRotationAboutOrigin();
+            var translate = new Translation(_axisOfRotation.BasePoint).Matrix;
+
+            this._matrix = translate * (rotate * translateInverse);
         }
 
         private void _setAxisAndAngle()
@@ -186,24 +191,35 @@ namespace GeometryClassLibrary
             this.AxisOfRotation = axis;
             this.RotationAngle = angle;
         }
+        #endregion
+        
+        #endregion
 
-        private Rotation(Line axis, Angle angle, Matrix matrix)
-        {
-            this._axisOfRotation = axis;
-            this._rotationAngle = angle;
-            this._matrix = matrix;
-        }
-
-        #endregion 
-             
         #region Methods
+
+        /// <summary>
+        /// This method runs no validation. So make sure this matrix represents an actual rotation.
+        /// </summary>
+        public static Rotation RotationFromMatrix(Matrix matrix)
+        {
+            return new Rotation(matrix);
+        }
+        /// <summary>
+        /// Returns the rotation component of the shift object.
+        /// </summary>
+        public static Rotation RotationAboutOrigin(Shift shift)
+        {
+            var copy = new Matrix(shift.Matrix);
+            copy.SetColumn(3, new double[] { 0, 0, 0, 1 });
+            return new Rotation(copy);
+        }
 
         /// <summary>
         /// Returns the inverse rotation.
         /// </summary>
         public Rotation Inverse()
         {
-            var inverseAngle = RotationAngle * -1;
+            var inverseAngle = RotationAngle.Negate();
             
             return new Rotation(this.AxisOfRotation, inverseAngle);
         }

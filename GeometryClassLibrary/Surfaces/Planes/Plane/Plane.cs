@@ -15,7 +15,7 @@ namespace GeometryClassLibrary
     /// A plane is an unbounded flat surface
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Plane : ISurface
+    public partial class Plane : ISurface, IShift<Plane>
     {
         #region Properties and Fields
 
@@ -213,7 +213,7 @@ namespace GeometryClassLibrary
             return passedPoint.DistanceTo(this) == Distance.ZeroDistance;
         }
 
-        public Plane Translate(Translation translation)
+        public Plane Translate(Point translation)
         {
             Vector newNormalVector = this.NormalVector.Translate(translation);
             return new Plane(newNormalVector);
@@ -222,8 +222,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the Plane with the given rotation
         /// </summary>
-        /// <param name="rotationToApply">The Rotation(that stores the axis to rotate around and the angle to rotate) to apply to the Plane</param>
-        /// <returns></returns>
         public Plane Rotate(Rotation rotationToApply)
         {
             Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);

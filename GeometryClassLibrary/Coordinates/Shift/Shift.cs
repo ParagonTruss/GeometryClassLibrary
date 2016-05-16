@@ -37,15 +37,7 @@ namespace GeometryClassLibrary
 
         public Translation Translation { get { return new Translation(Point.Origin.Shift(this)); } }
         
-        public Rotation RotationAboutOrigin
-        {
-            get
-            {
-                var copy = new Matrix(this.Matrix);
-                copy.SetColumn(3, new double[] { 0, 0, 0, 1 });
-                return new Rotation(copy);
-            }
-        }
+        public Rotation RotationAboutOrigin { get { return Rotation.RotationAboutOrigin(this); } }
         #endregion
 
         #region Constructors

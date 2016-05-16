@@ -307,20 +307,14 @@ namespace GeometryClassLibrary
             return new Vector(BasePoint, Direction, newMagnitude);
         }
 
-    
-
         /// <summary>
-        /// Projects this LineSegment onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
+        /// Projects this vector onto the given Line, which is the projected length of this LineSegment in the direction of the Line projected onto
         /// </summary>
         public Vector ProjectOntoLine(Line projectOnto)
         {
-            if (this.IsCoplanarWith(projectOnto))
-            {
-                Point basePoint = this.BasePoint.ProjectOntoLine(projectOnto);
-                Point endPoint = this.EndPoint.ProjectOntoLine(projectOnto);
-                return new Vector(basePoint, endPoint);
-            }
-            throw new Exception("Cannot project a vector onto a line that its not coplanar with!");
+            Point basePoint = this.BasePoint.ProjectOntoLine(projectOnto);
+            Point endPoint = this.EndPoint.ProjectOntoLine(projectOnto);
+            return new Vector(basePoint, endPoint);
         }
 
         /// <summary>

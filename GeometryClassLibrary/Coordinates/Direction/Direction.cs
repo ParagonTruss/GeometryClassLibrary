@@ -54,7 +54,7 @@ namespace GeometryClassLibrary
         /// Gets for the z-component of this directions unitVector
         /// </summary>
         public Measurement Z { get { return Normalized.Z; } }
-        [JsonProperty]
+        
         private MeasurementVector _vector;
         private MeasurementVector _normalized;
 
