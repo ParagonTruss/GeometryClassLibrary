@@ -64,7 +64,7 @@ namespace GeometryClassLibrary
             foreach (Polygon polygon in polygonList)
             {
                 //see if they intersect
-                if (toSeeIfTouches.DoesIntersect(polygon))
+                if (toSeeIfTouches.Intersects(polygon))
                 {
                     touchingPolygons.Add(polygon);
                 }

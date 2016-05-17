@@ -11,10 +11,5 @@ namespace GeometryClassLibrary
         public int? Y_DatabaseId { get; set; }
 
         public int? Z_DatabaseId { get; set; }
-
-        internal Point Translate(object point)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

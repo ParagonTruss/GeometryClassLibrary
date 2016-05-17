@@ -60,7 +60,7 @@ namespace GeometryClassLibrary
             return pointList.Select(p => p.Shift(shift)).ToList();
         }
 
-        public static List<Point> ProjectAllOntoPlane(this IList<Point> pointList, Plane plane)
+        public static List<Point> ProjectAllOntoPlane(this IEnumerable<Point> pointList, Plane plane)
         {
             var results = new List<Point>();
             foreach (var point in pointList)

@@ -316,7 +316,7 @@ namespace GeometryClassLibrary
         {
             foreach (Polygon polygon in this.Polygons)
             {
-                if (passedPlane.DoesIntersect(polygon))
+                if (passedPlane.Intersects(polygon))
                 {
                     return true;
                 }

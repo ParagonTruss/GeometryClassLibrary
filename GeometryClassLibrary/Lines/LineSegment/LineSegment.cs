@@ -222,6 +222,11 @@ namespace GeometryClassLibrary
             return null;
         }
 
+        public virtual Point IntersectWithPlane(Plane plane)
+        {
+            return plane.IntersectWithSegment(this);
+        }
+
         /// <summary>
         /// Checks if this LineSegment intersects with the given LineSegment and returns the point of intersection
         /// </summary>

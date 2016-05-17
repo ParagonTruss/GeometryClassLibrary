@@ -91,13 +91,13 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a new point with the given values with the given Distance type
         /// </summary>
-        public Point(DistanceType passedType, double passedX, double passedY, double passedZ)
+        public Point(DistanceType passedType, double passedX, double passedY, double passedZ = 0)
         {
             _x = new Distance(passedType, passedX);
             _y = new Distance(passedType, passedY);
             _z = new Distance(passedType, passedZ);
         }
-        public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ)
+        public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ = default(Measurement))
         {
             _x = new Distance(passedType, passedX);
             _y = new Distance(passedType, passedY);

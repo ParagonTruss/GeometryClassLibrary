@@ -25,14 +25,13 @@ namespace GeometryClassLibrary
 
         public virtual bool IsBounded { get { return true; } }
 
-        public Line NormalLine { get; protected set; }
-
         [JsonProperty]
+        public virtual Line NormalLine { get; protected set; }
+   
         public Point BasePoint { get { return NormalLine.BasePoint; } }
 
         public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, new Distance(1, Inches)); } }
 
-        [JsonProperty]
         public Direction NormalDirection { get { return NormalLine.Direction; } }
         #endregion
 
@@ -397,7 +396,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public bool DoesIntersect(Line passedLine)
+        public bool Intersects(Line passedLine)
         {
             Point intersection = this.IntersectWithLine(passedLine);
             return (intersection != null);
@@ -408,7 +407,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         /// <returns></returns>
-        public virtual bool DoesIntersect(LineSegment passedVector)
+        public virtual bool Intersects(LineSegment passedVector)
         {
             var intersection = new Line(passedVector).IntersectWithPlane(this);
             bool segmentContainsPoint = passedVector.Contains(intersection);
@@ -420,7 +419,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public bool DoesIntersect(Plane passedPlane)
+        public bool Intersects(Plane passedPlane)
         {
             return !this.IsParallelTo(passedPlane) || this.IsCoplanarTo(passedPlane);
         }
@@ -428,7 +427,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the polygon and plane intersect
         /// </summary>
-        public bool DoesIntersect(Polygon polygon)
+        public bool Intersects(Polygon polygon)
         {
             Line slicingLine = polygon.IntersectingSegment(this);
             return (slicingLine != null && polygon.DoesIntersect(slicingLine));
