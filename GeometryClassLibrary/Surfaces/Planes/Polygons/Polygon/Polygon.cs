@@ -9,6 +9,7 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary
 {
@@ -1623,7 +1624,16 @@ namespace GeometryClassLibrary
         {
             return Rectangle(sideLength, sideLength, basePoint);
         }
-     
+
+        public static Polygon Triangle(DistanceType type, 
+            double x1, double y1,
+            double x2, double y2, 
+            double x3, double y3)
+        {
+            return new Polygon(new List<Point>
+            { new Point(type, x1, y1), new Point(type, x2, y2), new Point(type, x3, y3) }, false);
+        }
+
         public static Polygon Triangle(Vector vector1, Vector vector2, Point basePoint = null)
         {
             if (basePoint == null)

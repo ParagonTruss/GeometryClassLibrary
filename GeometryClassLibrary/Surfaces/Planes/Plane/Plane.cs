@@ -348,9 +348,9 @@ namespace GeometryClassLibrary
             return line.GetPointAlongLine(distance);
         }
 
-        public Point IntersectWithSegment(LineSegment segment)
+        public virtual Point IntersectWithSegment(LineSegment segment)
         {
-            Point possibleIntersection = this.IntersectWithLine((Line)segment);
+            Point possibleIntersection = this.IntersectWithLine(segment);
             if (possibleIntersection != null && possibleIntersection.IsOnLineSegment(segment))
             {
                 return possibleIntersection;
