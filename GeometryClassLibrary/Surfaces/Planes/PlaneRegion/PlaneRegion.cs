@@ -7,7 +7,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
-    public partial class PlaneRegion : Plane, ISurface, IComparable<PlaneRegion>
+    public partial class PlaneRegion : Plane, ISurface
     {
         public static implicit operator PlaneRegion(Polygon p)
         {

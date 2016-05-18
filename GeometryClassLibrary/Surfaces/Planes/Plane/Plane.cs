@@ -24,6 +24,7 @@ namespace GeometryClassLibrary
         public static Plane YZ { get { return new Plane(Point.Origin, Direction.Right); } }
 
         public virtual bool IsBounded { get { return true; } }
+        public Area Area { get { return new Area(Double.PositiveInfinity, Area.SquareInches); } }
 
         [JsonProperty]
         public virtual Line NormalLine { get; protected set; }

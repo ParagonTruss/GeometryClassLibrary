@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
+using MoreLinq;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary
 {
@@ -104,6 +106,11 @@ namespace GeometryClassLibrary
         public LineSegment(LineSegment toCopy)
             : base(toCopy.BasePoint, toCopy.Direction,toCopy.Magnitude) { }
 
+        public LineSegment(DistanceType distanceUnit, double x1, double y1, double x2, double y2)
+            : base(new Point(distanceUnit, x1, y1), new Point(distanceUnit, x2, y2)) { }
+
+        public LineSegment(DistanceType distanceUnit, double x1, double y1, double z1, double x2, double y2, double z2)
+            : base(new Point(distanceUnit, x1, y1, z1), new Point(distanceUnit, x2, y2, z2)) { }
 
         private void _checkSegment()
         {
@@ -277,24 +284,44 @@ namespace GeometryClassLibrary
 
             return containsBasePoint && containsEndPoint;
         }
-
+        
+        public List<LineSegment> Slice(List<LineSegment> slicingSegments)
+        {
+            var currentSegments = new List<LineSegment> { this };
+            foreach (var slicer in slicingSegments)
+            {
+                var tempList = new List<LineSegment>();
+                foreach (var segment in currentSegments)
+                {
+                    tempList.AddRange(segment.Slice(slicer));
+                }
+                currentSegments = tempList;
+            }
+            return currentSegments.OrderBy(segment => segment.BasePoint.DistanceTo(this.BasePoint)).ToList();
+        }
+        public List<LineSegment> Slice(LineSegment slicingSegment)
+        {
+            var splitPoint = this.IntersectWithSegment(slicingSegment);
+            if (splitPoint == null || this.IsParallelTo(slicingSegment))
+            {
+                return new List<LineSegment>() { this };
+            }
+            return Slice(splitPoint);
+        }
         /// <summary>
-        /// Slices this lineSegment into two lineSegments at the given point and returns them with the longer segment first
-        /// or the original line segment if the point is not on it
+        /// Returns them with the piece containing the base point first.
         /// </summary>
-        /// <param name="spotToSliceAt">Spot on the line to slice at</param>
-        /// <returns>returns the two parts the LineSegment is sliced into, or the original line segment if the point is not on it</returns>
         public List<LineSegment> Slice(Point spotToSliceAt)
         {
             if (this.ContainsOnInside(spotToSliceAt))
             {
-                List<LineSegment> returnLines = new List<LineSegment>();
+                List<LineSegment> splitSegments = new List<LineSegment>();
 
                 //add the two segments to the return list
-                returnLines.Add(new LineSegment(this.BasePoint, spotToSliceAt));
-                returnLines.Add(new LineSegment(spotToSliceAt, this.EndPoint));
+                splitSegments.Add(new LineSegment(this.BasePoint, spotToSliceAt));
+                splitSegments.Add(new LineSegment(spotToSliceAt, this.EndPoint));
 
-                return returnLines;
+                return splitSegments;
             }
             else
             {

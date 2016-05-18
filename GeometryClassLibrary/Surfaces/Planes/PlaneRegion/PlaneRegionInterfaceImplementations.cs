@@ -14,12 +14,6 @@ namespace GeometryClassLibrary
             return this.Shift(shift);
         }
 
-        /// <summary>
-        /// Should return the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other PlaneRegion
-        /// </summary>
-        public int CompareTo(PlaneRegion other)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

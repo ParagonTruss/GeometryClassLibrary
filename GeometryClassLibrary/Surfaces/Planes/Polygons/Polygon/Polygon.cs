@@ -287,6 +287,13 @@ namespace GeometryClassLibrary
                 this.Vertices.Select(v => v.Translate(translation)).ToList(), false);
         }
 
+        public LineSegment ContainedPieceOfSegment(LineSegment segment)
+        {
+            var slicedPieces = segment.Slice(this.LineSegments);
+            var piece = slicedPieces.FirstOrDefault(s => this.Contains(s));
+            return piece;
+        }
+
         public virtual Polygon SmallestEnclosingRectangle()
         {
             throw new NotImplementedException();
