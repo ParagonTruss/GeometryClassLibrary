@@ -397,7 +397,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedPlane"></param>
         /// <returns></returns>
-        public bool Intersects(Line passedLine)
+        public virtual bool Intersects(Line passedLine)
         {
             Point intersection = this.IntersectWithLine(passedLine);
             return (intersection != null);
