@@ -17,7 +17,7 @@ namespace GeometryClassLibrary
     /// A plane region is a section of a plane.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Polygon : Plane
+    public partial class Polygon : Plane, IShift<Polygon>
     {
         public static explicit operator Polygon(PlaneRegion p)
         {
@@ -265,7 +265,10 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-
+        public Polygon Rotate2D (Point centerOfRotation, Angle rotationAngle)
+        {
+            return new Polygon(this.Vertices.Select(vertex => vertex.Rotate2D(rotationAngle, centerOfRotation)).ToList(), false);
+        }
         public new Polygon Shift(Shift passedShift)
         {
             return new Polygon(this.LineSegments.Shift(passedShift), false);
