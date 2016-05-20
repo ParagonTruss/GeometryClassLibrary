@@ -13,7 +13,7 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class LineSegment : Vector, IEdge, IEquatable<LineSegment>
+    public partial class LineSegment : Vector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
     {
         #region Properties and Fields
 
@@ -116,11 +116,11 @@ namespace GeometryClassLibrary
         {
             if (this.BasePoint == null || this.EndPoint == null)
             {
-                throw new GeometricException("BasePoint or EndPoint is null!");
+                throw new ArgumentNullException("BasePoint or EndPoint is null!");
             }
             if (this.BasePoint == this.EndPoint)
             {
-                throw new GeometricException("LineSegment has no breadth!");
+                throw new InvalidLineSegmentException("LineSegment has no breadth!");
             }
         }
         #endregion
@@ -500,12 +500,7 @@ namespace GeometryClassLibrary
         {
             if (!point.IsBaseOrEndPointOf(this))
             {
-                var vector1 = new Vector(this.BasePoint, point);
-                var vector2 = new Vector(point, this.EndPoint);
-                if (vector1.HasSameDirectionAs(this) && vector2.HasSameDirectionAs(this))
-                {
-                    return true;
-                }
+                return this.Contains(point);
             }
             return false;
         }
@@ -514,22 +509,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public new bool Contains(Point point)
         {
-            //This method can make or break the Slice method. Handle very carefully.
-            //This checks for a null point, and checks the distance from the point to the line.
-            if (!new Line(this).Contains(point))
-            {
-                return false;
-            }
-            //We need this check before we check directions, because there is no direction if the point is the vector's basepoint
-            if (point == this.BasePoint || point == this.EndPoint)
-            {
-                return true;
-            }
-            Vector pointVector = new Vector(this.BasePoint, point);
-            bool sameDirection = this.HasSameDirectionAs(pointVector);
-            bool greaterMagnitude = (this.Magnitude >= pointVector.Magnitude);
-
-            return sameDirection && greaterMagnitude;
+            return this.BasePoint.DistanceTo(point) + point.DistanceTo(EndPoint) == this.Length;
         }
 
         public bool ContainsOnInside(LineSegment other)

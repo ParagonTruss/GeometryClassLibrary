@@ -16,7 +16,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
-    //[DebuggerVisualizer(typeof(GeometryVisualizer))]
     public partial class Point : IEquatable<Point>
     {
         #region Properties and Fields
@@ -211,7 +210,7 @@ namespace GeometryClassLibrary
        
         public override string ToString()
         {
-            return String.Format("X = {0}, Y = {1}, Z = {2}", this.X.ToString(), this.Y.ToString(), this.Z.ToString());
+            return String.Format("({0}, {1}, {2})", this.X.ToString(), this.Y.ToString(), this.Z.ToString());
         }
 
         #endregion

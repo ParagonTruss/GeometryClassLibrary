@@ -201,7 +201,7 @@ namespace GeometryClassLibrary
             }
             if (polygons == null || polygons.Count == 0)
             {
-                throw new Exception("The polygons you're attempting to use do not form a single closed region.");
+                throw new InvalidPolyhedronException("The polygons you're attempting to use do not form a single closed region.");
             }
 
             this.Polygons = polygons;
@@ -799,7 +799,7 @@ namespace GeometryClassLibrary
             {
                 return placedFaces;
             }
-            throw new Exception();
+            throw new InvalidPolyhedronException();
 
         }
 
@@ -821,7 +821,7 @@ namespace GeometryClassLibrary
                     return new Polygon(face);
                 }
             }
-            throw new Exception();
+            throw new InvalidPolyhedronException();
         }
 
      
@@ -877,7 +877,7 @@ namespace GeometryClassLibrary
                     }
                 }
             }
-            throw new Exception("The passed list of faces do not form a closed region.");
+            throw new InvalidPolyhedronException("The passed list of faces do not form a closed region.");
         }
         #endregion
 

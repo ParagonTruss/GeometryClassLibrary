@@ -1125,16 +1125,17 @@ namespace GeometryClassLibraryTest
             Point point = null;
 
             Action contains = () => lineSegment.ContainsOnInside(point);
-            contains.ShouldThrow<Exception>();
+            contains.ShouldThrow<NullReferenceException>();
         }
 
         [Test()]
-        public void LineSegment_ContainsPoint_ShouldReturnFalse_IfPointIsNull()
+        public void LineSegment_ContainsPoint_ShouldReturnThrowException_IfPointIsNull()
         {
             LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(2, 2, 2));
             Point point = null;
 
-            lineSegment.Contains(point).Should().BeFalse();
+            Action contains = () => lineSegment.ContainsOnInside(point);
+            contains.ShouldThrow<NullReferenceException>();
         }
 
         [Test()]

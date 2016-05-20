@@ -11,13 +11,25 @@ namespace GeometryClassLibrary
     /// </summary>
     public class GeometricException : Exception
     {
-        public GeometricException()
-        {
+        public GeometricException() { }
+        public GeometricException(string message) : base(message) { }   
+    }
 
-        }
-        public GeometricException(string message) : base(message)
-        {
+    public class InvalidLineSegmentException : GeometricException
+    {
+        public InvalidLineSegmentException() { }
+        public InvalidLineSegmentException(string message) : base(message) { }
+    }
 
-        }
+    public class InvalidPolygonException : GeometricException
+    {
+        public InvalidPolygonException() { }
+        public InvalidPolygonException(string message) : base(message) { }
+    }
+
+    public class InvalidPolyhedronException : GeometricException
+    {
+        public InvalidPolyhedronException() { }
+        public InvalidPolyhedronException(string message) : base(message) { }
     }
 }

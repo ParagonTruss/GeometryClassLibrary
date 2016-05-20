@@ -114,22 +114,22 @@ namespace GeometryClassLibrary
             bool notEnoughSegments = (segments == null || segments.Count < 3);
             if (notEnoughSegments)
             {
-                throw new GeometricException("The passed list is either null or has less than 3 segments.");
+                throw new InvalidPolygonException("The passed list is either null or has less than 3 segments.");
             }
             bool notClosed = !segments.DoFormClosedRegion();
             if (notClosed)
             {
-                throw new GeometricException("The passed list of segments do not form a closed region.");
+                throw new InvalidPolygonException("The passed list of segments do not form a closed region.");
             }
             bool areNotCoplanar = !segments.AreAllCoplanar();
             if (areNotCoplanar)
             {
-                throw new GeometricException("The passed list of segments are not coplanar.");
+                throw new InvalidPolygonException("The passed list of segments are not coplanar.");
             }
             bool selfIntersecting = segments.AtleastOneIntersection();
             if (selfIntersecting)
             {
-                throw new GeometricException("The passed list of segments are self intersecting.");
+                throw new InvalidPolygonException("The passed list of segments are self intersecting.");
             }
         }
 
