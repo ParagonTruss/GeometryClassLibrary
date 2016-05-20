@@ -17,7 +17,7 @@ namespace GeometryClassLibrary
     /// A line in 3d space.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Line : IEquatable<Line>
+    public partial class Line : IEquatable<Line>, IShift<Line>
     {
         #region Properties and Fields
 
