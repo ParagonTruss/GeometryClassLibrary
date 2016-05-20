@@ -46,7 +46,7 @@ namespace GeometryClassLibraryTest
             area.Should().Be(new Area(new SquareInch(), 1));
 
      
-            Assert.Throws<Exception>(() => new Polygon(verticesInWrongOrder));       
+            Assert.Throws<GeometricException>(() => new Polygon(verticesInWrongOrder));       
         }
 
         [Test()]
