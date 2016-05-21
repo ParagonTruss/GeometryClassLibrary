@@ -16,7 +16,7 @@ namespace GeometryClassLibrary
     /// St
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class Direction
+    public partial class Direction : IRotate<Direction>
     {
         #region Properties and Fields
 
@@ -316,6 +316,11 @@ namespace GeometryClassLibrary
             var angle = AngleBetween(d);
             return angle == Angle.ZeroAngle ||
                 angle == 180 * new Angle(1, Degrees);
+        }
+
+        public Direction Rotate(Rotation rotation)
+        {
+            return new Direction(_vector.Rotate(rotation));
         }
         #endregion
     }

@@ -4,27 +4,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public class MeasurementVector : IMeasurementVector
+    public class MeasurementVector : IMeasurementVector, IRotate<MeasurementVector>
     {
-        public Measurement X { get; private set; }
-        public Measurement Y { get; private set; }
-        public Measurement Z { get; private set; }
+        public static MeasurementVector Zero { get { return new MeasurementVector(0.0, 0.0, 0.0); } }
+
+        #region Local Properties
+        public Measurement X { get; }
+        public Measurement Y { get; }
+        public Measurement Z { get; }
 
         public Measurement Magnitude { get { return this.Magnitude(); } }
 
-        public static MeasurementVector Zero { get { return new MeasurementVector(0.0, 0.0, 0.0); } }
+        #endregion
 
+        #region Constructor
         public MeasurementVector(Measurement x, Measurement y)
         {
             this.X = x;
             this.Y = y;
             this.Z = new Measurement(0.0, 0.0);
         }
-
-        [JsonConstructor]
+        
         public MeasurementVector(Measurement x, Measurement y, Measurement z)
         {
             if (Measurement.ErrorPropagationIsEnabled)
@@ -47,15 +51,30 @@ namespace GeometryClassLibrary.Vectors
             this.Y = magnitude * direction.Y;
             this.Z = magnitude * direction.Z;
         }
+        #endregion
 
+        #region Public Methods
         public MeasurementVector Reverse()
         {
             return new MeasurementVector(X.Negate(), Y.Negate(), Z.Negate());
         }
 
+        public MeasurementVector Rotate(Rotation rotation)
+        {
+            // update later, but for now:
+            var point = new Point(Distance.Inches, X, Y, Z);
+            point = point.Rotate3D(rotation);
+            return new MeasurementVector(point.X.InInches, point.Y.InInches, point.Z.InInches);
+        }
+
+
+        #endregion
+
+        #region Operator Overloads
         public static MeasurementVector operator /(MeasurementVector vector, double divisor)
         {
             return new MeasurementVector(vector.X/divisor, vector.Y/divisor, vector.Z/divisor);
         }
+        #endregion
     }
 }
