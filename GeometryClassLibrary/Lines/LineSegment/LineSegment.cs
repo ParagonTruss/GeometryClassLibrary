@@ -87,10 +87,13 @@ namespace GeometryClassLibrary
             _checkSegment();
         }
 
-
-        [JsonConstructor]
-        public LineSegment(Point basePoint, Direction direction, Distance magnitude = null)
+        public LineSegment(Point basePoint, Direction direction, Distance magnitude)
             : base(basePoint, direction, magnitude)
+        {
+            _checkSegment();
+        }
+        public LineSegment(Direction direction, Distance magnitude)
+            : base(direction, magnitude)
         {
             _checkSegment();
         }

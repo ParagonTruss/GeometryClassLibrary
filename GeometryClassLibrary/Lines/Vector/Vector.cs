@@ -328,6 +328,15 @@ namespace GeometryClassLibrary
             return new Vector(newBasePoint, newEndPoint);
         }
 
+        public Vector OrthogonalProjection(Line line)
+        {
+            return ProjectOntoPlane(new Plane(line));
+        }
+
+        public Vector OrthogonalProjection(Plane plane)
+        {
+            return ProjectOntoLine(plane.NormalLine);
+        }
         /// <summary>
         /// Returns the cross product of the 2 vectors
         /// which is always perpendicular to both vectors

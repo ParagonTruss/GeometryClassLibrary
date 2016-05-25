@@ -302,11 +302,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the smaller of the two angles fromed where the two lines intersect
+        /// Returns the smaller of the two angles between these lines.
         /// </summary>
-        public Angle SmallestAngleBetween(Line passedIntersectingLine)
+        public virtual Angle SmallestAngleBetween(Line line)
         {
-            Angle returnAngle = AngleBetween(passedIntersectingLine);
+            Angle returnAngle = AngleBetween(line);
 
             if (returnAngle.InDegrees > 90)
             {
