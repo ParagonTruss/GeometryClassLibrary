@@ -219,11 +219,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks if this Vector intersects the given line and returns the point if it does or null otherwise
         /// </summary>
-        /// <param name="passedLine">The line to check if this intersects with</param>
+        /// <param name="line">The line to check if this intersects with</param>
         /// <returns>returns the intersection point of the two lines or null if they do not</returns>
-        public override Point IntersectWithLine(Line passedLine)
+        public override Point IntersectWithLine(Line line)
         {
-            Point intersect = new Line(this).IntersectWithLine(passedLine);
+            Point intersect = new Line(this).IntersectWithLine(new Line(line));
 
             if (!ReferenceEquals(intersect, null) && intersect.IsOnLineSegment(this))
             {
