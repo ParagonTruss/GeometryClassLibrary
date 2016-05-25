@@ -959,14 +959,14 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Checks if the point is touching the PlaneRegion (aka if it is on the boundaries of the planeRegion)
+        /// Checks if the point is on any of the boundaries of the polygon.
         /// </summary>
-        public bool Touches(Point passedPoint)
+        public bool Touches(Point point)
         {
             //check each of our boundaries if the point is on the LineSegment
             foreach (LineSegment line in this.LineSegments)
             {
-                if (passedPoint.IsOnLineSegment(line))
+                if (point.IsOnLineSegment(line))
                 {
                     return true;
                 }
@@ -1522,10 +1522,48 @@ namespace GeometryClassLibrary
                 list.Add(new LineSegment(basePoint, endPoint));
             }
         }
-        
+
         #endregion
 
         #region Static Factory Methods
+
+        public static Polygon Triangle(
+            DistanceType type,
+            double x1, double y1,
+            double x2, double y2,
+            double x3, double y3)
+        {
+            return new Polygon(new List<Point>{
+                new Point(type, x1, y1),
+                new Point(type, x2, y2),
+                new Point(type, x3, y3) }, false);
+        }
+
+        public static Polygon Quad(
+            DistanceType type,
+            double x1, double y1,
+            double x2, double y2,
+            double x3, double y3,
+            double x4, double y4)
+        {
+            return new Polygon(new List<Point>{
+                new Point(type, x1, y1),
+                new Point(type, x2, y2),
+                new Point(type, x3, y3),
+                new Point(type, x4, y4)});
+        }
+
+        public static Polygon Rectangle(
+            DistanceType type,
+            double x1, double y1,
+            double x2, double y2)
+        {
+            return new Polygon(new List<Point>{
+                new Point(type, x1, y1),
+                new Point(type, x2, y1),
+                new Point(type, x2, y2),
+                new Point(type, x1, y2)});
+        }
 
         public static Polygon EquilateralTriangle(Distance sideLength)
         {
@@ -1533,7 +1571,7 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a parrelologram. 
+        /// Creates a parallelogram. 
         /// shifts both vectors so their basepoints are the passed basepoint, and creates the parrelogram spanned by those sides.
         /// </summary>
         public static Polygon Parallelogram(Vector vector1, Vector vector2, Point basePoint = null)
@@ -1577,10 +1615,10 @@ namespace GeometryClassLibrary
             }
 
             Angle step = new Angle(360.0 / numberOfSides, Degrees);
-            Angle otherAngle = (Angle.StraightAngle - step) / 2;
+            Angle otherAngle = (StraightAngle - step) / 2;
 
             //Law of Sines
-            Distance length = sideLength * Angle.Sine(otherAngle) / Angle.Sine(step);
+            Distance length = sideLength * Sine(otherAngle) / Sine(step);
 
             Point firstPoint;
             if (startingAngle == null)
@@ -1589,7 +1627,7 @@ namespace GeometryClassLibrary
                 if (numberOfSides % 4 == 0)
                 {
                     firstPoint = new Point(length, Distance.ZeroDistance);
-                    firstPoint = firstPoint.Rotate2D((Angle)(step / 2));
+                    firstPoint = firstPoint.Rotate2D(step / 2);
                 }
                 else if (numberOfSides % 2 == 0)
                 {
@@ -1608,7 +1646,7 @@ namespace GeometryClassLibrary
             List<Point> points = new List<Point>() { firstPoint };
             for (int i = 1; i < numberOfSides; i++)
             {
-                points.Add(firstPoint.Rotate2D((Angle)(step*i)));
+                points.Add(firstPoint.Rotate2D(step*i));
             }
             if (centerPoint == null)
             {
@@ -1633,15 +1671,6 @@ namespace GeometryClassLibrary
         public static Polygon Square(Distance sideLength, Point basePoint = null)
         {
             return Rectangle(sideLength, sideLength, basePoint);
-        }
-
-        public static Polygon Triangle(DistanceType type, 
-            double x1, double y1,
-            double x2, double y2, 
-            double x3, double y3)
-        {
-            return new Polygon(new List<Point>
-            { new Point(type, x1, y1), new Point(type, x2, y2), new Point(type, x3, y3) }, false);
         }
 
         public static Polygon Triangle(Vector vector1, Vector vector2, Point basePoint = null)
