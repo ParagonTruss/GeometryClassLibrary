@@ -6,13 +6,20 @@ namespace GeometryClassLibrary
 
     public class Rectangle : Polygon
     {
-        
+        public Distance Length { get; }
+        public Distance Width { get; }
+
         /// <summary>
         /// Creates a Rectangle in the XY Plane, with one corner at the origin, and the specified length, width.
         /// </summary>
         /// <param name="length"></param>
         /// <param name="width"></param>
-        public Rectangle(Distance length, Distance width) : base(_makeRectangle(length, width)) { }
+        public Rectangle(Distance length, Distance width, Point basePoint = null) 
+            : base(_makeRectangle(length, width))
+        {
+            this.Length = length.AbsoluteValue();
+            this.Width = width.AbsoluteValue();
+        }
 
         private static Polygon _makeRectangle(Distance length, Distance width, Point basePoint = null)
         {
@@ -22,12 +29,7 @@ namespace GeometryClassLibrary
             var rectangle = Parallelogram(vector1, vector2, basePoint);
             return rectangle;
         }
-
-        /// <summary>
-        /// Null constructor for the benefit of Entity Framework
-        /// </summary>
-        private Rectangle()
-            : base() { }
+        
 
         public Rectangle(Vector baseSegment, Distance height, Direction referencePlaneNormal = null)
             : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }

@@ -668,7 +668,7 @@ namespace GeometryClassLibrary
             return this._slice(slicingLine, slicingPlane);
         }
 
-        #region New slice attempt
+        #region Slice Helpers
         private List<Polygon> _slice(Line slicingLine, Plane slicingPlane)
         {
 
