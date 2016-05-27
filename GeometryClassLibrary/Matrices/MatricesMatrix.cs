@@ -6,27 +6,19 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        // declares a two Distanceal array named Matrices but does not initialize it yet.  The "," denotes that it is 2d
         Matrix[,] _matrices;
 
         /// <summary>
-        /// Returns the element at row "rowIndex" and column "columnIndex"
+        /// Returns the matrix at row "rowIndex" and column "columnIndex"
         /// </summary>
-        /// <param name="rowIndex">The row number of the desired element</param>
-        /// <param name="columnIndex">The column number of the desired element</param>
-        /// <returns></returns>
         public Matrix GetElement(int rowIndex, int columnIndex)
         {
             return _matrices[rowIndex, columnIndex];
         }
-
-        // adds element at specified indices
+        
         /// <summary>
-        /// Adds an element to a specific lecation in the Matrices
+        /// Sets an element to a specific location.
         /// </summary>
-        /// <param name="rowIndex">The number of the row where the element will be added</param>
-        /// <param name="columnIndex">The number of the column where the element will be added</param>
-        /// <param name="element"></param>
         public void SetElement(int rowIndex, int columnIndex, Matrix element)
         {
             _matrices[rowIndex, columnIndex] = element;
@@ -64,7 +56,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the total number of rows required to contain all of the rows from the inner matrices
         /// </summary>
-        /// <returns></returns>
         public int TotalRows()
         {
             int totalRows = 0;
@@ -112,6 +103,21 @@ namespace GeometryClassLibrary
 
         }
 
+        public void SetNullEntriesToZero()
+        {
+            for (int i = 0; i < this.NumberOfRows; i++)
+            {
+                for (int j = 0; j < this.NumberOfColumns; j++)
+                {
+                    //Replace any null elements with a 3x3 zero matrix
+                    if (ReferenceEquals(this.GetElement(i, j), null))
+                    {
+                        this.SetElement(i, j, new Matrix(3, 3));
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -125,11 +131,6 @@ namespace GeometryClassLibrary
             _matrices = new Matrix[numRowsAndColumns, numRowsAndColumns];
         }
 
-        /// <summary>
-        ///the constructor that is called when you say new MatricesMatrix(numberOfRows, numberOfColumns)
-        /// </summary>
-        /// <param name="numRows">The desired number of rows in the new MatricesMatrix</param>
-        /// <param name="numCols">The desired number of columns in the new MatricesMatrix</param>
         public MatricesMatrix(int numRows, int numCols) 
         {
             _matrices = new Matrix[numRows, numCols];
@@ -222,141 +223,132 @@ namespace GeometryClassLibrary
 
         #region Methods 
     
-        /// <summary>
-        /// Checks to see if this matrix and the passed matrix can be added together.  
-        /// In order to be able to add two matrices, they must have the same Distances.
-        /// </summary>
-        /// <param name="passedMatrices"></param>
-        /// <returns></returns>
-        public bool CanBeAddedTo(MatricesMatrix passedMatrices)
-        {
-            throw new NotImplementedException();            
-            //Must check that the Distances are same for the corresponding elements of the 2 MatricesMatrixes
+        ///// <summary>
+        ///// Checks to see if this matrix and the passed matrix can be added together.  
+        ///// In order to be able to add two matrices, they must have the same dimensions.
+        ///// </summary>
+        //public bool CanBeAddedTo(MatricesMatrix passedMatrices)
+        //{
+        //    throw new NotImplementedException();            
+        //    //Must check that the Distances are same for the corresponding elements of the 2 MatricesMatrixes
                         
-            //if ((this.NumberOfRows == passedMatrices.NumberOfRows) && (this.NumberOfColumns == passedMatrices.NumberOfColumns))
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-        }
+        //    //if ((this.NumberOfRows == passedMatrices.NumberOfRows) && (this.NumberOfColumns == passedMatrices.NumberOfColumns))
+        //    //{
+        //    //    return true;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return false;
+        //    //}
+        //}
 
-        /// <summary>
-        /// Returns the sum of this matrix and the passed matrix
-        /// </summary>
-        /// <param name="passedMatrices"></param>
-        /// <returns></returns>
-        public MatricesMatrix AddTo(MatricesMatrix passedMatrices)
-        {
+        ///// <summary>
+        ///// Returns the sum of this matrix and the passed matrix
+        ///// </summary>
+        //public MatricesMatrix AddTo(MatricesMatrix passedMatrices)
+        //{
             
-            throw new NotImplementedException();
+        //    throw new NotImplementedException();
 
-            //MatricesMatrix resultingMatrices;
+        //    //MatricesMatrix resultingMatrices;
 
-            //if (this.CanBeAddedTo(passedMatrices))
-            //{
-            //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, this.NumberOfColumns);
-            //}
-            //else
-            //{
-            //    throw new Exception("The two matrices cannot be added");
-            //}
+        //    //if (this.CanBeAddedTo(passedMatrices))
+        //    //{
+        //    //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, this.NumberOfColumns);
+        //    //}
+        //    //else
+        //    //{
+        //    //    throw new Exception("The two matrices cannot be added");
+        //    //}
             
-            //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
-            //{
-            //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
-            //    {
-            //        Matrix sum = (this.GetElement(rowIndex, columnIndex).AddTo(passedMatrices.GetElement(rowIndex, columnIndex)));
-            //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
-            //    }
-            //}
+        //    //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
+        //    //{
+        //    //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
+        //    //    {
+        //    //        Matrix sum = (this.GetElement(rowIndex, columnIndex).AddTo(passedMatrices.GetElement(rowIndex, columnIndex)));
+        //    //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
+        //    //    }
+        //    //}
 
-            //return resultingMatrices;
+        //    //return resultingMatrices;
 
-        }
+        //}
 
-        /// <summary>
-        /// Checks to see if this matrix can be multiplied by the passed matrix IN THAT ORDER.
-        /// In order to multiply two matrices, the number of columns in the first matrix
-        /// must equal the number of columns in the second matrix.
-        /// </summary>
-        /// <param name="passedMatrices"></param>
-        /// <returns></returns>
-        public bool CanBeMultipliedBy(MatricesMatrix passedMatrices)
-        {
-            throw new NotImplementedException();
-            //Must check that this.numberofcolumns = passedMatricesMatrix.NumberOfRows for every element of the MatricesMatrix
+        ///// <summary>
+        ///// Checks to see if this matrix can be multiplied by the passed matrix IN THAT ORDER.
+        ///// In order to multiply two matrices, the number of columns in the first matrix
+        ///// must equal the number of columns in the second matrix.
+        ///// </summary>
+        ///// <param name="passedMatrices"></param>
+        ///// <returns></returns>
+        //public bool CanBeMultipliedBy(MatricesMatrix passedMatrices)
+        //{
+        //    throw new NotImplementedException();
+        //    //Must check that this.numberofcolumns = passedMatricesMatrix.NumberOfRows for every element of the MatricesMatrix
             
-            //if (this.NumberOfColumns == passedMatrices.NumberOfRows)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-        }
+        //    //if (this.NumberOfColumns == passedMatrices.NumberOfRows)
+        //    //{
+        //    //    return true;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return false;
+        //    //}
+        //}
 
-        /// <summary>
-        /// Returns the product matrix of this matrix multiplied by the passed matrix, in that order.
-        /// </summary>
-        /// <param name="passedMatrices"></param>
-        /// <returns></returns>
-        public MatricesMatrix MultiplyBy(MatricesMatrix passedMatrices)
-        {
-            throw new NotImplementedException();
+        ///// <summary>
+        ///// Returns the product matrix of this matrix multiplied by the passed matrix, in that order.
+        ///// </summary>
+        //public MatricesMatrix MultiplyBy(MatricesMatrix passedMatrices)
+        //{
+        //    throw new NotImplementedException();
 
-            //MatricesMatrix resultingMatrices;
+        //    //MatricesMatrix resultingMatrices;
 
-            //if (this.CanBeMultipliedBy(passedMatrices))
-            //{
-            //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, passedMatrices.NumberOfColumns);
-            //}
-            //else
-            //{
-            //    throw new Exception("The two MatrixMatrices cannot be multiplied");
-            //}
+        //    //if (this.CanBeMultipliedBy(passedMatrices))
+        //    //{
+        //    //    resultingMatrices = new MatricesMatrix(this.NumberOfRows, passedMatrices.NumberOfColumns);
+        //    //}
+        //    //else
+        //    //{
+        //    //    throw new Exception("The two MatrixMatrices cannot be multiplied");
+        //    //}
 
 
-            //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
-            //{
-            //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
-            //    {
-            //        Matrix sum = null;
-            //        for (int term = 0; term < this.NumberOfColumns; term++)
-            //        {
-            //            sum = sum.AddTo((this.GetElement(rowIndex, term).MultiplyBy( passedMatrices.GetElement(term, columnIndex))));
-            //        }
-            //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
-            //    }
-            //}
+        //    //for (int rowIndex = 0; rowIndex < resultingMatrices.NumberOfRows; rowIndex++)
+        //    //{
+        //    //    for (int columnIndex = 0; columnIndex < resultingMatrices.NumberOfColumns; columnIndex++)
+        //    //    {
+        //    //        Matrix sum = null;
+        //    //        for (int term = 0; term < this.NumberOfColumns; term++)
+        //    //        {
+        //    //            sum = sum.AddTo((this.GetElement(rowIndex, term).MultiplyBy( passedMatrices.GetElement(term, columnIndex))));
+        //    //        }
+        //    //        resultingMatrices.SetElement(rowIndex, columnIndex, sum);
+        //    //    }
+        //    //}
 
-            //return resultingMatrices;
+        //    //return resultingMatrices;
 
-        }
+        //}
 
-        /// <summary>
-        /// Checks to see if the MatricesMatrix is square
-        /// </summary>
-        /// <returns></returns>
-        private bool IsSquare()
-        {
-            // A square MatricesMatrix has the same number of rows and columns.
-            if (this.NumberOfRows == this.NumberOfColumns)
-            {
-                return true;
-            }
+        ///// <summary>
+        ///// Checks to see if the MatricesMatrix is square
+        ///// </summary>
+        //public bool IsSquare()
+        //{
+        //    // A square MatricesMatrix has the same number of rows and columns.
+        //    if (this.NumberOfRows == this.NumberOfColumns)
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }      
+        //    return false;
+        //}      
         
         /// <summary>
         /// Returns the number of rows of the matrix with the largest number of rows in the specified row of the MatricesMatrix
         /// </summary>
-        /// <param name="col"></param>
-        /// <returns></returns>
         public int GetRowHeight(int row)
         {
             int maxSeen = 0;
@@ -393,10 +385,9 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Strips out all the elements from each Matrix of a MatricesMatrix and inserts them into the approprate places of a new Matrix
+        /// Strips out all the elements from each submatrix and creates an equivalent matrix.
         /// For a more detailed explanation, see http://stackoverflow.com/questions/24678305/converting-a-2d-array-of-2d-arrays-into-a-single-2d-array
         /// </summary>
-        /// <returns></returns>
         public Matrix ConvertToMatrix()
         {
             //Creates a matrix big enough to hold all of the values in the MatricesMatrix
