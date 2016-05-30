@@ -84,6 +84,7 @@
     <Compile Include="Coordinates\Direction\DirectionFactoryProperties.cs" />
     <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
     <Compile Include="Coordinates\Shift\ShiftEntityFramework.cs" />
+    <Compile Include="ExtensionMethods\IEnumerableExtensions.cs" />
     <Compile Include="ExtensionMethods\ShiftListExtensions.cs" />
     <Compile Include="ExtensionMethods\SurfaceListExtensions.cs" />
     <Compile Include="ExtensionMethods\VectorListExtensions.cs" />
