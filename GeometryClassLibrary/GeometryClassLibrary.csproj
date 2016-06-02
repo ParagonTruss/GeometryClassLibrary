@@ -79,11 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComparisonMethods\PointComparisons.cs" />
-    <Compile Include="Coordinates\CoordinateSystem\CoordinateSystemEntityFramework.cs" />
-    <Compile Include="Coordinates\Direction\DirectionEntityFramework.cs" />
     <Compile Include="Coordinates\Direction\DirectionFactoryProperties.cs" />
-    <Compile Include="Coordinates\Point\PointEntityFramework.cs" />
-    <Compile Include="Coordinates\Shift\ShiftEntityFramework.cs" />
     <Compile Include="ExtensionMethods\IEnumerableExtensions.cs" />
     <Compile Include="ExtensionMethods\ShiftListExtensions.cs" />
     <Compile Include="ExtensionMethods\SurfaceListExtensions.cs" />
@@ -96,16 +92,10 @@
     <Compile Include="Interfaces\IShiftableExtensions.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Lines\EllipticArc.cs" />
-    <Compile Include="Lines\LineSegment\LineSegmentEntityFramework.cs" />
     <Compile Include="Lines\Line\ILinear.cs" />
-    <Compile Include="Lines\Line\LineEntityFramework.cs" />
-    <Compile Include="Lines\Vector\VectorEntityFramework.cs" />
-    <Compile Include="Matrices\Matrix\MatrixEntityFramework.cs" />
-    <Compile Include="Solids\Polyhedra\Polyhedron\PolyhedronEntityFramework.cs" />
     <Compile Include="Surfaces\Planes\OtherShapes\Circle.cs" />
     <Compile Include="Surfaces\Planes\PlaneRegion\PlaneRegionInterfaceImplementations.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Parallelogram.cs" />
-    <Compile Include="Surfaces\Planes\Plane\PlaneEntityFramework.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Polygon\PolygonInterfaceImplementations.cs" />
     <Compile Include="Surfaces\Planes\Polygons\RightTriangle.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Triangle.cs" />
@@ -115,7 +105,6 @@
     <Compile Include="Coordinates\CoordinateSystem\CoordinateSystem.cs" />
     <Compile Include="Coordinates\Direction\Direction.cs" />
     <Compile Include="Surfaces\Planes\Polygons\EquilateralTriangle.cs" />
-    <Compile Include="Solids\SolidEntityFramework.cs" />
     <Compile Include="Solids\Polyhedra\Cube.cs" />
     <Compile Include="Solids\OtherSolids\Cylinder.cs" />
     <Compile Include="Surfaces\Planes\OtherShapes\Ellipse.cs" />
