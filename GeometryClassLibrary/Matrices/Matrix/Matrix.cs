@@ -14,8 +14,18 @@ namespace GeometryClassLibrary
     public partial class Matrix
     {
         #region Properties and Fields
-
-        public Matrix<double> _matrix { get; set; }
+        public double this[int i, int j]
+        {
+            get
+            {
+                return this.GetElement(i, j);
+            }
+            set
+            {
+                this.SetElement(i, j, value);
+            }
+        }
+        public Matrix<double> _matrix { get; }
 
         /// <summary>
         /// Returns the matrix as a double[,]
@@ -200,9 +210,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the product of the 2 matrices if they can be multiplied
         /// </summary>
-        /// <param name="m1"></param>
-        /// <param name="m2"></param>
-        /// <returns></returns>
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
             var matrix = new Matrix(m1._matrix.Multiply(m2._matrix));
@@ -212,9 +219,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new matrix with each element multiplied by the passed multiplier
         /// </summary>
-        /// <param name="m1"></param>
-        /// <param name="scalarMultiplier"></param>
-        /// <returns></returns>
         public static Matrix operator *(Matrix m1, double scalarMultiplier)
         {
             return new Matrix(m1._matrix.Multiply(scalarMultiplier));
@@ -609,7 +613,22 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix AddTo(Matrix passedMatrix)
         {
-            return passedMatrix + new Matrix(_matrix);
+            return passedMatrix + this;
+        }
+
+        /// <summary>
+        /// Adds the passed matrix to the larger matrix
+        /// starting at the specified row,col entry.
+        /// </summary>
+        public void AddToAt(int row, int col, Matrix matrix)
+        {
+            for (int i = 0; i < matrix.NumberOfRows; i++)
+            {
+                for (int j = 0; j < matrix.NumberOfColumns; j++)
+                {
+                    this[i + row, j + col] += matrix[i,j];
+                }
+            }
         }
 
         /// <summary>
