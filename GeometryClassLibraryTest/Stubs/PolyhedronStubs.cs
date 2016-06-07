@@ -2,7 +2,7 @@
 using GeometryClassLibrary;
 using UnitClassLibrary;
 
-namespace GeometryClassLibraryTest.Stubs
+namespace GeometryClassLibraryTest
 {
     public class TestRectangularBox1 : RectangularPrism
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using GeometryClassLibrary;
 
-namespace GeometryClassLibraryTest.Stubs
+namespace GeometryClassLibraryTest
 {
     public class ConcaveQuadrilateral : Polygon
     {
