@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
-using GeometryStubLibrary;
+using GeometryClassLibraryTest.Stubs;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnitClassLibrary;
