@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
-using GeometryStubLibrary;
+using GeometryClassLibraryTest.Stubs;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using UnitClassLibrary;
-using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
-using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
+using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 

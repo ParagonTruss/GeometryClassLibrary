@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using GeometryClassLibrary;
 
-namespace GeometryStubLibrary
+namespace GeometryClassLibraryTest.Stubs
 {
     public class ThreeFourFiveRightTriangle : Triangle
     {
