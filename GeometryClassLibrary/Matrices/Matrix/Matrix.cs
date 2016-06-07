@@ -14,6 +14,21 @@ namespace GeometryClassLibrary
     public partial class Matrix
     {
         #region Properties and Fields
+
+        /// <summary>
+        /// For setting and accessing column vectors
+        /// </summary>
+        public double this[int i]
+        {
+            get
+            {
+                return this.GetElement(i, 0);
+            }
+            set
+            {
+                this.SetElement(i, 0, value);
+            }
+        }
         public double this[int i, int j]
         {
             get
@@ -98,6 +113,9 @@ namespace GeometryClassLibrary
             _matrix = passedMatrix.Clone();
         }
 
+        /// <summary>
+        /// Creates a matrix with a single column from the array.
+        /// </summary>
         public Matrix(double[] array)
         {
             this._matrix = DenseMatrix.OfArray(new double[array.Length, 1]);
@@ -1037,123 +1055,96 @@ namespace GeometryClassLibrary
 
         // --------------------------------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// Helper method for System Solve
-        /// </summary>
-        internal double[] SolveHelper(Matrix decomposedMatrix, double[] b)
-        {
-            // before calling this helper, permute b using the perm array from MatrixDecompose that generated luMatrix
-            int NumberOfColumns = decomposedMatrix.NumberOfColumns;
-            double[] x = new double[NumberOfColumns];
-            b.CopyTo(x, 0);
-
-            for (int rowIndex = 1; rowIndex < NumberOfColumns; rowIndex++)
-            {
-                double sum = x[rowIndex];
-                for (int columnIndex = 0; columnIndex < rowIndex; columnIndex++)
-                    sum -= decomposedMatrix.GetElement(rowIndex, columnIndex) * x[columnIndex];
-                x[rowIndex] = sum;
-            }
-
-            if (decomposedMatrix.GetElement(NumberOfColumns - 1, NumberOfColumns - 1) != 0)
-            {
-                x[NumberOfColumns - 1] /= decomposedMatrix.GetElement(NumberOfColumns - 1, NumberOfColumns - 1);
-            }
-
-            for (int rowIndex = NumberOfColumns - 2; rowIndex >= 0; rowIndex--)
-            {
-                double sum = x[rowIndex];
-                for (int columnIndex = rowIndex + 1; columnIndex < NumberOfColumns; ++columnIndex)
-                {
-                    sum -= decomposedMatrix.GetElement(rowIndex, columnIndex) * x[columnIndex];
-                }
-                if (decomposedMatrix.GetElement(rowIndex, rowIndex) != 0)
-                {
-                    x[rowIndex] = sum / decomposedMatrix.GetElement(rowIndex, rowIndex);
-                }
-            }
-
-            return x;
-        }
-
-        // --------------------------------------------------------------------------------------------------------------
-
-        public double[] SystemSolve(double[] b)
-        {
-            Matrix matrixA = this;
-            // Solve Ax = b
-
-            while (!matrixA.IsSquare())
-            {
-                if (this.NumberOfRows > this.NumberOfColumns)
-                {
-                    matrixA = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
-                    matrixA.InsertMatrixAt(this, 0, 0);
-                    matrixA.SetColumn(this.NumberOfColumns - 1, matrixA.GetColumn(0));
-                }
-                else
-                {
-                    matrixA = new Matrix(this.NumberOfRows + 1, this.NumberOfColumns);
-                    matrixA.InsertMatrixAt(this, 0, 0);
-                    matrixA.SetRow(this.NumberOfRows - 1, matrixA.GetRow(0));
-                }
-            }
-
-            // 1. decompose A
-            int[] permutationArray;
-            int toggle;
-            Matrix decomposedMatrix = matrixA.Decompose(out permutationArray, out toggle);
-
-            // 2. permute b according to permutationArray[]
-            double[] bPermuted = new double[b.Length];
-            for (int i = 0; i < matrixA.NumberOfColumns; ++i)
-            {
-                bPermuted[i] = b[permutationArray[i]];
-            }
-            // 3. call helper
-            double[] solution = SolveHelper(decomposedMatrix, bPermuted);
-
-            //return solution (x) to Ax = b
-            return solution;
-        } // SystemSolve
 
         // --------------------------------------------------------------------------------------------------------------
 
 
         /// <summary>
-        /// This method makes it possible to use SystemSolve on a matrix. It calls the other SystemSolve method and returns the result as a new Matrix.
+        /// Solves for the column matrix x, where Ax = b.
         /// </summary>
-        public Matrix SystemSolve(Matrix passedSolutionMatrix)
+        public Matrix SystemSolve(Matrix columnMatrix)
         {
-            Matrix solution = new Matrix(NumberOfRows, 1);
-            if (passedSolutionMatrix.IsZeroMatrix())
-            {
-                solution.SetColumn(0, passedSolutionMatrix.GetColumn(0));
-            }
-            else
-            {
-                solution.SetColumn(0, SystemSolve(passedSolutionMatrix.GetColumn(0)));
-            }
+            var augmentedMatrix = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
+            augmentedMatrix.InsertMatrixAt(this, 0, 0);
+            augmentedMatrix.InsertMatrixAt(columnMatrix, 0, this.NumberOfColumns);
 
-            return solution;
-
+            var solution = Matrix.SolveMatrix(augmentedMatrix);
+            return new Matrix(solution);
         }
 
-        private bool IsZeroMatrix()
-        {
-            for (int i = 0; i < this.NumberOfRows; i++)
+        internal static double[] SolveMatrix(Matrix augmentedMatrix)
+        {  
+            //needs to be an augmented matrix
+             //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
+
+            //see how many rows we have
+            var numberOfMatrixRows = augmentedMatrix.NumberOfRows;
+
+            //first we need to get the matrix in echelon form
+            //since we move diagonally we can use the same place for both the refernce row and the column
+            for (var currentColumnAndReferenceRow = 0; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
             {
-                for (int j = 0; j < this.GetRow(i).Length; j++)
+                //we start one below our current reference row
+                for (var currentRow = currentColumnAndReferenceRow + 1; currentRow < numberOfMatrixRows; currentRow++)
                 {
-                    if (this.GetElement(i, j) != 0)
+                    //if the column above us has a zero we jsut set the scale to 1 because otherwise we would divide by 0
+                    var referenceRowMultiplier = 1.0;
+                    if (Math.Abs(augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]) > 0.0000001)
                     {
-                        return false;
+                        referenceRowMultiplier = (augmentedMatrix[currentRow, currentColumnAndReferenceRow] / augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]);
+                    }
+
+                    //cycle through the items in the row and change them using the multiplier and the first row
+                    for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
+                    {
+                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier * augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
                     }
                 }
-
             }
 
-            return true;
+            //now we want it in reduced echelon form (the diagonals should be 1)
+            //since we move diagonally we can use the same place for both the row and the column
+            for (var currentColumnAndRow = 0; currentColumnAndRow < numberOfMatrixRows; currentColumnAndRow++)
+            {
+                //divide by the value aling the diagonal
+                var divisor = augmentedMatrix[currentColumnAndRow, currentColumnAndRow];
+
+                for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
+                {
+                    if (divisor == 0)
+                    {
+                        augmentedMatrix[currentColumnAndRow, currentItem] = 0;
+                    }
+                    else
+                    {
+                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem] / divisor);
+                    }
+                }
+            }
+
+            //back substitution to find the answers
+            //since we move diagonally we can use the same place for both the refernce row and the column
+            for (var currentColumnAndReferenceRow = 1; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
+            {
+                //start at the bottom and work up
+                for (var currentRow = currentColumnAndReferenceRow - 1; currentRow >= 0; currentRow--)
+                {
+                    //then find the multiplier for the refernece line based on the currentline and column
+                    var currentRowMultiplier = augmentedMatrix[currentRow, currentColumnAndReferenceRow];
+
+                    for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
+                    {
+                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier * augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
+
+                        if (Math.Abs(augmentedMatrix[currentRow, currentItem]) < 0.000000001)
+                        {
+                            augmentedMatrix[currentRow, currentItem] = 0.0;
+                        }
+                    }
+                }
+            }
+            // return the last column :
+            return augmentedMatrix.GetColumn(augmentedMatrix.NumberOfColumns - 1);
         }
         // --------------------------------------------------------------------------------------------------------------
 
@@ -1186,7 +1177,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns Matrix with only the values in the main diagonal and upper triangle (above main diagonal) intact.  Has 0.0's in lower triangle
         /// </summary>
-        /// <returns></returns>
         public Matrix ExtractUpper()
         {
             Matrix UpperPart = new Matrix(NumberOfRows, NumberOfColumns);

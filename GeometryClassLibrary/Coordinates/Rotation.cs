@@ -180,8 +180,8 @@ namespace GeometryClassLibrary
 
                 angle = rowVector.SignedAngleBetween(rotated, axis);
 
-                var translation = singularMatrix.SystemSolve(shift.Translation.Point.Negate().ToListOfCoordinates()
-                    .Select(d => d.InInches.Value).ToArray()).Select(d => new Distance(d, Inches)).ToList();
+                var translation = singularMatrix.SystemSolve(new Matrix(shift.Translation.Point.Negate().ToListOfCoordinates()
+                    .Select(d => d.InInches.Value).ToArray())).GetColumn(0).Select(d => new Distance(d, Inches)).ToList();
                 axis = axis.Translate(new Point(translation));
             }
             else
