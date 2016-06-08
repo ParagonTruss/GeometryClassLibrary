@@ -527,7 +527,7 @@ namespace GeometryClassLibrary
             return false;
         }
         /// <summary>
-        /// Determines whether or not the point is along/contained by this vector
+        /// Determines whether or not the point is along/contained by this line segment
         /// </summary>
         public new bool Contains(Point point)
         {

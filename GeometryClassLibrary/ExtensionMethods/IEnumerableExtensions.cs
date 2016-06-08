@@ -30,5 +30,23 @@ namespace GeometryClassLibrary
         {
             return list.Any(itemInList => ReferenceEquals(itemInList, item));
         }
+
+        public static bool RemoveByReference<T>(this IList<T> list, T item)
+        {
+            var index = -1;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (ReferenceEquals(list[i], item))
+                {
+                    index = i;
+                }
+            }
+            if (index == -1)
+            {
+                return false;
+            }
+            list.RemoveAt(index);
+            return true;
+        }
     }
 }
