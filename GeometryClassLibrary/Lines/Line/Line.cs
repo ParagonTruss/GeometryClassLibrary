@@ -369,11 +369,23 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines if this line and the passed line are parallel.
         /// </summary>
-        public virtual bool IsParallelTo(Line passedLine)
+        public bool IsParallelTo(Line passedLine)
         {
             return (passedLine.Direction == this.Direction || passedLine.Direction == this.Direction.Reverse());
         }
 
+        /// <summary>
+        /// Determines if two lines are parallel up to a custom angular tolerance.
+        /// That is, if the lines are within that angle of each other the lines are considered "parallel"
+        /// </summary>
+        public bool IsParallelTo(Line line, Angle tolerance)
+        {
+            var angle = this.SmallestAngleBetween(line);
+            var m = new Measurement(angle.InRadians.Value, tolerance.InRadians.Value);
+            return m == Measurement.Zero;
+        }
+
+       // public 
         /// <summary>
         /// Returns whether or not the two lines are perindicular to each other
         /// </summary>
