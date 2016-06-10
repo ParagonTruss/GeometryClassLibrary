@@ -31,8 +31,8 @@ namespace GeometryClassLibrary.Vectors
     public sealed class LineSegment_New : IVector<DistanceType>
     {
         #region Properties
-        public Point BasePoint { get; private set; }
-        public Point EndPoint { get; private set; }
+        public Point BasePoint { get; }
+        public Point EndPoint { get;  }
 
         public DistanceType UnitType { get { return (DistanceType)BasePoint.X.UnitType; } }
 
@@ -47,5 +47,11 @@ namespace GeometryClassLibrary.Vectors
         private Measurement _y { get { return (EndPoint.Y - BasePoint.Y).MeasurementIn(UnitType); } }
         private Measurement _z { get { return (EndPoint.Z - BasePoint.Z).MeasurementIn(UnitType); } }
         #endregion
+
+        public LineSegment_New(LineSegment oldSegment)
+        {
+            this.BasePoint = oldSegment.BasePoint;
+            this.EndPoint = oldSegment.EndPoint;
+        }
     }
 }

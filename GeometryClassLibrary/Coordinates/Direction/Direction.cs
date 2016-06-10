@@ -41,7 +41,7 @@ namespace GeometryClassLibrary
 
         /// <summary>
         /// The angle from the positive x-axis in the xy-plane (azimuth)
-        /// currently, this should be between 0 and 360
+        /// Will be between -180 degrees and +180 degrees.
         /// </summary>     
         public Angle Phi { get { return new Angle(Math.Atan2(Y.Value, X.Value), Radians); } }
 
