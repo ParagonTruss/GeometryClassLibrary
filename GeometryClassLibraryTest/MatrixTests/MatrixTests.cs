@@ -330,8 +330,6 @@ namespace GeometryClassLibraryTest
         [Test]
         public void MatrixTest_SystemSolve_ZeroMatrix()
         {
-            //Fails
-
             //Ax = b
             Matrix matrixA = new Matrix(4, 4);
             Matrix matrixB = new Matrix(4, 1);

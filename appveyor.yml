@@ -1,0 +1,8 @@
+configuration: Release
+build:
+    publish_nuget: true
+deploy:
+    provider: NuGet
+    api_key: b11f3056-8100-4e18-bc0a-2dd2193f1e90
+    on:
+        branch: master

@@ -1,6 +1,6 @@
 ﻿using GeometryClassLibrary;
 
-namespace TestGeometryStubLibrary
+namespace GeometryClassLibraryTest
 {
         public class TestFirstLine : Line
         {

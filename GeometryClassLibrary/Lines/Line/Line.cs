@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+    This file is part of Geometry Class Library.
+    Copyright (C) 2016 Paragon Component Systems, LLC.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnitClassLibrary;
@@ -350,11 +369,23 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines if this line and the passed line are parallel.
         /// </summary>
-        public virtual bool IsParallelTo(Line passedLine)
+        public bool IsParallelTo(Line passedLine)
         {
             return (passedLine.Direction == this.Direction || passedLine.Direction == this.Direction.Reverse());
         }
 
+        /// <summary>
+        /// Determines if two lines are parallel up to a custom angular tolerance.
+        /// That is, if the lines are within that angle of each other the lines are considered "parallel"
+        /// </summary>
+        public bool IsParallelTo(Line line, Angle tolerance)
+        {
+            var angle = this.SmallestAngleBetween(line);
+            var m = new Measurement(angle.InRadians.Value, tolerance.InRadians.Value);
+            return m == Measurement.Zero;
+        }
+
+       // public 
         /// <summary>
         /// Returns whether or not the two lines are perindicular to each other
         /// </summary>

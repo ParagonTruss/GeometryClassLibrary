@@ -95,6 +95,10 @@
       <HintPath>..\packages\NUnitTestAdapter.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnitClassLibrary, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnitClassLibrary.2.0.0-rc1\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LineTests\ArcTests.cs" />
@@ -126,6 +130,13 @@
     <Compile Include="CoordinateTests\PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LineTests\VectorTests.cs" />
+    <Compile Include="Stubs\ArcStubs.cs" />
+    <Compile Include="Stubs\PolygonStubs.cs" />
+    <Compile Include="Stubs\PolyhedronStubs.cs" />
+    <Compile Include="Stubs\StubPolyhedron.cs" />
+    <Compile Include="Stubs\TestLine.cs" />
+    <Compile Include="Stubs\TestLineIntersection.cs" />
+    <Compile Include="Stubs\ThreeFourFiveRightTriangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -135,14 +146,6 @@
     <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
       <Project>{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}</Project>
       <Name>GeometryClassLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeometryStubLibrary\GeometryStubLibrary.csproj">
-      <Project>{0547226E-2A1A-4AAA-B91D-2AE879504706}</Project>
-      <Name>GeometryStubLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\unit-class-library\UnitClassLibrary\UnitClassLibrary.csproj">
-      <Project>{4d89e91c-bf44-49d8-acf4-be105c3428fe}</Project>
-      <Name>UnitClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using GeometryClassLibrary;
 
-namespace GeometryStubLibrary
+namespace GeometryClassLibraryTest
 {
     public class TestQuarterArc : Arc
     {
