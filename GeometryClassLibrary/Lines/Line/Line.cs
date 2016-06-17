@@ -32,6 +32,8 @@ using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 
 namespace GeometryClassLibrary
 {
+    public enum Axis { X, Y, Z };
+
     /// <summary>
     /// A line in 3d space.
     /// </summary>

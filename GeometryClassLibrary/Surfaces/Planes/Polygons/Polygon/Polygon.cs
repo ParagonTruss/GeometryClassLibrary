@@ -1170,7 +1170,7 @@ namespace GeometryClassLibrary
             var polygon2 = toRemove;
             if (!polygon1.IsCoplanarTo(polygon2))
             {
-                throw new Exception();
+                return new List<Polygon> { this };
             }
             if (polygon1.NormalDirection == polygon2.NormalDirection)
             {
@@ -1216,7 +1216,7 @@ namespace GeometryClassLibrary
         {
             if (!this.IsConvex || !otherPolygon.IsConvex)
             {
-                throw new Exception("Overlapping Polygon should not be called on non convex polygons.");
+                throw new ArgumentException("Overlapping Polygon should not be called on non convex polygons.");
             }
             if (this.ContainsAll(otherPolygon.Vertices))
             {
