@@ -55,18 +55,5 @@ namespace GeometryClassLibraryTest
             //Just barely more than a 1 degree angle between them
             (testDirection2 == expected).Should().BeFalse();
         }
-
-        [Test]
-        [Ignore("JSON")]
-        public void Direction_JSON()
-        {
-            Direction direction = new Direction(new Angle(new Degree(), 14), new Angle(new Degree(), 37));
-
-            var json = JsonConvert.SerializeObject(direction);
-            Direction deserializedDirection = JsonConvert.DeserializeObject<Direction>(json);
-
-            bool areEqual = (direction == deserializedDirection);
-            areEqual.Should().BeTrue();
-        }
     }
 }

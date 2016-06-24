@@ -44,19 +44,6 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        [Ignore("JSON")]
-        public void Point_JSON()
-        {
-            Point point = Point.MakePointWithInches(1, 2, 2);
-
-            var json = JsonConvert.SerializeObject(point);
-            Point deserializedPoint = JsonConvert.DeserializeObject<Point>(json);
-
-            bool areEqual = (point == deserializedPoint);
-            areEqual.Should().BeTrue();
-        }
-
-        [Test()]
         public void Point_PlusOperatorStandardTest()
         {
             Distance xDistance1 = new Distance(new Millimeter(), 5);

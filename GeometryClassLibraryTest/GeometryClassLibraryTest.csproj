@@ -96,7 +96,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnitClassLibrary, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UnitClassLibrary.2.0.0-rc1\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.2.0.0-rc7\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

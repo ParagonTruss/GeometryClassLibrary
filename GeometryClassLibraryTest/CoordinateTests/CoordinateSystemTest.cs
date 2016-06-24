@@ -14,17 +14,7 @@ namespace GeometryClassLibraryTest
     [TestFixture]
     public class CoordinateSystemTests
     {
-        [Test]
-        public void CoordinateSystem_JSON()
-        {
-            CoordinateSystem coordinateSystem = new CoordinateSystem(Point.Origin, Angle.RightAngle / 2, Angle.RightAngle / 2, Angle.RightAngle);
 
-            var json = JsonConvert.SerializeObject(coordinateSystem);
-            CoordinateSystem deserializedCoordinateSystem = JsonConvert.DeserializeObject<CoordinateSystem>(json);
-
-            bool areEqual = (coordinateSystem == deserializedCoordinateSystem);
-            areEqual.Should().BeTrue();
-        }
 
         //[Test]
         //public void CoordinateSystem_PlaneAndVectorConstuctor()

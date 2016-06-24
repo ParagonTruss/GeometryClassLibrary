@@ -2,8 +2,8 @@
 
 namespace GeometryClassLibraryTest
 {
-    [TestFixture]
-    public class SolidTests
-    {   
-    }
+    //[TestFixture]
+    //public class SolidTests
+    //{   
+    //}
 }

@@ -29,36 +29,8 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 namespace GeometryClassLibrary
 {
     /// <summary>
-    /// Coordinate Systems can be thought of as where you are viewing the world from and this serves as a good conceptual model for how they are implemented in this Library. 
-    /// Following this model, if you shift based on a CoordinateSystem, the objects will shift in the opposite way because you are moving "yourself" and not the objects when 
-    /// you are changing CoordinateSystems. To see this, just look at an object in front of you. If you move left a step, it is perceived the same as if the object moved right 
-    /// and you stayed still and this is how the CoordinateSystems work. CoordinateSystems are useful because we can switch easily to a different view for a certain
-    /// object to see how it relates easier without losing how it is related to the rest of the objects. These can be used to simplify calculations from 3D to 2D and make them
-    /// much easier to preform by shifting to a CoordinateSystem in which the calculations done will have no component in one of the axis directions. Using CoordinateSystems this 
-    /// way is the same idea of reference frames (http://en.wikipedia.org/wiki/Frame_of_reference) and is actually a limited application of reference frames if that helps with 
-    /// conceptualizing them and their power.
     /// 
-    /// Another concept that is used in this class is of a "WorldCoordinateSystem." This is an abitrary CoordinateSystem that is used as the basis and reference for all the
-    /// CoordinateSystems. Since it is abitrary and the reference, it's components will always be "zero" no matter where it is placed. This is the same as when you are graphing
-    /// a line for instance. You draw a X-Axis and an Y-Axis, which positions are abitrary, and then draw the line based on those axis.
-    /// 
-    /// 3D CoordinateSystems have two main parts: an origin and a set of axes. The origin is usually represented by a point in 3D space based on the WorldCoordinateSystem (the reference 
-    /// CoordinateSystem), but the axes can be represented in many different ways. The way we store the axes in this class is with 3 angles to rotate around each of the 
-    /// WorldCoordinateSytem's axes in X-Y-Z order, which as also refered to as euler angles(http://en.wikipedia.org/wiki/Euler_angles), but we do not limit beta to [0, pi] 
-    /// (http://en.wikipedia.org/wiki/Euler_angles#Signs_and_ranges). Both of these are stored relative to the WorldCoordinates and so, in a sense, the World Coordinates are 
-    /// self defining. Note that the order we rotate around the axis IS important! If you do the same angles with Z-Y-X rotation, it most likely will result in a different 
-    /// orientation with respect to the WorldCoordinateSystem. Also, we rotate the angles around the WorldCoordinateSystem, meaning this is an extrinsic rotation approach to 
-    /// CoordinateSystems (http://en.wikipedia.org/wiki/Euler_angles#Extrinsic_rotations). We can store the axis as angles instead of lines because we make two assumptions that
-    /// are alway held in this class about the CoordinateSystems. First, it is a cartesian Coordinate System meaning that each axis is seperated from the other two by 90 degrees 
-    /// and the axes are formed by the intersection of 3 planes(http://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). Secondly, they follow the right hand 
-    /// rule for determining how the axes relate to each other(http://en.wikipedia.org/wiki/Right-hand_rule#Coordinate_orientation). 
-    /// 
-    /// Another thing to make note of is that Euler Angle, which we use to store the CoordinateSystems axes with, do NOT represent a unique orientation. Many different 
-    /// combinations of euler angle can lead to the same orientation based on the WorldCoordinateSystem. This is partly due to not limiting any of the angles from [0, pi] 
-    /// instead of [-pi, pi], but there are still ambiguous cases I belive even with the limit, but it is easier to leave them unlimited and then represent the orientation in 
-    /// a different form (we use Quaternions: http://en.wikipedia.org/wiki/Quaternion) to determine if they are the same orientation.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class CoordinateSystem
     {
         #region Properties and Fields
@@ -69,8 +41,7 @@ namespace GeometryClassLibrary
         public static CoordinateSystem WorldCoordinateSystem { get { return _worldCoordinateSystem; } }
         private readonly static CoordinateSystem _worldCoordinateSystem = new CoordinateSystem(Point.Origin, Angle.ZeroAngle, Angle.ZeroAngle, Angle.ZeroAngle);
 
-        [JsonProperty]
-        public Shift ShiftFromThisToWorld { get; set; }
+        public Shift ShiftFromThisToWorld { get;  }
        
         public Point TranslationToOrigin
         {

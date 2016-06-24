@@ -16,21 +16,7 @@ namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class LineTests
-    {
-        [Test()]
-        [Ignore("JSON")]
-        public void Line_JSON()
-        {
-            Point testBasePoint = Point.MakePointWithInches(1, 0, 2);
-            Line line = new Line(testBasePoint, Point.MakePointWithInches(2, 3, 1));
-
-            var json = JsonConvert.SerializeObject(line);
-            Line deserializedLine = JsonConvert.DeserializeObject<Line>(json);
-
-            bool areEqual = (line == deserializedLine);
-            areEqual.Should().BeTrue();
-        }
-
+    { 
         [Test()]
         public void Line_GetPointOnLine()
         {

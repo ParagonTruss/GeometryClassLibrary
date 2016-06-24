@@ -44,7 +44,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
-        [JsonProperty]
         public virtual Distance Magnitude
         {
             get { return _magnitude; }
@@ -84,25 +83,21 @@ namespace GeometryClassLibrary
             get { return new Point(XComponent, YComponent, ZComponent) + BasePoint; }
         }
 
-        ///// <summary>
-        ///// Allows the xyz components of the vector to be able to be accessed as an array
-        ///// </summary>
-        ///// <param name="i"></param>
-        ///// <returns></returns>
-        //private Distance this[int i]
-        //{
-        //    get
-        //    {
-        //        if (i == 0)
-        //            return XComponent;
-        //        else if (i == 1)
-        //            return YComponent;
-        //        else if (i == 2)
-        //            return ZComponent;
-        //        else
-        //            throw new Exception("No item of that index!");
-        //    }
-        //}
+        /// <summary>
+        /// Allows the xyz components of the vector to be able to be accessed as an array
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private Distance this[int i]
+        {
+            get
+            {
+                if (i == 0) return XComponent;
+                else if (i == 1) return YComponent;
+                else if (i == 2) return ZComponent;
+                else throw new IndexOutOfRangeException("No item of that index!");
+            }
+        }
 
         #endregion
 
@@ -516,18 +511,18 @@ namespace GeometryClassLibrary
             else return Direction.UnitVector(passedType);
         }
         /// <summary>
-        /// Returns the DotProduct between two Vectors as a distance
+        /// Returns the DotProduct between two Vectors as an area.
         /// </summary>
         public Area DotProduct(Vector vector)
         {
             Vector vector1 = this;
             Vector vector2 = vector;
 
-            var xTerm =( vector1.XComponent * vector2.XComponent).MeasurementIn(new SquareInch());
-            var yTerm =( vector1.YComponent * vector2.YComponent).MeasurementIn(new SquareInch()); 
-            var zTerm = (vector1.ZComponent * vector2.ZComponent).MeasurementIn(new SquareInch()); 
-            
-            var sum = xTerm + yTerm + zTerm;
+            var sum = 0.0;
+            for (int i = 0; i < 3; i++)
+            {
+                sum += vector1[i].InInches.Value * vector2[i].InInches.Value;
+            }
             return new Area(new SquareInch(),sum);
         }
        

@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibrary", "Geo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometryClassLibraryTest", "GeometryClassLibraryTest\GeometryClassLibraryTest.csproj", "{F383D1FE-05BA-4591-A47E-28B7651AE289}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{4F203178-AE28-43B7-BA3F-5BD20382C5AC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

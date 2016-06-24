@@ -13,19 +13,6 @@ namespace GeometryClassLibraryTest
     public class PolyhedronTests
     {
         [Test()]
-        [Ignore("JSON")]
-        public void Polyhedron_JSON()
-        {
-            Polyhedron polyhedron = new TestRectangularBox2();
-            var json = JsonConvert.SerializeObject(polyhedron);
-
-            Polyhedron deserializedPolyhedron = JsonConvert.DeserializeObject<Polyhedron>(json);
-
-            bool areEqual = (polyhedron == deserializedPolyhedron);
-            areEqual.Should().BeTrue();
-        }
-
-        [Test()]
         public void Polyhedron_ShiftXY()
         {
             Polyhedron polyhedron = new TestRectangularBox2();

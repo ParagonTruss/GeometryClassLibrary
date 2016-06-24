@@ -47,30 +47,7 @@ namespace GeometryClassLibraryTest
      
             Assert.Throws<InvalidPolygonException>(() => new Polygon(verticesInWrongOrder));       
         }
-
-        [Test()]
-        [Ignore("JSON")]
-        public void Polygon_JSON()
-        {
-            Point basePoint = Point.MakePointWithInches(4, 4, 0);
-            Point topLeftPoint = Point.MakePointWithInches(4, 8, 0);
-            Point bottomRightPoint = Point.MakePointWithInches(8, 4, 0);
-            Point topRightPoint = Point.MakePointWithInches(8, 8, 0);
-
-            LineSegment left = new LineSegment(basePoint, topLeftPoint);
-            LineSegment right = new LineSegment(bottomRightPoint, topRightPoint);
-            LineSegment top = new LineSegment(topLeftPoint, topRightPoint);
-            LineSegment bottom = new LineSegment(basePoint, bottomRightPoint);
-
-            Polygon polygon = new Polygon(new List<LineSegment> { left, top, bottom, right });
-            var json = JsonConvert.SerializeObject(polygon, Formatting.Indented);
-            Console.WriteLine(json);
-            Polygon deserializedPolygon = JsonConvert.DeserializeObject<Polygon>(json);
-
-            bool areEqual = (polygon == deserializedPolygon);
-            areEqual.Should().BeTrue();
-        }
-
+        
         [Test()]
         public void Polygon_Extrude()
         {

@@ -15,19 +15,6 @@ namespace GeometryClassLibraryTest
     public class LineSegmentTests
     {
         [Test()]
-        [Ignore("JSON")]
-        public void LineSegment_JSON()
-        {
-            LineSegment lineSegment = new LineSegment(Point.Origin, Point.MakePointWithInches(1, 1, 1));
-
-            var json = JsonConvert.SerializeObject(lineSegment);
-            LineSegment deserializedLineSegment = JsonConvert.DeserializeObject<LineSegment>(json);
-
-            bool areEqual = (lineSegment == deserializedLineSegment);
-            areEqual.Should().BeTrue();
-        }
-
-        [Test()]
         public void LineSegment_GetLength_ShouldReturnVectorMagnitude()
         {
             LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(0, 0, 2));
