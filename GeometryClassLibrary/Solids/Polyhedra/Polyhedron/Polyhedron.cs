@@ -107,7 +107,7 @@ namespace GeometryClassLibrary
                 //Now we check that for every face all the remaining vertices are on the same side of that plane
                 //http://stackoverflow.com/a/30380541/4875161
                 var dir = Polygons.Select(f => f.NormalDirection);
-                return !Polygons.Any(face => Vertices.Except(face.Vertices).Any(vertex => face.PointIsOnNormalSide(vertex)));
+                return !Polygons.Any(face => Vertices.Except(face.Vertices).Any(face.PointIsOnNormalSide));
                
             }
         }
@@ -138,7 +138,7 @@ namespace GeometryClassLibrary
                 if (_volume == null)
                 {
                     var volume = this.Polygons.SplitIntoTriangles()
-                        .Select(p => _volumeOfTetrahedronFormedWithTheOrigin(p)).Sum();
+                        .Select(_volumeOfTetrahedronFormedWithTheOrigin).Sum();
                     _volume = new Volume(new CubicInch(), volume);
                 }
                 if (_volume < Volume.Zero)
@@ -169,7 +169,7 @@ namespace GeometryClassLibrary
             double Z2 = triangle.Vertices[1].Z.InInches.Value;
             double Z3 = triangle.Vertices[2].Z.InInches.Value;
 
-            double[,] array = new double[,] { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
+            double[,] array = { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
 
             Matrix volumeMatrix = new Matrix(array);
 
