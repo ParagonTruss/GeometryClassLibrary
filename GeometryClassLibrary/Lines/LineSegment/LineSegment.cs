@@ -251,7 +251,7 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        public virtual Point IntersectWithPlane(Plane plane)
+        public new virtual Point IntersectWithPlane(Plane plane)
         {
             return plane.IntersectWithSegment(this);
         }

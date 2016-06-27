@@ -89,11 +89,7 @@
     <Compile Include="ExtensionMethods\SurfaceListExtensions.cs" />
     <Compile Include="ExtensionMethods\VectorListExtensions.cs" />
     <Compile Include="Exceptions\GeometricException.cs" />
-    <Compile Include="Interfaces\IRotate.cs" />
-    <Compile Include="Interfaces\IShiftable.cs" />
-    <Compile Include="Interfaces\IShiftableCollection.cs" />
-    <Compile Include="Interfaces\IShiftableCollectionExtensions.cs" />
-    <Compile Include="Interfaces\IShiftableExtensions.cs" />
+    <Compile Include="Coordinates\IRotate.cs" />
     <Compile Include="Lines\Arc.cs" />
     <Compile Include="Lines\EllipticArc.cs" />
     <Compile Include="Lines\Line\ILinear.cs" />

@@ -322,6 +322,11 @@ namespace GeometryClassLibrary
             return new Plane(extrusionLine, this);
         }
 
+        public bool Contains(LineSegment segment)
+        {
+            return this.Contains(segment.BasePoint) && this.Contains(segment.EndPoint);
+        }
+
         /// <summary>
         /// Returns the smaller of the two angles between these lines.
         /// </summary>

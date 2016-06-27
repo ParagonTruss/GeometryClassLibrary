@@ -575,6 +575,9 @@ namespace GeometryClassLibraryTest
 
         private class LegoBlock
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public Polyhedron Geometry;
             public CoordinateSystem BlockSystem;
         }

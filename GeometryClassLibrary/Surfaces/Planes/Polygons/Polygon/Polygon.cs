@@ -303,7 +303,7 @@ namespace GeometryClassLibrary
         }
 
 
-        public new Polygon Translate(Translation translation)
+        public Polygon Translate(Translation translation)
         {
             return new Polygon(
                 this.Vertices.Select(v => v.Translate(translation)).ToList(), false);
