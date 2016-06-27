@@ -26,7 +26,6 @@ using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Polyhedron : IShift<Polyhedron>
     {
         #region Properties and Fields
@@ -34,7 +33,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A list containing the polygons that make up this polyhedron
         /// </summary>
-        [JsonProperty]
         public virtual List<Polygon> Polygons { get; set; }
 
         /// <summary>
@@ -46,9 +44,9 @@ namespace GeometryClassLibrary
             {
                 List<LineSegment> returnList = new List<LineSegment>();
 
-                foreach (Polygon region in this.Polygons)
+                foreach (var region in this.Polygons)
                 {
-                    foreach (LineSegment segment in region.LineSegments)
+                    foreach (var segment in region.LineSegments)
                     {
                         if (!returnList.Contains(segment))
                         {
@@ -67,10 +65,23 @@ namespace GeometryClassLibrary
         {
             get
             {
-                return this.LineSegments.GetAllPoints();
+                if (_vertices == null)
+                {
+                    var returnList = new List<Point>();
+                    foreach (var face in Polygons)
+                    {
+                        foreach (var point in face.Vertices)
+                        {
+                            if (returnList.Contains(point)) continue;
+                            returnList.Add(point);
+                        }
+                    }
+                    _vertices = returnList;
+                }
+                return _vertices;
             }
         }
-
+        private List<Point> _vertices;
         /// <summary>
         /// determines if the polyhedron is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon
@@ -209,8 +220,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
-        /// <param name="passedPolygons">The list of polygons that define this Polyhedron</param>
-        [JsonConstructor]
         public Polyhedron(List<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)
             : base()
         {
@@ -804,13 +813,10 @@ namespace GeometryClassLibrary
             //place the first face
             _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
 
-            LineSegment currentEdge = null;
-            Polygon nextFace = null;
-
             while (edgesWithoutNeighboringFace.Count != 0)
             {
-                currentEdge = edgesWithoutNeighboringFace[0];
-                nextFace = _findAndOrientNextFace(currentEdge, unplacedFaces);
+                var currentEdge = edgesWithoutNeighboringFace[0];
+                var nextFace = _findAndOrientNextFace(currentEdge, unplacedFaces);
                 _placeFace(nextFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
             }
 
