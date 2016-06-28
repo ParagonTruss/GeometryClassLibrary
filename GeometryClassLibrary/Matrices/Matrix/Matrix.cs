@@ -30,6 +30,7 @@ using static UnitClassLibrary.AngleUnit.Angle;
 namespace GeometryClassLibrary
 {
     public enum EnumerationOrder { ByColumn, ByRow} 
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Matrix
     {
         #region Properties and Fields
@@ -65,32 +66,17 @@ namespace GeometryClassLibrary
         /// Returns the matrix as a double[,]
         /// </summary>
         [JsonProperty]
-        public double[,] As2DArray
-        {
-            get { return this._matrix.ToArray(); }
-        }
+        public double[,] As2DArray => this._matrix.ToArray();
 
         /// <summary>
         /// Returns the number of rows in the matrix
         /// </summary>
-        public int NumberOfRows
-        {
-            get
-            {
-                return _matrix.RowCount;
-            }
-        }
+        public int NumberOfRows => _matrix.RowCount;
 
         /// <summary>
         /// Returns the number of columns in the matrix
         /// </summary>
-        public int NumberOfColumns
-        {
-            get
-            {
-                return _matrix.ColumnCount;
-            }
-        }
+        public int NumberOfColumns => _matrix.ColumnCount;
 
         #endregion
 
