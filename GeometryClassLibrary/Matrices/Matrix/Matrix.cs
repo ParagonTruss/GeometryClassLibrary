@@ -287,7 +287,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-        public double[] As1DArray(EnumerationOrder order = EnumerationOrder.ByColumn)
+        public double[] As1DArray(EnumerationOrder order = EnumerationOrder.ByRow)
         {
             switch (order)
             {
