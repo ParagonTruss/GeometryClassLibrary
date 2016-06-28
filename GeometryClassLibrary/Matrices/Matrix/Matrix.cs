@@ -29,7 +29,7 @@ using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibrary
 {
-    [JsonObject(MemberSerialization.OptIn)]
+    public enum EnumerationOrder { ByColumn, ByRow} 
     public partial class Matrix
     {
         #region Properties and Fields
@@ -264,9 +264,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new matrix with each element multiplied by the passed multiplier
         /// </summary>
-        /// <param name="scalarMultiplier"></param>
-        /// <param name="m1"></param>
-        /// <returns></returns>
         public static Matrix operator *(double scalarMultiplier, Matrix m1)
         {
             return new Matrix(m1._matrix.Multiply(scalarMultiplier));
@@ -290,19 +287,47 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
-        public double[] As1DArray()
+        public double[] As1DArray(EnumerationOrder order = EnumerationOrder.ByColumn)
         {
-            var N = this.NumberOfColumns * this.NumberOfRows;
-            var result = new List<double>();
+            switch (order)
+            {
+                case EnumerationOrder.ByColumn:
+                    return _enumerateByColumn();
+                case EnumerationOrder.ByRow:
+                    return _enumerateByRow();
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private double[] _enumerateByRow()
+        {
+            var N = this.NumberOfColumns*this.NumberOfRows;
+            var result = new List<double>(N);
             for (int i = 0; i < NumberOfRows; i++)
             {
                 for (int j = 0; j < NumberOfColumns; j++)
                 {
-                    result.Add(this.GetElement(i, j));
+                    result.Add(this[i, j]);
                 }
             }
             return result.ToArray();
         }
+
+        private double[] _enumerateByColumn()
+        {
+            var N = this.NumberOfColumns*this.NumberOfRows;
+            var result = new List<double>(N);
+            for (int j = 0; j < NumberOfColumns; j++)
+            {
+                for (int i = 0; i < NumberOfRows; i++)
+                {
+                    result.Add(this[i, j]);
+                }
+            }
+            return result.ToArray();
+        }
+
         public static Matrix ProjectiveMatrixToRotationMatrix(Matrix matrix)
         {
             var newMatrix = new Matrix(3, 3);
@@ -327,6 +352,7 @@ namespace GeometryClassLibrary
         }
 
         #region Get/Set Methods
+
         /// <summary>
         /// </summary>
         /// <param name="rowIndex">The number of the row where the element will be added</param>
@@ -360,7 +386,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public double[] GetRow(int passedrowIndex)
         {
-            Vector <double> row = _matrix.Row(passedrowIndex);
+            Vector<double> row = _matrix.Row(passedrowIndex);
             return row.ToArray();
         }
 
@@ -402,8 +428,6 @@ namespace GeometryClassLibrary
         }
 
 
-
-
         /// <summary>
         /// Returns the euler angles (for rotations in x, y,z order) assuming this matrix is a pure rotation matrix
         /// </summary>
@@ -435,7 +459,7 @@ namespace GeometryClassLibrary
             //http://stackoverflow.com/questions/21455139/matrix-rotation-to-quaternion
 
             // Output quaternion
-            double w,x,y,z;
+            double w, x, y, z;
 
             // Determine which of w,x,y, or z has the largest absolute value
             double fourWSquaredMinus1 = this.GetElement(0, 0) + this.GetElement(1, 1) + this.GetElement(2, 2);
@@ -446,15 +470,18 @@ namespace GeometryClassLibrary
             int biggestIndex = 0;
             double fourBiggestSquaredMinus1 = fourWSquaredMinus1;
 
-            if(fourXSquaredMinus1 > fourBiggestSquaredMinus1) {
+            if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
+            {
                 fourBiggestSquaredMinus1 = fourXSquaredMinus1;
                 biggestIndex = 1;
             }
-            if (fourYSquaredMinus1 > fourBiggestSquaredMinus1) {
+            if (fourYSquaredMinus1 > fourBiggestSquaredMinus1)
+            {
                 fourBiggestSquaredMinus1 = fourYSquaredMinus1;
                 biggestIndex = 2;
             }
-            if (fourZSquaredMinus1 > fourBiggestSquaredMinus1) {
+            if (fourZSquaredMinus1 > fourBiggestSquaredMinus1)
+            {
                 fourBiggestSquaredMinus1 = fourZSquaredMinus1;
                 biggestIndex = 3;
             }
@@ -463,35 +490,35 @@ namespace GeometryClassLibrary
             //(I have also seen it this way: mult = 0.25 * Math.Sqrt (fourBiggestSquaredMinus1 + 1.0 ) * 2
             //  and then you divide by mult below instead of * i.e  x = (this.GetElement(1, 2) - this.GetElement(2, 1)) / mult;
             //  and both ways seem to work the same)
-            double biggestVal = Math.Sqrt (fourBiggestSquaredMinus1 + 1.0 ) * 0.5;
-            double mult = 0.25 / biggestVal;
+            double biggestVal = Math.Sqrt(fourBiggestSquaredMinus1 + 1.0)*0.5;
+            double mult = 0.25/biggestVal;
 
             // Apply table to compute quaternion values
-            switch (biggestIndex) 
+            switch (biggestIndex)
             {
                 case 0:
                     w = biggestVal;
-                    x = (this.GetElement(1, 2) - this.GetElement(2, 1)) * mult;
-                    y = (this.GetElement(2, 0) - this.GetElement(0, 2)) * mult;
-                    z = (this.GetElement(0, 1) - this.GetElement(1, 0)) * mult;
+                    x = (this.GetElement(1, 2) - this.GetElement(2, 1))*mult;
+                    y = (this.GetElement(2, 0) - this.GetElement(0, 2))*mult;
+                    z = (this.GetElement(0, 1) - this.GetElement(1, 0))*mult;
                     break;
                 case 1:
                     x = biggestVal;
-                    w = (this.GetElement(1, 2) - this.GetElement(2, 1)) * mult;
-                    y = (this.GetElement(0, 1) + this.GetElement(1, 0)) * mult;
-                    z = (this.GetElement(2, 0) + this.GetElement(0, 2)) * mult;
+                    w = (this.GetElement(1, 2) - this.GetElement(2, 1))*mult;
+                    y = (this.GetElement(0, 1) + this.GetElement(1, 0))*mult;
+                    z = (this.GetElement(2, 0) + this.GetElement(0, 2))*mult;
                     break;
                 case 2:
                     y = biggestVal;
-                    w = (this.GetElement(2, 0) - this.GetElement(0, 2)) * mult;
-                    x = (this.GetElement(0, 1) + this.GetElement(1, 0)) * mult;
-                    z = (this.GetElement(1, 2) + this.GetElement(2, 1)) * mult;
+                    w = (this.GetElement(2, 0) - this.GetElement(0, 2))*mult;
+                    x = (this.GetElement(0, 1) + this.GetElement(1, 0))*mult;
+                    z = (this.GetElement(1, 2) + this.GetElement(2, 1))*mult;
                     break;
                 case 3:
                     z = biggestVal;
-                    w = (this.GetElement(0, 1) - this.GetElement(1, 0)) * mult;
-                    x = (this.GetElement(2, 0) + this.GetElement(0, 2)) * mult;
-                    y = (this.GetElement(1, 2) + this.GetElement(2, 1)) * mult;
+                    w = (this.GetElement(0, 1) - this.GetElement(1, 0))*mult;
+                    x = (this.GetElement(2, 0) + this.GetElement(0, 2))*mult;
+                    y = (this.GetElement(1, 2) + this.GetElement(2, 1))*mult;
                     break;
                 default:
                     throw new Exception("Error creating quaternion");
@@ -509,16 +536,16 @@ namespace GeometryClassLibrary
 
         public static Point ShiftPoint(Point point, Matrix matrix)
         {
-            var col =  PointAsProjectiveColumnVector(point);
-            var result = matrix * col;
+            var col = PointAsProjectiveColumnVector(point);
+            var result = matrix*col;
             return _pointFromProjectiveColumnVector(result);
         }
 
         public static Matrix PointAsProjectiveColumnVector(Point point)
         {
-            return new Matrix(new double[]
-            { point.X.InInches.Value, point.Y.InInches.Value, point.Z.InInches.Value, 1 });
+            return new Matrix(new double[] {point.X.InInches.Value, point.Y.InInches.Value, point.Z.InInches.Value, 1});
         }
+
         private static Point _pointFromProjectiveColumnVector(Matrix projectiveVector)
         {
             var col = projectiveVector.GetColumn(0);
@@ -529,12 +556,13 @@ namespace GeometryClassLibrary
             }
             else
             {
-                var x = col[0] / col[3];
-                var y = col[1] / col[3];
-                var z = col[2] / col[3];
+                var x = col[0]/col[3];
+                var y = col[1]/col[3];
+                var z = col[2]/col[3];
                 return Point.MakePointWithInches(x, y, z);
             }
         }
+
         #endregion
 
         /// <summary>
@@ -604,7 +632,7 @@ namespace GeometryClassLibrary
             }
 
             return returnMatrix;
-            
+
         }
 
         /// <summary>
@@ -663,7 +691,7 @@ namespace GeometryClassLibrary
             {
                 for (int j = 0; j < matrix.NumberOfColumns; j++)
                 {
-                    this[i + row, j + col] += matrix[i,j];
+                    this[i + row, j + col] += matrix[i, j];
                 }
             }
         }
@@ -690,7 +718,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix MultiplyBy(Matrix passedMatrix)
         {
-            return new Matrix(_matrix) * passedMatrix;
+            return new Matrix(_matrix)*passedMatrix;
         }
 
         /// <summary>
@@ -759,7 +787,7 @@ namespace GeometryClassLibrary
 
             //Give the cofactor the correct sign (+/-) based on its position in the matrix
             int indexSum = rowIndex + columnIndex;
-            double cofactor = determinantOfSubMatrix * Math.Pow(-1, indexSum);
+            double cofactor = determinantOfSubMatrix*Math.Pow(-1, indexSum);
 
             return cofactor;
         }
@@ -802,7 +830,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix Transpose()
         {
-           return new Matrix(_matrix.Transpose());
+            return new Matrix(_matrix.Transpose());
         }
 
         /// <summary>
@@ -814,9 +842,9 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { 1, 0, 0 };
-            double[] row2 = { 0, Math.Cos(rotationAngle.InRadians.Value), -Math.Sin(rotationAngle.InRadians.Value) };
-            double[] row3 = { 0, Math.Sin(rotationAngle.InRadians.Value), Math.Cos(rotationAngle.InRadians.Value) };
+            double[] row1 = {1, 0, 0};
+            double[] row2 = {0, Math.Cos(rotationAngle.InRadians.Value), -Math.Sin(rotationAngle.InRadians.Value)};
+            double[] row3 = {0, Math.Sin(rotationAngle.InRadians.Value), Math.Cos(rotationAngle.InRadians.Value)};
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -832,9 +860,9 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { Math.Cos(rotationAngle.InRadians.Value), 0, Math.Sin(rotationAngle.InRadians.Value) };
-            double[] row2 = { 0, 1, 0 };
-            double[] row3 = { -Math.Sin(rotationAngle.InRadians.Value), 0, Math.Cos(rotationAngle.InRadians.Value) };
+            double[] row1 = {Math.Cos(rotationAngle.InRadians.Value), 0, Math.Sin(rotationAngle.InRadians.Value)};
+            double[] row2 = {0, 1, 0};
+            double[] row3 = {-Math.Sin(rotationAngle.InRadians.Value), 0, Math.Cos(rotationAngle.InRadians.Value)};
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -850,9 +878,9 @@ namespace GeometryClassLibrary
         {
             Matrix rotationMatrix = new Matrix(3);
 
-            double[] row1 = { Math.Cos(rotationAngle.InRadians.Value), -Math.Sin(rotationAngle.InRadians.Value), 0 };
-            double[] row2 = { Math.Sin(rotationAngle.InRadians.Value), Math.Cos(rotationAngle.InRadians.Value), 0 };
-            double[] row3 = { 0, 0, 1 };
+            double[] row1 = {Math.Cos(rotationAngle.InRadians.Value), -Math.Sin(rotationAngle.InRadians.Value), 0};
+            double[] row2 = {Math.Sin(rotationAngle.InRadians.Value), Math.Cos(rotationAngle.InRadians.Value), 0};
+            double[] row3 = {0, 0, 1};
 
             rotationMatrix.SetRow(0, row1);
             rotationMatrix.SetRow(1, row2);
@@ -878,15 +906,15 @@ namespace GeometryClassLibrary
             double sinTheta = Math.Sin(theta);
             double cosTheta = Math.Cos(theta);
 
-            double row0column0 = Math.Cos(theta) + unitX*unitX * (1 - Math.Cos(theta));
-            double row0column1 = unitX * unitY * (1 - Math.Cos(theta)) - unitZ * Math.Sin(theta);
-            double row0column2 = unitX * unitZ * (1 - Math.Cos(theta)) + unitY * Math.Sin(theta);
-            double row1column0 = unitY * unitX * (1 - Math.Cos(theta)) + unitZ * Math.Sin(theta);
-            double row1column1 = Math.Cos(theta) + unitY*unitY * (1 - Math.Cos(theta));
-            double row1column2 = unitY * unitZ * (1 - Math.Cos(theta)) - unitX * Math.Sin(theta);
-            double row2column0 = unitZ * unitX * (1 - Math.Cos(theta)) - unitY * Math.Sin(theta);
-            double row2column1 = unitZ * unitY * (1 - Math.Cos(theta)) + unitX * Math.Sin(theta);
-            double row2column2 = Math.Cos(theta) + unitZ*unitZ * (1 - Math.Cos(theta));
+            double row0column0 = Math.Cos(theta) + unitX*unitX*(1 - Math.Cos(theta));
+            double row0column1 = unitX*unitY*(1 - Math.Cos(theta)) - unitZ*Math.Sin(theta);
+            double row0column2 = unitX*unitZ*(1 - Math.Cos(theta)) + unitY*Math.Sin(theta);
+            double row1column0 = unitY*unitX*(1 - Math.Cos(theta)) + unitZ*Math.Sin(theta);
+            double row1column1 = Math.Cos(theta) + unitY*unitY*(1 - Math.Cos(theta));
+            double row1column2 = unitY*unitZ*(1 - Math.Cos(theta)) - unitX*Math.Sin(theta);
+            double row2column0 = unitZ*unitX*(1 - Math.Cos(theta)) - unitY*Math.Sin(theta);
+            double row2column1 = unitZ*unitY*(1 - Math.Cos(theta)) + unitX*Math.Sin(theta);
+            double row2column2 = Math.Cos(theta) + unitZ*unitZ*(1 - Math.Cos(theta));
 
             rotationMatrix.SetElement(0, 0, row0column0);
             rotationMatrix.SetElement(0, 1, row0column1);
@@ -933,6 +961,7 @@ namespace GeometryClassLibrary
         }
 
         #region Matrix Decomposition Stuff (Source: http://msdn.microsoft.com/en-us/magazine/jj863137.aspx)
+
         // --------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -990,7 +1019,7 @@ namespace GeometryClassLibrary
                 }
 
                 //Check to see if there is a zero on the diagonal. If so, try to get rid of it by swapping with a row that is beneath the row with a zero on the diagonal
-              //  double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
+                //  double elementOnDiagonal = decomposedMatrix.GetElement(columnIndex, columnIndex);
 
                 //if (Math.Round(elementOnDiagonal, 6) == 0.0)
                 //{
@@ -1027,12 +1056,11 @@ namespace GeometryClassLibrary
                 //Find the next value to insert into the decomposed matrix    
                 for (int rowIndex = columnIndex + 1; rowIndex < this.NumberOfRows; ++rowIndex)
                 {
-                    double valueToStore = decomposedMatrix.GetElement(rowIndex, columnIndex) / decomposedMatrix.GetElement(columnIndex, columnIndex);
+                    double valueToStore = decomposedMatrix.GetElement(rowIndex, columnIndex)/decomposedMatrix.GetElement(columnIndex, columnIndex);
                     decomposedMatrix.SetElement(rowIndex, columnIndex, valueToStore);
                     for (int nextColumnIndex = columnIndex + 1; nextColumnIndex < NumberOfRows; ++nextColumnIndex)
                     {
-                        double valueToStore2 = decomposedMatrix.GetElement(rowIndex, nextColumnIndex) -
-                                                decomposedMatrix.GetElement(rowIndex, columnIndex) * decomposedMatrix.GetElement(columnIndex, nextColumnIndex);
+                        double valueToStore2 = decomposedMatrix.GetElement(rowIndex, nextColumnIndex) - decomposedMatrix.GetElement(rowIndex, columnIndex)*decomposedMatrix.GetElement(columnIndex, nextColumnIndex);
                         decomposedMatrix.SetElement(rowIndex, nextColumnIndex, valueToStore2);
                     }
                 }
@@ -1092,9 +1120,9 @@ namespace GeometryClassLibrary
         }
 
         internal static double[] SolveMatrix(Matrix augmentedMatrix)
-        {  
+        {
             //needs to be an augmented matrix
-             //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
+            //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
 
             //see how many rows we have
             var numberOfMatrixRows = augmentedMatrix.NumberOfRows;
@@ -1110,13 +1138,13 @@ namespace GeometryClassLibrary
                     var referenceRowMultiplier = 1.0;
                     if (Math.Abs(augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]) > 0.0000001)
                     {
-                        referenceRowMultiplier = (augmentedMatrix[currentRow, currentColumnAndReferenceRow] / augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]);
+                        referenceRowMultiplier = (augmentedMatrix[currentRow, currentColumnAndReferenceRow]/augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]);
                     }
 
                     //cycle through the items in the row and change them using the multiplier and the first row
                     for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
                     {
-                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier * augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
+                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
                     }
                 }
             }
@@ -1136,7 +1164,7 @@ namespace GeometryClassLibrary
                     }
                     else
                     {
-                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem] / divisor);
+                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem]/divisor);
                     }
                 }
             }
@@ -1153,7 +1181,7 @@ namespace GeometryClassLibrary
 
                     for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
                     {
-                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier * augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
+                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
 
                         if (Math.Abs(augmentedMatrix[currentRow, currentItem]) < 0.000000001)
                         {
@@ -1165,6 +1193,7 @@ namespace GeometryClassLibrary
             // return the last column :
             return augmentedMatrix.GetColumn(augmentedMatrix.NumberOfColumns - 1);
         }
+
         // --------------------------------------------------------------------------------------------------------------
 
         /// <summary>
