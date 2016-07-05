@@ -1151,8 +1151,7 @@ namespace GeometryClassLibrary
             //see how many rows we have
             var numberOfMatrixRows = augmentedMatrix.GetLength(0);
             var numberOfMatrixColumns = augmentedMatrix.GetLength(1);
-            //first we need to get the matrix in echelon form
-            //since we move diagonally we can use the same place for both the refernce row and the column
+            //first we need to get the matrix in row echelon form
             for (var currentColumnAndReferenceRow = 0; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
             {
                 //we start one below our current reference row
@@ -1168,13 +1167,12 @@ namespace GeometryClassLibrary
                     //cycle through the items in the row and change them using the multiplier and the first row
                     for (var currentItem = 0; currentItem < numberOfMatrixColumns; currentItem++)
                     {
-                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
+                        augmentedMatrix[currentRow, currentItem] -= referenceRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem];
                     }
                 }
             }
 
-            //now we want it in reduced echelon form (the diagonals should be 1)
-            //since we move diagonally we can use the same place for both the row and the column
+            //now we want it in reduced row echelon form (the diagonals should be 1)
             for (var currentColumnAndRow = 0; currentColumnAndRow < numberOfMatrixRows; currentColumnAndRow++)
             {
                 //divide by the value along the diagonal
@@ -1188,29 +1186,23 @@ namespace GeometryClassLibrary
                     }
                     else
                     {
-                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem]/divisor);
+                        augmentedMatrix[currentColumnAndRow, currentItem] /= divisor;
                     }
                 }
             }
 
             //back substitution to find the answers
-            //since we move diagonally we can use the same place for both the refernce row and the column
             for (var currentColumnAndReferenceRow = 1; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
             {
                 //start at the bottom and work up
                 for (var currentRow = currentColumnAndReferenceRow - 1; currentRow >= 0; currentRow--)
                 {
-                    //then find the multiplier for the refernece line based on the currentline and column
+                    //then find the multiplier for the reference line based on the current row and column
                     var currentRowMultiplier = augmentedMatrix[currentRow, currentColumnAndReferenceRow];
 
                     for (var currentItem = 0; currentItem < numberOfMatrixColumns; currentItem++)
                     {
-                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
-
-                        if (Math.Abs(augmentedMatrix[currentRow, currentItem]) < 0.000000001)
-                        {
-                            augmentedMatrix[currentRow, currentItem] = 0.0;
-                        }
+                        augmentedMatrix[currentRow, currentItem] -= (currentRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
                     }
                 }
             }
