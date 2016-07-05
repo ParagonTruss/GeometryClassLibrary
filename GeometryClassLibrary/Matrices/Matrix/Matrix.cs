@@ -329,7 +329,7 @@ namespace GeometryClassLibrary
 
         public List<Vector> NullSpace()
         {
-            return this._matrix.Kernel().Select(v => _vectorOfDoublesToVectorOfInches(v)).ToList();
+            return this._matrix.Kernel().Select(_vectorOfDoublesToVectorOfInches).ToList();
         }
 
         private static Vector _vectorOfDoublesToVectorOfInches(Vector<double> vector)
@@ -415,21 +415,19 @@ namespace GeometryClassLibrary
 
 
         /// <summary>
-        /// Returns the euler angles (for rotations in x, y,z order) assuming this matrix is a pure rotation matrix
+        /// Returns the euler angles (for rotations in x, y,z order) assuming the upper left 3x3 submatrix is a rotation matrix.
         /// </summary>
         /// <returns>Returns a list of the euler angles in this order: x, y, z</returns>
-        public List<Angle> GetAnglesOutOfRotationMatrixForXYZRotationOrder()
+        public List<Angle> EulerAngles()
         {
             //Try getting the angles out of the matrix (based of of the following question but modified for x,y,z rotation order)
             //http://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
-            //Note the Matrix is formed by multiplying together in the z,y,x order and so we need to multipy the matricies in that order as well
-            //but this gets the angle for the x,y,z order shift. This is due to how matricies are multiplied together and is difficult to grasp conceptually
-            List<Angle> extractedAngles = new List<Angle>();
-            extractedAngles.Add(new Angle(Math.Atan2(this.GetElement(2, 1), this.GetElement(2, 2)), Radians).ProperAngle); //x
-            extractedAngles.Add(new Angle(Math.Asin(-this.GetElement(2, 0)), Radians).ProperAngle); //y
-            extractedAngles.Add(new Angle(Math.Atan2(this.GetElement(1, 0), this.GetElement(0, 0)), Radians).ProperAngle); //z
-
-
+            List<Angle> extractedAngles = new List<Angle>
+            {
+                new Angle(Math.Atan2(this[2, 1], this[2, 2]), Radians).ProperAngle,
+                new Angle(Math.Asin(-this[2, 0]), Radians).ProperAngle,
+                new Angle(Math.Atan2(this[1, 0], this[0, 0]), Radians).ProperAngle
+            };
             return extractedAngles;
         }
 

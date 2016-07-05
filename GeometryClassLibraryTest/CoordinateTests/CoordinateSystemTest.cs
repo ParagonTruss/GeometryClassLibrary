@@ -47,12 +47,12 @@ namespace GeometryClassLibraryTest
             CoordinateSystem testSystem = new CoordinateSystem(origin, angleX, angleY, angleZ);
 
             Matrix test1 = Matrix.RotationMatrixAboutZ(angleZ) * Matrix.RotationMatrixAboutY(angleY) * Matrix.RotationMatrixAboutX(angleX);
-            List<Angle> results1 = test1.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> results1 = test1.EulerAngles();
             Matrix test2 = Matrix.RotationMatrixAboutX(angleX) * Matrix.RotationMatrixAboutY(angleY) * Matrix.RotationMatrixAboutZ(angleZ);
-            List<Angle> results2 = test2.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> results2 = test2.EulerAngles();
 
             Matrix testMatrix = testSystem.RotationMatrixFromThisToWorld();
-            List<Angle> results = testMatrix.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> results = testMatrix.EulerAngles();
 
             List<Rotation> resultRotations = new List<Rotation>();
             resultRotations.Add(new Rotation(Line.XAxis, results[0]));
@@ -188,10 +188,11 @@ namespace GeometryClassLibraryTest
             Angle zExpected3 = new Angle(new Degree(), -45);
             CoordinateSystem expectedCombined3 = new CoordinateSystem(expectedOrigin3, xExpected3, yExpected3, zExpected3);
 
-            Matrix e = expectedCombined3.RotationMatrixFromThisToWorld();
-            List<Angle> ea = e.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+           // Matrix e = expectedCombined3.RotationMatrixFromThisToWorld();
+            var e = expectedCombined3.ShiftFromThisToWorld.Matrix;
+            List<Angle> ea = e.EulerAngles();
             Matrix r = basedOnWorld3.RotationMatrixFromThisToWorld();
-            List<Angle> ra = r.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> ra = r.EulerAngles();
 
             (basedOnWorld3 == expectedCombined3).Should().BeTrue();
 

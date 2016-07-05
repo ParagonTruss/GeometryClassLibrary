@@ -1421,7 +1421,7 @@ namespace GeometryClassLibraryTest
 
             Matrix xyzRotation = zMatrix * yMatrix * xMatrix;
 
-            List<Angle> results = xyzRotation.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> results = xyzRotation.EulerAngles();
 
             (results[0] == xAngle).Should().BeTrue();
             (results[1] == yAngle).Should().BeTrue();
@@ -1437,7 +1437,7 @@ namespace GeometryClassLibraryTest
 
             Matrix xyzRotation2 = zMatrix2 * yMatrix2 * xMatrix2;
 
-            List<Angle> results2 = xyzRotation2.GetAnglesOutOfRotationMatrixForXYZRotationOrder();
+            List<Angle> results2 = xyzRotation2.EulerAngles();
 
             (results2[0] == xAngle2).Should().BeTrue();
             (results2[1] == yAngle2).Should().BeTrue();
