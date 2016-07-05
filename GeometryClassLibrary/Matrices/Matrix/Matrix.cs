@@ -346,7 +346,7 @@ namespace GeometryClassLibrary
         /// <param name="element"></param>
         public void SetElement(int rowIndex, int columnIndex, double element)
         {
-            if (Double.IsNaN(element))
+            if (double.IsNaN(element))
             {
                 throw new Exception("Matrix entry should be a number!");
             }
@@ -392,8 +392,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the specified column of the matrix
         /// </summary>
-        /// <param name="passedColumnIndex"></param>
-        /// <returns></returns>
         public double[] GetColumn(int passedColumnIndex)
         {
             Vector<double> column = _matrix.Column(passedColumnIndex);
@@ -403,8 +401,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Replaces the specified column of the matrix with the passed column
         /// </summary>
-        /// <param name="passedrowIndex"></param>
-        /// <returns></returns>
         public void SetColumn(int passedColumnIndex, double[] passedColumn)
         {
             for (int rowIndex = 0; rowIndex < passedColumn.Length; rowIndex++)
@@ -417,7 +413,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the euler angles (for rotations in x, y,z order) assuming the upper left 3x3 submatrix is a rotation matrix.
         /// </summary>
-        /// <returns>Returns a list of the euler angles in this order: x, y, z</returns>
         public List<Angle> EulerAngles()
         {
             //Try getting the angles out of the matrix (based of of the following question but modified for x,y,z rotation order)
@@ -1086,98 +1081,6 @@ namespace GeometryClassLibrary
 
         // --------------------------------------------------------------------------------------------------------------
 
-
-        // --------------------------------------------------------------------------------------------------------------
-
-
-        /// <summary>
-        /// Solves for the column matrix x, where Ax = b.
-        /// </summary>
-        public Matrix SystemSolve(Matrix columnMatrix)
-        {
-            var augmentedMatrix = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
-            augmentedMatrix.InsertMatrixAt(this, 0, 0);
-            augmentedMatrix.InsertMatrixAt(columnMatrix, 0, this.NumberOfColumns);
-
-            var solution = Matrix.SolveMatrix(augmentedMatrix);
-            return new Matrix(solution);
-        }
-
-        internal static double[] SolveMatrix(Matrix augmentedMatrix)
-        {
-            //needs to be an augmented matrix
-            //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
-
-            //see how many rows we have
-            var numberOfMatrixRows = augmentedMatrix.NumberOfRows;
-
-            //first we need to get the matrix in echelon form
-            //since we move diagonally we can use the same place for both the refernce row and the column
-            for (var currentColumnAndReferenceRow = 0; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
-            {
-                //we start one below our current reference row
-                for (var currentRow = currentColumnAndReferenceRow + 1; currentRow < numberOfMatrixRows; currentRow++)
-                {
-                    //if the column above us has a zero we jsut set the scale to 1 because otherwise we would divide by 0
-                    var referenceRowMultiplier = 1.0;
-                    if (Math.Abs(augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]) > 0.0000001)
-                    {
-                        referenceRowMultiplier = (augmentedMatrix[currentRow, currentColumnAndReferenceRow]/augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]);
-                    }
-
-                    //cycle through the items in the row and change them using the multiplier and the first row
-                    for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
-                    {
-                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
-                    }
-                }
-            }
-
-            //now we want it in reduced echelon form (the diagonals should be 1)
-            //since we move diagonally we can use the same place for both the row and the column
-            for (var currentColumnAndRow = 0; currentColumnAndRow < numberOfMatrixRows; currentColumnAndRow++)
-            {
-                //divide by the value aling the diagonal
-                var divisor = augmentedMatrix[currentColumnAndRow, currentColumnAndRow];
-
-                for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
-                {
-                    if (divisor == 0)
-                    {
-                        augmentedMatrix[currentColumnAndRow, currentItem] = 0;
-                    }
-                    else
-                    {
-                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem]/divisor);
-                    }
-                }
-            }
-
-            //back substitution to find the answers
-            //since we move diagonally we can use the same place for both the refernce row and the column
-            for (var currentColumnAndReferenceRow = 1; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
-            {
-                //start at the bottom and work up
-                for (var currentRow = currentColumnAndReferenceRow - 1; currentRow >= 0; currentRow--)
-                {
-                    //then find the multiplier for the refernece line based on the currentline and column
-                    var currentRowMultiplier = augmentedMatrix[currentRow, currentColumnAndReferenceRow];
-
-                    for (var currentItem = 0; currentItem < augmentedMatrix.NumberOfColumns; currentItem++)
-                    {
-                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
-
-                        if (Math.Abs(augmentedMatrix[currentRow, currentItem]) < 0.000000001)
-                        {
-                            augmentedMatrix[currentRow, currentItem] = 0.0;
-                        }
-                    }
-                }
-            }
-            // return the last column :
-            return augmentedMatrix.GetColumn(augmentedMatrix.NumberOfColumns - 1);
-        }
-
         // --------------------------------------------------------------------------------------------------------------
 
         /// <summary>
@@ -1224,8 +1127,114 @@ namespace GeometryClassLibrary
             return UpperPart;
         }
 
+        // --------------------------------------------------------------------------------------------------------------
+
+
+        /// <summary>
+        /// Solves for the column matrix x, where Ax = b.
+        /// </summary>
+        public Matrix SystemSolve(Matrix columnMatrix)
+        {
+            var augmentedMatrix = new Matrix(this.NumberOfRows, this.NumberOfColumns + 1);
+            augmentedMatrix.InsertMatrixAt(this, 0, 0);
+            augmentedMatrix.InsertMatrixAt(columnMatrix, 0, this.NumberOfColumns);
+
+            var solution = Matrix._solveMatrix(augmentedMatrix.As2DArray);
+            return new Matrix(solution);
+        }
+
+        private static double[] _solveMatrix(double[,] augmentedMatrix)
+        {
+            //needs to be an augmented matrix
+            //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
+
+            //see how many rows we have
+            var numberOfMatrixRows = augmentedMatrix.GetLength(0);
+            var numberOfMatrixColumns = augmentedMatrix.GetLength(1);
+            //first we need to get the matrix in echelon form
+            //since we move diagonally we can use the same place for both the refernce row and the column
+            for (var currentColumnAndReferenceRow = 0; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
+            {
+                //we start one below our current reference row
+                for (var currentRow = currentColumnAndReferenceRow + 1; currentRow < numberOfMatrixRows; currentRow++)
+                {
+                    //if the column above us has a zero we just set the scale to 1 because otherwise we would divide by 0
+                    var referenceRowMultiplier = 1.0;
+                    if (Math.Abs(augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]) > 0.0000001)
+                    {
+                        referenceRowMultiplier = (augmentedMatrix[currentRow, currentColumnAndReferenceRow]/augmentedMatrix[currentColumnAndReferenceRow, currentColumnAndReferenceRow]);
+                    }
+
+                    //cycle through the items in the row and change them using the multiplier and the first row
+                    for (var currentItem = 0; currentItem < numberOfMatrixColumns; currentItem++)
+                    {
+                        augmentedMatrix[currentRow, currentItem] = augmentedMatrix[currentRow, currentItem] - (referenceRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]);
+                    }
+                }
+            }
+
+            //now we want it in reduced echelon form (the diagonals should be 1)
+            //since we move diagonally we can use the same place for both the row and the column
+            for (var currentColumnAndRow = 0; currentColumnAndRow < numberOfMatrixRows; currentColumnAndRow++)
+            {
+                //divide by the value along the diagonal
+                var divisor = augmentedMatrix[currentColumnAndRow, currentColumnAndRow];
+
+                for (var currentItem = 0; currentItem < numberOfMatrixColumns; currentItem++)
+                {
+                    if (divisor == 0)
+                    {
+                        augmentedMatrix[currentColumnAndRow, currentItem] = 0;
+                    }
+                    else
+                    {
+                        augmentedMatrix[currentColumnAndRow, currentItem] = (augmentedMatrix[currentColumnAndRow, currentItem]/divisor);
+                    }
+                }
+            }
+
+            //back substitution to find the answers
+            //since we move diagonally we can use the same place for both the refernce row and the column
+            for (var currentColumnAndReferenceRow = 1; currentColumnAndReferenceRow < numberOfMatrixRows; currentColumnAndReferenceRow++)
+            {
+                //start at the bottom and work up
+                for (var currentRow = currentColumnAndReferenceRow - 1; currentRow >= 0; currentRow--)
+                {
+                    //then find the multiplier for the refernece line based on the currentline and column
+                    var currentRowMultiplier = augmentedMatrix[currentRow, currentColumnAndReferenceRow];
+
+                    for (var currentItem = 0; currentItem < numberOfMatrixColumns; currentItem++)
+                    {
+                        augmentedMatrix[currentRow, currentItem] = (augmentedMatrix[currentRow, currentItem] - (currentRowMultiplier*augmentedMatrix[currentColumnAndReferenceRow, currentItem]));
+
+                        if (Math.Abs(augmentedMatrix[currentRow, currentItem]) < 0.000000001)
+                        {
+                            augmentedMatrix[currentRow, currentItem] = 0.0;
+                        }
+                    }
+                }
+            }
+            // return the last column :
+            return augmentedMatrix.GetColumn(numberOfMatrixColumns - 1);
+        }
+
+
         #endregion
 
         #endregion
+    }
+
+    public static class TwoDimensionalArrayExtensions
+    {
+        public static double[] GetColumn(this double[,] array, int index)
+        {
+            var numRows = array.GetLength(0);
+            var column = new double[numRows];
+            for (int i = 0; i < numRows; i++)
+            {
+                column[i] = array[i, index];
+            }
+            return column;
+        }
     }
 }

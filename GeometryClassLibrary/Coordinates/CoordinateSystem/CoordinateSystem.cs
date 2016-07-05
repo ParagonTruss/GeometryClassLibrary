@@ -31,25 +31,18 @@ namespace GeometryClassLibrary
     /// <summary>
     /// 
     /// </summary>
-    public partial class CoordinateSystem
+    public class CoordinateSystem
     {
         #region Properties and Fields
 
         /// <summary>
         /// The world coordinate system
         /// </summary>
-        public static CoordinateSystem WorldCoordinateSystem { get { return _worldCoordinateSystem; } }
-        private readonly static CoordinateSystem _worldCoordinateSystem = new CoordinateSystem(Point.Origin, Angle.ZeroAngle, Angle.ZeroAngle, Angle.ZeroAngle);
+        public static CoordinateSystem WorldCoordinateSystem { get; } = new CoordinateSystem(Point.Origin, Angle.ZeroAngle, Angle.ZeroAngle, Angle.ZeroAngle);
 
         public Shift ShiftFromThisToWorld { get;  }
        
-        public Point TranslationToOrigin
-        {
-            get
-            {
-                return Matrix.ShiftPoint(Point.Origin, ShiftFromThisToWorld.Matrix);
-            }
-        }
+        public Point TranslationToOrigin => Matrix.ShiftPoint(Point.Origin, ShiftFromThisToWorld.Matrix);
 
         #endregion
 
