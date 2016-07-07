@@ -108,14 +108,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Makes a copy of the passed matrix
         /// </summary>
-        public Matrix(Matrix<double> passedMatrix)
+        private Matrix(Matrix<double> passedMatrix)
         {
-            double norm =  passedMatrix.InfinityNorm();
-            if (Double.IsNaN(norm))
-            {
-                throw new Exception("Matrix entries should all be numbers!");
-            }
-            _matrix = passedMatrix.Clone();
+            _matrix = passedMatrix;
         }
 
         /// <summary>
@@ -697,7 +692,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Matrix MultiplyBy(Matrix passedMatrix)
         {
-            return new Matrix(_matrix)*passedMatrix;
+            return this*passedMatrix;
         }
 
         /// <summary>
@@ -1054,7 +1049,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the inverse of this matrix
         /// </summary>
-        /// <returns></returns>
         public Matrix Invert()
         {
             return new Matrix(_matrix.Inverse());
@@ -1118,10 +1112,9 @@ namespace GeometryClassLibrary
 
             for (int i = 0; i < NumberOfRows; ++i)
             {
-                for (int j = 0; j < NumberOfColumns; ++j)
+                for (int j = i; j < NumberOfColumns; ++j)
                 {
-                    if (i <= j)
-                        UpperPart.SetElement(i, j, this.GetElement(i, j));
+                    UpperPart[i,j] = this[i, j];
                 }
             }
             return UpperPart;
@@ -1139,11 +1132,14 @@ namespace GeometryClassLibrary
             augmentedMatrix.InsertMatrixAt(this, 0, 0);
             augmentedMatrix.InsertMatrixAt(columnMatrix, 0, this.NumberOfColumns);
 
-            var solution = Matrix._solveMatrix(augmentedMatrix.As2DArray);
+            var solution = SolveMatrix(augmentedMatrix.As2DArray);
             return new Matrix(solution);
         }
 
-        private static double[] _solveMatrix(double[,] augmentedMatrix)
+        /// <summary>
+        /// Turns an augmented matrix into Reduced Row Echelon form, by modifying the matrix in place. Then returns the last column.
+        /// </summary>
+        public static double[] SolveMatrix(double[,] augmentedMatrix)
         {
             //needs to be an augmented matrix
             //see for information on this method of solving: http://en.wikipedia.org/wiki/Gaussian_elimination
