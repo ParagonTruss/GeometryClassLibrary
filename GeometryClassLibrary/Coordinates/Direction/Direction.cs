@@ -312,7 +312,7 @@ namespace GeometryClassLibrary
             Angle testAngle = this.AngleBetween(direction);
             Direction testNormal = this.CrossProduct(direction);
            
-            if (testNormal == NoDirection || testAngle % Angle.StraightAngle == Angle.ZeroAngle || testNormal == referenceNormal)
+            if (testNormal == null || testAngle % Angle.StraightAngle == Angle.ZeroAngle || testNormal == referenceNormal)
             {
                 return testAngle;
             }
