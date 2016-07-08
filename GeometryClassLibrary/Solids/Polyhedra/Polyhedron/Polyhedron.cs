@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MoreLinq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
@@ -39,14 +38,50 @@ namespace GeometryClassLibrary
         /// <summary>
         /// All the polyhedron's linesegments.
         /// </summary>
-        public List<LineSegment> LineSegments => this.Polygons.SelectMany(face => face.LineSegments).Distinct().ToList();
+        public List<LineSegment> LineSegments
+        {
+            get
+            {
+                List<LineSegment> returnList = new List<LineSegment>();
+
+                foreach (var region in this.Polygons)
+                {
+                    foreach (var segment in region.LineSegments)
+                    {
+                        if (!returnList.Contains(segment))
+                        {
+                            returnList.Add(segment);
+                        }
+                    }
+                }
+                return returnList;
+            }
+        }
 
         /// <summary>
         /// Returns a list of all the vertices in the Polyhedron
         /// </summary>
-        public List<Point> Vertices => _vertices ?? (_vertices = this.Polygons.SelectMany(face => face.Vertices).Distinct().ToList());
+        public List<Point> Vertices
+        {
+            get
+            {
+                if (_vertices == null)
+                {
+                    var returnList = new List<Point>();
+                    foreach (var face in Polygons)
+                    {
+                        foreach (var point in face.Vertices)
+                        {
+                            if (returnList.Contains(point)) continue;
+                            returnList.Add(point);
+                        }
+                    }
+                    _vertices = returnList;
+                }
+                return _vertices;
+            }
+        }
         private List<Point> _vertices;
-
         /// <summary>
         /// determines if the polyhedron is convex
         /// i.e. all segments whose endpoints are inside the polygon, are inside the polygon

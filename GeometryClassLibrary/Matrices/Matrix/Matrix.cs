@@ -863,45 +863,45 @@ namespace GeometryClassLibrary
             return rotationMatrix;
         }
 
-        ///// <summary>
-        ///// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
-        ///// </summary>>
-        //public static Matrix RotationMatrixAboutOrigin(Rotation passedRotation)
-        //{
-        //    Matrix rotationMatrix = new Matrix(3);
+        /// <summary>
+        /// Returns a matrix that can be multiplied by another matrix to represent a rotation of that matrix about the passed axis line by the specified angle
+        /// </summary>>
+        public static Matrix RotationMatrixAboutOrigin(Rotation passedRotation)
+        {
+            Matrix rotationMatrix = new Matrix(3);
 
-        //    Direction rotationUnitVector = passedRotation.AxisOfRotation.Direction;
+            Direction rotationUnitVector = passedRotation.AxisOfRotation.Direction;
 
-        //    double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
-        //    double unitY = rotationUnitVector.Y.Value;
-        //    double unitZ = rotationUnitVector.Z.Value;
-        //    double theta = passedRotation.RotationAngle.InRadians.Value;
+            double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
+            double unitY = rotationUnitVector.Y.Value;
+            double unitZ = rotationUnitVector.Z.Value;
+            double theta = passedRotation.RotationAngle.InRadians.Value;
 
-        //    double sinTheta = Math.Sin(theta);
-        //    double cosTheta = Math.Cos(theta);
+            double sinTheta = Math.Sin(theta);
+            double cosTheta = Math.Cos(theta);
 
-        //    double row0column0 = cosTheta + unitX*unitX*(1 - cosTheta);
-        //    double row0column1 = unitX*unitY*(1 - cosTheta) - unitZ*sinTheta;
-        //    double row0column2 = unitX*unitZ*(1 - cosTheta) + unitY*sinTheta;
-        //    double row1column0 = unitY*unitX*(1 - cosTheta) + unitZ*sinTheta;
-        //    double row1column1 = cosTheta + unitY*unitY*(1 - cosTheta);
-        //    double row1column2 = unitY*unitZ*(1 - cosTheta) - unitX*sinTheta;
-        //    double row2column0 = unitZ*unitX*(1 - cosTheta) - unitY*sinTheta;
-        //    double row2column1 = unitZ*unitY*(1 - cosTheta) + unitX*sinTheta;
-        //    double row2column2 = cosTheta + unitZ*unitZ*(1 - cosTheta);
+            double row0column0 = Math.Cos(theta) + unitX*unitX*(1 - Math.Cos(theta));
+            double row0column1 = unitX*unitY*(1 - Math.Cos(theta)) - unitZ*Math.Sin(theta);
+            double row0column2 = unitX*unitZ*(1 - Math.Cos(theta)) + unitY*Math.Sin(theta);
+            double row1column0 = unitY*unitX*(1 - Math.Cos(theta)) + unitZ*Math.Sin(theta);
+            double row1column1 = Math.Cos(theta) + unitY*unitY*(1 - Math.Cos(theta));
+            double row1column2 = unitY*unitZ*(1 - Math.Cos(theta)) - unitX*Math.Sin(theta);
+            double row2column0 = unitZ*unitX*(1 - Math.Cos(theta)) - unitY*Math.Sin(theta);
+            double row2column1 = unitZ*unitY*(1 - Math.Cos(theta)) + unitX*Math.Sin(theta);
+            double row2column2 = Math.Cos(theta) + unitZ*unitZ*(1 - Math.Cos(theta));
 
-        //    rotationMatrix.SetElement(0, 0, row0column0);
-        //    rotationMatrix.SetElement(0, 1, row0column1);
-        //    rotationMatrix.SetElement(0, 2, row0column2);
-        //    rotationMatrix.SetElement(1, 0, row1column0);
-        //    rotationMatrix.SetElement(1, 1, row1column1);
-        //    rotationMatrix.SetElement(1, 2, row1column2);
-        //    rotationMatrix.SetElement(2, 0, row2column0);
-        //    rotationMatrix.SetElement(2, 1, row2column1);
-        //    rotationMatrix.SetElement(2, 2, row2column2);
+            rotationMatrix.SetElement(0, 0, row0column0);
+            rotationMatrix.SetElement(0, 1, row0column1);
+            rotationMatrix.SetElement(0, 2, row0column2);
+            rotationMatrix.SetElement(1, 0, row1column0);
+            rotationMatrix.SetElement(1, 1, row1column1);
+            rotationMatrix.SetElement(1, 2, row1column2);
+            rotationMatrix.SetElement(2, 0, row2column0);
+            rotationMatrix.SetElement(2, 1, row2column1);
+            rotationMatrix.SetElement(2, 2, row2column2);
 
-        //    return rotationMatrix;
-        //}
+            return rotationMatrix;
+        }
 
         /// <summary>
         /// Returns true if every element in this matrix is zero, false otherwise

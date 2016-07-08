@@ -30,6 +30,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Angle to Rotate = {AngleToRotate.InDegrees.Value}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.InInches}, {AxisToRotateAround.BasePoint.Y.InInches}, {AxisToRotateAround.BasePoint.Z.InInches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.InInches}")]
+    [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {
         #region Properties and Fields
@@ -134,34 +135,40 @@ namespace GeometryClassLibrary
         #region Constructor Helpers
         private Matrix _matrixOfRotationAboutOrigin()
         {
+            Matrix rotationMatrix = new Matrix(4, 4);
+
             Direction rotationUnitVector = this.AxisOfRotation.Direction;
 
             double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
             double unitY = rotationUnitVector.Y.Value;
             double unitZ = rotationUnitVector.Z.Value;
-            double theta = this.RotationAngle.ValueIn(Radians);
+            Angle theta = this.RotationAngle;
 
-            double sinTheta = Math.Sin(theta);
-            double cosTheta = Math.Cos(theta);
+            double sinTheta = Angle.Sine(theta).Value;
+            double cosTheta = Angle.Cosine(theta).Value;
 
-            double entry00 = cosTheta + unitX * unitX * (1 - cosTheta);
-            double entry01 = unitX * unitY * (1 - cosTheta) - unitZ * sinTheta;
-            double entry02 = unitX * unitZ * (1 - cosTheta) + unitY * sinTheta;
-            double entry10 = unitY * unitX * (1 - cosTheta) + unitZ * sinTheta;
-            double entry11 = cosTheta + unitY * unitY * (1 - cosTheta);
-            double entry12 = unitY * unitZ * (1 - cosTheta) - unitX * sinTheta;
-            double entry20 = unitZ * unitX * (1 - cosTheta) - unitY * sinTheta;
-            double entry21 = unitZ * unitY * (1 - cosTheta) + unitX * sinTheta;
-            double entry22 = cosTheta + unitZ * unitZ * (1 - cosTheta);
+            double row0column0 = cosTheta + unitX * unitX * (1 - cosTheta);
+            double row0column1 = unitX * unitY * (1 - cosTheta) - unitZ * sinTheta;
+            double row0column2 = unitX * unitZ * (1 - cosTheta) + unitY * sinTheta;
+            double row1column0 = unitY * unitX * (1 - cosTheta) + unitZ * sinTheta;
+            double row1column1 = cosTheta + unitY * unitY * (1 - cosTheta);
+            double row1column2 = unitY * unitZ * (1 - cosTheta) - unitX * sinTheta;
+            double row2column0 = unitZ * unitX * (1 - cosTheta) - unitY * sinTheta;
+            double row2column1 = unitZ * unitY * (1 - cosTheta) + unitX * sinTheta;
+            double row2column2 = cosTheta + unitZ * unitZ * (1 - cosTheta);
 
-            var matrix = new double[,]
-            {
-                {entry00, entry01, entry02,   0},
-                {entry10, entry11, entry12,   0},
-                {entry20, entry21, entry22,   0},
-                {      0,       0,       0,   1},
-            };
-            return new Matrix(matrix);
+            rotationMatrix.SetElement(0, 0, row0column0);
+            rotationMatrix.SetElement(0, 1, row0column1);
+            rotationMatrix.SetElement(0, 2, row0column2);
+            rotationMatrix.SetElement(1, 0, row1column0);
+            rotationMatrix.SetElement(1, 1, row1column1);
+            rotationMatrix.SetElement(1, 2, row1column2);
+            rotationMatrix.SetElement(2, 0, row2column0);
+            rotationMatrix.SetElement(2, 1, row2column1);
+            rotationMatrix.SetElement(2, 2, row2column2);
+
+            rotationMatrix.SetElement(3, 3, 1.0);
+            return rotationMatrix;
         }
 
         private void _setMatrix()
