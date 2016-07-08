@@ -225,6 +225,10 @@ namespace GeometryClassLibrary.Vectors
                 var magnitude1 = vector1.Magnitude();
                 var magnitude2 = vector2.Magnitude();
                 var divided = dotProduct / (magnitude1 * magnitude2);
+                if (double.IsNaN(divided.Value))
+                {
+                    return Angle.ZeroAngle;
+                }
                 var angle = Angle.ArcCos(divided);
                 return angle;
             }
