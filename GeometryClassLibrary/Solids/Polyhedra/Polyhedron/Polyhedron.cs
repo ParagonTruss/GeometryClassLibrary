@@ -27,7 +27,7 @@ using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
-    public partial class Polyhedron : IShift<Polyhedron>
+    public class Polyhedron : IShift<Polyhedron>
     {
         #region Properties and Fields
 
