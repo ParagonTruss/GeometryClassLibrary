@@ -12,7 +12,7 @@
     <copyright>Copyright © 2016 Paracon Component Systems, LLC</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
-		<dependency id="UnitClassLibrary" version="2.0.0-rc1" />
+		<dependency id="UnitClassLibrary" version="3.0.0" />
 		<dependency id="MathNet.Numerics" version="3.10.0" />
 		<dependency id="MoreLinq.Portable" version="1.4.0" />
 	</dependencies>
