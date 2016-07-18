@@ -35,7 +35,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Polygon : Plane, IShift<Polygon>
     {
         public static explicit operator Polygon(PlaneRegion p)
@@ -45,8 +44,7 @@ namespace GeometryClassLibrary
 
         #region Properties and Fields
 
-        [JsonProperty]
-        public virtual List<LineSegment> LineSegments { get; private set; }
+        public virtual List<LineSegment> LineSegments { get; }
 
         public virtual List<Point> Vertices { get { return LineSegments.Select(s => s.BasePoint).ToList(); } }
         
@@ -160,7 +158,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a polygon from the passed linesegments, after validating that they in fact form a closed nondegenerate planar region.
         /// </summary>
-        [JsonConstructor]
         public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
         {
             if (shouldValidate)
@@ -1545,7 +1542,18 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Static Factory Methods
-
+        public static Polygon CreateInXYPlane(DistanceType distanceType, params double[] coordinates)
+        {
+            if (coordinates.Length % 2 != 0)
+            {
+                throw new ArgumentException("You must pass in an x & y coordinate for each vertex.");
+            }
+            var list = coordinates.Select((cord, index) => new {cord, index}).ToList();
+            var Xs = list.Where(pair => pair.index % 2 == 0);
+            var Ys = list.Where(pair => pair.index % 2 == 1);
+            var vertices = Enumerable.Zip(Xs, Ys, (x, y) => new Point(distanceType, x.cord, y.cord));
+            return new Polygon(vertices.ToList());
+        }
         public static Polygon Triangle(
             DistanceType type,
             double x1, double y1,
