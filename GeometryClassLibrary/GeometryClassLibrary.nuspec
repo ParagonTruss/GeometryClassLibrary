@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GeometryClassLibrary</id>
-    <version>2.0.0-rc.15</version>
+    <version>3.0.0</version>
     <title>Geometry Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
