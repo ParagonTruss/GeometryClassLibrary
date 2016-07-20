@@ -656,6 +656,10 @@ namespace GeometryClassLibrary
             Polygon intersectionPlane;
             for (int j = 0; j < this.Polygons.Count; j++)
             {
+                if (!polygon.IsCoplanarTo(Polygons[j]))
+                {
+                    continue;
+                }
                 intersectionPlane = polygon.OverlappingPolygon(this.Polygons[j]);
                 if (intersectionPlane != null)
                 {
