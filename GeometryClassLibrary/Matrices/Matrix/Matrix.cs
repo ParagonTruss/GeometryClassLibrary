@@ -123,7 +123,21 @@ namespace GeometryClassLibrary
             this.SetColumn(0, array);
         }
 
-        /// <summary> Constructs Matrix object from a 2dArray </summary>
+        /// <summary>
+        /// Construct a matrix from a 1 Dimensional array either building row by row, or column by column.
+        /// </summary>
+        public Matrix(double[] array, int numRows, int numCols, EnumerationOrder order = EnumerationOrder.ByColumn)
+        {
+            this._matrix = DenseMatrix.OfColumnMajor(numRows, numCols, array);
+            if (order == EnumerationOrder.ByRow)
+            {
+                this._matrix = _matrix.Transpose();
+            }
+        }
+
+        /// <summary> 
+        /// Constructs Matrix object from a 2dArray
+        ///  </summary>
         [JsonConstructor]
         public Matrix(double[,] As2DArray)
         {
