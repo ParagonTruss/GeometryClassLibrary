@@ -31,7 +31,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved as around a circle.
     /// </summary>
-    public class Arc : IEdge, IComparable<Arc>
+    public class Arc : IEdge
     {
         #region Properties and Fields
 
@@ -391,16 +391,6 @@ namespace GeometryClassLibrary
                    (this.BasePoint == arc.EndPoint &&
                     this.EndPoint == arc.BasePoint &&
                     this.NormalDirection == arc.NormalDirection.Reverse());
-        }
-
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Arc other)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
