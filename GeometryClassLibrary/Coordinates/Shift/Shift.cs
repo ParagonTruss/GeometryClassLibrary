@@ -231,16 +231,6 @@ namespace GeometryClassLibrary
             return this._matrix.GetHashCode();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            throw new NotImplementedException();
-        }
-
-
         #endregion
 
     }
