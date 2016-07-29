@@ -18,18 +18,6 @@ namespace GeometryClassLibraryTest
     public class PolygonTests
     {
         [Test()]
-        public void Mutability_Test()
-        {
-            Point point1 = Point.Origin;
-            var list = new List<Point>();
-            list.Add(point1);
-
-            point1 = Point.MakePointWithInches(3, 3, 3);
-            bool test = list[0] == point1;
-            Assert.Pass();
-        }
-
-        [Test()]
         public void Polygon_Constructor_NoSelfIntersections()
         {
             Point point1 = Point.MakePointWithInches(0, 0);
@@ -409,31 +397,38 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_OverlappingPolygon_ErrorCase1()
         {
-            var vertices1 = new List<Point>() {
-                Point.MakePointWithInches(30,1.5),
-                Point.MakePointWithInches(0,1.5),
-                Point.MakePointWithInches(0,0),
-                Point.MakePointWithInches(30,0) };
-            var vertices2 = new List<Point>() {
-                Point.MakePointWithInches(3.5,0),
-                Point.MakePointWithInches(7,0),
-                Point.MakePointWithInches(7,3.5),
-                Point.MakePointWithInches(3.5,3.5) };
-            var polygon1 = new Polygon(vertices1);
-            var polygon2 = new Polygon(vertices2);
+            var polygon1 = Polygon.Rectangle(Inches, 30, 1.5, 0, 0);
+            var polygon2 = Polygon.Rectangle(Inches, 3.5, 0, 7, 3.5);
 
             var result = polygon1.OverlappingPolygon(polygon2);
 
-            var expectedVertices = new List<Point>() {
-                Point.MakePointWithInches(3.5,0),
-                Point.MakePointWithInches(7,0),
-                Point.MakePointWithInches(7,1.5),
-                Point.MakePointWithInches(3.5,1.5) };
-            var expected = new Polygon(expectedVertices);
+            var expected = Polygon.Rectangle(Inches, 3.5, 0, 7, 1.5);
 
             (result == expected).Should().BeTrue();
         }
+        [Test()]
+        public void Polygon_OverlappingPolygon_ErrorCase2()
+        {
+            var plate = Polygon.CreateInXYPlane(Inches, 
+                20, 14, 
+                16, 14, 
+                16, 18, 
+                20, 18);
+            var member = Polygon.CreateInXYPlane(Inches,
+                214.5, 18,
+                214.5, 16.5,
+                0, 16.5,
+                0, 18);
 
+            var overlap = plate.OverlappingPolygon(member);
+
+            overlap.IsNull().Should().BeFalse();
+
+            var expected = Polygon.Rectangle(Inches, 16, 16.5, 20, 18);
+           
+
+            (overlap == expected).Should().BeTrue();
+        }
         [Test()]
         public void Polygon_NormalLine()
         {
