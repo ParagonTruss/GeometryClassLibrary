@@ -991,18 +991,17 @@ namespace GeometryClassLibrary
                 for (int j = 0; j < segments2.Count; j++)
                 {           
                     var segment2 = segments2[j];
-                    if (segment1.Overlaps(segment2))
+                    
+                    if (segment1.Direction == segment2.Direction.Reverse() && 
+                        segment1.Overlaps(segment2))
                     {
-                        if (segment1.AngleBetween(segment2) == Angle.StraightAngle)
-                        {
-                            List<List<LineSegment>> segments = _subtract(segment1, segment2);
-                            segments1.RemoveAt(i);
-                            segments2.RemoveAt(j);
-                            segments1.AddRange(segments[0]);
-                            segments2.AddRange(segments[1]);
-                            i -= 1;
-                            break;
-                        }
+                        List<List<LineSegment>> segments = _subtract(segment1, segment2);
+                        segments1.RemoveAt(i);
+                        segments2.RemoveAt(j);
+                        segments1.AddRange(segments[0]);
+                        segments2.AddRange(segments[1]);
+                        i -= 1;
+                        break;
                     }
                 }
             }
@@ -1071,7 +1070,7 @@ namespace GeometryClassLibrary
                 #endregion
 
                 #region Check For Intersection
-                var candidates = new Dictionary<Point, LineSegment>();
+                var candidates = new List<Tuple<Point, LineSegment>>();
                 foreach (var segment in otherList)
                 {
                     var intersection = segment.IntersectWithSegment(currentSegment);
@@ -1079,7 +1078,7 @@ namespace GeometryClassLibrary
                         intersection != segment.EndPoint &&
                         intersection != currentSegment.BasePoint)
                     {
-                        candidates.Add(intersection, segment);
+                        candidates.Add(Tuple.Create(intersection, segment));
                     }
                 }
 
@@ -1093,11 +1092,11 @@ namespace GeometryClassLibrary
                 var nextSegment = polygons[index % 2].LineSegments.FirstOrDefault(s => s.BasePoint == currentSegment.EndPoint);
 
                 var found = false;
-                var enumerator = candidates.OrderBy(p => p.Key.DistanceTo(currentSegment.BasePoint));
-                foreach (var pair in enumerator)
+                var tuples = candidates.OrderBy(p => p.Item1.DistanceTo(currentSegment.BasePoint));
+                foreach (var pair in tuples)
                 {
-                    point = pair.Key;
-                    lineSegment = pair.Value;
+                    point = pair.Item1;
+                    lineSegment = pair.Item2;
                     if (point == currentSegment.EndPoint)
                     {
                         if (nextSegment != null && nextSegment.IsParallelTo(lineSegment))
@@ -1241,7 +1240,7 @@ namespace GeometryClassLibrary
             var results = new List<List<LineSegment>>() { new List<LineSegment>(), new List<LineSegment>() };
             if (segment.EndPoint == toSubtract.BasePoint && segment.BasePoint == toSubtract.EndPoint)
             {
-                // return nothing;
+                ; // return nothing;
             }
             else if (new Vector(segment.BasePoint, toSubtract.BasePoint).HasSameDirectionAs(new Vector(segment.EndPoint, toSubtract.EndPoint)))
             {
@@ -1267,6 +1266,11 @@ namespace GeometryClassLibrary
             {
                 results[1].Add(new LineSegment(toSubtract.BasePoint, segment.EndPoint));
                 results[0].Add(new LineSegment(segment.BasePoint, toSubtract.EndPoint));
+            }
+            else
+            {
+                throw new Exception();
+                ;
             }
             return results;
         }

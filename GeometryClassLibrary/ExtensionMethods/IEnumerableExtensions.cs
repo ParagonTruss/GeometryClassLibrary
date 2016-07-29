@@ -49,4 +49,13 @@ namespace GeometryClassLibrary
             return true;
         }
     }
+
+    /// <summary>
+    /// For easy null checking
+    /// </summary>
+    public static class _
+    {
+        public static bool IsNull(this object obj) => obj == null;
+        public static bool NotNull(this object obj) => obj != null;
+    }
 }
