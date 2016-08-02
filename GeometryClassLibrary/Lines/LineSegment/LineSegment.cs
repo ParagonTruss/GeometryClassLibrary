@@ -533,8 +533,8 @@ namespace GeometryClassLibrary
         {
             var vector1 = new Vector(BasePoint, point);
             var vector2 = new Vector(point, EndPoint);
-            return vector1.Magnitude + vector2.Magnitude == this.Length &&
-                vector1.HasSameDirectionAs(vector2);
+            return point.IsOnLine(this) && vector1.HasSameDirectionAs(vector2);
+
         }
 
         public bool ContainsOnInside(LineSegment other)

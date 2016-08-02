@@ -50,12 +50,18 @@ namespace GeometryClassLibrary
         }
     }
 
-    /// <summary>
-    /// For easy null checking
-    /// </summary>
+  
     public static class _
     {
+        /// <summary>
+        /// For easy null checking
+        /// </summary>
         public static bool IsNull(this object obj) => obj == null;
         public static bool NotNull(this object obj) => obj != null;
+        
+        /// <summary>
+        /// A function that returns its input.
+        /// </summary>
+        public static T Identity<T>(this T input) => input;
     }
 }

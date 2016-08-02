@@ -3,46 +3,7 @@ using GeometryClassLibrary;
 
 namespace GeometryClassLibraryTest
 {
-    public class StubPolyhedron1 : Polyhedron
-    {
-        public StubPolyhedron1()
-        {
-             List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 8)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(4, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0), Point.MakePointWithInches(4, 8)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 8), Point.MakePointWithInches(0, 8)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
-            //Polyhedron_ShiftXYTest()
-            //Polyhedron_ShiftYZTest()
-        }
-    
-    }
-   
-        
-    
-    public class StubPolyhedron3 : Polyhedron
-    {
-        public StubPolyhedron3()
-        {
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(0, 4, 0)));
-            lineSegments.Add(new LineSegment(Point.Origin, Point.MakePointWithInches(8, 0, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 0, 0), Point.MakePointWithInches(8, 4, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(8, 4, 0), Point.MakePointWithInches(0, 4, 0)));
-            Polyhedron polyhedron = new Polyhedron(lineSegments);
-            //Polyhedron_MultiShiftReturnToOriginalTest()
-            //Polyhedron_MultiShiftReturnToOriginalTest()
-            //Polyhedron_ShiftTest_RotationOnly()
-            //Polyhedron_ShiftTest_TranslationOnly()
-            //Polyhedron_ShiftTest_RotateAndTranslate()
-            //Polyhedron_ShiftTest_RotateAndTranslate_ThenReturnToOriginal()
-            //Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate()
-            //Polyhedron_ShiftTest_RotateNotThroughOriginAndTranslate_ThenReturnToOriginal()
-            //
 
-        }
-    }
     public class StubPolyhedron4 : Polyhedron
     {
         public StubPolyhedron4()
@@ -74,12 +35,4 @@ namespace GeometryClassLibraryTest
 
         }
     }
-    public class StubPolyhedron0 : Polyhedron
-    {
-        public StubPolyhedron0()
-        {
-
-        }
-    }
-   
 }

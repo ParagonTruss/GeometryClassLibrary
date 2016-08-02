@@ -134,8 +134,6 @@
     <Compile Include="Stubs\PolygonStubs.cs" />
     <Compile Include="Stubs\PolyhedronStubs.cs" />
     <Compile Include="Stubs\StubPolyhedron.cs" />
-    <Compile Include="Stubs\TestLine.cs" />
-    <Compile Include="Stubs\TestLineIntersection.cs" />
     <Compile Include="Stubs\ThreeFourFiveRightTriangle.cs" />
   </ItemGroup>
   <ItemGroup>
