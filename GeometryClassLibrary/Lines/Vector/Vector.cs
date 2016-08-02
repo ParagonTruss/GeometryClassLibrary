@@ -34,54 +34,36 @@ namespace GeometryClassLibrary
     /// A vector is a line segment that has a direction
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
-    public partial class Vector : Line, IEquatable<Vector>
+    public class Vector : Line, IEquatable<Vector>
     {
         #region Properties and Fields
 
-        public static Vector Zero { get { return new Vector(Point.Origin); } }
+        public static Vector Zero => new Vector(Point.Origin);
 
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
-        public virtual Distance Magnitude
-        {
-            get { return _magnitude; }
-            set { _magnitude = value; }
-        }
-        private Distance _magnitude;
+        public virtual Distance Magnitude { get; }
 
         /// <summary>
         /// Returns the x-component of this vector
         /// </summary>
-        public virtual Distance XComponent
-        {
-            get { return _magnitude * base.Direction.X; }
-        }
+        public virtual Distance XComponent => Magnitude * base.Direction.X;
 
         /// <summary>
         /// Returns the y-component of this vector
         /// </summary>
-        public virtual Distance YComponent
-        {
-            get { return _magnitude * base.Direction.Y; }
-        }
+        public virtual Distance YComponent => Magnitude * base.Direction.Y;
 
         /// <summary>
         /// Returns the z-component of this vector
         /// </summary>
-        public virtual Distance ZComponent
-        {
-            get { return _magnitude * base.Direction.Z; }
-        }
+        public virtual Distance ZComponent => Magnitude * base.Direction.Z;
 
         /// <summary>
         /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the vector's direction
         /// </summary>
-        public virtual Point EndPoint
-        {
-            get { return new Point(XComponent, YComponent, ZComponent) + BasePoint; }
-        }
+        public virtual Point EndPoint => new Point(XComponent, YComponent, ZComponent) + BasePoint;
 
         /// <summary>
         /// Allows the xyz components of the vector to be able to be accessed as an array
@@ -115,7 +97,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedEndPoint)
             : base(passedEndPoint)
         {
-            _magnitude = passedEndPoint.DistanceTo(Point.Origin);
+            this.Magnitude = passedEndPoint.DistanceTo(Point.Origin);
         }
 
         /// <summary>
@@ -124,7 +106,7 @@ namespace GeometryClassLibrary
         public Vector(Point basePoint, Point endPoint)
             : base(basePoint, endPoint)
         {
-            _magnitude = basePoint.DistanceTo(endPoint);
+            this.Magnitude = basePoint.DistanceTo(endPoint);
         }
 
         /// <summary>
@@ -133,12 +115,12 @@ namespace GeometryClassLibrary
         public Vector(Point basePoint, Vector vector)
             : base(vector.Direction, basePoint)
         {
-            _magnitude = new Distance(vector._magnitude);
+            this.Magnitude = vector.Magnitude;
         }
 
         public Vector(Direction direction, Distance magnitude) : base(direction)
         {
-            this._magnitude = magnitude;
+            this.Magnitude = magnitude;
         }
 
         public Vector(Line line, Distance magnitude) : this(line.BasePoint, line.Direction, magnitude) { }
@@ -151,7 +133,7 @@ namespace GeometryClassLibrary
         public Vector(Point passedBasePoint, Direction direction, Distance magnitude)
             : base(direction, passedBasePoint)
         {
-             _magnitude = magnitude;
+             this.Magnitude = magnitude;
         }
 
         /// <summary>
@@ -191,9 +173,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Subtracts the two vectors and returns the resultant vector
         /// </summary>
-        /// <param name="passedVector1"></param>
-        /// <param name="passedVector2"></param>
-        /// <returns></returns>
         public static Vector operator -(Vector passedVector1, Vector passedVector2)
         {
             Vector negatedVector2 = -1 * passedVector2;
@@ -203,9 +182,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
-        /// <param name="passedVector"></param>
-        /// <param name="scalar"></param>
-        /// <returns></returns>
         public static Vector operator *(Vector passedVector, Measurement scalar)
         {
             return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude * scalar);
@@ -214,9 +190,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
-        /// <param name="scalar"></param>
-        /// <param name="passedVector"></param>
-        /// <returns></returns>
         public static Vector operator *(double scalar, Vector passedVector)
         {
             return passedVector * scalar;
@@ -234,80 +207,29 @@ namespace GeometryClassLibrary
         {
             if ((object)vector1 == null)
             {
-                if ((object)vector2 == null)
-                {
-                    return true;
-                }
-                return false;
+                return (object)vector2 == null;
             }
             return vector1.Equals(vector2);
         }
 
         public static bool operator !=(Vector vector1, Vector vector2)
-        {
-            if ((object)vector1 == null)
-            {
-                if ((object)vector2 == null)
-                {
-                    return false;
-                }
-                return true;
-            }
-            return !vector1.Equals(vector2);
-        }
+            => !(vector1 == vector2);
+        
 
-        public override bool Equals(object obj)
-        {
-            //check for null
-            if (obj == null || !(obj is Vector))
-            {
-                return false;
-            }
-            
-            Vector vec = (Vector)obj;
-
-            bool basePointsEqual = (this.BasePoint == vec.BasePoint);
-            bool endPointsEqual = (this.EndPoint == vec.EndPoint);
-
-            return basePointsEqual && endPointsEqual;        
-        }
+        public override bool Equals(object obj) => Equals(obj as Vector);        
 
         public bool Equals(Vector vector)
         {
-            //check for null
-            if (vector == null)
-            {
-                return false;
-            }
-
-            bool basePointsEqual = (this.BasePoint == vector.BasePoint);
-            bool endPointsEqual = (this.EndPoint == vector.EndPoint);
-
-            return basePointsEqual && endPointsEqual;        
-        }
-
-        /// <summary>
-        /// returns the comparison integer of -1 if less than, 0 if equal to, and 1 if greater than the other segment
-        /// NOTE: BASED SOLELY ON LENGTH.  MAY WANT TO CHANGE LATER
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public int CompareTo(Vector other)
-        {
-            if (this._magnitude.Equals(other._magnitude))
-                return 0;
-            else
-                return this._magnitude.CompareTo(other._magnitude);
+            return this.BasePoint == vector?.BasePoint &&
+                   this.EndPoint == vector.EndPoint;
         }
 
         /// <summary>
         /// returns the vector as a string
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("BasePoint= {0}, Direction= {1}, Magnitude= {2}", this.BasePoint.ToString(), this.Direction.ToString(), this.Magnitude.ToString());
-        }
+        public override string ToString() => $"BasePoint= {BasePoint}, Direction= {Direction}, Magnitude= {Magnitude}";
+        
 
         #endregion
 
@@ -463,9 +385,14 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public Matrix ConvertToMatrixColumn()
         {
-            Matrix returnMatrix = new Matrix(3, 1);
-            double[] vectorArray = { XComponent.InInches.Value, YComponent.InInches.Value, ZComponent.InInches.Value };
-            returnMatrix.SetColumn(0, vectorArray);
+            var vectorArray = new []
+            {
+                XComponent.InInches.Value,
+                YComponent.InInches.Value,
+                ZComponent.InInches.Value
+            };
+
+            Matrix returnMatrix = new Matrix(vectorArray);
             return returnMatrix;
         }
 
@@ -504,12 +431,13 @@ namespace GeometryClassLibrary
         /// </summary>
         public new Vector UnitVector(DistanceType passedType)
         {
-            if (Magnitude == Distance.ZeroDistance)
+            if (Magnitude == ZeroDistance)
             {
                 throw new Exception();
             }
-            else return Direction.UnitVector(passedType);
+            return Direction.UnitVector(passedType);
         }
+
         /// <summary>
         /// Returns the DotProduct between two Vectors as an area.
         /// </summary>
@@ -535,12 +463,6 @@ namespace GeometryClassLibrary
         {
             return this.SmallestAngleBetween(vector) == Angle.ZeroAngle;
         }
-
-     
-
-       
-
-
         #endregion
 
     }

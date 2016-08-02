@@ -208,16 +208,6 @@ namespace GeometryClassLibrary
         protected Polyhedron() { }
 
         /// <summary>
-        /// Makes a Polyhedron using the giving line segments made into polygons based on if they are coplanar and share a point
-        /// WARNING: THIS CONSTRUCTOR LEADS TO AMBIGUOUS CASES, DON'T USE IT!
-        /// </summary>
-        /// <param name="passedLineSegments">The line segments that define this Polyhedron</param>
-        public Polyhedron(List<LineSegment> passedLineSegments)
-        {
-            this.Polygons = passedLineSegments.MakeCoplanarLineSegmentsIntoPolygons();
-        }
-
-        /// <summary>
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
         public Polyhedron(List<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)

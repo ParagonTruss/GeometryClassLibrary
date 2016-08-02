@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
@@ -50,15 +51,13 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A point on the line to use as a reference.
         /// </summary>
-        [JsonProperty]
-        public Point BasePoint { get; protected set; }
+        public Point BasePoint { get; }
 
         /// <summary>
         /// The direction the line is extends from the base point in one direction
         /// Note: it also extends in the direction opposite
         /// </summary>
-        [JsonProperty]
-        public Direction Direction { get; protected set; }
+        public Direction Direction { get; }
 
         #endregion
      
@@ -244,59 +243,33 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+
+        #region Intercept Methods
         /// <summary>
         /// Returns the X intercept of the line if the z Distance is ignored
         /// </summary>
-        public Distance XInterceptIn2D()
-        {
-            if (XZIntercept() == null)
-            {
-                return null;
-            }
-            else
-            {
-                return XZIntercept().X;
-            }
-        }
-
+        public Distance XInterceptIn2D() => XZIntercept()?.X;
+       
         /// <summary>
         /// Returns the Y intecept of the Line if the z Distance is ignored
         /// </summary>
-        public Distance YInterceptIn2D()
-        {
-            if (YZIntercept() == null)
-            {
-                return null;
-            }
-            else
-            {
-                return YZIntercept().Y;
-            }
-        }
+        public Distance YInterceptIn2D() => YZIntercept()?.Y;
 
         /// <summary>
         /// Returns the point at which this line intercepts the XY-Plane
         /// </summary>
-        public Point XYIntercept()
-        {
-            return this.IntersectWithPlane(Plane.XY);
-        }
-
+        public Point XYIntercept() => this.IntersectWithPlane(Plane.XY);
+        
         /// <summary>
         /// Returns the point at which this line intercepts the XZ-Plane
         /// </summary>
-        public Point XZIntercept()
-        {
-            return this.IntersectWithPlane(Plane.XZ);
-        }
-
+        public Point XZIntercept() => this.IntersectWithPlane(Plane.XZ);
+ 
         /// <summary>
         /// Returns the point at which this line intercepts the YZ-Plane
         /// </summary>
-        public Point YZIntercept()
-        {
-            return Plane.YZ.IntersectWithLine(this);
-        }
+        public Point YZIntercept() => Plane.YZ.IntersectWithLine(this);
+#endregion
 
         public Plane PlaneThroughLineInDirectionOf(Axis passedAxis)
         {
@@ -406,8 +379,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the point at which a line intersects the passed line
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
         public virtual Point IntersectWithLine(Line passedLine)
         {
             if (this.Equals(passedLine))
@@ -453,8 +424,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// return the point of intersection, if any, between this line and the passed polygon
         /// </summary>
-        /// <param name="polygon"></param>
-        /// <returns></returns>
         public virtual Point IntersectWithPolygon(Polygon polygon)
         {
             return polygon.IntersectWithLine(this);
@@ -468,8 +437,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the two lines intersect
         /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
         public bool IntersectsLine(Line passedLine)
         {
             Point intersect = this.IntersectWithLine(passedLine);
@@ -484,8 +451,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the vector and line intersect
         /// </summary>
-        /// <param name="segment"></param>
-        /// <returns></returns>
         public virtual bool DoesIntersect(LineSegment segment)
         {
             Line newLine = new Line(segment);
@@ -501,8 +466,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the Polygon and Line intersect
         /// </summary>
-        /// <param name="passedPolygon"></param>
-        /// <returns></returns>
         public virtual bool DoesIntersect(Polygon passedPolygon)
         {
             return (passedPolygon.DoesIntersect(this));
@@ -511,20 +474,9 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether ot not this line itnersects the Polyhedron
         /// </summary>
-        /// <param name="passedPolyhedron"></param>
-        /// <returns>Returns true if the Line intersected the Polyhedron or false if it did not</returns>
-        public virtual bool DoesIntersect(Polyhedron passedPolyhedron)
-        {
-            foreach (Polygon polygon in passedPolyhedron.Polygons)
-            {
-                if (this.DoesIntersect(polygon))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-       
+        public virtual bool DoesIntersect(Polyhedron passedPolyhedron) => passedPolyhedron.Polygons.Any(DoesIntersect);
+        
+
         /// <summary>
         /// Rotates a line about the given axis by the amount of the passed angle
         /// </summary>
@@ -535,28 +487,6 @@ namespace GeometryClassLibrary
             Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
             Vector newDirectionVector = this.UnitVector(new Inch()).Rotate(rotationToApply);
             return new Line(newDirectionVector.Direction, newBasePoint);
-        }
-
-        /// <summary>
-        /// Rotates a line with the given lists of rotations
-        /// </summary>
-        /// <param name="rotationsToApply">The list of Rotations(that stores the axis to rotate around and the angle to rotate) to apply to the Line</param>
-        /// <returns></returns>
-        public Line Rotate(List<Rotation> rotationsToApply)
-        {
-            Line rotated = new Line(this);
-
-            Vector newDirectionVector = this.Direction.UnitVector(new Inch());
-
-            foreach (Rotation rotation in rotationsToApply)
-            {
-                rotated.BasePoint = this.BasePoint.Rotate3D(rotation);
-                newDirectionVector = newDirectionVector.UnitVector(new Inch()).Rotate(rotation);
-            }
-
-            rotated.Direction = newDirectionVector.Direction;
-
-            return rotated;
         }
 
         /// <summary>
@@ -588,7 +518,7 @@ namespace GeometryClassLibrary
 
             // checks if it is equal to 0
             double determinant = Math.Abs(pointsMatrix.Determinant());
-            Distance determinateDistance = determinant*new Distance(1, Inches);
+            Distance determinateDistance = new Distance(determinant, Inches);
             return determinateDistance == Distance.ZeroDistance;
         }
 
@@ -599,7 +529,7 @@ namespace GeometryClassLibrary
         public Line Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
-            Point newOtherPoint = this.GetPointAlongLine(new Distance(1, Inches) * 2).Translate(translation);
+            Point newOtherPoint = this.GetPointAlongLine(new Distance(2, Inches)).Translate(translation);
 
             return new Line(newBasePoint, newOtherPoint);
         }
@@ -607,8 +537,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Shifts the Line with the given shift
         /// </summary>
-        /// <param name="passedShift">The shift to apply to the Line</param>
-        /// <returns>Returns a new Line that has been shifted with the given Shift</returns>
         public Line Shift(Shift passedShift)
         {
             //shift it as a vector since we currently don't shift directions
@@ -641,7 +569,7 @@ namespace GeometryClassLibrary
             }
             else
             {
-                throw new ArgumentOutOfRangeException("The given line is not in the given plane");
+                throw new ArgumentException("The given line is not in the given plane");
             }
         }
 
@@ -681,7 +609,5 @@ namespace GeometryClassLibrary
             return new LineSegment(GetPointAlongLine(distance1), GetPointAlongLine(distance2));
         }
         #endregion
-
-        
     }
 }
