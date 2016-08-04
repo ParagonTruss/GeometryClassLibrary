@@ -97,6 +97,7 @@
     <Compile Include="Surfaces\Planes\PlaneRegion\PlaneRegionInterfaceImplementations.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Parallelogram.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Polygon\PolygonInterfaceImplementations.cs" />
+    <Compile Include="Surfaces\Planes\Polygons\Polygon\Polygon_Overlap.cs" />
     <Compile Include="Surfaces\Planes\Polygons\RightTriangle.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Triangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
