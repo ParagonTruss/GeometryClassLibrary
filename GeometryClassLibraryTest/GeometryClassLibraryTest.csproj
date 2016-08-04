@@ -96,7 +96,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnitClassLibrary, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UnitClassLibrary.2.0.0-rc7\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.3.0.0\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -105,6 +105,7 @@
     <Compile Include="PlaneTests\NonPolygonTests.cs" />
     <Compile Include="CoordinateTests\CoordinateSystemTest.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />
+    <Compile Include="Polygon_Overlap_Tests.cs" />
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />

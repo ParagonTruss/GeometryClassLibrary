@@ -61,15 +61,13 @@ namespace GeometryClassLibrary
         public virtual Distance ZComponent => Magnitude * base.Direction.Z;
 
         /// <summary>
-        /// Returns the point that is the distance away from the Vector's current basepoint that is equal to the vector's magnitude in the vector's direction
+        /// Returns the end point of the vector
         /// </summary>
         public virtual Point EndPoint => new Point(XComponent, YComponent, ZComponent) + BasePoint;
 
         /// <summary>
         /// Allows the xyz components of the vector to be able to be accessed as an array
         /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
         private Distance this[int i]
         {
             get
@@ -93,7 +91,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a vector that extends from the Origin to the passed reference point  
         /// </summary>
-        /// <param name="passedEndPoint">The point at which the vector goes to / ends at</param>
         public Vector(Point passedEndPoint)
             : base(passedEndPoint)
         {

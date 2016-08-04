@@ -50,15 +50,33 @@ namespace GeometryClassLibrary
         }
     }
 
-  
     public static class _
     {
         /// <summary>
         /// For easy null checking
         /// </summary>
-        public static bool IsNull(this object obj) => obj == null;
-        public static bool NotNull(this object obj) => obj != null;
-        
+        public static bool IsNull<T>(this T obj)
+            where T : class
+        {
+            return obj == null;
+        }
+
+
+        /// <summary>
+        /// For easy null checking
+        /// </summary>
+        public static bool NotNull<T>(this T obj)
+           where T : class
+        {
+            return obj != null;
+        }
+
+        /// <summary>
+        /// Returns the opposite boolean value.
+        /// Wraps the prefix operator "!". 
+        /// </summary>
+        public static bool Not(this bool boolean) => !boolean;
+
         /// <summary>
         /// A function that returns its input.
         /// </summary>

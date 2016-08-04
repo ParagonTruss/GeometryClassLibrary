@@ -945,6 +945,50 @@ namespace GeometryClassLibrary
             return filtered;
         }
 
+        
+        public static Polygon Clip(Polygon clipPolygon, Polygon subject)
+        {
+            // Uses : https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm#Pseudo_code
+            var outputList = subject.Vertices;
+            foreach (var clipEdge in clipPolygon.LineSegments)
+            {
+                var inputList = outputList;
+                outputList.Clear();
+                Point S = inputList.LastOrDefault();
+                if (S.IsNull())
+                {
+                    break;
+                }
+                foreach (Point E in inputList)
+                {
+                    if (clipPolygon.inside(E,clipEdge))
+                    {
+                        if (clipPolygon.inside(S, clipEdge).Not())
+                        {
+                            outputList.Add(ComputeIntersection(S, E, clipEdge));
+                        }
+                    }
+                    else if (clipPolygon.inside(S,clipEdge))
+                    {
+                        outputList.Add(ComputeIntersection(S, E, clipEdge));
+                    }
+                    S = E;
+                }
+            }
+            var result = new Polygon(outputList);
+            return result;
+        }
+
+        private bool inside(Point point, LineSegment clipEdge)
+        {
+            return clipEdge.Direction.CrossProduct(new Direction(clipEdge.BasePoint, point)) == this.NormalDirection;
+        }
+
+        private static Point ComputeIntersection(Point S, Point E, Line clipEdge)
+        {
+            return new LineSegment(S, E).IntersectWithLine(clipEdge);
+        }
+
         /// <summary>
         /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
         /// the polygons must be convex for this to work
@@ -963,6 +1007,7 @@ namespace GeometryClassLibrary
             {
                 return this;
             }
+            // return Clip(Clip(this, otherPolygon), this);
             var polygons = OverlappingPolygons(otherPolygon);
             if (polygons.Count == 0)
             {
@@ -983,8 +1028,7 @@ namespace GeometryClassLibrary
         {
             List<LineSegment> segments1 = polygon1.LineSegments.ToList();
             List<LineSegment> segments2 = polygon2.LineSegments.ToList();
-
-            #region Remove Overlapping Opposite segments
+             #region Remove Overlapping Opposite segments
             for (int i = 0; i < segments1.Count; i++)
             {
                 var segment1 = segments1[i];
@@ -1017,9 +1061,8 @@ namespace GeometryClassLibrary
             List<LineSegment> currentList, otherList = null;
             LineSegment currentSegment = null;
             #endregion
-
-            var done = false;
-            while (!done)
+            
+            while (true)
             {
                 if (polygonUnderConstruction.Count > 2 &&
                     polygonUnderConstruction.First().BasePoint ==
@@ -1071,6 +1114,7 @@ namespace GeometryClassLibrary
 
                 #region Check For Intersection
                 var candidates = new List<Tuple<Point, LineSegment>>();
+                var count = 0;
                 foreach (var segment in otherList)
                 {
                     var intersection = segment.IntersectWithSegment(currentSegment);
@@ -1118,10 +1162,7 @@ namespace GeometryClassLibrary
                                     found = true;
                                     break;
                                 }
-                                else
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
                             #endregion
 
