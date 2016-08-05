@@ -57,8 +57,21 @@ namespace GeometryClassLibrary
             // clipper offers 4 operations: http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Types/ClipType.htm
             var success = clipper.Execute(ClipType.ctIntersection, soln);
 
-            var polygon =  success ? ToPoints(soln[0]) : null;
-            return polygon;
+            if (success.Not())
+            {
+                return null;
+            }
+            
+            switch (soln.Count)
+            {
+                case 0:
+                    return null;
+                case 1:
+                    return ToPoints(soln[0]);
+                default:
+                    throw new ArgumentException("The passed polygons had multiple regions of overlap.");
+            }
+           
         }
 
        
