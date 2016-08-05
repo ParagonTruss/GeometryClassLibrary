@@ -43,7 +43,7 @@ namespace GeometryClassLibrary
         /// The angle from the positive x-axis in the xy-plane (azimuth)
         /// Will be between -180 degrees and +180 degrees.
         /// </summary>     
-        public Angle Phi { get { return new Angle(Math.Atan2(Y.Value, X.Value), Radians); } }
+        public Angle Phi => new Angle(Math.Atan2(Y.Value, X.Value), Radians);
 
         /// <summary>
         /// The angle from the positive z-axis (should be a max of 180 degrees) (inclination)
@@ -62,18 +62,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public Measurement X { get { return Normalized.X; } }
+        public Measurement X => Normalized.X;
 
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public Measurement Y { get { return Normalized.Y; } }
+        public Measurement Y => Normalized.Y;
 
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public Measurement Z { get { return Normalized.Z; } }
-        
+        public Measurement Z => Normalized.Z;
+
         private MeasurementVector _vector;
         private MeasurementVector _normalized;
 
