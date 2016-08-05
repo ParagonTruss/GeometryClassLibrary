@@ -130,19 +130,43 @@ namespace GeometryClassLibrary
 
         #region Methods
 
-        public static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
+        internal static bool RotationsAreEquivalent(Shift shift1, Shift shift2)
         {
             return shift1.RotationAboutOrigin == shift2.RotationAboutOrigin;
         }
 
-        public static Shift Compose(Shift shift1, Shift shift2)
+        /// <summary>
+        /// Right to left composition.
+        /// </summary>
+        public static Shift ComposeRightToLeft(Shift second, Shift first)
         {
-            return new Shift(shift1.Matrix * shift2.Matrix);
+            return new Shift(second.Matrix * first.Matrix);
         }
 
+        /// <summary>
+        /// Left to right composition.
+        /// </summary>
+        public static Shift ComposeLeftToRight(Shift first, Shift second)
+        {
+            return new Shift(second.Matrix * first.Matrix);
+        }
+
+        /// <summary>
+        /// Right to left composition.
+        /// </summary>
+        [Obsolete("Use ComposeRightToLeft  instead.")]
         public Shift Compose(Shift shift)
         {
             return new Shift(this.Matrix * shift.Matrix);
+        }
+
+        /// <summary>
+        /// Right to left composition.
+        /// </summary>
+        [Obsolete("Use ComposeRightToLeft instead.")]
+        public static Shift Compose(Shift second, Shift first)
+        {
+            return new Shift(second.Matrix * first.Matrix);
         }
 
         /// <summary>
