@@ -249,19 +249,28 @@ namespace GeometryClassLibraryTest
             Point pentagonPoint3 = Point.MakePointWithInches(2, 2);
             Point pentagonPoint4 = Point.MakePointWithInches(4, 4);
             Point pentagonPoint5 = Point.MakePointWithInches(0, 4);
-            Polygon concavePentagon = new Polygon( new List<Point>(){ pentagonPoint1, pentagonPoint2, pentagonPoint3, pentagonPoint4, pentagonPoint5 });
+            Polygon concavePentagon =
+                new Polygon(new List<Point>()
+                {
+                    pentagonPoint1,
+                    pentagonPoint2,
+                    pentagonPoint3,
+                    pentagonPoint4,
+                    pentagonPoint5
+                });
 
             Point rectanglePoint1 = Point.MakePointWithInches(1, 1);
             Point rectanglePoint2 = Point.MakePointWithInches(2.5, 1);
             Point rectanglePoint3 = Point.MakePointWithInches(2.5, 3);
             Point rectanglePoint4 = Point.MakePointWithInches(1, 3);
-            Polygon rectangle = new Polygon( new List<Point>(){ rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4});
+            Polygon rectangle =
+                new Polygon(new List<Point>() {rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4});
 
             Point squarePoint1 = Point.MakePointWithInches(1, 1);
             Point squarePoint2 = Point.MakePointWithInches(2, 1);
             Point squarePoint3 = Point.MakePointWithInches(2, 2);
             Point squarePoint4 = Point.MakePointWithInches(1, 2);
-            Polygon square = new Polygon( new List<Point>(){ squarePoint1, squarePoint2, squarePoint3, squarePoint4});
+            Polygon square = new Polygon(new List<Point>() {squarePoint1, squarePoint2, squarePoint3, squarePoint4});
 
             concavePentagon.Contains(rectangle).Should().BeFalse();
             rectangle.Contains(concavePentagon).Should().BeFalse();
@@ -273,162 +282,6 @@ namespace GeometryClassLibraryTest
             square.Contains(rectangle).Should().BeFalse();
         }
 
-        [Test()]
-        public void Polygon_OverlappingPolygonOneEnclosedInOtherTest()
-        {
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 4, 1)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 3, 3)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 4, 1), Point.MakePointWithInches(4, 4, 3)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 3), Point.MakePointWithInches(4, 4, 3)));
-            Polygon testPolygon = new Polygon(bounds);
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 12, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 4)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 12, 0), Point.MakePointWithInches(4, 12, 4)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 4), Point.MakePointWithInches(4, 12, 4)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-
-            //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
-            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
-            Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-            intersect1.Equals(intersect2).Should().BeTrue();
-
-            //the intersection should simply be the smaller plane in this case
-            intersect1.Equals(testPolygon).Should().BeTrue();
-        }
-
-        [Test()]
-        public void Polygon_OverlappingPolygonSharedSidesTest()
-        {
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 1, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 2)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 1, 0), Point.MakePointWithInches(4, 1, 2)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 0, 2), Point.MakePointWithInches(4, 1, 2)));
-            Polygon testPolygon = new Polygon(bounds);
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 12, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 2)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 12, 0), Point.MakePointWithInches(4, 12, 2)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 2), Point.MakePointWithInches(4, 12, 2)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-
-            //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
-            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
-            Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-
-            (intersect1 == intersect2).Should().BeTrue();
-
-            //the intersection should simply be the smaller plane in this case
-            (intersect1 == testPolygon).Should().BeTrue();
-        }
-
-        [Test()]
-        public void Polygon_OverlappingPolygonIntersectingBoundariesTest()
-        {
-            //changed to inches because mm were gave results smaller than what we are considering equivalent
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 4, 1)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 3, 3)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 4, 1), Point.MakePointWithInches(4, 4, 5)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 3), Point.MakePointWithInches(4, 4, 5)));
-            Polygon testPolygon = new Polygon(bounds);
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 12, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 0), Point.MakePointWithInches(4, 0, 4)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 12, 0), Point.MakePointWithInches(4, 12, 4)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(4, 0, 4), Point.MakePointWithInches(4, 12, 4)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-
-            List<LineSegment> expectedBounds = new List<LineSegment>();
-            expectedBounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 4, 1)));
-            expectedBounds.Add(new LineSegment(Point.MakePointWithInches(4, 3, 1), Point.MakePointWithInches(4, 3, 3)));
-            expectedBounds.Add(new LineSegment(Point.MakePointWithInches(4, 4, 1), Point.MakePointWithInches(4, 4, 4)));
-            expectedBounds.Add(new LineSegment(Point.MakePointWithInches(4, 3.5, 4), Point.MakePointWithInches(4, 3, 3)));
-            expectedBounds.Add(new LineSegment(Point.MakePointWithInches(4, 4, 4), Point.MakePointWithInches(4, 3.5, 4)));
-            Polygon expected = new Polygon(expectedBounds);
-
-            //It shouldnt matter which one we use to clip (unless one is concave) so try it both ways
-            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
-            Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-            intersect1.Should().Be(expected);
-            intersect1.Should().Be(intersect2);
-
-        }
-
-        [Test()]
-        public void Polygon_OverlappingPolygon()
-        {
-
-            List<LineSegment> bounds = new List<LineSegment>();
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(0, 3, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 1, 0), Point.MakePointWithInches(4, 1, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(0, 3, 0), Point.MakePointWithInches(4, 3, 0)));
-            bounds.Add(new LineSegment(Point.MakePointWithInches(4, 1, 0), Point.MakePointWithInches(4, 3, 0)));
-            Polygon testPolygon = new Polygon(bounds);
-
-            List<LineSegment> lineSegments = new List<LineSegment>();
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, -1, 0), Point.MakePointWithInches(1, -1, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(0, -1, 0), Point.MakePointWithInches(3, 5, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(1, -1, 0), Point.MakePointWithInches(4, 5, 0)));
-            lineSegments.Add(new LineSegment(Point.MakePointWithInches(3, 5, 0), Point.MakePointWithInches(4, 5, 0)));
-            Polygon testPolygon2 = new Polygon(lineSegments);
-
-            List<LineSegment> expectedBound = new List<LineSegment>();
-            expectedBound.Add(new LineSegment(Point.MakePointWithInches(1, 1, 0), Point.MakePointWithInches(2, 1, 0)));
-            expectedBound.Add(new LineSegment(Point.MakePointWithInches(2, 1, 0), Point.MakePointWithInches(3, 3, 0)));
-            expectedBound.Add(new LineSegment(Point.MakePointWithInches(3, 3, 0), Point.MakePointWithInches(2, 3, 0)));
-            expectedBound.Add(new LineSegment(Point.MakePointWithInches(2, 3, 0), Point.MakePointWithInches(1, 1, 0)));
-            Polygon expected = new Polygon(expectedBound);
-
-            //check to see if its what we expected
-            Polygon intersect1 = testPolygon.OverlappingPolygon(testPolygon2);
-            Polygon intersect2 = testPolygon2.OverlappingPolygon(testPolygon);
-            bool overlapAsExpected1 = (intersect1 == expected);
-            bool overlapAsExpected2 = (intersect2 == expected);
-            Assert.IsTrue(overlapAsExpected1);
-            Assert.IsTrue(overlapAsExpected2);
-        }
-
-        [Test()]
-        public void Polygon_OverlappingPolygon_ErrorCase1()
-        {
-            var polygon1 = Polygon.Rectangle(Inches, 30, 1.5, 0, 0);
-            var polygon2 = Polygon.Rectangle(Inches, 3.5, 0, 7, 3.5);
-
-            var result = polygon1.OverlappingPolygon(polygon2);
-
-            var expected = Polygon.Rectangle(Inches, 3.5, 0, 7, 1.5);
-
-            (result == expected).Should().BeTrue();
-        }
-        [Test()]
-        public void Polygon_OverlappingPolygon_ErrorCase2()
-        {
-            var plate = Polygon.CreateInXYPlane(Inches, 
-                20, 14, 
-                16, 14, 
-                16, 18, 
-                20, 18);
-            var member = Polygon.CreateInXYPlane(Inches,
-                214.5, 18,
-                214.5, 16.5,
-                0, 16.5,
-                0, 18);
-
-            var overlap = plate.OverlappingPolygon(member);
-
-            overlap.IsNull().Should().BeFalse();
-
-            var expected = Polygon.Rectangle(Inches, 16, 16.5, 20, 18);
-           
-
-            (overlap == expected).Should().BeTrue();
-        }
         [Test()]
         public void Polygon_NormalLine()
         {
@@ -486,7 +339,13 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_IsConvex_Triangle()
         {
-            Polygon triangle = new Polygon7();
+            List<LineSegment> lineSegments = new List<LineSegment>
+            {
+                new LineSegment(Point.MakePointWithInches(0, 2, 3), Point.MakePointWithInches(-3, -2, 0)),
+                new LineSegment(Point.MakePointWithInches(-3, -2, 0), Point.MakePointWithInches(1, 1, -1)),
+                new LineSegment(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(0, 2, 3))
+            };
+            Polygon triangle = new Polygon(lineSegments);
 
             triangle.IsConvex.Should().BeTrue();
         }

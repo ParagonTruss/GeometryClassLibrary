@@ -173,11 +173,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Will break down all line segments into points and form them into clockwise traveling segments
-        /// Segments must be coplanar and closed or else it will return null
+        /// Returns a new list of segments with their directions such that they all flow in a consistent direction.
         /// </summary>
-        /// <param name="segments"></param>
-        /// <returns>returns the LineSegmetns sorted in clockwise order all pointing in the clockwise direction</returns>
         public static List<LineSegment> FixSegmentOrientation(this IList<LineSegment> segments)
         {
             segments.ValidateForPolygon();

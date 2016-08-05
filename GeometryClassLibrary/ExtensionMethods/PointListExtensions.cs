@@ -29,6 +29,11 @@ namespace GeometryClassLibrary
 {
     public static class PointListExtensions
     {
+        public static Polygon ToPolygon(this List<Point> points)
+        {
+            return points.IsNull() ? null : new Polygon(points);
+        }
+
         public static bool AreAllCoplanar(this List<Point> points)
         {
             Vector whatTheNormalShouldBe = null;
@@ -151,20 +156,19 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Makes line segments that connect the given points in the order the appear in the list
         /// </summary>
-        /// <param name="points">The points to make the segments out of</param>
-        /// <returns>A new List of LineSegment that connect the points</returns>
         public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this List<Point> points)
         {
+            if (points.Count == 0)
+            {
+                throw new InvalidPolygonException("Cannot create a polygon from 0 points.");
+            }
             List<LineSegment> segments = new List<LineSegment>() { new LineSegment(points.Last(), points[0]) };
 
-            LineSegment newSegment;
-            for (int k = 0; k < points.Count() - 1; k++)
+            for (int k = 0; k < points.Count - 1; k++)
             {
-                newSegment = new LineSegment(points[k], points[k + 1]);
-
+                var newSegment = new LineSegment(points[k], points[k + 1]);
                 segments.Add(newSegment);
             }
-
             return segments;
         }
 
@@ -179,8 +183,6 @@ namespace GeometryClassLibrary
         /// Uses the Graham Scan: http://en.wikipedia.org/wiki/Graham_scan
         /// the suppressed boolean is for cases where you know all your points can be used
         /// </summary>
-        /// <param name="vertices"></param>
-        /// <returns></returns>
         public static Polygon ConvexHull(this List<Point> passedPointList, bool allPointsShouldBeVertices = false)
         {
             if (passedPointList.Count < 3)
@@ -213,16 +215,10 @@ namespace GeometryClassLibrary
 
         private static List<Point> _sortByAngles(this List<Point> pointList, Point initial)
         {
-            Dictionary<Angle, Point> myDictionary = new Dictionary<Angle, Point>();
-            Vector referenceVector;
-            if (pointList._xCompIsConstant())
-            {
-                referenceVector = Direction.Out.UnitVector(new Inch());
-            }
-            else
-            {
-                referenceVector = Direction.Right.UnitVector(new Inch());
-            }
+            var referenceVector = pointList._xCompIsConstant() ? 
+                Direction.Out.UnitVector(new Inch()) : 
+                Direction.Right.UnitVector(new Inch());
+
             var orderedList = pointList.OrderBy(v => referenceVector.AngleBetween(new Vector(initial, v))).ToList();
             return orderedList;
         }

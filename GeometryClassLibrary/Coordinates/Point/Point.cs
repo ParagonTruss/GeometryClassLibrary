@@ -206,11 +206,8 @@ namespace GeometryClassLibrary
 
         public bool Equals(Point other)
         {
-            if (other == null)
-            {
-                return false;
-            }
-            return this.DistanceTo(other) == ZeroDistance;
+            var distance = other?.DistanceTo(this);
+            return distance == ZeroDistance;
         }
         /// <summary>
         /// does the same thing as ==

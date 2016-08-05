@@ -946,35 +946,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
-        /// the polygons must be convex for this to work
+        /// Returns the region of overlap between the two Polygons or null if there is no overlap. 
         /// </summary>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            if (!this.IsConvex || !otherPolygon.IsConvex)
-            {
-                throw new ArgumentException("Overlapping Polygon should not be called on non convex polygons.");
-            }
-            if (this.ContainsAll(otherPolygon.Vertices))
-            {
-                return otherPolygon;
-            }
-            else if (otherPolygon.ContainsAll(this.Vertices))
-            {
-                return this;
-            }
-            var polygons = OverlappingPolygons(otherPolygon);
-            if (polygons.Count == 0)
-            {
-                return null;
-            }
-
-            var polygon = polygons.MinBy(p => p.Area);
-            if (this.ContainsAll(polygon.Vertices) && otherPolygon.ContainsAll(polygon.Vertices))
-            {
-                return polygon;
-            }
-            return null;
+            return ClipperPort.Overlap(this, otherPolygon);
         }
         #endregion
 
@@ -983,8 +959,7 @@ namespace GeometryClassLibrary
         {
             List<LineSegment> segments1 = polygon1.LineSegments.ToList();
             List<LineSegment> segments2 = polygon2.LineSegments.ToList();
-
-            #region Remove Overlapping Opposite segments
+             #region Remove Overlapping Opposite segments
             for (int i = 0; i < segments1.Count; i++)
             {
                 var segment1 = segments1[i];
@@ -1017,9 +992,8 @@ namespace GeometryClassLibrary
             List<LineSegment> currentList, otherList = null;
             LineSegment currentSegment = null;
             #endregion
-
-            var done = false;
-            while (!done)
+            
+            while (true)
             {
                 if (polygonUnderConstruction.Count > 2 &&
                     polygonUnderConstruction.First().BasePoint ==
@@ -1071,6 +1045,7 @@ namespace GeometryClassLibrary
 
                 #region Check For Intersection
                 var candidates = new List<Tuple<Point, LineSegment>>();
+                var count = 0;
                 foreach (var segment in otherList)
                 {
                     var intersection = segment.IntersectWithSegment(currentSegment);
@@ -1118,10 +1093,7 @@ namespace GeometryClassLibrary
                                     found = true;
                                     break;
                                 }
-                                else
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
                             #endregion
 

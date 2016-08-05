@@ -96,7 +96,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnitClassLibrary, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UnitClassLibrary.2.0.0-rc7\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
+      <HintPath>..\packages\UnitClassLibrary.3.0.0\lib\portable40-net40+sl5+win8+wp8\UnitClassLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -105,6 +105,7 @@
     <Compile Include="PlaneTests\NonPolygonTests.cs" />
     <Compile Include="CoordinateTests\CoordinateSystemTest.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />
+    <Compile Include="Polygon_Overlap_Tests.cs" />
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
@@ -130,26 +131,22 @@
     <Compile Include="CoordinateTests\PointTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LineTests\VectorTests.cs" />
-    <Compile Include="Stubs\ArcStubs.cs" />
     <Compile Include="Stubs\PolygonStubs.cs" />
     <Compile Include="Stubs\PolyhedronStubs.cs" />
-    <Compile Include="Stubs\StubPolyhedron.cs" />
-    <Compile Include="Stubs\ThreeFourFiveRightTriangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Properties\packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\GeometryClassLibrary\GeometryClassLibrary.csproj">
-      <Project>{BE165769-E5C6-4D8E-AE6A-7075B1DD3D2D}</Project>
+      <Project>{68e3c72b-0778-4ef9-b10c-17184f236cd6}</Project>
       <Name>GeometryClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

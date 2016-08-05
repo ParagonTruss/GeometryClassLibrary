@@ -32,34 +32,26 @@ namespace GeometryClassLibrary
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
-    public partial class LineSegment : Vector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
+    public class LineSegment : Vector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
     {
         #region Properties and Fields
 
         /// <summary>
         /// Returns this lineSegment's length (this is the same as the magnitude)
         /// </summary>
-        public virtual Distance Length
-        {
-            get { return base.Magnitude; }
-        }
+        public virtual Distance Length => base.Magnitude;
 
         /// <summary>
         /// Returns the midpoint of this lineSegment
         /// </summary>
-        public Point MidPoint
-        {
-            get { return EndPoints.CenterPoint(); }
-        }
+        public Point MidPoint => EndPoints.CenterPoint();
 
-        public List<Point> EndPoints
-        {
-            get { return new List<Point>() { BasePoint, EndPoint }; }
-        }
+        public List<Point> EndPoints => new List<Point>() { BasePoint, EndPoint };
 
-        public bool IsClosed { get { return false; } }
+        public bool IsClosed => false;
 
-        public Direction InitialDirection { get { return Direction; } }
+        public Direction InitialDirection => Direction;
+
         #endregion
 
         #region Constructors
