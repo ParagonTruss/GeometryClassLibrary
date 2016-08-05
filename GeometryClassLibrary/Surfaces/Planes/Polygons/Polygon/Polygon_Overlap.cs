@@ -103,7 +103,7 @@ namespace GeometryClassLibrary
 
       
     }
-    public struct Point2D
+    internal struct Point2D
     {
         public double X { get; }
         public double Y { get; }
@@ -114,7 +114,7 @@ namespace GeometryClassLibrary
             this.Y = y;
         }
     }
-    public struct Segment
+    internal struct Segment
     {
         public Point2D BasePoint { get; }
         public Point2D EndPoint { get; }
@@ -126,19 +126,22 @@ namespace GeometryClassLibrary
         }
     }
 
-    public sealed class Polygon2D
+    internal sealed class Polygon2D
     {
+        public Point2D this[int index] => Vertices[index];
+      
         public Point2D[] Vertices { get; }
 
+        public Polygon2D(params Point2D[] points)
+        {
+            this.Vertices = points;
+        }
         public Polygon2D(IEnumerable<Point2D> points)
         {
             this.Vertices = points.ToArray();
         }
 
-        public void MutateEntry(int index, Point2D point)
-        {
-            Vertices[index] = point;
-        }
+        
     }
    
 }

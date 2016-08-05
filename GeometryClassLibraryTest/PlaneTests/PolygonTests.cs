@@ -339,7 +339,13 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Polygon_IsConvex_Triangle()
         {
-            Polygon triangle = new Polygon7();
+            List<LineSegment> lineSegments = new List<LineSegment>
+            {
+                new LineSegment(Point.MakePointWithInches(0, 2, 3), Point.MakePointWithInches(-3, -2, 0)),
+                new LineSegment(Point.MakePointWithInches(-3, -2, 0), Point.MakePointWithInches(1, 1, -1)),
+                new LineSegment(Point.MakePointWithInches(1, 1, -1), Point.MakePointWithInches(0, 2, 3))
+            };
+            Polygon triangle = new Polygon(lineSegments);
 
             triangle.IsConvex.Should().BeTrue();
         }

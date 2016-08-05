@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -186,6 +187,25 @@ namespace GeometryClassLibraryTest
 
             Polygon expected = null; //Fill me in
             actual.Should().Be(expected);
+        }
+
+
+        [Test]
+        public void ClipPolygon_ErrorCase_CD319ADE()
+        {
+            //5x3 Plate centered at :(22.5, 19) in, Angle: 46.87°
+            var plate = Polygon.CreateInXYPlane(Inches, 25.3038481173636, 19.7990217360978, 21.8855612413269, 16.1500061382802, 19.6961518826364, 18.2009782639022, 23.1144387586731, 21.8499938617198);
+
+            //W2
+            var member = Polygon.CreateInXYPlane(Inches, 56.93, 3.5, 22.5, 17.118, 22.5, 19, 24.143, 20.232, 61.688, 5.382, 61.688, 3.5);
+
+            var actual = Polygon.Clip(member,plate);
+            actual.Should().NotBe(null);
+
+            Console.WriteLine(actual.Area);
+
+
+        
         }
 
     }
