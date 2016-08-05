@@ -100,5 +100,45 @@ namespace GeometryClassLibrary
         {
             return new LineSegment(S, E).IntersectWithLine(clipEdge);
         }
+
+      
     }
+    public struct Point2D
+    {
+        public double X { get; }
+        public double Y { get; }
+
+        public Point2D(double x, double y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+    }
+    public struct Segment
+    {
+        public Point2D BasePoint { get; }
+        public Point2D EndPoint { get; }
+
+        public Segment(Point2D basePoint, Point2D endPoint)
+        {
+            this.BasePoint = basePoint;
+            this.EndPoint = endPoint;
+        }
+    }
+
+    public sealed class Polygon2D
+    {
+        public Point2D[] Vertices { get; }
+
+        public Polygon2D(IEnumerable<Point2D> points)
+        {
+            this.Vertices = points.ToArray();
+        }
+
+        public void MutateEntry(int index, Point2D point)
+        {
+            Vertices[index] = point;
+        }
+    }
+   
 }
