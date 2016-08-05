@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GeometryClassLibrary</id>
-    <version>3.4.2</version>
+    <version>3.4.3</version>
     <title>Geometry Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -15,6 +15,7 @@
 		<dependency id="UnitClassLibrary" version="3.0.0" />
 		<dependency id="MathNet.Numerics" version="3.10.0" />
 		<dependency id="MoreLinq.Portable" version="1.4.0" />
+		<dependency id="Clipper" version="6.2.10" />
 	</dependencies>
   </metadata>
 </package>
