@@ -113,7 +113,7 @@
     <Compile Include="Surfaces\Planes\Polygons\Pentagon.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Polygon\Polygon.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Polygon\PolygonInterfaceImplementations.cs" />
-    <Compile Include="Surfaces\Planes\Polygons\Polygon\Polygon_Overlap.cs" />
+    <Compile Include="Surfaces\Planes\Polygons\Polygon\ClipperPort.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Rectangle.cs" />
     <Compile Include="Surfaces\Planes\Polygons\RegularPolygon.cs" />
     <Compile Include="Surfaces\Planes\Polygons\Rhombus.cs" />

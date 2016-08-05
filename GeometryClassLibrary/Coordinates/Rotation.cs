@@ -33,6 +33,7 @@ namespace GeometryClassLibrary
     [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {
+        public static Rotation Identity => new Rotation(Matrix.IdentityMatrix(4));
         #region Properties and Fields
         private Angle _rotationAngle;
         private Line _axisOfRotation;

@@ -12,24 +12,6 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class MatrixTests
     {
-        [Test]
-        public void Matrix_JSON()
-        {
-            Matrix matrix = new Matrix(3, 2);
-            matrix.SetElement(0, 0, 1);
-            matrix.SetElement(0, 1, 1);
-            matrix.SetElement(1, 0, 2);
-            matrix.SetElement(1, 1, 0);
-            matrix.SetElement(2, 0, 0);
-            matrix.SetElement(2, 1, 3);
-
-            var json = JsonConvert.SerializeObject(matrix);
-            Matrix deserializedMatrix = JsonConvert.DeserializeObject<Matrix>(json);
-
-            bool areEqual = (matrix == deserializedMatrix);
-            areEqual.Should().BeTrue();
-        }
-
         [Test()]
         public void Matrix_StandardMatrixMultiplyTest()
         {

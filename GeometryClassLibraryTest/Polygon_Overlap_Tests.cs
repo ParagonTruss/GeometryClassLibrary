@@ -3,6 +3,9 @@ using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest
@@ -151,7 +154,7 @@ namespace GeometryClassLibraryTest
             var actual = plate.OverlappingPolygon(member);
             actual.Should().NotBe(null);
 
-            Polygon expected = null; //Fill me in
+            var expected = Polygon.CreateInXYPlane(Inches, 22.713, 17.034, 25.285, 19.78, 24.143, 20.232, 22.5, 19, 22.5, 17.118);
             actual.Should().Be(expected);
         }
 
@@ -168,7 +171,7 @@ namespace GeometryClassLibraryTest
             var actual = plate.OverlappingPolygon(member);
             actual.Should().NotBe(null);
 
-            Polygon expected = null; //Fill me in
+            var expected = Polygon.CreateInXYPlane(Inches, 61.688, 3.5, 61.688, 5.353, 60.041, 5.353, 60.041, 3.5);
             actual.Should().Be(expected);
         }
 
@@ -185,28 +188,19 @@ namespace GeometryClassLibraryTest
             var actual = plate.OverlappingPolygon(member);
             actual.Should().NotBe(null);
 
-            Polygon expected = null; //Fill me in
+            var expected = Polygon.CreateInXYPlane(Inches, 61.688, 3.5, 61.688, 5.353, 59.333, 5.353, 59.333, 3.5);
             actual.Should().Be(expected);
         }
-
-
-        [Test]
-        public void ClipPolygon_ErrorCase_CD319ADE()
+        private static string Coordinates(Polygon polygon)
         {
-            //5x3 Plate centered at :(22.5, 19) in, Angle: 46.87°
-            var plate = Polygon.CreateInXYPlane(Inches, 25.3038481173636, 19.7990217360978, 21.8855612413269, 16.1500061382802, 19.6961518826364, 18.2009782639022, 23.1144387586731, 21.8499938617198);
-
-            //W2
-            var member = Polygon.CreateInXYPlane(Inches, 56.93, 3.5, 22.5, 17.118, 22.5, 19, 24.143, 20.232, 61.688, 5.382, 61.688, 3.5);
-
-            var actual = Polygon.Clip(member,plate);
-            actual.Should().NotBe(null);
-
-            Console.WriteLine(actual.Area);
-
-
-        
+            return string.Join(", ", polygon.Vertices
+                 .SelectMany(point => new[] { point.X.ValueInInches, point.Y.ValueInInches })
+                 .Select(d => d.ToString()));
         }
 
+        private string PolygonString(Polygon polygon)
+        {
+            return $"Polygon.CreateInXYPlane(Distance.Inches, {Coordinates(polygon)})";
+        }
     }
 }

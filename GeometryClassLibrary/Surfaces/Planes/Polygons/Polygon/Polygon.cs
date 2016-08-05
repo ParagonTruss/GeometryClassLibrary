@@ -946,35 +946,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// This finds and returns the Polygon where the two Polygons overlap or null if they do not 
-        /// the polygons must be convex for this to work
+        /// Returns the region of overlap between the two Polygons or null if there is no overlap. 
         /// </summary>
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
-            if (!this.IsConvex || !otherPolygon.IsConvex)
-            {
-                throw new ArgumentException("Overlapping Polygon should not be called on non convex polygons.");
-            }
-            if (this.ContainsAll(otherPolygon.Vertices))
-            {
-                return otherPolygon;
-            }
-            else if (otherPolygon.ContainsAll(this.Vertices))
-            {
-                return this;
-            }
-            var polygons = OverlappingPolygons(otherPolygon);
-            if (polygons.Count == 0)
-            {
-                return null;
-            }
-
-            var polygon = polygons.MinBy(p => p.Area);
-            if (this.ContainsAll(polygon.Vertices) && otherPolygon.ContainsAll(polygon.Vertices))
-            {
-                return polygon;
-            }
-            return null;
+            return ClipperPort.Overlap(this, otherPolygon);
         }
         #endregion
 
