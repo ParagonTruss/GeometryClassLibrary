@@ -32,7 +32,7 @@ namespace GeometryClassLibrary
             var inverse = new Rotation(axis,angle.Negate());
 
 
-            return Overlap_In_XY_Plane(polygon1.Rotate(rotation).Vertices, polygon2.Rotate(rotation).Vertices).Rotate(inverse).ToPolygon();
+            return Overlap_In_XY_Plane(polygon1.Rotate(rotation).Vertices, polygon2.Rotate(rotation).Vertices)?.Rotate(inverse).ToPolygon();
         }
 
        
