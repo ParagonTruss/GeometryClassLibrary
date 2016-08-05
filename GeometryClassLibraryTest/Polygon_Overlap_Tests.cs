@@ -191,6 +191,50 @@ namespace GeometryClassLibraryTest
             var expected = Polygon.CreateInXYPlane(Inches, 61.688, 3.5, 61.688, 5.353, 59.333, 5.353, 59.333, 3.5);
             actual.Should().Be(expected);
         }
+
+        //Automatically generated at 8/5/2016 3:43:56 PM
+        [Test]
+        public void OverlappingPolygon_ErrorCase_CD8A2BBF()
+        {
+            //4x3 Plate centered at :(8.08, 3.5) in, Angle: 36.87°
+            var plate = Polygon.CreateInXYPlane(Inches, 10.58333, 3.49999972801679, 7.38332973889612, 1.10000007615531, 5.58333000000002, 3.50000027198321, 8.78333026110388, 5.89999992384469);
+
+            //B1
+            var member = Polygon.CreateInXYPlane(Inches, 214.833, 3.5, 219.5, 0, 0.5, 0, 5.167, 3.5);
+
+            var actual = plate.OverlappingPolygon(member);
+            actual.Should().NotBe(null);
+
+        }
+
+
+        //Automatically generated at 8/5/2016 3:43:56 PM
+        [Test]
+        public void OverlappingPolygon_ErrorCase_CCABCAF4()
+        {
+            //4x3 Plate centered at :(211.92, 3.5) in, Angle: 323.13°
+            var plate = Polygon.CreateInXYPlane(Inches, 212.616670261099, 1.10000007615396, 209.41667, 3.49999972802163, 211.216669738901, 5.89999992384604, 214.41667, 3.50000027197837);
+
+            //B1
+            var member = Polygon.CreateInXYPlane(Inches, 214.833, 3.5, 219.5, 0, 0.5, 0, 5.167, 3.5);
+
+            var actual = plate.OverlappingPolygon(member);
+            actual.Should().NotBe(null);
+        }
+
+        //Automatically generated at 8/5/2016 3:43:56 PM
+        [Test]
+        public void OverlappingPolygon_ErrorCase_CCAACAC6()
+        {
+            //4x3 Plate centered at :(211.92, 3.5) in, Angle: 323.13°
+            var plate = Polygon.CreateInXYPlane(Inches, 212.616670261099, 1.10000007615396, 209.41667, 3.49999972802163, 211.216669738901, 5.89999992384604, 214.41667, 3.50000027197837);
+
+            //T2
+            var member = Polygon.CreateInXYPlane(Inches, 209, 3.49999999999997, 110, 77.75, 110, 82.125, 214.833, 3.49999999999999);
+
+            var actual = plate.OverlappingPolygon(member);
+            actual.Should().NotBe(null);
+        }
         private static string Coordinates(Polygon polygon)
         {
             return string.Join(", ", polygon.Vertices

@@ -21,30 +21,55 @@ namespace GeometryClassLibrary
                 return null;
             }
             var normal = polygon1.NormalDirection;
-            if (normal.IsParallelTo(Direction.Out))
-            {
-                var vertices1 = polygon1.Vertices;
-                var vertices2 = polygon2.Vertices;
-
-                var depth = vertices1[0].Z;
-                return Overlap_In_XY_Plane(vertices1, vertices2).Shift(depth*Direction.Out).ToPolygon();
-            }
-
-            var angle = normal.AngleBetween(Direction.Out);
-            var axis = new Line(normal.CrossProduct(Direction.Out));
-            var rotation = new Shift(new Rotation(axis, angle));
-
+            var rotation = GetRotation(normal);
+         
             var rotated1 = polygon1.Vertices.Shift(rotation);
             var rotated2 = polygon2.Vertices.Shift(rotation);
 
-            var z_depth = rotated1[0].Z;
+            var overlapped = Overlap_In_XY_Plane(rotated1, rotated2);
+            if (overlapped.IsNull())
+            {
+                return null;
+            }
 
-            var shiftBack = Shift.ComposeLeftToRight(z_depth*Direction.Out, rotation.Inverse());
-
-            return Overlap_In_XY_Plane(rotated1, rotated2)?.Shift(shiftBack).ToPolygon();
+            overlapped = RemovePointsTooCloseToEachOther(overlapped);
+           
+            var depth = rotated1[0].Z;
+            var shiftBack = Shift.ComposeLeftToRight(depth*Direction.Out, rotation.Inverse());
+            
+            return new Polygon(overlapped.Shift(shiftBack));
         }
 
-       
+        private static Shift GetRotation(Direction normal)
+        {
+            if (normal.IsParallelTo(Direction.Out))
+            {
+                return Rotation.Identity;
+            }
+            var angle = normal.AngleBetween(Direction.Out);
+            var axis = new Line(normal.CrossProduct(Direction.Out));
+            var rotation = new Shift(new Rotation(axis, angle));
+            return rotation;
+        }
+
+        private static List<Point> RemovePointsTooCloseToEachOther(List<Point> overlapped)
+        {
+            var newPoints = new List<Point>();
+            foreach (var point in overlapped)
+            {
+                if (point != newPoints.LastOrDefault())
+                {
+                   newPoints.Add(point);
+                }
+            }
+            if (newPoints[0] == newPoints.Last())
+            {
+                newPoints.RemoveAt(newPoints.Count-1);
+            }
+            return newPoints;
+        }
+
+
         // Only works if the points are in the XY plane.
         // Link to their Documentation: http://www.angusj.com/delphi/clipper/documentation/Docs/_Body.htm
         private static List<Point> Overlap_In_XY_Plane(List<Point> points1, List<Point> points2)

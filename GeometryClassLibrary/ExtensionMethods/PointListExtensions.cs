@@ -29,11 +29,6 @@ namespace GeometryClassLibrary
 {
     public static class PointListExtensions
     {
-        public static Polygon ToPolygon(this List<Point> points)
-        {
-            return new Polygon(points);
-        }
-
         public static bool AreAllCoplanar(this List<Point> points)
         {
             Vector whatTheNormalShouldBe = null;
