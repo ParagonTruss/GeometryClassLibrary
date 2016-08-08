@@ -53,20 +53,20 @@ namespace GeometryClassLibrary.Vectors
             return new Unit<T>(vector.UnitType, result);
         }
 
-        public static Unit DotProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
-        {
-            var result = vector1.DoubleVector.DotProduct(vector2.DoubleVector);
-            var unitType = new DerivedUnitType(vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions()));
-            return new Unit<DerivedUnitType>(unitType, result);
-        }
+        //public static Unit DotProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
+        //{
+        //    var result = vector1.DoubleVector.DotProduct(vector2.DoubleVector);
+        //    var unitType = new DerivedUnitType(vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions()));
+        //    return new Unit<DerivedUnitType>(unitType, result);
+        //}
 
-        public static Vector_New<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
-        {
-            var underlyingVector = vector1.DoubleVector.CrossProduct(vector2.DoubleVector);
-            var newDimensions = vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions());
-            var newUnitType = new DerivedUnitType(newDimensions);
-            return new Vector_New<DerivedUnitType>(newUnitType, underlyingVector);
-        }
+        //public static Vector_New<DerivedUnitType> CrossProduct(this IVector<IUnitType> vector1, IVector<IUnitType> vector2)
+        //{
+        //    var underlyingVector = vector1.DoubleVector.CrossProduct(vector2.DoubleVector);
+        //    var newDimensions = vector1.UnitType.Dimensions().Multiply(vector2.UnitType.Dimensions());
+        //    var newUnitType = new DerivedUnitType(newDimensions);
+        //    return new Vector_New<DerivedUnitType>(newUnitType, underlyingVector);
+        //}
 
         /// <summary>
         /// Projects this vector onto the given Line.

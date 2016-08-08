@@ -145,7 +145,7 @@ namespace GeometryClassLibrary
             double unitZ = rotationUnitVector.Z;
             Angle theta = this.RotationAngle;
 
-            double sinTheta = Angle.Sine(theta).Value;
+            double sinTheta = Angle.Sine(theta);
             double cosTheta = Angle.Cosine(theta).Value;
 
             double row0column0 = cosTheta + unitX * unitX * (1 - cosTheta);

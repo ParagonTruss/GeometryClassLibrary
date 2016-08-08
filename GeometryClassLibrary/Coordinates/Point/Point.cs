@@ -248,7 +248,7 @@ namespace GeometryClassLibrary
                 centerPoint = Origin;
             }
            double cosTheta = Angle.Cosine(rotateAngle).Value;
-           double sinTheta = Angle.Sine(rotateAngle).Value;
+           double sinTheta = Angle.Sine(rotateAngle);
 
             var point = this - centerPoint;
             return new Point(

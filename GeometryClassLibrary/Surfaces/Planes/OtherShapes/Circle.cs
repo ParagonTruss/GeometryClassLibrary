@@ -33,31 +33,14 @@ namespace GeometryClassLibrary
     {
         #region Properties and Fields
 
-        public Point Center
-        {
-            get { return ((Arc)this._Edges[0]).CenterPoint; }
-        }
+        public Point Center => ((Arc)this._Edges[0]).CenterPoint;
 
-        public Distance Radius
-        {
-            get { return ((Arc)this._Edges[0]).RadiusOfCurvature; }
-        }
+        public Distance Radius => ((Arc)this._Edges[0]).RadiusOfCurvature;
 
-        public override Area Area
-        {
-            get
-            {
-                return (Area)(Math.PI * new Area(new SquareInch(),Radius* Radius));
-            }
-        }
+        public override Area Area => (Area)(Math.PI * new Area(new SquareInch(),Radius.ValueInInches.ToThe(2)));
 
-        public override Point Centroid
-        {
-            get
-            {
-                return Center;
-            }
-        }
+        public override Point Centroid => Center;
+
         #endregion
 
         #region Constructors
