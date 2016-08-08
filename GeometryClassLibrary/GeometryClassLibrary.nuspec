@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GeometryClassLibrary</id>
-    <version>3.4.5</version>
+    <version>4.0.0</version>
     <title>Geometry Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -12,7 +12,7 @@
     <copyright>Copyright © 2016 Paracon Component Systems, LLC</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
-		<dependency id="UnitClassLibrary" version="3.0.0" />
+		<dependency id="UnitClassLibrary" version="4.0.2" />
 		<dependency id="MathNet.Numerics" version="3.10.0" />
 		<dependency id="MoreLinq.Portable" version="1.4.0" />
 		<dependency id="Clipper" version="6.2.10" />
