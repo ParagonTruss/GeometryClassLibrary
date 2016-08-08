@@ -157,17 +157,17 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
         {
-            double X1 = triangle.Vertices[0].X.InInches.Value;
-            double X2 = triangle.Vertices[1].X.InInches.Value;
-            double X3 = triangle.Vertices[2].X.InInches.Value;
+            double X1 = triangle.Vertices[0].X.ValueInInches;
+            double X2 = triangle.Vertices[1].X.ValueInInches;
+            double X3 = triangle.Vertices[2].X.ValueInInches;
 
-            double Y1 = triangle.Vertices[0].Y.InInches.Value;
-            double Y2 = triangle.Vertices[1].Y.InInches.Value;
-            double Y3 = triangle.Vertices[2].Y.InInches.Value;
+            double Y1 = triangle.Vertices[0].Y.ValueInInches;
+            double Y2 = triangle.Vertices[1].Y.ValueInInches;
+            double Y3 = triangle.Vertices[2].Y.ValueInInches;
 
-            double Z1 = triangle.Vertices[0].Z.InInches.Value;
-            double Z2 = triangle.Vertices[1].Z.InInches.Value;
-            double Z3 = triangle.Vertices[2].Z.InInches.Value;
+            double Z1 = triangle.Vertices[0].Z.ValueInInches;
+            double Z2 = triangle.Vertices[1].Z.ValueInInches;
+            double Z3 = triangle.Vertices[2].Z.ValueInInches;
 
             double[,] array = { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
 

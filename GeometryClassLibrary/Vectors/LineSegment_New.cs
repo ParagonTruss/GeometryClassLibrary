@@ -42,10 +42,10 @@ namespace GeometryClassLibrary.Vectors
         public Distance Length { get { return BasePoint.DistanceTo(EndPoint); } }
         public Unit<DistanceType> Magnitude { get { return Length; } }
 
-        public IMeasurementVector MeasurementVector { get { return new MeasurementVector(_x, _y, _z); } }
-        private Measurement _x { get { return (EndPoint.X - BasePoint.X).MeasurementIn(UnitType); } }
-        private Measurement _y { get { return (EndPoint.Y - BasePoint.Y).MeasurementIn(UnitType); } }
-        private Measurement _z { get { return (EndPoint.Z - BasePoint.Z).MeasurementIn(UnitType); } }
+        public IDoubleVector DoubleVector { get { return new DoubleVector(_x, _y, _z); } }
+        private double _x { get { return (EndPoint.X - BasePoint.X).ValueIn(UnitType); } }
+        private double _y { get { return (EndPoint.Y - BasePoint.Y).ValueIn(UnitType); } }
+        private double _z { get { return (EndPoint.Z - BasePoint.Z).ValueIn(UnitType); } }
         #endregion
 
         public LineSegment_New(LineSegment oldSegment)

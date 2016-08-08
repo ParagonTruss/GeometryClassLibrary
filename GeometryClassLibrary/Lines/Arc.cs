@@ -55,7 +55,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcArea = r^2/2 * (theta), where theta is in radians
-                return new Area(new SquareInch(), 0.5 * CentralAngle.InRadians * (RadiusOfCurvature.InInches^2));
+                return new Area(new SquareInch(), 0.5 * CentralAngle.InRadians * (RadiusOfCurvature.ValueInInches*RadiusOfCurvature.ValueInInches));
             }
         }
 
@@ -67,7 +67,7 @@ namespace GeometryClassLibrary
             get
             {
                 //arcSegmentArea = r^2 / 2 * (theta - sin(theta))
-                return new Area(new SquareInch(), .5 * (RadiusOfCurvature.InInches^2) * (CentralAngle.InRadians - Angle.Sine(CentralAngle)));
+                return new Area(new SquareInch(), .5 * Math.Pow(RadiusOfCurvature.ValueInInches,2) * (CentralAngle.InRadians - Angle.Sine(CentralAngle)));
             }
         }
 

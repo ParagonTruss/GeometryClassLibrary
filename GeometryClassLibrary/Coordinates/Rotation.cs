@@ -29,7 +29,7 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
 {
-    [DebuggerDisplay("Angle to Rotate = {AngleToRotate.InDegrees.Value}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.InInches}, {AxisToRotateAround.BasePoint.Y.InInches}, {AxisToRotateAround.BasePoint.Z.InInches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.InInches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.InInches}")]
+    [DebuggerDisplay("Angle to Rotate = {AngleToRotate.InDegrees.Value}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.ValueInInches}, {AxisToRotateAround.BasePoint.Y.ValueInInches}, {AxisToRotateAround.BasePoint.Z.ValueInInches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.ValueInInches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.ValueInInches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.ValueInInches}")]
     [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {
@@ -140,9 +140,9 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = this.AxisOfRotation.Direction;
 
-            double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
-            double unitY = rotationUnitVector.Y.Value;
-            double unitZ = rotationUnitVector.Z.Value;
+            double unitX = rotationUnitVector.X; //Projection onto x-axis
+            double unitY = rotationUnitVector.Y;
+            double unitZ = rotationUnitVector.Z;
             Angle theta = this.RotationAngle;
 
             double sinTheta = Angle.Sine(theta).Value;
@@ -201,7 +201,7 @@ namespace GeometryClassLibrary
                 angle = rowVector.SignedAngleBetween(rotated, axis);
 
                 var translation = singularMatrix.SystemSolve(new Matrix(shift.Translation.Point.Negate().ToListOfCoordinates()
-                    .Select(d => d.InInches.Value).ToArray())).GetColumn(0).Select(d => new Distance(d, Inches)).ToList();
+                    .Select(d => d.ValueInInches).ToArray())).GetColumn(0).Select(d => new Distance(d, Inches)).ToList();
                 axis = axis.Translate(new Point(translation));
             }
             else

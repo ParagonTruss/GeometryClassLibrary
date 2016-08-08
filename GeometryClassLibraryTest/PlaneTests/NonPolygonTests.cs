@@ -28,7 +28,7 @@ namespace GeometryClassLibraryTest
             Distance radius = new Distance(3, Inches);
             Circle c2 = new Circle(center, radius);
             c2.Center.Equals(Point.Origin).Should().BeTrue();
-            c2.Radius.InInches.Should().Be(3);
+            c2.Radius.ValueInInches.Should().Be(3);
         }
     }
 }

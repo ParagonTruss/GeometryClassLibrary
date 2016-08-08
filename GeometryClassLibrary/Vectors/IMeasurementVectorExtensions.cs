@@ -25,20 +25,20 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary.Vectors
 {
-    public static class IMeasurementVectorExtensions
+    public static class DoubleVectorExtensions
     {
-        public static Measurement Magnitude(this IMeasurementVector vector)
+        public static double Magnitude(this IDoubleVector vector)
         {
-            var result = (vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z).SquareRoot();
+            var result = Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y + vector.Z * vector.Z);
             return result;
         }
 
-        public static Direction Direction(this IMeasurementVector vector)
+        public static Direction Direction(this IDoubleVector vector)
         {
             return new Direction(vector.X, vector.Y, vector.Z);
         }
 
-        public static Measurement DotProduct(this IMeasurementVector vector1, IMeasurementVector vector2)
+        public static double DotProduct(this IDoubleVector vector1, IDoubleVector vector2)
         {
             var xTerm = vector1.X * vector2.X;
             var yTerm = vector1.Y * vector2.Y;
@@ -48,7 +48,7 @@ namespace GeometryClassLibrary.Vectors
             return sum;
         }
 
-        public static MeasurementVector CrossProduct(this IMeasurementVector vector1, IMeasurementVector vector2)
+        public static DoubleVector CrossProduct(this IDoubleVector vector1, IDoubleVector vector2)
         {
             var x1 = vector1.X;
             var y1 = vector1.Y;
@@ -61,7 +61,7 @@ namespace GeometryClassLibrary.Vectors
             var newY = z1 * x2 - z2 * x1;
             var newZ = x1 * y2 - x2 * y1;
 
-            return new MeasurementVector(newX, newY, newZ);
+            return new DoubleVector(newX, newY, newZ);
         }
     }
 }

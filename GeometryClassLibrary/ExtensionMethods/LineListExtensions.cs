@@ -74,7 +74,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D()));
-            var list = dictionary.OrderBy(pair =>(pair.Value.InInches.Value));
+            var list = dictionary.OrderBy(pair =>(pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -91,7 +91,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D()));
-            var list = dictionary.OrderByDescending(pair => (pair.Value.InInches.Value));
+            var list = dictionary.OrderByDescending(pair => (pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -109,7 +109,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D() - pointToFindTheClosestInterceptTo));
-            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.InInches.Value));
+            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -127,7 +127,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.XInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.XInterceptIn2D() - pointToFindTheFarthestInterceptTo));
-            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.InInches.Value));
+            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -144,7 +144,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D()));
-            var list = dictionary.OrderBy(pair => pair.Value.InInches.Value);
+            var list = dictionary.OrderBy(pair => pair.Value.ValueInInches);
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -173,7 +173,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D() - pointToFindTheClosestInterceptTo));
-            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.InInches.Value));
+            var list = dictionary.OrderBy(pair => Math.Abs(pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;
@@ -191,7 +191,7 @@ namespace GeometryClassLibrary
             var withoutNullIntercepts = passedLines.Where(line => line.YInterceptIn2D() != null);
 
             var dictionary = withoutNullIntercepts.Select(line => new KeyValuePair<Line, Distance>(line, line.YInterceptIn2D() - pointToFindTheFarthestInterceptTo));
-            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.InInches.Value));
+            var list = dictionary.OrderByDescending(pair => Math.Abs(pair.Value.ValueInInches));
             var result = list.FirstOrDefault().Key;
 
             return result;

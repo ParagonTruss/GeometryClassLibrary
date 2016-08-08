@@ -361,8 +361,8 @@ namespace GeometryClassLibrary
         public bool IsParallelTo(Line line, Angle tolerance)
         {
             var angle = this.SmallestAngleBetween(line);
-            var m = new Measurement(angle.InRadians.Value, tolerance.InRadians.Value);
-            return m == Measurement.Zero;
+            angle = Angle.Exactly(angle.InRadians.Value, Angle.Radians);
+            return angle == tolerance;
         }
 
        // public 
@@ -400,15 +400,10 @@ namespace GeometryClassLibrary
             Vector crossProductCB = basePointDiffVectorC.CrossProduct(directionVectorB);
             Vector crossProductAB = directionVectorA.CrossProduct(directionVectorB);
 
-            Measurement crossProductABMagnitudeSquared = crossProductAB.Magnitude.InInches ^ 2;
-            Measurement dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).MeasurementIn(new SquareInch());
+            double crossProductABMagnitudeSquared = crossProductAB.Magnitude.ValueInInches * crossProductAB.Magnitude.ValueInInches;
+            double dotProductOfCrossProducts = (crossProductCB.DotProduct(crossProductAB)).ValueIn(new SquareInch());
 
-            if (crossProductABMagnitudeSquared == 0)
-            {
-                //The first if statements should prevent you from ever getting here
-                return null;
-            }
-            Measurement solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
+            double solutionVariable = dotProductOfCrossProducts / crossProductABMagnitudeSquared;
             Distance solutionVariableDistance = new Distance(new Inch(), solutionVariable);
 
             Point intersectionPoint = this.GetPointAlongLine(solutionVariableDistance);
@@ -496,15 +491,15 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsCoplanarWith(Line passedLine)
         {
-            double[] point1Line1 = { this.BasePoint.X.InInches.Value, this.BasePoint.Y.InInches.Value, this.BasePoint.Z.InInches.Value };
+            double[] point1Line1 = { this.BasePoint.X.ValueInInches, this.BasePoint.Y.ValueInInches, this.BasePoint.Z.ValueInInches };
 
             Point anotherPointOnLine1 = this.GetPointAlongLine(new Distance(1, Inches));
-            double[] point2Line1 = { anotherPointOnLine1.X.InInches.Value, anotherPointOnLine1.Y.InInches.Value, anotherPointOnLine1.Z.InInches.Value };
+            double[] point2Line1 = { anotherPointOnLine1.X.ValueInInches, anotherPointOnLine1.Y.ValueInInches, anotherPointOnLine1.Z.ValueInInches };
 
-            double[] point1Line2 = { passedLine.BasePoint.X.InInches.Value, passedLine.BasePoint.Y.InInches.Value, passedLine.BasePoint.Z.InInches.Value };
+            double[] point1Line2 = { passedLine.BasePoint.X.ValueInInches, passedLine.BasePoint.Y.ValueInInches, passedLine.BasePoint.Z.ValueInInches };
 
             Point anotherPointOnLine2 = passedLine.GetPointAlongLine(new Distance(1, Inches) * 2);
-            double[] point2Line2 = { anotherPointOnLine2.X.InInches.Value, anotherPointOnLine2.Y.InInches.Value, anotherPointOnLine2.Z.InInches.Value };
+            double[] point2Line2 = { anotherPointOnLine2.X.ValueInInches, anotherPointOnLine2.Y.ValueInInches, anotherPointOnLine2.Z.ValueInInches };
 
             Matrix pointsMatrix = new Matrix(4, 4);
 

@@ -531,7 +531,7 @@ namespace GeometryClassLibrary
 
         public static Matrix PointAsProjectiveColumnVector(Point point)
         {
-            return new Matrix(new double[] {point.X.InInches.Value, point.Y.InInches.Value, point.Z.InInches.Value, 1});
+            return new Matrix(new double[] {point.X.ValueInInches, point.Y.ValueInInches, point.Z.ValueInInches, 1});
         }
 
         private static Point _pointFromProjectiveColumnVector(Matrix projectiveVector)
@@ -886,9 +886,9 @@ namespace GeometryClassLibrary
 
             Direction rotationUnitVector = passedRotation.AxisOfRotation.Direction;
 
-            double unitX = rotationUnitVector.X.Value; //Projection onto x-axis
-            double unitY = rotationUnitVector.Y.Value;
-            double unitZ = rotationUnitVector.Z.Value;
+            double unitX = rotationUnitVector.X; //Projection onto x-axis
+            double unitY = rotationUnitVector.Y;
+            double unitZ = rotationUnitVector.Z;
             double theta = passedRotation.RotationAngle.InRadians.Value;
 
             double sinTheta = Math.Sin(theta);

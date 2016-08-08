@@ -29,7 +29,7 @@ namespace GeometryClassLibrary.Vectors
     {
         T UnitType { get; }
         Point ApplicationPoint { get; }
-        IMeasurementVector MeasurementVector { get; }
+        IDoubleVector DoubleVector { get; }
         Direction Direction { get; }
         //Unit<T> Magnitude { get; }
     }

@@ -43,7 +43,7 @@ namespace GeometryClassLibrary
         /// The angle from the positive x-axis in the xy-plane (azimuth)
         /// Will be between -180 degrees and +180 degrees.
         /// </summary>     
-        public Angle Phi => new Angle(Math.Atan2(Y.Value, X.Value), Radians);
+        public Angle Phi => new Angle(Math.Atan2(Y, X), Radians);
 
         /// <summary>
         /// The angle from the positive z-axis (should be a max of 180 degrees) (inclination)
@@ -52,32 +52,32 @@ namespace GeometryClassLibrary
         {
             get
             {
-                var x = X.Value;
-                var y = Y.Value;
+                var x = X;
+                var y = Y;
                 var r = Math.Sqrt(x*x + y*y);
-                return new Angle(Math.Atan2(r, Z.Value), Radians);
+                return new Angle(Math.Atan2(r, Z), Radians);
             }
         }
 
         /// <summary>
         /// Gets for the x-component of this directions unitVector
         /// </summary>
-        public Measurement X => Normalized.X;
+        public double X => Normalized.X;
 
         /// <summary>
         /// Gets for the y-component of this directions unitVector
         /// </summary>
-        public Measurement Y => Normalized.Y;
+        public double Y => Normalized.Y;
 
         /// <summary>
         /// Gets for the z-component of this directions unitVector
         /// </summary>
-        public Measurement Z => Normalized.Z;
+        public double Z => Normalized.Z;
 
-        private MeasurementVector _vector;
-        private MeasurementVector _normalized;
+        private DoubleVector _vector;
+        private DoubleVector _normalized;
 
-        private MeasurementVector Normalized
+        private DoubleVector Normalized
         {
             get
             {
@@ -101,9 +101,9 @@ namespace GeometryClassLibrary
         /// </summary>
         private Direction() { }
 
-        public Direction(Measurement x, Measurement y, Measurement z)
+        public Direction(double x, double y, double z)
         {
-            this._vector = new MeasurementVector(x, y, z);
+            this._vector = new DoubleVector(x, y, z);
         }
    
         /// <summary>
@@ -111,9 +111,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction(Angle xyPlaneAngle)
         {
-            var X = Angle.Cosine(xyPlaneAngle);
-            var Y = Angle.Sine(xyPlaneAngle);
-            this._vector = new MeasurementVector(X, Y);
+            var X = Math.Cos(xyPlaneAngle.InRadians.Value);
+            var Y = Math.Sin(xyPlaneAngle.InRadians.Value);
+            this._vector = new DoubleVector(X, Y);
             this._normalized = _vector;
         }
 
@@ -122,7 +122,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction(Point point)
         {
-            this._vector = new MeasurementVector(point.X.InInches, point.Y.InInches, point.Z.InInches);
+            this._vector = new DoubleVector(point.X.ValueInInches, point.Y.ValueInInches, point.Z.ValueInInches);
         }
 
         /// <summary>
@@ -136,10 +136,10 @@ namespace GeometryClassLibrary
         /// </summary>
         public Direction(Angle phi, Angle theta)
         {
-            var X = Angle.Cosine(phi) * Angle.Sine(theta);
-            var Y = Angle.Sine(phi) * Angle.Sine(theta);
-            var Z = Angle.Cosine(theta);
-            this._vector = new MeasurementVector(X, Y, Z);
+            var X = Math.Cos(phi.InRadians.Value) * Math.Sin(theta.InRadians.Value);
+            var Y = Math.Sin(phi.InRadians.Value) * Math.Sin(theta.InRadians.Value);
+            var Z = Math.Cos(theta.InRadians.Value);
+            this._vector = new DoubleVector(X, Y, Z);
             this._normalized = _vector;
         }
        
@@ -154,25 +154,21 @@ namespace GeometryClassLibrary
         }
 
         [JsonConstructor]
-        public Direction(MeasurementVector genericVector)
+        public Direction(DoubleVector genericVector)
         {
             this._vector = genericVector;
         }
 
-        public static MeasurementVector Normalize(MeasurementVector vector)
+        public static DoubleVector Normalize(DoubleVector vector)
         {
             var r = vector.Magnitude;
-            if (r == Measurement.Zero)
+            if (r < DoubleVector.Tolerance)
             {
-                return MeasurementVector.Zero;
-            }
-            else if (r == new Measurement(1, 0))
-            {
-                return vector;
+                return DoubleVector.Zero;
             }
             else
             {
-                var d = r.Value;
+                var d = r;
                 return vector/d;
             }
         }
@@ -198,11 +194,7 @@ namespace GeometryClassLibrary
         {
             if ((object)direction1 == null)
             {
-                if ((object)direction2 == null)
-                {
-                    return true;
-                }
-                return false;
+                return (object)direction2 == null;
             }
             return direction1.Equals(direction2);
         }
@@ -214,20 +206,7 @@ namespace GeometryClassLibrary
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                return this.Equals(obj as Direction);   
-            }
-            //wasnt even a direction so it must not be equal
-            catch (InvalidCastException)
-            {
-                return false;
-            }
+            return (obj as Direction)?.Equals(this) ?? false;
         }
         public bool Equals(Direction dir)
         {
@@ -235,8 +214,8 @@ namespace GeometryClassLibrary
             {
                 return false;
             }
-            if (this._vector.Magnitude() == new Measurement(0, 0) &&
-                dir._vector.Magnitude()== new Measurement(0, 0))
+            if (this._vector.Magnitude() < DoubleVector.Tolerance &&
+                dir._vector.Magnitude() < DoubleVector.Tolerance)
             {
                 return true;
             }
@@ -247,7 +226,7 @@ namespace GeometryClassLibrary
 
         public override string ToString()
         {
-            return String.Format("X = {0}, Y = {1}, Z = {2}", Math.Round(X.Value, 2), Math.Round(Y.Value, 2), Math.Round(Z.Value, 2));
+            return $"X = {Math.Round(X, 2)}, Y = {Math.Round(Y, 2)}, Z = {Math.Round(Z, 2)}";
         }
         #endregion
 
@@ -272,7 +251,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// 
         /// </summary>
-        public Measurement DotProduct(Direction otherDirection)
+        public double DotProduct(Direction otherDirection)
         {
             var xTerm = this.X * otherDirection.X;
             var yTerm = this.Y * otherDirection.Y;

@@ -794,7 +794,7 @@ namespace GeometryClassLibrary
                 var vector2 = new Vector(vertices[0], vertices[i+1]);
                 total += vector1.CrossProduct(vector2);
             }
-            return total.Magnitude.InInches.Value / 2;
+            return total.Magnitude.ValueInInches / 2;
         }
 
         private Point _findCentroid()
@@ -810,11 +810,11 @@ namespace GeometryClassLibrary
                 var  centroidOfLocalTriangle = new List<Point>() { vertices[0],vector1.EndPoint,vector2.EndPoint }.CenterPoint();
                 if (crossProduct.Direction == NormalVector.Direction)
                 {
-                    total += crossProduct.Magnitude.InInches * centroidOfLocalTriangle;
+                    total += crossProduct.Magnitude.ValueInInches * centroidOfLocalTriangle;
                 }
                 else
                 {
-                    total -= crossProduct.Magnitude.InInches * centroidOfLocalTriangle;
+                    total -= crossProduct.Magnitude.ValueInInches * centroidOfLocalTriangle;
                 }
             }
             return total/(2*_findArea());

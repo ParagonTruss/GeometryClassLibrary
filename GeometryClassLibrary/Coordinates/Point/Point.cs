@@ -115,12 +115,12 @@ namespace GeometryClassLibrary
             _y = new Distance(passedType, passedY);
             _z = new Distance(passedType, passedZ);
         }
-        public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ = default(Measurement))
-        {
-            _x = new Distance(passedType, passedX);
-            _y = new Distance(passedType, passedY);
-            _z = new Distance(passedType, passedZ);
-        }
+        //public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ = default(Measurement))
+        //{
+        //    _x = new Distance(passedType, passedX);
+        //    _y = new Distance(passedType, passedY);
+        //    _z = new Distance(passedType, passedZ);
+        //}
         public Point(List<Distance> coordinates)
         {
             _x = coordinates[0];
@@ -138,9 +138,9 @@ namespace GeometryClassLibrary
             _z = toCopy.Z;
         }
 
-        public Point(Unit<DistanceType> x, Unit<DistanceType> y, Unit<DistanceType> z)
-            : this((Distance)x,(Distance)y, (Distance)z)
-        { }
+        //public Point(Unit<DistanceType> x, Unit<DistanceType> y, Unit<DistanceType> z)
+        //    : this((Distance)x,(Distance)y, (Distance)z)
+        //{ }
         #endregion
 
         #region Overloaded Operators
@@ -169,12 +169,12 @@ namespace GeometryClassLibrary
             return new Point(newX, newY, newZ);
         }
 
-        public static Point operator *(Measurement scalar, Point point)
+        public static Point operator *(double scalar, Point point)
         {
             return new Point(scalar * point.X, scalar * point.Y, scalar * point.Z);
         }
 
-        public static Point operator /(Point point, Measurement divisor)
+        public static Point operator /(Point point, double divisor)
         {
             return new Point(point.X/ divisor, point.Y/divisor, point.Z/divisor);
 
@@ -247,8 +247,8 @@ namespace GeometryClassLibrary
             {
                 centerPoint = Origin;
             }
-           Measurement cosTheta = Angle.Cosine(rotateAngle);
-           Measurement sinTheta = Angle.Sine(rotateAngle);
+           double cosTheta = Angle.Cosine(rotateAngle).Value;
+           double sinTheta = Angle.Sine(rotateAngle).Value;
 
             var point = this - centerPoint;
             return new Point(
@@ -287,11 +287,11 @@ namespace GeometryClassLibrary
         public Distance DistanceTo(Point endPoint)
         {
             //distance formula
-            Measurement term1 = (X - endPoint.X).InInches ^ 2;
-            Measurement term2 = (Y - endPoint.Y).InInches ^ 2;
-            Measurement term3 = (Z - endPoint.Z).InInches ^ 2;
+            double term1 = Math.Pow(X.ValueInInches - endPoint.X.ValueInInches, 2);
+            double term2 = Math.Pow(Y.ValueInInches - endPoint.Y.ValueInInches, 2);
+            double term3 = Math.Pow(Z.ValueInInches - endPoint.Z.ValueInInches, 2);
 
-            Measurement distanceInInches = (term1 + term2 + term3).SquareRoot();
+            double distanceInInches = Math.Sqrt(term1 + term2 + term3);
 
             return new Distance(new Inch(), distanceInInches);
         }
@@ -354,7 +354,7 @@ namespace GeometryClassLibrary
         {
             Vector hypotenuse = new Vector(projectOnto.BasePoint, this);
             Direction lineDirection = projectOnto.Direction;
-            Measurement dotProduct = hypotenuse.Direction.DotProduct(projectOnto.Direction);
+            double dotProduct = hypotenuse.Direction.DotProduct(projectOnto.Direction);
             return projectOnto.GetPointAlongLine(dotProduct * hypotenuse.Magnitude);
         }
 
@@ -434,10 +434,10 @@ namespace GeometryClassLibrary
         {
             return new Point(new Inch(), x, y, z);
         }
-        public static Point MakePointWithInches(Measurement x, Measurement y, Measurement z)
-        {
-            return new Point(new Inch(), x, y, z);
-        }
+        //public static Point MakePointWithInches(double x, double y, double z)
+        //{
+        //    return new Point(new Inch(), x, y, z);
+        //}
 
         public static Point MakePointWithMillimeters(double x, double y, double z = 0)
         {

@@ -26,11 +26,11 @@ using UnitClassLibrary;
 
 namespace GeometryClassLibrary
 {
-    public interface IMeasurementVector
+    public interface IDoubleVector
     {
-        Measurement X { get; }
-        Measurement Y { get; }
-        Measurement Z { get; }    
+        double X { get; }
+        double Y { get; }
+        double Z { get; }    
     }
     
 }

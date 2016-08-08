@@ -40,7 +40,7 @@ namespace GeometryClassLibrary
 
         private static Polyhedron _makePrismFromRectangle(Rectangle rectangle, Distance height)
         {
-            var prism = rectangle.Extrude(rectangle.NormalVector * height.InInches);
+            var prism = rectangle.Extrude(rectangle.NormalVector * height.ValueInInches);
             return prism;
         }
 

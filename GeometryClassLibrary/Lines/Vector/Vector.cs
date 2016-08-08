@@ -179,7 +179,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new Vector with each component multiplied by the scalar (order of terms does not matter)
         /// </summary>
-        public static Vector operator *(Vector passedVector, Measurement scalar)
+        public static Vector operator *(Vector passedVector, double scalar)
         {
             return new Vector(passedVector.BasePoint, passedVector.Direction, passedVector.Magnitude * scalar);
         }
@@ -283,18 +283,18 @@ namespace GeometryClassLibrary
 
             //Find each component 
 
-            Measurement xProduct1 = v1.YComponent.InInches * v2.ZComponent.InInches;
-            Measurement xProduct2 = v1.ZComponent.InInches * v2.YComponent.InInches;
+            double xProduct1 = v1.YComponent.ValueInInches * v2.ZComponent.ValueInInches;
+            double xProduct2 = v1.ZComponent.ValueInInches * v2.YComponent.ValueInInches;
 
-            Measurement yProduct1 = v1.ZComponent.InInches * v2.XComponent.InInches;
-            Measurement yProduct2 = v1.XComponent.InInches * v2.ZComponent.InInches;
+            double yProduct1 = v1.ZComponent.ValueInInches * v2.XComponent.ValueInInches;
+            double yProduct2 = v1.XComponent.ValueInInches * v2.ZComponent.ValueInInches;
 
-            Measurement zProduct1 = v1.XComponent.InInches * v2.YComponent.InInches;
-            Measurement zProduct2 = v1.YComponent.InInches * v2.XComponent.InInches;
+            double zProduct1 = v1.XComponent.ValueInInches * v2.YComponent.ValueInInches;
+            double zProduct2 = v1.YComponent.ValueInInches * v2.XComponent.ValueInInches;
 
-            Measurement newX = (xProduct1) - (xProduct2);
-            Measurement newY = (yProduct1) - (yProduct2);
-            Measurement newZ = (zProduct1) - (zProduct2);
+            double newX = (xProduct1) - (xProduct2);
+            double newY = (yProduct1) - (yProduct2);
+            double newZ = (zProduct1) - (zProduct2);
 
             return new Vector(Point.MakePointWithInches(newX, newY, newZ));
         }
@@ -384,9 +384,9 @@ namespace GeometryClassLibrary
         {
             var vectorArray = new []
             {
-                XComponent.InInches.Value,
-                YComponent.InInches.Value,
-                ZComponent.InInches.Value
+                XComponent.ValueInInches,
+                YComponent.ValueInInches,
+                ZComponent.ValueInInches
             };
 
             Matrix returnMatrix = new Matrix(vectorArray);
@@ -446,7 +446,7 @@ namespace GeometryClassLibrary
             var sum = 0.0;
             for (int i = 0; i < 3; i++)
             {
-                sum += vector1[i].InInches.Value * vector2[i].InInches.Value;
+                sum += vector1[i].ValueInInches * vector2[i].ValueInInches;
             }
             return new Area(new SquareInch(),sum);
         }

@@ -186,7 +186,7 @@ namespace GeometryClassLibrary
         //    //we can simplify the equation as this since it is unit vectors
         //    //sin(angle to plane) = z * planeNormal (which is the x axis by definition)
         //    //Distance dotProductOfZAndNormal = zAxis * Line.XAxis.UnitVector(new Inch());
-        //    //Angle angleBetweenCurrentZAndYZPlane = new Angle(new Radian(), Math.Asin(dotProductOfZAndNormal.InInches));
+        //    //Angle angleBetweenCurrentZAndYZPlane = new Angle(new Radian(), Math.Asin(dotProductOfZAndNormal.ValueInInches));
 
         //    //now rotate the axis (we only need to do z and x since we are done with y now)
         //    xAxis = xAxis.Rotate(new Rotation(Line.YAxis, angleBetweenCurrentZAndYZPlane));

@@ -47,8 +47,8 @@ namespace GeometryClassLibrary
         {
             get
             {
-                var matrix = GeometryClassLibrary.Matrix.IdentityMatrix(4);
-                var array = new double[] { Point.X.InInches.Value, Point.Y.InInches.Value, Point.Z.InInches.Value, 1 };
+                var matrix = Matrix.IdentityMatrix(4);
+                var array = new double[] { Point.X.ValueInInches, Point.Y.ValueInInches, Point.Z.ValueInInches, 1 };
                 matrix.SetColumn(3, array);
                 return matrix;
             }
