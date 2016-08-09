@@ -187,7 +187,7 @@ namespace GeometryClassLibrary.Vectors
             }
             else
             {
-                return new Vector_New<T>(vector.ApplicationPoint, new Unit<T>(passedType), direction);
+                return new Vector_New<T>(vector.ApplicationPoint, new Unit<T>(passedType, 1), direction);
             }
 
         }

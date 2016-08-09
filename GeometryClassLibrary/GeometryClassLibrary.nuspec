@@ -9,10 +9,10 @@
 	<projectUrl>https://github.com/ParagonTruss/GeometryClassLibrary</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright © 2016 Paracon Component Systems, LLC</copyright>
+    <copyright>Copyright © 2016 Paragon Component Systems, LLC</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
-		<dependency id="UnitClassLibrary" version="4.0.2" />
+		<dependency id="UnitClassLibrary" version="4.0.3" />
 		<dependency id="MathNet.Numerics" version="3.10.0" />
 		<dependency id="MoreLinq.Portable" version="1.4.0" />
 		<dependency id="Clipper" version="6.2.10" />

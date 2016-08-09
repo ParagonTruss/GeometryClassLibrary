@@ -153,7 +153,7 @@ namespace GeometryClassLibrary
             this._normalized = toCopy._normalized;
         }
 
-        [JsonConstructor]
+        
         public Direction(DoubleVector genericVector)
         {
             this._vector = genericVector;

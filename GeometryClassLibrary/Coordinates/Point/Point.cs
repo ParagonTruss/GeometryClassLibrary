@@ -88,7 +88,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Create any point by its coordinates.
         /// </summary>
-        [JsonConstructor]
+        
         public Point(Distance x, Distance y, Distance z)
         {
             _x = x;
@@ -247,7 +247,7 @@ namespace GeometryClassLibrary
             {
                 centerPoint = Origin;
             }
-           double cosTheta = Angle.Cosine(rotateAngle).Value;
+           double cosTheta = Angle.Cosine(rotateAngle);
            double sinTheta = Angle.Sine(rotateAngle);
 
             var point = this - centerPoint;

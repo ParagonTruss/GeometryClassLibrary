@@ -38,38 +38,17 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The length of an arc of a circle with radius r and subtending an angle theta, with the circle center — i.e., the central angle 
         /// </summary>
-        public Distance ArcLength
-        {
-            get
-            {
-                //length = r * theta), when theta is in radians
-                return RadiusOfCurvature * CentralAngle.InRadians;
-            }
-        }
+        public Distance ArcLength => RadiusOfCurvature * CentralAngle.InRadians.Value;
 
         /// <summary>
         /// The area between an arc and the center of a would be circle.
         /// </summary>
-        public Area SectorArea
-        {
-            get
-            {
-                //arcArea = r^2/2 * (theta), where theta is in radians
-                return new Area(new SquareInch(), 0.5 * CentralAngle.InRadians * (RadiusOfCurvature.ValueInInches*RadiusOfCurvature.ValueInInches));
-            }
-        }
+        public Area SectorArea => new Area(new SquareInch(), 0.5 * CentralAngle.InRadians * (RadiusOfCurvature.ValueInInches*RadiusOfCurvature.ValueInInches));
 
         /// <summary>
         /// The area of the shape limited by the arc and a straight line between the two end points.
         /// </summary>
-        public Area SegmentArea
-        {
-            get
-            {
-                //arcSegmentArea = r^2 / 2 * (theta - sin(theta))
-                return new Area(new SquareInch(), .5 * Math.Pow(RadiusOfCurvature.ValueInInches,2) * (CentralAngle.InRadians - Angle.Sine(CentralAngle)));
-            }
-        }
+        public Area SegmentArea => new Area(new SquareInch(), .5 * Math.Pow(RadiusOfCurvature.ValueInInches,2) * (CentralAngle.InRadians - Angle.Sine(CentralAngle)));
 
         /// <summary>
         ///  an angle whose apex (vertex) is the center O of a circle and whose legs (sides) 
@@ -105,58 +84,46 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The radius of the would be circle formed by the arc
         /// </summary>
-        public Distance RadiusOfCurvature { get { return CenterPoint.DistanceTo(BasePoint); } }
+        public Distance RadiusOfCurvature => CenterPoint.DistanceTo(BasePoint);
 
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between then
         /// </summary>
-        public virtual Direction StraightLineDirection
-        {
-            get
-            {
-                return new Direction(this._basePoint, this.EndPoint);
-            }
-        }
+        public virtual Direction StraightLineDirection => new Direction(this.BasePoint, this.EndPoint);
 
         /// <summary>
         /// The direction from the arc's start point to end point as if a straight line were drawn between them.
         /// This is defined and used by IEdge
         /// </summary>
-        public Direction Direction { get { return InitialDirection; } }
+        public Direction Direction => InitialDirection;
 
         /// <summary>
         /// The direction tangent to the basepoint.
         /// </summary>
-        public Direction InitialDirection
-        {
-            get { return new Direction(BasePoint, CenterPoint).CrossProduct(NormalDirection); }
-        }
-        
+        public Direction InitialDirection => new Direction(BasePoint, CenterPoint).CrossProduct(NormalDirection);
+
         /// <summary>
         /// Where the arc begins.
         /// </summary>
-        public Point BasePoint { get { return _basePoint; } }
-        private Point _basePoint;
+        public Point BasePoint { get; }
 
         /// <summary>
         /// Where the arc ends.
         /// </summary>
-        public Point EndPoint { get { return _endPoint; } }
-        private Point _endPoint;
+        public Point EndPoint { get; }
 
         /// <summary>
         /// The center point of the circle that the arc fits along.
         /// </summary>
-        public Point CenterPoint { get { return _centerPoint; } }
+        public Point CenterPoint { get; }
         // The centerPoint could be calculated from other data, in some cases.
         // However in the case of a full closed arc, one needs to specify the size, since the basepoint is the endpoint.
-        private Point _centerPoint;
 
-        public Direction NormalDirection { get { return _normalDirection; } }
-        private Direction _normalDirection;
+        public Direction NormalDirection { get; }
 
-        public bool IsClosed { get { return BasePoint == EndPoint; } }
-        public bool IsAcute { get { return this.CentralAngle < StraightAngle; } }
+        public bool IsClosed => BasePoint == EndPoint;
+        public bool IsAcute => this.CentralAngle < StraightAngle;
+
         #endregion
 
         #region Constructors
@@ -165,21 +132,21 @@ namespace GeometryClassLibrary
 
         public Arc(Point basePoint, Point endPoint, Direction initialDirection)
         {
-            this._basePoint = basePoint;
-            this._endPoint = endPoint;
+            this.BasePoint = basePoint;
+            this.EndPoint = endPoint;
             if (this.IsClosed)
             {
                 throw new GeometricException("Not enough information given to determine curvature.");
             }
             var segmentBetweenPoints = new LineSegment(basePoint,endPoint);
-            this._normalDirection = initialDirection.CrossProduct(segmentBetweenPoints.Direction);
+            this.NormalDirection = initialDirection.CrossProduct(segmentBetweenPoints.Direction);
 
             var plane1 = new Plane(BasePoint, initialDirection);
             var plane2 = new Plane(segmentBetweenPoints.MidPoint, segmentBetweenPoints.Direction);
             var intersectingLine = plane1.IntersectWithPlane(plane2);
             var containingPlane = new Plane(BasePoint, NormalDirection);
             var centerPoint = intersectingLine.IntersectWithPlane(containingPlane);
-            this._centerPoint = centerPoint;
+            this.CenterPoint = centerPoint;
             //var line1 = new Line(BasePoint, NormalDirection.CrossProduct(initialDirection));
             //var line2 = new Line(segmentBetweenPoints.MidPoint, NormalDirection.CrossProduct(segmentBetweenPoints.Direction));
             //this._centerPoint = line1.IntersectWithLine(line2);
@@ -196,18 +163,18 @@ namespace GeometryClassLibrary
             {
                 throw new GeometricException();
             }
-            this._basePoint = basePoint;
-            this._endPoint = endPoint;
-            this._centerPoint = projected;
-            this._normalDirection = normalLine.Direction;            
+            this.BasePoint = basePoint;
+            this.EndPoint = endPoint;
+            this.CenterPoint = projected;
+            this.NormalDirection = normalLine.Direction;            
         }
 
         private Arc(Point basePoint, Point endPoint, Point centerPoint, Direction normalDirection)
         {
-            this._basePoint = basePoint;
-            this._endPoint = endPoint;
-            this._centerPoint = centerPoint;
-            this._normalDirection = normalDirection;
+            this.BasePoint = basePoint;
+            this.EndPoint = endPoint;
+            this.CenterPoint = centerPoint;
+            this.NormalDirection = normalDirection;
         }
 
         /// <summary>
@@ -216,10 +183,10 @@ namespace GeometryClassLibrary
         /// <param name="toCopy">The Arc to copy</param>
         public Arc(Arc toCopy)
         {
-            _basePoint = toCopy.BasePoint;
-            _endPoint = toCopy.EndPoint;
-            _centerPoint = toCopy.CenterPoint;
-            _normalDirection = toCopy.NormalDirection;
+            BasePoint = toCopy.BasePoint;
+            EndPoint = toCopy.EndPoint;
+            CenterPoint = toCopy.CenterPoint;
+            NormalDirection = toCopy.NormalDirection;
         }
 
         #endregion
@@ -325,7 +292,6 @@ namespace GeometryClassLibrary
         }
         #endregion
 
-        //These are currently only based on the points and not anything else about it!
         #region Overloaded Operators
 
 
@@ -371,7 +337,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Arc))
+            if (!(obj is Arc))
             {
                 return false;
             }

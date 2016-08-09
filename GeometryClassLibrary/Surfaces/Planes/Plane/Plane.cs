@@ -33,26 +33,25 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
-    public partial class Plane : ISurface, IShift<Plane>
+    public class Plane : ISurface, IShift<Plane>
     {
         #region Properties and Fields
 
-        public static Plane XY { get { return new Plane(Point.Origin, Direction.Out); } }
-        public static Plane XZ { get { return new Plane(Point.Origin, Direction.Up); } }
-        public static Plane YZ { get { return new Plane(Point.Origin, Direction.Right); } }
+        public static Plane XY => new Plane(Point.Origin, Direction.Out);
+        public static Plane XZ => new Plane(Point.Origin, Direction.Up);
+        public static Plane YZ => new Plane(Point.Origin, Direction.Right);
 
-        public virtual bool IsBounded { get { return true; } }
-        public Area Area { get { return new Area(Double.PositiveInfinity, Area.SquareInches); } }
+        public virtual bool IsBounded => true;
+        public virtual Area Area => new Area(Double.PositiveInfinity, Area.SquareInches);
 
-        [JsonProperty]
         public virtual Line NormalLine { get; protected set; }
    
-        public Point BasePoint { get { return NormalLine.BasePoint; } }
+        public Point BasePoint => NormalLine.BasePoint;
 
-        public Vector NormalVector { get { return new Vector(BasePoint, NormalDirection, new Distance(1, Inches)); } }
+        public Vector NormalVector => new Vector(BasePoint, NormalDirection, new Distance(1, Inches));
 
-        public Direction NormalDirection { get { return NormalLine.Direction; } }
+        public Direction NormalDirection => NormalLine.Direction;
+
         #endregion
 
         #region Constructors
@@ -65,7 +64,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Plane that contains the given point and whose normal is in a given direction.
         /// </summary>
-        [JsonConstructor]
         public Plane(Direction normalDirection , Point basePoint = null)
         {
             if (basePoint == null)

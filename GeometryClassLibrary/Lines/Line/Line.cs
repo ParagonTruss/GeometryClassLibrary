@@ -80,7 +80,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a line with the given direction and point if passed, other wise it uses the origin as the base point
         /// </summary>
-        [JsonConstructor]
+        
         public Line(Direction direction, Point basePoint = null)
         {
             if (basePoint == null)

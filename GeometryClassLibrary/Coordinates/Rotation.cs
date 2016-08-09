@@ -94,7 +94,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
-        [JsonConstructor]
+        
         public Rotation(Line axisOfRotation, Angle rotationAngle)
         {
             this.RotationAngle = rotationAngle;
@@ -146,7 +146,7 @@ namespace GeometryClassLibrary
             Angle theta = this.RotationAngle;
 
             double sinTheta = Angle.Sine(theta);
-            double cosTheta = Angle.Cosine(theta).Value;
+            double cosTheta = Angle.Cosine(theta);
 
             double row0column0 = cosTheta + unitX * unitX * (1 - cosTheta);
             double row0column1 = unitX * unitY * (1 - cosTheta) - unitZ * sinTheta;

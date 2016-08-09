@@ -112,7 +112,7 @@ namespace GeometryClassLibrary
             _matrix = translationMatrix * _matrix;
         }
 
-        [JsonConstructor]
+        
         public Shift(Matrix matrix)
         {
             this._matrix = matrix;

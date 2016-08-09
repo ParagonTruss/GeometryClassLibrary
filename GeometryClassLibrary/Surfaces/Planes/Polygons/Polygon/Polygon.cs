@@ -108,7 +108,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// The area of the polygon.
         /// </summary>
-        public virtual Area Area
+        public override Area Area
         {
             get
             {   
@@ -1045,7 +1045,6 @@ namespace GeometryClassLibrary
 
                 #region Check For Intersection
                 var candidates = new List<Tuple<Point, LineSegment>>();
-                var count = 0;
                 foreach (var segment in otherList)
                 {
                     var intersection = segment.IntersectWithSegment(currentSegment);

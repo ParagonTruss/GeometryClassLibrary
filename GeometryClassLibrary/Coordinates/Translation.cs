@@ -64,7 +64,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Translation with offsets in each direction represented by the point
         /// </summary>param>
-        [JsonConstructor]
+        
         public Translation(Point point)
         {
             this.Point = point;
