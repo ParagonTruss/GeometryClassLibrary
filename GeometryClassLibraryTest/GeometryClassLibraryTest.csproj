@@ -106,6 +106,7 @@
     <Compile Include="CoordinateTests\CoordinateSystemTest.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />
     <Compile Include="Polygon_Overlap_Tests.cs" />
+    <Compile Include="Polygon_Validation.cs" />
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />

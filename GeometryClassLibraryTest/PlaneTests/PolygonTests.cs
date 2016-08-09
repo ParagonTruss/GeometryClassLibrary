@@ -17,24 +17,9 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class PolygonTests
     {
-        [Test()]
-        public void Polygon_Constructor_NoSelfIntersections()
-        {
-            Point point1 = Point.MakePointWithInches(0, 0);
-            Point point2 = Point.MakePointWithInches(1, 0);
-            Point point3 = Point.MakePointWithInches(1, 1);
-            Point point4 = Point.MakePointWithInches(0, 1);
 
-            List<Point> verticesInCorrectOrder = new List<Point>() { point1, point2, point3, point4 };
-            List<Point> verticesInWrongOrder = new List<Point>() { point1, point2, point4, point3 };
 
-            Polygon correctPolygon = new Polygon(verticesInCorrectOrder);
-            Area area = correctPolygon.Area;
-            area.Should().Be(new Area(new SquareInch(), 1));
-
-     
-            Assert.Throws<InvalidPolygonException>(() => new Polygon(verticesInWrongOrder));       
-        }
+      
         
         [Test()]
         public void Polygon_Extrude()
