@@ -5,6 +5,7 @@ using GeometryClassLibrary;
 using GeometryClassLibraryTest;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
@@ -18,7 +19,22 @@ namespace GeometryClassLibraryTest
     public class PolygonTests
     {
 
+        [Test]
+        public void Polygon_Extrude_Colinear_Points()
+        {
+            var extrusion = 3.5*Inches*Direction.Out;
+            var polygon = Polygon.CreateInXYPlane(Inches,
+                0,   16.5,
+                1.5, 16.5,
+                3,   16.5,
+                3,    1.5,
+                1.5,  1.5,
+                0,    1.5);
 
+            var solid = polygon.Extrude(extrusion);
+
+            solid.Volume.Should().Be(new Volume(new CubicInch(), 3*15*3.5));
+        }
       
         
         [Test()]
