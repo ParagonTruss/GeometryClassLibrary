@@ -556,9 +556,47 @@ namespace GeometryClassLibrary
             {
                 return true;
             }
-            throw new NotImplementedException();
+            if (this.IsConvex)
+            {
+                foreach(Plane face in this.Polygons)
+                {
+                    if(face.PointIsOnNormalSide(point))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return _containsOnInside(point);
+            }
+            return true;
         }
-
+        private bool _containsOnInside(Point passedPoint)
+        {
+            if (Polygons.Any(face => face.Contains(passedPoint)))
+            {
+                return false;
+            }
+            Line testLine = new Line(passedPoint);
+            Line intersectionLine;
+            int counter = 0;
+            Point intersectionPoint;
+            foreach (Polygon face in this.Polygons)
+            {
+                intersectionPoint = face.IntersectWithLine(testLine);
+                if (intersectionPoint != null)
+                {
+                    intersectionLine = new Line(passedPoint, intersectionPoint);
+                    if (intersectionLine.Direction.Equals(testLine.Direction))
+                    {
+                        counter++;
+                    }
+                }
+            }
+            if (counter % 2 == 0) return false;
+            else return true;
+        }
         public bool Contains(Polygon polygon)
         {
             return polygon.Vertices.All(vertex => this.Contains(vertex));
@@ -566,6 +604,10 @@ namespace GeometryClassLibrary
 
         public bool Contains(Polyhedron polyhedron)
         {
+            if (this.Volume<polyhedron.Volume)
+            {
+                return false;
+            }
             if (this.IsConvex)
             {
                 foreach (Point vertex in polyhedron.Vertices)
@@ -578,10 +620,27 @@ namespace GeometryClassLibrary
                         }
                     }
                 }
-                return true;
-            }
 
-            throw new NotImplementedException();
+            }
+            else
+            {
+                foreach(Point vertex in polyhedron.Vertices)
+                {
+                    if (!this.Contains(vertex))
+                    {
+                        return false;
+                    }
+                }
+                
+                foreach (Point vertex in this.Vertices)
+                {
+                    if (polyhedron._containsOnInside(vertex))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         // Do we need this?

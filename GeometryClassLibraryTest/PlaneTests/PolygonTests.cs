@@ -266,7 +266,61 @@ namespace GeometryClassLibraryTest
             rectangle.Contains(square).Should().BeTrue();
             square.Contains(rectangle).Should().BeFalse();
         }
+        [Test()]
+        public void Polygon_ContainsPoint()
+        {
+            Point pentagonPoint1 = Point.MakePointWithInches(0, 0);
+            Point pentagonPoint2 = Point.MakePointWithInches(4, 0);
+            Point pentagonPoint3 = Point.MakePointWithInches(2, 2);
+            Point pentagonPoint4 = Point.MakePointWithInches(4, 4);
+            Point pentagonPoint5 = Point.MakePointWithInches(0, 4);
+            Polygon concavePentagon =
+                new Polygon(new List<Point>()
+                {
+                    pentagonPoint1,
+                    pentagonPoint2,
+                    pentagonPoint3,
+                    pentagonPoint4,
+                    pentagonPoint5
+                });
 
+            Point rectanglePoint1 = Point.MakePointWithInches(1, 1);
+            Point rectanglePoint2 = Point.MakePointWithInches(2.5, 1);
+            Point rectanglePoint3 = Point.MakePointWithInches(2.5, 3);
+            Point rectanglePoint4 = Point.MakePointWithInches(1, 3);
+            Polygon rectangle =
+                new Polygon(new List<Point>() { rectanglePoint1, rectanglePoint2, rectanglePoint3, rectanglePoint4 });
+
+            Point squarePoint1 = Point.MakePointWithInches(1, 1);
+            Point squarePoint2 = Point.MakePointWithInches(2, 1);
+            Point squarePoint3 = Point.MakePointWithInches(2, 2);
+            Point squarePoint4 = Point.MakePointWithInches(1, 2);
+            Polygon square = new Polygon(new List<Point>() { squarePoint1, squarePoint2, squarePoint3, squarePoint4 });
+
+            Point notInPlane = Point.MakePointWithInches(1, 1, 1);
+            Point distantPoint = Point.MakePointWithInches(20, 20);
+            Point outsidePentagon = Point.MakePointWithInches(3, 2);
+            Point onRectangleSegment = Point.MakePointWithInches(1, 1.5);
+
+            concavePentagon.Contains(squarePoint3).Should().BeTrue();
+            concavePentagon.Contains(notInPlane).Should().BeFalse();
+            concavePentagon.Contains(rectanglePoint1).Should().BeTrue();
+            concavePentagon.Contains(distantPoint).Should().BeFalse();
+            concavePentagon.Contains(outsidePentagon).Should().BeFalse();
+
+            square.Contains(rectanglePoint1).Should().BeTrue();
+            square.Contains(rectanglePoint4).Should().BeFalse();
+            square.Contains(pentagonPoint1).Should().BeFalse();
+            square.Contains(distantPoint).Should().BeFalse();
+            square.Contains(onRectangleSegment).Should().BeTrue();
+
+            rectangle.Contains(rectanglePoint1).Should().BeTrue();
+            rectangle.Contains(squarePoint2).Should().BeTrue();
+            rectangle.Contains(pentagonPoint1).Should().BeFalse();
+            rectangle.Contains(distantPoint).Should().BeFalse();
+            rectangle.Contains(onRectangleSegment).Should().BeTrue();
+
+        }
         [Test()]
         public void Polygon_NormalLine()
         {
