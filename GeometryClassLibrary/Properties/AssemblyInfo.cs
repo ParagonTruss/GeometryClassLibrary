@@ -6,9 +6,9 @@ using System.Reflection;
 [assembly: AssemblyTitle("GeometryClassLibrary")]
 [assembly: AssemblyDescription("GeometryClassLibrary")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Clearspan Components")]
+[assembly: AssemblyCompany("Paragon Component Systems")]
 [assembly: AssemblyProduct("GeometryClassLibrary")]
-[assembly: AssemblyCopyright("2015 Clearspan")]
+[assembly: AssemblyCopyright("2016 Paragon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

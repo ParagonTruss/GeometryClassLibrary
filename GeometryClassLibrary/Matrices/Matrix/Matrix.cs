@@ -1224,8 +1224,104 @@ namespace GeometryClassLibrary
         #endregion
 
         #endregion
-    }
+        //public static double[,] fastCholesky(double[,] a)
+        //{
+        //    var n = (int)Math.Sqrt(a.Length);
 
+        //    var ret = new double[n, n];
+        //    for (var r = 0; r < n; r++)
+        //    {
+        //        for (var c = 0; c <= r; c++)
+        //        {
+        //            if (c == r)
+        //            {
+        //                double sum = 0;
+        //                for (var j = 0; j < c; j++)
+        //                {
+        //                    sum += ret[c, j] * ret[c, j];
+        //                }
+        //                ret[c, c] = Math.Sqrt(a[c, c] - sum);
+        //            }
+        //            else
+        //            {
+        //                double sum = 0;
+        //                for (var j = 0; j < c; j++)
+        //                    sum += ret[r, j] * ret[c, j];
+        //                ret[r, c] = 1.0 / ret[c, c] * (a[r, c] - sum);
+        //            }
+        //        }
+        //    }
+        //    return ret;
+        //}
+
+        //public static double[] CholeskySolve(double[,] choleskydecomp, double[] b)
+        //{
+        //    var n = b.Length;
+            
+
+        //    return null;
+        //}
+
+        public static Tuple<double[,], double[,]> LUDecomp(double[,] a, double[,] lower, double[,] upper)
+        {
+            var n = Math.Sqrt(a.Length);
+            for (var i = 0; i < n; i++)
+            {
+                for (var j = 0; j < n; j++)
+                    if (j < i)
+                        lower[j, i] = 0;
+                    else
+                    {
+                        lower[j, i] = a[j, i];
+                        for (var k = 0; k < i; k++)
+                            lower[j, i] = lower[j, i] - lower[j, k]*upper[k, i];
+                    }
+                for (var j = 0; j < n; j++)
+                    if (j < i)
+                        upper[i, j] = 0;
+                    else if (j == i)
+                        upper[i, j] = 1;
+                    else
+                    {
+                        upper[i, j] = a[i, j]/lower[i, i];
+                        for (var k = 0; k < i; k++)
+                            upper[i, j] = upper[i, j] - lower[i, k]*upper[k, j]/lower[i, i];
+                    }
+            }
+            return Tuple.Create(lower, upper);
+        }
+        public static double[] LUSolve(double[,] l, double [,] u, double[] b)
+        {
+            var n = b.Length - 1;
+            var x = new double[n + 1];
+            var y = new double[n + 1];
+
+            /*
+            * Solve for y using formward substitution
+            * */
+            for (var i = 0; i <= n; i++)
+            {
+                var suml = 0.0;
+                for (var j = 0; j <= i - 1; j++)
+                {           
+                    suml = suml + (l[i,j] * y[j]);
+                }
+                y[i] = (b[i] - suml)/l[i,i];
+            }
+            //Solve for x by using back substitution
+            for (var i = n; i >= 0; i--)
+            {
+                var sumu = 0.0;
+                for (var j = i + 1; j <= n; j++)
+                {
+                    sumu = sumu + (u[i,j] * x[j]);
+                }
+                x[i] = (y[i] - sumu) / u[i,i];
+            }
+            return x;
+        }
+    }
+    
     public static class TwoDimensionalArrayExtensions
     {
         public static double[] GetColumn(this double[,] array, int index)
