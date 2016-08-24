@@ -1262,9 +1262,12 @@ namespace GeometryClassLibrary
         //    return null;
         //}
 
-        public static Tuple<double[,], double[,]> LUDecomp(double[,] a, double[,] lower, double[,] upper)
+        public static void LUDecomp(double[,] a, out double[,] lower, out double[,] upper)
         {
-            var n = Math.Sqrt(a.Length);
+            
+            var n = (int)Math.Sqrt(a.Length);
+            lower = new double[n, n];
+            upper = new double[n, n];
             for (var i = 0; i < n; i++)
             {
                 for (var j = 0; j < n; j++)
@@ -1288,7 +1291,7 @@ namespace GeometryClassLibrary
                             upper[i, j] = upper[i, j] - lower[i, k]*upper[k, j]/lower[i, i];
                     }
             }
-            return Tuple.Create(lower, upper);
+           // return Tuple.Create(lower, upper);
         }
         public static double[] LUSolve(double[,] l, double [,] u, double[] b)
         {

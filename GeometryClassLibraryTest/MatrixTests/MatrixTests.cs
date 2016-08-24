@@ -1430,9 +1430,8 @@ namespace GeometryClassLibraryTest
         public void LUSolveTest()
         {
             double[,] a = {{4, 1, 1, 1}, {-1, 2, 1, 1}, {1, 1, 2, 2}, {1, 1, 2, 4}};
-            double[,] l = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
-            double[,] u = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
-            var LU = Matrix.LUDecomp(a, l, u);
+            double[,] l, u;
+            Matrix.LUDecomp(a, out l, out u);
             double[] b = {2.4, 1.4, 1.7, 25};
             var x=Matrix.LUSolve(l, u, b);
             var testResult=new Matrix(4,4);
