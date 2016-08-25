@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using UnitClassLibrary;
 using Newtonsoft.Json;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
@@ -1224,44 +1223,8 @@ namespace GeometryClassLibrary
         #endregion
 
         #endregion
-        //public static double[,] fastCholesky(double[,] a)
-        //{
-        //    var n = (int)Math.Sqrt(a.Length);
 
-        //    var ret = new double[n, n];
-        //    for (var r = 0; r < n; r++)
-        //    {
-        //        for (var c = 0; c <= r; c++)
-        //        {
-        //            if (c == r)
-        //            {
-        //                double sum = 0;
-        //                for (var j = 0; j < c; j++)
-        //                {
-        //                    sum += ret[c, j] * ret[c, j];
-        //                }
-        //                ret[c, c] = Math.Sqrt(a[c, c] - sum);
-        //            }
-        //            else
-        //            {
-        //                double sum = 0;
-        //                for (var j = 0; j < c; j++)
-        //                    sum += ret[r, j] * ret[c, j];
-        //                ret[r, c] = 1.0 / ret[c, c] * (a[r, c] - sum);
-        //            }
-        //        }
-        //    }
-        //    return ret;
-        //}
-
-        //public static double[] CholeskySolve(double[,] choleskydecomp, double[] b)
-        //{
-        //    var n = b.Length;
-            
-
-        //    return null;
-        //}
-
+        //not necessarily the cleanest way of doing this, considered using a tuple to return upper and lower, but in the end this seemed best.
         public static void LUDecomp(double[,] a, out double[,] lower, out double[,] upper)
         {
             
@@ -1291,7 +1254,6 @@ namespace GeometryClassLibrary
                             upper[i, j] = upper[i, j] - lower[i, k]*upper[k, j]/lower[i, i];
                     }
             }
-           // return Tuple.Create(lower, upper);
         }
         public static double[] LUSolve(double[,] l, double [,] u, double[] b)
         {
