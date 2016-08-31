@@ -309,8 +309,12 @@ namespace GeometryClassLibrary
         public LineSegment ContainedPieceOfSegment(LineSegment segment)
         {
             var slicedPieces = segment.Slice(this.LineSegments);
-            var piece = slicedPieces.FirstOrDefault(s => this.Contains(s));
-            return piece;
+            //var piece = slicedPieces.FirstOrDefault(s => this.Contains(s));
+            for (int i = 0; i < slicedPieces.Count; i++)
+            {
+                if (this.Contains(slicedPieces[i])) return slicedPieces[i];
+            }
+            return null;
         }
 
         public virtual Polygon SmallestEnclosingRectangle()
