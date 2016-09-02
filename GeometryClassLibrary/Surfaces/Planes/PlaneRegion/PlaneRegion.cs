@@ -107,7 +107,15 @@ namespace GeometryClassLibrary
             if (this.Edges.Count() > 2)
             {
                 Vector vector1 = new Vector(_Edges.OrderBy(s => s.BasePoint.X).ThenBy(s => s.BasePoint.Y).ThenBy(s => s.BasePoint.Z).First());
-                Vector vector2 = new Vector(_Edges.First(s => s.BasePoint == vector1.EndPoint));
+               // Vector vector2 = new Vector(_Edges.First(s => s.BasePoint == vector1.EndPoint));
+                Vector vector2 = null;
+                for (int i = 0; i < Edges.Count; i++)
+                {
+                    if (Edges[i].BasePoint == vector1.EndPoint)
+                    {
+                        vector2=new Vector(Edges[i]);
+                    }
+                }
 
                 var normal = vector1.CrossProduct(vector2);
                 
