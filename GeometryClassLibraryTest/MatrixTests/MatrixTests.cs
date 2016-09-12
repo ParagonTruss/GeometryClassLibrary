@@ -1448,6 +1448,27 @@ namespace GeometryClassLibraryTest
 
 
         }
+        [Test()]
+        public void PseudoInvSolveTest()
+        {
+            double[,] a = { { 0, 0 }, { 0,2 } };
+            double[,] P;
+            P=Matrix.GetPseudoInverse(a);
+            double[] b = { 0, 1 };
+            var x = Matrix.PseudoInvSolve(P, b);
+            var testResult = new Matrix(2, 2);
+
+            testResult.SetColumn(0, a.GetColumn(0));
+            testResult.SetColumn(1, a.GetColumn(1));
+           
+
+            var tX = new Matrix(x);
+            var tB = new Matrix(b);
+
+            (testResult.MultiplyBy(tX) == tB).Should().BeTrue();
+
+
+        }
         #endregion
     }
 }

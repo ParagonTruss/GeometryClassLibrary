@@ -22,9 +22,11 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+
 using Newtonsoft.Json;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace GeometryClassLibrary
 {
@@ -1254,6 +1256,26 @@ namespace GeometryClassLibrary
                             upper[i, j] = upper[i, j] - lower[i, k]*upper[k, j]/lower[i, i];
                     }
             }
+        }
+
+        public static double[,] GetPseudoInverse(double[,] a)
+        {
+            MathNet.Numerics.LinearAlgebra.Double.Matrix A=DenseMatrix.OfArray(a);
+            var pinv=MathNet.Numerics.LinearAlgebra.Double.ExtensionMethods.PseudoInverse(A);
+            return pinv.ToArray();
+        }
+
+        public static double[] PseudoInvSolve(double[,] p, double[] b)
+        {
+            var x=new double[b.Length];
+            for (int i = 0; i < b.Length; i++)
+            {
+                for (int j = 0; j < b.Length; j++)
+                {
+                    x[i] += p[i, j]*b[j];
+                }
+            }
+            return x;
         }
         public static double[] LUSolve(double[,] l, double [,] u, double[] b)
         {
