@@ -17,13 +17,11 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
 namespace GeometryClassLibrary
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Shift
     {
         #region Implicit Conversions
@@ -50,7 +48,6 @@ namespace GeometryClassLibrary
 
         #region Properties and Fields
 
-        [JsonProperty]
         public Matrix Matrix { get { return _matrix; } }
         private Matrix _matrix = Matrix.IdentityMatrix(4);
 

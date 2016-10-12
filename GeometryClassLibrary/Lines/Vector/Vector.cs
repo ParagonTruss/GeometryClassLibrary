@@ -18,8 +18,6 @@
 */
 
 using System;
-using Newtonsoft.Json;
-using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AngleUnit;

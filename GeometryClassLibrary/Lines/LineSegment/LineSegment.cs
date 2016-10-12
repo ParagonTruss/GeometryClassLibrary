@@ -20,10 +20,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
-using MoreLinq;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary
@@ -31,7 +28,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public class LineSegment : Vector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
     {
         #region Properties and Fields

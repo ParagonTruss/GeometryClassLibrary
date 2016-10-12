@@ -22,16 +22,12 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-
-using Newtonsoft.Json;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
-using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace GeometryClassLibrary
 {
     public enum EnumerationOrder { ByColumn, ByRow} 
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Matrix
     {
         #region Properties and Fields
@@ -66,7 +62,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the matrix as a double[,]
         /// </summary>
-        [JsonProperty]
         public double[,] As2DArray => this._matrix.ToArray();
 
         /// <summary>
@@ -139,7 +134,6 @@ namespace GeometryClassLibrary
         /// <summary> 
         /// Constructs Matrix object from a 2dArray
         ///  </summary>
-        [JsonConstructor]
         public Matrix(double[,] As2DArray)
         {
             this._matrix = DenseMatrix.OfArray(As2DArray);

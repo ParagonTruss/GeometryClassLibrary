@@ -1,7 +1,6 @@
 ﻿
 using System;
 //using MathNet.Numerics.LinearAlgebra.Double.Factorization;
-using MathNet.Numerics.LinearAlgebra.Factorization;
 
 namespace MathNet.Numerics.LinearAlgebra.Double
     {

@@ -17,11 +17,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using MoreLinq;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
@@ -30,7 +28,6 @@ using static UnitClassLibrary.DistanceUnit.Distance;
 namespace GeometryClassLibrary
 {
     [DebuggerDisplay("Angle to Rotate = {AngleToRotate.InDegrees.Value}, Axis of Rotation: BasePoint = {AxisToRotateAround.BasePoint.X.ValueInInches}, {AxisToRotateAround.BasePoint.Y.ValueInInches}, {AxisToRotateAround.BasePoint.Z.ValueInInches}, Direction Vector = {AxisToRotateAround.DirectionVector.XComponentOfDirection.ValueInInches}, {AxisToRotateAround.DirectionVector.YComponentOfDirection.ValueInInches}, {AxisToRotateAround.DirectionVector.ZComponentOfDirection.ValueInInches}")]
-    [JsonObject(MemberSerialization.OptIn)]
     public class Rotation
     {
         public static Rotation Identity => new Rotation(Matrix.IdentityMatrix(4));

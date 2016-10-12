@@ -1,11 +1,7 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest

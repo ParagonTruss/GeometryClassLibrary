@@ -2,9 +2,7 @@
 using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
-using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest

@@ -18,8 +18,6 @@
 */
 
 using System;
-using Newtonsoft.Json;
-using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using System.Collections.Generic;
 using UnitClassLibrary.DistanceUnit;
@@ -45,21 +43,18 @@ namespace GeometryClassLibrary
         private Distance _y;
         private Distance _z;
 
-        [JsonProperty]
         public Distance X
         {
             get { return _x; }
             private set { _x = value; }
         }
 
-        [JsonProperty]
         public Distance Y
         {
             get { return _y; }
             private set { _y = value; }
         }
 
-        [JsonProperty]
         public Distance Z
         {
             get { return _z; }
