@@ -20,8 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
@@ -38,7 +36,6 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line in 3d space.
     /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Line : IEquatable<Line>, IShift<Line>
     {
         #region Properties and Fields

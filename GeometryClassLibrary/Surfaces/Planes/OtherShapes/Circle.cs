@@ -18,7 +18,6 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using MoreLinq;
 using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;

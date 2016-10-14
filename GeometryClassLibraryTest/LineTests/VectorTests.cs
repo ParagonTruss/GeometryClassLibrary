@@ -2,7 +2,6 @@
 using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
 using static UnitClassLibrary.AngleUnit.Angle;

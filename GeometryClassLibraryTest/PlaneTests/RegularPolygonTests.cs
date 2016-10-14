@@ -1,15 +1,11 @@
 ﻿using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using UnitClassLibrary;
-using System.Linq;
 using MoreLinq;
-using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.DerivedUnits.Area.AreaTypes.Imperial;
-using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest

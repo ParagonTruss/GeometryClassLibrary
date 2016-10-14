@@ -1,11 +1,8 @@
 ﻿using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using UnitClassLibrary;
-using System.Diagnostics;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
-using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 

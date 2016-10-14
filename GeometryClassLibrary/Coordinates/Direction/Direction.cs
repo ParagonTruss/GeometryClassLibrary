@@ -18,23 +18,15 @@
 */
 
 using System;
-using Newtonsoft.Json;
-using UnitClassLibrary;
-using System.Diagnostics;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
 using GeometryClassLibrary.Vectors;
 using static UnitClassLibrary.AngleUnit.Angle;
-using static UnitClassLibrary.DistanceUnit.Distance;
 
 
 namespace GeometryClassLibrary
 {
-    /// <summary>
-    /// St
-    /// </summary>
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Direction : IRotate<Direction>
     {
         #region Properties and Fields

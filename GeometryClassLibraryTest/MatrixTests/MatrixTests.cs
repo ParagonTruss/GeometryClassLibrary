@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest
@@ -1425,7 +1423,50 @@ namespace GeometryClassLibraryTest
             (results2[1] == yAngle2).Should().BeTrue();
             (results2[2] == zAngle2).Should().BeTrue();
         }
-        
+
+        [Test()]
+        public void LUSolveTest()
+        {
+            double[,] a = {{4, 1, 1, 1}, {-1, 2, 1, 1}, {1, 1, 2, 2}, {1, 1, 2, 4}};
+            double[,] l, u;
+            Matrix.LUDecomp(a, out l, out u);
+            double[] b = {2.4, 1.4, 1.7, 25};
+            var x=Matrix.LUSolve(l, u, b);
+            var testResult=new Matrix(4,4);
+            
+            testResult.SetColumn(0, a.GetColumn(0));
+            testResult.SetColumn(1, a.GetColumn(1));
+            testResult.SetColumn(2, a.GetColumn(2));
+            testResult.SetColumn(3, a.GetColumn(3));
+
+            var tX=new Matrix(x);
+            var tB=new Matrix(b);
+
+            (testResult.MultiplyBy(tX)==tB).Should().BeTrue();
+
+
+        }
+        [Test()]
+        public void PseudoInvSolveTest()
+        {
+            double[,] a = { { 0, 0 }, { 0,2 } };
+            double[,] P;
+            P=Matrix.GetPseudoInverse(a);
+            double[] b = { 0, 1 };
+            var x = Matrix.PseudoInvSolve(P, b);
+            var testResult = new Matrix(2, 2);
+
+            testResult.SetColumn(0, a.GetColumn(0));
+            testResult.SetColumn(1, a.GetColumn(1));
+           
+
+            var tX = new Matrix(x);
+            var tB = new Matrix(b);
+
+            (testResult.MultiplyBy(tX) == tB).Should().BeTrue();
+
+
+        }
         #endregion
     }
 }

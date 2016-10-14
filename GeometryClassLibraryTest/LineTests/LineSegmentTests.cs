@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.AngleUnit;
 
 namespace GeometryClassLibraryTest

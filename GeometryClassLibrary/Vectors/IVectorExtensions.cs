@@ -18,11 +18,7 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnitClassLibrary.AngleUnit;
-using GeometryClassLibrary;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;

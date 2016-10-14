@@ -17,14 +17,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using UnitClassLibrary;
-using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.AngleUnit;
-using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 
 namespace GeometryClassLibrary
 {
@@ -53,7 +47,6 @@ namespace GeometryClassLibrary
         /// </summary>
         private CoordinateSystem() { }
 
-        [JsonConstructor]
         public CoordinateSystem(Shift shift)
         {
             this.ShiftFromThisToWorld = shift;

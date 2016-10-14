@@ -17,14 +17,10 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-using UnitClassLibrary;
-using System;
-using Newtonsoft.Json;
 using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
-    [JsonObject(MemberSerialization.OptIn)]
     public class Translation
     {
         public static implicit operator Translation(Point p)
@@ -39,9 +35,7 @@ namespace GeometryClassLibrary
 
         #region _fields & Properties
 
-        [JsonProperty]
         public Point Point { get; set; }
-
         
         public Matrix Matrix
         {

@@ -20,8 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnitClassLibrary;
-using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 

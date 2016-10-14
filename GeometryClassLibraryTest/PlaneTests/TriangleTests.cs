@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using UnitClassLibrary;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.AreaUnit;
 

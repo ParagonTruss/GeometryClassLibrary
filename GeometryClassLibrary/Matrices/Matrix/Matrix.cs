@@ -22,15 +22,12 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using UnitClassLibrary;
-using Newtonsoft.Json;
 using UnitClassLibrary.AngleUnit;
 using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibrary
 {
     public enum EnumerationOrder { ByColumn, ByRow} 
-    [JsonObject(MemberSerialization.OptIn)]
     public partial class Matrix
     {
         #region Properties and Fields
@@ -65,7 +62,6 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the matrix as a double[,]
         /// </summary>
-        [JsonProperty]
         public double[,] As2DArray => this._matrix.ToArray();
 
         /// <summary>
@@ -138,7 +134,6 @@ namespace GeometryClassLibrary
         /// <summary> 
         /// Constructs Matrix object from a 2dArray
         ///  </summary>
-        [JsonConstructor]
         public Matrix(double[,] As2DArray)
         {
             this._matrix = DenseMatrix.OfArray(As2DArray);
@@ -1224,8 +1219,90 @@ namespace GeometryClassLibrary
         #endregion
 
         #endregion
-    }
 
+        //not necessarily the cleanest way of doing this, considered using a tuple to return upper and lower, but in the end this seemed best.
+        public static void LUDecomp(double[,] a, out double[,] lower, out double[,] upper)
+        {
+            
+            var n = (int)Math.Sqrt(a.Length);
+            lower = new double[n, n];
+            upper = new double[n, n];
+            for (var i = 0; i < n; i++)
+            {
+                for (var j = 0; j < n; j++)
+                    if (j < i)
+                        lower[j, i] = 0;
+                    else
+                    {
+                        lower[j, i] = a[j, i];
+                        for (var k = 0; k < i; k++)
+                            lower[j, i] = lower[j, i] - lower[j, k]*upper[k, i];
+                    }
+                for (var j = 0; j < n; j++)
+                    if (j < i)
+                        upper[i, j] = 0;
+                    else if (j == i)
+                        upper[i, j] = 1;
+                    else
+                    {
+                        upper[i, j] = a[i, j]/lower[i, i];
+                        for (var k = 0; k < i; k++)
+                            upper[i, j] = upper[i, j] - lower[i, k]*upper[k, j]/lower[i, i];
+                    }
+            }
+        }
+
+        public static double[,] GetPseudoInverse(double[,] a)
+        {
+            MathNet.Numerics.LinearAlgebra.Double.Matrix A=DenseMatrix.OfArray(a);
+            var pinv=MathNet.Numerics.LinearAlgebra.Double.ExtensionMethods.PseudoInverse(A);
+            return pinv.ToArray();
+        }
+
+        public static double[] PseudoInvSolve(double[,] p, double[] b)
+        {
+            var x=new double[b.Length];
+            for (int i = 0; i < b.Length; i++)
+            {
+                for (int j = 0; j < b.Length; j++)
+                {
+                    x[i] += p[i, j]*b[j];
+                }
+            }
+            return x;
+        }
+        public static double[] LUSolve(double[,] l, double [,] u, double[] b)
+        {
+            var n = b.Length - 1;
+            var x = new double[n + 1];
+            var y = new double[n + 1];
+
+            /*
+            * Solve for y using formward substitution
+            * */
+            for (var i = 0; i <= n; i++)
+            {
+                var suml = 0.0;
+                for (var j = 0; j <= i - 1; j++)
+                {           
+                    suml = suml + (l[i,j] * y[j]);
+                }
+                y[i] = (b[i] - suml)/l[i,i];
+            }
+            //Solve for x by using back substitution
+            for (var i = n; i >= 0; i--)
+            {
+                var sumu = 0.0;
+                for (var j = i + 1; j <= n; j++)
+                {
+                    sumu = sumu + (u[i,j] * x[j]);
+                }
+                x[i] = (y[i] - sumu) / u[i,i];
+            }
+            return x;
+        }
+    }
+    
     public static class TwoDimensionalArrayExtensions
     {
         public static double[] GetColumn(this double[,] array, int index)

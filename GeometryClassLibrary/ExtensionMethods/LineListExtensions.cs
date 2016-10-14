@@ -19,11 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using UnitClassLibrary;
 using System.Linq;
 using UnitClassLibrary.DistanceUnit;
-using MoreLinq;
-using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibrary
