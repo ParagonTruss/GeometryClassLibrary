@@ -16,6 +16,11 @@ namespace GeometryClassLibraryTest
                 PolygonArrayString(polygons));
         }
 
+        public static void Log(this Polygon polygon)
+        {
+            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\ForTrussDisplay.txt",
+               PolygonString(polygon));
+        }
         private static string PolygonArrayString(List<Polygon> polygons)
         {
             return "new[]\n {\n\t" + string.Join(",\n\t", polygons.Select(PolygonString)) + "\n};";

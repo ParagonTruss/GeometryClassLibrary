@@ -48,7 +48,7 @@ namespace GeometryClassLibrary
 
         public Vector NormalVector => new Vector(BasePoint, NormalDirection, new Distance(1, Inches));
 
-        public Direction NormalDirection => NormalLine.Direction;
+        public virtual Direction NormalDirection => NormalLine.Direction;
 
         #endregion
 

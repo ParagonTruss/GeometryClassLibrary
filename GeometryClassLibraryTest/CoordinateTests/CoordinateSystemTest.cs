@@ -13,28 +13,6 @@ namespace GeometryClassLibraryTest
     public class CoordinateSystemTests
     {
 
-
-        //[Test]
-        //public void CoordinateSystem_PlaneAndVectorConstuctor()
-        //{
-        //    CoordinateSystem expected = new CoordinateSystem(Point.Origin, Angle.RightAngle / 2, Angle.RightAngle / 2, Angle.RightAngle;
-
-        //    Vector xVector = new Vector(Point.MakePointWithInches(-.5, -.707106781, -.5));
-        //    Vector yVector = new Vector(Point.MakePointWithInches(.707106781, 0, -.707106781));
-        //    Vector zVector = new Vector(Point.MakePointWithInches(.5, -.707106781, .5));
-
-        //    //make sure our vectors are right
-        //    xVector.IsPerpendicularTo(yVector).Should().BeTrue();
-        //    yVector.IsPerpendicularTo(zVector).Should().BeTrue();
-        //    zVector.IsPerpendicularTo(xVector).Should().BeTrue();
-
-        //    Plane xyPlane = new Plane(xVector, yVector);
-        //    CoordinateSystem results = new CoordinateSystem(xyPlane, xVector, Enums.Axis.X, Enums.AxisPlanes.XYPlane);
-
-        //    results.DirectionsAreEquivalent(expected).Should().BeTrue();
-
-        //}
-
         [Test()]
         public void CoordinateSystem_RotationMatrix()
         {

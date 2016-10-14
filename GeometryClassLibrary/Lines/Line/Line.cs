@@ -75,9 +75,8 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Creates a line with the given direction and point if passed, other wise it uses the origin as the base point
+        /// Creates a line with the given direction and point if passed, otherwise it uses the origin as the base point
         /// </summary>
-        
         public Line(Direction direction, Point basePoint = null)
         {
             if (basePoint == null)

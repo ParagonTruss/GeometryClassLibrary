@@ -350,8 +350,6 @@ namespace GeometryClassLibrary
         /// returns a list of the points of intersection between these polygons
         /// if there are any overlapping sides, the endpoints of the shared segment are included in the list
         /// </summary>
-        /// <param name="otherPolygon"></param>
-        /// <returns></returns>
         public List<Point> IntersectionPoints(Polygon otherPolygon)
         {
             List<Point> newVertices = new List<Point>();

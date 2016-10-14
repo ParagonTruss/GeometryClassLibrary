@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LineTests\ArcTests.cs" />
+    <Compile Include="LoggingUtilities.cs" />
     <Compile Include="PlaneTests\NonPolygonTests.cs" />
     <Compile Include="CoordinateTests\CoordinateSystemTest.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />

@@ -21,13 +21,8 @@ namespace GeometryClassLibraryTest
         public void Polygon_Extrude_Colinear_Points()
         {
             var extrusion = 3.5*Inches*Direction.Out;
-            var polygon = Polygon.CreateInXYPlane(Inches,
-                0,   16.5,
-                1.5, 16.5,
-                3,   16.5,
-                3,    1.5,
-                1.5,  1.5,
-                0,    1.5);
+            var polygon = Polygon.CreateInXYPlane(Inches, -2.22044604925031E-16, 16.5, 1.5, 16.5, 3, 16.5, 3, 1.5, 1.5,
+                1.5, 0, 1.5);
 
             var solid = polygon.Extrude(extrusion);
 
@@ -335,6 +330,25 @@ namespace GeometryClassLibraryTest
             rectangle.Contains(onRectangleSegment).Should().BeTrue();
 
         }
+        [Test]
+        public void Polygon_ContainsPolygon_Concave()
+        {
+            var birdsMouth = Polygon.CreateInXYPlane(Inches,
+                0, 0,
+                4, 0,
+                2, 2,
+                4, 4,
+                0, 4);
+
+            var innerSquare = Polygon.CreateInXYPlane(Inches,
+                1, 1,
+                3, 1,
+                3, 3,
+                1, 3);
+
+            birdsMouth.Contains(innerSquare).Should().BeFalse();
+        }
+
         [Test()]
         public void Polygon_NormalLine()
         {
