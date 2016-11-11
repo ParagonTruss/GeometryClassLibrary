@@ -880,6 +880,22 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
+        public void Polygon_RemovePolygon()
+        {
+            var rectangle1 = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
+            var rectangle2 = Polygon.Rectangle(new Distance(1, Inches), new Distance(3, Inches), Point.MakePointWithInches(1, -1));
+            var polyList = new List<Polygon>();
+            polyList.Add(rectangle2);
+            var results = rectangle1.RemoveOverlappingPolygon(polyList);
+
+            var expected1 = Polygon.Square(new Distance(1, Inches));
+            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
+            (results.Count).Should().Be(2);
+            (results[0] == expected1).Should().BeTrue();
+            (results[1] == expected2).Should().BeTrue();
+        }
+
+        [Test]
         public void Polygon_RemoveRegion_SharedEdges()
         {
             var rectangle = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
@@ -891,6 +907,77 @@ namespace GeometryClassLibraryTest
             var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
             (results.Contains(expected1)).Should().BeTrue();
             (results.Contains(expected2)).Should().BeTrue();
+        }
+        [Test]
+        public void Polygon_RemoveRegion_SharedEdgesAndEndpoint()
+        {
+            var rectangle = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
+            var square = Polygon.Square(new Distance(1, Inches));
+
+            var results = rectangle.RemoveRegion(square);
+
+            var expected1 = Polygon.Square(new Distance(1, Inches));
+            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
+            (results.Contains(expected1)).Should().BeTrue();
+            (results.Contains(expected2)).Should().BeTrue();
+        }
+        [Test]
+        public void Polygon_RemoveRegions_VM_6b()
+        {
+            //this will be a test of the top plate from VM_6b
+            var point1=new Point(41*Distance.Inches, 25.874*Distance.Inches);
+            var point2 = new Point(45 * Distance.Inches, 25.874 * Distance.Inches);
+            var point3 = new Point(45 * Distance.Inches, 29.874 * Distance.Inches);
+            var point4 = new Point(41 * Distance.Inches, 29.874 * Distance.Inches);
+
+            var point5 = new Point(41.25 * Distance.Inches, 25.874 * Distance.Inches);
+            var point6 = new Point(44.75 * Distance.Inches, 25.874 * Distance.Inches);
+            var point7 = new Point(44.75 * Distance.Inches, 26.562 * Distance.Inches);
+            var point8 = new Point(43 * Distance.Inches, 27.875 * Distance.Inches);
+            var point9 = new Point(41.25 * Distance.Inches, 26.562 * Distance.Inches);
+
+            var point10 = new Point(41 * Distance.Inches, 26.375 * Distance.Inches);
+            var point11 = new Point(45 * Distance.Inches, 26.375 * Distance.Inches);
+            var point12 = new Point(43 * Distance.Inches, 29.874 * Distance.Inches);
+
+            var platePoints =new List<Point>();
+            platePoints.Add(point1);
+            platePoints.Add(point2);
+            platePoints.Add(point3);
+            platePoints.Add(point4);
+
+            var area1Points = new List<Point>();
+            area1Points.Add(point5);
+            area1Points.Add(point6);
+            area1Points.Add(point7);
+            area1Points.Add(point8);
+            area1Points.Add(point9);
+
+            var area2Points = new List<Point>();
+            area2Points.Add(point10);
+            area2Points.Add(point8);
+            area2Points.Add(point12);
+            area2Points.Add(point4);
+
+            var area3Points = new List<Point>();
+            area3Points.Add(point8);
+            area3Points.Add(point11);
+            area3Points.Add(point3);
+            area3Points.Add(point12);
+            var area1 = new Polygon(area1Points);
+            var area2 =new Polygon(area2Points);
+            var area3 = new Polygon(area3Points);
+            var plate = new Polygon(platePoints);
+            var polygons = new List<Polygon>();
+            var plates = new List<Polygon>();
+            polygons.Add(area2);
+           // polygons.Add(area3);
+            //polygons.Add(area1);
+           
+            plates.Add(plate);
+            var results = plate.RemoveRegions(polygons);
+
+          
         }
 
         [Test]

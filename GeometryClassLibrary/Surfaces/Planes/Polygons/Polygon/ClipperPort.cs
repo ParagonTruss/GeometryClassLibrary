@@ -38,6 +38,44 @@ namespace GeometryClassLibrary
             
             return new Polygon(overlapped.Shift(shiftBack));
         }
+        public static List<Polygon> RemoveOverlap(Polygon polygon1, List<Polygon> polygons)
+        {
+            foreach (var polygon in polygons)
+            {
+                if (!polygon1.IsCoplanarTo(polygon))
+                {
+                    return null;
+                }
+            }
+            var normal = polygon1.NormalDirection;
+            var rotation = GetRotation(normal);
+
+            var rotated1 = polygon1.Vertices.Shift(rotation);
+            var rotatedPolygons = new List<List<Point>>();
+            foreach (var polygon in polygons)
+            {
+                rotatedPolygons.Add(polygon.Vertices.Shift(rotation));
+            }
+       
+            var overlapped = Remove_Overlap_In_XY_Plane(rotated1, rotatedPolygons);
+            if (overlapped.IsNull())
+            {
+                return null;
+            }
+            for (int i = 0; i < overlapped.Count; i++)
+            {
+                overlapped[i] = RemovePointsTooCloseToEachOther(overlapped[i]);
+            }
+
+            var depth = rotated1[0].Z;
+            var shiftBack = Shift.ComposeLeftToRight(depth * Direction.Out, rotation.Inverse());
+            var finalPolygons = new List<Polygon>();
+            foreach (var polygonPointList in overlapped)
+            {
+                finalPolygons.Add(new Polygon(polygonPointList.Shift(shiftBack)));
+            }
+            return finalPolygons;
+        }
 
         private static Shift GetRotation(Direction normal)
         {
@@ -97,8 +135,34 @@ namespace GeometryClassLibrary
             }
            
         }
+        private static List<List<Point>> Remove_Overlap_In_XY_Plane(List<Point> points1, List<List<Point>> otherPolygonsPoints)
+        {
+            var clipper = new Clipper();
+            clipper.AddPath(ToClipperPath(points1), PolyType.ptSubject, true);
+            foreach (var pointList in otherPolygonsPoints)
+            {
+                clipper.AddPath(ToClipperPath(pointList), PolyType.ptClip, true);
+            }
 
-       
+            var soln = new Paths();
+            // clipper offers 4 operations: http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Types/ClipType.htm
+            var success = clipper.Execute(ClipType.ctDifference, soln);
+
+
+            var resultantPolygonPoints = new List<List<Point>>();
+            if (success.Not())
+            {
+                return null;
+            }
+            foreach (var pointList in soln)
+            {
+                resultantPolygonPoints.Add(ToPoints(pointList));
+            }
+            return resultantPolygonPoints;
+
+        }
+
+
         // Clipper rounds off doubles into longs. We scale up, and then scale down when converting between, to keep digits of precision.
         // The current scalefactor of a 1000 will preserve 3 digits of precision. 
         private const int scaling = 1000;

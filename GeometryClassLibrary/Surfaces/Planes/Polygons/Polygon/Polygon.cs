@@ -913,7 +913,9 @@ namespace GeometryClassLibrary
             {
                 polygon2 = polygon2.ReverseOrientation();
             }
-            var results = _traceRegions(polygon1, polygon2).Where(p => p.NormalDirection == this.NormalDirection).ToList();
+            
+            var results = _traceRegions(polygon1, polygon2);
+            //var x = results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
             return results;
         }
 
@@ -951,6 +953,11 @@ namespace GeometryClassLibrary
         public Polygon OverlappingPolygon(Polygon otherPolygon)
         {
             return ClipperPort.Overlap(this, otherPolygon);
+        }
+
+        public List<Polygon> RemoveOverlappingPolygon(List<Polygon> otherPolygons)
+        {
+            return ClipperPort.RemoveOverlap(this, otherPolygons);
         }
         #endregion
 
