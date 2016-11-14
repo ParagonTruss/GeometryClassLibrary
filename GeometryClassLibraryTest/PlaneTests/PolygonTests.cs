@@ -865,28 +865,13 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void Polygon_RemoveRegion()
-        {
-            var rectangle1 = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
-            var rectangle2 = Polygon.Rectangle(new Distance(1, Inches), new Distance(3, Inches), Point.MakePointWithInches(1, -1));
-
-            var results = rectangle1.RemoveRegion(rectangle2);
-
-            var expected1 = Polygon.Square(new Distance(1, Inches));
-            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
-            (results.Count).Should().Be(2);
-            (results[0] == expected1).Should().BeTrue();
-            (results[1] == expected2).Should().BeTrue();
-        }
-
-        [Test]
         public void Polygon_RemovePolygon()
         {
             var rectangle1 = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
             var rectangle2 = Polygon.Rectangle(new Distance(1, Inches), new Distance(3, Inches), Point.MakePointWithInches(1, -1));
             var polyList = new List<Polygon>();
             polyList.Add(rectangle2);
-            var results = rectangle1.RemoveOverlappingPolygon(polyList);
+            var results = rectangle1.RemoveOverlappingPolygons(polyList);
 
             var expected1 = Polygon.Square(new Distance(1, Inches));
             var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
@@ -896,12 +881,13 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void Polygon_RemoveRegion_SharedEdges()
+        public void Polygon_RemovePolygon_SharedEdges()
         {
             var rectangle = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
             var square = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 0));
-
-            var results = rectangle.RemoveRegion(square);
+            var polyToRemove = new List<Polygon>();
+            polyToRemove.Add(square);
+            var results = rectangle.RemoveOverlappingPolygons(polyToRemove);
 
             var expected1 = Polygon.Square(new Distance(1, Inches));
             var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
@@ -909,20 +895,20 @@ namespace GeometryClassLibraryTest
             (results.Contains(expected2)).Should().BeTrue();
         }
         [Test]
-        public void Polygon_RemoveRegion_SharedEdgesAndEndpoint()
+        public void Polygon_RemovePolygons_SharedEdgesAndEndpoint()
         {
             var rectangle = Polygon.Rectangle(new Distance(3, Inches), new Distance(1, Inches));
             var square = Polygon.Square(new Distance(1, Inches));
+            var polyToRemove = new List<Polygon>();
+            polyToRemove.Add(square);
+            var results = rectangle.RemoveOverlappingPolygons(polyToRemove);
 
-            var results = rectangle.RemoveRegion(square);
-
-            var expected1 = Polygon.Square(new Distance(1, Inches));
-            var expected2 = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(2, 0));
-            (results.Contains(expected1)).Should().BeTrue();
-            (results.Contains(expected2)).Should().BeTrue();
+            var expected = Polygon.Rectangle(new Distance(2, Inches), new Distance(1, Inches), Point.MakePointWithInches(1, 0));
+            (results.Contains(expected)).Should().BeTrue();
+            
         }
         [Test]
-        public void Polygon_RemoveRegions_VM_6b()
+        public void Polygon_RemovePolygons_VM_6b()
         {
             //this will be a test of the top plate from VM_6b
             var point1=new Point(41*Distance.Inches, 25.874*Distance.Inches);
@@ -971,13 +957,33 @@ namespace GeometryClassLibraryTest
             var polygons = new List<Polygon>();
             var plates = new List<Polygon>();
             polygons.Add(area2);
-           // polygons.Add(area3);
-            //polygons.Add(area1);
+            polygons.Add(area3);
+            polygons.Add(area1);
            
             plates.Add(plate);
-            var results = plate.RemoveRegions(polygons);
+            var results = plate.RemoveOverlappingPolygons(polygons);
+            results.Count.Should().Be(2);
 
-          
+            var leftover1points = new List<Point>();
+            leftover1points.Add(point2);
+            leftover1points.Add(point11);
+            leftover1points.Add(point7);
+            leftover1points.Add(point6);
+
+            var leftover1 = new Polygon(leftover1points);
+            leftover1.Should().Be(results[0]);
+
+            var leftover2points = new List<Point>();
+            leftover2points.Add(point1);
+            leftover2points.Add(point5);
+            leftover2points.Add(point9);
+            leftover2points.Add(point10);
+
+            var leftover2 =new Polygon(leftover2points);
+            leftover2.Should().Be(results[1]);
+
+           
+
         }
 
         [Test]
@@ -987,8 +993,10 @@ namespace GeometryClassLibraryTest
             var rectangle = Polygon.Rectangle(new Distance(4 * Math.Sqrt(2), Inches), new Distance(1, Inches));
             rectangle = rectangle.Rotate(new Rotation(new Angle(45, Degrees)));
             rectangle = rectangle.Shift(square.CenterPoint - rectangle.CenterPoint);
-
-            var results = square.RemoveRegion(rectangle);
+            var polyToRemove = new List<Polygon>();
+            polyToRemove.Add(rectangle);
+            var results = square.RemoveOverlappingPolygons(polyToRemove);
+           // var results = square.RemoveRegion(rectangle);
 
             results.Count.Should().Be(2);
             var expected1 = Polygon.Triangle(new Vector(Direction.Right, new Distance(3.29289, Inches)), new Vector(Direction.Down, new Distance(3.29289, Inches)), Point.MakePointWithInches(0, 4));
@@ -1003,10 +1011,22 @@ namespace GeometryClassLibraryTest
         {
             var square1 = Polygon.Square(new Distance(4, Inches));
             var square2 = Polygon.Square(new Distance(4 / Math.Sqrt(2), Inches));
-            var diamond = square2.Rotate(new Rotation(RightAngle / 2));
-            diamond = diamond.Translate(square1.CenterPoint - diamond.CenterPoint);
-
-            var results = square1.RemoveRegion(diamond);
+            //var diamond = square2.Rotate(new Rotation(RightAngle / 2));
+            var point1=new Point(Distance.Inches, 2.0, 0);
+            var point2= new Point(Distance.Inches, 4.0, 2.0);
+            var point3= new Point(Distance.Inches, 2.0, 4.0);
+            var point4 = new Point(Distance.Inches, 0, 2.0);
+            var diamondList = new List<Point>();
+            diamondList.Add(point1);
+            diamondList.Add(point2);
+            diamondList.Add(point3);
+            diamondList.Add(point4);
+           // diamond = diamond.Translate(square1.CenterPoint - diamond.CenterPoint);
+           var diamond=new Polygon(diamondList);
+            var polyToRemove = new List<Polygon>();
+            polyToRemove.Add(diamond);
+            var results = square1.RemoveOverlappingPolygons(polyToRemove);
+            //var results = square1.RemoveRegion(diamond);
 
             results.Count.Should().Be(4);
 

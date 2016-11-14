@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
+using UnitClassLibrary.AngleUnit;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 using static UnitClassLibrary.DistanceUnit.Distance;
@@ -66,10 +67,52 @@ namespace GeometryClassLibrary
             {
                 overlapped[i] = RemovePointsTooCloseToEachOther(overlapped[i]);
             }
+            
 
             var depth = rotated1[0].Z;
             var shiftBack = Shift.ComposeLeftToRight(depth * Direction.Out, rotation.Inverse());
             var finalPolygons = new List<Polygon>();
+            for (int i = 0; i < overlapped.Count; i++)
+            {
+                var pointList = overlapped[i].Shift(shiftBack);
+                for (int j = 0; j < overlapped[i].Count; j++)
+                {
+                    var index1 = j;
+                    var index2 = j + 1;
+                    var index3 = j + 2;
+                    if (j == overlapped[i].Count - 1)
+                    {
+                        index2 = 0;
+                        index3 = 1;
+                    }
+                    if (j == overlapped[i].Count - 2)
+                    {
+                        index3 = 0;
+                    }
+                    var seg1 = new LineSegment(pointList[index1], pointList[index2]);
+                    var seg2 = new LineSegment(pointList[index2], pointList[index3]);
+                    var angleBetween = seg1.AngleBetween(seg2);
+                    if (Math.Abs(angleBetween.InDegrees.Value) >= 179)
+                    {
+                        overlapped[i].RemoveAt(index2);
+                    }
+                    //var intersection = seg1.IntersectWithSegment(seg2);
+                    //if (intersection != null &&
+                    //    (!intersection.IsBaseOrEndPointOf(seg1) ||
+                    //    !intersection.IsBaseOrEndPointOf(seg2)))
+                    //{
+                    //    overlapped[i].RemoveAt(j);
+                    //}
+                }
+                
+            }
+            for (int i = 0; i < overlapped.Count; i++)
+            {
+                if (overlapped[i].Count == 0)
+                {
+                    overlapped.RemoveAt(i);
+                } 
+            }
             foreach (var polygonPointList in overlapped)
             {
                 finalPolygons.Add(new Polygon(polygonPointList.Shift(shiftBack)));
@@ -138,17 +181,19 @@ namespace GeometryClassLibrary
         private static List<List<Point>> Remove_Overlap_In_XY_Plane(List<Point> points1, List<List<Point>> otherPolygonsPoints)
         {
             var clipper = new Clipper();
+            clipper.StrictlySimple = true;
+            var firstPolyTest = ToClipperPath(points1);
             clipper.AddPath(ToClipperPath(points1), PolyType.ptSubject, true);
             foreach (var pointList in otherPolygonsPoints)
             {
+                var test = ToClipperPath(pointList);
                 clipper.AddPath(ToClipperPath(pointList), PolyType.ptClip, true);
             }
 
             var soln = new Paths();
             // clipper offers 4 operations: http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Types/ClipType.htm
-            var success = clipper.Execute(ClipType.ctDifference, soln);
-
-
+            var success = clipper.Execute(ClipType.ctDifference, soln, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
+           
             var resultantPolygonPoints = new List<List<Point>>();
             if (success.Not())
             {
