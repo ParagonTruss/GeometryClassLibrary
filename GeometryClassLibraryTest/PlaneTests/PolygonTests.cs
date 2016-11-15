@@ -987,7 +987,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void Polygon_RemoveRegion_CutThroughCorners()
+        public void Polygon_RemovePolygons_CutThroughCorners()
         {
             var square = Polygon.Square(new Distance(4, Inches));
             var rectangle = Polygon.Rectangle(new Distance(4 * Math.Sqrt(2), Inches), new Distance(1, Inches));
@@ -1007,7 +1007,7 @@ namespace GeometryClassLibraryTest
 
         }
         [Test]
-        public void Polygon_RemoveRegion_SquareRemoveDiamond()
+        public void Polygon_RemovePolygons_SquareRemoveDiamond()
         {
             var square1 = Polygon.Square(new Distance(4, Inches));
             var square2 = Polygon.Square(new Distance(4 / Math.Sqrt(2), Inches));
@@ -1043,7 +1043,7 @@ namespace GeometryClassLibraryTest
         }
 
         [Test]
-        public void Polygon_RemoveRegion_TouchingVertices()
+        public void Polygon_RemovePolygon_TouchingVertices()
         {
             // The shapes touch at the upper right vertex.
             // There's no overlapping region, 
@@ -1054,9 +1054,16 @@ namespace GeometryClassLibraryTest
             square2 = square2.Rotate(new Rotation(65 * new Angle(1, Degrees)));
             square2 = square2.Translate(Point.MakePointWithInches(3, 3));
 
-            var results1 = square1.RemoveRegion(square2);
-            var results2 = square2.RemoveRegion(square1);
-            var results3 = square1.RemoveRegion(square1);
+            var polyToRemove1 = new List<Polygon>();
+            polyToRemove1.Add(square1);
+            
+
+            var polyToRemove2 = new List<Polygon>();
+            polyToRemove2.Add(square2);
+
+            var results1 = square1.RemoveOverlappingPolygons(polyToRemove2);
+            var results2 = square2.RemoveOverlappingPolygons(polyToRemove1);
+            var results3 = square1.RemoveOverlappingPolygons(polyToRemove1);
 
             (results1.Count == 1).Should().BeTrue();
             (results2.Count == 1).Should().BeTrue();

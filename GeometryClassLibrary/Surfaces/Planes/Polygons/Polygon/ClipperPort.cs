@@ -49,6 +49,7 @@ namespace GeometryClassLibrary
                 }
             }
             var normal = polygon1.NormalDirection;
+            //For clipper, everything must be converted to 2d, so any references to rotation are dealing with that
             var rotation = GetRotation(normal);
 
             var rotated1 = polygon1.Vertices.Shift(rotation);
@@ -72,6 +73,10 @@ namespace GeometryClassLibrary
             var depth = rotated1[0].Z;
             var shiftBack = Shift.ComposeLeftToRight(depth * Direction.Out, rotation.Inverse());
             var finalPolygons = new List<Polygon>();
+
+            //for some reason, Clipper will sometimes return very thin areas that we consider invalid and overlapping
+            //this function loops over all points in each polygon, and if the angle between any two
+            //segments is greater than 179 degrees, it gets rid of the intermediary point
             for (int i = 0; i < overlapped.Count; i++)
             {
                 var pointList = overlapped[i].Shift(shiftBack);
@@ -96,16 +101,10 @@ namespace GeometryClassLibrary
                     {
                         overlapped[i].RemoveAt(index2);
                     }
-                    //var intersection = seg1.IntersectWithSegment(seg2);
-                    //if (intersection != null &&
-                    //    (!intersection.IsBaseOrEndPointOf(seg1) ||
-                    //    !intersection.IsBaseOrEndPointOf(seg2)))
-                    //{
-                    //    overlapped[i].RemoveAt(j);
-                    //}
                 }
                 
             }
+            //In rare cases, Clipper will return a polygon with no points, this removes those
             for (int i = 0; i < overlapped.Count; i++)
             {
                 if (overlapped[i].Count == 0)
@@ -181,19 +180,19 @@ namespace GeometryClassLibrary
         private static List<List<Point>> Remove_Overlap_In_XY_Plane(List<Point> points1, List<List<Point>> otherPolygonsPoints)
         {
             var clipper = new Clipper();
-            clipper.StrictlySimple = true;
-            var firstPolyTest = ToClipperPath(points1);
+            
+            clipper.StrictlySimple = true; //we only handle so-called simple polygons, this helps ensure that the only results clipper returns are simple polygons
+            
             clipper.AddPath(ToClipperPath(points1), PolyType.ptSubject, true);
             foreach (var pointList in otherPolygonsPoints)
-            {
-                var test = ToClipperPath(pointList);
+            { 
                 clipper.AddPath(ToClipperPath(pointList), PolyType.ptClip, true);
             }
 
             var soln = new Paths();
             // clipper offers 4 operations: http://www.angusj.com/delphi/clipper/documentation/Docs/Units/ClipperLib/Types/ClipType.htm
-            var success = clipper.Execute(ClipType.ctDifference, soln, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
-           
+            var success = clipper.Execute(ClipType.ctDifference, soln);
+            
             var resultantPolygonPoints = new List<List<Point>>();
             if (success.Not())
             {
@@ -204,14 +203,13 @@ namespace GeometryClassLibrary
                 resultantPolygonPoints.Add(ToPoints(pointList));
             }
             return resultantPolygonPoints;
-
         }
 
 
         // Clipper rounds off doubles into longs. We scale up, and then scale down when converting between, to keep digits of precision.
         // The current scalefactor of a 1000 will preserve 3 digits of precision. 
         private const int scaling = 1000;
-        private static IntPoint ToClipperPoint(Point point) => new IntPoint(point.X.ValueInInches * scaling, point.Y.ValueInInches * scaling);
+        private static IntPoint ToClipperPoint(Point point) => new IntPoint(Convert.ToInt64(point.X.ValueInInches * scaling),Convert.ToInt64(point.Y.ValueInInches * scaling));
         private static Point ToGCLPoint(IntPoint point) => new Point(Inches, Convert.ToDouble(point.X) / scaling, Convert.ToDouble(point.Y) / scaling);
    
         private static List<IntPoint> ToClipperPath(List<Point> p) => p.Select(ToClipperPoint).ToList();
