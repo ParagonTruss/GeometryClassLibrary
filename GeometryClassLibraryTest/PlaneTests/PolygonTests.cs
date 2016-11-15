@@ -1080,8 +1080,9 @@ namespace GeometryClassLibraryTest
         {
             var initialRectangle = Polygon.Rectangle(2 * new Distance(1, Inches), 3 * new Distance(1, Inches));
             var square = Polygon.Square(new Distance(1, Inches), Point.MakePointWithInches(1, 1));
-
-            var cShape = initialRectangle.RemoveRegion(square)[0];
+            var squareList = new List<Polygon>();
+            squareList.Add(square);
+            var cShape = initialRectangle.RemoveOverlappingPolygons(squareList)[0];
             var rectangle = Polygon.Rectangle(new Distance(1, Inches), 3 * new Distance(1, Inches), Point.MakePointWithInches(1, 0));
 
             var results = cShape.OverlappingPolygons(rectangle);

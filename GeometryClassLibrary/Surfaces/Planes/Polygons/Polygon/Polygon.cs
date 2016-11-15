@@ -897,37 +897,6 @@ namespace GeometryClassLibrary
         {
             return !pointList.Any(p => !this.Contains(p));
         }
-
-        /// <summary>
-        /// Removes a polygonal region from a polygon. Returns the resulting list of polygons.
-        /// </summary>
-        public List<Polygon> RemoveRegion(Polygon toRemove)
-        {
-            var polygon1 = this;
-            var polygon2 = toRemove;
-            if (!polygon1.IsCoplanarTo(polygon2))
-            {
-                return new List<Polygon> { this };
-            }
-            if (polygon1.NormalDirection == polygon2.NormalDirection)
-            {
-                polygon2 = polygon2.ReverseOrientation();
-            }
-            
-            var results = _traceRegions(polygon1, polygon2).Where(p => p.NormalDirection == this.NormalDirection).ToList();
-            //var x = results.Where(p => p.NormalDirection == this.NormalDirection).ToList();
-            return results;
-        }
-
-        public List<Polygon> RemoveRegions(List<Polygon> toRemove)
-        {
-            IEnumerable<Polygon> results = new List<Polygon>() { this };
-            foreach(var polygon in toRemove)
-            {
-                results = results.SelectMany(p => p.RemoveRegion(polygon));
-            }
-            return results.ToList();
-        }
         
         public List<Polygon> OverlappingPolygons(Polygon otherPolygon)
         {
