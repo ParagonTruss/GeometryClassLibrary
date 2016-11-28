@@ -426,8 +426,11 @@ namespace GeometryClassLibrary
         public virtual bool Intersects(LineSegment passedVector)
         {
             var intersection = new Line(passedVector).IntersectWithPlane(this);
-            bool segmentContainsPoint = passedVector.Contains(intersection);
-            return segmentContainsPoint;
+            if (intersection != null)
+            {
+                return passedVector.Contains(intersection);
+            }
+            return false;
         }
 
         /// <summary>
@@ -542,6 +545,27 @@ namespace GeometryClassLibrary
         public bool CutsAcross(Polyhedron solid)
         {
             return solid.Slice(this).Count == 2;
+        }
+
+        public bool CutsAcross(Polygon polygon)
+        {
+            foreach (var side in polygon.LineSegments)
+            {
+                if (!Contains(side))
+                {
+                    if (Intersects(side))
+                    {
+                        var test1 = this.Contains(side.BasePoint);
+                        var test2 = this.Contains(side.EndPoint);
+                        if (!this.Contains(side.BasePoint) && !this.Contains(side.EndPoint))
+                        {
+                            return true;
+                        }                   
+                    }
+                }
+                
+            }
+            return false;
         }
 
         ISurface ISurface.Shift(Shift shift)

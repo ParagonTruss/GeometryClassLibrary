@@ -237,6 +237,22 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
+        public void Plane_Intersect_Line_Segment()
+        {
+            Plane testPlane = new Plane(new Direction(2, -1, 1), Point.MakePointWithInches(2, -1, 1));
+
+            var linesegment=new LineSegment(Point.MakePointWithInches(2, -1, 1));
+            testPlane.Intersects(linesegment).Should().BeTrue();
+            
+        }
+        [Test()]
+        public void Plane_Does_Not_Intersect_Parallel_Line_Segment()
+        {        
+            var linesegment = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 1, 2));
+            Plane.XZ.Intersects(linesegment).Should().BeFalse();
+
+        }
+        [Test()]
         public void Plane_IntersectLineOnPlane()
         {
             Plane testPlane = new Plane(Direction.Out);
@@ -259,6 +275,49 @@ namespace GeometryClassLibraryTest
             Point expectedIntersection = point2;
 
             (actualIntersection == expectedIntersection).Should().BeTrue();
+        }
+
+        [Test()]
+        public void Plane_Lies_Along_Polygon_Without_Cutting()
+        {
+            Point point1 = Point.MakePointWithInches(0, 0);
+            Point point2 = Point.MakePointWithInches(1, 0);
+            Point point3 = Point.MakePointWithInches(1, 1);
+            Point point4 = Point.MakePointWithInches(0, 1);
+
+            var polyList=new List<Point>();
+            polyList.Add(point1);
+            polyList.Add(point2);
+            polyList.Add(point3);
+            polyList.Add(point4);
+
+            var poly=new Polygon(polyList);
+            var cutsAcross = Plane.XZ.CutsAcross(poly);
+            cutsAcross.Should().BeFalse();
+
+        }
+
+
+        [Test()]
+        public void Plane_Cuts_Across_Polygon()
+        {
+            var point1 = Point.MakePointWithInches(0, -1);
+            var point2 = Point.MakePointWithInches(1, -1);
+            var point3 = Point.MakePointWithInches(1, 0);
+            var point4 = Point.MakePointWithInches(0.5, 0);
+            var point5 = Point.MakePointWithInches(0, 1);
+
+            var polyList = new List<Point>();
+            polyList.Add(point1);
+            polyList.Add(point2);
+            polyList.Add(point3);
+            polyList.Add(point4);
+            polyList.Add(point5);
+
+            var poly = new Polygon(polyList);
+            var cutsAcross = Plane.XZ.CutsAcross(poly);
+            cutsAcross.Should().BeTrue();
+
         }
     }
 }
