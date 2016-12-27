@@ -519,9 +519,11 @@ namespace GeometryClassLibrary
         /// </summary>
         public new bool Contains(Point point)
         {
-            var vector1 = new Vector(BasePoint, point);
-            var vector2 = new Vector(point, EndPoint);
-            return point.IsOnLine(this) && vector1.HasSameDirectionAs(vector2);
+            var dist1 = BasePoint.DistanceTo(point);
+            var dist2 = EndPoint.DistanceTo(point);
+            var samelength = (dist1 + dist2).Equals(this.Length); //if the two lengths are the same, and the point is on the line, then the point is also on the linesegment within error margins
+           
+            return point.IsOnLine(this) && samelength;
 
         }
 

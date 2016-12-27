@@ -8,6 +8,7 @@ using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
@@ -1103,6 +1104,31 @@ namespace GeometryClassLibraryTest
             var results = rectangle1.OverlappingPolygons(rectangle2);
 
             results.Count.Should().Be(0);
+        }
+
+        [Test]
+        public void Contains_Piece_Of_Segment_Test()
+        {
+            var point1 = Point.MakePointWithInches(460.10509398461357, 22.280925985117292);
+            var point2 = Point.MakePointWithInches(452.59860725706864, 23.532015269343788);
+
+            var point3 = Point.MakePointWithInches(459.83140878334285, 20.805720582794379);
+            var point4 = Point.MakePointWithInches(455.8858333001466, 21.463317804808426);
+            var point5 = Point.MakePointWithInches(456.3790312166571, 24.422499417205621);
+            var point6 = Point.MakePointWithInches(460.32460669985335, 23.764902195191574);
+
+            LineSegment testLineSegment=new LineSegment(point1, point2);
+            List<Point> polygonPoints=new List<Point>();
+            polygonPoints.Add(point3);
+            polygonPoints.Add(point4);
+            polygonPoints.Add(point5);
+            polygonPoints.Add(point6);
+
+            Polygon poly=new Polygon(polygonPoints);
+
+            var test = poly.ContainedPieceOfSegment(testLineSegment);
+           
+            Math.Round(test.Length.ValueInInches, 1).ShouldBeEquivalentTo(4.0);
         }
     }
 }
