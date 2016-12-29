@@ -23,7 +23,7 @@ namespace GeometryClassLibrary.Vectors
 {
     public sealed class DoubleVector : IDoubleVector, IRotate<DoubleVector>
     {
-        public const double Tolerance = 0.001;
+        public const double Tolerance = 0.00001;
         public static DoubleVector Zero => new DoubleVector(0.0, 0.0, 0.0);
 
         #region Local Properties

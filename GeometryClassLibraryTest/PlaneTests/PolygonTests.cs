@@ -1130,5 +1130,32 @@ namespace GeometryClassLibraryTest
            
             Math.Round(test.Length.ValueInInches, 1).ShouldBeEquivalentTo(4.0);
         }
+
+        [Test]
+        public void Contains_Piece_Of_Segment_Test2()
+        {
+            var point1 = Point.MakePointWithInches(288, 48.9);
+            var point2 = Point.MakePointWithInches(194.06, 1.75);
+
+            var point3 = Point.MakePointWithInches(195.8, 5.5);
+            var point4 = Point.MakePointWithInches(286.25, 52.65);
+            var point5 = Point.MakePointWithInches(286.25, 48.7);
+            var point6 = Point.MakePointWithInches(199.6, 3.5);
+            var point7 = Point.MakePointWithInches(195.8, 3.5);
+
+            LineSegment testLineSegment = new LineSegment(point1, point2);
+            List<Point> polygonPoints = new List<Point>();
+            polygonPoints.Add(point3);
+            polygonPoints.Add(point4);
+            polygonPoints.Add(point5);
+            polygonPoints.Add(point6);
+            polygonPoints.Add(point7);
+
+            Polygon poly = new Polygon(polygonPoints);
+
+            var test = poly.ContainedPieceOfSegment(testLineSegment);
+
+            Math.Round(test.Length.ValueInInches, 2).ShouldBeEquivalentTo(60.77);
+        }
     }
 }
