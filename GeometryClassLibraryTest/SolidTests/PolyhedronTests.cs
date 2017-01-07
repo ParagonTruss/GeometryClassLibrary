@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
@@ -10,6 +11,20 @@ namespace GeometryClassLibraryTest
     [TestFixture()]
     public class PolyhedronTests
     {
+        [Test()]
+        public void Polyhedron_AdjacentPolygons()
+        {
+            TestTetrahedron polyhedron = new TestTetrahedron();
+
+            var polygon = polyhedron.Polygons[0];
+
+            var adjacents = polyhedron.AdjacentPolygons(polygon);
+
+            //should be 1 less than original polyhedron
+            adjacents.Count().Should().Be(3);
+
+        }
+
         [Test()]
         public void Polyhedron_ShiftXY()
         {

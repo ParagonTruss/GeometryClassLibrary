@@ -1,6 +1,6 @@
 ﻿/*
     This file is part of Geometry Class Library.
-    Copyright (C) 2016 Paragon Component Systems, LLC.
+    Copyright (C) 2017 Paragon Component Systems, LLC.
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

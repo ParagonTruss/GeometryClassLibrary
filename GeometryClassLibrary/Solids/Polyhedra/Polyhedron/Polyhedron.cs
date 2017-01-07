@@ -1,6 +1,6 @@
 /*
     This file is part of Geometry Class Library.
-    Copyright (C) 2016 Paragon Component Systems, LLC.
+    Copyright (C) 2017 Paragon Component Systems, LLC.
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -789,6 +789,29 @@ namespace GeometryClassLibrary
             }
             return false;
         }
+
+        public IEnumerable<Polygon> AdjacentPolygons(Polygon polygon)
+        {
+
+            if (!this.Polygons.Contains(polygon))
+            {
+                // we can only find the polygons adjacent to the parameter if actually is one of the faces
+                return null;
+            }
+
+            foreach (var face in this.Polygons)
+            {
+                if (face == polygon)
+                {
+                    return this.Polygons.Where(side => side != face).ToList();
+                }
+            }
+
+            // is this even possible?
+            return new List<Polygon>();
+
+        }
+
         #endregion
 
         #region Static Factory Methods
