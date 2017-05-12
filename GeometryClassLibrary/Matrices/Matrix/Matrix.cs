@@ -1255,7 +1255,7 @@ namespace GeometryClassLibrary
         public static double[,] GetPseudoInverse(double[,] a)
         {
             MathNet.Numerics.LinearAlgebra.Double.Matrix A=DenseMatrix.OfArray(a);
-            var pinv=MathNet.Numerics.LinearAlgebra.Double.ExtensionMethods.PseudoInverse(A);
+            var pinv = A.PseudoInverse();
             return pinv.ToArray();
         }
 

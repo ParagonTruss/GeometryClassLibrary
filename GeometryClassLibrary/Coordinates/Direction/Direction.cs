@@ -264,7 +264,15 @@ namespace GeometryClassLibrary
             var result = this._vector.AngleBetween(direction._vector);
             return result;
         }
-
+        public Angle SmallestAngleBetween(Direction direction)
+        {
+            var angle = this.AngleBetween(direction);
+            if (angle > Angle.RightAngle)
+            {
+                angle = angle - Angle.RightAngle;
+            }
+            return angle;
+        }
 
         /// <summary>
         /// finds the signed angle between two directions.
