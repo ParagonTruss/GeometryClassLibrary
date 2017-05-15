@@ -679,6 +679,14 @@ namespace GeometryClassLibraryTest
 
             lineSegment.ProjectOntoLine(line).Should().BeNull();
         }
+        [Test()]
+        public void LineSegment_ProjectOntoLine_PracticalTest()
+        {
+            LineSegment lineSegment = new LineSegment(Point.MakePointWithInches(1.75, 33.16), Point.MakePointWithInches(91.4, 35));
+            Line line = new Line(Point.MakePointWithInches(0, 0), new Direction(Point.Origin, Point.MakePointWithInches( -0.020854359399988368, 0.99978252419914615)));
+
+            lineSegment.ProjectOntoLine(line).Should().BeNull();
+        }
 
         [Test()]
         public void LineSegment_ProjectOntoLine_ShouldReturnVectorProjection_IfVectorLengthIsNotZero()

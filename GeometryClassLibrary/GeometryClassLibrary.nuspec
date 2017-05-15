@@ -13,7 +13,7 @@
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
 		<dependency id="UnitClassLibrary" version="4.0.9" />
-		<dependency id="MathNet.Numerics" version="3.16.0" />
+		<dependency id="MathNet.Numerics" version="3.19.0" />
 		<dependency id="MoreLinq.Portable" version="1.4.0" />
 		<dependency id="ParagonClipper" version="1.0.0" />
 	</dependencies>
