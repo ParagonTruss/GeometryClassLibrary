@@ -140,32 +140,27 @@ namespace GeometryClassLibrary
         #region Constructors
 
         /// <summary>
-        /// Null constructor
+        /// Empty constructor
         /// </summary>
         protected Polygon() { }
+
+        public Polygon(bool shouldValidate, params Point[] points) : this(points, shouldValidate) { }
 
         /// <summary>
         /// Makes a polygon by connecting the points with line segments in the order they are in the list. If they are not in the correct order you can tell it
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in
         /// </summary>
         /// <param name="passedPoints">The List of points to make the polygon with. It will create the linesegments based on the order the points are inputted</param>
-        public Polygon(List<Point> passedPoints, bool shouldValidate = true)
+        public Polygon(IEnumerable<Point> passedPoints, bool shouldValidate = true)
             : this(passedPoints.MakeIntoLineSegmentsThatMeet(), shouldValidate)
         { }
 
         /// <summary>
         /// Creates a polygon from the passed linesegments, after validating that they in fact form a closed nondegenerate planar region.
         /// </summary>
-        public Polygon(List<LineSegment> lineSegments, bool shouldValidate = true)
+        public Polygon(IEnumerable<LineSegment> lineSegments, bool shouldValidate = true)
         {
-            if (shouldValidate)
-            {
-                this.LineSegments = (lineSegments.FixSegmentOrientation());
-            }
-            else
-            {
-                this.LineSegments = (lineSegments).ToList();
-            }
+            this.LineSegments = shouldValidate ? (lineSegments.FixSegmentOrientation()) : (lineSegments).ToList();
 
             this.NormalLine = this._getNormalLine();
         }
@@ -327,22 +322,26 @@ namespace GeometryClassLibrary
         /// </summary>
         public Polyhedron Extrude(Vector extrusionVector)
         {
-            List<Polygon> faces = new List<Polygon>();
-            List<LineSegment> oppositeSegments = new List<LineSegment>();
+            var baseFace = extrusionVector.DotProduct(this.NormalVector) < new Area(0,Area.SquareInches)
+                ? this
+                : this.ReverseOrientation();
 
-            foreach (LineSegment segment in LineSegments)
+            List<Polygon> faces = new List<Polygon> {baseFace};
+            List<LineSegment> oppositeFace = new List<LineSegment>();
+
+            foreach (LineSegment segment in baseFace.LineSegments)
             {
                 LineSegment opposite = segment.Shift(extrusionVector);
-                oppositeSegments.Add(opposite);
 
-                Polygon sideFace = new Polygon(new List<Point>() { segment.BasePoint, segment.EndPoint, opposite.EndPoint, opposite.BasePoint });
+                Polygon sideFace = new Polygon(true, opposite.BasePoint, opposite.EndPoint, segment.EndPoint, segment.BasePoint);
                 faces.Add(sideFace);
+
+                oppositeFace.Add(opposite.Reverse());
             }
+            oppositeFace.Reverse();
+            faces.Add(new Polygon(oppositeFace, false));
 
-            faces.Add(this);
-            faces.Add(new Polygon(oppositeSegments));
-
-            var solid = new Polyhedron(faces);
+            var solid = new Polyhedron(faces,false);
             return solid;
         }
 
@@ -826,17 +825,11 @@ namespace GeometryClassLibrary
         /// and the linesegments listed in opposite order
         /// so that vertices are also listed in this new order
         /// If the polygon already circulates in a consistent direction,
-        /// Then this swaps the polygon's inside face with its outside one
+        /// Then this swaps the polygon's normal face with its outside one
         /// </summary>
         public Polygon ReverseOrientation()
         {
-            List<LineSegment> flippedEdges = new List<LineSegment>();
-            foreach(LineSegment edge in LineSegments)
-            {
-                flippedEdges.Add(edge.Reverse());
-            }
-            flippedEdges.Reverse();
-            return new Polygon(flippedEdges, false);
+            return new Polygon(LineSegments.Select(edge => edge.Reverse()).Reverse(), false);
         }
 
         /// <summary>

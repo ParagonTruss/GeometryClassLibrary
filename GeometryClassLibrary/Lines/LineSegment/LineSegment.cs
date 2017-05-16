@@ -309,9 +309,9 @@ namespace GeometryClassLibrary
             }
             return currentSegments.OrderBy(segment => segment.BasePoint.DistanceTo(this.BasePoint)).ToList();
         }
-        public List<LineSegment> Slice(LineSegment slicingSegment)
+        public List<LineSegment> Slice(Line slicingSegment)
         {
-            var splitPoint = this.IntersectWithSegment(slicingSegment);
+            var splitPoint = this.IntersectWithLine(slicingSegment);
             if (splitPoint == null || this.IsParallelTo(slicingSegment))
             {
                 return new List<LineSegment>() { this };

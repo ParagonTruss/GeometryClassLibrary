@@ -268,6 +268,19 @@ namespace GeometryClassLibrary
         {
             return ProjectOntoLine(plane.NormalLine);
         }
+
+        public Distance ScalarProjection(Line line)
+        {
+            var projection = this.ProjectOntoLine(line);
+            if (projection.Direction == line.Direction)
+            {
+                return projection.Magnitude;
+            }
+            return projection.Magnitude*-1;
+        }
+
+        public Distance ScalarProjection(Direction direction) => ScalarProjection(new Line(Point.Origin, direction));
+
         /// <summary>
         /// Returns the cross product of the 2 vectors
         /// which is always perpendicular to both vectors
@@ -461,6 +474,4 @@ namespace GeometryClassLibrary
         #endregion
 
     }
-
-
 }

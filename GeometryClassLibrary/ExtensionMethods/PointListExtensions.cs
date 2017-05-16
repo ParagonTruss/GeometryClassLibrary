@@ -149,17 +149,20 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Makes line segments that connect the given points in the order the appear in the list
         /// </summary>
-        public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this List<Point> points)
+        public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this IEnumerable<Point> points)
         {
-            if (points.Count == 0)
+            var array = points.ToArray();
+            if (array.Length == 0)
             {
                 throw new InvalidPolygonException("Cannot create a polygon from 0 points.");
             }
-            List<LineSegment> segments = new List<LineSegment>() { new LineSegment(points.Last(), points[0]) };
 
-            for (int k = 0; k < points.Count - 1; k++)
+            var last = array.Length - 1;
+            List<LineSegment> segments = new List<LineSegment>() { new LineSegment(array[last], array[0]) };
+
+            for (int k = 0; k < last; k++)
             {
-                var newSegment = new LineSegment(points[k], points[k + 1]);
+                var newSegment = new LineSegment(array[k], array[k + 1]);
                 segments.Add(newSegment);
             }
             return segments;

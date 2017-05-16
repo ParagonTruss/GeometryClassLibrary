@@ -172,12 +172,13 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns a new list of segments with their directions such that they all flow in a consistent direction.
         /// </summary>
-        public static List<LineSegment> FixSegmentOrientation(this IList<LineSegment> segments)
+        public static List<LineSegment> FixSegmentOrientation(this IEnumerable<LineSegment> segments)
         {
-            segments.ValidateForPolygon();
-
-            List<LineSegment> sorted = new List<LineSegment>() { segments.First() };
             List<LineSegment> unSorted = segments.ToList();
+            unSorted.ValidateForPolygon();
+
+            List<LineSegment> sorted = new List<LineSegment>() { unSorted.First() };
+
             unSorted.RemoveAt(0);
             Point currentVertex = sorted[0].EndPoint;
             while (unSorted.Count != 0)

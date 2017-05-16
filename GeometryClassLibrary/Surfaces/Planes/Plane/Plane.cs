@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using MoreLinq;
+using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
@@ -31,7 +32,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane is an unbounded flat surface
     /// </summary>
-    public class Plane : ISurface, IShift<Plane>
+    public class Plane : ISurface, IShift<Plane>, IEquatable<Plane>
     {
         #region Properties and Fields
 
@@ -180,6 +181,20 @@ namespace GeometryClassLibrary
             return !plane1.Equals(plane2);
         }
 
+        public bool Equals(Plane other)
+        {
+            //make sure the passed obj isnt null
+            if (other == null)
+            {
+                return false;
+            }
+
+            bool checkPoint = this.Contains(other.BasePoint);
+            bool checkVector = this.NormalVector.IsParallelTo(other.NormalVector);
+
+            return checkPoint && checkVector;
+        }
+
         public override bool Equals(object obj)
         {
             //make sure the passed obj isnt null
@@ -198,6 +213,7 @@ namespace GeometryClassLibrary
         #endregion
 
         #region Methods
+        public Angle AngleBetween(Vector vector) => vector.AngleBetween(vector.ProjectOntoPlane(this));
 
         public bool Contains(Polygon polygon)
         {
@@ -568,10 +584,8 @@ namespace GeometryClassLibrary
             return false;
         }
 
-        ISurface ISurface.Shift(Shift shift)
-        {
-            return this.Shift(shift);
-        }
+        ISurface ISurface.Shift(Shift shift) => Shift(shift);
+
         #endregion
     }
 }

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
+using MoreLinq;
 
 namespace GeometryClassLibrary
 {
@@ -32,7 +33,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// A list containing the polygons that make up this polyhedron
         /// </summary>
-        public virtual List<Polygon> Polygons { get; set; }
+        public virtual List<Polygon> Polygons { get; }
 
         /// <summary>
         /// All the polyhedron's linesegments.
@@ -209,19 +210,18 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
-        public Polyhedron(List<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)
-            : base()
+        public Polyhedron(IEnumerable<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)
         {
+            List<Polygon> faces = polygons.ToList();
             if (checkAndRebuildValidPolyhedron)
             {
-                polygons = _makeFacesWithProperOrientation(polygons);
+                faces = _makeFacesWithProperOrientation(faces);
             }
-            if (polygons == null || polygons.Count == 0)
+            if (faces == null || !faces.Any())
             {
                 throw new InvalidPolyhedronException("The polygons you're attempting to use do not form a single closed region.");
             }
-
-            this.Polygons = polygons;
+            this.Polygons = faces;
         }
 
         /// <summary>
@@ -596,14 +596,18 @@ namespace GeometryClassLibrary
             if (counter % 2 == 0) return false;
             else return true;
         }
-        public bool Contains(Polygon polygon)
+
+        /// <summary>
+        /// Checks if a convex polygon contains another
+        /// </summary>
+        public bool ConvexContains(Polygon polygon)
         {
-            return polygon.Vertices.All(vertex => this.Contains(vertex));
+            return polygon.Vertices.All(this.Contains);
         }
 
         public bool Contains(Polyhedron polyhedron)
         {
-            if (this.Volume<polyhedron.Volume)
+            if (this.Volume < polyhedron.Volume)
             {
                 return false;
             }
@@ -792,24 +796,16 @@ namespace GeometryClassLibrary
 
         public IEnumerable<Polygon> AdjacentPolygons(Polygon polygon)
         {
+            // The number of adjacent polygons should be the number of line segments on the polygon.
+            // The connecting segments should have opposite directions.
+            var adjacent = polygon.LineSegments.Select(segment1 => this.Polygons
+                .FirstOrDefault(face => face.LineSegments
+                    // The connecting segments should have opposite directions.
+                    .Any(segment2 => segment1.BasePoint == segment2.EndPoint &&
+                                     segment2.EndPoint == segment1.BasePoint))).ToArray();
 
-            if (!this.Polygons.Contains(polygon))
-            {
-                // we can only find the polygons adjacent to the parameter if actually is one of the faces
-                return null;
-            }
-
-            foreach (var face in this.Polygons)
-            {
-                if (face == polygon)
-                {
-                    return this.Polygons.Where(side => side != face).ToList();
-                }
-            }
-
-            // is this even possible?
-            return new List<Polygon>();
-
+            // Return empty array if polygon not on the solid.
+            return adjacent.Any(_.IsNull) ? new Polygon[0] : adjacent;
         }
 
         #endregion
@@ -837,7 +833,7 @@ namespace GeometryClassLibrary
 
         public static Polyhedron Cube(Distance sidelength)
         {
-            throw new NotImplementedException();
+            return new Cube(sidelength);
         }
 
         public static Polyhedron RegularTetrahedron(Distance sidelength)
@@ -870,8 +866,7 @@ namespace GeometryClassLibrary
         ///returns the oriented faces
         /// </summary>
         private static List<Polygon> _makeFacesWithProperOrientation(List<Polygon> polygonList)
-        { 
-
+        {
             //Now we try to build piecewise the polyhedron from the faces
             //we abort and return null if run out of faces, but have unmet edges, or
             //all edges have two faces but we have faces left over
@@ -883,7 +878,7 @@ namespace GeometryClassLibrary
             List<LineSegment> edgesWithoutNeighboringFace = new List<LineSegment>();
 
             //we find the first face
-            Polygon lowestFace = _findLowestFace(polygonList);
+            Polygon lowestFace = _findLowestFace(unplacedFaces);
 
             //place the first face
             _placeFace(lowestFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
@@ -905,23 +900,13 @@ namespace GeometryClassLibrary
 
         private static Polygon _findLowestFace(List<Polygon> polygonList)
         {
-            var candidates = polygonList.OrderBy(p => p.Vertices.Min(v => v.Y)).ThenBy(f => f.CenterPoint.Y);
-            foreach (Polygon face in candidates)
-            {
-                if (face.NormalVector.IsPerpendicularTo(Line.YAxis))
-                {
-                    continue;
-                }
-                if (face.NormalVector.Direction.DotProduct(Direction.Down) < 0)
-                {
-                    return face.ReverseOrientation();
-                }
-                else
-                {
-                    return new Polygon(face);
-                }
-            }
-            throw new InvalidPolyhedronException();
+            var lowestY_Vertex = polygonList.SelectMany(face => face.Vertices).MinBy(vertex => vertex.Y);
+            var bottomFaces = polygonList.Where(face => face.Vertices.Contains(lowestY_Vertex)).ToList();
+
+            if (!bottomFaces.Any()) throw new InvalidPolyhedronException();
+
+            var lowest = bottomFaces.MinBy(face => Direction.Down.SmallestAngleBetween(face.NormalDirection));
+            return lowest.NormalDirection.DotProduct(Direction.Down) < 0 ? lowest.ReverseOrientation() : lowest;
         }
 
      
@@ -970,10 +955,7 @@ namespace GeometryClassLibrary
                             //this is a simple consequence of the right hand rule and the convention that normal vectors should point outward
                             return polygon.ReverseOrientation();
                         }
-                        else
-                        {
-                            return new Polygon(polygon);
-                        }
+                        return polygon;
                     }
                 }
             }

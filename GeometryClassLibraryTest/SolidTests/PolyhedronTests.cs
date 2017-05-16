@@ -2,15 +2,46 @@
 using System.Linq;
 using FluentAssertions;
 using GeometryClassLibrary;
+using MoreLinq;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 
 namespace GeometryClassLibraryTest
 {
     [TestFixture()]
     public class PolyhedronTests
     {
+        [Test]
+        public void Polyhedron_FaceOrientation()
+        {
+//            This polyhedron has the normal vectors pointing in instead of out.
+             var polygon = Polygon.CreateInXYPlane(Distance.Inches,
+                 364.74, -22.8,
+                 366.4, -26.46,
+                 248.5, -16.26,
+                 248.5, -12.74);
+            var polyhedron = polygon.Extrude(new Vector(Direction.Out, new Distance(1.5, Distance.Inches)));
+
+            // Volume will be negative for inside out polyhedra
+            polyhedron.Volume.IsPositive().Should().BeTrue();
+        }
+
+
+        [Test()]
+        public void Polyhedron_AdjacentPolygons_Cube()
+        {
+            Cube polyhedron = new Cube(1 * Distance.Feet);
+
+            var polygon = polyhedron.Polygons[0];
+
+            var adjacents = polyhedron.AdjacentPolygons(polygon);
+
+            adjacents.Count().Should().Be(4);
+        }
+
         [Test()]
         public void Polyhedron_AdjacentPolygons()
         {
@@ -724,6 +755,7 @@ namespace GeometryClassLibraryTest
             Point closePoint = Point.MakePointWithInches(4.1, 4.1, 4.1);
             testPolyhedron.Contains(closePoint).Should().BeFalse();
         }
+
         [Test()]
         public void Convex_Polyhedron_Contains_Polyhedron()
         {
@@ -787,160 +819,20 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Concave_Polyhedron_Contains_Polyhedron()
         {
-            Point basePoint1 = Point.MakePointWithInches(0, 0);
-            Point basePoint2 = Point.MakePointWithInches(4, 0);
-            Point basePoint3 = Point.MakePointWithInches(2, 2);
-            Point basePoint4 = Point.MakePointWithInches(4, 4);
-            Point basePoint5 = Point.MakePointWithInches(0, 4);
-            Point topPoint1 = Point.MakePointWithInches(0, 0, 4);
-            Point topPoint2 = Point.MakePointWithInches(4, 0, 4);
-            Point topPoint3 = Point.MakePointWithInches(2, 2, 4);
-            Point topPoint4 = Point.MakePointWithInches(4, 4, 4);
-            Point topPoint5 = Point.MakePointWithInches(0, 4, 4);
-            List<Polygon> planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron outerPolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(2, 2);
-            basePoint4 = Point.MakePointWithInches(4, 4);
-            basePoint5 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 2);
-            topPoint2 = Point.MakePointWithInches(4, 0, 2);
-            topPoint3 = Point.MakePointWithInches(2, 2, 2);
-            topPoint4 = Point.MakePointWithInches(4, 4, 2);
-            topPoint5 = Point.MakePointWithInches(0, 4, 2);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron innerPolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(2, 2);
-            basePoint4 = Point.MakePointWithInches(4, 4);
-            basePoint5 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 6);
-            topPoint2 = Point.MakePointWithInches(4, 0, 6);
-            topPoint3 = Point.MakePointWithInches(2, 2, 6);
-            topPoint4 = Point.MakePointWithInches(4, 4, 6);
-            topPoint5 = Point.MakePointWithInches(0, 4, 6);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron largePolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(4, 4);
-            basePoint4 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 4);
-            topPoint2 = Point.MakePointWithInches(4, 0, 4);
-            topPoint3 = Point.MakePointWithInches(4, 4, 4);
-            topPoint4 = Point.MakePointWithInches(0, 4, 4);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint1, topPoint1, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4}));
-            Polyhedron convexPolyhedron = new Polyhedron(planes);
-            outerPolyhedron.Contains(innerPolyhedron).Should().BeTrue();
-            outerPolyhedron.Contains(largePolyhedron).Should().BeFalse();
-            outerPolyhedron.Contains(convexPolyhedron).Should().BeFalse();
-        }
+            var concaveBase = Polygon.CreateInXYPlane(new Inch(),
+                0, 0,
+                4, 0,
+                2, 2,
+                4, 4,
+                0, 4);
+            var outerPolyhedron = concaveBase.Extrude(4 * Distance.Inches * Direction.Out);
 
-        [Test()]
-        public void addPolygonToCorrectPolyhedronTest()
-        {
-            Point basePoint1 = Point.MakePointWithInches(0, 0);
-            Point basePoint2 = Point.MakePointWithInches(4, 0);
-            Point basePoint3 = Point.MakePointWithInches(2, 2);
-            Point basePoint4 = Point.MakePointWithInches(4, 4);
-            Point basePoint5 = Point.MakePointWithInches(0, 4);
-            Point topPoint1 = Point.MakePointWithInches(0, 0, 4);
-            Point topPoint2 = Point.MakePointWithInches(4, 0, 4);
-            Point topPoint3 = Point.MakePointWithInches(2, 2, 4);
-            Point topPoint4 = Point.MakePointWithInches(4, 4, 4);
-            Point topPoint5 = Point.MakePointWithInches(0, 4, 4);
-            List<Polygon> planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron outerPolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(2, 2);
-            basePoint4 = Point.MakePointWithInches(4, 4);
-            basePoint5 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 2);
-            topPoint2 = Point.MakePointWithInches(4, 0, 2);
-            topPoint3 = Point.MakePointWithInches(2, 2, 2);
-            topPoint4 = Point.MakePointWithInches(4, 4, 2);
-            topPoint5 = Point.MakePointWithInches(0, 4, 2);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron innerPolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(2, 2);
-            basePoint4 = Point.MakePointWithInches(4, 4);
-            basePoint5 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 6);
-            topPoint2 = Point.MakePointWithInches(4, 0, 6);
-            topPoint3 = Point.MakePointWithInches(2, 2, 6);
-            topPoint4 = Point.MakePointWithInches(4, 4, 6);
-            topPoint5 = Point.MakePointWithInches(0, 4, 6);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4, basePoint5 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint5, topPoint5, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint5, basePoint1, topPoint1, topPoint5 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4, topPoint5 }));
-            Polyhedron largePolyhedron = new Polyhedron(planes);
-            basePoint1 = Point.MakePointWithInches(0, 0);
-            basePoint2 = Point.MakePointWithInches(4, 0);
-            basePoint3 = Point.MakePointWithInches(4, 4);
-            basePoint4 = Point.MakePointWithInches(0, 4);
-            topPoint1 = Point.MakePointWithInches(0, 0, 4);
-            topPoint2 = Point.MakePointWithInches(4, 0, 4);
-            topPoint3 = Point.MakePointWithInches(4, 4, 4);
-            topPoint4 = Point.MakePointWithInches(0, 4, 4);
-            planes = new List<Polygon>();
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, basePoint3, basePoint4 }));
-            planes.Add(new Polygon(new List<Point> { basePoint1, basePoint2, topPoint2, topPoint1 }));
-            planes.Add(new Polygon(new List<Point> { basePoint2, basePoint3, topPoint3, topPoint2 }));
-            planes.Add(new Polygon(new List<Point> { basePoint3, basePoint4, topPoint4, topPoint3 }));
-            planes.Add(new Polygon(new List<Point> { basePoint4, basePoint1, topPoint1, topPoint4 }));
-            planes.Add(new Polygon(new List<Point> { topPoint1, topPoint2, topPoint3, topPoint4 }));
-            Polyhedron convexPolyhedron = new Polyhedron(planes);
+            Polyhedron innerPolyhedron = concaveBase.Extrude(2 * Distance.Inches * Direction.Out);
+
+            Polyhedron largePolyhedron = concaveBase.Extrude(6 * Distance.Inches * Direction.Out);
+
+            Polyhedron convexPolyhedron = new Cube(4 * Distance.Inches);
+
             outerPolyhedron.Contains(innerPolyhedron).Should().BeTrue();
             outerPolyhedron.Contains(largePolyhedron).Should().BeFalse();
             outerPolyhedron.Contains(convexPolyhedron).Should().BeFalse();
