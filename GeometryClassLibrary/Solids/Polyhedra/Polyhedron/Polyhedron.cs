@@ -900,12 +900,12 @@ namespace GeometryClassLibrary
 
         private static Polygon _findLowestFace(List<Polygon> polygonList)
         {
-            var lowestY_Vertex = polygonList.SelectMany(face => face.Vertices).MinBy(vertex => vertex.Y);
+            var lowestY_Vertex = polygonList.SelectMany(face => face.Vertices).MinByUnit(vertex => vertex.Y);
             var bottomFaces = polygonList.Where(face => face.Vertices.Contains(lowestY_Vertex)).ToList();
 
             if (!bottomFaces.Any()) throw new InvalidPolyhedronException();
 
-            var lowest = bottomFaces.MinBy(face => Direction.Down.SmallestAngleBetween(face.NormalDirection));
+            var lowest = bottomFaces.MinByUnit(face => Direction.Down.SmallestAngleBetween(face.NormalDirection));
             return lowest.NormalDirection.DotProduct(Direction.Down) < 0 ? lowest.ReverseOrientation() : lowest;
         }
 

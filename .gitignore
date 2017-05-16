@@ -9,6 +9,9 @@
 *.user
 *.sln.docstates
 
+#Jet brains
+*.idea/*
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

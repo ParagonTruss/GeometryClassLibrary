@@ -55,7 +55,7 @@ namespace GeometryClassLibrary
             var vector1 = new Vector(Point.MakePointWithInches(1, 0, 0)).CrossProduct(normalDirection * new Distance(1, Inches));
             var vector2 = new Vector(Point.MakePointWithInches(0, 1, 0)).CrossProduct(normalDirection * new Distance(1, Inches));
             var vector3 = new Vector(Point.MakePointWithInches(0, 0, 1)).CrossProduct(normalDirection * new Distance(1, Inches));
-            var chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
+            var chosen = new List<Vector>() { vector1, vector2, vector3 }.SafeMaxBy(v => v.Magnitude);
 
             var basePoint = center.Translate(chosen.Direction * radius);
             var arc = new Arc(basePoint, basePoint, new Line(center, normalDirection));

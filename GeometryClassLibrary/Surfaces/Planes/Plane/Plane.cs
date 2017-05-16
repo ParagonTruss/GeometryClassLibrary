@@ -349,7 +349,7 @@ namespace GeometryClassLibrary
             Vector vector1 = this.NormalVector.CrossProduct(Line.XAxis.UnitVector(new Inch()));
             Vector vector2 = this.NormalVector.CrossProduct(Line.YAxis.UnitVector(new Inch()));
             Vector vector3 = this.NormalVector.CrossProduct(Line.ZAxis.UnitVector(new Inch()));
-            Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.MaxBy(v => v.Magnitude);
+            Vector chosen = new List<Vector>() { vector1, vector2, vector3 }.SafeMaxBy(v => v.Magnitude);
             
             //vectors 1,2,&3 all will be parallel to the plane, but the most precise will be the one with the largest magnitude.
             return new Line(this.BasePoint, chosen);

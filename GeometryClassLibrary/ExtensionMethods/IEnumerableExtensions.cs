@@ -95,34 +95,39 @@ namespace GeometryClassLibrary
             return groups;
         }
 
-        public static TSource MaxBy<TSource, TUnit, TUnitType>(this IEnumerable<TSource> enumerable, Func<TSource,TUnit> selector)
-            where TUnitType : IUnitType
-            where TUnit : Unit<TUnitType>
+        public static TSource MaxByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
         {
-            return enumerable.MaxBy(x => selector(x).ValueIn(new Inch()));
+            return source.MaxBy(x => selector(x).ValueIn(new Inch()));
         }
 
-        public static TSource MinBy<TSource, TUnit, TUnitType>(this IEnumerable<TSource> enumerable, Func<TSource,TUnit> selector)
-            where TUnitType : IUnitType
-            where TUnit : Unit<TUnitType>
+        public static TSource MinByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
         {
-            return enumerable.MinBy(x => selector(x).ValueIn(new Inch()));
+            return source.MinBy(x => selector(x).ValueIn(new Inch()));
         }
 
-        public static IEnumerable<TSource> OrderBy<TSource, TUnit, TUnitType>(this IEnumerable<TSource> enumerable, Func<TSource,TUnit> selector)
-            where TUnitType : IUnitType
-            where TUnit : Unit<TUnitType>
+        public static TSource MaxByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
         {
-            return enumerable.OrderBy(x => selector(x).ValueIn(new Inch()));
+            return source.Any() ? source.MaxBy(selector) : default(TSource);
         }
 
-        public static IEnumerable<TSource> OrderByDescending<TSource, TUnit, TUnitType>(this IEnumerable<TSource> enumerable, Func<TSource,TUnit> selector)
-            where TUnitType : IUnitType
-            where TUnit : Unit<TUnitType>
+        public static TSource MinByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
         {
-            return enumerable.OrderByDescending(x => selector(x).ValueIn(new Inch()));
+            return source.Any() ? source.MinBy(selector) : default(TSource);
         }
 
+        public static IEnumerable<TSource> OrderByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
+        {
+            return source.OrderBy(x => selector(x).ValueIn(new Inch()));
+        }
+
+        public static IEnumerable<TSource> OrderByUnitDescending<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
+        {
+            return source.OrderByDescending(x => selector(x).ValueIn(new Inch()));
+        }
     }
 
     public static class _
