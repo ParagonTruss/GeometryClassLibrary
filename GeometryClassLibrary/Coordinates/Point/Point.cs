@@ -36,30 +36,14 @@ namespace GeometryClassLibrary
     public partial class Point : IEquatable<Point>
     {
         #region Properties and Fields
-        private readonly static Point _origin = new Point(Distance.ZeroDistance, Distance.ZeroDistance, Distance.ZeroDistance);
-        public static Point Origin { get { return _origin; } }
 
-        private Distance _x;
-        private Distance _y;
-        private Distance _z;
+        public static Point Origin { get; } = new Point(ZeroDistance, ZeroDistance, ZeroDistance);
 
-        public Distance X
-        {
-            get { return _x; }
-            private set { _x = value; }
-        }
+        public Distance X { get; }
 
-        public Distance Y
-        {
-            get { return _y; }
-            private set { _y = value; }
-        }
+        public Distance Y { get; }
 
-        public Distance Z
-        {
-            get { return _z; }
-            private set { _z = value; }
-        }
+        public Distance Z { get; }
 
         #endregion
 
@@ -75,52 +59,36 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Distance passedX, Distance passedY)
         {
-            this._x = passedX;
-            this._y = passedY;
-            this._z = Distance.ZeroDistance;
+            this.X = passedX;
+            this.Y = passedY;
+            this.Z = Distance.ZeroDistance;
         }
 
         /// <summary>
         /// Create any point by its coordinates.
         /// </summary>
-        
         public Point(Distance x, Distance y, Distance z)
         {
-            _x = x;
-            _y = y;
-            _z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
-
-        ///// <summary>
-        ///// Creates the point that is the specified distance from the origin, in the specified direction.
-        ///// </summary>
-        //public Point(Direction direction, Distance fromOrigin)
-        //{
-        //    this._x = direction.X * fromOrigin;
-        //    this._y = direction.Y * fromOrigin;
-        //    this._z = direction.Z * fromOrigin;
-        //}
 
         /// <summary>
         /// Creates a new point with the given values with the given Distance type
         /// </summary>
         public Point(DistanceType passedType, double passedX, double passedY, double passedZ = 0)
         {
-            _x = new Distance(passedType, passedX);
-            _y = new Distance(passedType, passedY);
-            _z = new Distance(passedType, passedZ);
+            X = new Distance(passedType, passedX);
+            Y = new Distance(passedType, passedY);
+            Z = new Distance(passedType, passedZ);
         }
-        //public Point(DistanceType passedType, Measurement passedX, Measurement passedY, Measurement passedZ = default(Measurement))
-        //{
-        //    _x = new Distance(passedType, passedX);
-        //    _y = new Distance(passedType, passedY);
-        //    _z = new Distance(passedType, passedZ);
-        //}
+
         public Point(List<Distance> coordinates)
         {
-            _x = coordinates[0];
-            _y = coordinates[1];
-            _z = coordinates[2];
+            X = coordinates[0];
+            Y = coordinates[1];
+            Z = coordinates[2];
         }
 
         /// <summary>
@@ -128,9 +96,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point(Point toCopy)
         {
-            _x = toCopy.X;
-            _y = toCopy.Y;
-            _z = toCopy.Z;
+            X = toCopy.X;
+            Y = toCopy.Y;
+            Z = toCopy.Z;
         }
 
         //public Point(Unit<DistanceType> x, Unit<DistanceType> y, Unit<DistanceType> z)

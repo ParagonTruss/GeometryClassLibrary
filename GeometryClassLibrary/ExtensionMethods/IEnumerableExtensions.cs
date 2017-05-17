@@ -22,8 +22,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnitClassLibrary;
-using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using MoreLinq;
+using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
 {
@@ -54,6 +54,7 @@ namespace GeometryClassLibrary
 
         #region IGrouping Implementation
         public class Group<TKey,TElement> : IGrouping<TKey,TElement>
+            where TKey : IEquatable<TKey>
         {
             public IEnumerator<TElement> GetEnumerator() => Elements.GetEnumerator();
             IEnumerator IEnumerable.GetEnumerator() => Elements.GetEnumerator();
@@ -69,9 +70,9 @@ namespace GeometryClassLibrary
         }
         #endregion
 
-        public static IEnumerable<IGrouping<TKey, TSource>> GroupBy<TSource, TKey>(this IEnumerable<TSource> source,
+        public static List<Group<TKey, TSource>> GroupByEquatable<TSource, TKey>(this IEnumerable<TSource> source,
             Func<TSource, TKey> selector)
-        where TKey : IEquatable<TKey>
+            where TKey : IEquatable<TKey>
         {
             var groups = new List<Group<TKey,TSource>>();
             foreach (var item in source)
@@ -80,7 +81,7 @@ namespace GeometryClassLibrary
                 var itemHasBeenGrouped = false;
                 foreach (var group in groups)
                 {
-                    if (group.Key.Equals(key))
+                    if (key.Equals(group.Key))
                     {
                         group.Elements.Add(item);
                         itemHasBeenGrouped = true;
@@ -89,44 +90,79 @@ namespace GeometryClassLibrary
                 }
                 if (!itemHasBeenGrouped)
                 {
-                    groups.Add(new Group<TKey,TSource>(key, new List<TSource>{}));
+                    groups.Add(new Group<TKey,TSource>(key, new List<TSource>{item}));
                 }
             }
             return groups;
         }
 
-        public static TSource MaxByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+        /// <summary>
+        /// A safe alternative to Max when working with Units. Returns null for empty enumerables.
+        /// </summary>
+        public static TUnit MaxUnitOrNull<TUnit>(this IEnumerable<TUnit> source)
             where TUnit : Unit
         {
-            return source.MaxBy(x => selector(x).ValueIn(new Inch()));
+            return source.MaxByUnitOrDefault(_.Identity);
         }
 
-        public static TSource MinByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+        /// <summary>
+        /// A safe alternative to Min when working with Units. Returns null for empty enumerables.
+        /// </summary>
+        public static TUnit MinUnitOrNull<TUnit>(this IEnumerable<TUnit> source)
             where TUnit : Unit
         {
-            return source.MinBy(x => selector(x).ValueIn(new Inch()));
+            return source.MinByUnitOrDefault(_.Identity);
         }
 
+        /// <summary>
+        /// A safe alternative to MaxBy when working with Units. Returns the default value for empty enumerables.
+        /// </summary>
+        public static TSource MaxByUnitOrDefault<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
+        {
+            return source.MaxByOrDefault(x => selector(x).ValueIn(Distance.Inches));
+        }
+
+        /// <summary>
+        /// A safe alternative to MinBy when working with Units. Returns the default value for empty enumerables.
+        /// </summary>
+        public static TSource MinByUnitOrDefault<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
+            where TUnit : Unit
+        {
+            return source.MinByOrDefault(x => selector(x).ValueIn(Distance.Inches));
+        }
+        /// <summary>
+        /// A safe alternative to MaxBy. Returns the default value for empty enumerables.
+        /// </summary>
         public static TSource MaxByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
         {
             return source.Any() ? source.MaxBy(selector) : default(TSource);
         }
 
+        /// <summary>
+        /// A safe alternative to MinBy. Returns the default value for empty enumerables.
+        /// </summary>
         public static TSource MinByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
         {
             return source.Any() ? source.MinBy(selector) : default(TSource);
         }
 
+        /// <summary>
+        /// Orders by Units (ascending), ignoring the error margins.
+        /// </summary>
         public static IEnumerable<TSource> OrderByUnit<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
             where TUnit : Unit
         {
-            return source.OrderBy(x => selector(x).ValueIn(new Inch()));
+            return source.OrderBy(x => selector(x).ValueIn(Distance.Inches));
         }
 
+        /// <summary>
+        /// Orders by Units (descending), ignoring the error margins.
+        /// </summary>
         public static IEnumerable<TSource> OrderByUnitDescending<TSource,TUnit>(this IEnumerable<TSource> source, Func<TSource,TUnit> selector)
             where TUnit : Unit
         {
-            return source.OrderByDescending(x => selector(x).ValueIn(new Inch()));
+            return source.OrderByDescending(x => selector(x).ValueIn(Distance.Inches));
         }
     }
 

@@ -137,6 +137,7 @@ namespace GeometryClassLibraryTest
 
             (overlap == expected).Should().BeTrue();
         }
+
         //Automatically generated at 8/4/2016 10:36:47 AM
         [Test]
         public void OverlappingPolygon_ErrorCase_CD319ADE()
@@ -200,7 +201,6 @@ namespace GeometryClassLibraryTest
 
             var actual = plate.OverlappingPolygon(member);
             actual.Should().NotBe(null);
-
         }
 
 
@@ -230,17 +230,6 @@ namespace GeometryClassLibraryTest
 
             var actual = plate.OverlappingPolygon(member);
             actual.Should().NotBe(null);
-        }
-        private static string Coordinates(Polygon polygon)
-        {
-            return string.Join(", ", polygon.Vertices
-                 .SelectMany(point => new[] { point.X.ValueInInches, point.Y.ValueInInches })
-                 .Select(d => d.ToString()));
-        }
-
-        private string PolygonString(Polygon polygon)
-        {
-            return $"Polygon.CreateInXYPlane(Distance.Inches, {Coordinates(polygon)})";
         }
     }
 }
