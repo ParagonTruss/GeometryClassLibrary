@@ -65,11 +65,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Plane(Direction normalDirection , Point basePoint = null)
         {
-            if (basePoint == null)
-            {
-                basePoint = Point.Origin;
-            }
-            this.NormalLine = new Line(basePoint, normalDirection);
+            this.NormalLine = new Line(basePoint ?? Point.Origin, normalDirection);
         }
         public Plane(Point basePoint, Direction normalDirection)
         {

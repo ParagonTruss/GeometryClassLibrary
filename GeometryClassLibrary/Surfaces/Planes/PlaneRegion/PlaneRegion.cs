@@ -95,7 +95,6 @@ namespace GeometryClassLibrary
         {
             this._Edges = passedEdges.FixEdgeOrientation();
             this.NormalLine = _getNormalLine();
-
         }
 
         // Returns a normalVector of the planeregion.
@@ -111,7 +110,7 @@ namespace GeometryClassLibrary
                 {
                     if (Edges[i].BasePoint == vector1.EndPoint)
                     {
-                        vector2=new Vector(Edges[i]);
+                        vector2 = new Vector(Edges[i]);
                     }
                 }
 

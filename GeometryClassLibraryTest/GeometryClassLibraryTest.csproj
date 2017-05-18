@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="SolidTests\PolyhedronTests.cs" />
     <Compile Include="CoordinateTests\RotationTests.cs" />
+    <Compile Include="SolidTests\SliceTests.cs" />
     <Compile Include="SolidTests\SolidTests.cs" />
     <Compile Include="ListExtensionTests\LineListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\LineSegmentListExtensionTests.cs" />

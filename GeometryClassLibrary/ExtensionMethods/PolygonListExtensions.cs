@@ -104,32 +104,20 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public static List<LineSegment> GetAllEdges(this List<Polygon> polygonList)
         {
-            List<LineSegment> edges = new List<LineSegment>();
-            foreach(Polygon polygon in polygonList)
+            return polygonList.SelectMany(polygon => polygon.LineSegments).DistinctByEquatable(_.Identity).ToList();
+        }
+
+        private static IEnumerable<Point[]> _splitIntoTriangles(Polygon p)
+        {
+            var n = p.Vertices.Count - 2;
+            for (var i = 0; i < n; i++)
             {
-                foreach(LineSegment edge in polygon.LineSegments)
-                {
-                    if (!edges.Contains(edge))
-                    {
-                        edges.Add(edge);
-                    }
-                }
+                yield return new[] {p.Vertices[0], p.Vertices[i + 1], p.Vertices[i + 2]};
             }
-            return edges;
         }
-
-        /// <summary>
-        /// Copies the list
-        /// Note: the edges may be oriented differently
-        /// </summary>
-        public static List<Polygon> CopyList(this List<Polygon> polygonList)
+        public static IEnumerable<Point[]> SplitIntoTriangles(this List<Polygon> polygonList)
         {
-            return polygonList.Select(p => new Polygon(p)).ToList();
-        }
-
-        public static List<Polygon> SplitIntoTriangles(this List<Polygon> polygonList)
-        {
-            return polygonList.SelectMany(p => p.SplitIntoTriangles()).ToList();
+            return polygonList.SelectMany(_splitIntoTriangles).ToList();
         }
 
         public static List<Polygon> ProjectAllOntoPlane(this IEnumerable<Polygon> polygonList, Plane plane)

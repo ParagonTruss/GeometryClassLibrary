@@ -19,7 +19,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
+using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;
+using UnitClassLibrary.DistanceUnit;
+using UnitClassLibrary.DistanceUnit.DistanceTypes;
 
 namespace GeometryClassLibrary
 {
@@ -66,39 +70,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Checks that all the boundaries meet end to end.
         /// </summary>
-        /// <param name="passedBoundaries"></param>
+        /// <param name="segments"></param>
         /// <returns></returns>
-        public static bool DoFormClosedRegion(this IList<LineSegment> passedBoundaries)
+        public static bool DoFormClosedRegion(this IList<LineSegment> segments)
         {
-            List<Point> points = passedBoundaries.GetAllPoints();
-
-            //we should have the same number of points as line segments for it to even potentially form a closed region
-            if (points.Count != passedBoundaries.Count)
-            {
-                return false;
-            }
-
-            //find out how many times each point is used
-            int[] pointsUsedCount = new int[points.Count];
-
-            foreach (LineSegment segment in passedBoundaries)
-            {
-                pointsUsedCount[points.IndexOf(segment.BasePoint)] ++;
-                pointsUsedCount[points.IndexOf(segment.EndPoint)] ++;
-            }
-
-            //every point has to be used twice in order for it to be closed
-            //Note: cant be large than two either to preserve same functionality as before
-            foreach (int timesUsed in pointsUsedCount)
-            {
-                if (timesUsed != 2)
-                {
-                    return false;
-                }
-            }
-
-            //if everything passed than we're good!
-            return true;
+            var groups = segments.SelectMany(segment => segment.EndPoints).GroupByEquatable(_.Identity);
+            return groups.Count == segments.Count && groups.All(group => group.Elements.Count == 2);
         }
 
         public static bool AtleastOneIntersection(this IList<LineSegment> listOfSegments)
@@ -130,22 +107,22 @@ namespace GeometryClassLibrary
             bool notEnoughSegments = (segments == null || segments.Count < 3);
             if (notEnoughSegments)
             {
-                throw new InvalidPolygonException("The passed list is either null or has less than 3 segments.");
+                throw new InvalidPolygonException(segments,"The passed list is either null or has less than 3 segments.");
             }
             bool notClosed = !segments.DoFormClosedRegion();
             if (notClosed)
             {
-                throw new InvalidPolygonException("The passed list of segments do not form a closed region.");
+                throw new InvalidPolygonException(segments,"The passed list of segments do not form a closed region.");
             }
             bool areNotCoplanar = !segments.AreAllCoplanar();
             if (areNotCoplanar)
             {
-                throw new InvalidPolygonException("The passed list of segments are not coplanar.");
+                throw new InvalidPolygonException(segments,"The passed list of segments are not coplanar.");
             }
             bool selfIntersecting = segments.AtleastOneIntersection();
             if (selfIntersecting)
             {
-                throw new InvalidPolygonException("The passed list of segments are self intersecting.");
+                throw new InvalidPolygonException(segments,"The passed list of segments are self intersecting.");
             }
         }
 
@@ -207,26 +184,11 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Gets a list of all the unique Points represented in this list of LineSegments (both end and base points)
+        /// Gets a list of all the unique Points represented in this list of LineSegments
         /// </summary>
         public static List<Point> GetAllPoints(this IEnumerable<LineSegment> segments)
         {
-            List<Point> points = new List<Point>();
-
-            //just cycle through each line and add the points to our list if they are not already there
-            foreach (LineSegment line in segments)
-            {
-                if (!points.Contains(line.BasePoint))
-                {
-                    points.Add(line.BasePoint);
-                }
-                if (!points.Contains(line.EndPoint))
-                {
-                    points.Add(line.EndPoint);
-                }
-            }
-
-            return points;
+            return segments.SelectMany(s => s.EndPoints).DistinctByEquatable(_.Identity).ToList();
         }
 
 

@@ -831,24 +831,6 @@ namespace GeometryClassLibrary
         {
             return new Polygon(LineSegments.Select(edge => edge.Reverse()).Reverse(), false);
         }
-
-        /// <summary>
-        /// Splits the polygon into connecting triangles and returns them as a list
-        /// Note: the triangles will overlap if the polygon is concave
-        /// </summary>
-        /// <returns></returns>
-        public List<Polygon> SplitIntoTriangles()
-        {
-            List<Polygon> triangles = new List<Polygon>();
-
-            for (int i = 0; i < Vertices.Count - 2; i++)
-            {
-                List<Point> points = new List<Point>() { Vertices[0], Vertices[i + 1], Vertices[i + 2] };
-                Polygon triangle = new Polygon(points, false);
-                triangles.Add(triangle);
-            }
-            return triangles;
-        }
       
         public bool IsRectangle()
         {
@@ -1236,7 +1218,7 @@ namespace GeometryClassLibrary
             var Xs = list.Where(pair => pair.index % 2 == 0);
             var Ys = list.Where(pair => pair.index % 2 == 1);
             var vertices = Enumerable.Zip(Xs, Ys, (x, y) => new Point(distanceType, x.cord, y.cord));
-            return new Polygon(vertices.ToList());
+            return new Polygon(vertices);
         }
         public static Polygon Triangle(
             DistanceType type,

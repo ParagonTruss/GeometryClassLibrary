@@ -58,7 +58,7 @@ namespace GeometryClassLibrary
         {
             if (edges.Count < 2)
             {
-                throw new InvalidPolygonException("too few edges");
+                throw new GeometricException("too few edges");
             }
             var copy = edges.ToList();
            
@@ -74,7 +74,7 @@ namespace GeometryClassLibrary
                     next = copy.FirstOrDefault(e => current.EndPoint == e.EndPoint);
                     if (next == null)
                     {
-                        throw new InvalidPolygonException("The passed list of edges do not meet end to end.");
+                        throw new GeometricException("The passed list of edges do not meet end to end.");
                     }
                     else
                     {

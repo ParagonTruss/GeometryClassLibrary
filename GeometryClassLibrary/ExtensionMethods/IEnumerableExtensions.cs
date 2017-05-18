@@ -70,6 +70,9 @@ namespace GeometryClassLibrary
         }
         #endregion
 
+        /// <summary>
+        /// A safe version of Linq's GroupBy that relies on IEquatable instead of GetHashCode.
+        /// </summary>
         public static List<Group<TKey, TSource>> GroupByEquatable<TSource, TKey>(this IEnumerable<TSource> source,
             Func<TSource, TKey> selector)
             where TKey : IEquatable<TKey>
@@ -94,6 +97,34 @@ namespace GeometryClassLibrary
                 }
             }
             return groups;
+        }
+
+        /// <summary>
+        /// A safe version of Linq's Distinct that relies on IEquatable instead of GetHashCode.
+        /// </summary>
+        public static IEnumerable<TSource> DistinctEquatable<TSource>(this IEnumerable<TSource> source)
+            where TSource : IEquatable<TSource>
+        {
+            return source.DistinctByEquatable(_.Identity);
+        }
+
+        /// <summary>
+        /// A safe version of MoreLinq's DistinctBy that relies on IEquatable instead of GetHashCode.
+        /// </summary>
+        public static IEnumerable<TSource> DistinctByEquatable<TSource, TKey>(this IEnumerable<TSource> source,
+            Func<TSource, TKey> selector)
+            where TKey : IEquatable<TKey>
+        {
+            var list = new List<TKey>();
+            foreach (var item in source)
+            {
+                var key = selector(item);
+                if (!list.Contains(key))
+                {
+                    list.Add(key);
+                    yield return item;
+                }
+            }
         }
 
         /// <summary>
@@ -135,6 +166,7 @@ namespace GeometryClassLibrary
         /// A safe alternative to MaxBy. Returns the default value for empty enumerables.
         /// </summary>
         public static TSource MaxByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
+            where TKey : IComparable<TKey>
         {
             return source.Any() ? source.MaxBy(selector) : default(TSource);
         }
@@ -143,6 +175,7 @@ namespace GeometryClassLibrary
         /// A safe alternative to MinBy. Returns the default value for empty enumerables.
         /// </summary>
         public static TSource MinByOrDefault<TSource,TKey>(this IEnumerable<TSource> source, Func<TSource,TKey> selector)
+            where TKey : IComparable<TKey>
         {
             return source.Any() ? source.MinBy(selector) : default(TSource);
         }
@@ -171,20 +204,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// For easy null checking
         /// </summary>
-        public static bool IsNull<T>(this T obj)
-            where T : class
-        {
-            return obj == null;
-        }
+        public static bool IsNull(this object obj) => obj == null;
 
         /// <summary>
         /// For easy null checking
         /// </summary>
-        public static bool NotNull<T>(this T obj)
-           where T : class
-        {
-            return obj != null;
-        }
+        public static bool NotNull(this object obj) => obj != null;
 
         /// <summary>
         /// Returns the opposite boolean value.

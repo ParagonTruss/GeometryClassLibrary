@@ -42,7 +42,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Point MidPoint => EndPoints.CenterPoint();
 
-        public List<Point> EndPoints => new List<Point>() { BasePoint, EndPoint };
+        public List<Point> EndPoints => new List<Point>(2) { BasePoint, EndPoint };
 
         public bool IsClosed => false;
 
@@ -303,13 +303,23 @@ namespace GeometryClassLibrary
                 var tempList = new List<LineSegment>();
                 foreach (var segment in currentSegments)
                 {
-                    tempList.AddRange(segment.Slice(slicer));
+                    tempList.AddRange(segment.SliceWithSegment(slicer));
                 }
                 currentSegments = tempList;
             }
             return currentSegments.OrderBy(segment => segment.BasePoint.DistanceTo(this.BasePoint)).ToList();
         }
-        public List<LineSegment> Slice(Line slicingSegment)
+
+        public List<LineSegment> SliceWithSegment(LineSegment slicingSegment)
+        {
+            var splitPoint = this.IntersectWithSegment(slicingSegment);
+            if (splitPoint == null || this.IsParallelTo(slicingSegment))
+            {
+                return new List<LineSegment>() { this };
+            }
+            return Slice(splitPoint);
+        }
+        public List<LineSegment> SliceWithLine(Line slicingSegment)
         {
             var splitPoint = this.IntersectWithLine(slicingSegment);
             if (splitPoint == null || this.IsParallelTo(slicingSegment))

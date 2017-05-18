@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace GeometryClassLibrary
 {
@@ -39,13 +40,26 @@ namespace GeometryClassLibrary
 
     public class InvalidPolygonException : GeometricException
     {
-        public InvalidPolygonException() { }
-        public InvalidPolygonException(string message) : base(message) { }
+        public IList<Point> Points { get;  }
+        public IList<LineSegment> LineSegments { get; }
+
+        public InvalidPolygonException(IList<LineSegment> segments, string message = null) : base(message)
+        {
+            LineSegments = segments;
+        }
+        public InvalidPolygonException(IList<Point> points, string message = null) : base(message)
+        {
+            Points = points;
+        }
     }
 
     public class InvalidPolyhedronException : GeometricException
     {
-        public InvalidPolyhedronException() { }
-        public InvalidPolyhedronException(string message) : base(message) { }
+        public List<Polygon> Polygons { get; }
+
+        public InvalidPolyhedronException(List<Polygon> polygons, string message = null) : base(message)
+        {
+            Polygons = polygons;
+        }
     }
 }

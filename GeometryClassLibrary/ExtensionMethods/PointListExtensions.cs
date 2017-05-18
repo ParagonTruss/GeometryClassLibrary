@@ -154,7 +154,7 @@ namespace GeometryClassLibrary
             var array = points.ToArray();
             if (array.Length == 0)
             {
-                throw new InvalidPolygonException("Cannot create a polygon from 0 points.");
+                throw new InvalidPolygonException(array,"Cannot create a polygon from 0 points.");
             }
 
             var last = array.Length - 1;

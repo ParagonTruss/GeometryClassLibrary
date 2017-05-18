@@ -38,25 +38,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// All the polyhedron's linesegments.
         /// </summary>
-        public List<LineSegment> LineSegments
-        {
-            get
-            {
-                List<LineSegment> returnList = new List<LineSegment>();
-
-                foreach (var region in this.Polygons)
-                {
-                    foreach (var segment in region.LineSegments)
-                    {
-                        if (!returnList.Contains(segment))
-                        {
-                            returnList.Add(segment);
-                        }
-                    }
-                }
-                return returnList;
-            }
-        }
+        public List<LineSegment> LineSegments => Polygons.GetAllEdges();
 
         /// <summary>
         /// Returns a list of all the vertices in the Polyhedron
@@ -67,16 +49,7 @@ namespace GeometryClassLibrary
             {
                 if (_vertices == null)
                 {
-                    var returnList = new List<Point>();
-                    foreach (var face in Polygons)
-                    {
-                        foreach (var point in face.Vertices)
-                        {
-                            if (returnList.Contains(point)) continue;
-                            returnList.Add(point);
-                        }
-                    }
-                    _vertices = returnList;
+                    _vertices = this.Polygons.SelectMany(v => v.Vertices).DistinctByEquatable(_.Identity).ToList();
                 }
                 return _vertices;
             }
@@ -137,8 +110,7 @@ namespace GeometryClassLibrary
             {
                 if (_volume == null)
                 {
-                    var volume = this.Polygons.SplitIntoTriangles()
-                        .Select(_volumeOfTetrahedronFormedWithTheOrigin).Sum();
+                    var volume = _getVolumeInCubicInches(this.Polygons);
                     _volume = new Volume(new CubicInch(), volume);
                 }
                 if (_volume < Volume.Zero)
@@ -148,6 +120,12 @@ namespace GeometryClassLibrary
                 return _volume;
             }
         }
+
+        private static double _getVolumeInCubicInches(List<Polygon> polygons) =>
+            polygons.SplitIntoTriangles()
+                    .Select(_volumeOfTetrahedronFormedWithTheOrigin)
+                    .Sum();
+
         private Volume _volume;
 
         /// <summary>
@@ -155,19 +133,19 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="triangle"></param>
         /// <returns></returns>
-        private static double _volumeOfTetrahedronFormedWithTheOrigin(Polygon triangle)
+        private static double _volumeOfTetrahedronFormedWithTheOrigin(Point[] triangle)
         {
-            double X1 = triangle.Vertices[0].X.ValueInInches;
-            double X2 = triangle.Vertices[1].X.ValueInInches;
-            double X3 = triangle.Vertices[2].X.ValueInInches;
+            double X1 = triangle[0].X.ValueInInches;
+            double X2 = triangle[1].X.ValueInInches;
+            double X3 = triangle[2].X.ValueInInches;
 
-            double Y1 = triangle.Vertices[0].Y.ValueInInches;
-            double Y2 = triangle.Vertices[1].Y.ValueInInches;
-            double Y3 = triangle.Vertices[2].Y.ValueInInches;
+            double Y1 = triangle[0].Y.ValueInInches;
+            double Y2 = triangle[1].Y.ValueInInches;
+            double Y3 = triangle[2].Y.ValueInInches;
 
-            double Z1 = triangle.Vertices[0].Z.ValueInInches;
-            double Z2 = triangle.Vertices[1].Z.ValueInInches;
-            double Z3 = triangle.Vertices[2].Z.ValueInInches;
+            double Z1 = triangle[0].Z.ValueInInches;
+            double Z2 = triangle[1].Z.ValueInInches;
+            double Z3 = triangle[2].Z.ValueInInches;
 
             double[,] array = { { X1, X2, X3 }, { Y1, Y2, Y3 }, { Z1, Z2, Z3 } };
 
@@ -180,15 +158,14 @@ namespace GeometryClassLibrary
         {
             get
             {
-                List<Polygon> triangles = this.Polygons.SplitIntoTriangles();
                 Vector weightedSum = new Vector(Point.Origin);
                 double totalVolume = 0;
 
-                foreach (Polygon triangle in triangles)
+                foreach (var triangle in this.Polygons.SplitIntoTriangles())
                 {
                     double volume = _volumeOfTetrahedronFormedWithTheOrigin(triangle);
 
-                    Vector currentCentroidAsVector = new Vector(triangle.Vertices[0] + triangle.Vertices[1] + triangle.Vertices[2]) / 4;
+                    Vector currentCentroidAsVector = new Vector(triangle[0] + triangle[1] + triangle[2]) / 4;
 
                     weightedSum += volume * currentCentroidAsVector;
                     totalVolume += volume;
@@ -210,6 +187,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a Polyhedron using the passed polygons as its side/polygons
         /// </summary>
+        public Polyhedron(bool checkAndRebuildValidPolyhedron = true, params Polygon[] faces)
+            : this(faces, checkAndRebuildValidPolyhedron) { }
+
+        /// <summary>
+        /// Creates a Polyhedron using the passed polygons as its side/polygons
+        /// </summary>
         public Polyhedron(IEnumerable<Polygon> polygons, bool checkAndRebuildValidPolyhedron = true)
         {
             List<Polygon> faces = polygons.ToList();
@@ -219,7 +202,7 @@ namespace GeometryClassLibrary
             }
             if (faces == null || !faces.Any())
             {
-                throw new InvalidPolyhedronException("The polygons you're attempting to use do not form a single closed region.");
+                throw new InvalidPolyhedronException(faces, "The polygons you're attempting to use do not form a single closed region.");
             }
             this.Polygons = faces;
         }
@@ -887,15 +870,22 @@ namespace GeometryClassLibrary
             {
                 var currentEdge = edgesWithoutNeighboringFace[0];
                 var nextFace = _findAndOrientNextFace(currentEdge, unplacedFaces);
+                if (nextFace.IsNull())
+                {
+                    throw new InvalidPolyhedronException(polygonList, "The passed list of faces do not form a closed region.");
+                }
                 _placeFace(nextFace, placedFaces, unplacedFaces, edgesWithoutNeighboringFace);
             }
 
-            if (unplacedFaces.Count == 0)
+            if (unplacedFaces.Count != 0)
             {
-                return placedFaces;
+                throw new InvalidPolyhedronException(polygonList, "Extra faces passed in.");
             }
-            throw new InvalidPolyhedronException();
-
+            if (_getVolumeInCubicInches(placedFaces) < 0)
+            {
+                placedFaces = placedFaces.Select(face => face.ReverseOrientation()).ToList();
+            }
+            return placedFaces;
         }
 
         private static Polygon _findLowestFace(List<Polygon> polygonList)
@@ -903,7 +893,7 @@ namespace GeometryClassLibrary
             var lowestY_Vertex = polygonList.SelectMany(face => face.Vertices).MinByUnitOrDefault(vertex => vertex.Y);
             var bottomFaces = polygonList.Where(face => face.Vertices.Contains(lowestY_Vertex)).ToList();
 
-            if (!bottomFaces.Any()) throw new InvalidPolyhedronException();
+            if (!bottomFaces.Any()) throw new InvalidPolyhedronException(polygonList);
 
             var lowest = bottomFaces.MinByUnitOrDefault(face => Direction.Down.SmallestAngleBetween(face.NormalDirection));
             return lowest.NormalDirection.DotProduct(Direction.Down) < 0 ? lowest.ReverseOrientation() : lowest;
@@ -959,7 +949,7 @@ namespace GeometryClassLibrary
                     }
                 }
             }
-            throw new InvalidPolyhedronException("The passed list of faces do not form a closed region.");
+            return null;
         }
         #endregion
 

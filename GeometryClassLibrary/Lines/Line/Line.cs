@@ -79,14 +79,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Line(Direction direction, Point basePoint = null)
         {
-            if (basePoint == null)
-            {
-                this.BasePoint = Origin;
-            }
-            else
-            {
-                this.BasePoint = basePoint;
-            }
+            this.BasePoint = basePoint ?? Origin;
             this.Direction = direction;
         }
 
