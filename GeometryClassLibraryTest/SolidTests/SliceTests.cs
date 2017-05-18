@@ -42,5 +42,54 @@ namespace GeometryClassLibraryTest
             var slicingPlane = new Plane(new Point(Distance.Inches,72.0000000000743,0,0),new Direction(1,0,0));
             var sliceResults = polyhedron.Slice(slicingPlane);
         }
+
+        // Automatically generated at 5/18/2017 1:44:51 PM
+        [Test]
+        public void SliceError_Case_004DF458()
+        {
+            var polyhedron = new Polyhedron(true, new[]
+            {
+                new Polygon(true,
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 1.5),
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 0),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 0),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 1.5)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 0),
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 1.5),
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 1.5),
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 0),
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 0),
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 0),
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 0),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 0),
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 1.5),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 1.5),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 1.5),
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 1.5),
+                    new Point(Distance.Inches, 181.750000000073, 3.5, 1.5),
+                    new Point(Distance.Inches, 181.750000000085, 29.3749999999576, 1.5),
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 1.5)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 0),
+                    new Point(Distance.Inches, 178.250000000073, 3.5000000000017, 1.5),
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 1.5),
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 0),
+                    new Point(Distance.Inches, 178.250000000086, 30.2499999999654, 1.5),
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 1.5),
+                    new Point(Distance.Inches, 180.000000000072, 30.2499999999645, 0))
+            });
+            var slicingPlane = new Plane(new Point(Distance.Inches, 127.31379563066, 3.5, 1.5), new Direction(0.452633527072262, -0.891696635728836, -7.91985708773556E-16));
+            var sliceResults = polyhedron.Slice(slicingPlane);
+        }
+
     }
 }
