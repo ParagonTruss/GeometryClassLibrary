@@ -152,9 +152,9 @@ namespace GeometryClassLibrary
         public static List<LineSegment> MakeIntoLineSegmentsThatMeet(this IEnumerable<Point> points)
         {
             var array = points.ToArray();
-            if (array.Length == 0)
+            if (array.Length < 2)
             {
-                throw new InvalidPolygonException(array,"Cannot create a polygon from 0 points.");
+                throw new NotEnoughPointsPolygonException("Cannot create a polygon from 0 points.");
             }
 
             var last = array.Length - 1;

@@ -38,20 +38,38 @@ namespace GeometryClassLibrary
         public InvalidLineSegmentException(string message) : base(message) { }
     }
 
+    #region Polygon Exceptions
     public class InvalidPolygonException : GeometricException
     {
-        public IList<Point> Points { get;  }
-        public IList<LineSegment> LineSegments { get; }
-
-        public InvalidPolygonException(IList<LineSegment> segments, string message = null) : base(message)
-        {
-            LineSegments = segments;
-        }
-        public InvalidPolygonException(IList<Point> points, string message = null) : base(message)
-        {
-            Points = points;
-        }
+        public InvalidPolygonException(string message)
+            : base(message) { }
     }
+    public class NotEnoughPointsPolygonException : InvalidPolygonException
+    {
+        public NotEnoughPointsPolygonException(string message)
+            : base(message) { }
+    }
+    public class NotEnoughSegmentsPolygonException : InvalidPolygonException
+    {
+        public NotEnoughSegmentsPolygonException(string message)
+            : base(message) { }
+    }
+    public class NotClosedPolygonException : InvalidPolygonException
+    {
+        public NotClosedPolygonException(string message)
+            : base(message) { }
+    }
+    public class NotCoplanarPolygonException : InvalidPolygonException
+    {
+        public NotCoplanarPolygonException(string message)
+            : base(message) { }
+    }
+    public class SelfIntersectionPolygonException : InvalidPolygonException
+    {
+        public SelfIntersectionPolygonException(string message)
+            : base(message) { }
+    }
+    #endregion
 
     public class InvalidPolyhedronException : GeometricException
     {

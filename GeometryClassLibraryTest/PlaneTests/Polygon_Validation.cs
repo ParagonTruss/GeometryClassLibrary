@@ -12,7 +12,7 @@ namespace GeometryClassLibraryTest
     [TestFixture]
     public class Polygon_Validation
     {
-        [Test()]
+        [Test]
         public void Polygon_Constructor_NoSelfIntersections_ErrorCase_1()
         {
             var points = new List<Point>
@@ -22,9 +22,9 @@ namespace GeometryClassLibraryTest
                new Point(new Distance(-12, Inches), new Distance(-1.8125, Inches)),
                new Point(new Distance(-12, Inches), new Distance(-5.72561896062463, Inches))
            };
-            Assert.Throws<InvalidPolygonException>(() => new Polygon(points));
+            Assert.Throws<SelfIntersectionPolygonException>(() => new Polygon(points));
         }
-        [Test()]
+        [Test]
         public void Polygon_Constructor_NoSelfIntersections()
         {
             Point point1 = Point.MakePointWithInches(0, 0);
@@ -32,15 +32,32 @@ namespace GeometryClassLibraryTest
             Point point3 = Point.MakePointWithInches(1, 1);
             Point point4 = Point.MakePointWithInches(0, 1);
 
-            List<Point> verticesInCorrectOrder = new List<Point>() { point1, point2, point3, point4 };
-            List<Point> verticesInWrongOrder = new List<Point>() { point1, point2, point4, point3 };
+            List<Point> verticesInCorrectOrder = new List<Point> { point1, point2, point3, point4 };
+            List<Point> verticesInWrongOrder = new List<Point> { point1, point2, point4, point3 };
 
             Polygon correctPolygon = new Polygon(verticesInCorrectOrder);
             Area area = correctPolygon.Area;
             area.Should().Be(new Area(new SquareInch(), 1));
 
 
-            Assert.Throws<InvalidPolygonException>(() => new Polygon(verticesInWrongOrder));
+            Assert.Throws<SelfIntersectionPolygonException>(() => new Polygon(verticesInWrongOrder));
+        }
+
+        [Test]
+        public void Polygon_Constructor_CoplanarPoints_ErrorCase_1()
+        {
+            var segments = new[]
+            {
+                new LineSegment(new Point(Inches, 178.25, 29.3556923011416, 0),
+                    new Point(Inches, 180.011803133622, 30.25, 0)),
+                new LineSegment(new Point(Inches, 180, 30.25, 1.5),
+                    new Point(Inches, 178.25, 29.3556923011416, 1.5)),
+                new LineSegment(new Point(Inches, 178.25, 29.3556923011416, 0),
+                    new Point(Inches, 178.25, 29.3556923011416, 1.5)),
+                new LineSegment(new Point(Inches, 180, 30.25, 0),
+                    new Point(Inches, 180.011803133622, 30.25, 1.5))
+            };
+            Assert.DoesNotThrow(() => new Polygon(true, segments));
         }
     }
 }
