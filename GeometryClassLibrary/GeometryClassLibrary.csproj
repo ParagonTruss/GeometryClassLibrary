@@ -77,7 +77,7 @@
     <Compile Include="ExtensionMethods\IEnumerableExtensions.cs" />
     <Compile Include="ExtensionMethods\LineListExtensions.cs" />
     <Compile Include="ExtensionMethods\LineSegmentListExtensions.cs" />
-    <Compile Include="ExtensionMethods\LoggingUtilities.cs" />
+    <Compile Include="ExtensionMethods\Logging.cs" />
     <Compile Include="ExtensionMethods\PlaneRegionListExtensions.cs" />
     <Compile Include="ExtensionMethods\PointListExtensions.cs" />
     <Compile Include="ExtensionMethods\PolygonListExtensions.cs" />

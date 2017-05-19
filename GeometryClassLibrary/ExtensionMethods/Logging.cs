@@ -1,55 +1,67 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary.ExtensionMethods
 {
+    /// <summary>
+    /// Singleton class for asynchronous file logging
+    /// </summary>
+    public class Logging
+    {
+        #region Properties & Destructor
+        private static readonly BlockingCollection<Tuple<string,string>> _log = new BlockingCollection<Tuple<string,string>>();
+       
+        private Logging(){ }
+        private static readonly Logging _instance = new Logging();
+        // destructor relies on singleton instance
+        ~Logging()
+        {
+            foreach (var tuple in _log)
+            {
+                // Write all logged values to files, delete existing records in those files.
+                File.WriteAllText($"{Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)}\\{tuple.Item1}.txt", tuple.Item2);
+            }
+        }
+        #endregion
+        
+        public static void WriteToFile(string fileName, string contents)
+        {
+            _log.Add(Tuple.Create(fileName,contents));
+        }
+
+        public static void WriteToFile(string fileName, IEnumerable<string> contents)
+        {
+            _log.Add(Tuple.Create(fileName,contents.Join("\r\n")));
+        }
+
+        public static void WriteSliceTest(string fileName, Polyhedron polyhedron, Plane slicingPlane)
+        {
+            WriteToFile(fileName, new[]
+            {
+                $"// Automatically generated at {DateTime.Now}",
+                $"[Test]",
+                $"public void SliceError_Case_{Hash(polyhedron, slicingPlane)}()",
+                "{",
+                $"var polyhedron = {polyhedron.AsString()};",
+                $"var slicingPlane = {slicingPlane.AsString()};",
+                "var sliceResults = polyhedron.Slice(slicingPlane);",
+                "}",
+            });
+        }
+        private static string Hash<T1,T2>(T1 item1, T2 item2) => (item1.GetHashCode() ^ item2.GetHashCode()).ToString("X8");
+    }
+
     public static class LoggingUtilities
     {
         public static string Join(this IEnumerable<string> list, string separator)
         {
             return string.Join(separator, list);
         }
-
-        public static void Log(this string contents, string fileName)
-        {
-            File.WriteAllText($"{Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)}\\{fileName}.txt", contents);
-        }
-
-        public static void Log(this IEnumerable<string> contents, string fileName)
-        {
-            File.WriteAllLines($"{Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)}\\{fileName}.txt", contents);
-        }
-
-        public static void WriteSliceTest(Polyhedron polyhedron, Plane slicingPlane, string fileName)
-        {
-            new []
-            {
-                $"// Automatically generated at {DateTime.Now}",
-                $"[Test]",
-                $"public void SliceError_Case_{Hash(polyhedron,slicingPlane)}()",
-                "{",
-                $"var polyhedron = {AsString(polyhedron)};",
-                $"var slicingPlane = {AsString(slicingPlane)};",
-                "var sliceResults = polyhedron.Slice(slicingPlane);",
-                "}",
-            }.Log(fileName);
-        }
-        private static string Hash<T1,T2>(T1 item1, T2 item2) => (item1.GetHashCode() ^ item2.GetHashCode()).ToString("X8");
-
-        public static void Log(this IEnumerable<object> source, string fileName)
-        {
-            AsString(source).Log(fileName);
-        }
-
-        public static void Log(this object item, string fileName)
-        {
-            AsString(item).Log(fileName);
-        }
-        private static string AsString(IEnumerable<object> source)
+        internal static string AsString(this IEnumerable<object> source)
         {
             return "new[]\r\n{\r\n\t" + source.Select(AsString).Join(",\r\n") + "\r\n}";
         }
@@ -58,7 +70,7 @@ namespace GeometryClassLibrary.ExtensionMethods
         // Technically we could use an interface (i.e. ILoggable with method AsString), 
         // but that would require maintaining across several files. 
         // This way has all the logging behavior confined to this one extension file.
-        private static string AsString(object obj)
+        internal static string AsString(this object obj)
         {
             // dynamic keyword doesn't work with extension methods. So we do this instead.
             if (obj is Polyhedron) return AsString(obj as Polyhedron);
@@ -72,39 +84,39 @@ namespace GeometryClassLibrary.ExtensionMethods
             if (obj is Direction) return AsString(obj as Direction);
             throw new NotImplementedException();
         }
-        private static string AsString(Polyhedron polyhedron)
+        internal static string AsString(this Polyhedron polyhedron)
         {
             return $"new Polyhedron(true, {AsString(polyhedron.Polygons)})";
         }
-        private static string AsString(Polygon polygon)
+        internal static string AsString(this Polygon polygon)
         {
             return $"new Polygon(true,\r\n{polygon.Vertices.Select(AsString).Join(",\r\n")})";
         }
-        private static string AsString(Point point)
+        internal static string AsString(this Point point)
         {
-            return $"new Point(Distance.Inches, {AsString(point.X)}, {AsString(point.Y)}, {AsString(point.Z)})";
+            return $"new Point(Distance.Inches, {point.X.ValueInInches}, {point.Y.ValueInInches}, {point.Z.ValueInInches})";
         }
-        private static string AsString(Distance distance)
+        internal static string AsString(this Distance distance)
         {
-            return $"new Point(Distance.Inches, {distance.ValueInInches})";
+            return $"new Distance(Distance.Inches, {distance.ValueInInches})";
         }
-        private static string AsString(LineSegment segment)
+        internal static string AsString(this LineSegment segment)
         {
             return $"new LineSegment({AsString(segment.BasePoint)}, {AsString(segment.EndPoint)})";
         }
-        private static string AsString(Vector vector)
+        internal static string AsString(this Vector vector)
         {
             return $"new Vector({AsString(vector.BasePoint)}, {AsString(vector.EndPoint)})";
         }
-        private static string AsString(Line line)
+        internal static string AsString(this Line line)
         {
             return $"new Line({AsString(line.BasePoint)}, {AsString(line.Direction)})";
         }
-        private static string AsString(Plane plane)
+        internal static string AsString(this Plane plane)
         {
             return $"new Plane({AsString(plane.BasePoint)},{AsString(plane.NormalDirection)})";
         }
-        private static string AsString(Direction direction)
+        internal static string AsString(this Direction direction)
         {
             return $"new Direction({direction.X}, {direction.Y}, {direction.Z})";
         }
