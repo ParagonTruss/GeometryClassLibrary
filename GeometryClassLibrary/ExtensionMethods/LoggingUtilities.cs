@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnitClassLibrary;
+using UnitClassLibrary.DistanceUnit;
 
-namespace GeometryClassLibrary
+namespace GeometryClassLibrary.ExtensionMethods
 {
     public static class LoggingUtilities
     {

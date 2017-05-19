@@ -144,8 +144,8 @@ namespace GeometryClassLibrary
         /// </summary>
         protected Polygon() { }
 
-        public Polygon(bool shouldValidate, params Point[] points) : this(points, shouldValidate) { }
-
+        public Polygon(bool shouldValidate, params Point[] points) : this(points, shouldValidate) { }        
+        public Polygon(bool shouldValidate, params LineSegment[] segments) : this(segments, shouldValidate) { }
         /// <summary>
         /// Makes a polygon by connecting the points with line segments in the order they are in the list. If they are not in the correct order you can tell it
         /// to sort the linessegments of the polygon clockwise with the boolean flag unless you need it in the specific order it is in

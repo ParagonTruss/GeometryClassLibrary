@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GeometryClassLibrary.ExtensionMethods;
 using UnitClassLibrary;
 using UnitClassLibrary.DistanceUnit;
 using MoreLinq;

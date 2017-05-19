@@ -111,9 +111,9 @@
     <Compile Include="ListExtensionTests\IEnumerableExtensionsTests.cs" />
     <Compile Include="PlaneTests\NonPolygonTests.cs" />
     <Compile Include="CoordinateTests\CoordinateSystemTest.cs" />
+    <Compile Include="PlaneTests\Polygon_Overlap_Tests.cs" />
+    <Compile Include="PlaneTests\Polygon_Validation.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />
-    <Compile Include="Polygon_Overlap_Tests.cs" />
-    <Compile Include="Polygon_Validation.cs" />
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
@@ -130,7 +130,6 @@
     <Compile Include="SolidTests\PolyhedronTests.cs" />
     <Compile Include="CoordinateTests\RotationTests.cs" />
     <Compile Include="SolidTests\SliceTests.cs" />
-    <Compile Include="SolidTests\SolidTests.cs" />
     <Compile Include="ListExtensionTests\LineListExtensionTests.cs" />
     <Compile Include="ListExtensionTests\LineSegmentListExtensionTests.cs" />
     <Compile Include="LineTests\LineSegmentTests.cs" />
