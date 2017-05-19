@@ -33,7 +33,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A plane region is a section of a plane.
     /// </summary>
-    public partial class Polygon : Plane, IShift<Polygon>
+    public partial class Polygon : Plane, IShift<Polygon>, IEquatable<Polygon>
     {
         public static explicit operator Polygon(PlaneRegion p)
         {
@@ -227,49 +227,31 @@ namespace GeometryClassLibrary
             return !region1.Equals(region2);
         }
 
+        public bool Equals(Polygon other)
+        {
+            //make sure we didnt get a null
+            if (other == null)
+            {
+                return false;
+            }
+            if (this.Vertices.Count != other.Vertices.Count) return false;
+            if (!this.NormalDirection.Equals(other.NormalDirection))
+            {
+                other = other.ReverseOrientation();
+            }
+            var count = this.Vertices.Count;
+            var offset = other.Vertices.FindIndex(v => v.Equals(this.Vertices[0]));
+
+            if (offset == -1) return false;
+
+            var allEqual = this.Vertices.Select((point, i) => point.Equals(other.Vertices[(i + offset) % count])).All(_.Identity);
+            return allEqual;
+        }
+
         /// <summary>
         /// does the same thing as ==
         /// </summary>
-        public override bool Equals(object obj)
-        {
-            //make sure we didnt get a null
-            if (obj == null || !(obj is Polygon))
-            {
-                return false;
-            }
-            Polygon comparablePolygon = (Polygon)obj;
-
-            //if they have differnt number of boundaries they cant be equal
-            if (this.LineSegments.Count != comparablePolygon.LineSegments.Count)
-            {
-                return false;
-            }
-
-            //now check each line segment
-            foreach (LineSegment segment in this.LineSegments)
-            {
-                //make sure each segment is represented exactly once
-                int timesUsed = 0;
-                foreach (LineSegment segmentOther in comparablePolygon.LineSegments)
-                {
-                    if (segment == segmentOther)
-                    {
-                        timesUsed++;
-                    }
-                }
-
-                //make sure each is used exactly once
-                if (timesUsed != 1)
-                {
-                    return false;
-                }
-            }
-
-            //if the segments were all the same, then they're equal
-            return true;
-        }
-
-        
+        public override bool Equals(object obj) => (obj as Polygon)?.Equals(this) ?? false;
 
         #endregion
 

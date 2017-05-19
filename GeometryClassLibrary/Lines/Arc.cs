@@ -29,7 +29,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// An arc is a finite line (having a start and end) that is curved as around a circle.
     /// </summary>
-    public class Arc : IEdge
+    public class Arc : IEdge, IEquatable<Arc>
     {
         #region Properties and Fields
 
@@ -328,6 +328,30 @@ namespace GeometryClassLibrary
                 return true;
             }
             return !arc1.Equals(arc2);
+        }
+
+        public bool Equals(Arc other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            Arc arc = other;
+            if (this.CenterPoint != arc.CenterPoint)
+            {
+                return false;
+            }
+            if (this.IsClosed && arc.IsClosed)
+            {
+                return this.NormalDirection == arc.NormalDirection ||
+                       this.NormalDirection == arc.NormalDirection.Reverse();
+            }
+            return (this.BasePoint == arc.BasePoint &&
+                    this.EndPoint == arc.EndPoint &&
+                    this.NormalDirection == arc.NormalDirection) ||
+                   (this.BasePoint == arc.EndPoint &&
+                    this.EndPoint == arc.BasePoint &&
+                    this.NormalDirection == arc.NormalDirection.Reverse());
         }
 
         /// <summary>

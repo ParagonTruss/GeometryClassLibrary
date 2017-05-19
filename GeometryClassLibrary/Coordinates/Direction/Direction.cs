@@ -27,7 +27,7 @@ using static UnitClassLibrary.AngleUnit.Angle;
 
 namespace GeometryClassLibrary
 {
-    public partial class Direction : IRotate<Direction>
+    public partial class Direction : IRotate<Direction>, IEquatable<Direction>
     {
         #region Properties and Fields
 
