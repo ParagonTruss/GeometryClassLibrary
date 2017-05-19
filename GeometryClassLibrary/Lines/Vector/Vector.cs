@@ -464,7 +464,9 @@ namespace GeometryClassLibrary
        
         public bool IsPerpendicularTo(Vector other)
         {
-            return this.SmallestAngleBetween(other) == Angle.RightAngle;
+            Angle smallestAngle = this.SmallestAngleBetween(other);
+            bool isRightAngle = smallestAngle == Angle.RightAngle;
+            return isRightAngle;
         }
 
         public bool IsParallelTo(Vector vector)
