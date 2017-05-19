@@ -21,42 +21,42 @@ namespace GeometryClassLibrary
 {
     public partial class Direction
     {
-        public static Direction NoDirection = new Direction(0, 0, 0);
+        public static Direction NoDirection { get; } = new Direction(0, 0, 0);
         
         /// <summary>
         /// A staticly defined Direction that is positive in the X direction. 
         /// Extends to the right in the XY plane.
         /// </summary>
-        public static Direction Right = new Direction(1, 0, 0); 
+        public static Direction Right {get; } = new Direction(1, 0, 0);
 
         /// <summary>
         /// A staticly defined Direction that is negative in the X direction. 
         /// Extends to the left in the XY plane.
         /// </summary>
-        public static Direction Left = new Direction(-1, 0, 0); 
+        public static Direction Left {get; } = new Direction(-1, 0, 0);
 
         /// <summary>
         /// A staticly defined Direction that is positive in the Y direction. 
         /// Extends upward in the XY plane.
         /// </summary>
-        public static Direction Up = new Direction(0, 1, 0); 
+        public static Direction Up {get; } = new Direction(0, 1, 0);
 
         /// <summary>
         /// A staticly defined Direction that is negative in the Y direction. 
         /// Extends downward in the XY plane.
         /// </summary>
-        public static Direction Down = new Direction(0, -1, 0); 
+        public static Direction Down {get; } = new Direction(0, -1, 0);
         
         /// <summary>
         /// A staticly defined Direction that is positive in the Z direction.
         /// Extends towards the viewer when looking at the XY plane.
         /// </summary>
-        public static Direction Out = new Direction(0, 0, 1); 
+        public static Direction Out {get; } = new Direction(0, 0, 1);
 
         /// <summary>
         /// A staticly defined Direction that is negative in the Z direction.
         /// Extends away from the viewer when looking at the XY plane.
         /// </summary>
-        public static Direction Back = new Direction(0, 0, -1); 
+        public static Direction Back {get; } = new Direction(0, 0, -1);
     }
 }
