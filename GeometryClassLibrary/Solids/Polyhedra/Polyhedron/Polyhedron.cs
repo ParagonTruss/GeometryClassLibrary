@@ -27,7 +27,7 @@ using MoreLinq;
 
 namespace GeometryClassLibrary
 {
-    public class Polyhedron : IShift<Polyhedron>
+    public class Polyhedron : IShift<Polyhedron>, IEquatable<Polyhedron>
     {
         #region Properties and Fields
 
@@ -260,10 +260,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// does the same thing as ==
         /// </summary>
-        public override bool Equals(object obj)
+        public bool Equals(Polyhedron obj)
         {
             //make sure the obj passed is not null
-            if (obj == null || !(obj is Polyhedron))
+            if (obj == null)
             {
                 return false;
             }
@@ -296,6 +296,10 @@ namespace GeometryClassLibrary
             //if they were all used exactly once than its equal
             return true;
         }
+
+        public override bool Equals(object obj) => (obj as Polyhedron)?.Equals(this) ?? false;
+        
+        public override string ToString() => $"faces = {this.Polygons.Join(",\r\n")}";
         #endregion
 
         #region Methods

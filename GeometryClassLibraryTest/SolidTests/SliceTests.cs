@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary.AngleUnit;
@@ -97,6 +100,77 @@ namespace GeometryClassLibraryTest
             var slicingPlane = new Plane(new Point(Inches, 127.31379563066, 3.5, 1.5), new Direction(0.452633527072262, -0.891696635728836, 0));
             var sliceResults = polyhedron.Slice(slicingPlane);
         }
+        
+        // Automatically generated at 5/19/2017 2:06:22 PM
+        [Test]
+        public void SliceError_Case_0146718B()
+        {
+            var polyhedron = new Polyhedron(true, new[]
+            {
+                new Polygon(true,
+                    new Point(Inches, 120, 60.25, 0),
+                    new Point(Inches, 120, 64.16311896, 0),
+                    new Point(Inches, 260, -5.83688104, 0),
+                    new Point(Inches, 260, -9.75, 0)),
+                new Polygon(true,
+                    new Point(Inches, 260, -9.75, 0),
+                    new Point(Inches, 260, -9.75, 1.5),
+                    new Point(Inches, 120, 60.25, 1.5),
+                    new Point(Inches, 120, 60.25, 0)),
+                new Polygon(true,
+                    new Point(Inches, 260, -5.83688104, 0),
+                    new Point(Inches, 260, -5.83688104, 1.5),
+                    new Point(Inches, 260, -9.75, 1.5),
+                    new Point(Inches, 260, -9.75, 0)),
+                new Polygon(true,
+                    new Point(Inches, 120, 64.16311896, 0),
+                    new Point(Inches, 120, 64.16311896, 1.5),
+                    new Point(Inches, 260, -5.83688104, 1.5),
+                    new Point(Inches, 260, -5.83688103999999, 0)),
+                new Polygon(true,
+                    new Point(Inches, 120, 60.25, 0),
+                    new Point(Inches, 120, 60.25, 1.5),
+                    new Point(Inches, 120, 64.16311896, 1.5),
+                    new Point(Inches, 120, 64.16311896, 0)),
+                new Polygon(true,
+                    new Point(Inches, 120, 60.25, 1.5),
+                    new Point(Inches, 260, -9.75, 1.5),
+                    new Point(Inches, 260, -5.83688103999999, 1.5),
+                    new Point(Inches, 120, 64.16311896, 1.5))
+            });
+            var slicingPlane = new Plane(new Point(Inches, 252, -1.83688104, 0),new Direction(0.967862745704715, -0.251479035859714, 0));
+            var sliceResults = polyhedron.Slice(slicingPlane);
+            var referencePoint = new Point(Inches, 120, 62.2, 0);
+            var result = sliceResults.First(solid => slicingPlane.PointIsOnSameSideAs(solid.CenterPoint, referencePoint));
+            
+            #region Expected solid
+            Angle pitchAngle =  new Angle(new Radian(), Math.Atan2(6, 12));
+            Angle cutAngle = new Angle(new Degree(), 78);
+            //make the points (0.25 is from the butt cut)
+            Point rightMemberTopRight = Point.MakePointWithInches(10 * 12, 64.16311896, 0); //60.25 + 3.91311896 = 64.16311896
+            Point rightMemberBottomRight = Point.MakePointWithInches(10 * 12, 60.25, 0); //10 * 12 * .5 = 60 + 0.25
+            Point rightMemberTopRightBack = Point.MakePointWithInches(10 * 12, 64.16311896, 1.5); //60.25 + 3.91311896 = 64.16311896
+            Point rightMemberBottomRightBack = Point.MakePointWithInches(10 * 12, 60.25, 1.5); //10 * 12 * .5 = 60 + 0.25
 
+            Angle largeAngleForAdjustment = cutAngle + pitchAngle - Angle.RightAngle;
+            double largeAngleXAdjust = 3.5 / (Angle.Cosine(pitchAngle - largeAngleForAdjustment) * Angle.Sine(largeAngleForAdjustment));//4.16311896 * Math.Tan(largeAngleForAdjustment.InRadians.Value);
+            Point newRightLargeMemberBottomLeft = Point.MakePointWithInches(252 - largeAngleXAdjust, -6 + 0.25 + largeAngleXAdjust * 0.5, 0);
+            Point newRightLargeMemberTopLeft = Point.MakePointWithInches(252, -6 + 4.16311896, 0);
+            Point newRightLargeMemberBottomLeftBack = Point.MakePointWithInches(252 - largeAngleXAdjust, -6 + 0.25 + largeAngleXAdjust * 0.5, 1.5);
+            Point newRightLargeMemberTopLeftBack = Point.MakePointWithInches(252, -6 + 4.16311896, 1.5);
+
+            List<Polygon> expectedRightFaces = new List<Polygon>();
+            expectedRightFaces.Add(new Polygon(new List<Point> { newRightLargeMemberBottomLeft, newRightLargeMemberTopLeft, rightMemberTopRight, rightMemberBottomRight }));
+            expectedRightFaces.Add(new Polygon(new List<Point> { newRightLargeMemberBottomLeftBack, newRightLargeMemberTopLeftBack, rightMemberTopRightBack, rightMemberBottomRightBack }));
+            expectedRightFaces.Add(new Polygon(new List<Point> { newRightLargeMemberBottomLeft, newRightLargeMemberBottomLeftBack, newRightLargeMemberTopLeftBack, newRightLargeMemberTopLeft }));
+            expectedRightFaces.Add(new Polygon(new List<Point> { newRightLargeMemberTopLeft, newRightLargeMemberTopLeftBack, rightMemberTopRightBack, rightMemberTopRight }));
+            expectedRightFaces.Add(new Polygon(new List<Point> { rightMemberTopRight, rightMemberTopRightBack, rightMemberBottomRightBack, rightMemberBottomRight }));
+            expectedRightFaces.Add(new Polygon(new List<Point> { rightMemberBottomRight, rightMemberBottomRightBack, newRightLargeMemberBottomLeftBack, newRightLargeMemberBottomLeft }));
+    
+            var expected = new Polyhedron(expectedRightFaces);
+            #endregion        
+            
+            result.Should().Be(expected);
+        }
     }
 }

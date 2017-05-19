@@ -253,6 +253,8 @@ namespace GeometryClassLibrary
         /// </summary>
         public override bool Equals(object obj) => (obj as Polygon)?.Equals(this) ?? false;
 
+        public override string ToString() => $"vertices = {this.Vertices.Join(",")}";
+        
         #endregion
 
         #region Methods

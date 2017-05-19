@@ -51,7 +51,12 @@ namespace GeometryClassLibrary
             list.RemoveAt(index);
             return true;
         }
-
+        
+        public static string Join<T>(this IEnumerable<T> list, string separator)
+        {
+            return string.Join(separator, list);
+        }
+        
         #region IGrouping Implementation
         public class Group<TKey,TElement> : IGrouping<TKey,TElement>
             where TKey : IEquatable<TKey>

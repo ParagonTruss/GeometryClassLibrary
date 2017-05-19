@@ -26,14 +26,13 @@ using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.FootUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Metric.MillimeterUnit;
-//using VisualGeometryDebugger;
 
 namespace GeometryClassLibrary
 {
     /// <summary>
     /// Point class that gracefully handles 2d and 3d points
     /// </summary>
-    public partial class Point : IEquatable<Point>
+    public class Point : IEquatable<Point>
     {
         #region Properties and Fields
 
@@ -101,9 +100,6 @@ namespace GeometryClassLibrary
             Z = toCopy.Z;
         }
 
-        //public Point(Unit<DistanceType> x, Unit<DistanceType> y, Unit<DistanceType> z)
-        //    : this((Distance)x,(Distance)y, (Distance)z)
-        //{ }
         #endregion
 
         #region Overloaded Operators
