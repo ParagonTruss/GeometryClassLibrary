@@ -43,7 +43,7 @@ namespace GeometryClassLibrary
                         {
                             whatTheNormalShouldBe = vector1.CrossProduct(vector2);
                         }
-                        if (!whatTheNormalShouldBe.IsPerpendicularTo(vector2, 0.3*Angle.Degrees))
+                        if (!whatTheNormalShouldBe.IsPerpendicularTo(vector2))
                         {
                             return false;
                         }

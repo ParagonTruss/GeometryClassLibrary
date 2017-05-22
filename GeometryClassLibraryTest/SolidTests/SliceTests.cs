@@ -47,6 +47,7 @@ namespace GeometryClassLibraryTest
         }
 
         // Automatically generated at 5/18/2017 1:44:51 PM
+        [Ignore("Should fail")]
         [Test]
         public void SliceError_Case_004DF458()
         {
