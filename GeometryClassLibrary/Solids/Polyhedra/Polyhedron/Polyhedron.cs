@@ -375,7 +375,19 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the two Polyhedrons created by a slice. returns the solid on the normal side of the plane first
+        /// Slice by a plane, and return the solid on the same side as the reference point first.
+        /// </summary>
+        public List<Polyhedron> Slice(Plane slicingPlane, Point referencePoint)
+        {
+            if (!slicingPlane.PointIsOnNormalSide(referencePoint))
+            {
+                slicingPlane = new Plane(new Line(slicingPlane.BasePoint, slicingPlane.NormalDirection.Reverse()));
+            }
+            return this.Slice(slicingPlane);
+        }
+
+        /// <summary>
+        /// Slice the polyhedron by a plane and return the one on the normal side of the plane first.
         /// </summary>
         public List<Polyhedron> Slice(Plane slicingPlane)
         {

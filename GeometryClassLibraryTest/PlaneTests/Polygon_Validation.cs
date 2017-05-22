@@ -23,6 +23,8 @@ namespace GeometryClassLibraryTest
                new Point(new Distance(-12, Inches), new Distance(-5.72561896062463, Inches))
            };
             Assert.Throws<SelfIntersectionPolygonException>(() => new Polygon(points));
+            
+          
         }
         [Test]
         public void Polygon_Constructor_NoSelfIntersections()
