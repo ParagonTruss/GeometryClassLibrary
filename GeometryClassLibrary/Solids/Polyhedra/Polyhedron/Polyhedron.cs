@@ -472,19 +472,19 @@ namespace GeometryClassLibrary
             }
             if (side == 0)
             {
-                unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
+                unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
                 if (slicedPolygons.Count > 1)
                 {
-                    unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
+                    unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
                 }
             }
             else if (side == 1)
             {
-                unconstructedInsidePolyhedron.Add(slicedPolygons[0]);
+                unconstructedOutsidePolyhedron.Add(slicedPolygons[0]);
                 
                 if (slicedPolygons.Count > 1)
                 {
-                    unconstructedOutsidePolyhedron.Add(slicedPolygons[1]);
+                    unconstructedInsidePolyhedron.Add(slicedPolygons[1]);
                 }
             }
         }
