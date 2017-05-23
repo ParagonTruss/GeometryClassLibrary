@@ -378,6 +378,15 @@ namespace GeometryClassLibrary
 
         public virtual Point IntersectWithSegment(LineSegment segment)
         {
+            if (this.Contains(segment.BasePoint))
+            {
+                return segment.BasePoint;
+            }
+            if (this.Contains(segment.EndPoint))
+            {
+                return segment.EndPoint;
+            }
+            
             Point possibleIntersection = this.IntersectWithLine(segment);
             if (possibleIntersection != null && possibleIntersection.IsOnLineSegment(segment))
             {
