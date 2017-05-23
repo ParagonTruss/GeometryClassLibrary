@@ -47,7 +47,6 @@ namespace GeometryClassLibraryTest
         }
 
         // Automatically generated at 5/18/2017 1:44:51 PM
-        [Ignore("Should fail")]
         [Test]
         public void SliceError_Case_004DF458()
         {
@@ -315,7 +314,6 @@ namespace GeometryClassLibraryTest
             sliceResults.Last().Should().Be(expected);    
         }
     
-        [Ignore("Incorrect test")]
         [Test]
         public void Slice_AngleCut_4()
         {
@@ -354,7 +352,7 @@ namespace GeometryClassLibraryTest
             });
             var slicingPlane = new Plane(new Point(Inches, 252, -1.83688104, 0),new Direction(0.967862745704715, -0.251479035859714, 0));
             var referencePoint = new Point(Inches, 120, 62.2, 0);
-            var result = polyhedron.Slice(slicingPlane, referencePoint).Last();
+            var result = polyhedron.Slice(slicingPlane, referencePoint).First();
             
             #region Expected solid
             Angle pitchAngle = new Angle(new Radian(), Math.Atan2(6, 12));
@@ -366,7 +364,7 @@ namespace GeometryClassLibraryTest
             Point rightMemberBottomRightBack = Point.MakePointWithInches(10 * 12, 60.25, 1.5); //10 * 12 * .5 = 60 + 0.25
 
             Angle largeAngleForAdjustment = cutAngle + pitchAngle - Angle.RightAngle;
-            double largeAngleXAdjust = 3.5 / (Angle.Cosine(pitchAngle - largeAngleForAdjustment) * Angle.Sine(largeAngleForAdjustment));//4.16311896 * Math.Tan(largeAngleForAdjustment.InRadians.Value);
+            double largeAngleXAdjust = 3.5 / Angle.Cosine(pitchAngle - largeAngleForAdjustment) * Angle.Sine(largeAngleForAdjustment);//4.16311896 * Math.Tan(largeAngleForAdjustment.InRadians.Value);
             Point newRightLargeMemberBottomLeft = Point.MakePointWithInches(252 - largeAngleXAdjust, -6 + 0.25 + largeAngleXAdjust * 0.5, 0);
             Point newRightLargeMemberTopLeft = Point.MakePointWithInches(252, -6 + 4.16311896, 0);
             Point newRightLargeMemberBottomLeftBack = Point.MakePointWithInches(252 - largeAngleXAdjust, -6 + 0.25 + largeAngleXAdjust * 0.5, 1.5);

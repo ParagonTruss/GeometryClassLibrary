@@ -45,7 +45,6 @@ namespace GeometryClassLibraryTest
             Assert.Throws<SelfIntersectionPolygonException>(() => new Polygon(verticesInWrongOrder));
         }
 
-        [Ignore("Should fail")]
         [Test]
         public void Polygon_Constructor_CoplanarPoints_ErrorCase_1()
         {
@@ -60,7 +59,7 @@ namespace GeometryClassLibraryTest
                 new LineSegment(new Point(Inches, 180, 30.25, 0),
                     new Point(Inches, 180.011803133622, 30.25, 1.5))
             };
-            Assert.DoesNotThrow(() => new Polygon(true, segments));
+            Assert.Throws<NotCoplanarPolygonException>(() => new Polygon(true, segments));
         }
     }
 }
