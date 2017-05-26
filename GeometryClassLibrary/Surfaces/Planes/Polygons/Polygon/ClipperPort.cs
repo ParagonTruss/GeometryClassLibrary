@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
-using UnitClassLibrary.AngleUnit;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
 using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
 using static UnitClassLibrary.DistanceUnit.Distance;

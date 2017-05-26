@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using GeometryClassLibrary;
-using MoreLinq;
 using NUnit.Framework;
 using UnitClassLibrary;
 using UnitClassLibrary.AngleUnit;

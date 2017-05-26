@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GeometryClassLibrary;
 using NUnit.Framework;
-using System.Linq;
 using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest

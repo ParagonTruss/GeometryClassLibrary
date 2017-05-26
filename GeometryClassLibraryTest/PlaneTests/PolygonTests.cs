@@ -8,7 +8,6 @@ using UnitClassLibrary.AngleUnit;
 using UnitClassLibrary.AreaUnit;
 using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.DistanceUnit;
-using UnitClassLibrary.DistanceUnit.DistanceTypes;
 using static UnitClassLibrary.AngleUnit.Angle;
 using static UnitClassLibrary.DistanceUnit.Distance;
 

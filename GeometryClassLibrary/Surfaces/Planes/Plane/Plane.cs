@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using MoreLinq;
-using UnitClassLibrary;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AreaUnit;
