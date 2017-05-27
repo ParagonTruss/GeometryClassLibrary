@@ -122,7 +122,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Vector(Point basePoint, IVector vector)
         {
-            this.BasePoint = basePoint;
+            this.BasePoint = basePoint ?? Point.Origin;
             this.Direction = vector.Direction;
             this.Magnitude = vector.Magnitude;
         }
@@ -143,7 +143,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public Vector(Point passedBasePoint, Direction direction, Distance magnitude)
         {
-            this.BasePoint = passedBasePoint;
+            this.BasePoint = passedBasePoint ?? Point.Origin;
             this.Direction = direction;
             this.Magnitude = magnitude;
         }

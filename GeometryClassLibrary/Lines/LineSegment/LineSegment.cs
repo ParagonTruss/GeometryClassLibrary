@@ -113,15 +113,16 @@ namespace GeometryClassLibrary
         /// </summary>
         public LineSegment(Point passedBasePoint, IVector passedVector)
         {
-            this.BasePoint = passedBasePoint;
-            this.EndPoint = new Vector(passedBasePoint, passedVector).EndPoint;
+            this.BasePoint = passedBasePoint ?? Point.Origin;
+            this.EndPoint = new Vector(this.BasePoint, passedVector).EndPoint;
             _checkSegment();
         }
 
         public LineSegment(Point basePoint, Direction direction, Distance magnitude)
         {
-            this.BasePoint = basePoint;
-            this.EndPoint = new Vector(basePoint, direction, magnitude).EndPoint;
+            this.BasePoint = basePoint ?? Point.Origin;
+            this.EndPoint = new Vector(this.BasePoint, direction, magnitude).EndPoint;
+            _checkSegment();
         }
         public LineSegment(Direction direction, Distance magnitude)
         {
@@ -134,6 +135,7 @@ namespace GeometryClassLibrary
         {
             this.BasePoint = points[0];
             this.EndPoint = points[1];
+            _checkSegment();
         }
 
         /// <summary>
@@ -166,7 +168,7 @@ namespace GeometryClassLibrary
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.BasePoint.GetHashCode() ^ this.EndPoint.GetHashCode();
         }
 
         /// <summary>
@@ -283,7 +285,7 @@ namespace GeometryClassLibrary
             {
                 return this.EndPoint;
             }
-            Point potentialIntersect = new Line(segment).IntersectWithLine(new Line(segment));
+            Point potentialIntersect = new Line(this).IntersectWithLine(new Line(segment));
 
             if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(segment) && potentialIntersect.IsOnLineSegment(this))
             {

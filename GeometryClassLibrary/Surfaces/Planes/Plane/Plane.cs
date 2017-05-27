@@ -468,7 +468,9 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool Intersects(Polygon polygon)
         {
-            Line slicingLine = new Line(polygon.IntersectingSegment(this));
+            var intersectingSegment = polygon.IntersectingSegment(this);
+            if (intersectingSegment == null) return false;
+            Line slicingLine = new Line(intersectingSegment);
             return (slicingLine != null && polygon.DoesIntersect(slicingLine));
         }
 

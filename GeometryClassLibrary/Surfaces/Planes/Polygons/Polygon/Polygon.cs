@@ -402,7 +402,9 @@ namespace GeometryClassLibrary
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first</returns>
         public List<Polygon> Slice(Plane slicingPlane)
         {
-            Line slicingLine = new Line(this.IntersectingSegment(slicingPlane));
+            var intersectingSegment = this.IntersectingSegment(slicingPlane);
+            if (intersectingSegment == null) return new List<Polygon> {new Polygon(this)};
+            Line slicingLine = new Line(intersectingSegment);
 
             return this._slice(slicingLine, slicingPlane);
         }
