@@ -70,6 +70,13 @@ namespace GeometryClassLibrary
         /// <param name="vector"></param>
         public Translation(Vector vector)
             : this(vector.EndPoint - vector.BasePoint) { }
+        
+        /// <summary>
+        /// Creates a Translation in the direction of the given vector.
+        /// </summary>
+        /// <param name="vector"></param>
+        public Translation(IVector vector)
+            : this(vector.EndPoint - vector.BasePoint) { }
 
         /// <summary>
         /// Creates a translation with the given translation Dimesnions in each direction

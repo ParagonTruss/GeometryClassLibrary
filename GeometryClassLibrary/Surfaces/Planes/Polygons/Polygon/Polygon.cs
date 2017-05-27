@@ -1352,7 +1352,7 @@ namespace GeometryClassLibrary
             return Rectangle(sideLength, sideLength, basePoint);
         }
 
-        public static Polygon Triangle(Vector vector1, Vector vector2, Point basePoint = null)
+        public static Polygon Triangle(IVector vector1, IVector vector2, Point basePoint = null)
         {
             if (basePoint == null)
             {
