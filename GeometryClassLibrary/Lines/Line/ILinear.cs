@@ -117,6 +117,18 @@ namespace GeometryClassLibrary
             return (otherLine.Direction == thisLine.Direction || otherLine.Direction == thisLine.Direction.Reverse());
         }
         
+        
+        /// <summary>
+        /// Determines if two lines are parallel up to a custom angular tolerance.
+        /// That is, if the lines are within that angle of each other the lines are considered "parallel"
+        /// </summary>
+        public static bool IsParallelTo(this ILinear thisLine, ILinear otherLine, Angle tolerance)
+        {
+            var angle = thisLine.SmallestAngleBetween(otherLine);
+            angle = Angle.Exactly(angle.InRadians.Value, Angle.Radians);
+            return angle == tolerance;
+        }
+        
         /// <summary>
         /// Returns whether or not the two lines are perindicular to each other
         /// </summary>

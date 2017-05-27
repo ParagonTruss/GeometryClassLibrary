@@ -265,17 +265,6 @@ namespace GeometryClassLibrary
             return this.Contains(segment.BasePoint) && this.Contains(segment.EndPoint);
         }
 
-        /// <summary>
-        /// Determines if two lines are parallel up to a custom angular tolerance.
-        /// That is, if the lines are within that angle of each other the lines are considered "parallel"
-        /// </summary>
-        public bool IsParallelTo(Line line, Angle tolerance)
-        {
-            var angle = this.SmallestAngleBetween(line);
-            angle = Angle.Exactly(angle.InRadians.Value, Angle.Radians);
-            return angle == tolerance;
-        }
-
         // public 
         /// <summary>
         /// Determines whether or not the two lines are perpindicular to each other, up to a given tolerance.
