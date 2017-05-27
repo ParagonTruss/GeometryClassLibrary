@@ -56,6 +56,21 @@ namespace GeometryClassLibrary
         /// Returns the magnitude of the vector
         /// </summary>
         public Distance Magnitude => Length;
+        
+        /// <summary>
+        /// Returns the x-component of this vector
+        /// </summary>
+        public Distance XComponent => Length * Direction.X;
+
+        /// <summary>
+        /// Returns the y-component of this vector
+        /// </summary>
+        public Distance YComponent => Length * Direction.Y;
+
+        /// <summary>
+        /// Returns the z-component of this vector
+        /// </summary>
+        public Distance ZComponent => Length * Direction.Z;
 
         /// <summary>
         /// Returns the midpoint of this lineSegment

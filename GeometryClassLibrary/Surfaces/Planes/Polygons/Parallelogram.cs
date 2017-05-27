@@ -25,7 +25,7 @@ namespace GeometryClassLibrary
     {
         public override Point Centroid {get { return base.CenterPoint; }}
 
-        public Parallelogram(Vector vector1, Vector vector2, Point basePoint = null)
+        public Parallelogram(IVector vector1, IVector vector2, Point basePoint = null)
             : base(Parallelogram(vector1, vector2, basePoint)) { }
 
         public Parallelogram(KeyValuePair<Vector, Vector> pair, Point basePoint = null)
