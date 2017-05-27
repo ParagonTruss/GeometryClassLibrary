@@ -109,7 +109,7 @@ namespace GeometryClassLibrary
 
         private void checkHasRightAngle(List<LineSegment> sides)
         {
-            if (!(((Line)(sides[0])).IsPerpendicularTo((Line)(sides[1])) || ((Line)(sides[0])).IsPerpendicularTo((Line)(sides[2])) || ((Line)(sides[1])).IsPerpendicularTo((Line)(sides[2]))))
+            if (!((new Line(sides[0])).IsPerpendicularTo(new Line(sides[1])) || (new Line(sides[0])).IsPerpendicularTo(new Line(sides[2])) || (new Line(sides[1])).IsPerpendicularTo(new Line(sides[2]))))
             {
                 throw new ArgumentException("No right angle in this triangle.");
             }

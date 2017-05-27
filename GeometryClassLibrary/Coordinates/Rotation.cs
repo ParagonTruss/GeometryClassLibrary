@@ -92,10 +92,10 @@ namespace GeometryClassLibrary
         /// Creates a rotation about the input Axis and with the input Angle of 0 if the angle is omitted
         /// </summary>
         
-        public Rotation(Line axisOfRotation, Angle rotationAngle)
+        public Rotation(ILinear axisOfRotation, Angle rotationAngle)
         {
             this.RotationAngle = rotationAngle;
-            this.AxisOfRotation = axisOfRotation;
+            this.AxisOfRotation = new Line(axisOfRotation);
         }
 
         public Rotation(Angle rotationAngle, Line axisOfRotation = null)
@@ -187,7 +187,7 @@ namespace GeometryClassLibrary
             var singularMatrix = rotationMatrix  - Matrix.IdentityMatrix(3);
 
             var nullSpace = (singularMatrix).NullSpace();
-            axis = nullSpace[0];
+            axis = new Line(nullSpace[0]);
 
             var row = singularMatrix.Rows().FirstOrDefault(d => d.Any(v => Math.Abs(v) > 0.5));
             if (row != null)

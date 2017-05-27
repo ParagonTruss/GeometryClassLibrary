@@ -167,9 +167,9 @@ namespace GeometryClassLibrary
 
         private Line _getNormalLine()
         {
-            Vector vector1 = (LineSegments.OrderBy(s => s.EndPoint.X).ThenBy(s => s.EndPoint.Y).ThenBy(s => s.EndPoint.Z).First());
+            IVector vector1 = (LineSegments.OrderBy(s => s.EndPoint.X).ThenBy(s => s.EndPoint.Y).ThenBy(s => s.EndPoint.Z).First());
 
-            Vector vector2 = LineSegments.First(s => s.BasePoint == vector1.EndPoint);
+            IVector vector2 = LineSegments.First(s => s.BasePoint == vector1.EndPoint);
 
             var normal = vector1.CrossProduct(vector2);
 
@@ -389,7 +389,7 @@ namespace GeometryClassLibrary
 
             //now make it with the normal we found and the lines basepoint
             Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
-            slicingLine = this.IntersectingSegment(divisionPlane);
+            slicingLine = new Line(this.IntersectingSegment(divisionPlane));
 
             return this._slice(slicingLine, divisionPlane);
         }
@@ -402,7 +402,7 @@ namespace GeometryClassLibrary
         /// <returns>returns a List of the two plane Regions that represent the slices region with the region with the larger area first</returns>
         public List<Polygon> Slice(Plane slicingPlane)
         {
-            Line slicingLine = this.IntersectingSegment(slicingPlane);
+            Line slicingLine = new Line(this.IntersectingSegment(slicingPlane));
 
             return this._slice(slicingLine, slicingPlane);
         }
@@ -419,7 +419,7 @@ namespace GeometryClassLibrary
 
             var intersectionPoints = this.IntersectionCoplanarPoints(slicingLine);
 
-            if (intersectionPoints.Count < 2 || (intersectionPoints.Count == 2 && this.HasSide((LineSegment)slicingLine)))
+            if (intersectionPoints.Count < 2 || (intersectionPoints.Count == 2 && this.HasSide(new LineSegment(intersectionPoints))))
             {
                 return new List<Polygon>() { new Polygon(this) };
             }
@@ -581,15 +581,15 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the given line and polygon intersect or are coplanar and intersect on the plane
         /// </summary>
-        public new bool DoesIntersect(Line line)
+        public bool DoesIntersect(Line line)
         {
             Point intersection = new Plane(this).IntersectWithLine(line);
             return this.Contains(intersection);
         }
 
-        public new bool DoesIntersect(LineSegment segment)
+        public bool DoesIntersect(LineSegment segment)
         {
-            var point = this.IntersectWithLine(segment);
+            var point = this.IntersectWithLine(new Line(segment));
             return segment.Contains(point);
         }
 
@@ -1251,7 +1251,7 @@ namespace GeometryClassLibrary
         /// Creates a parallelogram. 
         /// shifts both vectors so their basepoints are the passed basepoint, and creates the parrelogram spanned by those sides.
         /// </summary>
-        public static Polygon Parallelogram(Vector vector1, Vector vector2, Point basePoint = null)
+        public static Polygon Parallelogram(IVector vector1, IVector vector2, Point basePoint = null)
         {
             if (basePoint == null)
             {

@@ -109,20 +109,6 @@ namespace GeometryClassLibraryTest
 
             result.Should().Be(expected);
         }
-
-        [Test]
-        public void Vector_ContainsPoint()
-        {
-            Vector testVector = new Vector(Point.MakePointWithInches(4, 4, -4));
-            Point testPoint = Point.MakePointWithInches(2, 2, -2);
-            Point pointNotOnVector = Point.MakePointWithInches(2, 2, -3);
-
-            bool resultOn = testVector.Contains(testPoint);
-            bool resultNotOn = testVector.Contains(pointNotOnVector);
-
-            resultOn.Should().BeTrue();
-            resultNotOn.Should().BeFalse();
-        }
         
         //[Test()]
         //public void Vector_DoesOverlapInSameDirection()

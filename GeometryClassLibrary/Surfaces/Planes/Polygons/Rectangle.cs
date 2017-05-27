@@ -49,10 +49,10 @@ namespace GeometryClassLibrary
         }
         
 
-        public Rectangle(Vector baseSegment, Distance height, Direction referencePlaneNormal = null)
+        public Rectangle(IVector baseSegment, Distance height, Direction referencePlaneNormal = null)
             : base(_makeRectangle(baseSegment, height, referencePlaneNormal)) { }
 
-        private static Polygon _makeRectangle(Vector baseSegment, Distance height, Direction referencePlaneNormal)
+        private static Polygon _makeRectangle(IVector baseSegment, Distance height, Direction referencePlaneNormal)
         {
             if (referencePlaneNormal == null)
             {

@@ -80,6 +80,7 @@
     <Compile Include="Lines\LineSegment\LineSegment.cs" />
     <Compile Include="Lines\Line\ILinear.cs" />
     <Compile Include="Lines\Line\Line.cs" />
+    <Compile Include="Lines\Vector\IVector.cs" />
     <Compile Include="Lines\Vector\Vector.cs" />
     <Compile Include="Matrices\MatricesMatrix.cs" />
     <Compile Include="Matrices\Matrix\Matrix.cs" />

@@ -216,13 +216,13 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_IsParallelTo()
         {
-            Line line1 = new LineSegment(Point.MakePointWithInches(0,0), Point.MakePointWithInches(5,0));
-            Line line2 = new LineSegment(Point.MakePointWithInches(-3,-3), Point.MakePointWithInches(8,-3));
-            Line line3 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
+            ILinear line1 = new LineSegment(Point.MakePointWithInches(0,0), Point.MakePointWithInches(5,0));
+            ILinear line2 = new LineSegment(Point.MakePointWithInches(-3,-3), Point.MakePointWithInches(8,-3));
+            ILinear line3 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(4, 1));
 
-            Line line4 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
-            Line line5 = new LineSegment(Point.MakePointWithInches(-3, -3), Point.MakePointWithInches(-3, 8));
-            Line line6 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(1,4));
+            ILinear line4 = new LineSegment(Point.MakePointWithInches(0, 0), Point.MakePointWithInches(0, 5));
+            ILinear line5 = new LineSegment(Point.MakePointWithInches(-3, -3), Point.MakePointWithInches(-3, 8));
+            ILinear line6 = new LineSegment(Point.MakePointWithInches(1, 1), Point.MakePointWithInches(1,4));
              
             line1.IsParallelTo(line2).Should().BeTrue();
             line2.IsParallelTo(line3).Should().BeTrue();
@@ -237,13 +237,13 @@ namespace GeometryClassLibraryTest
         [Test()]
         public void Line_IsPerpendicularTo()
         {
-            Line line1 = new LineSegment(Point.Origin, new Direction(Angle.RightAngle / 2), new Distance(new Inch(), 1));
-            Line line2 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 135)), new Distance(new Inch(), 1));
-            Line line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(Angle.RightAngle / 2, Angle.ZeroAngle), new Distance(new Inch(), 1));
+            ILinear line1 = new LineSegment(Point.Origin, new Direction(Angle.RightAngle / 2), new Distance(new Inch(), 1));
+            ILinear line2 = new LineSegment(Point.Origin, new Direction(new Angle(new Degree(), 135)), new Distance(new Inch(), 1));
+            ILinear line3 = new LineSegment(Point.MakePointWithInches(2,-3,1), new Direction(Angle.RightAngle / 2, Angle.ZeroAngle), new Distance(new Inch(), 1));
 
-            Line line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
-            Line line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
-            Line line6 = new LineSegment(Point.MakePointWithInches(1, 2, -3), Point.MakePointWithInches(5, 1, -4)); //4, -1, -1
+            ILinear line4 = new LineSegment(Point.MakePointWithInches(3, 5, 7));
+            ILinear line5 = new LineSegment(Point.MakePointWithInches(1, -2, 1));
+            ILinear line6 = new LineSegment(Point.MakePointWithInches(1, 2, -3), Point.MakePointWithInches(5, 1, -4)); //4, -1, -1
 
             line1.IsPerpendicularTo(line2).Should().BeTrue();
             line1.IsPerpendicularTo(line3).Should().BeTrue();

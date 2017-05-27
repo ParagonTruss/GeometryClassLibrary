@@ -71,15 +71,15 @@ namespace GeometryClassLibrary
             this.NormalLine = new Line(basePoint, normalDirection);
         }
 
-        public Plane(Line normalLine)
+        public Plane(ILinear normalLine)
         {
-            this.NormalLine = normalLine;
+            this.NormalLine = new Line(normalLine);
         }
 
         /// <summary>
         /// Creates a plane that contains the two lines, provided the lines are not the same.
         /// </summary>
-        public Plane(Line line1, Line line2)
+        public Plane(ILinear line1, ILinear line2)
         {
             //if they arent equivalent lines
             if (line1 != line2)
@@ -124,7 +124,7 @@ namespace GeometryClassLibrary
             Vector vector1 = new Vector(point1, point2);
             Vector vector2 = new Vector(point1, point3);
 
-            if (point2.IsOnLine(vector2))
+            if (point2.IsOnLine(new Line(vector2)))
             {
                 throw new Exception("The passed points all fall on a common line.");
             } 
@@ -220,7 +220,7 @@ namespace GeometryClassLibrary
             return (this.Contains(line.BasePoint) && NormalVector.IsPerpendicularTo(line));
         }
 
-        public bool Contains(Vector vector)
+        public bool Contains(IVector vector)
         {
             return this.Contains(vector.BasePoint) && this.Contains(vector.EndPoint);
         }
@@ -386,7 +386,7 @@ namespace GeometryClassLibrary
                 return segment.EndPoint;
             }
             
-            Point possibleIntersection = this.IntersectWithLine(segment);
+            Point possibleIntersection = this.IntersectWithLine(new Line(segment));
             if (possibleIntersection != null && possibleIntersection.IsOnLineSegment(segment))
             {
                 return possibleIntersection;
@@ -468,7 +468,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public bool Intersects(Polygon polygon)
         {
-            Line slicingLine = polygon.IntersectingSegment(this);
+            Line slicingLine = new Line(polygon.IntersectingSegment(this));
             return (slicingLine != null && polygon.DoesIntersect(slicingLine));
         }
 

@@ -36,7 +36,7 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line in 3d space.
     /// </summary>
-    public partial class Line : IEquatable<Line>, IShift<Line>
+    public class Line : ILinear, IEquatable<Line>, IShift<Line>
     {
         #region Properties and Fields
 
@@ -101,7 +101,7 @@ namespace GeometryClassLibrary
         /// Default copy constructor
         /// </summary>
         /// <param name="toCopy"></param>
-        public Line(Line toCopy)
+        public Line(ILinear toCopy)
             : this(toCopy.Direction, toCopy.BasePoint) { }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="line"></param>
         /// <param name="newBasePoint"></param>
-        public Line(Point newBasePoint, Line line) : this(line.Direction, newBasePoint) { }
+        public Line(Point newBasePoint, ILinear line) : this(line.Direction, newBasePoint) { }
 
         #endregion
 
@@ -159,7 +159,7 @@ namespace GeometryClassLibrary
 
             Line comparableLine = (Line)obj;
 
-            bool linesAreParallel = IsParallelTo(comparableLine);
+            bool linesAreParallel = this.IsParallelTo(comparableLine);
             bool basePointIsOnLine = BasePoint.IsOnLine(comparableLine);
 
             return (linesAreParallel && basePointIsOnLine);
@@ -173,7 +173,7 @@ namespace GeometryClassLibrary
                 return false;
             }
 
-            bool linesAreParallel = IsParallelTo(other);
+            bool linesAreParallel = this.IsParallelTo(other);
             bool basePointIsOnLine = BasePoint.IsOnLine(other);
 
             return (linesAreParallel && basePointIsOnLine);
@@ -290,57 +290,6 @@ namespace GeometryClassLibrary
         }
 
         /// <summary>
-        /// Returns the smaller of the two angles between these lines.
-        /// </summary>
-        public virtual Angle SmallestAngleBetween(Line line)
-        {
-            Angle angle = AngleBetween(line);
-
-            if (angle.InDegrees > 90)
-            {
-               angle = Angle.StraightAngle - angle;
-            }
-            return angle;
-        }
-
-        /// <summary>
-        /// Finds the angle between the two Lines.
-        /// </summary>
-        public Angle AngleBetween(Line otherLine)
-        {
-            return this.Direction.AngleBetween(otherLine.Direction);
-        }        
-	
-        public Angle SignedAngleBetween(Line line, Line referenceNormal = null)
-        {
-            if (referenceNormal == null)
-            {
-                referenceNormal = Line.ZAxis;
-            }
-
-            return this.Direction.AngleFromThisToThat(line.Direction, referenceNormal.Direction);
-	    }
-
-        /// <summary>
-        /// Returns the point a given distance along the line.
-        /// </summary>
-        public Point GetPointAlongLine(Distance distance)
-        {
-            Distance newX = BasePoint.X + distance * Direction.X;
-            Distance newY = BasePoint.Y + distance * Direction.Y;
-            Distance newZ = BasePoint.Z + distance * Direction.Z;
-            return new Point(newX, newY, newZ);
-        }
-
-        /// <summary>
-        /// Determines if this line and the passed line are parallel.
-        /// </summary>
-        public bool IsParallelTo(Line passedLine)
-        {
-            return (passedLine.Direction == this.Direction || passedLine.Direction == this.Direction.Reverse());
-        }
-
-        /// <summary>
         /// Determines if two lines are parallel up to a custom angular tolerance.
         /// That is, if the lines are within that angle of each other the lines are considered "parallel"
         /// </summary>
@@ -351,17 +300,6 @@ namespace GeometryClassLibrary
             return angle == tolerance;
         }
 
-       // public 
-        /// <summary>
-        /// Returns whether or not the two lines are perindicular to each other
-        /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
-        public virtual bool IsPerpendicularTo(Line passedLine)
-        {
-            return this.SmallestAngleBetween(passedLine) == new Angle(90, Degrees);
-        }
-        
         // public 
         /// <summary>
         /// Determines whether or not the two lines are perpindicular to each other, up to a given tolerance.
@@ -379,7 +317,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns the point at which a line intersects the passed line
         /// </summary>
-        public virtual Point IntersectWithLine(Line passedLine)
+        public Point IntersectWithLine(Line passedLine)
         {
             if (this.Equals(passedLine))
             {
@@ -411,7 +349,7 @@ namespace GeometryClassLibrary
             return intersectionPoint;
         }
 
-        public virtual Point IntersectWithPlane(Plane plane)
+        public Point IntersectWithPlane(Plane plane)
         {
             return plane.IntersectWithLine(this);
         }
@@ -419,12 +357,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// return the point of intersection, if any, between this line and the passed polygon
         /// </summary>
-        public virtual Point IntersectWithPolygon(Polygon polygon)
+        public Point IntersectWithPolygon(Polygon polygon)
         {
             return polygon.IntersectWithLine(this);
         }
 
-        public virtual List<Point> IntersectionCoplanarPoints(Polygon polygon)
+        public List<Point> IntersectionCoplanarPoints(Polygon polygon)
         {
             return polygon.IntersectionCoplanarPoints(this);
         }
@@ -446,7 +384,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the vector and line intersect
         /// </summary>
-        public virtual bool DoesIntersect(LineSegment segment)
+        public bool DoesIntersect(LineSegment segment)
         {
             Line newLine = new Line(segment);
             Point intersect = this.IntersectWithLine(newLine);
@@ -461,7 +399,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether or not the Polygon and Line intersect
         /// </summary>
-        public virtual bool DoesIntersect(Polygon passedPolygon)
+        public bool DoesIntersect(Polygon passedPolygon)
         {
             return (passedPolygon.DoesIntersect(this));
         }
@@ -469,7 +407,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns whether ot not this line itnersects the Polyhedron
         /// </summary>
-        public virtual bool DoesIntersect(Polyhedron passedPolyhedron) => passedPolyhedron.Polygons.Any(DoesIntersect);
+        public bool DoesIntersect(Polyhedron passedPolyhedron) => passedPolyhedron.Polygons.Any(DoesIntersect);
         
 
         /// <summary>
@@ -482,39 +420,6 @@ namespace GeometryClassLibrary
             Point newBasePoint = this.BasePoint.Rotate3D(rotationToApply);
             Vector newDirectionVector = this.UnitVector(new Inch()).Rotate(rotationToApply);
             return new Line(newDirectionVector.Direction, newBasePoint);
-        }
-
-        /// <summary>
-        /// Returns true if the passed line is in the same plane as this one, AKA if it intersects or is parallel to the other line
-        /// </summary>
-        /// <param name="passedLine"></param>
-        /// <returns></returns>
-        public bool IsCoplanarWith(Line passedLine)
-        {
-            double[] point1Line1 = { this.BasePoint.X.ValueInInches, this.BasePoint.Y.ValueInInches, this.BasePoint.Z.ValueInInches };
-
-            Point anotherPointOnLine1 = this.GetPointAlongLine(new Distance(1, Inches));
-            double[] point2Line1 = { anotherPointOnLine1.X.ValueInInches, anotherPointOnLine1.Y.ValueInInches, anotherPointOnLine1.Z.ValueInInches };
-
-            double[] point1Line2 = { passedLine.BasePoint.X.ValueInInches, passedLine.BasePoint.Y.ValueInInches, passedLine.BasePoint.Z.ValueInInches };
-
-            Point anotherPointOnLine2 = passedLine.GetPointAlongLine(new Distance(1, Inches) * 2);
-            double[] point2Line2 = { anotherPointOnLine2.X.ValueInInches, anotherPointOnLine2.Y.ValueInInches, anotherPointOnLine2.Z.ValueInInches };
-
-            Matrix pointsMatrix = new Matrix(4, 4);
-
-            pointsMatrix.SetRow(0, point1Line1);
-            pointsMatrix.SetRow(1, point2Line1);
-            pointsMatrix.SetRow(2, point1Line2);
-            pointsMatrix.SetRow(3, point2Line2);
-
-            double[] onesColumn = { 1, 1, 1, 1 };
-            pointsMatrix.SetColumn(3, onesColumn);
-
-            // checks if it is equal to 0
-            double determinant = Math.Abs(pointsMatrix.Determinant());
-            Distance determinateDistance = new Distance(determinant, Inches);
-            return determinateDistance == Distance.ZeroDistance;
         }
 
         /// <summary>
@@ -546,7 +451,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Creates a vector on this line, of unit length for the passed distance type.
         /// </summary>
-        public virtual Vector UnitVector(DistanceType passedType)
+        public Vector UnitVector(DistanceType passedType)
         {
             return new Vector(this.BasePoint, this.Direction.UnitVector(passedType));
         }
@@ -588,7 +493,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public virtual bool Contains(Point point)
+        public bool Contains(Point point)
         {
             if (point == null)
             {
@@ -601,7 +506,7 @@ namespace GeometryClassLibrary
 
         public LineSegment GetSegmentAlongLine(Distance distance1, Distance distance2)
         {
-            return new LineSegment(GetPointAlongLine(distance1), GetPointAlongLine(distance2));
+            return new LineSegment(this.GetPointAlongLine(distance1), this.GetPointAlongLine(distance2));
         }
         #endregion
     }

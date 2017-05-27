@@ -332,7 +332,7 @@ namespace GeometryClassLibrary
                 var nextSegment = segmentsExtendingFromThisPoint.OrderBy(s => new Angle(s.SignedAngleBetween(referenceVector, referenceNormal))).First();
                 profileSegments.Add(nextSegment);
                 segments2D.Remove(nextSegment);
-                referenceVector = nextSegment.Reverse();
+                referenceVector = new Vector(nextSegment.Reverse());
                 currentPoint = nextSegment.EndPoint;
             }
             return new Polygon(profileSegments, false);

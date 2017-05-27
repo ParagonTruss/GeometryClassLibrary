@@ -18,7 +18,7 @@ namespace GeometryClassLibraryTest
             Vector vector2 = new Vector(Point.MakePointWithInches(-5, 3, 7));
 
             //A very randomish axis
-            Line testAxis = vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10));
+            Line testAxis = new Line(vector1.CrossProduct(vector2).Translate(Point.MakePointWithInches(3, -9, 10)));
 
             Angle angle = new Angle(new Radian(), -173);
 

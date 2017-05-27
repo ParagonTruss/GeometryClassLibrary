@@ -32,36 +32,47 @@ namespace GeometryClassLibrary
     /// A vector is a line segment that has a direction
     /// Except it derives from Line. So that it doesn't cut the way linesegments do.
     /// </summary>
-    public class Vector : Line, IEquatable<Vector>
+    public class Vector : IVector, IEquatable<Vector>
     {
         #region Properties and Fields
 
         public static Vector Zero => new Vector(Point.Origin);
+        
+        /// <summary>
+        /// A point on the line to use as a reference.
+        /// </summary>
+        public Point BasePoint { get; }
+
+        /// <summary>
+        /// The direction the line is extends from the base point in one direction
+        /// Note: it also extends in the direction opposite
+        /// </summary>
+        public Direction Direction { get; }
 
         /// <summary>
         /// Returns the magnitude of the vector
         /// </summary>
-        public virtual Distance Magnitude { get; }
+        public Distance Magnitude { get; }
 
         /// <summary>
         /// Returns the x-component of this vector
         /// </summary>
-        public virtual Distance XComponent => Magnitude * base.Direction.X;
+        public Distance XComponent => Magnitude * Direction.X;
 
         /// <summary>
         /// Returns the y-component of this vector
         /// </summary>
-        public virtual Distance YComponent => Magnitude * base.Direction.Y;
+        public Distance YComponent => Magnitude * Direction.Y;
 
         /// <summary>
         /// Returns the z-component of this vector
         /// </summary>
-        public virtual Distance ZComponent => Magnitude * base.Direction.Z;
+        public Distance ZComponent => Magnitude * Direction.Z;
 
         /// <summary>
         /// Returns the end point of the vector
         /// </summary>
-        public virtual Point EndPoint => new Point(XComponent, YComponent, ZComponent) + BasePoint;
+        public Point EndPoint => new Point(XComponent, YComponent, ZComponent) + BasePoint;
 
         /// <summary>
         /// Allows the xyz components of the vector to be able to be accessed as an array
@@ -90,8 +101,9 @@ namespace GeometryClassLibrary
         /// Creates a vector that extends from the Origin to the passed reference point  
         /// </summary>
         public Vector(Point passedEndPoint)
-            : base(passedEndPoint)
         {
+            this.BasePoint = Point.Origin;
+            this.Direction = new Direction(passedEndPoint);
             this.Magnitude = passedEndPoint.DistanceTo(Point.Origin);
         }
 
@@ -99,26 +111,30 @@ namespace GeometryClassLibrary
         /// Creates a vector that starts at the given base point and goes to the given end point
         /// </summary>
         public Vector(Point basePoint, Point endPoint)
-            : base(basePoint, endPoint)
         {
+            this.BasePoint = basePoint;
+            this.Direction = new Direction(basePoint, endPoint);
             this.Magnitude = basePoint.DistanceTo(endPoint);
         }
 
         /// <summary>
         /// Creates a new vector with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        public Vector(Point basePoint, Vector vector)
-            : base(vector.Direction, basePoint)
+        public Vector(Point basePoint, IVector vector)
         {
+            this.BasePoint = basePoint;
+            this.Direction = vector.Direction;
             this.Magnitude = vector.Magnitude;
         }
 
-        public Vector(Direction direction, Distance magnitude) : base(direction)
+        public Vector(Direction direction, Distance magnitude)
         {
+            this.BasePoint = Point.Origin;
+            this.Direction = direction;
             this.Magnitude = magnitude;
         }
 
-        public Vector(Line line, Distance magnitude) : this(line.BasePoint, line.Direction, magnitude) { }
+        public Vector(ILinear line, Distance magnitude) : this(line.BasePoint, line.Direction, magnitude) { }
 
         public Vector(Vector vector, Distance magnitude) : this(vector.BasePoint, vector.Direction, magnitude) { }
 
@@ -126,9 +142,10 @@ namespace GeometryClassLibrary
         /// Creates a new vector with the given BasePoint in the given direction with the given magnitude
         /// </summary>
         public Vector(Point passedBasePoint, Direction direction, Distance magnitude)
-            : base(direction, passedBasePoint)
         {
-             this.Magnitude = magnitude;
+            this.BasePoint = passedBasePoint;
+            this.Direction = direction;
+            this.Magnitude = magnitude;
         }
 
         /// <summary>
@@ -139,8 +156,11 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Default copy constructor
         /// </summary>
-        public Vector(Vector toCopy)
+        public Vector(IVector toCopy)
             : this(toCopy.BasePoint, toCopy.Direction, toCopy.Magnitude) { }
+
+        public Vector(LineSegment segment)
+            : this(segment.BasePoint, segment.EndPoint) { }
 
         #endregion
 
@@ -251,7 +271,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Projects this vector on the given plane
         /// </summary>
-        public new Vector ProjectOntoPlane(Plane plane)
+        public Vector ProjectOntoPlane(Plane plane)
         {
             //find the line in the plane and then project this line onto it
             Point newBasePoint = BasePoint.ProjectOntoPlane(plane);
@@ -280,35 +300,6 @@ namespace GeometryClassLibrary
         }
 
         public Distance ScalarProjection(Direction direction) => ScalarProjection(new Line(Point.Origin, direction));
-
-        /// <summary>
-        /// Returns the cross product of the 2 vectors
-        /// which is always perpendicular to both vectors
-        /// and whose magnitude is the area of the parellelogram spanned by those two vectors
-        /// Consequently if they point in the same (or opposite) direction, than the cross product is zero
-        /// </summary>
-        public Vector CrossProduct(Vector passedVector)
-        {
-            Vector v1 = new Vector(this);
-            Vector v2 = new Vector(passedVector);
-
-            //Find each component 
-
-            double xProduct1 = v1.YComponent.ValueInInches * v2.ZComponent.ValueInInches;
-            double xProduct2 = v1.ZComponent.ValueInInches * v2.YComponent.ValueInInches;
-
-            double yProduct1 = v1.ZComponent.ValueInInches * v2.XComponent.ValueInInches;
-            double yProduct2 = v1.XComponent.ValueInInches * v2.ZComponent.ValueInInches;
-
-            double zProduct1 = v1.XComponent.ValueInInches * v2.YComponent.ValueInInches;
-            double zProduct2 = v1.YComponent.ValueInInches * v2.XComponent.ValueInInches;
-
-            double newX = (xProduct1) - (xProduct2);
-            double newY = (yProduct1) - (yProduct2);
-            double newZ = (zProduct1) - (zProduct2);
-
-            return new Vector(Point.MakePointWithInches(newX, newY, newZ));
-        }
 
         /// <summary>
         /// determines whether two vectors point in the same direction
@@ -407,7 +398,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Rotates the vector about the given axis by the passed angle
         /// </summary>
-        public new Vector Rotate(Rotation rotationToApply)
+        public Vector Rotate(Rotation rotationToApply)
         {
             Point rotatedBasePoint = this.BasePoint.Rotate3D(rotationToApply);
             Point rotatedEndPoint = this.EndPoint.Rotate3D(rotationToApply);
@@ -417,7 +408,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Performs the Shift on this vector
         /// </summary>
-        public new Vector Shift(Shift passedShift)
+        public Vector Shift(Shift passedShift)
         {
             return new Vector(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
@@ -425,7 +416,7 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates the vector the given distance in the given direction
         /// </summary>
-        public new Vector Translate(Translation translation)
+        public Vector Translate(Translation translation)
         {
             Point newBasePoint = this.BasePoint.Translate(translation);
             Point newEndPoint = this.EndPoint.Translate(translation);
@@ -437,7 +428,7 @@ namespace GeometryClassLibrary
         /// Returns a unit vector with a length of 1 in with the given Distance that is equivalent to this direction
         /// Note: if it is a zero vector and you call the unitVector it will throw an exception.
         /// </summary>
-        public new Vector UnitVector(DistanceType passedType)
+        public Vector UnitVector(DistanceType passedType)
         {
             if (Magnitude == ZeroDistance)
             {
@@ -460,18 +451,6 @@ namespace GeometryClassLibrary
                 sum += vector1[i].ValueInInches * vector2[i].ValueInInches;
             }
             return new Area(new SquareInch(),sum);
-        }
-       
-        public bool IsPerpendicularTo(Vector other)
-        {
-            Angle smallestAngle = this.SmallestAngleBetween(other);
-            bool isRightAngle = smallestAngle == Angle.RightAngle;
-            return isRightAngle;
-        }
-
-        public bool IsParallelTo(Vector vector)
-        {
-            return this.SmallestAngleBetween(vector) == Angle.ZeroAngle;
         }
         #endregion
 

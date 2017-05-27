@@ -28,14 +28,34 @@ namespace GeometryClassLibrary
     /// <summary>
     /// A line segment is a portion of a line, whether curved or straight.
     /// </summary>
-    public class LineSegment : Vector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
+    public class LineSegment : IVector, IEdge, IEquatable<LineSegment>, IShift<LineSegment>
     {
         #region Properties and Fields
+        /// <summary>
+        /// A point on the line to use as a reference.
+        /// </summary>
+        public Point BasePoint { get; }
+        
+        /// <summary>
+        /// Returns the end point of the vector
+        /// </summary>
+        public Point EndPoint { get; }
+
+        /// <summary>
+        /// The direction the line is extends from the base point in one direction
+        /// Note: it also extends in the direction opposite
+        /// </summary>
+        public Direction Direction => new Direction(BasePoint, EndPoint);
 
         /// <summary>
         /// Returns this lineSegment's length (this is the same as the magnitude)
         /// </summary>
-        public virtual Distance Length => base.Magnitude;
+        public Distance Length => BasePoint.DistanceTo(EndPoint);
+
+        /// <summary>
+        /// Returns the magnitude of the vector
+        /// </summary>
+        public Distance Magnitude => Length;
 
         /// <summary>
         /// Returns the midpoint of this lineSegment
@@ -61,8 +81,9 @@ namespace GeometryClassLibrary
         /// Creates a Line Segment that extends from the origin to the given end point
         /// </summary>
         public LineSegment(Point passedEndPoint)
-            : base(passedEndPoint)
         {
+            this.BasePoint = Point.Origin;
+            this.EndPoint = passedEndPoint;
             _checkSegment();
         }
 
@@ -71,8 +92,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedVector"></param>
         public LineSegment(Vector passedVector)
-            : base(passedVector)
         {
+            this.BasePoint = passedVector.BasePoint;
+            this.EndPoint = passedVector.EndPoint;
             _checkSegment();
         }
 
@@ -80,47 +102,51 @@ namespace GeometryClassLibrary
         /// Constructs a line segment from a given start point to a given end point
         /// </summary>
         public LineSegment(Point passedBasePoint, Point passedEndPoint)
-            : base(passedBasePoint, passedEndPoint)
         {
+            this.BasePoint = passedBasePoint;
+            this.EndPoint = passedEndPoint;
             _checkSegment();
         }
         
         /// <summary>
         /// Creates a new line segment with the given BasePoint in the same direction and magnitude as the passed Vector
         /// </summary>
-        public LineSegment(Point passedBasePoint, Vector passedVector)
-            : base(passedBasePoint, passedVector)
+        public LineSegment(Point passedBasePoint, IVector passedVector)
         {
+            this.BasePoint = passedBasePoint;
+            this.EndPoint = new Vector(passedBasePoint, passedVector).EndPoint;
             _checkSegment();
         }
 
         public LineSegment(Point basePoint, Direction direction, Distance magnitude)
-            : base(basePoint, direction, magnitude)
         {
-            _checkSegment();
+            this.BasePoint = basePoint;
+            this.EndPoint = new Vector(basePoint, direction, magnitude).EndPoint;
         }
         public LineSegment(Direction direction, Distance magnitude)
-            : base(direction, magnitude)
         {
+            this.BasePoint = Point.Origin;
+            this.EndPoint = new Vector(direction, magnitude).EndPoint;
             _checkSegment();
         }
 
-        public LineSegment(List<Point> points) : base(points[0],points[1])
+        public LineSegment(List<Point> points)
         {
-            _checkSegment();
+            this.BasePoint = points[0];
+            this.EndPoint = points[1];
         }
 
         /// <summary>
         /// Copies a Linesegment
         /// </summary>
         public LineSegment(LineSegment toCopy)
-            : base(toCopy.BasePoint, toCopy.Direction,toCopy.Magnitude) { }
+            : this(toCopy.BasePoint, toCopy.EndPoint) { }
 
         public LineSegment(DistanceType distanceUnit, double x1, double y1, double x2, double y2)
-            : base(new Point(distanceUnit, x1, y1), new Point(distanceUnit, x2, y2)) { }
+            : this(new Point(distanceUnit, x1, y1), new Point(distanceUnit, x2, y2)) { }
 
         public LineSegment(DistanceType distanceUnit, double x1, double y1, double z1, double x2, double y2, double z2)
-            : base(new Point(distanceUnit, x1, y1, z1), new Point(distanceUnit, x2, y2, z2)) { }
+            : this(new Point(distanceUnit, x1, y1, z1), new Point(distanceUnit, x2, y2, z2)) { }
 
         private void _checkSegment()
         {
@@ -228,7 +254,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="line">The line to check if this intersects with</param>
         /// <returns>returns the intersection point of the two lines or null if they do not</returns>
-        public override Point IntersectWithLine(Line line)
+        public Point IntersectWithLine(Line line)
         {
             Point intersect = new Line(this).IntersectWithLine(new Line(line));
 
@@ -239,7 +265,7 @@ namespace GeometryClassLibrary
             return null;
         }
 
-        public new virtual Point IntersectWithPlane(Plane plane)
+        public Point IntersectWithPlane(Plane plane)
         {
             return plane.IntersectWithSegment(this);
         }
@@ -257,7 +283,7 @@ namespace GeometryClassLibrary
             {
                 return this.EndPoint;
             }
-            Point potentialIntersect = base.IntersectWithLine(segment);
+            Point potentialIntersect = new Line(segment).IntersectWithLine(new Line(segment));
 
             if (potentialIntersect != null && potentialIntersect.IsOnLineSegment(segment) && potentialIntersect.IsOnLineSegment(this))
             {
@@ -355,22 +381,24 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="projectOnto"></param>
         /// <returns></returns>
-        public new LineSegment ProjectOntoLine(Line projectOnto)
+        public LineSegment ProjectOntoLine(Line projectOnto)
         {
-            Vector projection = base.ProjectOntoLine(projectOnto);
-            if (projection.Magnitude != Distance.ZeroDistance)
+            Point basePoint = this.BasePoint.ProjectOntoLine(projectOnto);
+            Point endPoint = this.EndPoint.ProjectOntoLine(projectOnto);
+            if (basePoint != endPoint)
             {
-                return new LineSegment(projection);
+                return new LineSegment(basePoint, endPoint);
             }
             return null;
         }
 
-        public new LineSegment ProjectOntoPlane(Plane plane)
+        public LineSegment ProjectOntoPlane(Plane plane)
         {
-            Vector projection = base.ProjectOntoPlane(plane);
-            if (projection.Magnitude != Distance.ZeroDistance)
+            Point newBasePoint = BasePoint.ProjectOntoPlane(plane);
+            Point newEndPoint = EndPoint.ProjectOntoPlane(plane);
+            if (newBasePoint != newEndPoint)
             {
-                return new LineSegment(projection);
+                return new LineSegment(newBasePoint, newEndPoint);
             }
             return null;
         }
@@ -378,7 +406,7 @@ namespace GeometryClassLibrary
         /// returns a copy of the line segment pointing in the opposite direction as the original
         /// </summary>
         /// <returns></returns>
-        public new LineSegment Reverse()
+        public LineSegment Reverse()
         {
             return new LineSegment(this.EndPoint, this.Direction.Reverse(), this.Length);
         }
@@ -393,9 +421,11 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="rotationToApply">The Rotation to apply(that stores the axis to rotate around and the angle to rotate) to the LineSegment</param>
         /// <returns></returns>
-        public new LineSegment Rotate(Rotation rotationToApply)
+        public LineSegment Rotate(Rotation rotationToApply)
         {
-            return new LineSegment(base.Rotate(rotationToApply));
+            Point rotatedBasePoint = this.BasePoint.Rotate3D(rotationToApply);
+            Point rotatedEndPoint = this.EndPoint.Rotate3D(rotationToApply);
+            return new LineSegment(rotatedBasePoint, rotatedEndPoint);
         }
 
         IEdge IEdge.Rotate(Rotation passedRotation)
@@ -408,9 +438,9 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedShift"></param>
         /// <returns></returns>
-        public new LineSegment Shift(Shift passedShift)
+        public LineSegment Shift(Shift passedShift)
         {
-            return new LineSegment(base.Shift(passedShift));
+            return new LineSegment(BasePoint.Shift(passedShift), EndPoint.Shift(passedShift));
         }
 
         /// <summary>
@@ -426,9 +456,12 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Translates linesegment the given distance in the given direction
         /// </summary>
-        public new LineSegment Translate(Translation translation)
+        public LineSegment Translate(Translation translation)
         {
-            return new LineSegment(base.Translate(translation));
+            Point newBasePoint = this.BasePoint.Translate(translation);
+            Point newEndPoint = this.EndPoint.Translate(translation);
+
+            return new LineSegment(newBasePoint, newEndPoint);
         }
 
         /// <summary>
@@ -527,13 +560,13 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Determines whether or not the point is along/contained by this line segment
         /// </summary>
-        public new bool Contains(Point point)
+        public bool Contains(Point point)
         {
             var dist1 = BasePoint.DistanceTo(point);
             var dist2 = EndPoint.DistanceTo(point);
             var samelength = (dist1 + dist2).Equals(this.Length); //if the two lengths are the same, and the point is on the line, then the point is also on the linesegment within error margins
            
-            return point.IsOnLine(this) && samelength;
+            return point.IsOnLine(new Line(this)) && samelength;
 
         }
 
