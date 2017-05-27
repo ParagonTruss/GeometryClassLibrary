@@ -279,7 +279,7 @@ namespace GeometryClassLibrary
             return new Vector(newBasePoint, newEndPoint);
         }
 
-        public Vector OrthogonalProjection(Line line)
+        public Vector OrthogonalProjection(ILinear line)
         {
             return ProjectOntoPlane(new Plane(line));
         }
