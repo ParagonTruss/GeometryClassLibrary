@@ -497,7 +497,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsParallelTo(Line passedLine)
+        public bool IsParallelTo(ILinear passedLine)
         {
             //check to see if it is perpendicular to the normal vector and if it is then it is parallel to the plane because the plane is
             //by definition perpendicular to the normal
@@ -509,7 +509,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLine"></param>
         /// <returns></returns>
-        public bool IsPerpendicularTo(Line passedLine)
+        public bool IsPerpendicularTo(ILinear passedLine)
         {
             //check to see if it is parallel to the normal vector and if it is then it is perpendicular to the plane because the plane is
             //by definition perpendicular to the normal

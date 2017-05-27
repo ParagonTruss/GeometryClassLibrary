@@ -813,7 +813,7 @@ namespace GeometryClassLibrary
         /// Creates a parralelepiped.
         /// shifts the vectors so their basepoints are the passed basepoint, and creates the parralelepiped spanned by those vectors.
         /// </summary>
-        public static Polyhedron MakeParallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
+        public static Polyhedron MakeParallelepiped(IVector vector1, IVector vector2, Vector vector3, Point basePoint = null)
         {
             if (basePoint == null)
             {

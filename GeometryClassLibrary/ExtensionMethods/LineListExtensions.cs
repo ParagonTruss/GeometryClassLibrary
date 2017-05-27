@@ -237,7 +237,7 @@ namespace GeometryClassLibrary
         /// <param name="passedLines">passed List of Lines</param>
         /// <param name="lineToCheckIfParallelTo">passed List of Lines</param>
         /// <returns>returns a List of Lines of only the Lines that are parallel to the passed line</returns>
-        public static List<Line> OnlyLinesParallelTo(this IList<Line> passedLines, Line lineToCheckIfParallelTo)
+        public static List<Line> OnlyLinesParallelTo(this IList<Line> passedLines, ILinear lineToCheckIfParallelTo)
         {
             ////List<Line> passedLineListCasted = new List<Line>(passedLines);
             //List<Line> parallelLines = new List<Line>();

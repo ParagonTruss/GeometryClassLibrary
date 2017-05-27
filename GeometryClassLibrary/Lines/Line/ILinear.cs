@@ -126,5 +126,46 @@ namespace GeometryClassLibrary
         {
             return thisLine.SmallestAngleBetween(otherLine) == new Angle(90, Degrees);
         }
+
+        public static Plane PlaneThroughLineInDirectionOf(this ILinear thisLine, Axis passedAxis)
+        {
+            Line extrusionLine;
+
+            switch (passedAxis)
+            {
+                case Axis.X:
+                    extrusionLine = new Line(thisLine.BasePoint,
+                        thisLine.BasePoint - Point.MakePointWithInches(1, 0));
+                    break;
+                case Axis.Y:
+                    extrusionLine = new Line(thisLine.BasePoint,
+                        thisLine.BasePoint - Point.MakePointWithInches(0, 1));
+                    break;
+                case Axis.Z:
+                    extrusionLine = new Line(thisLine.BasePoint,
+                        thisLine.BasePoint - Point.MakePointWithInches(0, 0, 1));
+                    break;
+                default:
+                    throw new ArgumentException("You passed in an unknown Axis Enum");
+            }
+            return new Plane(extrusionLine, thisLine);
+        }
+        
+        /// <summary>
+        /// Makes a Perpendicular Line to this line that is in the passed plane
+        /// this assumes the line is in the plane
+        /// </summary>
+        public static Line MakePerpendicularLineInGivenPlane(this ILinear thisLine, Plane planeToMakePerpendicularLineIn)
+        {
+            if (planeToMakePerpendicularLineIn.IsParallelTo(thisLine))
+            {
+                //rotate it 90 degrees in the nornal of the plane and it will be perpendicular to the original
+                return new Line(thisLine).Rotate(new Rotation(new Vector(thisLine.BasePoint, planeToMakePerpendicularLineIn.NormalVector), RightAngle));
+            }
+            else
+            {
+                throw new ArgumentException("The given line is not in the given plane");
+            }
+        }
     }
 }

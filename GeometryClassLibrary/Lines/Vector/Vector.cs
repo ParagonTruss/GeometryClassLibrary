@@ -304,10 +304,10 @@ namespace GeometryClassLibrary
         /// <summary>
         /// determines whether two vectors point in the same direction
         /// </summary>
-        public bool HasSameDirectionAs(Vector passedVector)
+        public bool HasSameDirectionAs(IVector passedVector)
         {
             Vector vector1 = this;
-            Vector vector2 = passedVector;
+            IVector vector2 = passedVector;
 
             if (vector2 == null)
             {
