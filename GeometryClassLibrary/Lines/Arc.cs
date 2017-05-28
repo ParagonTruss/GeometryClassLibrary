@@ -150,13 +150,13 @@ namespace GeometryClassLibrary
             //this._centerPoint = line1.IntersectWithLine(line2);
         }
 
-        public Arc(Point basePoint, Point endPoint, Line normalLine)
+        public Arc(Point basePoint, Point endPoint, ILinear normalLine)
         {
             if (basePoint != endPoint && !new Direction(basePoint, endPoint).IsPerpendicularTo(normalLine.Direction))
             {
                 throw new GeometricException();
             }
-            var projected = basePoint.ProjectOntoLine(normalLine);
+            var projected = basePoint.ProjectOntoLine(new Line(normalLine));
             if (projected == basePoint)
             {
                 throw new GeometricException();

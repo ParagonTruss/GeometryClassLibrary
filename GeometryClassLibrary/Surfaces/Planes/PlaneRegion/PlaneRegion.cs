@@ -246,7 +246,7 @@ namespace GeometryClassLibrary
         }
 
        
-        public virtual Solid Extrude(Vector directionVector)
+        public virtual Solid Extrude(IVector directionVector)
         {
             throw new NotImplementedException();
         }

@@ -199,7 +199,7 @@ namespace GeometryClassLibrary
         /// </summary>
         /// <param name="passedLines">passed List of Lines</param>
         /// <returns>returns a bool of whether or not they are all parallel</returns>
-        public static bool AreAllParallel(this List<Line> passedLines)
+        public static bool AreAllParallel(this List<ILinear> passedLines)
         {
             for (int i = 0; i < passedLines.Count - 1; i++)
             {
@@ -214,17 +214,17 @@ namespace GeometryClassLibrary
         /// <summary>
         /// Returns true if all of the passed lines are in the same plane, false otherwise
         /// </summary>
-        public static bool AreAllCoplanar(this IList<Line> passedLineList)
+        public static bool AreAllCoplanar(this IList<ILinear> passedLineList)
         {
             List<LineSegment> segments = passedLineList.AsSegments(new Distance(1, Inches));
 
             return segments.AreAllCoplanar();
         }
 
-        public static List<LineSegment> AsSegments(this IList<Line> lineList, Distance lengthOfSegments)
+        public static List<LineSegment> AsSegments(this IList<ILinear> lineList, Distance lengthOfSegments)
         {
             List<LineSegment> segments = new List<LineSegment>();
-            foreach(Line line in lineList)
+            foreach(ILinear line in lineList)
             {
                 LineSegment lineAsSegment = new LineSegment(line.BasePoint, line.GetPointAlongLine(lengthOfSegments));
                 segments.Add(lineAsSegment);

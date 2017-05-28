@@ -70,8 +70,11 @@ namespace GeometryClassLibrary
         {
             _matrix = new Translation(displacement).Matrix;
         }
-
+        
         public Shift(Vector vector)
+            : this(vector.EndPoint-vector.BasePoint) { }
+
+        public Shift(IVector vector)
             : this(vector.EndPoint-vector.BasePoint) { }
 
         /// <summary>

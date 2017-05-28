@@ -551,7 +551,7 @@ namespace GeometryClassLibrary
             }
         }
 
-        public virtual Angle SmallestAngleBetween(Line line)
+        public virtual Angle SmallestAngleBetween(ILinear line)
         {
             var angle =  this.NormalVector.SmallestAngleBetween(line);
             var complement = Angle.RightAngle - angle;

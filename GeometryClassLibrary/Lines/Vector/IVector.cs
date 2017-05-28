@@ -17,6 +17,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+using UnitClassLibrary.AreaUnit;
+using UnitClassLibrary.AreaUnit.AreaTypes.Imperial.SquareInchesUnit;
 using UnitClassLibrary.DistanceUnit;
 
 namespace GeometryClassLibrary
@@ -56,6 +58,23 @@ namespace GeometryClassLibrary
             double newZ = (zProduct1) - (zProduct2);
 
             return new Vector(Point.MakePointWithInches(newX, newY, newZ));
+        }
+        
+        
+        /// <summary>
+        /// Returns the DotProduct between two Vectors as an area.
+        /// </summary>
+        public static Area DotProduct(this IVector thisVector, IVector otherVector)
+        {
+            Vector vector1 = new Vector(thisVector);
+            Vector vector2 = new Vector(otherVector);
+
+            var sum = 0.0;
+            sum += vector1.XComponent.ValueInInches * vector2.XComponent.ValueInInches;
+            sum += vector1.YComponent.ValueInInches * vector2.YComponent.ValueInInches;
+            sum += vector1.ZComponent.ValueInInches * vector2.ZComponent.ValueInInches;
+
+            return new Area(new SquareInch(),sum);
         }
     }
 }

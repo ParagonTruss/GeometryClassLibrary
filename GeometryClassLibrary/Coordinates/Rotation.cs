@@ -98,13 +98,13 @@ namespace GeometryClassLibrary
             this.AxisOfRotation = new Line(axisOfRotation);
         }
 
-        public Rotation(Angle rotationAngle, Line axisOfRotation = null)
+        public Rotation(Angle rotationAngle, ILinear axisOfRotation = null)
         {
             if (axisOfRotation == null)
             {
                 axisOfRotation = Line.ZAxis;
             }
-            this.AxisOfRotation = axisOfRotation;
+            this.AxisOfRotation = new Line(axisOfRotation);
             this.RotationAngle = rotationAngle;
         }
 
@@ -123,9 +123,9 @@ namespace GeometryClassLibrary
             this._matrix = matrix;
         }
 
-        private Rotation(Line axis, Angle angle, Matrix matrix)
+        private Rotation(ILinear axis, Angle angle, Matrix matrix)
         {
-            this._axisOfRotation = axis;
+            this._axisOfRotation = new Line(axis);
             this._rotationAngle = angle;
             this._matrix = matrix;
         }

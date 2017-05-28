@@ -20,6 +20,7 @@
 using System;
 using static UnitClassLibrary.DistanceUnit.Distance;
 using System.Collections.Generic;
+using System.Linq;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes.Imperial.InchUnit;
 using UnitClassLibrary.DistanceUnit.DistanceTypes;
@@ -263,6 +264,14 @@ namespace GeometryClassLibrary
             Point projected = this.ProjectOntoLine(line);
             Distance distance = this.DistanceTo(projected);
             return distance;
+        }
+        
+        public Distance DistanceTo(LineSegment segment)
+        {
+            var projected = ProjectOntoLine(new Line(segment));
+            return segment.Contains(projected)
+                ? this.DistanceTo(new Line(segment))
+                : segment.EndPoints.Min(p => DistanceTo(p));
         }
 
         public Distance DistanceTo(Plane plane)

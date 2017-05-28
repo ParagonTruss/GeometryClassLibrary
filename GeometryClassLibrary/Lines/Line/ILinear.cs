@@ -138,6 +138,21 @@ namespace GeometryClassLibrary
         {
             return thisLine.SmallestAngleBetween(otherLine) == new Angle(90, Degrees);
         }
+        
+        
+        // public 
+        /// <summary>
+        /// Determines whether or not the two lines are perpindicular to each other, up to a given tolerance.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsPerpendicularTo(ILinear thisLine, ILinear otherLine, Angle tolerance)
+        {
+            Angle angle = thisLine.SmallestAngleBetween(otherLine);
+            var diffFrom90 = (angle - Angle.RightAngle);
+            var closeToZero = Angle.ExactUnit(Degrees, 0, tolerance.ValueIn(Degrees));
+            var closeEnough = diffFrom90 == closeToZero;
+            return closeEnough;
+        }
 
         public static Plane PlaneThroughLineInDirectionOf(this ILinear thisLine, Axis passedAxis)
         {

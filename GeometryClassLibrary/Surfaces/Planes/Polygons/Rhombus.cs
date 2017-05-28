@@ -29,9 +29,9 @@ namespace GeometryClassLibrary
                 
         }
 
-        private static KeyValuePair<Vector, Vector> _makeVectors()
+        private static KeyValuePair<IVector, IVector> _makeVectors()
         {
-            return new KeyValuePair<Vector, Vector>(new Vector(Point.MakePointWithInches(1, 0)), new Vector(Point.MakePointWithInches(0, 1)));
+            return new KeyValuePair<IVector, IVector>(new Vector(Point.MakePointWithInches(1, 0)), new Vector(Point.MakePointWithInches(0, 1)));
         }
     }
 }

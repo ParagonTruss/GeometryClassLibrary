@@ -265,20 +265,6 @@ namespace GeometryClassLibrary
             return this.Contains(segment.BasePoint) && this.Contains(segment.EndPoint);
         }
 
-        // public 
-        /// <summary>
-        /// Determines whether or not the two lines are perpindicular to each other, up to a given tolerance.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsPerpendicularTo(Line passedLine, Angle tolerance)
-        {
-            Angle angle = this.SmallestAngleBetween(passedLine);
-            var diffFrom90 = (angle - Angle.RightAngle);
-            var closeToZero = Angle.ExactUnit(Degrees, 0, tolerance.ValueIn(Degrees));
-            var closeEnough = diffFrom90 == closeToZero;
-            return closeEnough;
-        }
-
         /// <summary>
         /// Returns the point at which a line intersects the passed line
         /// </summary>

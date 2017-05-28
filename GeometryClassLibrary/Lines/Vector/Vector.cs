@@ -436,22 +436,6 @@ namespace GeometryClassLibrary
             }
             return Direction.UnitVector(passedType);
         }
-
-        /// <summary>
-        /// Returns the DotProduct between two Vectors as an area.
-        /// </summary>
-        public Area DotProduct(Vector vector)
-        {
-            Vector vector1 = this;
-            Vector vector2 = vector;
-
-            var sum = 0.0;
-            for (int i = 0; i < 3; i++)
-            {
-                sum += vector1[i].ValueInInches * vector2[i].ValueInInches;
-            }
-            return new Area(new SquareInch(),sum);
-        }
         #endregion
 
     }

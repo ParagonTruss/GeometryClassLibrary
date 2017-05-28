@@ -304,7 +304,7 @@ namespace GeometryClassLibrary
         }
 
        
-        public static Polygon ExteriorProfileFromSegments(this List<LineSegment> segments2D, Vector referenceNormal = null)
+        public static Polygon ExteriorProfileFromSegments(this List<LineSegment> segments2D, IVector referenceNormal = null)
         {
             Point firstPoint = segments2D.GetAllPoints().OrderBy(p => p.X).ThenBy(p => p.Y).First();
             List<LineSegment> profileSegments = new List<LineSegment>();

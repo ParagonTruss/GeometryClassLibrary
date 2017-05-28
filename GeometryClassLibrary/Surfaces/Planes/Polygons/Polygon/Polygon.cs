@@ -304,7 +304,7 @@ namespace GeometryClassLibrary
         /// Extends a polygon to a 3 dimensional solid. 
         /// Makes a copy of the polygon shifted over by the extrusion vector, then connects corresponding vertices.
         /// </summary>
-        public Polyhedron Extrude(Vector extrusionVector)
+        public Polyhedron Extrude(IVector extrusionVector)
         {
             var baseFace = extrusionVector.DotProduct(this.NormalVector) < new Area(0,Area.SquareInches)
                 ? this
@@ -315,7 +315,7 @@ namespace GeometryClassLibrary
 
             foreach (LineSegment segment in baseFace.LineSegments)
             {
-                LineSegment opposite = segment.Shift(extrusionVector);
+                LineSegment opposite = segment.Shift(new Vector(extrusionVector));
 
                 Polygon sideFace = new Polygon(true, opposite.BasePoint, opposite.EndPoint, segment.EndPoint, segment.BasePoint);
                 faces.Add(sideFace);

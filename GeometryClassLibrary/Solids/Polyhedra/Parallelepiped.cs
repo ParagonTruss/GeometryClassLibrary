@@ -26,7 +26,7 @@ namespace GeometryClassLibrary
         /// </summary>
         private Parallelepiped() { }
 
-        public Parallelepiped(Vector vector1, Vector vector2, Vector vector3, Point basePoint = null)
+        public Parallelepiped(IVector vector1, IVector vector2, IVector vector3, Point basePoint = null)
             : base(MakeParallelepiped(vector1, vector2, vector3)) { }
 
         protected Parallelepiped(Polyhedron isParallelepiped) : base(isParallelepiped) { }
