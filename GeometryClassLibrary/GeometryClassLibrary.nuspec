@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>GeometryClassLibrary</id>
-    <version>4.9.2</version>
+    <version>5.0.0</version>
     <title>Geometry Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
 	<projectUrl>https://github.com/ParagonTruss/GeometryClassLibrary</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright © 2017 Paragon Component Systems, LLC</copyright>
+    <copyright>Copyright ï¿½ 2017 Paragon Component Systems, LLC</copyright>
 	<licenseUrl>https://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
 	<dependencies>
 		<dependency id="UnitClassLibrary" version="4.0.9" />
