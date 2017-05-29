@@ -389,6 +389,9 @@ namespace GeometryClassLibrary
 
             //now make it with the normal we found and the lines basepoint
             Plane divisionPlane = new Plane(divisionPlaneNormal.Direction, slicingLine.BasePoint);
+            
+            var slicingSegment = this.IntersectingSegment(divisionPlane);
+            if (slicingSegment == null) return new List<Polygon>() { new Polygon(this) };
             slicingLine = new Line(this.IntersectingSegment(divisionPlane));
 
             return this._slice(slicingLine, divisionPlane);
