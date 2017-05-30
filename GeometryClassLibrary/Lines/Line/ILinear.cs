@@ -66,7 +66,7 @@ namespace GeometryClassLibrary
             return angle;
         }
         
-        public static Angle SignedAngleBetween(this ILinear thisLine, ILinear otherLine, ILinear referenceNormal = null)
+        public static Angle CounterClockwiseAngleTo(this ILinear thisLine, ILinear otherLine, ILinear referenceNormal = null)
         {
             if (referenceNormal == null)
             {
@@ -74,6 +74,12 @@ namespace GeometryClassLibrary
             }
 
             return thisLine.Direction.AngleFromThisToThat(otherLine.Direction, referenceNormal.Direction);
+        }
+        
+        [Obsolete("Use CounterClockwiseAngleTo instead.")]
+        public static Angle SignedAngleBetween(this ILinear thisLine, ILinear otherLine, ILinear referenceNormal = null)
+        {
+            return CounterClockwiseAngleTo(thisLine, otherLine, referenceNormal);
         }
         
         /// <summary>

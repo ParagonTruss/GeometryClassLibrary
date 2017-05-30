@@ -329,7 +329,7 @@ namespace GeometryClassLibrary
                         segmentsExtendingFromThisPoint.Add(segment);
                     }
                 }
-                var nextSegment = segmentsExtendingFromThisPoint.OrderBy(s => new Angle(s.SignedAngleBetween(referenceVector, referenceNormal))).First();
+                var nextSegment = segmentsExtendingFromThisPoint.OrderBy(s => new Angle(s.CounterClockwiseAngleTo(referenceVector, referenceNormal))).First();
                 profileSegments.Add(nextSegment);
                 segments2D.Remove(nextSegment);
                 referenceVector = new Vector(nextSegment.Reverse());

@@ -1037,8 +1037,8 @@ namespace GeometryClassLibrary
                             #endregion
 
                             var normal = polygons[index % 2].NormalVector;
-                            var angle1 = (nextSegment.SignedAngleBetween(currentSegment.Reverse(), normal)).ProperAngle;
-                            var angle2 = (nextSegment.SignedAngleBetween(lineSegment, normal)).ProperAngle;
+                            var angle1 = (nextSegment.CounterClockwiseAngleTo(currentSegment.Reverse(), normal)).ProperAngle;
+                            var angle2 = (nextSegment.CounterClockwiseAngleTo(lineSegment, normal)).ProperAngle;
                             if (angle2 < angle1)
                             {
                                 found = true;

@@ -195,7 +195,7 @@ namespace GeometryClassLibrary
                 var rowVector = new Vector(new Point(row.Select(d => new Distance(d, Inches)).ToList()));
                 Vector rotated = new Vector(rowVector.EndPoint.Rotate3D(shift.RotationAboutOrigin));
 
-                angle = rowVector.SignedAngleBetween(rotated, axis);
+                angle = rowVector.CounterClockwiseAngleTo(rotated, axis);
 
                 var translation = singularMatrix.SystemSolve(new Matrix(shift.Translation.Point.Negate().ToListOfCoordinates()
                     .Select(d => d.ValueInInches).ToArray())).GetColumn(0).Select(d => new Distance(d, Inches)).ToList();
