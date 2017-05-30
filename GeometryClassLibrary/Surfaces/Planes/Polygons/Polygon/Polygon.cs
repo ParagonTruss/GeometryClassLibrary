@@ -1270,6 +1270,17 @@ namespace GeometryClassLibrary
             return new Polygon(new List<LineSegment>() { segment1, segment2, segment3, segment4 });
         }
 
+        public static Polygon Parallelogram(LineSegment segment1, LineSegment segment2)
+        {
+            var basePoint = segment1.EndPoints.Single(p => segment2.EndPoints.Contains(p));
+            if (segment1.BasePoint != basePoint) segment1 = segment1.Reverse();
+            if (segment2.BasePoint != basePoint) segment2 = segment2.Reverse();
+            var segment3 = new LineSegment(segment2.EndPoint, segment1);
+            var segment4 = new LineSegment(segment1.EndPoint, segment2);
+
+            return new Polygon(new List<LineSegment> { segment1, segment2, segment3, segment4 });
+        }
+
         public static Polygon Pentagon(Distance sideLength)
         {
             return RegularPolygon(5, sideLength);

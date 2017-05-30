@@ -27,8 +27,14 @@ namespace GeometryClassLibrary
 
         public Parallelogram(IVector vector1, IVector vector2, Point basePoint = null)
             : base(Parallelogram(vector1, vector2, basePoint)) { }
+        
+        public Parallelogram(LineSegment segment1, LineSegment segment2)
+            : base(Parallelogram(segment1, segment2)) { }
 
         public Parallelogram(KeyValuePair<IVector, IVector> pair, Point basePoint = null)
             : this(pair.Key, pair.Value, basePoint) { }
+        
+        public Parallelogram(KeyValuePair<LineSegment, LineSegment> pair)
+            : this(pair.Key, pair.Value) { }
     }
 }

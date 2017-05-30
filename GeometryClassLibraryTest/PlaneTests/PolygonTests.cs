@@ -1156,5 +1156,35 @@ namespace GeometryClassLibraryTest
 
             Math.Round(test.Length.ValueInInches, 2).ShouldBeEquivalentTo(60.77);
         }
+        
+        [Test]
+        public void Polygon_Parallelogram_LineSegment_ZeroReverse()
+        {
+            var segment1 = new LineSegment(new Point(Inches, 1.25, 9.5), new Point(Inches, 0.25, 9.5));
+            var segment2 = new LineSegment(new Point(Inches, 1.25, 9.5), new Point(Inches, 1.25, 11.5));
+            var parallelogram = Polygon.Parallelogram(segment1, segment2);
+            parallelogram.LineSegments.Should().Contain(segment1);
+            parallelogram.LineSegments.Should().Contain(segment2);
+        }
+
+        [Test]
+        public void Polygon_Parallelogram_LineSegment_OneReverse()
+        {
+            var segment1 = new LineSegment(new Point(Inches, 1.25, 9.5), new Point(Inches, 0.25, 9.5));
+            var segment2 = new LineSegment(new Point(Inches, 1.25, 11.5), new Point(Inches, 1.25, 9.5));
+            var parallelogram = Polygon.Parallelogram(segment1, segment2);
+            parallelogram.LineSegments.Should().Contain(segment1);
+            parallelogram.LineSegments.Should().Contain(segment2);
+        }
+        
+        [Test]
+        public void Polygon_Parallelogram_LineSegment_TwoReverse()
+        {
+            var segment1 = new LineSegment(new Point(Inches, 0.25, 9.5), new Point(Inches, 1.25, 9.5));
+            var segment2 = new LineSegment(new Point(Inches, 1.25, 11.5), new Point(Inches, 1.25, 9.5));
+            var parallelogram = Polygon.Parallelogram(segment1, segment2);
+            parallelogram.LineSegments.Should().Contain(segment1);
+            parallelogram.LineSegments.Should().Contain(segment2);
+        }
     }
 }
