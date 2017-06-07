@@ -505,12 +505,12 @@ namespace GeometryClassLibrary
         /// </summary>
         public LineSegment OverlappingSegment(LineSegment segment)
         {
-            HashSet<Point> pointList = new HashSet<Point>();
+            List<Point> pointList = new List<Point>();
             foreach(Point point in segment.EndPoints)
             {
                 if(this.Contains(point))
                 {
-                    pointList.Add(point);
+                     pointList.Add(point);
                 }
             }
             foreach(Point point in this.EndPoints)
@@ -520,14 +520,10 @@ namespace GeometryClassLibrary
                     pointList.Add(point);
                 }
             }
-            if (pointList.Count == 2)
-            {
-                return new LineSegment(pointList.ElementAt(0), pointList.ElementAt(1));
-            }
-            else
-            {
-                return null;
-            }
+            var distinct = pointList.DistinctEquatable().ToList();
+            return distinct.Count == 2 
+                   ? new LineSegment(distinct[0], distinct[1])
+                   : null;
         }
 
         public bool Overlaps(LineSegment segment)

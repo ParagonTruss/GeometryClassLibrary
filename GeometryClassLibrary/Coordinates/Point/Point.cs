@@ -40,9 +40,7 @@ namespace GeometryClassLibrary
         public static Point Origin { get; } = new Point(ZeroDistance, ZeroDistance, ZeroDistance);
 
         public Distance X { get; }
-
         public Distance Y { get; }
-
         public Distance Z { get; }
 
         #endregion
@@ -110,7 +108,6 @@ namespace GeometryClassLibrary
             return this.X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
         }
 
-
         public static Point operator +(Point point1, Point point2)
         {
             Distance newX = point1.X + point2.X;
@@ -139,6 +136,7 @@ namespace GeometryClassLibrary
             return new Point(point.X/ divisor, point.Y/divisor, point.Z/divisor);
 
         }
+        
         /// <summary>
         /// Not a perfect equality operator, is only accurate up to the Distance Class's accuracy
         /// </summary>

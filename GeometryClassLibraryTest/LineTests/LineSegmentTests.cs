@@ -5,6 +5,7 @@ using GeometryClassLibrary;
 using NUnit.Framework;
 using UnitClassLibrary.DistanceUnit;
 using UnitClassLibrary.AngleUnit;
+using static UnitClassLibrary.DistanceUnit.Distance;
 
 namespace GeometryClassLibraryTest
 {
@@ -882,12 +883,25 @@ namespace GeometryClassLibraryTest
         }
 
         [Test()]
-        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyOneEndPointInCommon()
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyOneEndPointInCommon_1()
         {
             LineSegment lineSegment1 = new LineSegment(Point.MakePointWithInches(1, 1, 1));
             LineSegment lineSegment2 = new LineSegment(Point.MakePointWithInches(1, 1, 1), Point.MakePointWithInches(2, 2, 2));
 
             lineSegment1.OverlappingSegment(lineSegment2).Should().BeNull();
+        }
+        
+        [Test]
+        public void LineSegment_OverlappingSegment_ShouldReturnNull_IfOnlyOneEndPointInCommon_2()
+        {
+            var segment1 = new LineSegment(new Point(Inches, 200.529, -1.616),
+                                           new Point(Inches, 200.529, 0.01));
+            var segment2 = new LineSegment(new Point(Inches, 206.375, 0),
+                                           new Point(Inches, 200.542, 0));
+            var overlap1 = segment1.OverlappingSegment(segment2);
+            var overlap2 = segment2.OverlappingSegment(segment1);
+            overlap1.Should().Be(null);
+            overlap2.Should().Be(null);
         }
 
         [Test()]
