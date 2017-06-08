@@ -266,10 +266,11 @@ namespace GeometryClassLibrary
         }
         public Angle SmallestAngleBetween(Direction direction)
         {
-            var angle = this.AngleBetween(direction);
-            if (angle > Angle.RightAngle)
+            Angle angle = this.AngleBetween(direction);
+
+            if (angle.ValueIn(Angle.Degrees) > 90)
             {
-                angle = angle - Angle.RightAngle;
+                angle = Angle.StraightAngle - angle;
             }
             return angle;
         }
@@ -280,9 +281,8 @@ namespace GeometryClassLibrary
         /// finds the signed angle between two directions.
         /// i.e. the order you input the vectors matters: the angle from direction1 to direction2 is negative the angle from direction2 to direction1
         /// The reference normal is what counts as "up" for determining sign.
-        /// it defaults to the z direction, because this method will usuallly be used on the XYPLane.
+        /// The reference normal defaults to the z direction, because this method will usually be used on the x-y plane.
         /// </summary>
-        /// <returns></returns>
         public Angle AngleFromThisToThat(Direction direction, Direction referenceNormal = null)
         {
             if (referenceNormal == null)

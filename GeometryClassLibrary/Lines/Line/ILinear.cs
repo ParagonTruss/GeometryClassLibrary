@@ -57,13 +57,7 @@ namespace GeometryClassLibrary
         /// </summary>
         public static Angle SmallestAngleBetween(this ILinear thisLine, ILinear otherLine)
         {
-            Angle angle = thisLine.AngleBetween(otherLine);
-
-            if (angle.InDegrees > 90)
-            {
-                angle = Angle.StraightAngle - angle;
-            }
-            return angle;
+            return thisLine.Direction.SmallestAngleBetween(otherLine.Direction);
         }
         
         public static Angle CounterClockwiseAngleTo(this ILinear thisLine, ILinear otherLine, ILinear referenceNormal = null)
