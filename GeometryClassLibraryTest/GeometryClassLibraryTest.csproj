@@ -87,6 +87,7 @@
     <Compile Include="PlaneTests\Polygon_Overlap_Tests.cs" />
     <Compile Include="PlaneTests\Polygon_Validation.cs" />
     <Compile Include="PlaneTests\RegularPolygonTests.cs" />
+    <Compile Include="SolidTests\OverlappingPolygonTests.cs" />
     <Compile Include="SolidTests\RectangularPrismTest.cs" />
     <Compile Include="PlaneTests\TriangleTests.cs" />
     <Compile Include="ListExtensionTests\PolygonListExtensionTests.cs" />
