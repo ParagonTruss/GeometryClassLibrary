@@ -523,7 +523,7 @@ namespace GeometryClassLibrary
         /// <returns></returns>
         public bool IsCoplanarTo(Plane passedPlane)
         {
-            return IsParallelTo(passedPlane) && this.Contains(passedPlane.BasePoint);
+            return IsParallelTo(passedPlane) && (Contains(passedPlane.BasePoint) || passedPlane.Contains(BasePoint));
         }
 
         /// <summary>
