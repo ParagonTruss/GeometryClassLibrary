@@ -32,6 +32,7 @@ namespace GeometryClassLibrary
             }
 
             overlapped = RemovePointsTooCloseToEachOther(overlapped);
+            overlapped = RemoveAdjcentCollinearSegments(overlapped);
            
             var depth = rotated1[0].Z;
             var shiftBack = Shift.ComposeLeftToRight(depth*Direction.Out, rotation.Inverse());
@@ -76,32 +77,9 @@ namespace GeometryClassLibrary
             //for some reason, Clipper will sometimes return very thin areas that we consider invalid and overlapping
             //this function loops over all points in each polygon, and if the angle between any two
             //segments is greater than 179 degrees, it gets rid of the intermediary point
-            for (int i = 0; i < overlapped.Count; i++)
+            for (var i = 0; i < overlapped.Count; i++)
             {
-                var pointList = overlapped[i].Shift(shiftBack);
-                for (int j = 0; j < overlapped[i].Count; j++)
-                {
-                    var index1 = j;
-                    var index2 = j + 1;
-                    var index3 = j + 2;
-                    if (j == overlapped[i].Count - 1)
-                    {
-                        index2 = 0;
-                        index3 = 1;
-                    }
-                    if (j == overlapped[i].Count - 2)
-                    {
-                        index3 = 0;
-                    }
-                    var seg1 = new LineSegment(pointList[index1], pointList[index2]);
-                    var seg2 = new LineSegment(pointList[index2], pointList[index3]);
-                    var angleBetween = seg1.AngleBetween(seg2);
-                    if (Math.Abs(angleBetween.InDegrees.Value) >= 179)
-                    {
-                        overlapped[i].RemoveAt(index2);
-                    }
-                }
-                
+                overlapped[i] = RemoveAdjcentCollinearSegments(overlapped[i]);
             }
             //In rare cases, Clipper will return a polygon with no points, this removes those
             for (int i = 0; i < overlapped.Count; i++)
@@ -132,21 +110,34 @@ namespace GeometryClassLibrary
 
         private static List<Point> RemovePointsTooCloseToEachOther(List<Point> overlapped)
         {
-            var newPoints = new List<Point>();
-            foreach (var point in overlapped)
-            {
-                if (point != newPoints.LastOrDefault())
-                {
-                   newPoints.Add(point);
-                }
-            }
-            if (newPoints[0] == newPoints.Last())
-            {
-                newPoints.RemoveAt(newPoints.Count-1);
-            }
-            return newPoints;
+            return overlapped.DistinctEquatable().ToList();
         }
 
+        private static List<Point> RemoveAdjcentCollinearSegments(List<Point> overlapped)
+        {
+            var newPoints = new List<Point> {overlapped[0]};
+
+            for (var i = 1; i < overlapped.Count + 1; i++)
+            {
+                var basePoint = newPoints.Last();
+                var pointToCheck = overlapped[i % overlapped.Count];
+                var endPoint = overlapped[(i + 1) % overlapped.Count];
+                
+                var seg1 = new LineSegment(basePoint, pointToCheck);
+                var seg2 = new LineSegment(pointToCheck, endPoint);
+
+                if (i == overlapped.Count)
+                {
+                    if (seg1.IsParallelTo(seg2)) newPoints.RemoveAt(0);
+                }
+                else if (!seg1.IsParallelTo(seg2))
+                {
+                    newPoints.Add(pointToCheck);
+                }
+            }
+
+            return newPoints;
+        }
 
         // Only works if the points are in the XY plane.
         // Link to their Documentation: http://www.angusj.com/delphi/clipper/documentation/Docs/_Body.htm
