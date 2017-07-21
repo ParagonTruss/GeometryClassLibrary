@@ -186,6 +186,82 @@ namespace GeometryClassLibraryTest
             chordFirst.Should().NotBe(null);
             webFirst.Equals(chordFirst).Should().BeTrue();
         }
+                
+        [Test]
+        public void Neighbor1_And_Neighbor2_Should_Overlap_At_Rectangle()
+        {
+            var Neighbor1 = new Polyhedron(true, new[]
+            {
+                new Polygon(true,
+                    new Point(Distance.Inches, 176.5, 21.548, 0),
+                    new Point(Distance.Inches, 176.5, 18, 0),
+                    new Point(Distance.Inches, 68.5, 0, 0),
+                    new Point(Distance.Inches, 68.5, 3.548, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 176.5, 21.548, 0),
+                    new Point(Distance.Inches, 176.5, 21.548, 1.5),
+                    new Point(Distance.Inches, 176.5, 18, 1.5),
+                    new Point(Distance.Inches, 176.5, 18, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 176.5, 18, 0),
+                    new Point(Distance.Inches, 176.5, 18, 1.5),
+                    new Point(Distance.Inches, 68.5, 0, 1.5),
+                    new Point(Distance.Inches, 68.5, 0, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 68.5, 0, 0),
+                    new Point(Distance.Inches, 68.5, 0, 1.5),
+                    new Point(Distance.Inches, 68.5, 3.548, 1.5),
+                    new Point(Distance.Inches, 68.5, 3.548, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 68.5, 3.548, 0),
+                    new Point(Distance.Inches, 68.5, 3.548, 1.5),
+                    new Point(Distance.Inches, 176.5, 21.548, 1.5),
+                    new Point(Distance.Inches, 176.5, 21.548, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 176.5, 21.548, 1.5),
+                    new Point(Distance.Inches, 68.5, 3.548, 1.5),
+                    new Point(Distance.Inches, 68.5, 0, 1.5),
+                    new Point(Distance.Inches, 176.5, 18, 1.5))
+            });
+
+            var Neighbor2 = new Polyhedron(true, new[]
+            {
+                new Polygon(true,
+                    new Point(Distance.Inches, 68.21, 3.5, 0),
+                    new Point(Distance.Inches, 72.992, 24.581, 0),
+                    new Point(Distance.Inches, 76.875, 25.875, 0),
+                    new Point(Distance.Inches, 71.94, 4.122, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 68.21, 3.5, 0),
+                    new Point(Distance.Inches, 68.21, 3.5, 1.5),
+                    new Point(Distance.Inches, 72.992, 24.581, 1.5),
+                    new Point(Distance.Inches, 72.992, 24.581, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 72.992, 24.581, 0),
+                    new Point(Distance.Inches, 72.992, 24.581, 1.5),
+                    new Point(Distance.Inches, 76.875, 25.875, 1.5),
+                    new Point(Distance.Inches, 76.875, 25.875, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 76.875, 25.875, 0),
+                    new Point(Distance.Inches, 76.875, 25.875, 1.5),
+                    new Point(Distance.Inches, 71.94, 4.122, 1.5),
+                    new Point(Distance.Inches, 71.94, 4.122, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 71.94, 4.122, 0),
+                    new Point(Distance.Inches, 71.94, 4.122, 1.5),
+                    new Point(Distance.Inches, 68.21, 3.5, 1.5),
+                    new Point(Distance.Inches, 68.21, 3.5, 0)),
+                new Polygon(true,
+                    new Point(Distance.Inches, 68.21, 3.5, 1.5),
+                    new Point(Distance.Inches, 71.94, 4.122, 1.5),
+                    new Point(Distance.Inches, 76.875, 25.875, 1.5),
+                    new Point(Distance.Inches, 72.992, 24.581, 1.5))
+            });
+            
+            var overlap = Neighbor1.OverlappingPolygon(Neighbor2);
+
+            overlap.Vertices.Count.Should().Be(4);
+        }
         
     }
 }
