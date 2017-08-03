@@ -6,7 +6,7 @@ build:
     publish_nuget: true
     verbosity: quiet
 test_script:
- - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:".\packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:".\GeometryClassLibraryTest\bin\Release\GeometryClassLibraryTest.dll" -filter:"+[GeometryClassLibrary*]* -[GeometryClassLibraryTest*]*" -output:GeometryClassLibraryTest_coverage.xml
+ - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:".\packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:".\GeometryClassLibraryTest\bin\Release\GeometryClassLibraryTest.dll" -filter:"+[GeometryClassLibrary*]* -[GeometryClassLibraryTest*]*" -output:GeometryClassLibrary_coverage.xml
 environment:
   CODECOV_REPO_TOKEN:
     secure: 5KvEOsSLu1aItPKGB/cUQTGlBLxQJ+t60b/GEe7heXKlt9w14UW8j+nUrRJPq9yH
