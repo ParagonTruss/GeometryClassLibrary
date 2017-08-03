@@ -1,5 +1,7 @@
 # Welcome
 
+[![Coverage Status](https://coveralls.io/repos/github/ParagonTruss/GeometryClassLibrary/badge.svg)](https://coveralls.io/github/ParagonTruss/GeometryClassLibrary) [![codecov](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary/branch/master/graph/badge.svg)](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary)
+
 ## Overview
 
 Welcome to the Geometry Class Library. Built on the foundation of the [Unit Class Library](https://bitbucket.org/Clearspan/unit-class-library), the Geometry Class Library uses Distances to define geometric shapes.

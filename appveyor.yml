@@ -2,8 +2,19 @@ before_build:
  - nuget restore
 configuration: Release
 build:
+    project: GeometryClassLibrary.sln
     publish_nuget: true
     verbosity: quiet
+test_script:
+ - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:".\packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:".\GeometryClassLibraryTest\bin\Release\GeometryClassLibraryTest.dll" -filter:"+[GeometryClassLibrary*]* -[GeometryClassLibraryTest*]*" -output:GeometryClassLibrary_coverage.xml
+environment:
+  CODECOV_REPO_TOKEN:
+    secure: 5KvEOsSLu1aItPKGB/cUQTGlBLxQJ+t60b/GEe7heXKlt9w14UW8j+nUrRJPq9yH
+  COVERALLS_REPO_TOKEN:
+    secure: rIkmUedpVMY5Am7YO1qVMQ7rDvwTLzQc6M6gYtJyRsGEvcE1LTnSEiVRV+RfmqsA
+after_test:
+ - .\packages\Codecov.1.0.1\tools\codecov.exe -f ".\GeometryClassLibrary_coverage.xml" -t %CODECOV_REPO_TOKEN%
+ - .\packages\coveralls.io.1.3.4\tools\coveralls.net.exe --opencover .\GeometryClassLibrary_coverage.xml -r %COVERALLS_REPO_TOKEN%
 deploy:
     provider: NuGet
     api_key: b11f3056-8100-4e18-bc0a-2dd2193f1e90
