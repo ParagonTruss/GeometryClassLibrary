@@ -1,6 +1,7 @@
 # Welcome
 
-[![Coverage Status](https://coveralls.io/repos/github/ParagonTruss/GeometryClassLibrary/badge.svg)](https://coveralls.io/github/ParagonTruss/GeometryClassLibrary) [![codecov](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary/branch/master/graph/badge.svg)](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary)
+[![Build status](https://ci.appveyor.com/api/projects/status/w22jqslsq6x4tf45?svg=true)](https://ci.appveyor.com/project/Paragon/geometryclasslibrary)
+ [![Coverage Status](https://coveralls.io/repos/github/ParagonTruss/GeometryClassLibrary/badge.svg)](https://coveralls.io/github/ParagonTruss/GeometryClassLibrary) [![codecov](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary/branch/master/graph/badge.svg)](https://codecov.io/gh/ParagonTruss/GeometryClassLibrary)
 
 ## Overview
 
